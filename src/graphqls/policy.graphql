@@ -1,0 +1,11 @@
+query policies {
+  policies(filter: {}) {
+    collection {
+      businessProcessIds {
+        ancestry
+        id
+        name
+      }
+    }
+  }
+}
