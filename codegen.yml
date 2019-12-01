@@ -1,0 +1,17 @@
+overwrite: true
+schema: "http://mandalorian.rubyh.co/graphql"
+documents: "src/**/*.graphql"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+      - "fragment-matcher"
+    config:
+      withHooks: true
+      withComponent: false
+      withHOC: false
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

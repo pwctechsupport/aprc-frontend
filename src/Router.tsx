@@ -2,16 +2,16 @@ import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import ScrollToTop from "./shared/components/ScrollToTop";
 import Homepage from "./containers/homepage/Homepage";
-
-const AuthPage = () => <h1>Auth bro!</h1>;
+import AuthRoute from "./shared/components/AuthRoute";
+import Login from "./containers/auth/Login";
 
 export default function() {
   return (
     <BrowserRouter>
       <ScrollToTop>
         <Switch>
-          <Route exact path="/" component={Homepage} />
-          <Route path="/auth" component={AuthPage} />
+          <Route path="/auth" component={Login} />
+          <AuthRoute exact path="/" component={Homepage} />
         </Switch>
       </ScrollToTop>
     </BrowserRouter>
