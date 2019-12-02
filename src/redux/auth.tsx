@@ -5,6 +5,11 @@ const initialState: AuthStore = {
 };
 
 const AUTHORIZED = "AUTHORIZED";
+const UNAUTHORIZED = "UNAUTHORIZED";
+
+// ---------------------------------------------------------------
+// Type Definition
+// ---------------------------------------------------------------
 
 interface AuthStore {
   isAuthed: boolean;
@@ -14,7 +19,7 @@ interface AuthStore {
 
 interface User {
   name: string;
-  email: string;
+  email: string | null | undefined;
 }
 
 interface AuthorizedAction {
@@ -25,20 +30,49 @@ interface AuthorizedAction {
   };
 }
 
+interface UnauthorizeAction {
+  type: typeof UNAUTHORIZED;
+}
+
+// ---------------------------------------------------------------
+// Action Creator
+// ---------------------------------------------------------------
+
 export const authorize = (user: User, token: string): AuthorizedAction => {
+  localStorage.setItem("token", token);
   return {
-    type: "AUTHORIZED",
+    type: AUTHORIZED,
     payload: { user, token }
   };
 };
 
-export default function(state = initialState, action: AuthorizedAction) {
+export const unauthorize = (): UnauthorizeAction => {
+  localStorage.removeItem("token");
+  return {
+    type: UNAUTHORIZED
+  };
+};
+
+// ---------------------------------------------------------------
+// Reducer
+// ---------------------------------------------------------------
+
+export default function(
+  state = initialState,
+  action: AuthorizedAction | UnauthorizeAction
+) {
   switch (action.type) {
-    case "AUTHORIZED":
+    case AUTHORIZED:
       return {
         isAuthed: true,
         user: action.payload.user,
         token: action.payload.token
+      };
+    case UNAUTHORIZED:
+      return {
+        isAuthed: false,
+        user: initialState.user,
+        token: initialState.token
       };
   }
   return state;

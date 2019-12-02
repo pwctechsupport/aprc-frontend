@@ -9,3 +9,5 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer, applyMiddleware(logger));
 
 export default store;
+
+export type RootState = ReturnType<typeof rootReducer>;
