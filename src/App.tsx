@@ -6,6 +6,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { hot } from "react-hot-loader/root";
 
 const client = new ApolloClient({
   uri: "http://mandalorian.rubyh.co/graphql",
@@ -33,4 +34,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default hot(App);
