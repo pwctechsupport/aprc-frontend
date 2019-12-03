@@ -8,7 +8,7 @@ interface ButtonProps extends BsButtonProps {
 
 const Button = ({ loading, ...props }: ButtonProps) => {
   return (
-    <BsButton disabled={loading} {...props}>
+    <BsButton disabled={loading} {...props} className="button">
       {props.children}
       {loading && <LoadingSpinner className="ml-2" />}
     </BsButton>

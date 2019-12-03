@@ -33,7 +33,7 @@ const Login = ({ history }: RouteComponentProps) => {
   return (
     <Container>
       <Image src={pwcLogo} alt="pwc-logo" />
-      <h1>Welcome, Please Sign in Here</h1>
+      <H1>Welcome, Please Sign in Here</H1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Label>Email</Label>
         <br />
@@ -56,7 +56,7 @@ const Login = ({ history }: RouteComponentProps) => {
         />
         <br />
         <br />
-        <Button primary type="submit">
+        <Button color="primary" type="submit" block>
           Submit
         </Button>
       </Form>
@@ -78,6 +78,11 @@ const Form = styled.form`
 const Image = styled.img`
   width: 90px;
   height: auto;
+  margin: 70px;
+`;
+
+const H1 = styled.h1`
+  margin-bottom: 30px;
 `;
 
 const Label = styled.label`

@@ -8,6 +8,7 @@ import { ToastContainer, Slide } from "react-toastify";
 import { hot } from "react-hot-loader/root";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./styles/app.scss";
 
 const client = new ApolloClient({
   uri: "http://mandalorian.rubyh.co/graphql",
