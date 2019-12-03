@@ -2,33 +2,32 @@ import get from "lodash/get";
 import React from "react";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
+import { oc } from "ts-optchain";
 import {
   PoliciesDocument,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation,
-  PolicyDocument
+  useUpdatePolicyMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
-import { oc } from "ts-optchain";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   const { loading, data } = usePolicyQuery({ variables: { id } });
   const [update, updateState] = useUpdatePolicyMutation({
-    onCompleted: () => toast("Update Success"),
-    onError: () => toast("Update Failed"),
-    refetchQueries: [{ query: PolicyDocument, variables: { id } }],
+    onCompleted: () => toast.success("Update Success"),
+    onError: () => toast.error("Update Failed"),
+    refetchQueries: [{ query: PoliciesDocument, variables: { filter: {} } }],
     awaitRefetchQueries: true
   });
   const [destroy, destroyState] = useDestroyPolicyMutation({
     onCompleted: () => {
-      toast("Delete Success");
+      toast.success("Delete Success");
       history.push("/policy");
     },
-    onError: () => toast("Delete Failed"),
+    onError: () => toast.error("Delete Failed"),
     refetchQueries: [{ query: PoliciesDocument, variables: { filter: {} } }],
     awaitRefetchQueries: true
   });

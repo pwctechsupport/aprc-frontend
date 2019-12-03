@@ -4,11 +4,12 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import { RouteComponentProps } from "react-router";
 import { useCreatePolicyMutation } from "../../generated/graphql";
 import { oc } from "ts-optchain";
+import { toast } from "react-toastify";
 
 const CreatePolicy = ({ history }: RouteComponentProps) => {
-  const [createPolicy] = useCreatePolicyMutation({
+  const [createPolicy, { loading }] = useCreatePolicyMutation({
     onCompleted: res => {
-      console.log("res: ", res);
+      toast.success("Create Success");
       const id = oc(res).createPolicy.policy.id("");
       history.replace(`/policy/${id}`);
     }
@@ -27,7 +28,7 @@ const CreatePolicy = ({ history }: RouteComponentProps) => {
   return (
     <div>
       <HeaderWithBackButton heading="Create Policy" />
-      <PolicyForm onSubmit={handleSubmit} />
+      <PolicyForm onSubmit={handleSubmit} submitting={loading} />
     </div>
   );
 };

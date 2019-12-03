@@ -59,7 +59,7 @@ const PolicyForm = ({
             loading={submitting}
             className="px-5"
           >
-            {defaultValues ? "Edit" : "Submit"}
+            {defaultValues ? "Simpan" : "Submit"}
           </Button>
         </div>
       </Form>

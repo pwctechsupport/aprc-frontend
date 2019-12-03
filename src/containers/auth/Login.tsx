@@ -14,7 +14,7 @@ const Login = ({ history }: RouteComponentProps) => {
   const { register, handleSubmit } = useForm();
   const [login] = useLoginMutation({
     onCompleted: res => {
-      toast("Login Success !");
+      toast.success("Welcome");
       if (res.login) {
         dispatch(
           authorize(
@@ -25,7 +25,7 @@ const Login = ({ history }: RouteComponentProps) => {
         history.push("/policy");
       }
     },
-    onError: () => toast("Error!")
+    onError: () => toast.error("Error!")
   });
   const onSubmit = (data: any): void => {
     login({ variables: data });
