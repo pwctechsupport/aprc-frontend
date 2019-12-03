@@ -29,7 +29,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       history.push("/policy");
     },
     onError: () => toast("Delete Failed"),
-    refetchQueries: [{ query: PoliciesDocument }],
+    refetchQueries: [{ query: PoliciesDocument, variables: { filter: {} } }],
     awaitRefetchQueries: true
   });
 
