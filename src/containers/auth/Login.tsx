@@ -1,12 +1,12 @@
 import React from "react";
 import useForm from "react-hook-form";
-import { toast } from "react-toastify";
-import { useLoginMutation } from "../../generated/graphql";
-import { authorize } from "../../redux/auth";
 import { useDispatch } from "react-redux";
 import { RouteComponentProps } from "react-router";
+import { toast } from "react-toastify";
+import styled from "styled-components";
 import pwcLogo from "../../assets/images/pwc-logo.png";
-import styled, { css } from "styled-components";
+import { useLoginMutation } from "../../generated/graphql";
+import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 
 const Login = ({ history }: RouteComponentProps) => {
