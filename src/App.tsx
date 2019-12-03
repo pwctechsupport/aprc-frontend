@@ -5,14 +5,15 @@ import store from "./redux";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ToastContainer, Slide } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { hot } from "react-hot-loader/root";
+import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const client = new ApolloClient({
   uri: "http://mandalorian.rubyh.co/graphql",
   headers: {
-    Authorization: localStorage.userToken
-      ? `Bearer ${localStorage.userToken}`
+    Authorization: localStorage.token
+      ? `Bearer ${localStorage.token}`
       : undefined
   }
 });

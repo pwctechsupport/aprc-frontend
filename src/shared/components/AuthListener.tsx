@@ -9,12 +9,12 @@ const AuthListener = ({ history }: RouteComponentProps) => {
   const dispatch = useDispatch();
   useEffect(() => {
     if (isAuthed) {
-      history.push("/");
+      // history.push("/");
     } else {
       const token = localStorage.getItem("token");
       if (token) {
         dispatch(authorize({ email: "", name: "" }, token));
-        history.push("/");
+        // history.push("/");
       } else {
         history.push("/auth");
       }

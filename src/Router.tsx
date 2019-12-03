@@ -5,17 +5,27 @@ import Homepage from "./containers/homepage/Homepage";
 import AuthRoute from "./shared/components/AuthRoute";
 import Login from "./containers/auth/Login";
 import AuthListener from "./shared/components/AuthListener";
-import Navbar from "./shared/components/Navbar";
+import Layout from "./shared/components/Layout";
+import Policies from "./containers/policy/Policies";
+import CreatePolicy from "./containers/policy/CreatePolicy";
+import Policy from "./containers/policy/Policy";
 
 export default function() {
   return (
     <BrowserRouter>
       <Route component={AuthListener} />
-      <Route path="/" component={Navbar} />
       <ScrollToTop>
         <Switch>
           <Route path="/auth" component={Login} />
-          <AuthRoute exact path="/" component={Homepage} />
+
+          <Layout>
+            <AuthRoute exact path="/" component={Homepage} />
+            <Switch>
+              <AuthRoute exact path="/policy" component={Policies} />
+              <AuthRoute exact path="/policy/create" component={CreatePolicy} />
+              <AuthRoute exact path="/policy/:id" component={Policy} />
+            </Switch>
+          </Layout>
         </Switch>
       </ScrollToTop>
     </BrowserRouter>

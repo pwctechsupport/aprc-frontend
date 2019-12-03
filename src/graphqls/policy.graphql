@@ -1,11 +1,31 @@
-query policies {
-  policies(filter: {}) {
+query policies($filter: BaseScalar!) {
+  policies(filter: $filter) {
     collection {
-      businessProcessIds {
-        ancestry
-        id
-        name
-      }
+      id
+      title
+      policyCategoryId
+      description
     }
+  }
+}
+
+mutation destroyPolicy($id: ID!) {
+  destroyPolicy(input: { id: $id }) {
+    clientMutationId
+  }
+}
+
+mutation createPolicy($input: CreatePolicyInput!) {
+  createPolicy(input: $input) {
+    clientMutationId
+    policy {
+      id
+    }
+  }
+}
+
+mutation updatePolicy($input: UpdatePolicyInput!) {
+  updatePolicy(input: $input) {
+    clientMutationId
   }
 }

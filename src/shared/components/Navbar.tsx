@@ -25,8 +25,14 @@ const Navbar = () => {
           </NavbarLi>
         ))}
       </NavbarUl>
-      <FaBookmark />
-      <FaBell />
+      <div className="d-flex justify-content-space-between">
+        <div className="mr-3">
+          <FaBookmark />
+        </div>
+        <div>
+          <FaBell />
+        </div>
+      </div>
       <Avatar
         src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png"
         presence="online"
@@ -40,18 +46,20 @@ const NavbarContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px 0 20px;
+  padding: 0 45px 0 45px;
   border: 1px solid #bfbfbf;
+  height: 55px;
 `;
 
 const Image = styled.img`
-  width: 75px;
+  width: 50px;
   height: auto;
 `;
 
 const NavbarUl = styled.ul`
   list-style-type: none;
   display: inline;
+  margin: 0;
 `;
 
 const NavbarLi = styled.li`
@@ -67,25 +75,5 @@ const Hmmm = styled(NavLink)`
   line-height: 20px;
   color: #3a3838;
 `;
-
-// const ActiveIndicator = styled.div`
-//   background: #d85604;
-//   border-radius: 5px 5px 0px 0px;
-//   width: 10px;
-//   height: 3px;
-//   display: inline-flex;
-//   flex-direction: column;
-// `;
-
-// const Profile = styled.div`
-//   background: url("https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png");
-//   background-repeat: no-repeat;
-//   width: 75px;
-//   height: 75px;
-//   border-radius: 50%;
-//   background-position: center;
-//   background-size: contain;
-//   display: inline-block;
-// `;
 
 export default Navbar;
