@@ -22,6 +22,7 @@ const Login = ({ history }: RouteComponentProps) => {
             res.login.token
           )
         );
+        history.push("/policy");
       }
     },
     onError: () => toast("Error!")
