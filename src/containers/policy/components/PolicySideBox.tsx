@@ -1,11 +1,11 @@
 import React from "react";
 import Button from "../../../shared/components/Button";
+import Input from "../../../shared/components/forms/Input";
 
 const PolicySideBox = () => {
   return (
-    <div>
-      <label>Search</label>
-      <input />
+    <div className="policy-side-box">
+      <Input />
       <Button />
     </div>
   );

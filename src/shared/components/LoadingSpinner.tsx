@@ -18,7 +18,7 @@ const LoadingSpinner = ({
       className={classnames(centered ? "text-center" : "", className)}
       style={{ display: centered ? "block" : "inline-block" }}
     >
-      <FaSpinner className="icon-spin" size={30} {...props} />
+      <FaSpinner className="icon-spin" size={15} {...props} />
     </div>
   );
 };
