@@ -3,7 +3,9 @@ import { NavLink } from "react-router-dom";
 import pwcLogo from "../../assets/images/pwc-logo.png";
 import styled from "styled-components";
 import { FaBell, FaBookmark } from "react-icons/fa";
-import Avatar from "@atlaskit/avatar";
+import Avatar from "./Avatar";
+import { useDispatch } from "react-redux";
+import { unauthorize } from "../../redux/auth";
 
 const menus = [
   { label: "Policy", path: "/policy" },
@@ -14,6 +16,12 @@ const menus = [
 ];
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+
+  function handleLogout() {
+    dispatch(unauthorize());
+  }
+
   return (
     <NavbarContainer>
       <Image src={pwcLogo} alt="pwc" />
@@ -33,11 +41,7 @@ const Navbar = () => {
           <FaBell />
         </div>
       </div>
-      <Avatar
-        src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png"
-        presence="online"
-        size="large"
-      />
+      <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
     </NavbarContainer>
   );
 };
