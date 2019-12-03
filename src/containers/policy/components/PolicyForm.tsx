@@ -6,7 +6,11 @@ import { Form } from "reactstrap";
 import Button from "../../../shared/components/Button";
 import * as yup from "yup";
 
-const PolicyForm = ({ onSubmit, defaultValues }: PolicyFormProps) => {
+const PolicyForm = ({
+  onSubmit,
+  defaultValues,
+  submitting
+}: PolicyFormProps) => {
   const { register, setValue, watch, errors, handleSubmit } = useForm<
     PolicyFormValues
   >({
@@ -49,7 +53,12 @@ const PolicyForm = ({ onSubmit, defaultValues }: PolicyFormProps) => {
         />
 
         <div className="d-flex justify-content-end mt-3">
-          <Button type="submit" color="primary">
+          <Button
+            type="submit"
+            color="primary"
+            loading={submitting}
+            className="px-5"
+          >
             {defaultValues ? "Edit" : "Submit"}
           </Button>
         </div>

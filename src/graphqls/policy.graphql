@@ -9,6 +9,18 @@ query policies($filter: BaseScalar!) {
   }
 }
 
+query policy($id: ID!) {
+  policy(id: $id) {
+    id
+    title
+    policyCategory {
+      id
+      name
+    }
+    description
+  }
+}
+
 mutation destroyPolicy($id: ID!) {
   destroyPolicy(input: { id: $id }) {
     clientMutationId

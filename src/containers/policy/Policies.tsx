@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Button } from "reactstrap";
 import { oc } from "ts-optchain";
 import { usePoliciesQuery } from "../../generated/graphql";
 import Table from "../../shared/components/Table";
+import Button from "../../shared/components/Button";
 
 const Policies = () => {
   const { loading, data } = usePoliciesQuery({
