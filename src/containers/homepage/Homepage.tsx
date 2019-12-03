@@ -1,13 +1,16 @@
 import React from "react";
-import { unauthorize } from "../../redux/auth";
 import { useDispatch } from "react-redux";
+import { unauthorize } from "../../redux/auth";
+import Button from "../../shared/components/Button";
 
 const Homepage = () => {
   const dispatch = useDispatch();
   return (
     <div>
       <h1>This is HOME</h1>
-      <button onClick={() => dispatch(unauthorize())}>Log out</button>
+      <Button primary onClick={() => dispatch(unauthorize())}>
+        Log out
+      </Button>
     </div>
   );
 };

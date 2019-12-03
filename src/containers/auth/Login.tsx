@@ -6,6 +6,8 @@ import { authorize } from "../../redux/auth";
 import { useDispatch } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import pwcLogo from "../../assets/images/pwc-logo.png";
+import styled, { css } from "styled-components";
+import Button from "../../shared/components/Button";
 
 const Login = ({ history }: RouteComponentProps) => {
   const dispatch = useDispatch();
@@ -28,21 +30,78 @@ const Login = ({ history }: RouteComponentProps) => {
     login({ variables: data });
   };
   return (
-    <div>
-      <img src={pwcLogo} alt="pwc-logo" />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <label>Email</label>
-        <input name="email" ref={register({ required: true })} /> <br />
-        <label>Password</label>
-        <input
+    <Container>
+      <Image src={pwcLogo} alt="pwc-logo" />
+      <h1>Welcome, Please Sign in Here</h1>
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Label>Email</Label>
+        <br />
+        <Input
+          name="email"
+          placeholder="Enter email address"
+          required
+          ref={register({ required: true })}
+        />{" "}
+        <br />
+        <br />
+        <Label>Password</Label>
+        <br />
+        <Input
           name="password"
           type="password"
+          placeholder="Enter password"
+          required
           ref={register({ required: true })}
         />
-        <input type="submit" />
-      </form>
-    </div>
+        <br />
+        <br />
+        <Button primary type="submit">
+          Submit
+        </Button>
+      </Form>
+    </Container>
   );
 };
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+`;
+
+const Form = styled.form`
+  width: 40vw;
+`;
+
+const Image = styled.img`
+  width: 90px;
+  height: auto;
+`;
+
+const Label = styled.label`
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #3a3838;
+  margin-bottom: 10px;
+`;
+
+const Input = styled.input`
+  border: 1px solid #c4c4c4;
+  box-sizing: border-box;
+  border-radius: 10px;
+  height: 35px;
+  width: 100%;
+  padding: 5px 10px 5px 10px;
+  ::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 25px;
+    color: #bfbfbf;
+  }
+`;
 
 export default Login;
