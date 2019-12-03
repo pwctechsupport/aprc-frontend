@@ -22,8 +22,10 @@ const Avatar = ({ data }: AvatarProps) => {
         />
       </DropdownToggle>
       <DropdownMenu>
-        {data.map(item => (
-          <DropdownItem onClick={item.onClick}>{item.label}</DropdownItem>
+        {data.map((item, index) => (
+          <DropdownItem key={index} onClick={item.onClick}>
+            {item.label}
+          </DropdownItem>
         ))}
       </DropdownMenu>
     </Dropdown>
