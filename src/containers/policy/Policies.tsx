@@ -79,7 +79,7 @@ const Policies = () => {
           </div>
         </div>
       </aside>
-      <div>
+      <div className="w-100">
         <div className="d-flex justify-content-between align-items-center">
           <h1>Policies</h1>
           <Link to="/policy/create">
