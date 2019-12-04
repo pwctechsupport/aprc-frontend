@@ -5,12 +5,18 @@ import TextEditor from "../../../shared/components/forms/TextEditor";
 import { Form } from "reactstrap";
 import Button from "../../../shared/components/Button";
 import * as yup from "yup";
+import { usePolicyCategoriesQuery } from "../../../generated/graphql";
+import Select from "../../../shared/components/forms/Select";
+import { oc } from "ts-optchain";
 
 const PolicyForm = ({
   onSubmit,
   defaultValues,
   submitting
 }: PolicyFormProps) => {
+  const policyCategoriesState = usePolicyCategoriesQuery({
+    variables: { filter: {} }
+  });
   const { register, setValue, watch, errors, handleSubmit } = useForm<
     PolicyFormValues
   >({
@@ -18,19 +24,30 @@ const PolicyForm = ({
     defaultValues
   });
 
+  useEffect(() => {
+    register({ name: "policyCategoryId", required: true });
+    register({ name: "description", required: true });
+  }, [register]);
+
   function onChangeEditor(event: any, editor: any) {
     const data = editor.getData();
     setValue("description", data);
   }
 
-  useEffect(() => {
-    register({ name: "description", required: true });
-  }, [register]);
+  function handleCategoryChange(e: any) {
+    const { value } = e;
+    setValue("policyCategoryId", value);
+  }
 
   function submit(values: PolicyFormValues) {
     console.log("values:", values);
     onSubmit && onSubmit(values);
   }
+
+  const options = oc(policyCategoriesState)
+    .data.policyCategories.collection([])
+    .map(toLabelValue);
+  const policyCategoryId = oc(defaultValues).policyCategoryId("");
 
   return (
     <div>
@@ -40,10 +57,15 @@ const PolicyForm = ({
           label="Title"
           innerRef={register({ required: true })}
         />
-        <Input
+        <Select
           name="policyCategoryId"
           label="Policy Category"
+          options={options}
           innerRef={register({ required: true })}
+          onChange={handleCategoryChange}
+          defaultValue={options.find(
+            option => option.value === policyCategoryId
+          )}
         />
 
         <TextEditor
@@ -57,7 +79,7 @@ const PolicyForm = ({
             type="submit"
             color="primary"
             loading={submitting}
-            className="px-5"
+            className="pwc px-5"
           >
             {defaultValues ? "Simpan" : "Submit"}
           </Button>
@@ -73,6 +95,11 @@ const validationSchema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
   policyCategoryId: yup.string().required()
+});
+
+const toLabelValue = ({ id, name }: ToLabelValueValues) => ({
+  label: name,
+  value: id
 });
 
 // ---------------------------------------------------
@@ -91,4 +118,9 @@ export interface PolicyFormProps {
   onSubmit?: (data: PolicyFormValues) => void;
   submitting?: boolean;
   defaultValues?: PolicyFormValues;
+}
+
+interface ToLabelValueValues {
+  id: string;
+  name: string;
 }

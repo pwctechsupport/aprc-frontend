@@ -10730,6 +10730,11 @@ react-error-overlay@^6.0.3:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-6.0.3.tgz#c378c4b0a21e88b2e159a3e62b2f531fd63bf60d"
   integrity sha512-bOUvMWFQVk5oz8Ded9Xb7WVdEi3QGLC8tH7HmYP0Fdp4Bn3qw0tRFmr5TW6mvahzvmrK4a6bqWGfCevBflP+Xw==
 
+react-hook-form-input@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-hook-form-input/-/react-hook-form-input-1.1.1.tgz#ad1a61490a231d955b527875cc0de1f6935c30be"
+  integrity sha512-HOwyts04qzTFFaA0RK0dR0Em8VLUhiVDA+IFMxMLhc7Lxio1Lizg7QNTxiWGWCDnDxbNCwyTRPrgMg6EfP9A9g==
+
 react-hook-form@^3.28.10:
   version "3.28.10"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-3.28.10.tgz#bb891f23a13262e9f6f59ce709ad2d1ae332d8c0"

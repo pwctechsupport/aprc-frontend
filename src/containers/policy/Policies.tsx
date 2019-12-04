@@ -1,12 +1,17 @@
 import React, { useState } from "react";
+import { FaChevronDown, FaChevronRight, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Collapse, Input } from "reactstrap";
 import { oc } from "ts-optchain";
-import { usePoliciesQuery } from "../../generated/graphql";
-import Table from "../../shared/components/Table";
-import Button from "../../shared/components/Button";
 import { useDebounce } from "use-debounce";
-import { Input, Collapse } from "reactstrap";
-import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import {
+  PoliciesDocument,
+  useDestroyPolicyMutation,
+  usePoliciesQuery
+} from "../../generated/graphql";
+import Button from "../../shared/components/Button";
+import Table from "../../shared/components/Table";
 
 const dummy = {
   title: "Policy 1",
@@ -66,6 +71,21 @@ const Policies = () => {
     variables: { filter: { title_cont: searchQuery } }
   });
 
+  const [destroy] = useDestroyPolicyMutation({
+    onCompleted: () => toast.success("Delete Success"),
+    onError: () => toast.error("Delete Failed"),
+    refetchQueries: [
+      {
+        query: PoliciesDocument,
+        variables: { filter: { title_cont: searchQuery } }
+      }
+    ]
+  });
+
+  function handleDelete(id: string) {
+    destroy({ variables: { id } });
+  }
+
   return (
     <div className="d-flex">
       <aside className="mr-3">
@@ -83,7 +103,7 @@ const Policies = () => {
         <div className="d-flex justify-content-between align-items-center">
           <h1>Policies</h1>
           <Link to="/policy/create">
-            <Button>+ Add Policy</Button>
+            <Button className="pwc">+ Add Policy</Button>
           </Link>
         </div>
         <Table reloading={loading}>
@@ -94,6 +114,7 @@ const Policies = () => {
               <th>Description</th>
               <th>Version</th>
               <th>Status</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -105,7 +126,7 @@ const Policies = () => {
                     <td>
                       <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
                     </td>
-                    <td>{policy.policyCategoryId}</td>
+                    <td>{oc(policy).policyCategory.name("")}</td>
                     <td>
                       <div
                         dangerouslySetInnerHTML={{
@@ -115,6 +136,14 @@ const Policies = () => {
                     </td>
                     <td>-</td>
                     <td>-</td>
+                    <td>
+                      <Button
+                        color="tranparent"
+                        onClick={() => handleDelete(policy.id)}
+                      >
+                        <FaTrash />
+                      </Button>
+                    </td>
                   </tr>
                 );
               })}

@@ -4,6 +4,10 @@ query policies($filter: BaseScalar!) {
       id
       title
       policyCategoryId
+      policyCategory {
+        id
+        name
+      }
       description
     }
   }
@@ -18,6 +22,15 @@ query policy($id: ID!) {
       name
     }
     description
+  }
+}
+
+query policyCategories($filter: BaseScalar!) {
+  policyCategories(filter: $filter) {
+    collection {
+      id
+      name
+    }
   }
 }
 

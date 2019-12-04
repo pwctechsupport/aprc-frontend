@@ -56,7 +56,7 @@ const Login = ({ history }: RouteComponentProps) => {
         />
         <br />
         <br />
-        <Button color="primary" type="submit" block>
+        <Button className="pwc" color="primary" type="submit" block>
           Submit
         </Button>
       </Form>
