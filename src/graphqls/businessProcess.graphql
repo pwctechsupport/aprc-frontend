@@ -1,0 +1,29 @@
+mutation createBusinessProcess($input:CreateBusinessProcessInput!){
+  createBusinessProcess(input:$input){
+    businessProcess{
+      ancestry
+      id
+      name
+    }
+  }
+}
+
+query businessProcesses($filter:BaseScalar!){
+  businessProcesses(filter:$filter){
+    collection{
+      ancestry
+      id
+      name
+    }
+  }
+}
+
+mutation destroyBusinessProcess($input:DestroyBusinessProcessInput!){
+  destroyBusinessProcess(input:$input){
+    businessProcess{
+      ancestry
+      id
+      name
+    }
+  }
+}

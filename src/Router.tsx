@@ -10,6 +10,9 @@ import Policies from "./containers/policy/Policies";
 import CreatePolicy from "./containers/policy/CreatePolicy";
 import Policy from "./containers/policy/Policy";
 import CreateSubPolicy from "./containers/policy/CreateSubPolicy";
+import CreateBusinessProcess from "./containers/businessProcess/CreateBusinessProcess";
+import BusinessProcesses from "./containers/businessProcess/BusinessProcesses";
+import BusinessProcess from "./containers/businessProcess/BusinessProcess";
 
 export default function() {
   return (
@@ -25,6 +28,9 @@ export default function() {
               <AuthRoute exact path="/policy" component={Policies} />
               <AuthRoute exact path="/policy/create" component={CreatePolicy} />
               <AuthRoute exact path="/policy/:id" component={Policy} />
+              <AuthRoute exact path="/business-process" component={BusinessProcesses} />
+              <AuthRoute exact path="/business-process/create" component={CreateBusinessProcess} />
+              <AuthRoute exact path="/business-process/:id" component={BusinessProcess} />
               <AuthRoute
                 exact
                 path="/policy/:id/create-sub-policy"

@@ -12,7 +12,8 @@ const menus = [
   { label: "Risk & Control", path: "/risk-and-control" },
   { label: "Control & Risk Management", path: "/control-and-risk-management" },
   { label: "Report", path: "/report" },
-  { label: "Administrative", path: "/administrative" }
+  { label: "Administrative", path: "/administrative" },
+  { label: "Business Process", path: "/business-process"}
 ];
 
 const Navbar = () => {
