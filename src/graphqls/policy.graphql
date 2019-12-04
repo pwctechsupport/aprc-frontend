@@ -8,6 +8,7 @@ query policies($filter: BaseScalar!) {
         id
         name
       }
+      ancestry
       description
     }
   }
@@ -21,6 +22,7 @@ query policy($id: ID!) {
       id
       name
     }
+    ancestry
     description
   }
 }
@@ -51,6 +53,12 @@ mutation createPolicy($input: CreatePolicyInput!) {
 
 mutation updatePolicy($input: UpdatePolicyInput!) {
   updatePolicy(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation createSubPolicy($input: CreateSubPolicyInput!) {
+  createSubPolicy(input: $input) {
     clientMutationId
   }
 }

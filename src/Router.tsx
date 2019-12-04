@@ -9,6 +9,7 @@ import Layout from "./shared/components/Layout";
 import Policies from "./containers/policy/Policies";
 import CreatePolicy from "./containers/policy/CreatePolicy";
 import Policy from "./containers/policy/Policy";
+import CreateSubPolicy from "./containers/policy/CreateSubPolicy";
 
 export default function() {
   return (
@@ -24,6 +25,11 @@ export default function() {
               <AuthRoute exact path="/policy" component={Policies} />
               <AuthRoute exact path="/policy/create" component={CreatePolicy} />
               <AuthRoute exact path="/policy/:id" component={Policy} />
+              <AuthRoute
+                exact
+                path="/policy/:id/create-sub-policy"
+                component={CreateSubPolicy}
+              />
             </Switch>
           </Layout>
         </Switch>

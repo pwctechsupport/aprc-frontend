@@ -27,3 +27,13 @@ export const date = (input: Date | number | string | null | undefined) => {
   };
   return new Intl.DateTimeFormat(["ban", "id"], options).format(input);
 };
+
+export const toLabelValue = ({ id, name }: ToLabelValueValues) => ({
+  label: name,
+  value: id
+});
+
+interface ToLabelValueValues {
+  id: string;
+  name: string;
+}

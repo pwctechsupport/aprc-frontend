@@ -12,6 +12,7 @@ import {
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
+import { Link } from "react-router-dom";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -54,23 +55,30 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const title = oc(data).policy.title("");
   const description = oc(data).policy.description("");
   const policyCategoryId = oc(data).policy.policyCategory.id("");
+  const isSubPolicy: boolean = !!oc(data).policy.ancestry();
 
   return (
     <div>
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={`Policy ${title}`} />
-        <Button
-          onClick={handleDelete}
-          loading={destroyState.loading}
-          color="danger"
-        >
-          Delete
-        </Button>
+        <div className="d-flex">
+          <Link to={`/policy/${id}/create-sub-policy`}>
+            <Button className="mr-2 pwc">+ Create Sub-Policy</Button>
+          </Link>
+          <Button
+            onClick={handleDelete}
+            loading={destroyState.loading}
+            color="danger"
+          >
+            Delete
+          </Button>
+        </div>
       </div>
       <PolicyForm
         onSubmit={handleUpdate}
         defaultValues={{ title, policyCategoryId, description }}
         submitting={updateState.loading}
+        isSubPolicy={isSubPolicy}
       />
     </div>
   );

@@ -5,14 +5,18 @@ import TextEditor from "../../../shared/components/forms/TextEditor";
 import { Form } from "reactstrap";
 import Button from "../../../shared/components/Button";
 import * as yup from "yup";
-import { usePolicyCategoriesQuery } from "../../../generated/graphql";
+import {
+  usePolicyCategoriesQuery,
+  useReferencesQuery
+} from "../../../generated/graphql";
 import Select from "../../../shared/components/forms/Select";
 import { oc } from "ts-optchain";
 
 const PolicyForm = ({
   onSubmit,
   defaultValues,
-  submitting
+  submitting,
+  isSubPolicy
 }: PolicyFormProps) => {
   const policyCategoriesState = usePolicyCategoriesQuery({
     variables: { filter: {} }
@@ -23,9 +27,14 @@ const PolicyForm = ({
     validationSchema,
     defaultValues
   });
+  const referenceData = useReferencesQuery({ variables: { filter: {} } });
+  const references = oc(referenceData)
+    .data.references.collection([])
+    .map(toLabelValue);
 
   useEffect(() => {
     register({ name: "policyCategoryId", required: true });
+    register({ name: "referenceId" });
     register({ name: "description", required: true });
   }, [register]);
 
@@ -57,6 +66,29 @@ const PolicyForm = ({
           label="Title"
           innerRef={register({ required: true })}
         />
+        {isSubPolicy ? (
+          <Select
+            name="reference"
+            label="Reference Category"
+            options={references}
+            innerRef={register({ required: true })}
+            onChange={handleCategoryChange}
+            defaultValue={options.find(
+              option => option.value === policyCategoryId
+            )}
+          />
+        ) : (
+          <Select
+            name="policyCategoryId"
+            label="Policy Category"
+            options={options}
+            innerRef={register({ required: true })}
+            onChange={handleCategoryChange}
+            defaultValue={options.find(
+              option => option.value === policyCategoryId
+            )}
+          />
+        )}
         <Select
           name="policyCategoryId"
           label="Policy Category"
@@ -118,6 +150,7 @@ export interface PolicyFormProps {
   onSubmit?: (data: PolicyFormValues) => void;
   submitting?: boolean;
   defaultValues?: PolicyFormValues;
+  isSubPolicy?: boolean;
 }
 
 interface ToLabelValueValues {

@@ -1,0 +1,8 @@
+query references($filter: BaseScalar!) {
+  references(filter: $filter) {
+    collection {
+      id
+      name
+    }
+  }
+}
