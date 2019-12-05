@@ -30,6 +30,8 @@ fragment control on Control {
   nature
   controlOwner
   assertion
+  typeOfControl
+  ipo
 }
 
 mutation createControl($input: CreateControlInput!) {
