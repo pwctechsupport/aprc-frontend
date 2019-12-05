@@ -43,6 +43,16 @@ query businessProcess($id: ID!) {
   }
 }
 
+mutation updateBusinessProcess($input: UpdateBusinessProcessInput!) {
+  updateBusinessProcess(input: $input) {
+    businessProcess {
+      ancestry
+      id
+      name
+    }
+  }
+}
+
 mutation createSubBusinessProcess($input: CreateSubBusinessProcessInput!) {
   createSubBusinessProcess(input: $input) {
     businessProcess {
