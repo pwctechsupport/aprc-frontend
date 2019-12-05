@@ -1,0 +1,53 @@
+query controls($filter: BaseScalar!) {
+  controls(filter: $filter) {
+    collection {
+      ...control
+    }
+  }
+}
+
+query control($id: ID!) {
+  control(id: $id) {
+    ...control
+  }
+}
+
+fragment control on Control {
+  id
+  risks {
+    id
+    name
+  }
+  businessProcesses {
+    id
+    name
+  }
+  descriptions {
+    id
+    name
+  }
+  frequency
+  nature
+  controlOwner
+  assertion
+}
+
+mutation createControl($input: CreateControlInput!) {
+  createControl(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation destroyControl($input: DestroyControlInput!) {
+  destroyControl(input: $input) {
+    clientMutationId
+  }
+}
+
+mutation updateControl($input: UpdateControlInput!) {
+  updateControl(input: $input) {
+    control {
+      ...control
+    }
+  }
+}
