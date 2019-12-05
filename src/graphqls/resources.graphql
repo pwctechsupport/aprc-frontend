@@ -1,0 +1,63 @@
+query resources(
+  $filter: BaseScalar = {}
+  $page: Int
+  $limit: Int
+) {
+  resources(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+      name
+      category
+      policies { id title }
+      controls { id typeOfControl }
+      businessProcess { id name }
+      # file size ga ada
+      # upload ga ada
+      # status ga ada
+      resuploadUrl
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}
+
+mutation createResource($input: CreateResourceInput!) {
+  createResource(input: $input) {
+    success
+    errors
+  }
+}
+
+query resourceFormMaster {
+  policies(filter: {}) {
+    collection {
+      id
+      title
+    }
+  }
+
+  controls(filter: {}) {
+    collection {
+      id
+      typeOfControl
+    }
+  }
+
+  businessProcesses(filter: {}) {
+    collection {
+      id
+      name
+    }
+  }
+}
+
+mutation destroyResource($id: ID!) {
+  destroyResource(input: {id: $id}) {
+    success
+    errors
+  }
+}
