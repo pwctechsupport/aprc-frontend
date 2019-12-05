@@ -22,10 +22,7 @@ fragment control on Control {
     id
     name
   }
-  descriptions {
-    id
-    name
-  }
+  description
   frequency
   nature
   controlOwner

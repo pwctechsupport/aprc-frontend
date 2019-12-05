@@ -11,7 +11,6 @@ import {
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
-import HeaderWithBackButton from "../../../shared/components/HeaderWithBack";
 
 const ControlForm = ({ onSubmit, defaultValues }: ControlFormProps) => {
   const submit = (values: CreateControlFormValues) => {
@@ -29,51 +28,45 @@ const ControlForm = ({ onSubmit, defaultValues }: ControlFormProps) => {
     register({ name: "ipo" });
   }, [register]);
 
-  const handleFreqChange = ({ value }: any) => setValue("frequency", value);
+  const handleSelectChange = (name: string) => ({ value }: any) =>
+    setValue(name, value);
 
-  const handleTOCChange = ({ value }: any) => setValue("typeOfControl", value);
-
-  const handleNatureChange = ({ value }: any) => setValue("nature", value);
-
-  const handleAssertionChange = ({ value }: any) =>
-    setValue("assertion", value);
-
-  const handleIpoChange = ({ value }: any) => setValue("ipo", value);
+  const pDefVal = (name: string, options: []) => {
+    //prepareDefaultValue
+  };
 
   return (
-    <div>
-      <HeaderWithBackButton heading="Create Control" />
-      <Form onSubmit={handleSubmit(submit)}>
-        <Input name="controlOwner" label="Control Owner" innerRef={register} />
-        <Input name="description" label="Description" innerRef={register} />
-        <Select
-          options={typeOfControls}
-          onChange={handleTOCChange}
-          label="Type of Controls"
-        />
-        <Select
-          options={frequencies}
-          onChange={handleFreqChange}
-          label="Frequency"
-        />
-        <Select
-          options={natures}
-          onChange={handleNatureChange}
-          label="Nature"
-        />
-        <Select
-          options={assertions}
-          onChange={handleAssertionChange}
-          label="Assertion"
-        />
-        <Select options={ipos} onChange={handleIpoChange} label="IPO" />
-        <div className="d-flex justify-content-end">
-          <Button className="pwc" type="submit">
-            Submit
-          </Button>
-        </div>
-      </Form>
-    </div>
+    <Form onSubmit={handleSubmit(submit)}>
+      <Input name="controlOwner" label="Control Owner" innerRef={register} />
+      <Input name="description" label="Description" innerRef={register} />
+      <Select
+        options={typeOfControls}
+        onChange={handleSelectChange("typeOfControl")}
+        label="Type of Controls"
+        defaultValue={pDefVal("typeOfControl", [])}
+      />
+      <Select
+        options={frequencies}
+        onChange={handleSelectChange("frequency")}
+        label="Frequency"
+      />
+      <Select
+        options={natures}
+        onChange={handleSelectChange("nature")}
+        label="Nature"
+      />
+      <Select
+        options={assertions}
+        onChange={handleSelectChange("assertion")}
+        label="Assertion"
+      />
+      <Select options={ipos} onChange={handleSelectChange("ipo")} label="IPO" />
+      <div className="d-flex justify-content-end">
+        <Button className="pwc" type="submit">
+          Submit
+        </Button>
+      </div>
+    </Form>
   );
 };
 
@@ -124,4 +117,5 @@ export interface CreateControlFormValues {
   nature: Nature;
   ipo: Ipo;
   assertion: Assertion;
+  description?: string;
 }

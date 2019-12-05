@@ -13,6 +13,7 @@ import { RouteComponentProps } from "react-router";
 import get from "lodash/get";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 
 const Control = ({ match }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -42,8 +43,9 @@ const Control = ({ match }: RouteComponentProps) => {
     });
   };
 
-  const assertion = oc(data).control.assertion("");
   const controlOwner = oc(data).control.controlOwner("");
+  const description = oc(data).control.description("");
+  const assertion = oc(data).control.assertion("");
   const frequency = oc(data).control.frequency("");
   const ipo = oc(data).control.ipo("");
   const nature = oc(data).control.nature("");
@@ -51,27 +53,28 @@ const Control = ({ match }: RouteComponentProps) => {
 
   if (loading) return null;
 
-  const assertionValue = Object.entries(Assertion).find(
-    ([l, v]) => v === assertion
-  );
+  // const assertionValue = Object.entries(Assertion).find(
+  //   ([l, v]) => v === assertion
+  // );
 
   return (
     <div>
+      <HeaderWithBackButton heading={id} />
       <ControlForm
         onSubmit={handleUpdate}
-        // defaultValues={{
-        //   assertion: assertionValue ? assertionValue[0] : '',
-        //   controlOwner,
-        //   frequency: Frequency.Annually,
-        //   ipo: Ipo.Accuracy,
-        //   nature: Nature.Corrective,
-        //   typeOfControl: TypeOfControl.Automatic
-        // }}
+        defaultValues={{
+          controlOwner,
+          description,
+          assertion: (assertion as Assertion) || Assertion.Accuracy,
+          frequency: (frequency as Frequency) || Frequency.Annually,
+          ipo: (ipo as Ipo) || Ipo.Accuracy,
+          nature: (nature as Nature) || Nature.Corrective,
+          typeOfControl:
+            (typeOfControl as TypeOfControl) || TypeOfControl.Automatic
+        }}
       />
     </div>
   );
 };
 
 export default Control;
-
-type MyEnum = Assertion | Frequency | Ipo | Nature | TypeOfControl;
