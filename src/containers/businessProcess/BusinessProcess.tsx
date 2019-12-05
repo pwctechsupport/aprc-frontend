@@ -1,24 +1,26 @@
+import get from "lodash/get";
 import React, { useState } from "react";
+import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { Route, RouteComponentProps } from "react-router";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { oc } from "ts-optchain";
 import {
-  useBusinessProcessesQuery,
   useBusinessProcessQuery,
   useDestroyBusinessProcessMutation,
-  BusinessProcessDocument
+  useUpdateBusinessProcessMutation
 } from "../../generated/graphql";
-import { RouteComponentProps, Route } from "react-router";
-import get from "lodash/get";
-import Table from "../../shared/components/Table";
-import { oc } from "ts-optchain";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
-import { toast } from "react-toastify";
 import Button from "../../shared/components/Button";
-import { Link } from "react-router-dom";
-import { FaTrash, FaPencilAlt } from "react-icons/fa";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import Table from "../../shared/components/Table";
+import BusinessProcessForm, {
+  BusinessProcessFormValues
+} from "./components/BusinessProcessForm";
 import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
 
 const BusinessProcess = ({ match, history }: RouteComponentProps) => {
-  const [editMode, setEditMode] = useState(false);
   const id = get(match, "params.id", "");
+  const [editMode, setEditMode] = useState(false);
   const { data } = useBusinessProcessQuery({ variables: { id } });
   const childs = oc(data).businessProcess.children([]);
 
@@ -30,6 +32,19 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
     refetchQueries: ["businessProcess"],
     awaitRefetchQueries: true
   });
+  const [update] = useUpdateBusinessProcessMutation({
+    onCompleted: () => {
+      toast.success("Update Success");
+      toggleEdit();
+    },
+    onError: () => toast.error("Update Failed"),
+    refetchQueries: ["businessProcess"],
+    awaitRefetchQueries: true
+  });
+
+  const toggleEdit = () => {
+    setEditMode(!editMode);
+  };
 
   const handleDelete = (id: string) => {
     destroy({ variables: { input: { id } } });
@@ -42,24 +57,39 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
     } catch (error) {}
   };
 
-  const nama = oc(data).businessProcess.name("");
+  const handleUpdate = (values: BusinessProcessFormValues) => {
+    update({ variables: { input: { id, name: values.name } } });
+  };
+
+  const name = oc(data).businessProcess.name("");
   const ancest = oc(data).businessProcess.ancestry("");
   const isLimitMax = ancest.includes("/");
 
   return (
     <div>
       <HeaderWithBackButton heading="" />
-      <div className="d-flex justify-content-between align-items-center mt-3">
-        <h4>{`BusinessProcess ${nama}`}</h4>
-        <div>
-          <Button className="mr-3" color="transparent">
-            <FaPencilAlt />
-          </Button>
-          <Button onClick={() => handleDeleteMain(id)} color="transparent">
-            <FaTrash />
-          </Button>
+      {editMode ? (
+        <div className="mt-3">
+          <BusinessProcessForm
+            onSubmit={handleUpdate}
+            onCancel={toggleEdit}
+            defaultValues={{ name }}
+            submitButtonName="Simpan"
+          />
         </div>
-      </div>
+      ) : (
+        <div className="d-flex justify-content-between align-items-center mt-3">
+          <h4>{name}</h4>
+          <div>
+            <Button onClick={toggleEdit} className="mr-3" color="transparent">
+              <FaPencilAlt />
+            </Button>
+            <Button onClick={() => handleDeleteMain(id)} color="transparent">
+              <FaTrash />
+            </Button>
+          </div>
+        </div>
+      )}
       <h6>ID: {id}</h6>
       <div className="mt-5">
         {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}
@@ -74,25 +104,35 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
           </tr>
         </thead>
         <tbody>
-          {childs.map(child => {
-            return (
-              <tr key={child.id}>
-                <td>
-                  <Link to={`/business-process/${child.id}`}>{child.name}</Link>
-                </td>
-                <td>{child.id}</td>
-                <td>{child.ancestry}</td>
-                <td>
-                  <Button
-                    onClick={() => handleDelete(child.id)}
-                    color="transparent"
-                  >
-                    <FaTrash />
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
+          {childs.length ? (
+            childs.map(child => {
+              return (
+                <tr key={child.id}>
+                  <td>
+                    <Link to={`/business-process/${child.id}`}>
+                      {child.name}
+                    </Link>
+                  </td>
+                  <td>{child.id}</td>
+                  <td>{child.ancestry}</td>
+                  <td>
+                    <Button
+                      onClick={() => handleDelete(child.id)}
+                      color="transparent"
+                    >
+                      <FaTrash />
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })
+          ) : (
+            <tr>
+              <td colSpan={3}>
+                <div className="text-center">No Sub-Business Process</div>
+              </td>
+            </tr>
+          )}
         </tbody>
       </Table>
     </div>
