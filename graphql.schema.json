@@ -788,8 +788,6 @@
             "deprecationReason": null
           },
           {
-<<<<<<< HEAD
-=======
             "name": "parent",
             "description": "",
             "args": [],
@@ -802,7 +800,6 @@
             "deprecationReason": null
           },
           {
->>>>>>> 5bb9d6ed3049da8e2bbd42cffeddcd3de2641770
             "name": "parentId",
             "description": "",
             "args": [],
