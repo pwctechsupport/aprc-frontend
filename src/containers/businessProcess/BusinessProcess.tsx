@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   useBusinessProcessesQuery,
   useBusinessProcessQuery,
@@ -13,24 +13,18 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import { toast } from "react-toastify";
 import Button from "../../shared/components/Button";
 import { Link } from "react-router-dom";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaPencilAlt } from "react-icons/fa";
 import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
 
 const BusinessProcess = ({ match, history }: RouteComponentProps) => {
+  const [editMode, setEditMode] = useState(false);
   const id = get(match, "params.id", "");
   const { data } = useBusinessProcessQuery({ variables: { id } });
-  // const { data: dato } = useBusinessProcessesQuery({
-  //   variables: {
-  //     filter: { ancestry_cont: id }
-  //   }
-  // });
   const childs = oc(data).businessProcess.children([]);
-  // console.log(dato);
 
   const [destroy] = useDestroyBusinessProcessMutation({
     onCompleted: () => {
       toast.success("Delete Success");
-      // history.push("/business-process");
     },
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["businessProcess"],
@@ -41,18 +35,33 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
     destroy({ variables: { input: { id } } });
   };
 
+  const handleDeleteMain = async (id: string) => {
+    try {
+      await destroy({ variables: { input: { id } } });
+      history.goBack();
+    } catch (error) {}
+  };
+
   const nama = oc(data).businessProcess.name("");
   const ancest = oc(data).businessProcess.ancestry("");
-  const ident = oc(data).businessProcess.id;
   const isLimitMax = ancest.includes("/");
-  // const isSubBusinessProcess: boolean = !!oc(data).businessProcess.ancestry();
 
   return (
     <div>
-      <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton heading={`BusinessProcess ${nama}`} />
+      <HeaderWithBackButton heading="" />
+      <div className="d-flex justify-content-between align-items-center mt-3">
+        <h4>{`BusinessProcess ${nama}`}</h4>
+        <div>
+          <Button className="mr-3" color="transparent">
+            <FaPencilAlt />
+          </Button>
+          <Button onClick={() => handleDeleteMain(id)} color="transparent">
+            <FaTrash />
+          </Button>
+        </div>
       </div>
-      <div>
+      <h6>ID: {id}</h6>
+      <div className="mt-5">
         {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}
       </div>
       <Table>
