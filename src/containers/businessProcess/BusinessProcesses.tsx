@@ -48,7 +48,7 @@ const BusinessProcesses = () => {
         </thead>
         <tbody>
           {bPCollection.map(item => (
-            <tr>
+            <tr key={item.id}>
               <td>
                 <Link to={`/business-process/${item.id}`}>{item.name}</Link>
               </td>

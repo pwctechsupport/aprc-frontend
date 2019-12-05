@@ -31,7 +31,6 @@ const SubPolicyForm = ({ parentId }: SubPolicyFormProps) => {
         }
       }
     });
-    console.log("values", values);
   }
 
   useEffect(() => {
@@ -51,7 +50,6 @@ const SubPolicyForm = ({ parentId }: SubPolicyFormProps) => {
   const references = oc(referenceData)
     .data.references.collection([])
     .map(toLabelValue);
-  console.log("references", references);
 
   return (
     <div>

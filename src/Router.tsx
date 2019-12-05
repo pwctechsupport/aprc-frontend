@@ -28,9 +28,26 @@ export default function() {
               <AuthRoute exact path="/policy" component={Policies} />
               <AuthRoute exact path="/policy/create" component={CreatePolicy} />
               <AuthRoute exact path="/policy/:id" component={Policy} />
-              <AuthRoute exact path="/business-process" component={BusinessProcesses} />
-              <AuthRoute exact path="/business-process/create" component={CreateBusinessProcess} />
-              <AuthRoute exact path="/business-process/:id" component={BusinessProcess} />
+              <AuthRoute
+                exact
+                path="/business-process"
+                component={BusinessProcesses}
+              />
+              <AuthRoute
+                exact
+                path="/business-process/create"
+                component={CreateBusinessProcess}
+              />
+              <AuthRoute
+                exact
+                path="/business-process/:id"
+                component={BusinessProcess}
+              />
+              <AuthRoute
+                exact
+                path="/business-process/:id"
+                component={BusinessProcess}
+              />
               <AuthRoute
                 exact
                 path="/policy/:id/create-sub-policy"
