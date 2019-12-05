@@ -16,7 +16,9 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       name: data.name,
       resuploadBase64: data.resuploadBase64,
       resuploadFileName: data.resuploadFileName,
-      policyIds: []
+      policyIds: data.policyId ? [data.policyId] : [],
+      controlIds: data.controlId ? [data.controlId] : [],
+      businessProcessId: data.businessProcessId,
     }
 
     createResource({ variables: { input } })
