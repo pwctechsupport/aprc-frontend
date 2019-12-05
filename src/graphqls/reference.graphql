@@ -1,8 +1,32 @@
-query references($filter: BaseScalar!) {
-  references(filter: $filter) {
+query references(
+  $filter: BaseScalar = {}
+  $page: Int
+  $limit: Int
+) {
+  references(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
       name
     }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}
+
+mutation createReference($input: CreateReferenceInput!) {
+  createReference(input: $input) {
+    success
+    errors
+  }
+}
+
+mutation destroyReference($id: ID!){
+  destroyReference(input: {id: $id}) {
+    success
+    errors
   }
 }

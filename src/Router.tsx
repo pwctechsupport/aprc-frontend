@@ -13,6 +13,7 @@ import CreateSubPolicy from "./containers/policy/CreateSubPolicy";
 import CreateBusinessProcess from "./containers/businessProcess/CreateBusinessProcess";
 import BusinessProcesses from "./containers/businessProcess/BusinessProcesses";
 import BusinessProcess from "./containers/businessProcess/BusinessProcess";
+import References from "./containers/referencess/References";
 
 export default function() {
   return (
@@ -36,6 +37,7 @@ export default function() {
                 path="/policy/:id/create-sub-policy"
                 component={CreateSubPolicy}
               />
+              <AuthRoute exact path="/references" component={References}/>
             </Switch>
           </Layout>
         </Switch>
