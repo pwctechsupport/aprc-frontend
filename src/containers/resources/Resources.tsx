@@ -32,23 +32,27 @@ const Resources = () => {
           <tr>
             <th>Name</th>
             <th>File</th>
-            <th/>
+            <th />
           </tr>
         </thead>
         <tbody>
           {oc(data).resources.collection([]).map(resource => {
             return (
               <tr key={resource.id}>
-                <td>{resource.name}</td>
                 <td>
-                  <a href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`} target="_blank">Download</a>
+                  <Link to={`/resources/${resource.id}`}>
+                    {resource.name}
+                  </Link>
+                </td>
+                <td>
+                  <a href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`} target="_blank" rel="noopener noreferrer">Download</a>
                 </td>
                 <td>
                   <Button
-                    onClick={() => destroyResource({variables: {id: resource.id}})}
+                    onClick={() => destroyResource({ variables: { id: resource.id } })}
                     color="transparent"
                   >
-                    <FaTrash/>
+                    <FaTrash />
                   </Button>
                 </td>
               </tr>

@@ -10,10 +10,10 @@ import Select from '../../../shared/components/forms/Select';
 import { toBase64, toLabelValue } from '../../../shared/formatter';
 
 
-const ResourceForm = ({ onSubmit, submitting }: ResourceFormProps) => {
-  const { register, setValue, handleSubmit, errors } = useForm<ResourceFormValues>({ validationSchema })
+const ResourceForm = ({ defaultValues, onSubmit, submitting }: ResourceFormProps) => {
+  const { register, setValue, handleSubmit, errors } = useForm<ResourceFormValues>({ defaultValues, validationSchema })
 
-  const { data } = useResourceFormMasterQuery()
+  const { data, ...mastersQ } = useResourceFormMasterQuery()
   const masters = {
     policyCategories: Object.entries(Category).map(p => ({ label: p[0], value: p[1] })),
     policies: oc(data).policies.collection([]).map(p => ({ ...p, value: String(p.id), label: String(p.title) })),
@@ -47,6 +47,9 @@ const ResourceForm = ({ onSubmit, submitting }: ResourceFormProps) => {
     onSubmit && onSubmit(data)
   }
 
+  const defaultPolicy = defaultValues && masters.policies.map(p => ({ label: p.label, value: p.value })).find(c => c.value === defaultValues.policyId)
+  console.log({ defaultPolicy })
+
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <Input
@@ -59,6 +62,7 @@ const ResourceForm = ({ onSubmit, submitting }: ResourceFormProps) => {
         name="category"
         label="Category"
         options={masters.policyCategories}
+        defaultValue={defaultValues && masters.policyCategories.find(c => c.value === defaultValues.category)}
         onChange={handleChangeSelect('category')}
         error={oc(errors).category.message()}
       />
@@ -66,6 +70,7 @@ const ResourceForm = ({ onSubmit, submitting }: ResourceFormProps) => {
         name="policyId"
         label="Related Policy"
         options={masters.policies}
+        defaultValue={defaultPolicy}
         onChange={handleChangeSelect('policyId')}
         error={oc(errors).policyId.message()}
       />
@@ -111,6 +116,7 @@ const validationSchema = yup.object().shape({
 })
 
 interface ResourceFormProps {
+  defaultValues?: ResourceFormValues
   onSubmit?: (data: ResourceFormValues) => void
   submitting?: boolean
 }
@@ -122,5 +128,5 @@ export interface ResourceFormValues {
   controlId: string
   businessProcessId: string
   resuploadBase64: any
-  resuploadFileName: string
+  resuploadFileName?: string
 }

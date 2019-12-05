@@ -55,6 +55,25 @@ query resourceFormMaster {
   }
 }
 
+query resource($id:ID!) {
+  resource(id: $id) {
+    id
+    name
+    category
+    policies{ id description }
+    controls { id typeOfControl }
+    businessProcess { id name }
+    resuploadUrl
+  }
+}
+
+mutation updateResource($input: UpdateResourceInput!) {
+  updateResource(input: $input) {
+    success
+    errors
+  }
+}
+
 mutation destroyResource($id: ID!) {
   destroyResource(input: {id: $id}) {
     success

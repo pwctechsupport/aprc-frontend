@@ -19,6 +19,7 @@ import Control from "./containers/control/Control";
 import CreateControl from "./containers/control/CreateControl";
 import Resources from "./containers/resources/Resources";
 import CreateResource from "./containers/resources/CreateResource";
+import Resource from "./containers/resources/Resource";
 
 export default function() {
   return (
@@ -70,6 +71,7 @@ export default function() {
               <AuthRoute exact path="/control/:id" component={Control} />
               <AuthRoute exact path="/resources" component={Resources}/>
               <AuthRoute exact path="/resources/create" component={CreateResource}/>
+              <AuthRoute exact path="/resources/:id" component={Resource}/>
             </Switch>
           </Layout>
         </Switch>
