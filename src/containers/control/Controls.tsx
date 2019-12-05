@@ -8,12 +8,17 @@ import { oc } from "ts-optchain";
 import Button from "../../shared/components/Button";
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Controls = () => {
   const { loading, data } = useControlsQuery({ variables: { filter: {} } });
   const controls = oc(data).controls.collection([]);
 
-  const [destroy] = useDestroyControlMutation();
+  const [destroy] = useDestroyControlMutation({
+    onCompleted: () => toast.success("Delete Success"),
+    onError: () => toast.error("Delete Failed"),
+    refetchQueries: ["controls"]
+  });
   const handleDelete = (id: string) => {
     destroy({ variables: { input: { id } } });
   };

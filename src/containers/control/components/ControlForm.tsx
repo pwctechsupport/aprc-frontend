@@ -11,6 +11,7 @@ import {
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
+import { oc } from "ts-optchain";
 
 const ControlForm = ({ onSubmit, defaultValues }: ControlFormProps) => {
   const submit = (values: CreateControlFormValues) => {
@@ -31,9 +32,16 @@ const ControlForm = ({ onSubmit, defaultValues }: ControlFormProps) => {
   const handleSelectChange = (name: string) => ({ value }: any) =>
     setValue(name, value);
 
-  const pDefVal = (name: string, options: []) => {
-    //prepareDefaultValue
+  const pDefVal = (value: any, options: Options) => {
+    console.log("pDefVal");
+    return options.find(opt => opt.value === value);
   };
+
+  const typeOfControl = oc(defaultValues).typeOfControl();
+  const frequency = oc(defaultValues).frequency();
+  const nature = oc(defaultValues).nature();
+  const assertion = oc(defaultValues).assertion();
+  const ipo = oc(defaultValues).ipo();
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -43,24 +51,32 @@ const ControlForm = ({ onSubmit, defaultValues }: ControlFormProps) => {
         options={typeOfControls}
         onChange={handleSelectChange("typeOfControl")}
         label="Type of Controls"
-        defaultValue={pDefVal("typeOfControl", [])}
+        defaultValue={pDefVal(typeOfControl, typeOfControls)}
       />
       <Select
         options={frequencies}
         onChange={handleSelectChange("frequency")}
         label="Frequency"
+        defaultValue={pDefVal(frequency, frequencies)}
       />
       <Select
         options={natures}
         onChange={handleSelectChange("nature")}
         label="Nature"
+        defaultValue={pDefVal(nature, natures)}
       />
       <Select
         options={assertions}
         onChange={handleSelectChange("assertion")}
         label="Assertion"
+        defaultValue={pDefVal(assertion, assertions)}
       />
-      <Select options={ipos} onChange={handleSelectChange("ipo")} label="IPO" />
+      <Select
+        options={ipos}
+        onChange={handleSelectChange("ipo")}
+        label="IPO"
+        defaultValue={pDefVal(ipo, ipos)}
+      />
       <div className="d-flex justify-content-end">
         <Button className="pwc" type="submit">
           Submit
@@ -119,3 +135,8 @@ export interface CreateControlFormValues {
   assertion: Assertion;
   description?: string;
 }
+type Option = {
+  label: string;
+  value: string;
+};
+type Options = Option[];
