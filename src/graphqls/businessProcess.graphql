@@ -1,6 +1,6 @@
-mutation createBusinessProcess($input:CreateBusinessProcessInput!){
-  createBusinessProcess(input:$input){
-    businessProcess{
+mutation createBusinessProcess($input: CreateBusinessProcessInput!) {
+  createBusinessProcess(input: $input) {
+    businessProcess {
       ancestry
       id
       name
@@ -8,9 +8,20 @@ mutation createBusinessProcess($input:CreateBusinessProcessInput!){
   }
 }
 
-query businessProcesses($filter:BaseScalar!){
-  businessProcesses(filter:$filter){
-    collection{
+query businessProcesses($filter: BaseScalar!) {
+  businessProcesses(filter: $filter) {
+    collection {
+      ancestry
+      id
+      name
+      parentId
+    }
+  }
+}
+
+mutation destroyBusinessProcess($input: DestroyBusinessProcessInput!) {
+  destroyBusinessProcess(input: $input) {
+    businessProcess {
       ancestry
       id
       name
@@ -18,9 +29,23 @@ query businessProcesses($filter:BaseScalar!){
   }
 }
 
-mutation destroyBusinessProcess($input:DestroyBusinessProcessInput!){
-  destroyBusinessProcess(input:$input){
-    businessProcess{
+query businessProcess($id: ID!) {
+  businessProcess(id: $id) {
+    ancestry
+    id
+    name
+    parentId
+    children {
+      name
+      id
+      ancestry
+    }
+  }
+}
+
+mutation createSubBusinessProcess($input: CreateSubBusinessProcessInput!) {
+  createSubBusinessProcess(input: $input) {
+    businessProcess {
       ancestry
       id
       name

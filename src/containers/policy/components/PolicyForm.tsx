@@ -49,7 +49,6 @@ const PolicyForm = ({
   }
 
   function submit(values: PolicyFormValues) {
-    console.log("values:", values);
     onSubmit && onSubmit(values);
   }
 
