@@ -33,6 +33,7 @@ const Control = ({ match }: RouteComponentProps) => {
         input: {
           id,
           controlOwner: values.controlOwner,
+          description: values.description,
           typeOfControl: values.typeOfControl,
           assertion: values.assertion,
           frequency: values.frequency,
@@ -52,10 +53,6 @@ const Control = ({ match }: RouteComponentProps) => {
   const typeOfControl = oc(data).control.typeOfControl("");
 
   if (loading) return null;
-
-  // const assertionValue = Object.entries(Assertion).find(
-  //   ([l, v]) => v === assertion
-  // );
 
   return (
     <div>
