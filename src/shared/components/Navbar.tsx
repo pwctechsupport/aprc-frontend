@@ -9,11 +9,8 @@ import { unauthorize } from "../../redux/auth";
 
 const menus = [
   { label: "Policy", path: "/policy" },
-  { label: "Risk & Control", path: "/risk-and-control" },
-  { label: "Control & Risk Management", path: "/control-and-risk-management" },
-  { label: "Report", path: "/report" },
-  { label: "Administrative", path: "/administrative" },
-  { label: "Business Process", path: "/business-process"}
+  { label: "Control", path: "/control" },
+  { label: "Business Process", path: "/business-process" }
 ];
 
 const Navbar = () => {

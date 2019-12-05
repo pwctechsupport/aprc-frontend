@@ -13,6 +13,9 @@ import CreateSubPolicy from "./containers/policy/CreateSubPolicy";
 import CreateBusinessProcess from "./containers/businessProcess/CreateBusinessProcess";
 import BusinessProcesses from "./containers/businessProcess/BusinessProcesses";
 import BusinessProcess from "./containers/businessProcess/BusinessProcess";
+import References from "./containers/referencess/References";
+import Controls from "./containers/control/Controls";
+import CreateControl from "./containers/control/CreateControl";
 
 export default function() {
   return (
@@ -53,6 +56,15 @@ export default function() {
                 path="/policy/:id/create-sub-policy"
                 component={CreateSubPolicy}
               />
+              <AuthRoute exact path="/references" component={References} />
+
+              <AuthRoute exact path="/control" component={Controls} />
+              <AuthRoute
+                exact
+                path="/control/create"
+                component={CreateControl}
+              />
+              <AuthRoute exact path="/control/:id" component={Controls} />
             </Switch>
           </Layout>
         </Switch>
