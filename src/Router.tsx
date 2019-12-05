@@ -14,6 +14,7 @@ import CreateBusinessProcess from "./containers/businessProcess/CreateBusinessPr
 import BusinessProcesses from "./containers/businessProcess/BusinessProcesses";
 import BusinessProcess from "./containers/businessProcess/BusinessProcess";
 import Controls from "./containers/control/Controls";
+import Control from "./containers/control/Control";
 import CreateControl from "./containers/control/CreateControl";
 
 export default function() {
@@ -57,7 +58,7 @@ export default function() {
                 path="/control/create"
                 component={CreateControl}
               />
-              <AuthRoute exact path="/control/:id" component={Controls} />
+              <AuthRoute exact path="/control/:id" component={Control} />
             </Switch>
           </Layout>
         </Switch>
