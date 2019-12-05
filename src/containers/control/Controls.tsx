@@ -45,7 +45,7 @@ const Controls = () => {
                 <td>
                   <Link to={`/control/${control.id}`}>{control.id}</Link>
                 </td>
-                <td>{control.descriptions}</td>
+                <td>{control.description}</td>
                 <td>{control.frequency}</td>
                 <td>{control.typeOfControl}</td>
                 <td>
