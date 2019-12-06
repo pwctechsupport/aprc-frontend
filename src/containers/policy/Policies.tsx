@@ -138,12 +138,10 @@ const Policies = () => {
                     <td>-</td>
                     <td>-</td>
                     <td>
-                      <Button
-                        color="tranparent"
+                      <FaTrash
                         onClick={() => handleDelete(policy.id)}
-                      >
-                        <FaTrash />
-                      </Button>
+                        className="clickable"
+                      />
                     </td>
                   </tr>
                 );

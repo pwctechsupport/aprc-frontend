@@ -65,12 +65,10 @@ const BusinessProcesses = () => {
                 <td> {item.id}</td>
                 <td> {item.ancestry}</td>
                 <td>
-                  <Button
+                  <FaTrash
                     onClick={() => handleDelete(item.id)}
-                    color="transparent"
-                  >
-                    <FaTrash />
-                  </Button>
+                    className="clickable"
+                  />
                 </td>
               </tr>
             ))}
