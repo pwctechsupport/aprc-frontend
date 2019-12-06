@@ -46,6 +46,6 @@ pipelines:
             - pipe: atlassian/scp-deploy:0.3.3
               variables:
                 USER: 'deploy'
-                SERVER: 'staging.moodah.id'
+                SERVER: 'skywalker.rubyh.co'
                 REMOTE_PATH: '/home/deploy/app/skywalker'
                 LOCAL_PATH: 'build'
