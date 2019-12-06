@@ -1,0 +1,50 @@
+# This is a sample build configuration for JavaScript.
+# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
+# Only use spaces to indent your .yml configuration.
+# -----
+# You can specify a custom docker image from Docker Hub as your build environment.
+image: node:8.12
+
+pipelines:
+  branches:
+    production:
+      #54.169.178.53
+      - step:
+          deployment: production
+          caches:
+            - node
+          # size: 2x
+          script:
+            - yarn install
+            - CI=false yarn run build
+            - pipe: atlassian/ssh-run:0.1.4
+              variables:
+                SSH_USER: 'deploy'
+                SERVER: 'www.moodah.id'
+                COMMAND: 'cd app/skywalker/build/ && rm -rf *'
+            - pipe: atlassian/scp-deploy:0.3.3
+              variables:
+                USER: 'deploy'
+                SERVER: 'www.moodah.id'
+                REMOTE_PATH: '/home/deploy/app/skywalker'
+                LOCAL_PATH: 'build'
+    staging:
+      - step:
+          deployment: staging
+          caches:
+            - node
+          # size: 2x
+          script:
+            - yarn install
+            - CI=false yarn run build
+            - pipe: atlassian/ssh-run:0.1.4
+              variables:
+                SSH_USER: 'deploy'
+                SERVER: 'staging.moodah.id'
+                COMMAND: 'cd app/skywalker/build/ && rm -rf *'
+            - pipe: atlassian/scp-deploy:0.3.3
+              variables:
+                USER: 'deploy'
+                SERVER: 'staging.moodah.id'
+                REMOTE_PATH: '/home/deploy/app/skywalker'
+                LOCAL_PATH: 'build'
