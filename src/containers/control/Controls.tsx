@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "../../shared/components/Table";
 import {
   useControlsQuery,
@@ -9,9 +9,19 @@ import Button from "../../shared/components/Button";
 import { Link } from "react-router-dom";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import ControlSideBox from "./components/ControlSideBox";
+import { useDebounce } from "use-debounce/lib";
 
 const Controls = () => {
-  const { loading, data } = useControlsQuery({ variables: { filter: {} } });
+  const [searchValue, setSearchValue] = useState("");
+  const [searchQuery] = useDebounce(searchValue, 700);
+
+  const handleChange = (event: any) => {
+    setSearchValue(event.target.value);
+  };
+  const { loading, data } = useControlsQuery({
+    variables: { filter: { description_cont: searchQuery } }
+  });
   const controls = oc(data).controls.collection([]);
 
   const [destroy] = useDestroyControlMutation({
@@ -23,57 +33,60 @@ const Controls = () => {
     destroy({ variables: { input: { id } } });
   };
   return (
-    <div>
-      <div className="d-flex justify-content-between align-items-center">
-        <h1>Controls</h1>
-        <Link to="/control/create">
-          <Button className="pwc">+ Add Control</Button>
-        </Link>
+    <div className="d-flex">
+      <ControlSideBox searchValue={searchValue} handleChange={handleChange} />
+      <div className="ml-3 w-100">
+        <div className="d-flex justify-content-between align-items-center">
+          <h1>Controls</h1>
+          <Link to="/control/create">
+            <Button className="pwc">+ Add Control</Button>
+          </Link>
+        </div>
+        <Table reloading={loading}>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Title</th>
+              <th>Freq</th>
+              <th>Type</th>
+              <th>Ass. Risk</th>
+              <th>Nature</th>
+              <th>Owner</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {controls.map(control => {
+              return (
+                <tr key={control.id}>
+                  <td>
+                    <Link to={`/control/${control.id}`}>{control.id}</Link>
+                  </td>
+                  <td>{control.description}</td>
+                  <td>{control.frequency}</td>
+                  <td>{control.typeOfControl}</td>
+                  <td>
+                    {oc(control)
+                      .risks([])
+                      .map(risk => risk.name)
+                      .join(", ")}
+                  </td>
+                  <td>{control.nature}</td>
+                  <td>{control.controlOwner}</td>
+                  <td>
+                    <Button
+                      onClick={() => handleDelete(control.id)}
+                      color="transparent"
+                    >
+                      <FaTrash />
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </Table>
       </div>
-      <Table reloading={loading}>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Freq</th>
-            <th>Type</th>
-            <th>Ass. Risk</th>
-            <th>Nature</th>
-            <th>Owner</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {controls.map(control => {
-            return (
-              <tr key={control.id}>
-                <td>
-                  <Link to={`/control/${control.id}`}>{control.id}</Link>
-                </td>
-                <td>{control.description}</td>
-                <td>{control.frequency}</td>
-                <td>{control.typeOfControl}</td>
-                <td>
-                  {oc(control)
-                    .risks([])
-                    .map(risk => risk.name)
-                    .join(", ")}
-                </td>
-                <td>{control.nature}</td>
-                <td>{control.controlOwner}</td>
-                <td>
-                  <Button
-                    onClick={() => handleDelete(control.id)}
-                    color="transparent"
-                  >
-                    <FaTrash />
-                  </Button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </Table>
     </div>
   );
 };
