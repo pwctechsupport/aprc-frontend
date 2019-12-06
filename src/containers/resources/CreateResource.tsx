@@ -3,6 +3,7 @@ import React from 'react'
 import ResourceForm, { ResourceFormValues } from './components/ResourceForm'
 import { useCreateResourceMutation, CreateResourceInput } from '../../generated/graphql';
 import { RouteComponentProps } from 'react-router';
+import HeaderWithBackButton from '../../shared/components/HeaderWithBack';
 
 const CreateResource = ({ history }: RouteComponentProps) => {
   const [createResource, createResourceM] = useCreateResourceMutation({
@@ -26,6 +27,7 @@ const CreateResource = ({ history }: RouteComponentProps) => {
 
   return (
     <div>
+      <HeaderWithBackButton heading="Create Resource" />
       <ResourceForm onSubmit={handleSubmit} submitting={createResourceM.loading} />
     </div>
   )

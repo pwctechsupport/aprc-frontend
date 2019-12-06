@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import useForm from 'react-hook-form';
 import { Form } from 'reactstrap';
 import { oc } from 'ts-optchain';
@@ -7,6 +7,7 @@ import { Category, useResourceFormMasterQuery } from '../../../generated/graphql
 import Button from '../../../shared/components/Button';
 import Input from '../../../shared/components/forms/Input';
 import Select from '../../../shared/components/forms/Select';
+import LoadingSpinner from '../../../shared/components/LoadingSpinner';
 import { toBase64, toLabelValue } from '../../../shared/formatter';
 
 
@@ -28,7 +29,7 @@ const ResourceForm = ({ defaultValues, onSubmit, submitting }: ResourceFormProps
     register({ name: 'businessProcessId', required: true })
     register({ name: 'resuploadBase64', type: 'custom' })
     register({ name: 'resuploadFileName' })
-  }, [])
+  }, [register])
 
   function handleChangeSelect(name: string) {
     return function (e: any) {
@@ -47,8 +48,13 @@ const ResourceForm = ({ defaultValues, onSubmit, submitting }: ResourceFormProps
     onSubmit && onSubmit(data)
   }
 
-  const defaultPolicy = defaultValues && masters.policies.map(p => ({ label: p.label, value: p.value })).find(c => c.value === defaultValues.policyId)
-  console.log({ defaultPolicy })
+  if (mastersQ.loading) {
+    return (
+      <div>
+        <LoadingSpinner size={30} centered/>
+      </div>
+    )
+  }
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -70,7 +76,7 @@ const ResourceForm = ({ defaultValues, onSubmit, submitting }: ResourceFormProps
         name="policyId"
         label="Related Policy"
         options={masters.policies}
-        defaultValue={defaultPolicy}
+        defaultValue={defaultValues && masters.policies.find(c => c.value === defaultValues.policyId)}
         onChange={handleChangeSelect('policyId')}
         error={oc(errors).policyId.message()}
       />
@@ -78,6 +84,7 @@ const ResourceForm = ({ defaultValues, onSubmit, submitting }: ResourceFormProps
         name="controlId"
         label="Related Control"
         options={masters.controls}
+        defaultValue={defaultValues && masters.controls.find(c => c.value === defaultValues.controlId)}
         onChange={handleChangeSelect('controlId')}
         error={oc(errors).controlId.message()}
       />
@@ -85,6 +92,7 @@ const ResourceForm = ({ defaultValues, onSubmit, submitting }: ResourceFormProps
         name="businessProcessId"
         label="Related sub-business Process"
         options={masters.businessProcesses}
+        defaultValue={defaultValues && masters.businessProcesses.find(c => c.value === defaultValues.businessProcessId)}
         onChange={handleChangeSelect('businessProcessId')}
         error={oc(errors).businessProcessId.message()}
       />
@@ -127,6 +135,7 @@ export interface ResourceFormValues {
   policyId: string
   controlId: string
   businessProcessId: string
-  resuploadBase64: any
+  resuploadBase64?: any
   resuploadFileName?: string
+  resuploadUrl?: string
 }
