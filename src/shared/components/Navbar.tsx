@@ -12,7 +12,7 @@ const menus = [
   { label: "Control", path: "/control" },
   { label: "Business Process", path: "/business-process" },
   { label: "References", path: "/references" },
-  { label: "Resources", path: "/resources" },
+  { label: "Resources", path: "/resources" }
 ];
 
 const Navbar = () => {
@@ -33,15 +33,15 @@ const Navbar = () => {
           </NavbarLi>
         ))}
       </NavbarUl>
-      <div className="d-flex justify-content-space-between">
+      <div className="d-flex justify-content-space-between align-items-center">
         <div className="mr-3">
           <FaBookmark />
         </div>
-        <div>
+        <div className="mr-4">
           <FaBell />
         </div>
+        <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
       </div>
-      <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
     </NavbarContainer>
   );
 };
