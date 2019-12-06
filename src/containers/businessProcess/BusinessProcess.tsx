@@ -8,7 +8,8 @@ import { oc } from "ts-optchain";
 import {
   useBusinessProcessQuery,
   useDestroyBusinessProcessMutation,
-  useUpdateBusinessProcessMutation
+  useUpdateBusinessProcessMutation,
+  BusinessProcessDocument
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
@@ -23,6 +24,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
   const [editMode, setEditMode] = useState(false);
   const { data } = useBusinessProcessQuery({ variables: { id } });
   const childs = oc(data).businessProcess.children([]);
+  const parentId = oc(data).businessProcess.parentId("");
 
   const [destroy] = useDestroyBusinessProcessMutation({
     onCompleted: () => {
@@ -30,6 +32,17 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
     },
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["businessProcess"],
+    awaitRefetchQueries: true
+  });
+  const [destroyMain] = useDestroyBusinessProcessMutation({
+    onCompleted: () => {
+      toast.success("Delete Success");
+      history.goBack();
+    },
+    onError: () => toast.error("Delete Failed"),
+    refetchQueries: [
+      { query: BusinessProcessDocument, variables: { id: parentId } }
+    ],
     awaitRefetchQueries: true
   });
   const [update] = useUpdateBusinessProcessMutation({
@@ -52,8 +65,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
 
   const handleDeleteMain = async (id: string) => {
     try {
-      await destroy({ variables: { input: { id } } });
-      history.goBack();
+      await destroyMain({ variables: { input: { id } } });
     } catch (error) {}
   };
 
