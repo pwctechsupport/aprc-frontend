@@ -1,18 +1,17 @@
 import React, { useState } from "react";
+import { FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { oc } from "ts-optchain";
+import { useDebounce } from "use-debounce/lib";
 import {
   useBusinessProcessesQuery,
-  useDestroyBusinessProcessMutation,
-  BusinessProcessesDocument
+  useDestroyBusinessProcessMutation
 } from "../../generated/graphql";
-import Table from "../../shared/components/Table";
-import { oc } from "ts-optchain";
-import { Link } from "react-router-dom";
 import Button from "../../shared/components/Button";
-import { FaTrash } from "react-icons/fa";
-import { toast } from "react-toastify";
-import CreateBusinessProcess from "./CreateBusinessProcess";
+import Table from "../../shared/components/Table";
 import BusinessProcessSideBox from "./components/BusinessProcessSideBox";
-import { useDebounce } from "use-debounce/lib";
+import CreateBusinessProcess from "./CreateBusinessProcess";
 
 const BusinessProcesses = () => {
   const [searchValue, setSearchValue] = useState("");
