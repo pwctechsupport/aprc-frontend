@@ -8,27 +8,40 @@ import pwcLogo from "../../assets/images/pwc-logo.png";
 import { useLoginMutation } from "../../generated/graphql";
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
+import { oc } from "ts-optchain";
 
 const Login = ({ history }: RouteComponentProps) => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
-  const [login] = useLoginMutation({
-    onCompleted: res => {
-      toast.success("Welcome");
-      if (res.login) {
-        dispatch(
-          authorize(
-            { name: res.login.firstName, email: res.login.email },
-            res.login.token
-          )
-        );
-        history.push("/policy");
-      }
-    },
-    onError: () => toast.error("Error!")
+  const [login, { loading }] = useLoginMutation({
+    onCompleted: res => {},
+    onError: () => {}
   });
-  const onSubmit = (data: any): void => {
-    login({ variables: data });
+  const onSubmit = async (data: any) => {
+    try {
+      const res = await login({ variables: data });
+      if (!oc(res).data.login()) {
+        throw new Error("Error");
+      }
+      toast.success("Welcome");
+      dispatch(
+        authorize(
+          {
+            name: oc(res).data.login.firstName(""),
+            email: oc(res).data.login.email("")
+          },
+          oc(res).data.login.token("")
+        )
+      );
+      history.push("/policy");
+    } catch (error) {
+      toast.error(
+        <div>
+          <h5>Login Error!</h5>
+          <div>Mohon coba lagi</div>
+        </div>
+      );
+    }
   };
   return (
     <Container>
@@ -56,7 +69,13 @@ const Login = ({ history }: RouteComponentProps) => {
         />
         <br />
         <br />
-        <Button className="pwc" color="primary" type="submit" block>
+        <Button
+          className="pwc"
+          color="primary"
+          type="submit"
+          block
+          loading={loading}
+        >
           Submit
         </Button>
       </Form>
