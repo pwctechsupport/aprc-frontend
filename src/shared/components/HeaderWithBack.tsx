@@ -8,7 +8,7 @@ function HeaderWithBackButton({ heading = "Heading" }) {
 
   return (
     <div className="d-flex">
-      <div className="blue-anchor mr-3" onClick={handleClick}>
+      <div className="blue-anchor mr-3 clickable" onClick={handleClick}>
         <FaArrowLeft />
       </div>
       &nbsp;
