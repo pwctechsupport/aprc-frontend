@@ -49,7 +49,7 @@ const Controls = () => {
         <Table reloading={loading}>
           <thead>
             <tr>
-              <th>Id</th>
+              {/* <th>Id</th> */}
               <th>Title</th>
               <th>Freq</th>
               <th>Type</th>
@@ -64,9 +64,11 @@ const Controls = () => {
               return (
                 <tr key={control.id}>
                   <td>
-                    <Link to={`/control/${control.id}`}>{control.id}</Link>
+                    <Link to={`/control/${control.id}`}>
+                      {control.description}
+                    </Link>
                   </td>
-                  <td>{control.description}</td>
+                  {/* <td>{control.description}</td> */}
                   <td>{control.frequency}</td>
                   <td>{control.typeOfControl}</td>
                   <td>
@@ -78,12 +80,10 @@ const Controls = () => {
                   <td>{control.nature}</td>
                   <td>{control.controlOwner}</td>
                   <td>
-                    <Button
+                    <FaTrash
                       onClick={() => handleDelete(control.id)}
-                      color="transparent"
-                    >
-                      <FaTrash />
-                    </Button>
+                      className="clickable"
+                    />
                   </td>
                 </tr>
               );
