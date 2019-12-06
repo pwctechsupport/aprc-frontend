@@ -12,7 +12,10 @@ const CreatePolicy = ({ history }: RouteComponentProps) => {
       toast.success("Create Success");
       const id = oc(res).createPolicy.policy.id("");
       history.replace(`/policy/${id}`);
-    }
+    },
+    onError: () => toast.error("Create Failed"),
+    refetchQueries: ["policies"],
+    awaitRefetchQueries: true
   });
   function handleSubmit(values: PolicyFormValues) {
     createPolicy({

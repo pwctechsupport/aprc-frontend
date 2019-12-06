@@ -16,6 +16,21 @@ query policies($filter: BaseScalar!) {
 
 query policy($id: ID!) {
   policy(id: $id) {
+    ...policy
+  }
+}
+
+fragment policy on Policy {
+  id
+  title
+  policyCategory {
+    id
+    name
+  }
+  ancestry
+  description
+  parentId
+  children {
     id
     title
     policyCategory {
@@ -24,6 +39,7 @@ query policy($id: ID!) {
     }
     ancestry
     description
+    parentId
   }
 }
 

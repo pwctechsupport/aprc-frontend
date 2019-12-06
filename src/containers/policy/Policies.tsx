@@ -66,7 +66,7 @@ const PoliciyTree = ({ title, children }: any) => {
 
 const Policies = () => {
   const [search, setSearch] = useState("");
-  const [searchQuery] = useDebounce(search, 300);
+  const [searchQuery] = useDebounce(search, 700);
   const { loading, data } = usePoliciesQuery({
     variables: { filter: { title_cont: searchQuery } }
   });
@@ -88,18 +88,19 @@ const Policies = () => {
 
   return (
     <div className="d-flex">
-      <aside className="mr-3">
+      <aside>
         <div className="policy-side-box">
           <Input
-            placeholder="Search..."
+            placeholder="Search Policies..."
             onChange={e => setSearch(e.target.value)}
+            className="dark mb-3"
           />
           <div>
             <PoliciyTree {...dummy} />
           </div>
         </div>
       </aside>
-      <div className="w-100">
+      <div className="ml-3 w-100">
         <div className="d-flex justify-content-between align-items-center">
           <h1>Policies</h1>
           <Link to="/policy/create">

@@ -13,6 +13,7 @@ import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import { Link } from "react-router-dom";
+import SubPolicyForm from "./components/SubPolicyForm";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -55,6 +56,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const title = oc(data).policy.title("");
   const description = oc(data).policy.description("");
   const policyCategoryId = oc(data).policy.policyCategory.id("");
+  const parentId = oc(data).policy.parentId("");
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
 
   return (
@@ -74,12 +76,16 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           </Button>
         </div>
       </div>
-      <PolicyForm
-        onSubmit={handleUpdate}
-        defaultValues={{ title, policyCategoryId, description }}
-        submitting={updateState.loading}
-        isSubPolicy={isSubPolicy}
-      />
+      {isSubPolicy ? (
+        <SubPolicyForm defaultValues={{ parentId, title, description }} />
+      ) : (
+        <PolicyForm
+          onSubmit={handleUpdate}
+          defaultValues={{ title, policyCategoryId, description }}
+          submitting={updateState.loading}
+          isSubPolicy={isSubPolicy}
+        />
+      )}
     </div>
   );
 };

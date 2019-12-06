@@ -1,16 +1,13 @@
 import React, { useEffect } from "react";
-import Input from "../../../shared/components/forms/Input";
 import useForm from "react-hook-form";
-import TextEditor from "../../../shared/components/forms/TextEditor";
 import { Form } from "reactstrap";
-import Button from "../../../shared/components/Button";
-import * as yup from "yup";
-import {
-  usePolicyCategoriesQuery,
-  useReferencesQuery
-} from "../../../generated/graphql";
-import Select from "../../../shared/components/forms/Select";
 import { oc } from "ts-optchain";
+import * as yup from "yup";
+import { usePolicyCategoriesQuery } from "../../../generated/graphql";
+import Button from "../../../shared/components/Button";
+import Input from "../../../shared/components/forms/Input";
+import Select from "../../../shared/components/forms/Select";
+import TextEditor from "../../../shared/components/forms/TextEditor";
 
 const PolicyForm = ({
   onSubmit,
@@ -27,10 +24,6 @@ const PolicyForm = ({
     validationSchema,
     defaultValues
   });
-  const referenceData = useReferencesQuery({ variables: { filter: {} } });
-  const references = oc(referenceData)
-    .data.references.collection([])
-    .map(toLabelValue);
 
   useEffect(() => {
     register({ name: "policyCategoryId", required: true });
@@ -65,29 +58,6 @@ const PolicyForm = ({
           label="Title"
           innerRef={register({ required: true })}
         />
-        {isSubPolicy ? (
-          <Select
-            name="reference"
-            label="Reference Category"
-            options={references}
-            innerRef={register({ required: true })}
-            onChange={handleCategoryChange}
-            defaultValue={options.find(
-              option => option.value === policyCategoryId
-            )}
-          />
-        ) : (
-          <Select
-            name="policyCategoryId"
-            label="Policy Category"
-            options={options}
-            innerRef={register({ required: true })}
-            onChange={handleCategoryChange}
-            defaultValue={options.find(
-              option => option.value === policyCategoryId
-            )}
-          />
-        )}
         <Select
           name="policyCategoryId"
           label="Policy Category"
@@ -98,13 +68,11 @@ const PolicyForm = ({
             option => option.value === policyCategoryId
           )}
         />
-
         <TextEditor
           data={watch("description")}
           onChange={onChangeEditor}
           invalid={errors.description ? true : false}
         />
-
         <div className="d-flex justify-content-end mt-3">
           <Button
             type="submit"

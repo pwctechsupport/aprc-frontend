@@ -1,45 +1,40 @@
 import React, { useEffect } from "react";
-import { Form } from "reactstrap";
-import Input from "../../../shared/components/forms/Input";
-import TextEditor from "../../../shared/components/forms/TextEditor";
-import Select from "../../../shared/components/forms/Select";
-import Button from "../../../shared/components/Button";
 import useForm from "react-hook-form";
-import {
-  useReferencesQuery,
-  useCreateSubPolicyMutation
-} from "../../../generated/graphql";
+import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
+import { useReferencesQuery } from "../../../generated/graphql";
+import Button from "../../../shared/components/Button";
+import Input from "../../../shared/components/forms/Input";
+import Select from "../../../shared/components/forms/Select";
+import TextEditor from "../../../shared/components/forms/TextEditor";
 import { toLabelValue } from "../../../shared/formatter";
-import { toast } from "react-toastify";
 
-const SubPolicyForm = ({ parentId }: SubPolicyFormProps) => {
-  const { register, handleSubmit, setValue } = useForm();
-  const referenceData = useReferencesQuery({ variables: { filter: {} } });
-  const [createSubPolicy] = useCreateSubPolicyMutation({
-    onCompleted: () => toast.success("Berhasil"),
-    onError: () => toast.error("Gagal")
+const SubPolicyForm = ({ onSubmit, defaultValues }: SubPolicyFormProps) => {
+  const { register, handleSubmit, setValue, errors } = useForm<
+    SubPolicyFormValues
+  >({
+    defaultValues
   });
+  const referenceData = useReferencesQuery({ variables: { filter: {} } });
 
-  function submit(values: any) {
-    createSubPolicy({
-      variables: {
-        input: {
-          title: values.title,
-          description: values.description,
-          parentId
-        }
-      }
-    });
-  }
+  const references = oc(referenceData)
+    .data.references.collection([])
+    .map(toLabelValue);
 
   useEffect(() => {
-    register({ name: "reference" });
-    register({ name: "description" });
+    register({ name: "parentId" });
+    register({ name: "referenceIds" });
+    register({ name: "description", required: true });
   }, [register]);
 
-  function handleReferenceChange({ value }: any) {
-    setValue("reference", value);
+  function handleReferenceChange(multiSelect: any) {
+    console.log("ha", multiSelect);
+    if (multiSelect) {
+      setValue(
+        "referenceIds",
+        multiSelect.map((a: any) => a.value)
+      );
+    }
   }
 
   function handleEditorChange(event: any, editor: any) {
@@ -47,18 +42,25 @@ const SubPolicyForm = ({ parentId }: SubPolicyFormProps) => {
     setValue("description", data);
   }
 
-  const references = oc(referenceData)
-    .data.references.collection([])
-    .map(toLabelValue);
+  function submit(values: SubPolicyFormValues) {
+    console.log("values:", values);
+    onSubmit && onSubmit(values);
+  }
 
   return (
     <div>
       <Form onSubmit={handleSubmit(submit)}>
-        <Input name="title" label="Sub-Policy Title" innerRef={register} />
+        <Input
+          name="title"
+          label="Sub-Policy Title"
+          innerRef={register({ required: true })}
+          error={errors.title && errors.title.message}
+        />
         <Select
           label="Sub-Policy Reference"
           onChange={handleReferenceChange}
           options={references}
+          isMulti
         />
         <TextEditor onChange={handleEditorChange} />
 
@@ -74,6 +76,14 @@ const SubPolicyForm = ({ parentId }: SubPolicyFormProps) => {
 
 export default SubPolicyForm;
 
-interface SubPolicyFormProps {
+export interface SubPolicyFormProps {
+  onSubmit?: (values: SubPolicyFormValues) => void;
+  defaultValues: SubPolicyFormValues;
+}
+
+export interface SubPolicyFormValues {
   parentId: string;
+  title: string;
+  description: string;
+  referenceIds?: string[];
 }
