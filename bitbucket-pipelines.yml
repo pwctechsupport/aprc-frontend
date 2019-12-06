@@ -40,7 +40,7 @@ pipelines:
             - pipe: atlassian/ssh-run:0.1.4
               variables:
                 SSH_USER: 'deploy'
-                SERVER: 'staging.moodah.id'
+                SERVER: 'skywalker.rubyh.co'
                 COMMAND: 'cd app/skywalker/build/ && rm -rf *'
             - pipe: atlassian/scp-deploy:0.3.3
               variables:
