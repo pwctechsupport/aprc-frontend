@@ -7,13 +7,16 @@ import {
   PoliciesDocument,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation
+  useUpdatePolicyMutation,
+  PolicyDocument
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import { Link } from "react-router-dom";
 import SubPolicyForm from "./components/SubPolicyForm";
+import Table from "../../shared/components/Table";
+import { FaTrash } from "react-icons/fa";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -24,7 +27,13 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     refetchQueries: [{ query: PoliciesDocument, variables: { filter: {} } }],
     awaitRefetchQueries: true
   });
-  const [destroy, destroyState] = useDestroyPolicyMutation({
+  const [destroy] = useDestroyPolicyMutation({
+    onCompleted: () => toast.success("Delete Success"),
+    onError: () => toast.error("Delete Failed"),
+    refetchQueries: [{ query: PolicyDocument, variables: { id } }],
+    awaitRefetchQueries: true
+  });
+  const [destroyMain, destroyState] = useDestroyPolicyMutation({
     onCompleted: () => {
       toast.success("Delete Success");
       history.push("/policy");
@@ -34,7 +43,11 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     awaitRefetchQueries: true
   });
 
-  function handleDelete() {
+  function handleDeleteMain() {
+    destroyMain({ variables: { id } });
+  }
+
+  function handleDelete(id: string) {
     destroy({ variables: { id } });
   }
 
@@ -51,24 +64,30 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     });
   }
 
-  if (loading) return null;
-
   const title = oc(data).policy.title("");
   const description = oc(data).policy.description("");
   const policyCategoryId = oc(data).policy.policyCategory.id("");
   const parentId = oc(data).policy.parentId("");
+  const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
+  const ancestry = oc(data).policy.ancestry("");
+
+  const isMaximumLevel = ancestry.split("/").length === 5;
+
+  if (loading) return null;
 
   return (
     <div>
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={`Policy ${title}`} />
         <div className="d-flex">
-          <Link to={`/policy/${id}/create-sub-policy`}>
-            <Button className="mr-2 pwc">+ Create Sub-Policy</Button>
-          </Link>
+          {!isMaximumLevel && (
+            <Link to={`/policy/${id}/create-sub-policy`}>
+              <Button className="mr-2 pwc">+ Create Sub-Policy</Button>
+            </Link>
+          )}
           <Button
-            onClick={handleDelete}
+            onClick={handleDeleteMain}
             loading={destroyState.loading}
             color="danger"
           >
@@ -86,6 +105,49 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           isSubPolicy={isSubPolicy}
         />
       )}
+      {children.length ? (
+        <>
+          <h5 className="mt-5">Sub policies</h5>
+          <Table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Categories</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {children.map(item => (
+                <tr key={item.id}>
+                  <td>
+                    <Link to={`/policy/${item.id}`}>{item.title}</Link>
+                  </td>
+                  <td>
+                    <div
+                      dangerouslySetInnerHTML={{
+                        __html: item.description ? item.description : ""
+                      }}
+                    ></div>
+                  </td>
+                  <td>
+                    {oc(item)
+                      .references([])
+                      .map(ref => ref.name)
+                      .join(", ")}
+                  </td>
+                  <td>
+                    <FaTrash
+                      onClick={() => handleDelete(item.id)}
+                      className="clickable"
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </>
+      ) : null}
     </div>
   );
 };

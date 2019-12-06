@@ -8,7 +8,6 @@ import {
   useBusinessProcessesQuery,
   useDestroyBusinessProcessMutation
 } from "../../generated/graphql";
-import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import BusinessProcessSideBox from "./components/BusinessProcessSideBox";
 import CreateBusinessProcess from "./CreateBusinessProcess";
