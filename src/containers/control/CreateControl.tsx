@@ -6,7 +6,7 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 
 const CreateControl = ({ history }: RouteComponentProps) => {
-  const [create] = useCreateControlMutation({
+  const [create, { loading }] = useCreateControlMutation({
     onCompleted: () => {
       toast.success("Create Success");
       history.push("/control");
@@ -34,7 +34,7 @@ const CreateControl = ({ history }: RouteComponentProps) => {
   return (
     <div>
       <HeaderWithBackButton heading="Create Control" />
-      <ControlForm onSubmit={submit} />
+      <ControlForm onSubmit={submit} submitting={loading} />
     </div>
   );
 };

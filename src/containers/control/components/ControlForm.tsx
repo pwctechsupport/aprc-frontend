@@ -13,7 +13,11 @@ import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import { oc } from "ts-optchain";
 
-const ControlForm = ({ onSubmit, defaultValues }: ControlFormProps) => {
+const ControlForm = ({
+  onSubmit,
+  defaultValues,
+  submitting
+}: ControlFormProps) => {
   const submit = (values: CreateControlFormValues) => {
     onSubmit && onSubmit(values);
   };
@@ -78,7 +82,7 @@ const ControlForm = ({ onSubmit, defaultValues }: ControlFormProps) => {
         defaultValue={pDefVal(ipo, ipos)}
       />
       <div className="d-flex justify-content-end">
-        <Button className="pwc" type="submit">
+        <Button className="pwc px-5" type="submit" loading={submitting}>
           Submit
         </Button>
       </div>
@@ -124,6 +128,7 @@ const assertions = Object.entries(Assertion).map(([label, value]) => ({
 export interface ControlFormProps {
   defaultValues?: CreateControlFormValues;
   onSubmit?: (val: CreateControlFormValues) => void;
+  submitting?: boolean;
 }
 
 export interface CreateControlFormValues {

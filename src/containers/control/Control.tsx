@@ -18,7 +18,7 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 const Control = ({ match }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   const { loading, data } = useControlQuery({ variables: { id } });
-  const [update] = useUpdateControlMutation({
+  const [update, updateState] = useUpdateControlMutation({
     onCompleted: () => {
       toast.success("Update Success");
     },
@@ -69,6 +69,7 @@ const Control = ({ match }: RouteComponentProps) => {
           typeOfControl:
             (typeOfControl as TypeOfControl) || TypeOfControl.Automatic
         }}
+        submitting={updateState.loading}
       />
     </div>
   );
