@@ -34,7 +34,11 @@ const Controls = () => {
   };
   return (
     <div className="d-flex">
-      <ControlSideBox searchValue={searchValue} handleChange={handleChange} />
+      <ControlSideBox
+        searchValue={searchValue}
+        handleChange={handleChange}
+        placeholder="Search Control..."
+      />
       <div className="ml-3 w-100">
         <div className="d-flex justify-content-between align-items-center">
           <h1>Controls</h1>

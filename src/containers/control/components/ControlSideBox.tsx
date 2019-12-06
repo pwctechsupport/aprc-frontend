@@ -1,14 +1,19 @@
 import React from "react";
-import Input from "../../../shared/components/forms/Input";
+import { Input } from "reactstrap";
 
-const ControlSideBox = ({ searchValue, handleChange }: any) => {
+const ControlSideBox = ({
+  searchValue,
+  handleChange,
+  placeholder = "Search..."
+}: any) => {
   return (
     <aside>
       <div className="policy-side-box">
         <Input
-          placeholder="search..."
           value={searchValue}
           onChange={handleChange}
+          placeholder={placeholder}
+          className="dark"
         />
       </div>
     </aside>

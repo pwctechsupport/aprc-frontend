@@ -1,5 +1,5 @@
 import React from "react";
-import Input from "../../../shared/components/forms/Input";
+import { Input } from "reactstrap";
 
 const BusinessProcessSideBox = ({ searchValue, handleChange }: any) => {
   return (
@@ -9,6 +9,7 @@ const BusinessProcessSideBox = ({ searchValue, handleChange }: any) => {
           placeholder="Search..."
           value={searchValue}
           onChange={handleChange}
+          className="dark"
         />
       </div>
     </aside>
