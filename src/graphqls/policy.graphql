@@ -16,11 +16,11 @@ query policies($filter: BaseScalar!) {
 
 query policy($id: ID!) {
   policy(id: $id) {
-    ...policy
+    ...policyFragment
   }
 }
 
-fragment policy on Policy {
+fragment policyFragment on Policy {
   id
   title
   policyCategory {
@@ -34,6 +34,11 @@ fragment policy on Policy {
     id
     title
     policyCategory {
+      id
+      name
+    }
+    policyCategoryId
+    references {
       id
       name
     }

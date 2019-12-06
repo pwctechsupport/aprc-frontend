@@ -7,8 +7,11 @@ const Homepage = () => {
   const dispatch = useDispatch();
   return (
     <div>
-      <h1>This is HOME</h1>
-      <Button primary onClick={() => dispatch(unauthorize())}>
+      <h1>Welcome to PWC App</h1>
+      <h4>
+        Please navigate using <strong>Navigation Bar</strong> at the top
+      </h4>
+      <Button onClick={() => dispatch(unauthorize())} color="danger mt-5">
         Log out
       </Button>
     </div>

@@ -3,14 +3,22 @@ import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import { RouteComponentProps } from "react-router";
 import get from "lodash/get";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
-import { useCreateSubPolicyMutation } from "../../generated/graphql";
+import {
+  useCreateSubPolicyMutation,
+  PolicyDocument
+} from "../../generated/graphql";
 import { toast } from "react-toastify";
 
-const CreateSubPolicy = ({ match }: RouteComponentProps) => {
+const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   const [create] = useCreateSubPolicyMutation({
-    onCompleted: () => toast.success("Berhasil"),
-    onError: () => toast.error("Gagal")
+    onCompleted: () => {
+      toast.success("Berhasil");
+      history.goBack();
+    },
+    onError: () => toast.error("Gagal"),
+    refetchQueries: [{ query: PolicyDocument, variables: { id } }],
+    awaitRefetchQueries: true
   });
 
   function createSubPolicy(values: SubPolicyFormValues) {
