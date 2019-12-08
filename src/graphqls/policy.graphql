@@ -60,6 +60,10 @@ fragment policyFragment on Policy {
   ancestry
   description
   parentId
+  references {
+    id
+    name
+  }
   children {
     id
     title

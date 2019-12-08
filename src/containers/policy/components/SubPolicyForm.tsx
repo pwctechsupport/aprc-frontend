@@ -8,9 +8,10 @@ import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
 import { toLabelValue } from "../../../shared/formatter";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const SubPolicyForm = ({ onSubmit, defaultValues }: SubPolicyFormProps) => {
-  const { register, handleSubmit, setValue, errors } = useForm<
+  const { register, handleSubmit, setValue, errors, watch } = useForm<
     SubPolicyFormValues
   >({
     defaultValues
@@ -47,6 +48,16 @@ const SubPolicyForm = ({ onSubmit, defaultValues }: SubPolicyFormProps) => {
     onSubmit && onSubmit(values);
   }
 
+  if (referenceData.loading) {
+    return <LoadingSpinner centered size={30} />;
+  }
+
+  const defaultReference = references.filter(reference => {
+    return oc(defaultValues)
+      .referenceIds([])
+      .includes(reference.value);
+  });
+
   return (
     <div>
       <Form onSubmit={handleSubmit(submit)}>
@@ -61,8 +72,13 @@ const SubPolicyForm = ({ onSubmit, defaultValues }: SubPolicyFormProps) => {
           onChange={handleReferenceChange}
           options={references}
           isMulti
+          defaultValue={defaultReference}
         />
-        <TextEditor onChange={handleEditorChange} />
+        <TextEditor
+          data={watch("description")}
+          onChange={handleEditorChange}
+          invalid={errors.description ? true : false}
+        />
 
         <div className="d-flex justify-content-end mt-3">
           <Button type="submit" className="pwc">

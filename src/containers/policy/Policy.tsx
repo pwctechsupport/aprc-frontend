@@ -71,6 +71,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
   const ancestry = oc(data).policy.ancestry("");
+  const referenceIds = oc(data)
+    .policy.references([])
+    .map(item => item.id);
 
   const isMaximumLevel = ancestry.split("/").length === 5;
 
@@ -96,7 +99,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         </div>
       </div>
       {isSubPolicy ? (
-        <SubPolicyForm defaultValues={{ parentId, title, description }} />
+        <SubPolicyForm
+          defaultValues={{ parentId, title, description, referenceIds }}
+        />
       ) : (
         <PolicyForm
           onSubmit={handleUpdate}
@@ -113,7 +118,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
               <tr>
                 <th>Title</th>
                 <th>Description</th>
-                <th>Categories</th>
+                <th>References</th>
                 <th></th>
               </tr>
             </thead>
