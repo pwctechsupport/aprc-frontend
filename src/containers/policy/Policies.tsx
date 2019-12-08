@@ -8,60 +8,61 @@ import { useDebounce } from "use-debounce";
 import {
   PoliciesDocument,
   useDestroyPolicyMutation,
-  usePoliciesQuery
+  usePoliciesQuery,
+  usePolicyTreeQuery
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 
-const dummy = {
-  title: "Policy 1",
-  children: [
-    {
-      title: "Policy 1.1",
-      children: [
-        {
-          title: "Policy 1.1.1",
-          children: []
-        }
-      ]
-    },
-    {
-      title: "Policy 1.2",
-      children: []
-    },
-    {
-      title: "Policy 1.3",
-      children: []
-    }
-  ]
+const PolicyTree = () => {
+  const { error, loading, data } = usePolicyTreeQuery();
+  const policies = oc(data).policies.collection([]);
+
+  return (
+    <div>
+      {policies.map(policy => (
+        <PolicyBranch
+          key={policy.id}
+          id={policy.id}
+          title={policy.title}
+          children={policy.children}
+        />
+      ))}
+    </div>
+  );
 };
 
-const PoliciyTree = ({ title, children }: any) => {
-  const [isOpen, setIsOpen] = useState(true);
+const PolicyBranch = ({ id, title, children }: any) => {
+  const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
   const Icon = isOpen ? FaChevronDown : FaChevronRight;
 
   if (children && children.length) {
     return (
       <div>
-        <div
-          onClick={toggle}
-          className="d-flex justify-content-between align-items-center"
-        >
-          {title}
-          <Icon />
+        <div className="d-flex justify-content-between align-items-center ">
+          <Link className="side-box__item" to={`/policy/${id}`}>
+            {title}
+          </Link>
+          <Icon onClick={toggle} className="clickable" />
         </div>
         <Collapse isOpen={isOpen}>
           <div className="ml-3">
             {children.map((child: any) => (
-              <PoliciyTree key={child.title} {...child} />
+              <PolicyBranch key={child.id} {...child} />
             ))}
           </div>
         </Collapse>
       </div>
     );
   }
-  return <div>{title}</div>;
+  return (
+    <div>
+      <Link className="side-box__item" to={`/policy/${id}`}>
+        {title}
+      </Link>
+    </div>
+  );
 };
 
 const Policies = () => {
@@ -96,7 +97,7 @@ const Policies = () => {
             className="dark mb-3"
           />
           <div>
-            <PoliciyTree {...dummy} />
+            <PolicyTree />
           </div>
         </div>
       </aside>

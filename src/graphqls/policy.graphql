@@ -4,6 +4,7 @@ query policies($filter: BaseScalar!) {
       id
       title
       policyCategoryId
+      parentId
       policyCategory {
         id
         name
@@ -12,6 +13,35 @@ query policies($filter: BaseScalar!) {
       description
     }
   }
+}
+
+query policyTree {
+  policies(filter: { ancestry_null: true }) {
+    collection {
+      ...policyBranch
+      children {
+        ...policyBranch
+        children {
+          ...policyBranch
+          children {
+            ...policyBranch
+            children {
+              ...policyBranch
+              children {
+                ...policyBranch
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment policyBranch on Policy {
+  id
+  title
+  parentId
 }
 
 query policy($id: ID!) {

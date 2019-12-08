@@ -3,4 +3,12 @@
   border-radius: 10px;
   color: white;
   padding: 20px;
+  max-width: 300px;
+}
+
+.side-box__item {
+  width: 260px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
