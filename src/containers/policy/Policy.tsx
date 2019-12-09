@@ -129,9 +129,10 @@ const Policy = ({ match, history }: RouteComponentProps) => {
               .map(r => r.id),
             businessProcessIds: oc(data)
               .policy.businessProcesses([])
-              .map(r => r.id),
+              .map(r => r.id)
           }}
           onSubmit={handleUpdateSubPolicy}
+          submitting={updateState.loading}
         />
       ) : (
         <PolicyForm
@@ -162,7 +163,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                   <td>
                     <div
                       dangerouslySetInnerHTML={{
-                        __html: item.description ? item.description : '',
+                        __html: item.description ? item.description : ""
                       }}
                     ></div>
                   </td>
@@ -170,7 +171,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                     {oc(item)
                       .references([])
                       .map(ref => ref.name)
-                      .join(', ')}
+                      .join(", ")}
                   </td>
                   <td>
                     <FaTrash
