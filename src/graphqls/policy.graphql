@@ -15,8 +15,8 @@ query policies($filter: BaseScalar!) {
   }
 }
 
-query policyTree {
-  policies(filter: { ancestry_null: true }) {
+query policyTree($filter: BaseScalar!) {
+  policies(filter: $filter) {
     collection {
       ...policyBranch
       children {
@@ -80,9 +80,18 @@ fragment policyFragment on Policy {
     description
     parentId
   }
-  resources { id name }
-  itSystems { id name }
-  businessProcesses { id name }
+  resources {
+    id
+    name
+  }
+  itSystems {
+    id
+    name
+  }
+  businessProcesses {
+    id
+    name
+  }
 }
 
 query policyCategories($filter: BaseScalar!) {

@@ -8,10 +8,7 @@ import Control from "./containers/control/Control";
 import Controls from "./containers/control/Controls";
 import CreateControl from "./containers/control/CreateControl";
 import Homepage from "./containers/homepage/Homepage";
-import CreatePolicy from "./containers/policy/CreatePolicy";
-import CreateSubPolicy from "./containers/policy/CreateSubPolicy";
-import Policies from "./containers/policy/Policies";
-import Policy from "./containers/policy/Policy";
+import PolicyRoute from "./containers/policy/PolicyRoute";
 import References from "./containers/referencess/References";
 import ResourceRoute from "./containers/resources/ResourceRoute";
 import AuthListener from "./shared/components/AuthListener";
@@ -30,9 +27,6 @@ export default function() {
           <Layout>
             <AuthRoute exact path="/" component={Homepage} />
             <Switch>
-              <AuthRoute exact path="/policy" component={Policies} />
-              <AuthRoute exact path="/policy/create" component={CreatePolicy} />
-              <AuthRoute exact path="/policy/:id" component={Policy} />
               <AuthRoute
                 exact
                 path="/business-process"
@@ -53,11 +47,6 @@ export default function() {
                 path="/business-process/:id"
                 component={BusinessProcess}
               />
-              <AuthRoute
-                exact
-                path="/policy/:id/create-sub-policy"
-                component={CreateSubPolicy}
-              />
               <AuthRoute exact path="/references" component={References} />
 
               <AuthRoute exact path="/control" component={Controls} />
@@ -67,6 +56,7 @@ export default function() {
                 component={CreateControl}
               />
               <AuthRoute exact path="/control/:id" component={Control} />
+              <AuthRoute path="/policy" component={PolicyRoute} />
               <AuthRoute path="/resources" component={ResourceRoute} />
             </Switch>
           </Layout>

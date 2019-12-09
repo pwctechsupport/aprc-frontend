@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { NavLink, RouteComponentProps, useHistory } from "react-router-dom";
-import pwcLogo from "../../assets/images/pwc-logo.png";
-import styled from "styled-components";
 import { FaBell, FaBookmark, FaChevronDown } from "react-icons/fa";
-import Avatar from "./Avatar";
 import { useDispatch } from "react-redux";
-import { unauthorize } from "../../redux/auth";
+import { useHistory } from "react-router-dom";
 import {
   Dropdown,
-  DropdownToggle,
+  DropdownItem,
   DropdownMenu,
-  DropdownItem
+  DropdownToggle
 } from "reactstrap";
+import styled from "styled-components";
+import pwcLogo from "../../assets/images/pwc-logo.png";
+import { unauthorize } from "../../redux/auth";
+import Avatar from "./Avatar";
 
 const menus = [
   { label: "Policy", path: "/policy" },
@@ -85,25 +85,25 @@ const Image = styled.img`
   height: auto;
 `;
 
-const NavbarUl = styled.ul`
-  list-style-type: none;
-  display: inline;
-  margin: 0;
-`;
+// const NavbarUl = styled.ul`
+//   list-style-type: none;
+//   display: inline;
+//   margin: 0;
+// `;
 
-const NavbarLi = styled.li`
-  display: inline;
-  margin: 20px;
-`;
+// const NavbarLi = styled.li`
+//   display: inline;
+//   margin: 20px;
+// `;
 
-const MyNavLink = styled(NavLink)`
-  text-decoration: none;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 20px;
-  color: #3a3838;
-`;
+// const MyNavLink = styled(NavLink)`
+//   text-decoration: none;
+//   font-style: normal;
+//   font-weight: bold;
+//   font-size: 16px;
+//   line-height: 20px;
+//   color: #3a3838;
+// `;
 
 const MyNavSpan = styled.span`
   text-decoration: none;
