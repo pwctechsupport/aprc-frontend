@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import Table from "../../shared/components/Table";
 import { FaTrash } from "react-icons/fa";
+import Helmet from "react-helmet";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -102,6 +103,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
 
   return (
     <div>
+      <Helmet>
+        <title>Policy - {title} - PricewaterhouseCoopers</title>
+      </Helmet>
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={`Policy ${title}`} />
         <div className="d-flex">

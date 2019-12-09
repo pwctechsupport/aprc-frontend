@@ -5,6 +5,7 @@ import { RouteComponentProps } from "react-router";
 import { useCreatePolicyMutation } from "../../generated/graphql";
 import { oc } from "ts-optchain";
 import { toast } from "react-toastify";
+import Helmet from "react-helmet";
 
 const CreatePolicy = ({ history }: RouteComponentProps) => {
   const [createPolicy, { loading }] = useCreatePolicyMutation({
@@ -30,6 +31,9 @@ const CreatePolicy = ({ history }: RouteComponentProps) => {
   }
   return (
     <div>
+      <Helmet>
+        <title>Create Policy - PricewaterhouseCoopers</title>
+      </Helmet>
       <HeaderWithBackButton heading="Create Policy" />
       <PolicyForm onSubmit={handleSubmit} submitting={loading} />
     </div>

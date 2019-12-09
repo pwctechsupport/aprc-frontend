@@ -10,6 +10,7 @@ import {
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
+import Helmet from "react-helmet";
 
 const Policies = () => {
   // const [search, setSearch] = useState("");
@@ -35,6 +36,9 @@ const Policies = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Policies - PricewaterhouseCoopers</title>
+      </Helmet>
       <div className="d-flex justify-content-between align-items-center">
         <h1>Policies</h1>
         <Link to="/policy/create">
