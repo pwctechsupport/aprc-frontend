@@ -1,25 +1,23 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import ScrollToTop from "./shared/components/ScrollToTop";
-import Homepage from "./containers/homepage/Homepage";
-import AuthRoute from "./shared/components/AuthRoute";
 import Login from "./containers/auth/Login";
-import AuthListener from "./shared/components/AuthListener";
-import Layout from "./shared/components/Layout";
-import Policies from "./containers/policy/Policies";
-import CreatePolicy from "./containers/policy/CreatePolicy";
-import Policy from "./containers/policy/Policy";
-import CreateSubPolicy from "./containers/policy/CreateSubPolicy";
-import CreateBusinessProcess from "./containers/businessProcess/CreateBusinessProcess";
-import BusinessProcesses from "./containers/businessProcess/BusinessProcesses";
 import BusinessProcess from "./containers/businessProcess/BusinessProcess";
-import References from "./containers/referencess/References";
-import Controls from "./containers/control/Controls";
+import BusinessProcesses from "./containers/businessProcess/BusinessProcesses";
+import CreateBusinessProcess from "./containers/businessProcess/CreateBusinessProcess";
 import Control from "./containers/control/Control";
+import Controls from "./containers/control/Controls";
 import CreateControl from "./containers/control/CreateControl";
-import Resources from "./containers/resources/Resources";
-import CreateResource from "./containers/resources/CreateResource";
-import Resource from "./containers/resources/Resource";
+import Homepage from "./containers/homepage/Homepage";
+import CreatePolicy from "./containers/policy/CreatePolicy";
+import CreateSubPolicy from "./containers/policy/CreateSubPolicy";
+import Policies from "./containers/policy/Policies";
+import Policy from "./containers/policy/Policy";
+import References from "./containers/referencess/References";
+import ResourceRoute from "./containers/resources/ResourceRoute";
+import AuthListener from "./shared/components/AuthListener";
+import AuthRoute from "./shared/components/AuthRoute";
+import Layout from "./shared/components/Layout";
+import ScrollToTop from "./shared/components/ScrollToTop";
 
 export default function() {
   return (
@@ -69,9 +67,7 @@ export default function() {
                 component={CreateControl}
               />
               <AuthRoute exact path="/control/:id" component={Control} />
-              <AuthRoute exact path="/resources" component={Resources}/>
-              <AuthRoute exact path="/resources/create" component={CreateResource}/>
-              <AuthRoute exact path="/resources/:id" component={Resource}/>
+              <AuthRoute path="/resources" component={ResourceRoute} />
             </Switch>
           </Layout>
         </Switch>

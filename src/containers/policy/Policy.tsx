@@ -1,57 +1,60 @@
-import get from 'lodash/get'
-import React from 'react'
-import { RouteComponentProps } from 'react-router'
-import { toast } from 'react-toastify'
-import { oc } from 'ts-optchain'
+import get from "lodash/get";
+import React from "react";
+import { RouteComponentProps } from "react-router";
+import { toast } from "react-toastify";
+import { oc } from "ts-optchain";
 import {
   PoliciesDocument,
   useDestroyPolicyMutation,
   usePolicyQuery,
   useUpdatePolicyMutation,
-  PolicyDocument,
-} from '../../generated/graphql'
-import Button from '../../shared/components/Button'
-import HeaderWithBackButton from '../../shared/components/HeaderWithBack'
-import PolicyForm, { PolicyFormValues } from './components/PolicyForm'
-import { Link } from 'react-router-dom'
-import SubPolicyForm, { SubPolicyFormValues } from './components/SubPolicyForm'
-import Table from '../../shared/components/Table'
-import { FaTrash } from 'react-icons/fa'
+  PolicyDocument
+} from "../../generated/graphql";
+import Button from "../../shared/components/Button";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
+import { Link } from "react-router-dom";
+import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import Table from "../../shared/components/Table";
+import { FaTrash } from "react-icons/fa";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
-  const id = get(match, 'params.id', '')
-  const { loading, data } = usePolicyQuery({ variables: { id } })
+  const id = get(match, "params.id", "");
+  const { loading, data } = usePolicyQuery({
+    variables: { id },
+    fetchPolicy: "network-only"
+  });
   const [update, updateState] = useUpdatePolicyMutation({
-    onCompleted: () => toast.success('Update Success'),
-    onError: () => toast.error('Update Failed'),
+    onCompleted: () => toast.success("Update Success"),
+    onError: () => toast.error("Update Failed"),
     refetchQueries: [
       { query: PoliciesDocument, variables: { filter: {} } },
-      { query: PolicyDocument, variables: { id } },
+      { query: PolicyDocument, variables: { id } }
     ],
-    awaitRefetchQueries: true,
-  })
+    awaitRefetchQueries: true
+  });
   const [destroy] = useDestroyPolicyMutation({
-    onCompleted: () => toast.success('Delete Success'),
-    onError: () => toast.error('Delete Failed'),
+    onCompleted: () => toast.success("Delete Success"),
+    onError: () => toast.error("Delete Failed"),
     refetchQueries: [{ query: PolicyDocument, variables: { id } }],
-    awaitRefetchQueries: true,
-  })
+    awaitRefetchQueries: true
+  });
   const [destroyMain, destroyState] = useDestroyPolicyMutation({
     onCompleted: () => {
-      toast.success('Delete Success')
-      history.push('/policy')
+      toast.success("Delete Success");
+      history.push("/policy");
     },
-    onError: () => toast.error('Delete Failed'),
+    onError: () => toast.error("Delete Failed"),
     refetchQueries: [{ query: PoliciesDocument, variables: { filter: {} } }],
-    awaitRefetchQueries: true,
-  })
+    awaitRefetchQueries: true
+  });
 
   function handleDeleteMain() {
-    destroyMain({ variables: { id } })
+    destroyMain({ variables: { id } });
   }
 
   function handleDelete(id: string) {
-    destroy({ variables: { id } })
+    destroy({ variables: { id } });
   }
 
   function handleUpdate(values: PolicyFormValues) {
@@ -61,10 +64,10 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           id,
           title: values.title,
           policyCategoryId: values.policyCategoryId,
-          description: values.description,
-        },
-      },
-    })
+          description: values.description
+        }
+      }
+    });
   }
 
   function handleUpdateSubPolicy(values: SubPolicyFormValues) {
@@ -74,26 +77,26 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           id,
           resourceIds: values.resourceIds,
           itSystemIds: values.itSystemIds,
-          businessProcessIds: values.businessProcessIds,
-        },
-      },
-    })
+          businessProcessIds: values.businessProcessIds
+        }
+      }
+    });
   }
 
-  const title = oc(data).policy.title('')
-  const description = oc(data).policy.description('')
-  const policyCategoryId = oc(data).policy.policyCategory.id('')
-  const parentId = oc(data).policy.parentId('')
-  const children = oc(data).policy.children([])
-  const isSubPolicy: boolean = !!oc(data).policy.ancestry()
-  const ancestry = oc(data).policy.ancestry('')
+  const title = oc(data).policy.title("");
+  const description = oc(data).policy.description("");
+  const policyCategoryId = oc(data).policy.policyCategory.id("");
+  const parentId = oc(data).policy.parentId("");
+  const children = oc(data).policy.children([]);
+  const isSubPolicy: boolean = !!oc(data).policy.ancestry();
+  const ancestry = oc(data).policy.ancestry("");
   const referenceIds = oc(data)
     .policy.references([])
-    .map(item => item.id)
+    .map(item => item.id);
 
-  const isMaximumLevel = ancestry.split('/').length === 5
+  const isMaximumLevel = ancestry.split("/").length === 5;
 
-  if (loading) return null
+  if (loading) return null;
 
   return (
     <div>
@@ -186,7 +189,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         </>
       ) : null}
     </div>
-  )
-}
+  );
+};
 
-export default Policy
+export default Policy;
