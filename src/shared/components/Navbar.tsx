@@ -1,11 +1,17 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink, RouteComponentProps, useHistory } from "react-router-dom";
 import pwcLogo from "../../assets/images/pwc-logo.png";
 import styled from "styled-components";
-import { FaBell, FaBookmark } from "react-icons/fa";
+import { FaBell, FaBookmark, FaChevronDown } from "react-icons/fa";
 import Avatar from "./Avatar";
 import { useDispatch } from "react-redux";
 import { unauthorize } from "../../redux/auth";
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem
+} from "reactstrap";
 
 const menus = [
   { label: "Policy", path: "/policy" },
@@ -25,14 +31,7 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <Image src={pwcLogo} alt="pwc" />
-      <NavbarUl>
-        {menus.map((menu, index) => (
-          <NavbarLi key={index}>
-            <Hmmm to={menu.path}>{menu.label}</Hmmm>
-            {/* <ActiveIndicator /> */}
-          </NavbarLi>
-        ))}
-      </NavbarUl>
+      <AdministrativeDropdown />
       <div className="d-flex justify-content-space-between align-items-center">
         <div className="mr-3">
           <FaBookmark />
@@ -43,6 +42,32 @@ const Navbar = () => {
         <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
       </div>
     </NavbarContainer>
+  );
+};
+
+const AdministrativeDropdown = () => {
+  const history = useHistory();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const data = menus.map(menu => ({
+    label: menu.label,
+    onClick: () => history.push(menu.path)
+  }));
+  const toggle = () => setDropdownOpen(prevState => !prevState);
+  return (
+    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+      <DropdownToggle tag="div">
+        <div className="clickable">
+          <MyNavSpan>Administrative</MyNavSpan> <FaChevronDown />
+        </div>
+      </DropdownToggle>
+      <DropdownMenu>
+        {data.map((item, index) => (
+          <DropdownItem key={index} onClick={item.onClick}>
+            {item.label}
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
   );
 };
 
@@ -71,7 +96,16 @@ const NavbarLi = styled.li`
   margin: 20px;
 `;
 
-const Hmmm = styled(NavLink)`
+const MyNavLink = styled(NavLink)`
+  text-decoration: none;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  color: #3a3838;
+`;
+
+const MyNavSpan = styled.span`
   text-decoration: none;
   font-style: normal;
   font-weight: bold;
