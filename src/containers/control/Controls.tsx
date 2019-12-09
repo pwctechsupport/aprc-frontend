@@ -49,7 +49,7 @@ const Controls = () => {
         <Table reloading={loading}>
           <thead>
             <tr>
-              {/* <th>Id</th> */}
+              <th>Id</th>
               <th>Title</th>
               <th>Freq</th>
               <th>Type</th>
@@ -63,6 +63,7 @@ const Controls = () => {
             {controls.map(control => {
               return (
                 <tr key={control.id}>
+                  <td>{control.id}</td>
                   <td>
                     <Link to={`/control/${control.id}`}>
                       {control.description}
