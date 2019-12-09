@@ -43,14 +43,17 @@ query resourceFormMaster {
   controls(filter: {}) {
     collection {
       id
-      typeOfControl
+      description
     }
   }
 
-  businessProcesses(filter: {}) {
+  businessProcesses(
+    filter: { ancestry_not_null: true }
+  ) {
     collection {
       id
       name
+      parentId
     }
   }
 }
