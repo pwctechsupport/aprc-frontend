@@ -11,6 +11,7 @@ import {
 import Table from "../../shared/components/Table";
 import BusinessProcessSideBox from "./components/BusinessProcessSideBox";
 import CreateBusinessProcess from "./CreateBusinessProcess";
+import Helmet from "react-helmet";
 
 const BusinessProcesses = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -35,6 +36,10 @@ const BusinessProcesses = () => {
 
   return (
     <div className="d-flex">
+      <Helmet>
+        Business Process
+        <title>Controls - PricewaterhouseCoopers</title>
+      </Helmet>
       <BusinessProcessSideBox
         searchValue={searchValue}
         handleChange={handleChange}

@@ -10,6 +10,7 @@ import {
 import Table from "../../shared/components/Table";
 import ControlSideBox from "../control/components/ControlSideBox";
 import CreateReference from "./CreateReference";
+import Helmet from "react-helmet";
 
 const References = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -30,6 +31,9 @@ const References = () => {
 
   return (
     <div className="d-flex">
+      <Helmet>
+        <title>References - PricewaterhouseCoopers</title>
+      </Helmet>
       <ControlSideBox searchValue={searchValue} handleChange={handleChange} />
       <div className="ml-3 flex-grow-1">
         <div className="d-flex justify-content-between align-items-center">

@@ -11,6 +11,7 @@ import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import ControlSideBox from "./components/ControlSideBox";
 import { useDebounce } from "use-debounce/lib";
+import Helmet from "react-helmet";
 
 const Controls = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -34,6 +35,9 @@ const Controls = () => {
   };
   return (
     <div className="d-flex">
+      <Helmet>
+        <title>Controls - PricewaterhouseCoopers</title>
+      </Helmet>
       <ControlSideBox
         searchValue={searchValue}
         handleChange={handleChange}
