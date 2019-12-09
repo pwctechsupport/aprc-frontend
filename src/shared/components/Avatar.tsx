@@ -22,11 +22,20 @@ const Avatar = ({ data }: AvatarProps) => {
         />
       </DropdownToggle>
       <DropdownMenu>
-        {data.map((item, index) => (
-          <DropdownItem key={index} onClick={item.onClick}>
-            {item.label}
-          </DropdownItem>
-        ))}
+        {data.map((item, index) => {
+          if (item.header) {
+            return (
+              <DropdownItem header key={index} onClick={item.onClick}>
+                {item.label}
+              </DropdownItem>
+            );
+          }
+          return (
+            <DropdownItem key={index} onClick={item.onClick}>
+              {item.label}
+            </DropdownItem>
+          );
+        })}
       </DropdownMenu>
     </Dropdown>
   );
@@ -39,8 +48,9 @@ export default Avatar;
 // -------------------------------------------------
 
 interface DataType {
-  onClick: () => void;
-  label: string;
+  onClick?: () => void;
+  label: string | undefined;
+  header?: boolean;
 }
 
 export interface AvatarProps {

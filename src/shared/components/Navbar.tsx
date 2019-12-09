@@ -12,6 +12,8 @@ import styled from "styled-components";
 import pwcLogo from "../../assets/images/pwc-logo.png";
 import { unauthorize } from "../../redux/auth";
 import Avatar from "./Avatar";
+import { useSelector } from "../hooks/useSelector";
+import { oc } from "ts-optchain";
 
 const menus = [
   { label: "Policy", path: "/policy" },
@@ -23,6 +25,8 @@ const menus = [
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const user = useSelector(state => state.auth.user);
+  const email = oc(user).email("");
 
   function handleLogout() {
     dispatch(unauthorize());
@@ -33,13 +37,18 @@ const Navbar = () => {
       <Image src={pwcLogo} alt="pwc" />
       <AdministrativeDropdown />
       <div className="d-flex justify-content-space-between align-items-center">
-        <div className="mr-3">
+        <Avatar
+          data={[
+            { label: email, header: true },
+            { label: "Logout", onClick: handleLogout }
+          ]}
+        />
+        <div className="mx-4">
           <FaBookmark />
         </div>
-        <div className="mr-4">
+        <div>
           <FaBell />
         </div>
-        <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
       </div>
     </NavbarContainer>
   );
