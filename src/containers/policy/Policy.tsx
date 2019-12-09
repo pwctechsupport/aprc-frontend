@@ -77,7 +77,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           id,
           resourceIds: values.resourceIds,
           itSystemIds: values.itSystemIds,
-          businessProcessIds: values.businessProcessIds
+          businessProcessIds: values.businessProcessIds,
+          description: values.description,
+          referenceIds: values.referenceIds
         }
       }
     });
