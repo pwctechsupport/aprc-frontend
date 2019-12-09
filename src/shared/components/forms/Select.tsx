@@ -1,16 +1,16 @@
-import React, { Fragment } from "react";
-import ReactSelect, { Props } from "react-select";
-import { FormGroup, Col, FormText } from "reactstrap";
-import Label from "./Label";
-import classnames from "classnames";
+import React, { Fragment, useEffect } from 'react'
+import ReactSelect, { Props, ValueType, OptionTypeBase } from 'react-select'
+import { FormGroup, Col, FormText } from 'reactstrap'
+import Label from './Label'
+import classnames from 'classnames'
 
 interface SelectProps extends Props {
-  label?: string;
-  defaultValue?: any;
-  row?: boolean;
-  required?: boolean;
-  formText?: string;
-  error?: string;
+  label?: string
+  defaultValue?: any
+  row?: boolean
+  required?: boolean
+  formText?: string
+  error?: string
 }
 
 const Select = ({
@@ -25,13 +25,13 @@ const Select = ({
     <Fragment>
       <ReactSelect
         className={classnames(
-          "enlogy-react-select",
-          error ? "invalid" : undefined
+          'enlogy-react-select',
+          error ? 'invalid' : undefined
         )}
         classNamePrefix="enlogy"
         {...props}
         components={{ IndicatorSeparator: null }}
-        placeholder={props.placeholder || label || ""}
+        placeholder={props.placeholder || label || ''}
       />
       <FormText>{formText}</FormText>
       {error && (
@@ -40,7 +40,7 @@ const Select = ({
         </FormText>
       )}
     </Fragment>
-  );
+  )
 
   return (
     <FormGroup row={row}>
@@ -51,7 +51,39 @@ const Select = ({
       ) : null}
       {row ? <Col sm={9}>{Select}</Col> : Select}
     </FormGroup>
-  );
-};
+  )
+}
 
-export default Select;
+const FormSelect = ({
+  name,
+  register,
+  setValue,
+  onChange,
+  ...props
+}: FormSelectProps) => {
+  useEffect(() => {
+    register({ name })
+  }, [name, register])
+
+  function handleChange(e: any) {
+    if (props.isMulti) {
+      setValue(name, e && e.map((v: any) => v.value))
+    } else {
+      setValue(name, e && e.value)
+    }
+
+    props.onChange && props.onChange(e)
+  }
+
+  return <Select {...props} onChange={handleChange} />
+}
+
+export interface FormSelectProps extends SelectProps {
+  name: string
+  register: Function
+  setValue: Function
+  onChange?: (value: ValueType<OptionTypeBase>) => void
+}
+
+export { FormSelect }
+export default Select
