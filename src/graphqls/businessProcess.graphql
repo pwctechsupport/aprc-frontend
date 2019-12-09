@@ -8,7 +8,7 @@ mutation createBusinessProcess($input: CreateBusinessProcessInput!) {
   }
 }
 
-query businessProcesses($filter: BaseScalar!) {
+query businessProcesses($filter: BaseScalar = {}) {
   businessProcesses(filter: $filter) {
     collection {
       ancestry
