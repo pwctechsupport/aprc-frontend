@@ -2,10 +2,28 @@
   background: linear-gradient(180deg, #e3721c 0%, #c14303 100%);
   border-radius: 10px;
   border: 0;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.button.cancel {
+  background: linear-gradient(180deg, darkgrey 0%, grey 100%);
+  border-radius: 10px;
+  border: 0;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .button.btn-danger {
   background: linear-gradient(180deg, red 0%, darkred 100%);
   border-radius: 10px;
   border: 0;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
 }
