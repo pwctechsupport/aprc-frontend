@@ -1,0 +1,21 @@
+# Write your query or mutation here
+query risks ($filter: BaseScalar!) {
+  risks (filter: $filter) {
+    collection {
+      id
+      name
+    }
+  }
+}
+
+mutation createRisk ($input: CreateRiskInput!) {
+  createRisk(input: $input) {
+    success
+  }
+}
+
+mutation destroyRisk($id: ID!) {
+  destroyRisk(input: { id: $id }) {
+    success
+  }
+}
