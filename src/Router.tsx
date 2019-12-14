@@ -11,6 +11,7 @@ import Homepage from "./containers/homepage/Homepage";
 import PolicyRoute from "./containers/policy/PolicyRoute";
 import References from "./containers/referencess/References";
 import ResourceRoute from "./containers/resources/ResourceRoute";
+import RiskRoute from "./containers/risk/RiskRoute";
 import AuthListener from "./shared/components/AuthListener";
 import AuthRoute from "./shared/components/AuthRoute";
 import Layout from "./shared/components/Layout";
@@ -58,6 +59,7 @@ export default function() {
               <AuthRoute exact path="/control/:id" component={Control} />
               <AuthRoute path="/policy" component={PolicyRoute} />
               <AuthRoute path="/resources" component={ResourceRoute} />
+              <AuthRoute path="/risk" component={RiskRoute} />
             </Switch>
           </Layout>
         </Switch>

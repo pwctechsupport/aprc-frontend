@@ -44,7 +44,7 @@ const Risks = () => {
       </Helmet>
       <div className="d-flex justify-content-between align-items-center">
         <h1>Risks</h1>
-        <Link to="/policy/create">
+        <Link to="/risk/create">
           <Button className="pwc">+ Add Risk</Button>
         </Link>
       </div>

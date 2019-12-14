@@ -9,6 +9,14 @@ query risks ($filter: BaseScalar!) {
   }
 }
 
+query risk($id: ID!) {
+  risk(id: $id) {
+    name
+    levelOfRisk
+    status
+  }
+}
+
 mutation createRisk ($input: CreateRiskInput!) {
   createRisk(input: $input) {
     success

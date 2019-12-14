@@ -1,6 +1,10 @@
 // import get from "lodash/get";
-// import React from "react";
-// import { RouteComponentProps } from "react-router";
+import React from "react";
+import { RouteComponentProps } from "react-router";
+import { useRiskQuery, LevelOfRisk, Status } from "../../generated/graphql";
+import RiskForm, { RiskFormValues } from "./components/RiskForm";
+import { oc } from "ts-optchain";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 // import { toast } from "react-toastify";
 // import { oc } from "ts-optchain";
 // import {
@@ -198,3 +202,31 @@
 // };
 
 // export default Policy;
+
+const Risk = ({ match }: RouteComponentProps) => {
+
+  const id = match.params && (match.params as any).id;
+  const { data, loading } = useRiskQuery({
+    variables: { id },
+    fetchPolicy: "network-only"
+  });
+
+  const defaultValues: RiskFormValues = {
+    name: oc(data).risk.name(""),
+    levelOfRisk: oc(data).risk.levelOfRisk(LevelOfRisk.Low) as LevelOfRisk,
+    status: oc(data).risk.status(Status.Draft) as Status,
+  };
+
+  return (
+    <div>
+      <HeaderWithBackButton heading="Risk" />
+      <RiskForm
+        defaultValues={defaultValues}
+        // onSubmit={handleSubmit}
+        // submitting={updateResourceM.loading}
+      />
+    </div>
+  )
+}
+
+export default Risk;

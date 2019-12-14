@@ -20,7 +20,8 @@ const menus = [
   { label: "Control", path: "/control" },
   { label: "Business Process", path: "/business-process" },
   { label: "References", path: "/references" },
-  { label: "Resources", path: "/resources" }
+  { label: "Resources", path: "/resources" },
+  { label: "Risks", path: "/risk" }
 ];
 
 const Navbar = () => {
