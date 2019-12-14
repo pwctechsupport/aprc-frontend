@@ -20,6 +20,8 @@ interface AuthStore {
 interface User {
   name: string;
   email: string | null | undefined;
+  id: string;
+  phone: string;
 }
 
 interface AuthorizedAction {
@@ -39,6 +41,7 @@ interface UnauthorizeAction {
 // ---------------------------------------------------------------
 
 export const authorize = (user: User, token: string): AuthorizedAction => {
+  localStorage.setItem("user", JSON.stringify(user));
   localStorage.setItem("token", token);
   return {
     type: AUTHORIZED,
@@ -47,6 +50,7 @@ export const authorize = (user: User, token: string): AuthorizedAction => {
 };
 
 export const unauthorize = (): UnauthorizeAction => {
+  localStorage.removeItem("user");
   localStorage.removeItem("token");
   return {
     type: UNAUTHORIZED

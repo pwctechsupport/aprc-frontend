@@ -27,8 +27,10 @@ const Login = ({ history }: RouteComponentProps) => {
       dispatch(
         authorize(
           {
+            id: oc(res).data.login.id(""),
+            email: oc(res).data.login.email(""),
             name: oc(res).data.login.firstName(""),
-            email: oc(res).data.login.email("")
+            phone: oc(res).data.login.phone("")
           },
           oc(res).data.login.token("")
         )

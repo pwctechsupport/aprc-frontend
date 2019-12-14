@@ -13,8 +13,6 @@ import Table from "../../shared/components/Table";
 import Helmet from "react-helmet";
 
 const Policies = () => {
-  // const [search, setSearch] = useState("");
-  // const [searchQuery] = useDebounce(search, 700);
   const { loading, data } = usePoliciesQuery({
     variables: { filter: {} }
   });
@@ -74,7 +72,7 @@ const Policies = () => {
                     ></div>
                   </td>
                   <td>-</td>
-                  <td>-</td>
+                  <td>{policy.status}</td>
                   <td>
                     <FaTrash
                       onClick={() => handleDelete(policy.id)}
