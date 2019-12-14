@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import React from "react";
+import React, { useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
@@ -19,8 +19,10 @@ import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import Table from "../../shared/components/Table";
 import { FaTrash } from "react-icons/fa";
 import Helmet from "react-helmet";
+import ResourceBar from "../../shared/components/ResourceBar";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
+  const [inEditMode, setInEditMode] = useState(false);
   const id = get(match, "params.id", "");
   const { loading, data } = usePolicyQuery({
     variables: { id },
@@ -98,10 +100,69 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     .policy.references([])
     .map(item => item.id);
   const status = oc(data).policy.status("");
+  const resources = oc(data).policy.resources([]);
 
   const isMaximumLevel = ancestry.split("/").length === 5;
 
   if (loading) return null;
+
+  const renderPolicy = () => {
+    return (
+      <div>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: description
+          }}
+        ></div>
+        <h5 className="mt-5">Resources</h5>
+        {resources.map(resource => (
+          <ResourceBar
+            resourceId={resource.id}
+            name={resource.name}
+            rating={resource.rating}
+            visit={resource.visit}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const renderPolicyInEditMode = () => {
+    return isSubPolicy ? (
+      <SubPolicyForm
+        defaultValues={{
+          parentId,
+          title,
+          description,
+          referenceIds,
+          resourceIds: oc(data)
+            .policy.resources([])
+            .map(r => r.id),
+          itSystemIds: oc(data)
+            .policy.itSystems([])
+            .map(r => r.id),
+          businessProcessIds: oc(data)
+            .policy.businessProcesses([])
+            .map(r => r.id),
+          status: status as Status
+        }}
+        onSubmit={handleUpdateSubPolicy}
+        submitting={updateState.loading}
+      />
+    ) : (
+      <PolicyForm
+        onSubmit={handleUpdate}
+        defaultValues={{
+          title,
+          policyCategoryId,
+          description,
+          status: status as Status
+        }}
+        submitting={updateState.loading}
+        isSubPolicy={isSubPolicy}
+      />
+    );
+  };
 
   return (
     <div>
@@ -125,40 +186,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           </Button>
         </div>
       </div>
-      {isSubPolicy ? (
-        <SubPolicyForm
-          defaultValues={{
-            parentId,
-            title,
-            description,
-            referenceIds,
-            resourceIds: oc(data)
-              .policy.resources([])
-              .map(r => r.id),
-            itSystemIds: oc(data)
-              .policy.itSystems([])
-              .map(r => r.id),
-            businessProcessIds: oc(data)
-              .policy.businessProcesses([])
-              .map(r => r.id),
-            status: status as Status
-          }}
-          onSubmit={handleUpdateSubPolicy}
-          submitting={updateState.loading}
-        />
-      ) : (
-        <PolicyForm
-          onSubmit={handleUpdate}
-          defaultValues={{
-            title,
-            policyCategoryId,
-            description,
-            status: status as Status
-          }}
-          submitting={updateState.loading}
-          isSubPolicy={isSubPolicy}
-        />
-      )}
+      {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
       {children.length ? (
         <>
           <h5 className="mt-5">Sub policies</h5>

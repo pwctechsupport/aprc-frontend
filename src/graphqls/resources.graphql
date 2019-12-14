@@ -1,16 +1,21 @@
-query resources(
-  $filter: BaseScalar = {}
-  $page: Int
-  $limit: Int
-) {
+query resources($filter: BaseScalar = {}, $page: Int, $limit: Int) {
   resources(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
       name
       category
-      policies { id title }
-      controls { id typeOfControl }
-      businessProcess { id name }
+      policies {
+        id
+        title
+      }
+      controls {
+        id
+        typeOfControl
+      }
+      businessProcess {
+        id
+        name
+      }
       # file size ga ada
       # upload ga ada
       # status ga ada
@@ -47,9 +52,7 @@ query resourceFormMaster {
     }
   }
 
-  businessProcesses(
-    filter: { ancestry_not_null: true }
-  ) {
+  businessProcesses(filter: { ancestry_not_null: true }) {
     collection {
       id
       name
@@ -58,14 +61,23 @@ query resourceFormMaster {
   }
 }
 
-query resource($id:ID!) {
+query resource($id: ID!) {
   resource(id: $id) {
     id
     name
     category
-    policies{ id description }
-    controls { id typeOfControl }
-    businessProcess { id name }
+    policies {
+      id
+      description
+    }
+    controls {
+      id
+      typeOfControl
+    }
+    businessProcess {
+      id
+      name
+    }
     resuploadUrl
   }
 }
@@ -78,8 +90,14 @@ mutation updateResource($input: UpdateResourceInput!) {
 }
 
 mutation destroyResource($id: ID!) {
-  destroyResource(input: {id: $id}) {
+  destroyResource(input: { id: $id }) {
     success
     errors
+  }
+}
+
+mutation updateResourceRating($input: UpdateResourceRatingInput!) {
+  updateResourceRating(input: $input) {
+    success
   }
 }

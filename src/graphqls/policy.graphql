@@ -85,6 +85,9 @@ fragment policyFragment on Policy {
   resources {
     id
     name
+    rating
+    totalRating
+    visit
   }
   itSystems {
     id
