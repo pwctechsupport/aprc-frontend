@@ -20,6 +20,7 @@ import Table from "../../shared/components/Table";
 import { FaTrash } from "react-icons/fa";
 import Helmet from "react-helmet";
 import ResourceBar from "../../shared/components/ResourceBar";
+import classnames from "classnames";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -108,7 +109,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
 
   const renderPolicy = () => {
     return (
-      <div>
+      <div className="mt-3">
         <div
           dangerouslySetInnerHTML={{
             __html: description
@@ -174,9 +175,15 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         <div className="d-flex">
           {!isMaximumLevel && (
             <Link to={`/policy/${id}/create-sub-policy`}>
-              <Button className="mr-2 pwc">+ Create Sub-Policy</Button>
+              <Button className="pwc">+ Create Sub-Policy</Button>
             </Link>
           )}
+          <Button
+            onClick={() => setInEditMode(!inEditMode)}
+            className={classnames("mx-1", inEditMode ? "cancel" : "pwc")}
+          >
+            {inEditMode ? "Cancel Edit" : "Edit"}
+          </Button>
           <Button
             onClick={handleDeleteMain}
             loading={destroyState.loading}
