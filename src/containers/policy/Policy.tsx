@@ -8,7 +8,8 @@ import {
   useDestroyPolicyMutation,
   usePolicyQuery,
   useUpdatePolicyMutation,
-  PolicyDocument
+  PolicyDocument,
+  Status
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
@@ -96,6 +97,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const referenceIds = oc(data)
     .policy.references([])
     .map(item => item.id);
+  const status = oc(data).policy.status("");
 
   const isMaximumLevel = ancestry.split("/").length === 5;
 
@@ -138,7 +140,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
               .map(r => r.id),
             businessProcessIds: oc(data)
               .policy.businessProcesses([])
-              .map(r => r.id)
+              .map(r => r.id),
+            status: status as Status
           }}
           onSubmit={handleUpdateSubPolicy}
           submitting={updateState.loading}
@@ -146,7 +149,12 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       ) : (
         <PolicyForm
           onSubmit={handleUpdate}
-          defaultValues={{ title, policyCategoryId, description }}
+          defaultValues={{
+            title,
+            policyCategoryId,
+            description,
+            status: status as Status
+          }}
           submitting={updateState.loading}
           isSubPolicy={isSubPolicy}
         />

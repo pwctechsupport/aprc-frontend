@@ -29,6 +29,7 @@ fragment control on Control {
   assertion
   typeOfControl
   ipo
+  status
 }
 
 mutation createControl($input: CreateControlInput!) {

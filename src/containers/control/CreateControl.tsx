@@ -25,7 +25,8 @@ const CreateControl = ({ history }: RouteComponentProps) => {
           frequency: values.frequency,
           ipo: values.ipo,
           nature: values.nature,
-          description: values.description
+          description: values.description,
+          status: values.status
         }
       }
     });

@@ -7,7 +7,8 @@ import {
   TypeOfControl,
   Nature,
   Ipo,
-  Frequency
+  Frequency,
+  Status
 } from "../../generated/graphql";
 import { RouteComponentProps } from "react-router";
 import get from "lodash/get";
@@ -51,6 +52,7 @@ const Control = ({ match }: RouteComponentProps) => {
   const ipo = oc(data).control.ipo("");
   const nature = oc(data).control.nature("");
   const typeOfControl = oc(data).control.typeOfControl("");
+  const status = oc(data).control.status("");
 
   if (loading) return null;
 
@@ -67,7 +69,8 @@ const Control = ({ match }: RouteComponentProps) => {
           ipo: (ipo as Ipo) || Ipo.Accuracy,
           nature: (nature as Nature) || Nature.Corrective,
           typeOfControl:
-            (typeOfControl as TypeOfControl) || TypeOfControl.Automatic
+            (typeOfControl as TypeOfControl) || TypeOfControl.Automatic,
+          status: (status as Status) || Status.Draft
         }}
         submitting={updateState.loading}
       />

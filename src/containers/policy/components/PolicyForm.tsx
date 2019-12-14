@@ -3,7 +3,7 @@ import useForm from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
-import { usePolicyCategoriesQuery } from "../../../generated/graphql";
+import { usePolicyCategoriesQuery, Status } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
@@ -12,8 +12,7 @@ import TextEditor from "../../../shared/components/forms/TextEditor";
 const PolicyForm = ({
   onSubmit,
   defaultValues,
-  submitting,
-  isSubPolicy
+  submitting
 }: PolicyFormProps) => {
   const policyCategoriesState = usePolicyCategoriesQuery({
     variables: { filter: {} }
@@ -109,6 +108,7 @@ export interface PolicyFormValues {
   title: string;
   description: string;
   policyCategoryId: string;
+  status: Status;
 }
 
 export interface PolicyFormProps {
