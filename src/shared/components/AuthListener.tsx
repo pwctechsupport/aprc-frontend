@@ -11,9 +11,10 @@ const AuthListener = ({ history }: RouteComponentProps) => {
     if (isAuthed) {
       // history.push("/");
     } else {
+      const user = JSON.parse(String(localStorage.getItem("user")));
       const token = localStorage.getItem("token");
       if (token) {
-        dispatch(authorize({ email: "", name: "" }, token));
+        dispatch(authorize(user, token));
         // history.push("/");
       } else {
         history.push("/auth");
