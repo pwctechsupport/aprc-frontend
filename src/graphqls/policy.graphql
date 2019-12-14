@@ -89,6 +89,14 @@ fragment policyFragment on Policy {
     totalRating
     visit
   }
+  risks {
+    id
+    name
+  }
+  controls {
+    id
+    description
+  }
   itSystems {
     id
     name

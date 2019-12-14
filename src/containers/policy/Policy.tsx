@@ -145,6 +145,10 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           businessProcessIds: oc(data)
             .policy.businessProcesses([])
             .map(r => r.id),
+          riskIds: oc(data).policy.risks([]).map(r => r.id),
+          controlIds: oc(data).policy.controls([]).map(r => r.id),
+          //   .policy.risks([])
+          //   .map(r => r.id),
           status: status as Status
         }}
         onSubmit={handleUpdateSubPolicy}

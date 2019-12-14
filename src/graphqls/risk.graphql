@@ -1,5 +1,5 @@
 # Write your query or mutation here
-query risks ($filter: BaseScalar!, $limit: Int) {
+query risks ($filter: BaseScalar = {}, $limit: Int) {
   risks (filter: $filter, limit: $limit) {
     collection {
       id

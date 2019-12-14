@@ -7,7 +7,9 @@ import {
   useResourcesQuery,
   useItSystemsQuery,
   useBusinessProcessesQuery,
-  Status
+  Status,
+  useControlsQuery,
+  useRisksQuery
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
@@ -47,6 +49,12 @@ const SubPolicyForm = ({
   const businessProcessesOptions = oc(businessProcessesQ.data)
     .businessProcesses.collection([])
     .map(toLabelValue);
+
+  const controlsQ = useControlsQuery();
+  const controlsOptions = oc(controlsQ.data).controls.collection([]).map(({id, description}) => ({label: description || "", value: id}))
+
+  const risksQ = useRisksQuery();
+  const risksOptions = oc(risksQ.data).risks.collection([]).map(toLabelValue);
 
   useEffect(() => {
     register({ name: "parentId" });
@@ -179,6 +187,36 @@ const SubPolicyForm = ({
             )}
           />
 
+          <FormSelect
+            isMulti
+            isLoading={controlsQ.loading}
+            name="controlIds"
+            register={register}
+            setValue={setValue}
+            label="Control"
+            options={controlsOptions}
+            defaultValue={controlsOptions.filter(res =>
+              oc(defaultValues)
+                .controlIds([])
+                .includes(res.value)
+            )}
+          />
+
+          <FormSelect
+            isMulti
+            isLoading={risksQ.loading}
+            name="riskIds"
+            register={register}
+            setValue={setValue}
+            label="Risk"
+            options={risksOptions}
+            defaultValue={risksOptions.filter(res =>
+              oc(defaultValues)
+                .riskIds([])
+                .includes(res.value)
+            )}
+          />
+
           <div className=" d-flex justify-content-end">
             <Button
               type="button"
@@ -218,5 +256,7 @@ export interface SubPolicyFormValues {
   resourceIds?: string[];
   itSystemIds?: string[];
   businessProcessIds?: string[];
+  controlIds?: string[];
+  riskIds?: string[];
   status: Status;
 }
