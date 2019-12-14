@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaBell, FaBookmark, FaChevronDown } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 import {
   Dropdown,
   DropdownItem,
@@ -24,6 +24,13 @@ const menus = [
   { label: "Risks", path: "/admin/risk" }
 ];
 
+const userMenus = [
+  { label: "Policy", path: "/policy" },
+  { label: "Risk & Control", path: "/policy" },
+  { label: "Control & Risk Management", path: "/policy" },
+  { label: "Report", path: "/policy" }
+];
+
 const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
@@ -36,6 +43,13 @@ const Navbar = () => {
   return (
     <NavbarContainer>
       <Image src={pwcLogo} alt="pwc" />
+      <NavbarUl>
+        {userMenus.map(item => (
+          <NavbarLi>
+            <MyNavLink to={item.path}>{item.label}</MyNavLink>
+          </NavbarLi>
+        ))}
+      </NavbarUl>
       <AdministrativeDropdown />
       <div className="d-flex justify-content-space-between align-items-center">
         <Avatar
@@ -95,25 +109,25 @@ const Image = styled.img`
   height: auto;
 `;
 
-// const NavbarUl = styled.ul`
-//   list-style-type: none;
-//   display: inline;
-//   margin: 0;
-// `;
+const NavbarUl = styled.ul`
+  list-style-type: none;
+  display: inline;
+  margin: 0;
+`;
 
-// const NavbarLi = styled.li`
-//   display: inline;
-//   margin: 20px;
-// `;
+const NavbarLi = styled.li`
+  display: inline;
+  margin: 20px;
+`;
 
-// const MyNavLink = styled(NavLink)`
-//   text-decoration: none;
-//   font-style: normal;
-//   font-weight: bold;
-//   font-size: 16px;
-//   line-height: 20px;
-//   color: #3a3838;
-// `;
+const MyNavLink = styled(NavLink)`
+  text-decoration: none;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+  color: #3a3838;
+`;
 
 const MyNavSpan = styled.span`
   text-decoration: none;
