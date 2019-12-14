@@ -1,10 +1,12 @@
 // import get from "lodash/get";
 import React from "react";
 import { RouteComponentProps } from "react-router";
-import { useRiskQuery, LevelOfRisk, Status } from "../../generated/graphql";
+import { useRiskQuery, LevelOfRisk, Status, useUpdateRiskMutation, RisksDocument, RiskDocument } from "../../generated/graphql";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import { oc } from "ts-optchain";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 // import { oc } from "ts-optchain";
 // import {
@@ -217,13 +219,35 @@ const Risk = ({ match }: RouteComponentProps) => {
     status: oc(data).risk.status(Status.Draft) as Status,
   };
 
+  const [update, updateRiskMutation] = useUpdateRiskMutation({
+    onCompleted: () => toast.success("Update Success"),
+    onError: () => toast.error("Update Failed"),
+    refetchQueries: [
+      { query: RisksDocument, variables: { filter: {} } },
+      { query: RiskDocument, variables: { id } }
+    ],
+    awaitRefetchQueries: true
+  })
+
+  function handleUpdate(values: RiskFormValues) {
+    update({
+      variables: {
+        input: {
+          id,
+          ...values
+        }
+      }
+    });
+  }
+
+  if(loading) return <LoadingSpinner centered size={30}/>
   return (
     <div>
       <HeaderWithBackButton heading="Risk" />
       <RiskForm
         defaultValues={defaultValues}
-        // onSubmit={handleSubmit}
-        // submitting={updateResourceM.loading}
+        onSubmit={handleUpdate}
+        submitting={updateRiskMutation.loading}
       />
     </div>
   )

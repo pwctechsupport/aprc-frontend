@@ -1,6 +1,6 @@
 # Write your query or mutation here
-query risks ($filter: BaseScalar!) {
-  risks (filter: $filter) {
+query risks ($filter: BaseScalar!, $limit: Int) {
+  risks (filter: $filter, limit: $limit) {
     collection {
       id
       name
@@ -25,6 +25,12 @@ mutation createRisk ($input: CreateRiskInput!) {
 
 mutation destroyRisk($id: ID!) {
   destroyRisk(input: { id: $id }) {
+    success
+  }
+}
+
+mutation updateRisk($input: UpdateRiskInput!) {
+  updateRisk(input: $input) {
     success
   }
 }

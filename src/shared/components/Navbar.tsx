@@ -17,11 +17,11 @@ import { oc } from "ts-optchain";
 
 const menus = [
   { label: "Policy", path: "/policy" },
-  { label: "Control", path: "/control" },
-  { label: "Business Process", path: "/business-process" },
-  { label: "References", path: "/references" },
-  { label: "Resources", path: "/resources" },
-  { label: "Risks", path: "/risk" }
+  { label: "Control", path: "/admin/control" },
+  { label: "Business Process", path: "/admin/business-process" },
+  { label: "References", path: "/admin/references" },
+  { label: "Resources", path: "/admin/resources" },
+  { label: "Risks", path: "/admin/risk" }
 ];
 
 const Navbar = () => {

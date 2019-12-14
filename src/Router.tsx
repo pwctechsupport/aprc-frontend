@@ -30,36 +30,36 @@ export default function() {
             <Switch>
               <AuthRoute
                 exact
-                path="/business-process"
+                path="/admin/business-process"
                 component={BusinessProcesses}
               />
               <AuthRoute
                 exact
-                path="/business-process/create"
+                path="/admin/business-process/create"
                 component={CreateBusinessProcess}
               />
               <AuthRoute
                 exact
-                path="/business-process/:id"
+                path="/admin/business-process/:id"
                 component={BusinessProcess}
               />
               <AuthRoute
                 exact
-                path="/business-process/:id"
+                path="/admin/business-process/:id"
                 component={BusinessProcess}
               />
-              <AuthRoute exact path="/references" component={References} />
+              <AuthRoute exact path="/admin/references" component={References} />
 
-              <AuthRoute exact path="/control" component={Controls} />
+              <AuthRoute exact path="/admin/control" component={Controls} />
               <AuthRoute
                 exact
-                path="/control/create"
+                path="/admin/control/create"
                 component={CreateControl}
               />
-              <AuthRoute exact path="/control/:id" component={Control} />
+              <AuthRoute exact path="/admin/control/:id" component={Control} />
               <AuthRoute path="/policy" component={PolicyRoute} />
-              <AuthRoute path="/resources" component={ResourceRoute} />
-              <AuthRoute path="/risk" component={RiskRoute} />
+              <AuthRoute path="/admin/resources" component={ResourceRoute} />
+              <AuthRoute path="/admin/risk" component={RiskRoute} />
             </Switch>
           </Layout>
         </Switch>
