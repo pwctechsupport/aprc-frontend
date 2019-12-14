@@ -4,6 +4,7 @@ query risks ($filter: BaseScalar!) {
     collection {
       id
       name
+      levelOfRisk
     }
   }
 }

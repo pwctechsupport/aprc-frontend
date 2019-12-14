@@ -69,7 +69,7 @@ const Risks = () => {
                   </td>
                   <td>{oc(risk).name("")}</td>
                   <td>
-                    {oc(risk).level("")}
+                    {oc(risk).levelOfRisk("")}
                   </td>
                   <td>
                     <FaTrash
