@@ -24,7 +24,8 @@ const CreatePolicy = ({ history }: RouteComponentProps) => {
         input: {
           title: values.title,
           policyCategoryId: values.policyCategoryId,
-          description: values.description
+          description: values.description,
+          status: values.status
         }
       }
     });

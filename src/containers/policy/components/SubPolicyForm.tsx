@@ -6,7 +6,8 @@ import {
   useReferencesQuery,
   useResourcesQuery,
   useItSystemsQuery,
-  useBusinessProcessesQuery
+  useBusinessProcessesQuery,
+  Status
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
@@ -217,4 +218,5 @@ export interface SubPolicyFormValues {
   resourceIds?: string[];
   itSystemIds?: string[];
   businessProcessIds?: string[];
+  status: Status;
 }

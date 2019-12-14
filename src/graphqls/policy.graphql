@@ -3,6 +3,7 @@ query policies($filter: BaseScalar!) {
     collection {
       id
       title
+      status
       policyCategoryId
       parentId
       policyCategory {
@@ -53,6 +54,7 @@ query policy($id: ID!) {
 fragment policyFragment on Policy {
   id
   title
+  status
   policyCategory {
     id
     name

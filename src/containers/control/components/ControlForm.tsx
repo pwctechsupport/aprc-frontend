@@ -6,7 +6,8 @@ import {
   Frequency,
   Ipo,
   Nature,
-  TypeOfControl
+  TypeOfControl,
+  Status
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
@@ -31,13 +32,13 @@ const ControlForm = ({
     register({ name: "nature" });
     register({ name: "assertion" });
     register({ name: "ipo" });
+    register({ name: "status" });
   }, [register]);
 
   const handleSelectChange = (name: string) => ({ value }: any) =>
     setValue(name, value);
 
   const pDefVal = (value: any, options: Options) => {
-    console.log("pDefVal");
     return options.find(opt => opt.value === value);
   };
 
@@ -46,6 +47,7 @@ const ControlForm = ({
   const nature = oc(defaultValues).nature();
   const assertion = oc(defaultValues).assertion();
   const ipo = oc(defaultValues).ipo();
+  const status = oc(defaultValues).status();
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -80,6 +82,12 @@ const ControlForm = ({
         onChange={handleSelectChange("ipo")}
         label="IPO"
         defaultValue={pDefVal(ipo, ipos)}
+      />
+      <Select
+        options={statuses}
+        onChange={handleSelectChange("status")}
+        label="Status"
+        defaultValue={pDefVal(status, statuses)}
       />
       <div className="d-flex justify-content-end">
         <Button className="pwc px-5" type="submit" loading={submitting}>
@@ -121,6 +129,11 @@ const assertions = Object.entries(Assertion).map(([label, value]) => ({
   value
 }));
 
+const statuses = Object.entries(Status).map(([label, value]) => ({
+  label,
+  value
+}));
+
 // -------------------------------------------------------------------------
 // Type Definitions
 // -------------------------------------------------------------------------
@@ -139,6 +152,7 @@ export interface CreateControlFormValues {
   ipo: Ipo;
   assertion: Assertion;
   description?: string;
+  status: Status;
 }
 type Option = {
   label: string;
