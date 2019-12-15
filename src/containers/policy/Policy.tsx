@@ -241,7 +241,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                   <FaBookmark /> Bookmark
                 </div>
               ),
-              onClick: console.log
+              onClick: console.info
             }
           ]}
         >
