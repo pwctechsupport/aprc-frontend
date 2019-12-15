@@ -13,13 +13,13 @@ const RiskRoute = () => {
   return (
     <div className="d-flex">
       <div>
-        <Route path="/admin/risk" component={RiskSideBox} />
+        <Route path="/risk" component={RiskSideBox} />
       </div>
       <div className="w-100 ml-3">
-        <Route exact path="/admin/risk" component={Risks} />
+        <Route exact path="/risk" component={Risks} />
         <Switch>
-          <Route exact path="/admin/risk/create" component={CreateRisk} />
-          <Route exact path="/admin/risk/:id" component={Risk} />
+          <Route exact path="/risk/create" component={CreateRisk} />
+          <Route exact path="/risk/:id" component={Risk} />
         </Switch>
       </div>
     </div>
