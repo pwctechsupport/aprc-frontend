@@ -17,13 +17,15 @@ import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import { Link } from "react-router-dom";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import Table from "../../shared/components/Table";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaEdit, FaTimes } from "react-icons/fa";
+import { MdModeEdit } from "react-icons/md";
 import Helmet from "react-helmet";
 import ResourceBar from "../../shared/components/ResourceBar";
 import classnames from "classnames";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
+  const toggleEditMode = () => setInEditMode(prev => !prev);
   const id = get(match, "params.id", "");
   const { loading, data } = usePolicyQuery({
     variables: { id },
@@ -118,6 +120,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         <h5 className="mt-5">Resources</h5>
         {resources.map(resource => (
           <ResourceBar
+            key={resource.id}
             resourceId={resource.id}
             name={resource.name}
             rating={resource.rating}
@@ -145,8 +148,12 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           businessProcessIds: oc(data)
             .policy.businessProcesses([])
             .map(r => r.id),
-          riskIds: oc(data).policy.risks([]).map(r => r.id),
-          controlIds: oc(data).policy.controls([]).map(r => r.id),
+          riskIds: oc(data)
+            .policy.risks([])
+            .map(r => r.id),
+          controlIds: oc(data)
+            .policy.controls([])
+            .map(r => r.id),
           //   .policy.risks([])
           //   .map(r => r.id),
           status: status as Status
@@ -169,6 +176,32 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     );
   };
 
+  const renderPolicyAction = () => {
+    if (inEditMode) {
+      return (
+        <Button onClick={toggleEditMode} color="">
+          <FaTimes size={22} className="mr-2" />
+          Cancel Edit
+        </Button>
+      );
+    }
+    return (
+      <div className="d-flex align-items-center">
+        {!isMaximumLevel && (
+          <Link to={`/policy/${id}/create-sub-policy`}>
+            <Button className="pwc">+ Create Sub-Policy</Button>
+          </Link>
+        )}
+        <MdModeEdit
+          size={22}
+          className="mx-3 clickable"
+          onClick={toggleEditMode}
+        />
+        <FaTrash onClick={handleDeleteMain} className="clickable text-red" />
+      </div>
+    );
+  };
+
   return (
     <div>
       <Helmet>
@@ -176,26 +209,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       </Helmet>
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={`Policy ${title}`} />
-        <div className="d-flex">
-          {!isMaximumLevel && (
-            <Link to={`/policy/${id}/create-sub-policy`}>
-              <Button className="pwc">+ Create Sub-Policy</Button>
-            </Link>
-          )}
-          <Button
-            onClick={() => setInEditMode(!inEditMode)}
-            className={classnames("mx-1", inEditMode ? "cancel" : "pwc")}
-          >
-            {inEditMode ? "Cancel Edit" : "Edit"}
-          </Button>
-          <Button
-            onClick={handleDeleteMain}
-            loading={destroyState.loading}
-            color="danger"
-          >
-            Delete
-          </Button>
-        </div>
+        {renderPolicyAction()}
       </div>
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
       {children.length ? (
