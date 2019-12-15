@@ -15,9 +15,11 @@ const Menu = ({ children, data }: MenuProps) => {
       </DropdownToggle>
       <DropdownMenu right>
         {Array.isArray(data) &&
-          data.map(item => {
+          data.map((item, index) => {
             return (
-              <DropdownItem onClick={item.onClick}>{item.label}</DropdownItem>
+              <DropdownItem key={index} onClick={item.onClick}>
+                {item.label}
+              </DropdownItem>
             );
           })}
       </DropdownMenu>
