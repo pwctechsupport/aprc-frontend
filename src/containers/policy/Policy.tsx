@@ -1,35 +1,28 @@
 import get from "lodash/get";
 import React, { useState } from "react";
+import Helmet from "react-helmet";
+import { FaBookmark, FaEllipsisV, FaTimes, FaTrash } from "react-icons/fa";
+import { IoMdDownload } from "react-icons/io";
+import { MdEmail, MdModeEdit, MdPrint } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
   PoliciesDocument,
+  PolicyDocument,
+  Status,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation,
-  PolicyDocument,
-  Status
+  useUpdatePolicyMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
-import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
-import { Link } from "react-router-dom";
-import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import Table from "../../shared/components/Table";
-import {
-  FaTrash,
-  FaEdit,
-  FaTimes,
-  FaEllipsisV,
-  FaBookmark,
-  FaMailBulk
-} from "react-icons/fa";
-import { IoMdDownload } from "react-icons/io";
-import { MdModeEdit, MdEmail, MdPrint } from "react-icons/md";
-import Helmet from "react-helmet";
-import ResourceBar from "../../shared/components/ResourceBar";
 import Menu from "../../shared/components/Menu";
+import ResourceBar from "../../shared/components/ResourceBar";
+import Table from "../../shared/components/Table";
+import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
+import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -54,7 +47,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     refetchQueries: [{ query: PolicyDocument, variables: { id } }],
     awaitRefetchQueries: true
   });
-  const [destroyMain, destroyState] = useDestroyPolicyMutation({
+  const [destroyMain] = useDestroyPolicyMutation({
     onCompleted: () => {
       toast.success("Delete Success");
       history.push("/policy");

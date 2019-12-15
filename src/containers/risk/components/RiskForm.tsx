@@ -1,22 +1,15 @@
 import React, { useEffect } from "react";
-import { RouteComponentProps } from "react-router";
-import { Status, LevelOfRisk } from "../../../generated/graphql";
 import useForm from "react-hook-form";
-import * as yup from "yup";
 import { Form } from "reactstrap";
+import { oc } from "ts-optchain";
+import * as yup from "yup";
+import { LevelOfRisk, Status } from "../../../generated/graphql";
+import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
-import Button from "../../../shared/components/Button";
-import { oc } from "ts-optchain";
 
-const RiskForm = ({
-  onSubmit,
-  defaultValues,
-  submitting
-}: RiskFormProps) => {
-  const { register, setValue, watch, errors, handleSubmit } = useForm<
-    RiskFormValues
-  >({
+const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
+  const { register, setValue, errors, handleSubmit } = useForm<RiskFormValues>({
     validationSchema,
     defaultValues
   });
@@ -27,18 +20,17 @@ const RiskForm = ({
   }, [register]);
 
   // function handleChange(name: string, value: string) {
-    // }
-    
-    const handleChange = (name: string) => ({ value } : any) => {
-        setValue(name, value);
-    
-  }
+  // }
+
+  const handleChange = (name: string) => ({ value }: any) => {
+    setValue(name, value);
+  };
 
   const submit = (values: RiskFormValues) => {
     onSubmit && onSubmit(values);
-    console.log('values:', values)
-  }
- 
+    console.log("values:", values);
+  };
+
   const levelOfRisks = Object.entries(LevelOfRisk).map(([label, value]) => ({
     label,
     value
@@ -48,11 +40,11 @@ const RiskForm = ({
     value
   }));
 
-  const levelOfRisk = oc(defaultValues).levelOfRisk()
-  const status = oc(defaultValues).status()
-  const name = oc(defaultValues).name()
+  const levelOfRisk = oc(defaultValues).levelOfRisk();
+  const status = oc(defaultValues).status();
+  const name = oc(defaultValues).name();
 
-  console.log('name', name);
+  console.log("name", name);
 
   return (
     <div>
@@ -74,24 +66,22 @@ const RiskForm = ({
             option => option.value === levelOfRisk
           )}
         />
-         <Select
+        <Select
           name="status"
           label="Status"
           options={statuses}
           innerRef={register({ required: true })}
           onChange={handleChange("status")}
           error={errors.status && errors.status.message}
-          defaultValue={statuses.find(
-            option => option.value === status
-          )}
+          defaultValue={statuses.find(option => option.value === status)}
         />
         <Button type="submit" loading={submitting}>
           Submit
         </Button>
       </Form>
     </div>
-  )
-}
+  );
+};
 
 const validationSchema = yup.object().shape({
   name: yup.string().required(),

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { useRisksQuery } from "../../../generated/graphql";
+import React from "react";
+import { Link } from "react-router-dom";
 import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
-import { Link } from "react-router-dom";
+import { useRisksQuery } from "../../../generated/graphql";
 
 const RiskSideBox = () => {
-  const {loading, data} = useRisksQuery({
+  const { data } = useRisksQuery({
     variables: { filter: {}, limit: 5 }
-  })
+  });
 
   return (
     <aside>
@@ -21,18 +21,18 @@ const RiskSideBox = () => {
             </tr>
           </thead>
           <tbody>
-          {oc(data)
-            .risks.collection([])
-            .map(risk => {
-              return (
-                <tr key={risk.id}>
-                  <td>
-                    <Link to={`/risk/${risk.id}`}>{oc(risk).name("")}</Link>
-                  </td>
-                  <td>24 August 2019</td>
-                </tr>
-              );
-            })}
+            {oc(data)
+              .risks.collection([])
+              .map(risk => {
+                return (
+                  <tr key={risk.id}>
+                    <td>
+                      <Link to={`/risk/${risk.id}`}>{oc(risk).name("")}</Link>
+                    </td>
+                    <td>24 August 2019</td>
+                  </tr>
+                );
+              })}
           </tbody>
         </Table>
       </div>
