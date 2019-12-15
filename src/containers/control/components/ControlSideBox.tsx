@@ -8,13 +8,15 @@ const ControlSideBox = ({
 }: any) => {
   return (
     <aside>
-      <div className="policy-side-box">
-        <Input
-          value={searchValue}
-          onChange={handleChange}
-          placeholder={placeholder}
-          className="dark"
-        />
+      <div className="side-box">
+        <div className="side-box__searchbar">
+          <Input
+            value={searchValue}
+            onChange={handleChange}
+            placeholder={placeholder}
+            className="dark"
+          />
+        </div>
       </div>
     </aside>
   );

@@ -13,7 +13,7 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
   const [searchQuery] = useDebounce(search, 700);
   return (
     <aside>
-      <div className="policy-side-box">
+      <div className="side-box">
         <div className="side-box__searchbar mb-3">
           <Input
             value={search}

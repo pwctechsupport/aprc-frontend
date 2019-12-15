@@ -4,7 +4,7 @@ import { Input } from "reactstrap";
 const BusinessProcessSideBox = ({ searchValue, handleChange }: any) => {
   return (
     <aside>
-      <div className="policy-side-box ">
+      <div className="side-box p-2">
         <Input
           placeholder="Search..."
           value={searchValue}

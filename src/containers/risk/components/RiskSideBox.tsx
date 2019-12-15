@@ -11,7 +11,7 @@ const RiskSideBox = () => {
 
   return (
     <aside>
-      <div className="policy-side-box">
+      <div className="side-box p-2">
         <h4>Recently Added</h4>
         <Table>
           <thead>

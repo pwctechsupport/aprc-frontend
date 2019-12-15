@@ -12,7 +12,7 @@ const ResourceSideBox = () => {
   const resources = oc(data).resources.collection([]);
 
   return (
-    <div className="policy-side-box">
+    <div className="side-box p-2">
       <Input
         value={search}
         placeholder="Search Policies..."
