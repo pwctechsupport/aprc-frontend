@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
 import useForm from "react-hook-form";
-import { Form, Modal, ModalHeader, ModalBody } from "reactstrap";
+import { Form, Modal, ModalBody, ModalHeader } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
+  Status,
+  useBusinessProcessesQuery,
+  useControlsQuery,
   useReferencesQuery,
   useResourcesQuery,
-  useItSystemsQuery,
-  useBusinessProcessesQuery,
-  Status,
-  useControlsQuery,
   useRisksQuery
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
-import { toLabelValue } from "../../../shared/formatter";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
+import { toLabelValue } from "../../../shared/formatter";
 
 const SubPolicyForm = ({
   onSubmit,
@@ -40,10 +39,10 @@ const SubPolicyForm = ({
     .resources.collection([])
     .map(toLabelValue);
 
-  const itSystemsQ = useItSystemsQuery();
-  const itSystemsOptions = oc(itSystemsQ.data)
-    .itSystems.collection([])
-    .map(toLabelValue);
+  // const itSystemsQ = useItSystemsQuery();
+  // const itSystemsOptions = oc(itSystemsQ.data)
+  //   .itSystems.collection([])
+  //   .map(toLabelValue);
 
   const businessProcessesQ = useBusinessProcessesQuery();
   const businessProcessesOptions = oc(businessProcessesQ.data)
@@ -51,10 +50,14 @@ const SubPolicyForm = ({
     .map(toLabelValue);
 
   const controlsQ = useControlsQuery();
-  const controlsOptions = oc(controlsQ.data).controls.collection([]).map(({id, description}) => ({label: description || "", value: id}))
+  const controlsOptions = oc(controlsQ.data)
+    .controls.collection([])
+    .map(({ id, description }) => ({ label: description || "", value: id }));
 
   const risksQ = useRisksQuery();
-  const risksOptions = oc(risksQ.data).risks.collection([]).map(toLabelValue);
+  const risksOptions = oc(risksQ.data)
+    .risks.collection([])
+    .map(toLabelValue);
 
   useEffect(() => {
     register({ name: "parentId" });
@@ -157,7 +160,7 @@ const SubPolicyForm = ({
             )}
           />
 
-          <FormSelect
+          {/* <FormSelect
             isMulti
             isLoading={itSystemsQ.loading}
             name="itSystemIds"
@@ -170,7 +173,7 @@ const SubPolicyForm = ({
                 .itSystemIds([])
                 .includes(res.value)
             )}
-          />
+          /> */}
 
           <FormSelect
             isMulti
