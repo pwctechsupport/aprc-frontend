@@ -87,7 +87,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           itSystemIds: values.itSystemIds,
           businessProcessIds: values.businessProcessIds,
           description: values.description,
-          referenceIds: values.referenceIds
+          referenceIds: values.referenceIds,
+          controlIds: values.controlIds,
+          riskIds: values.riskIds
         }
       }
     });
@@ -105,6 +107,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     .map(item => item.id);
   const status = oc(data).policy.status("");
   const resources = oc(data).policy.resources([]);
+  const controls = oc(data).policy.controls([]);
 
   const isMaximumLevel = ancestry.split("/").length === 5;
 
@@ -128,6 +131,38 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             visit={resource.visit}
           />
         ))}
+        <h5 className="mt-5">Control</h5>
+        {controls.map(control => {
+          return (
+            <div>
+              <ul>
+                <li>{control.description}</li>
+              </ul>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Freq</th>
+                    <th>Type of Control</th>
+                    <th>Nature</th>
+                    <th>IPO</th>
+                    <th>Assertion</th>
+                    <th>Control Owner</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr key={control.id}>
+                    <td>{control.frequency}</td>
+                    <td>{control.typeOfControl}</td>
+                    <td>{control.nature}</td>
+                    <td>{control.ipo}</td>
+                    <td>{control.assertion}</td>
+                    <td>{control.controlOwner}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -149,14 +184,12 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           businessProcessIds: oc(data)
             .policy.businessProcesses([])
             .map(r => r.id),
-          riskIds: oc(data)
-            .policy.risks([])
-            .map(r => r.id),
           controlIds: oc(data)
             .policy.controls([])
             .map(r => r.id),
-          //   .policy.risks([])
-          //   .map(r => r.id),
+          riskIds: oc(data)
+            .policy.risks([])
+            .map(r => r.id),
           status: status as Status
         }}
         onSubmit={handleUpdateSubPolicy}

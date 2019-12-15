@@ -1,4 +1,4 @@
-query controls($filter: BaseScalar!) {
+query controls($filter: BaseScalar = {}) {
   controls(filter: $filter) {
     collection {
       ...control

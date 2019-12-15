@@ -96,6 +96,7 @@ fragment policyFragment on Policy {
   controls {
     id
     description
+    ...control
   }
   itSystems {
     id
