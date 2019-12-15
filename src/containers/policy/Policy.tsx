@@ -17,11 +17,19 @@ import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import { Link } from "react-router-dom";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import Table from "../../shared/components/Table";
-import { FaTrash, FaEdit, FaTimes } from "react-icons/fa";
-import { MdModeEdit } from "react-icons/md";
+import {
+  FaTrash,
+  FaEdit,
+  FaTimes,
+  FaEllipsisV,
+  FaBookmark,
+  FaMailBulk
+} from "react-icons/fa";
+import { IoMdDownload } from "react-icons/io";
+import { MdModeEdit, MdEmail, MdPrint } from "react-icons/md";
 import Helmet from "react-helmet";
 import ResourceBar from "../../shared/components/ResourceBar";
-import classnames from "classnames";
+import Menu from "../../shared/components/Menu";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -197,7 +205,48 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           className="mx-3 clickable"
           onClick={toggleEditMode}
         />
-        <FaTrash onClick={handleDeleteMain} className="clickable text-red" />
+        <FaTrash
+          onClick={handleDeleteMain}
+          className="clickable text-red mr-3"
+        />
+        <Menu
+          data={[
+            {
+              label: (
+                <div>
+                  <MdPrint /> Print
+                </div>
+              ),
+              onClick: console.log
+            },
+            {
+              label: (
+                <div>
+                  <IoMdDownload /> Download
+                </div>
+              ),
+              onClick: console.log
+            },
+            {
+              label: (
+                <div>
+                  <MdEmail /> Mail
+                </div>
+              ),
+              onClick: console.log
+            },
+            {
+              label: (
+                <div>
+                  <FaBookmark /> Bookmark
+                </div>
+              ),
+              onClick: console.log
+            }
+          ]}
+        >
+          <FaEllipsisV />
+        </Menu>
       </div>
     );
   };
