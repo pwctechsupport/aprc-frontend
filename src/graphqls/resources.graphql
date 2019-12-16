@@ -20,6 +20,8 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int) {
       # upload ga ada
       # status ga ada
       resuploadUrl
+      createdAt
+      updatedAt
     }
     metadata {
       currentPage
