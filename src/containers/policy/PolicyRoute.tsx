@@ -14,16 +14,16 @@ const PolicyRoute = () => {
         <Route path="/policy" component={PolicySideBox} />
       </div>
       <div className="w-100 ml-3">
-        <Route exact path="/policy" component={Policies} />
+        <Route exact path="/policy" component={PolicyDashboard} />
+        <Route exact path="/policy/all" component={Policies} />
+        <Route
+          exact
+          path="/policy/:id/create-sub-policy"
+          component={CreateSubPolicy}
+        />
         <Switch>
-          <Route exact path="/policy/dashboard" component={PolicyDashboard} />
           <Route exact path="/policy/create" component={CreatePolicy} />
           <Route exact path="/policy/:id" component={Policy} />
-          <Route
-            exact
-            path="/policy/:id/create-sub-policy"
-            component={CreateSubPolicy}
-          />
         </Switch>
       </div>
     </div>

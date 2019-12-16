@@ -6,6 +6,7 @@ import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { usePolicyTreeQuery } from "../../../generated/graphql";
 import classnames from "classnames";
+import Button from "../../../shared/components/Button";
 
 const PolicySideBox = ({ location }: RouteComponentProps) => {
   const activeId = readCurrentParams(location.pathname);
@@ -14,13 +15,28 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
   return (
     <aside>
       <div className="side-box">
-        <div className="side-box__searchbar mb-3">
+        <div className="side-box__searchbar mb-2">
           <Input
             value={search}
             placeholder="Search Policies..."
             onChange={e => setSearch(e.target.value)}
             className="dark"
           />
+        </div>
+        <div className="mx-3 mb-3">
+          {location.pathname.includes("/policy/all") ? (
+            <Link to="/policy">
+              <Button className="pwc" block>
+                View Dashboard Policies
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/policy/all">
+              <Button className="pwc" block>
+                View All Policies
+              </Button>
+            </Link>
+          )}
         </div>
         <div>
           <PolicyTree search={searchQuery} activeId={activeId} />
