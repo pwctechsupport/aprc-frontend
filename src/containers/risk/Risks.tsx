@@ -47,7 +47,6 @@ const Risks = () => {
             <th>Risk ID</th>
             <th>Risk</th>
             <th>Risk Level</th>
-            {/* <th>Business Process</th> */}
             <th></th>
           </tr>
         </thead>
@@ -57,10 +56,10 @@ const Risks = () => {
             .map(risk => {
               return (
                 <tr key={risk.id}>
+                  <td>{risk.id}</td>
                   <td>
-                    <Link to={`/risk/${risk.id}`}>{risk.id}</Link>
+                    <Link to={`/risk/${risk.id}`}>{oc(risk).name("")}</Link>
                   </td>
-                  <td>{oc(risk).name("")}</td>
                   <td>{oc(risk).levelOfRisk("")}</td>
                   <td>
                     <FaTrash

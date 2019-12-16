@@ -75,9 +75,11 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
           error={errors.status && errors.status.message}
           defaultValue={statuses.find(option => option.value === status)}
         />
-        <Button type="submit" loading={submitting}>
-          Submit
-        </Button>
+        <div className="d-flex justify-content-end">
+          <Button className="pwc px-5" type="submit" loading={submitting}>
+            Submit
+          </Button>
+        </div>
       </Form>
     </div>
   );
