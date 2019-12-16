@@ -133,21 +133,27 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           />
         ))}
         <h5 className="mt-5">Risks</h5>
-        {risks.map(risk => {
-          return (
-            <div>
-              <ul>
-                <li>{risk.name}</li>
-              </ul>
-            </div>
-          );
-        })}
+        <div>
+          <ul>
+            {risks.map(risk => {
+              return (
+                <li>
+                  <Link to={`/risk/${risk.id}`}>{risk.name}</Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
         <h5 className="mt-5">Controls</h5>
         {controls.map(control => {
           return (
             <div>
               <ul>
-                <li>{control.description}</li>
+                <li>
+                  <Link to={`/control/${control.id}`}>
+                    {control.description}
+                  </Link>
+                </li>
               </ul>
               <Table>
                 <thead>
