@@ -5,6 +5,7 @@ import Policy from "./Policy";
 import CreatePolicy from "./CreatePolicy";
 import CreateSubPolicy from "./CreateSubPolicy";
 import PolicySideBox from "./components/PolicySideBox";
+import PolicyDashboard from "./PolicyDashboard";
 
 const PolicyRoute = () => {
   return (
@@ -15,6 +16,7 @@ const PolicyRoute = () => {
       <div className="w-100 ml-3">
         <Route exact path="/policy" component={Policies} />
         <Switch>
+          <Route exact path="/policy/dashboard" component={PolicyDashboard} />
           <Route exact path="/policy/create" component={CreatePolicy} />
           <Route exact path="/policy/:id" component={Policy} />
           <Route

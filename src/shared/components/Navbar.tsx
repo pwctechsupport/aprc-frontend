@@ -45,7 +45,7 @@ const Navbar = () => {
       <Image src={pwcLogo} alt="pwc" />
       <NavbarUl>
         {userMenus.map(item => (
-          <NavbarLi>
+          <NavbarLi key={item.label}>
             <MyNavLink to={item.path}>{item.label}</MyNavLink>
           </NavbarLi>
         ))}

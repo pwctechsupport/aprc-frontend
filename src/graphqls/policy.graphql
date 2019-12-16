@@ -143,3 +143,63 @@ mutation createSubPolicy($input: CreateSubPolicyInput!) {
     clientMutationId
   }
 }
+
+query policyDashboard {
+  draftPolicies: policies(
+    filter: {
+      status_in: [
+        "draft"
+        "waiting_for_approval"
+        "ready_for_edit"
+        "waiting_for_review"
+      ]
+    }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  releasedPolicies: policies(filter: { status_eq: release }) {
+    metadata {
+      totalCount
+    }
+  }
+  draftControls: controls(
+    filter: {
+      status_in: [
+        "draft"
+        "waiting_for_approval"
+        "ready_for_edit"
+        "waiting_for_review"
+      ]
+    }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  releasedControls: controls(filter: { status_eq: release }) {
+    metadata {
+      totalCount
+    }
+  }
+  draftRisks: risks(
+    filter: {
+      status_in: [
+        "draft"
+        "waiting_for_approval"
+        "ready_for_edit"
+        "waiting_for_review"
+      ]
+    }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  releasedRisks: risks(filter: { status_eq: release }) {
+    metadata {
+      totalCount
+    }
+  }
+}
