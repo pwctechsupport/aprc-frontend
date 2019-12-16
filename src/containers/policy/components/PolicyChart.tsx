@@ -25,14 +25,13 @@ const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
             <PolicyChartItem
               height={(item.reviewed / maxCount) * 400}
               color={colors[1]}
-            >
-              <div>
-                <ChartValue color={colors[0]}>
-                  {item.prepared + item.reviewed}
-                </ChartValue>
-                <ChartLabel color={colors[0]}>{item.label}</ChartLabel>
-              </div>
-            </PolicyChartItem>
+            ></PolicyChartItem>
+            <ChartLabelValueWrapper>
+              <ChartValue color={colors[0]}>
+                {item.prepared + item.reviewed}
+              </ChartValue>
+              <ChartLabel color={colors[0]}>{item.label}</ChartLabel>
+            </ChartLabelValueWrapper>
           </PolicyChartItemWrapper>
         );
       })}
@@ -77,6 +76,8 @@ const PolicyChartItemWrapper = styled.div`
   height: 400px;
   margin-right: 20px;
   border-radius: 10px;
+  display: flex;
+  justify-content: center;
   &:last-child {
     margin-right: 0;
   }
@@ -113,6 +114,11 @@ const ChartLabel = styled.div<ChartLabelProps>`
   font-size: 14px;
   line-height: 16px;
   text-align: center;
+`;
+
+const ChartLabelValueWrapper = styled.div`
+  position: absolute;
+  bottom: 20px;
 `;
 
 // ---------------------------------------------------
