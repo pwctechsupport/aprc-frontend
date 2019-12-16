@@ -6,7 +6,6 @@ import Table from "../../shared/components/Table";
 
 const PolicyDashboard = () => {
   const { data } = usePolicyDashboardQuery();
-  console.log("data: ", data);
   const chartData = [
     {
       label: "Policy",
