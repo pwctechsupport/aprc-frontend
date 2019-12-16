@@ -108,6 +108,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const status = oc(data).policy.status("");
   const resources = oc(data).policy.resources([]);
   const controls = oc(data).policy.controls([]);
+  const risks = oc(data).policy.risks([]);
 
   const isMaximumLevel = ancestry.split("/").length === 5;
 
@@ -131,7 +132,17 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             visit={resource.visit}
           />
         ))}
-        <h5 className="mt-5">Control</h5>
+        <h5 className="mt-5">Risks</h5>
+        {risks.map(risk => {
+          return (
+            <div>
+              <ul>
+                <li>{risk.name}</li>
+              </ul>
+            </div>
+          );
+        })}
+        <h5 className="mt-5">Controls</h5>
         {controls.map(control => {
           return (
             <div>
