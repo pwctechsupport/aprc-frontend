@@ -4,23 +4,16 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  // PoliciesDocument,
-  // useDestroyPolicyMutation,
-  // usePoliciesQuery
   RisksDocument,
   useDestroyRiskMutation,
-  useRisksQuery,
+  useRisksQuery
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import Helmet from "react-helmet";
 
 const Risks = () => {
-  // const [search, setSearch] = useState("");
-  // const [searchQuery] = useDebounce(search, 700);
-  const { loading, data } = useRisksQuery({
-    variables: { filter: {} }
-  });
+  const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
 
   const [destroy] = useDestroyRiskMutation({
     onCompleted: () => toast.success("Delete Success"),
@@ -68,9 +61,7 @@ const Risks = () => {
                     <Link to={`/risk/${risk.id}`}>{risk.id}</Link>
                   </td>
                   <td>{oc(risk).name("")}</td>
-                  <td>
-                    {oc(risk).levelOfRisk("")}
-                  </td>
+                  <td>{oc(risk).levelOfRisk("")}</td>
                   <td>
                     <FaTrash
                       onClick={() => handleDelete(risk.id)}

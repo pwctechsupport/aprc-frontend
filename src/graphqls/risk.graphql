@@ -1,23 +1,28 @@
 # Write your query or mutation here
-query risks ($filter: BaseScalar = {}, $limit: Int) {
-  risks (filter: $filter, limit: $limit) {
+query risks($filter: BaseScalar = {}, $limit: Int) {
+  risks(filter: $filter, limit: $limit) {
     collection {
-      id
-      name
-      levelOfRisk
+      ...risk
     }
   }
 }
 
 query risk($id: ID!) {
   risk(id: $id) {
-    name
-    levelOfRisk
-    status
+    ...risk
   }
 }
 
-mutation createRisk ($input: CreateRiskInput!) {
+fragment risk on Risk {
+  id
+  name
+  levelOfRisk
+  createdAt
+  updatedAt
+  status
+}
+
+mutation createRisk($input: CreateRiskInput!) {
   createRisk(input: $input) {
     success
   }

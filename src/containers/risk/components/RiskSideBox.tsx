@@ -3,10 +3,14 @@ import { Link } from "react-router-dom";
 import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useRisksQuery } from "../../../generated/graphql";
+import { date } from "../../../shared/formatter";
+
+const formatDate = (v: Date) => date(v, { hour: "numeric", minute: "numeric" });
 
 const RiskSideBox = () => {
   const { data } = useRisksQuery({
-    variables: { filter: {}, limit: 5 }
+    variables: { limit: 5 },
+    fetchPolicy: "network-only"
   });
 
   return (
@@ -16,8 +20,8 @@ const RiskSideBox = () => {
         <Table>
           <thead>
             <tr>
-              <th>Risk</th>
-              <th>Added Date</th>
+              <th className="text-white">Risk</th>
+              <th className="text-white">Added Date</th>
             </tr>
           </thead>
           <tbody>
@@ -27,9 +31,13 @@ const RiskSideBox = () => {
                 return (
                   <tr key={risk.id}>
                     <td>
-                      <Link to={`/risk/${risk.id}`}>{oc(risk).name("")}</Link>
+                      <Link to={`/risk/${risk.id}`} className="text-white">
+                        {oc(risk).name("")}
+                      </Link>
                     </td>
-                    <td>24 August 2019</td>
+                    <td className="text-white">
+                      {formatDate(oc(risk).updatedAt(""))}
+                    </td>
                   </tr>
                 );
               })}

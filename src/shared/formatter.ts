@@ -11,21 +11,25 @@ export const money = (input: number | string | null | undefined) => {
   }).format(inputMoney);
 };
 
-export const date = (input: Date | number | string | null | undefined) => {
+export const date = (
+  input: Date | number | string | null | undefined,
+  options?: Intl.DateTimeFormatOptions
+) => {
   if (input == null) {
     return input;
   }
   input = new Date(input);
-  const options = {
-    weekday: "long",
+  const defaultOptions = {
     year: "numeric",
     month: "long",
     day: "numeric",
     hour: "numeric",
-    minute: "numeric",
-    second: "numeric"
+    minute: "numeric"
   };
-  return new Intl.DateTimeFormat(["ban", "id"], options).format(input);
+  return new Intl.DateTimeFormat(["ban", "id"], {
+    ...defaultOptions,
+    ...options
+  }).format(input);
 };
 
 export const toLabelValue = ({ id, name }: ToLabelValueValues) => ({
@@ -40,9 +44,9 @@ interface ToLabelValueValues {
 
 export const toBase64 = (file: File) =>
   new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
 
-    reader.onload = () => resolve(reader.result)
-    reader.onerror = error => reject(error)
-  })
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
