@@ -58,9 +58,9 @@ const PolicyDashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {tableData.map(item => {
+          {tableData.map((item, index) => {
             return (
-              <tr>
+              <tr key={index}>
                 <td>{item.label}</td>
                 <td>{item.policy}</td>
                 <td>{item.risk}</td>
