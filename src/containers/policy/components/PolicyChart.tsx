@@ -9,7 +9,8 @@ const mockupData = [
 
 const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
   const maxCount = Math.max(
-    ...data.map(item => Math.max(item.prepared, item.reviewed))
+    ...data.map(item => Math.max(item.prepared, item.reviewed)),
+    1
   );
 
   return (
