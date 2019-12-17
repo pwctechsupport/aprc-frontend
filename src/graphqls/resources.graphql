@@ -98,6 +98,12 @@ mutation destroyResource($id: ID!) {
   }
 }
 
+mutation createResourceRating($input: CreateResourceRatingInput!) {
+  createResourceRating(input: $input) {
+    success
+  }
+}
+
 mutation updateResourceRating($input: UpdateResourceRatingInput!) {
   updateResourceRating(input: $input) {
     success

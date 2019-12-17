@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import StarRatingComponent from "react-star-rating-component";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
-import { useUpdateResourceRatingMutation } from "../../generated/graphql";
+import { useCreateResourceRatingMutation } from "../../generated/graphql";
 import { useSelector } from "../hooks/useSelector";
 import { FaFile } from "react-icons/fa";
 
 const ResourceBar = (props: ResourceBarProps) => {
   const user = useSelector(state => state.auth.user);
-  const [mutate] = useUpdateResourceRatingMutation({
+  const [mutate] = useCreateResourceRatingMutation({
     onCompleted: () => toast.success("Update Rating Sucess"),
     onError: () => toast.error("Update Rating Failed"),
     awaitRefetchQueries: true,
@@ -19,7 +19,7 @@ const ResourceBar = (props: ResourceBarProps) => {
     mutate({
       variables: {
         input: {
-          id: props.resourceId,
+          resourceId: props.resourceId,
           rating: nextValue,
           userId: oc(user).id("")
         }
@@ -42,12 +42,10 @@ const ResourceBar = (props: ResourceBarProps) => {
         </a>
       </div>
 
-      <div>{props.rating}</div>
-
       <div className="star-and-views">
         <StarRatingComponent
           name={props.name}
-          value={props.rating || 2}
+          value={props.rating || 0}
           starCount={5}
           onStarClick={handleStarClick}
           starColor="#d85604"
