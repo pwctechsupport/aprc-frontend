@@ -15,8 +15,8 @@ import Avatar from "./Avatar";
 import { useSelector } from "../hooks/useSelector";
 import { oc } from "ts-optchain";
 
-const menus = [
-  { label: "Policy", path: "/policy" },
+const adminMenus = [
+  { label: "Policy", path: "/policy/all" },
   { label: "Control", path: "/control" },
   { label: "Business Process", path: "/business-process" },
   { label: "References", path: "/references" },
@@ -72,7 +72,7 @@ const Navbar = () => {
 const AdministrativeDropdown = () => {
   const history = useHistory();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const data = menus.map(menu => ({
+  const data = adminMenus.map(menu => ({
     label: menu.label,
     onClick: () => history.push(menu.path)
   }));
