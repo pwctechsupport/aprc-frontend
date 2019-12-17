@@ -2,7 +2,7 @@ import React from "react";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import { RouteComponentProps } from "react-router";
-import { useCreatePolicyMutation } from "../../generated/graphql";
+import { useCreatePolicyMutation, Status } from "../../generated/graphql";
 import { oc } from "ts-optchain";
 import { toast } from "react-toastify";
 import Helmet from "react-helmet";
@@ -25,7 +25,7 @@ const CreatePolicy = ({ history }: RouteComponentProps) => {
           title: values.title,
           policyCategoryId: values.policyCategoryId,
           description: values.description,
-          status: values.status
+          status: Status.Draft
         }
       }
     });
