@@ -88,6 +88,7 @@ fragment policyFragment on Policy {
     rating
     totalRating
     visit
+    resuploadUrl
   }
   risks {
     id

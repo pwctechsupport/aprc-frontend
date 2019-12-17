@@ -130,6 +130,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             name={resource.name}
             rating={resource.rating}
             visit={resource.visit}
+            resuploadUrl={resource.resuploadUrl}
           />
         ))}
         <h5 className="mt-5">Risks</h5>

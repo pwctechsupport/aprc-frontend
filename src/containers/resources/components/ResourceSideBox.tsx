@@ -32,6 +32,7 @@ const ResourceSideBox = () => {
           <Link
             className="side-box__item text-white d-flex justify-content-between mt-2 py-1"
             to={`/resources/${resource.id}`}
+            key={resource.id}
           >
             <div className="">{resource.name}</div>
             <div>{date(resource.updatedAt)}</div>

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import { useUpdateResourceRatingMutation } from "../../generated/graphql";
 import { useSelector } from "../hooks/useSelector";
+import { FaFile } from "react-icons/fa";
 
 const ResourceBar = (props: ResourceBarProps) => {
   const user = useSelector(state => state.auth.user);
@@ -27,9 +28,20 @@ const ResourceBar = (props: ResourceBarProps) => {
   };
   return (
     <div className="resource-bar">
-      <Link to={`/resources/${props.resourceId}`}>
-        <div className="name">{props.name}</div>
-      </Link>
+      <div className="d-flex align-items-center">
+        <Link to={`/resources/${props.resourceId}`}>
+          <div className="name">{props.name}</div>
+        </Link>
+        <a
+          href={`http://mandalorian.rubyh.co${props.resuploadUrl}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="ml-3"
+        >
+          <FaFile />
+        </a>
+      </div>
+
       <div>{props.rating}</div>
 
       <div className="star-and-views">
@@ -53,4 +65,5 @@ interface ResourceBarProps {
   name: string;
   rating?: number | undefined | null;
   visit?: string | number;
+  resuploadUrl: string | null | undefined;
 }
