@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  PolicyDocument,
   Status,
   useCreateBookmarkPolicyMutation,
   useDestroyPolicyMutation,

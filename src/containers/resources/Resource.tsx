@@ -33,7 +33,7 @@ const Resource = ({ match }: RouteComponentProps) => {
     onError: _ => toast.error("Update Failed")
   });
 
-  const [deleteResource, deleteResourceM] = useDestroyResourceMutation({
+  const [deleteResource] = useDestroyResourceMutation({
     refetchQueries: ["resources", "resource"],
     onCompleted: _ => toast.success("Delete Success"),
     onError: _ => toast.error("Delete Failed")

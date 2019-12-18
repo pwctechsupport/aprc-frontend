@@ -1,11 +1,11 @@
 import React from "react";
-import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
-import { RouteComponentProps } from "react-router";
-import { useCreatePolicyMutation, Status } from "../../generated/graphql";
-import { oc } from "ts-optchain";
-import { toast } from "react-toastify";
 import Helmet from "react-helmet";
+import { RouteComponentProps } from "react-router";
+import { toast } from "react-toastify";
+import { oc } from "ts-optchain";
+import { useCreatePolicyMutation } from "../../generated/graphql";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 
 const CreatePolicy = ({ history }: RouteComponentProps) => {
   const [createPolicy, { loading }] = useCreatePolicyMutation({
