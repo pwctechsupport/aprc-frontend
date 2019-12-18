@@ -14,8 +14,8 @@ const ResourceRoute = () => {
       <div className="w-100 ml-3">
         <Route exact path="/resources" component={Resources} />
         <Switch>
-          <Route exact path="/resources/:id" component={Resource} />
           <Route exact path="/resources/create" component={CreateResource} />
+          <Route exact path="/resources/:id" component={Resource} />
         </Switch>
       </div>
     </div>

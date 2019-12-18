@@ -18,6 +18,7 @@ const ResourceBox = ({
 }: ResourceBoxProps) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
+  const tooltipId = "resourceBarTooltip" + id;
 
   const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
@@ -45,11 +46,11 @@ const ResourceBox = ({
       <Tooltip
         placement="top"
         isOpen={tooltipOpen}
-        target={name}
+        target={tooltipId}
         toggle={toggle}
       >
         Avg. Rating: {rating} <br />
-        From {totalRating} users
+        From {totalRating} user(s)
       </Tooltip>
       <a
         href={`http://mandalorian.rubyh.co${resuploadUrl}`}
@@ -61,11 +62,11 @@ const ResourceBox = ({
       <ResourceBoxMeta>
         <div>{name}</div>
         <ResourceBoxBro>
-          <div id={name}>
+          <div id={tooltipId}>
             <StarRatingComponent
               name={name}
               starCount={5}
-              value={rating || 0}
+              value={rating}
               onStarClick={handleStarClick}
             />
           </div>
@@ -120,8 +121,8 @@ export default ResourceBox;
 interface ResourceBoxProps {
   id: string;
   name: string;
-  views: number | null | undefined;
-  rating: number | null | undefined;
+  views: number;
+  rating: number;
   resuploadUrl: string | null | undefined;
-  totalRating: number | null | undefined;
+  totalRating: number;
 }

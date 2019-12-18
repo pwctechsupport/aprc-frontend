@@ -13,19 +13,31 @@ import {
   useCreateBookmarkPolicyMutation,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation
+  useUpdatePolicyMutation,
+  useCreateResourceMutation,
+  CreateResourceInput
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import Menu from "../../shared/components/Menu";
-import ResourceBar from "../../shared/components/ResourceBar";
+import ResourceBar, {
+  AddResourceButton
+} from "../../shared/components/ResourceBar";
 import Table from "../../shared/components/Table";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import ResourceForm, {
+  ResourceFormValues
+} from "../resources/components/ResourceForm";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode(prev => !prev);
+
+  const [modal, setModal] = useState(false);
+  const toggleModal = () => setModal(prev => !prev);
+
   const id = get(match, "params.id", "");
   const { loading, data } = usePolicyQuery({
     variables: { id },
@@ -55,6 +67,15 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const [addBookmark] = useCreateBookmarkPolicyMutation({
     onCompleted: _ => toast.success("Added to bookmark"),
     onError: _ => toast.error("Failed to add bookmark")
+  });
+  const [createResource, createResourceM] = useCreateResourceMutation({
+    onCompleted: _ => {
+      toast.success("Resource Added");
+      toggleModal();
+    },
+    onError: _ => toast.error("Failed to add resource"),
+    awaitRefetchQueries: true,
+    refetchQueries: ["policy"]
   });
 
   function handleDeleteMain() {
@@ -96,6 +117,20 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     });
   }
 
+  function handleCreateResource(values: ResourceFormValues) {
+    const input: CreateResourceInput = {
+      category: values.category,
+      name: values.name,
+      resuploadBase64: values.resuploadBase64,
+      resuploadFileName: values.resuploadFileName,
+      policyIds: values.policyId ? [values.policyId] : [],
+      controlIds: values.controlId ? [values.controlId] : [],
+      businessProcessId: values.businessProcessId
+    };
+
+    createResource({ variables: { input } });
+  }
+
   const title = oc(data).policy.title("");
   const description = oc(data).policy.description("");
   const policyCategoryId = oc(data).policy.policyCategory.id("");
@@ -129,12 +164,13 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             key={resource.id}
             resourceId={resource.id}
             name={resource.name}
-            rating={resource.rating}
+            rating={resource.rating || 0}
             visit={resource.visit}
-            totalRating={resource.totalRating}
+            totalRating={resource.totalRating || 0}
             resuploadUrl={resource.resuploadUrl}
           />
         ))}
+        <AddResourceButton onClick={toggleModal} />
         <h5 className="mt-5">Risks</h5>
         <div>
           <ul>
@@ -350,6 +386,18 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           </Table>
         </>
       ) : null}
+      <Modal isOpen={modal} toggle={toggleModal}>
+        <ModalHeader>Add Resource</ModalHeader>
+        <ModalBody>
+          <ResourceForm
+            defaultValues={{
+              policyId: id
+            }}
+            onSubmit={handleCreateResource}
+            submitting={createResourceM.loading}
+          />
+        </ModalBody>
+      </Modal>
     </div>
   );
 };

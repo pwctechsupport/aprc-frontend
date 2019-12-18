@@ -7,6 +7,7 @@ import { useCreateResourceRatingMutation } from "../../generated/graphql";
 import { useSelector } from "../hooks/useSelector";
 import { FaFile } from "react-icons/fa";
 import { Tooltip } from "reactstrap";
+import styled from "styled-components";
 
 const ResourceBar = ({
   name,
@@ -18,6 +19,7 @@ const ResourceBar = ({
 }: ResourceBarProps) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
+  const tooltipId = "resourceBarTooltip" + resourceId;
 
   const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
@@ -45,11 +47,11 @@ const ResourceBar = ({
       <Tooltip
         placement="top"
         isOpen={tooltipOpen}
-        target={name}
+        target={tooltipId}
         toggle={toggle}
       >
         Avg. Rating: {rating} <br />
-        From {totalRating} users
+        From {totalRating} user(s)
       </Tooltip>
       <div className="d-flex align-items-center">
         <Link to={`/resources/${resourceId}`}>
@@ -66,10 +68,10 @@ const ResourceBar = ({
       </div>
 
       <div className="star-and-views">
-        <div id={name}>
+        <div id={tooltipId}>
           <StarRatingComponent
             name={name}
-            value={rating || 0}
+            value={rating}
             starCount={5}
             onStarClick={handleStarClick}
             starColor="#d85604"
@@ -83,11 +85,37 @@ const ResourceBar = ({
 
 export default ResourceBar;
 
+export const AddResourceButton = ({ onClick }: AddResourceButtonProps) => {
+  return (
+    <AddResourceButtonWrapper onClick={onClick}>
+      + Add Resource
+    </AddResourceButtonWrapper>
+  );
+};
+
+const AddResourceButtonWrapper = styled.div`
+  background-color: white;
+  text-align: center;
+  cursor: pointer;
+  padding: 5px 0;
+  border-radius: 3px;
+  transition: 0.15s ease-in-out;
+  color: grey;
+  &:hover {
+    background: lightgrey;
+    color: black;
+  }
+`;
+
+interface AddResourceButtonProps {
+  onClick: () => void;
+}
+
 interface ResourceBarProps {
   resourceId: string;
   name: string;
-  rating?: number | undefined | null;
-  visit?: string | number;
+  rating: number;
+  visit: number;
   resuploadUrl: string | null | undefined;
-  totalRating: number | null | undefined;
+  totalRating: number;
 }

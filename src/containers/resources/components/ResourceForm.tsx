@@ -1,33 +1,33 @@
-import React, { useEffect, Fragment } from 'react'
-import useForm from 'react-hook-form'
-import { Form } from 'reactstrap'
-import { oc } from 'ts-optchain'
-import * as yup from 'yup'
+import React, { useEffect, Fragment } from "react";
+import useForm from "react-hook-form";
+import { Form } from "reactstrap";
+import { oc } from "ts-optchain";
+import * as yup from "yup";
 import {
   Category,
-  useResourceFormMasterQuery,
-} from '../../../generated/graphql'
-import Button from '../../../shared/components/Button'
-import Input from '../../../shared/components/forms/Input'
-import Select from '../../../shared/components/forms/Select'
-import LoadingSpinner from '../../../shared/components/LoadingSpinner'
-import { toBase64, toLabelValue } from '../../../shared/formatter'
+  useResourceFormMasterQuery
+} from "../../../generated/graphql";
+import Button from "../../../shared/components/Button";
+import Input from "../../../shared/components/forms/Input";
+import Select from "../../../shared/components/forms/Select";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
+import { toBase64, toLabelValue } from "../../../shared/formatter";
 
 const ResourceForm = ({
   defaultValues,
   onSubmit,
-  submitting,
+  submitting
 }: ResourceFormProps) => {
   const { register, setValue, handleSubmit, errors, watch } = useForm<
     ResourceFormValues
-  >({ defaultValues, validationSchema })
-  const category = watch('category')
+  >({ defaultValues, validationSchema });
+  const category = watch("category");
 
-  const { data, ...mastersQ } = useResourceFormMasterQuery()
+  const { data, ...mastersQ } = useResourceFormMasterQuery();
   const masters = {
     policyCategories: Object.entries(Category).map(p => ({
       label: p[0],
-      value: p[1],
+      value: p[1]
     })),
     policies: oc(data)
       .policies.collection([])
@@ -37,54 +37,54 @@ const ResourceForm = ({
       .map(p => ({
         ...p,
         value: String(p.id),
-        label: String(p.description),
+        label: String(p.description)
       })),
     businessProcesses: oc(data)
       .businessProcesses.collection([])
-      .map(toLabelValue),
-  }
+      .map(toLabelValue)
+  };
 
   useEffect(() => {
-    register({ name: 'category', required: true, type: 'custom' })
-    register({ name: 'policyId', required: true, type: 'custom' })
-    register({ name: 'controlId', required: true, type: 'custom' })
-    register({ name: 'businessProcessId', required: true, type: 'custom' })
-    register({ name: 'resuploadBase64', type: 'custom' })
-    register({ name: 'resuploadFileName' })
-  }, [register])
+    register({ name: "category", required: true, type: "custom" });
+    register({ name: "policyId", required: true, type: "custom" });
+    register({ name: "controlId", required: true, type: "custom" });
+    register({ name: "businessProcessId", required: true, type: "custom" });
+    register({ name: "resuploadBase64", type: "custom" });
+    register({ name: "resuploadFileName" });
+  }, [register]);
 
-  watch('policyId', category === Category.Flowchart ? '' : undefined)
+  watch("policyId", category === Category.Flowchart ? "" : undefined);
 
   function handleChangeSelect(name: keyof ResourceFormValues) {
     return function(e: any) {
-      if (e) setValue(name, e.value, true)
-    }
+      if (e) setValue(name, e.value, true);
+    };
   }
 
   function handleChangeCategory(e: any) {
     if (e.value && e.value === Category.Flowchart) {
-      setValue('policyId', '', true)
-      setValue('controlId', '', true)
+      setValue("policyId", "", true);
+      setValue("controlId", "", true);
     } else if (e.value && e.value !== Category.Flowchart) {
-      setValue('businessProcessId', '', true)
+      setValue("businessProcessId", "", true);
     }
 
-    if (e) setValue('category', e.value)
+    if (e) setValue("category", e.value);
   }
 
   async function handleChangeFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
-      setValue('resuploadFileName', e.target.files[0].name)
+      setValue("resuploadFileName", e.target.files[0].name);
       setValue(
-        'resuploadBase64',
+        "resuploadBase64",
         String(await toBase64(e.target.files[0])),
         true
-      )
+      );
     }
   }
 
   function submit(data: ResourceFormValues) {
-    onSubmit && onSubmit(data)
+    onSubmit && onSubmit(data);
   }
 
   if (mastersQ.loading) {
@@ -92,7 +92,7 @@ const ResourceForm = ({
       <div>
         <LoadingSpinner size={30} centered />
       </div>
-    )
+    );
   }
 
   return (
@@ -124,7 +124,7 @@ const ResourceForm = ({
               defaultValues &&
               masters.policies.find(c => c.value === defaultValues.policyId)
             }
-            onChange={handleChangeSelect('policyId')}
+            onChange={handleChangeSelect("policyId")}
             error={oc(errors).policyId.message()}
           />
           <Select
@@ -135,7 +135,7 @@ const ResourceForm = ({
               defaultValues &&
               masters.controls.find(c => c.value === defaultValues.controlId)
             }
-            onChange={handleChangeSelect('controlId')}
+            onChange={handleChangeSelect("controlId")}
             error={oc(errors).controlId.message()}
           />
         </Fragment>
@@ -151,7 +151,7 @@ const ResourceForm = ({
               c => c.value === defaultValues.businessProcessId
             )
           }
-          onChange={handleChangeSelect('businessProcessId')}
+          onChange={handleChangeSelect("businessProcessId")}
           error={oc(errors).businessProcessId.message()}
         />
       )}
@@ -168,32 +168,43 @@ const ResourceForm = ({
         </Button>
       </div>
     </Form>
-  )
-}
+  );
+};
 
-export default ResourceForm
+export default ResourceForm;
 
 const validationSchema = yup.object().shape({
   name: yup.string().required(),
   category: yup
     .string()
     .oneOf(Object.values(Category))
-    .required(),
-})
+    .required()
+});
 
 interface ResourceFormProps {
-  defaultValues?: ResourceFormValues
-  onSubmit?: (data: ResourceFormValues) => void
-  submitting?: boolean
+  defaultValues?: ResourceFormDefaultValues;
+  onSubmit?: (data: ResourceFormValues) => void;
+  submitting?: boolean;
 }
 
 export interface ResourceFormValues {
-  name: string
-  category: Category
-  policyId: string
-  controlId: string
-  businessProcessId: string
-  resuploadBase64?: any
-  resuploadFileName?: string
-  resuploadUrl?: string
+  name: string;
+  category: Category;
+  policyId: string;
+  controlId: string;
+  businessProcessId: string;
+  resuploadBase64?: any;
+  resuploadFileName?: string;
+  resuploadUrl?: string;
+}
+
+interface ResourceFormDefaultValues {
+  name?: string;
+  category?: Category;
+  policyId?: string;
+  controlId?: string;
+  businessProcessId?: string;
+  resuploadBase64?: any;
+  resuploadFileName?: string;
+  resuploadUrl?: string;
 }
