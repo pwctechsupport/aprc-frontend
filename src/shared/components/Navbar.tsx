@@ -14,6 +14,7 @@ import { unauthorize } from "../../redux/auth";
 import Avatar from "./Avatar";
 import { useSelector } from "../hooks/useSelector";
 import { oc } from "ts-optchain";
+import { toggleModal } from "../../redux/modal";
 
 const adminMenus = [
   { label: "Policy", path: "/policy" },
@@ -35,6 +36,7 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
   const email = oc(user).email("");
+  const handleToggle = () => dispatch(toggleModal("bookmark"));
 
   function handleLogout() {
     dispatch(unauthorize());
@@ -59,7 +61,7 @@ const Navbar = () => {
           ]}
         />
         <div className="mx-4">
-          <FaBookmark />
+          <FaBookmark onClick={handleToggle} className="clickable" />
         </div>
         <div>
           <FaBell />

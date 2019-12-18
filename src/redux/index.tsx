@@ -1,9 +1,11 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import auth from "./auth";
+import modal from "./modal";
 
 const rootReducer = combineReducers({
-  auth: auth
+  auth,
+  modal
 });
 
 const store = createStore(rootReducer, applyMiddleware(logger));

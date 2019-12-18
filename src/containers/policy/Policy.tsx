@@ -66,7 +66,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   });
   const [addBookmark] = useCreateBookmarkPolicyMutation({
     onCompleted: _ => toast.success("Added to bookmark"),
-    onError: _ => toast.error("Failed to add bookmark")
+    onError: _ => toast.error("Failed to add bookmark"),
+    awaitRefetchQueries: true,
+    refetchQueries: ["bookmarkPolicies"]
   });
   const [createResource, createResourceM] = useCreateResourceMutation({
     onCompleted: _ => {

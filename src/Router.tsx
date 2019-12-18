@@ -16,10 +16,12 @@ import AuthListener from "./shared/components/AuthListener";
 import AuthRoute from "./shared/components/AuthRoute";
 import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
+import BookmarksModal from "./containers/policy/components/BookmarksModal";
 
 export default function() {
   return (
     <BrowserRouter>
+      <BookmarksModal />
       <Route component={AuthListener} />
       <ScrollToTop>
         <Switch>
