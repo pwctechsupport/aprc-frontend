@@ -42,6 +42,15 @@ interface ToLabelValueValues {
   name: string;
 }
 
+export const prepDefaultValue = (value: any, options: Options) => {
+  return options.find(opt => opt.value === value);
+};
+
+type Options = Array<{
+  label: string;
+  value: string;
+}>;
+
 export const toBase64 = (file: File) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();

@@ -3,20 +3,21 @@ import useForm from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
-import { usePolicyCategoriesQuery, Status } from "../../../generated/graphql";
+import { Status, usePolicyCategoriesQuery } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
+import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const PolicyForm = ({
   onSubmit,
   defaultValues,
-  submitting
+  submitting,
+  isAdmin = true
 }: PolicyFormProps) => {
-  const policyCategoriesState = usePolicyCategoriesQuery({
-    variables: { filter: {} }
-  });
+  const policyCategoriesState = usePolicyCategoriesQuery();
   const { register, setValue, watch, errors, handleSubmit } = useForm<
     PolicyFormValues
   >({
@@ -28,6 +29,7 @@ const PolicyForm = ({
     register({ name: "policyCategoryId", required: true });
     register({ name: "referenceId" });
     register({ name: "description", required: true });
+    register({ name: "status" });
   }, [register]);
 
   function onChangeEditor(event: any, editor: any) {
@@ -35,19 +37,28 @@ const PolicyForm = ({
     setValue("description", data);
   }
 
-  function handleCategoryChange(e: any) {
-    const { value } = e;
-    setValue("policyCategoryId", value);
+  function handleChange(name: string) {
+    return function(value: any) {
+      if (value) {
+        console.log("value:", value.value);
+        setValue(name, value.value);
+      }
+    };
   }
 
   function submit(values: PolicyFormValues) {
     onSubmit && onSubmit(values);
   }
 
+  const status = oc(defaultValues).status();
   const options = oc(policyCategoriesState)
     .data.policyCategories.collection([])
     .map(toLabelValue);
   const policyCategoryId = oc(defaultValues).policyCategoryId("");
+
+  if (policyCategoriesState.loading) {
+    return <LoadingSpinner centered size={30} />;
+  }
 
   return (
     <div>
@@ -56,21 +67,34 @@ const PolicyForm = ({
           name="title"
           label="Title"
           innerRef={register({ required: true })}
+          error={errors.title && errors.title.message}
         />
+        <div className="mb-3">
+          <label>Policy Description</label>
+          <TextEditor
+            data={watch("description")}
+            onChange={onChangeEditor}
+            invalid={!!errors.description}
+          />
+        </div>
         <Select
           name="policyCategoryId"
           label="Policy Category"
           options={options}
-          innerRef={register({ required: true })}
-          onChange={handleCategoryChange}
+          onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(
             option => option.value === policyCategoryId
           )}
+          error={errors.policyCategoryId && errors.policyCategoryId.message}
         />
-        <TextEditor
-          data={watch("description")}
-          onChange={onChangeEditor}
-          invalid={errors.description ? true : false}
+        <Select
+          name="status"
+          label="Status"
+          options={statuses}
+          onChange={handleChange("status")}
+          error={errors.status && errors.status.message}
+          defaultValue={prepDefaultValue(status, statuses) || Status.Draft}
+          isDisabled={!isAdmin}
         />
         <div className="d-flex justify-content-end mt-3">
           <Button
@@ -95,10 +119,10 @@ const validationSchema = yup.object().shape({
   policyCategoryId: yup.string().required()
 });
 
-const toLabelValue = ({ id, name }: ToLabelValueValues) => ({
-  label: name,
-  value: id
-});
+const statuses = Object.entries(Status).map(([label, value]) => ({
+  label,
+  value
+}));
 
 // ---------------------------------------------------
 // Type Definition
@@ -117,10 +141,5 @@ export interface PolicyFormProps {
   onSubmit?: (data: PolicyFormValues) => void;
   submitting?: boolean;
   defaultValues?: PolicyFormValues;
-  isSubPolicy?: boolean;
-}
-
-interface ToLabelValueValues {
-  id: string;
-  name: string;
+  isAdmin?: boolean;
 }

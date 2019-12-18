@@ -25,7 +25,7 @@ const CreatePolicy = ({ history }: RouteComponentProps) => {
           title: values.title,
           policyCategoryId: values.policyCategoryId,
           description: values.description,
-          status: Status.Draft
+          status: values.status
         }
       }
     });

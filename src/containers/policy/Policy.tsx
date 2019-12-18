@@ -9,13 +9,12 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  PoliciesDocument,
   PolicyDocument,
   Status,
+  useCreateBookmarkPolicyMutation,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation,
-  useCreateBookmarkPolicyMutation
+  useUpdatePolicyMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
@@ -36,16 +35,13 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const [update, updateState] = useUpdatePolicyMutation({
     onCompleted: () => toast.success("Update Success"),
     onError: () => toast.error("Update Failed"),
-    refetchQueries: [
-      { query: PoliciesDocument, variables: { filter: {} } },
-      { query: PolicyDocument, variables: { id } }
-    ],
+    refetchQueries: ["policies", "policyTree", "policy"],
     awaitRefetchQueries: true
   });
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: [{ query: PolicyDocument, variables: { id } }],
+    refetchQueries: ["policy"],
     awaitRefetchQueries: true
   });
   const [destroyMain] = useDestroyPolicyMutation({
@@ -54,7 +50,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       history.push("/policy");
     },
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: [{ query: PoliciesDocument, variables: { filter: {} } }],
+    refetchQueries: ["policies", "policyTree"],
     awaitRefetchQueries: true
   });
   const [addBookmark] = useCreateBookmarkPolicyMutation({
@@ -77,7 +73,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           id,
           title: values.title,
           policyCategoryId: values.policyCategoryId,
-          description: values.description
+          description: values.description,
+          status: values.status
         }
       }
     });
@@ -143,7 +140,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           <ul>
             {risks.map(risk => {
               return (
-                <li>
+                <li key={risk.id}>
                   <Link to={`/risk/${risk.id}`}>{risk.name}</Link>
                 </li>
               );
@@ -153,7 +150,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         <h5 className="mt-5">Controls</h5>
         {controls.map(control => {
           return (
-            <div>
+            <div key={control.id}>
               <ul>
                 <li>
                   <Link to={`/control/${control.id}`}>
@@ -228,7 +225,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           status: status as Status
         }}
         submitting={updateState.loading}
-        isSubPolicy={isSubPolicy}
       />
     );
   };
