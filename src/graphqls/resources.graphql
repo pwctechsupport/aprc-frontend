@@ -84,6 +84,7 @@ query resource($id: ID!) {
     # status ga ada
     resuploadUrl
     rating
+    totalRating
     visit
   }
 }

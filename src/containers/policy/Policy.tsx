@@ -131,6 +131,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             name={resource.name}
             rating={resource.rating}
             visit={resource.visit}
+            totalRating={resource.totalRating}
             resuploadUrl={resource.resuploadUrl}
           />
         ))}

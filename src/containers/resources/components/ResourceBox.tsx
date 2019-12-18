@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import StarRatingComponent from "react-star-rating-component";
 import { GoCloudDownload } from "react-icons/go";
@@ -6,14 +6,19 @@ import { useSelector } from "../../../shared/hooks/useSelector";
 import { useCreateResourceRatingMutation } from "../../../generated/graphql";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
+import { Tooltip } from "reactstrap";
 
 const ResourceBox = ({
   id,
   name,
   views,
   rating,
+  totalRating,
   resuploadUrl
 }: ResourceBoxProps) => {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const toggle = () => setTooltipOpen(!tooltipOpen);
+
   const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
     onCompleted: res => {
@@ -37,6 +42,15 @@ const ResourceBox = ({
   };
   return (
     <ResourceBoxContainer>
+      <Tooltip
+        placement="top"
+        isOpen={tooltipOpen}
+        target={name}
+        toggle={toggle}
+      >
+        Avg. Rating: {rating} <br />
+        From {totalRating} users
+      </Tooltip>
       <a
         href={`http://mandalorian.rubyh.co${resuploadUrl}`}
         target="_blank"
@@ -47,12 +61,14 @@ const ResourceBox = ({
       <ResourceBoxMeta>
         <div>{name}</div>
         <ResourceBoxBro>
-          <StarRatingComponent
-            name={name}
-            starCount={5}
-            value={rating || 0}
-            onStarClick={handleStarClick}
-          />
+          <div id={name}>
+            <StarRatingComponent
+              name={name}
+              starCount={5}
+              value={rating || 0}
+              onStarClick={handleStarClick}
+            />
+          </div>
           <RevenueBoxViews>{views} Views</RevenueBoxViews>
           <GoCloudDownload className="clickable" size={20} onClick={() => {}} />
         </ResourceBoxBro>
@@ -107,4 +123,5 @@ interface ResourceBoxProps {
   views: number | null | undefined;
   rating: number | null | undefined;
   resuploadUrl: string | null | undefined;
+  totalRating: number | null | undefined;
 }

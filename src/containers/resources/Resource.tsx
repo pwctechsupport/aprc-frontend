@@ -97,6 +97,7 @@ const Resource = ({ match }: RouteComponentProps) => {
           id={id}
           name={name}
           rating={oc(data).resource.rating(0)}
+          totalRating={oc(data).resource.totalRating(0)}
           views={oc(data).resource.visit(0)}
           resuploadUrl={oc(data).resource.resuploadUrl("")}
         />

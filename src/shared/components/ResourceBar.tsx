@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import StarRatingComponent from "react-star-rating-component";
 import { toast } from "react-toastify";
@@ -6,8 +6,19 @@ import { oc } from "ts-optchain";
 import { useCreateResourceRatingMutation } from "../../generated/graphql";
 import { useSelector } from "../hooks/useSelector";
 import { FaFile } from "react-icons/fa";
+import { Tooltip } from "reactstrap";
 
-const ResourceBar = (props: ResourceBarProps) => {
+const ResourceBar = ({
+  name,
+  resourceId,
+  resuploadUrl,
+  rating,
+  visit,
+  totalRating
+}: ResourceBarProps) => {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+  const toggle = () => setTooltipOpen(!tooltipOpen);
+
   const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
     onCompleted: res => {
@@ -16,13 +27,13 @@ const ResourceBar = (props: ResourceBarProps) => {
     },
     onError: () => toast.error("Update Rating Failed"),
     awaitRefetchQueries: true,
-    refetchQueries: ["policy"]
+    refetchQueries: ["policy", "resource", "resources"]
   });
   const handleStarClick = (nextValue: number) => {
     mutate({
       variables: {
         input: {
-          resourceId: props.resourceId,
+          resourceId: resourceId,
           rating: nextValue,
           userId: oc(user).id("")
         }
@@ -31,12 +42,21 @@ const ResourceBar = (props: ResourceBarProps) => {
   };
   return (
     <div className="resource-bar">
+      <Tooltip
+        placement="top"
+        isOpen={tooltipOpen}
+        target={name}
+        toggle={toggle}
+      >
+        Avg. Rating: {rating} <br />
+        From {totalRating} users
+      </Tooltip>
       <div className="d-flex align-items-center">
-        <Link to={`/resources/${props.resourceId}`}>
-          <div className="name">{props.name}</div>
+        <Link to={`/resources/${resourceId}`}>
+          <div className="name">{name}</div>
         </Link>
         <a
-          href={`http://mandalorian.rubyh.co${props.resuploadUrl}`}
+          href={`http://mandalorian.rubyh.co${resuploadUrl}`}
           target="_blank"
           rel="noopener noreferrer"
           className="ml-3"
@@ -46,14 +66,16 @@ const ResourceBar = (props: ResourceBarProps) => {
       </div>
 
       <div className="star-and-views">
-        <StarRatingComponent
-          name={props.name}
-          value={props.rating || 0}
-          starCount={5}
-          onStarClick={handleStarClick}
-          starColor="#d85604"
-        />
-        <div className="views">{props.visit} Views</div>
+        <div id={name}>
+          <StarRatingComponent
+            name={name}
+            value={rating || 0}
+            starCount={5}
+            onStarClick={handleStarClick}
+            starColor="#d85604"
+          />
+        </div>
+        <div className="views">{visit} Views</div>
       </div>
     </div>
   );
@@ -67,4 +89,5 @@ interface ResourceBarProps {
   rating?: number | undefined | null;
   visit?: string | number;
   resuploadUrl: string | null | undefined;
+  totalRating: number | null | undefined;
 }
