@@ -16,7 +16,7 @@ import { useSelector } from "../hooks/useSelector";
 import { oc } from "ts-optchain";
 
 const adminMenus = [
-  { label: "Policy", path: "/policy/all" },
+  { label: "Policy", path: "/policy" },
   { label: "Control", path: "/control" },
   { label: "Business Process", path: "/business-process" },
   { label: "References", path: "/references" },
@@ -25,7 +25,7 @@ const adminMenus = [
 ];
 
 const userMenus = [
-  { label: "Policy", path: "/policy" },
+  { label: "Policy", path: "/policy/dashboard" },
   { label: "Risk & Control", path: "/policy" },
   { label: "Control & Risk Management", path: "/policy" },
   { label: "Report", path: "/policy" }

@@ -16,11 +16,11 @@ query policies($filter: BaseScalar = {}) {
   }
 }
 
-query policyTree($filter: BaseScalar = {}) {
+query policyTree($filter: BaseScalar = {}, $isTree: Boolean!) {
   policies(filter: $filter) {
     collection {
       ...policyBranch
-      children {
+      children @include(if: $isTree) {
         ...policyBranch
         children {
           ...policyBranch
