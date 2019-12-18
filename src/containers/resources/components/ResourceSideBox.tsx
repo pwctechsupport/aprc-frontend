@@ -3,26 +3,27 @@ import { Input } from "reactstrap";
 import { useResourcesQuery } from "../../../generated/graphql";
 import { oc } from "ts-optchain";
 import { Link } from "react-router-dom";
-import { date } from "../../../shared/formatter";
+import humanizeDate from "../../../shared/utils/humanizeDate";
+import { useDebounce } from "use-debounce/lib";
 
 const ResourceSideBox = () => {
   const [search, setSearch] = useState("");
+  const [searchQuery] = useDebounce(search, 500);
   const { data } = useResourcesQuery({
-    variables: { filter: { name_cont: search } }
+    variables: { filter: { name_cont: searchQuery } }
   });
   const resources = oc(data)
     .resources.collection([])
     .sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    )
-    .filter((_, i) => i < 5);
+    );
 
   return (
     <div className="side-box p-2">
       <Input
         value={search}
-        placeholder="Search Policies..."
+        placeholder="Search Resources..."
         onChange={e => setSearch(e.target.value)}
         className="dark mb-3"
       />
@@ -34,8 +35,10 @@ const ResourceSideBox = () => {
             to={`/resources/${resource.id}`}
             key={resource.id}
           >
-            <div className="">{resource.name}</div>
-            <div>{date(resource.updatedAt)}</div>
+            <div className="text-small">{resource.name}</div>
+            <div className="text-small">
+              {humanizeDate(new Date(resource.updatedAt))}
+            </div>
           </Link>
         ))}
       </div>

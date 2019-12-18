@@ -14,9 +14,9 @@ export const money = (input: number | string | null | undefined) => {
 export const date = (
   input: Date | number | string | null | undefined,
   options?: Intl.DateTimeFormatOptions
-) => {
+): string => {
   if (input == null) {
-    return input;
+    return "";
   }
   input = new Date(input);
   const defaultOptions = {
