@@ -16,9 +16,6 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int) {
         id
         name
       }
-      # file size ga ada
-      # upload ga ada
-      # status ga ada
       resuploadUrl
       createdAt
       updatedAt
@@ -70,17 +67,24 @@ query resource($id: ID!) {
     category
     policies {
       id
+      title
       description
     }
     controls {
       id
+      description
       typeOfControl
     }
     businessProcess {
       id
       name
     }
+    # file size ga ada
+    # upload ga ada
+    # status ga ada
     resuploadUrl
+    rating
+    visit
   }
 }
 
