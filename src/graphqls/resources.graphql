@@ -105,6 +105,9 @@ mutation destroyResource($id: ID!) {
 mutation createResourceRating($input: CreateResourceRatingInput!) {
   createResourceRating(input: $input) {
     success
+    resourceRating {
+      rating
+    }
   }
 }
 

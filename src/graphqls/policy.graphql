@@ -1,4 +1,4 @@
-query policies($filter: BaseScalar!) {
+query policies($filter: BaseScalar = {}) {
   policies(filter: $filter) {
     collection {
       id
@@ -16,7 +16,7 @@ query policies($filter: BaseScalar!) {
   }
 }
 
-query policyTree($filter: BaseScalar!) {
+query policyTree($filter: BaseScalar = {}) {
   policies(filter: $filter) {
     collection {
       ...policyBranch
@@ -109,7 +109,7 @@ fragment policyFragment on Policy {
   }
 }
 
-query policyCategories($filter: BaseScalar!) {
+query policyCategories($filter: BaseScalar = {}) {
   policyCategories(filter: $filter) {
     collection {
       id
@@ -202,5 +202,25 @@ query policyDashboard {
     metadata {
       totalCount
     }
+  }
+}
+
+query bookmarkPolicies($filter: BaseScalar = {}) {
+  bookmarkPolicies(filter: $filter) {
+    collection {
+      policyId
+    }
+  }
+}
+
+mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {
+  createBookmarkPolicy(input: $input) {
+    success
+  }
+}
+
+mutation destroyBookmarkPolicy($id: ID!) {
+  destroyBookmarkPolicy(input: { id: $id }) {
+    success
   }
 }

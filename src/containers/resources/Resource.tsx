@@ -94,6 +94,7 @@ const Resource = ({ match }: RouteComponentProps) => {
     return (
       <div className="d-flex">
         <ResourceBox
+          id={id}
           name={name}
           rating={oc(data).resource.rating(0)}
           views={oc(data).resource.visit(0)}

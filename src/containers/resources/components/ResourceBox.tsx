@@ -2,14 +2,39 @@ import React from "react";
 import styled from "styled-components";
 import StarRatingComponent from "react-star-rating-component";
 import { GoCloudDownload } from "react-icons/go";
-import dummyPdf from "../../../assets/images/dummy-pdf.jpg";
+import { useSelector } from "../../../shared/hooks/useSelector";
+import { useCreateResourceRatingMutation } from "../../../generated/graphql";
+import { toast } from "react-toastify";
+import { oc } from "ts-optchain";
 
 const ResourceBox = ({
+  id,
   name,
   views,
   rating,
   resuploadUrl
 }: ResourceBoxProps) => {
+  const user = useSelector(state => state.auth.user);
+  const [mutate] = useCreateResourceRatingMutation({
+    onCompleted: res => {
+      const ratingGiven = oc(res).createResourceRating.resourceRating.rating(0);
+      toast.success(`You gave ${ratingGiven} star rating`);
+    },
+    onError: () => toast.error("Update Rating Failed"),
+    awaitRefetchQueries: true,
+    refetchQueries: ["resource", "resources"]
+  });
+  const handleStarClick = (nextValue: number) => {
+    mutate({
+      variables: {
+        input: {
+          resourceId: id,
+          rating: nextValue,
+          userId: oc(user).id("")
+        }
+      }
+    });
+  };
   return (
     <ResourceBoxContainer>
       <a
@@ -22,7 +47,12 @@ const ResourceBox = ({
       <ResourceBoxMeta>
         <div>{name}</div>
         <ResourceBoxBro>
-          <StarRatingComponent name={name} starCount={5} value={rating || 0} />
+          <StarRatingComponent
+            name={name}
+            starCount={5}
+            value={rating || 0}
+            onStarClick={handleStarClick}
+          />
           <RevenueBoxViews>{views} Views</RevenueBoxViews>
           <GoCloudDownload className="clickable" size={20} onClick={() => {}} />
         </ResourceBoxBro>
@@ -72,6 +102,7 @@ const RevenueBoxViews = styled.div`
 export default ResourceBox;
 
 interface ResourceBoxProps {
+  id: string;
   name: string;
   views: number | null | undefined;
   rating: number | null | undefined;

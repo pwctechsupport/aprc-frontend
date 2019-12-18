@@ -10,7 +10,10 @@ import { FaFile } from "react-icons/fa";
 const ResourceBar = (props: ResourceBarProps) => {
   const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
-    onCompleted: () => toast.success("Update Rating Sucess"),
+    onCompleted: res => {
+      const ratingGiven = oc(res).createResourceRating.resourceRating.rating(0);
+      toast.success(`You gave ${ratingGiven} star rating`);
+    },
     onError: () => toast.error("Update Rating Failed"),
     awaitRefetchQueries: true,
     refetchQueries: ["policy"]

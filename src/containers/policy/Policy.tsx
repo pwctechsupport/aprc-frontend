@@ -14,7 +14,8 @@ import {
   Status,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation
+  useUpdatePolicyMutation,
+  useCreateBookmarkPolicyMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
@@ -55,6 +56,10 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     onError: () => toast.error("Delete Failed"),
     refetchQueries: [{ query: PoliciesDocument, variables: { filter: {} } }],
     awaitRefetchQueries: true
+  });
+  const [addBookmark] = useCreateBookmarkPolicyMutation({
+    onCompleted: _ => toast.success("Added to bookmark"),
+    onError: _ => toast.error("Failed to add bookmark")
   });
 
   function handleDeleteMain() {
@@ -285,7 +290,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                   <FaBookmark /> Bookmark
                 </div>
               ),
-              onClick: console.info
+              onClick: () =>
+                addBookmark({ variables: { input: { policyId: id } } })
             }
           ]}
         >
