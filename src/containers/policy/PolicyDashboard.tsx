@@ -3,6 +3,7 @@ import PolicyChart from "./components/PolicyChart";
 import { usePolicyDashboardQuery } from "../../generated/graphql";
 import { oc } from "ts-optchain";
 import Table from "../../shared/components/Table";
+import Helmet from "react-helmet";
 
 const PolicyDashboard = () => {
   const { data } = usePolicyDashboardQuery();
@@ -45,6 +46,9 @@ const PolicyDashboard = () => {
   ];
   return (
     <div>
+      <Helmet>
+        <title>Policy - Dashboard - PricewaterhouseCoopers</title>
+      </Helmet>
       <h1>Dashboard</h1>
       <PolicyChart data={chartData} />
       <Table className="mt-5">
