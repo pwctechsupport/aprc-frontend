@@ -7,15 +7,16 @@ import { MdEmail, MdModeEdit, MdPrint } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
+  CreateResourceInput,
   Status,
   useCreateBookmarkPolicyMutation,
+  useCreateResourceMutation,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation,
-  useCreateResourceMutation,
-  CreateResourceInput
+  useUpdatePolicyMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
@@ -24,19 +25,19 @@ import ResourceBar, {
   AddResourceButton
 } from "../../shared/components/ResourceBar";
 import Table from "../../shared/components/Table";
-import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
-import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
+import MyApi from "../../shared/utils/api";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
+import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
+import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode(prev => !prev);
 
-  const [modal, setModal] = useState(false);
-  const toggleModal = () => setModal(prev => !prev);
+  const [addResourceModal, setAddResourceModal] = useState(false);
+  const toggleAddResourceModal = () => setAddResourceModal(prev => !prev);
 
   const id = get(match, "params.id", "");
   const { loading, data } = usePolicyQuery({
@@ -73,7 +74,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const [createResource, createResourceM] = useCreateResourceMutation({
     onCompleted: _ => {
       toast.success("Resource Added");
-      toggleModal();
+      toggleAddResourceModal();
     },
     onError: _ => toast.error("Failed to add resource"),
     awaitRefetchQueries: true,
@@ -133,6 +134,27 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     createResource({ variables: { input } });
   }
 
+  async function handleDownload(fileName: string) {
+    console.log("Start download");
+    try {
+      const res = await MyApi.get(`prints/${id}.pdf`, {
+        responseType: "blob"
+      });
+      const url = window.URL.createObjectURL(
+        new Blob([res.data], { type: "application/pdf" })
+      );
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode && link.parentNode.removeChild(link);
+      console.info("download succeded");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   const title = oc(data).policy.title("");
   const description = oc(data).policy.description("");
   const policyCategoryId = oc(data).policy.policyCategory.id("");
@@ -172,7 +194,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             resuploadUrl={resource.resuploadUrl}
           />
         ))}
-        <AddResourceButton onClick={toggleModal} />
+        <AddResourceButton onClick={toggleAddResourceModal} />
         <h5 className="mt-5">Risks</h5>
         <div>
           <ul>
@@ -308,7 +330,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                   <IoMdDownload /> Download
                 </div>
               ),
-              onClick: console.log
+              onClick: () => handleDownload(title)
             },
             {
               label: (
@@ -388,7 +410,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           </Table>
         </>
       ) : null}
-      <Modal isOpen={modal} toggle={toggleModal}>
+      <Modal isOpen={addResourceModal} toggle={toggleAddResourceModal}>
         <ModalHeader>Add Resource</ModalHeader>
         <ModalBody>
           <ResourceForm
@@ -400,6 +422,12 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           />
         </ModalBody>
       </Modal>
+      {/* <Modal isOpen={!!pdf} toggle={() => {}}>
+        <ModalHeader>Test</ModalHeader>
+        <ModalBody>
+          
+        </ModalBody>
+      </Modal> */}
     </div>
   );
 };
