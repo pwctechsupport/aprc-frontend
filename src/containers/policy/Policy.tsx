@@ -1,9 +1,15 @@
 import get from "lodash/get";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaBookmark, FaEllipsisV, FaTimes, FaTrash } from "react-icons/fa";
+import {
+  FaBookmark,
+  FaEllipsisV,
+  FaFilePdf,
+  FaTimes,
+  FaTrash
+} from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
-import { MdEmail, MdModeEdit, MdPrint } from "react-icons/md";
+import { MdEmail, MdModeEdit } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -25,7 +31,11 @@ import ResourceBar, {
   AddResourceButton
 } from "../../shared/components/ResourceBar";
 import Table from "../../shared/components/Table";
-import MyApi from "../../shared/utils/api";
+import {
+  downloadPdf,
+  previewPdf,
+  emailPdf
+} from "../../shared/utils/accessGeneratedPdf";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
@@ -132,27 +142,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     };
 
     createResource({ variables: { input } });
-  }
-
-  async function handleDownload(fileName: string) {
-    console.log("Start download");
-    try {
-      const res = await MyApi.get(`prints/${id}.pdf`, {
-        responseType: "blob"
-      });
-      const url = window.URL.createObjectURL(
-        new Blob([res.data], { type: "application/pdf" })
-      );
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode && link.parentNode.removeChild(link);
-      console.info("download succeded");
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   const title = oc(data).policy.title("");
@@ -319,10 +308,16 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             {
               label: (
                 <div>
-                  <MdPrint /> Print
+                  <FaFilePdf /> Preview
                 </div>
               ),
-              onClick: console.log
+              onClick: () =>
+                previewPdf(`prints/${id}.pdf`, {
+                  onStart: () =>
+                    toast.info("Downloading file for preview", {
+                      autoClose: 10000
+                    })
+                })
             },
             {
               label: (
@@ -330,16 +325,22 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                   <IoMdDownload /> Download
                 </div>
               ),
-              onClick: () => handleDownload(title)
+              onClick: () =>
+                downloadPdf(`prints/${id}.pdf`, {
+                  fileName: title,
+                  onStart: () => toast.info("Download Started"),
+                  onError: () => toast.error("Download Failed"),
+                  onCompleted: () => toast.success("Download Success")
+                })
             },
-            {
-              label: (
-                <div>
-                  <MdEmail /> Mail
-                </div>
-              ),
-              onClick: console.log
-            },
+            // {
+            //   label: (
+            //     <div>
+            //       <MdEmail /> Mail
+            //     </div>
+            //   ),
+            //   onClick: () => emailPdf(`prints/${id}.pdf`)
+            // },
             {
               label: (
                 <div>
