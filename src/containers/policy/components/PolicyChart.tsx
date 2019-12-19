@@ -20,13 +20,15 @@ const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
         return (
           <PolicyChartItemWrapper key={item.label}>
             <PolicyChartItem
+              onClick={item.onClick}
               height={(item.prepared / maxCount) * 400}
               color={colors[2]}
-            ></PolicyChartItem>
+            />
             <PolicyChartItem
+              onClick={item.onClick}
               height={(item.reviewed / maxCount) * 400}
               color={colors[1]}
-            ></PolicyChartItem>
+            />
             <ChartLabelValueWrapper>
               <ChartValue color={colors[0]}>
                 {item.prepared + item.reviewed}
@@ -133,6 +135,7 @@ interface ChartData {
   label: string;
   prepared: number;
   reviewed: number;
+  onClick?: () => void;
 }
 
 interface PolicyChartItemProps {

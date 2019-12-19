@@ -4,24 +4,28 @@ import { usePolicyDashboardQuery } from "../../generated/graphql";
 import { oc } from "ts-optchain";
 import Table from "../../shared/components/Table";
 import Helmet from "react-helmet";
+import { RouteComponentProps } from "react-router-dom";
 
-const PolicyDashboard = () => {
+const PolicyDashboard = ({ history }: RouteComponentProps) => {
   const { data } = usePolicyDashboardQuery();
   const chartData = [
     {
       label: "Policy",
       prepared: oc(data).draftPolicies.metadata.totalCount(0),
-      reviewed: oc(data).releasedPolicies.metadata.totalCount(0)
+      reviewed: oc(data).releasedPolicies.metadata.totalCount(0),
+      onClick: () => history.push("/policy")
     },
     {
       label: "Risk",
       prepared: oc(data).draftRisks.metadata.totalCount(0),
-      reviewed: oc(data).releasedRisks.metadata.totalCount(0)
+      reviewed: oc(data).releasedRisks.metadata.totalCount(0),
+      onClick: () => history.push("/risk")
     },
     {
       label: "Control",
       prepared: oc(data).draftControls.metadata.totalCount(0),
-      reviewed: oc(data).releasedControls.metadata.totalCount(0)
+      reviewed: oc(data).releasedControls.metadata.totalCount(0),
+      onClick: () => history.push("/control")
     }
   ];
   const tableData = [
