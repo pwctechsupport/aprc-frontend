@@ -15,12 +15,13 @@ import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { toLabelValue } from "../../../shared/formatter";
+import { toLabelValue, prepDefaultValue } from "../../../shared/formatter";
 
 const SubPolicyForm = ({
   onSubmit,
   defaultValues,
-  submitting
+  submitting,
+  isAdmin = true
 }: SubPolicyFormProps) => {
   const { register, handleSubmit, setValue, errors, watch } = useForm<
     SubPolicyFormValues
@@ -63,6 +64,7 @@ const SubPolicyForm = ({
     register({ name: "parentId" });
     register({ name: "referenceIds" });
     register({ name: "description", required: true });
+    register({ name: "status", required: true });
   }, [register]);
 
   function handleReferenceChange(multiSelect: any) {
@@ -73,6 +75,15 @@ const SubPolicyForm = ({
         multiSelect.map((a: any) => a.value)
       );
     }
+  }
+
+  function handleChange(name: string) {
+    return function(value: any) {
+      if (value) {
+        console.log("value:", value.value);
+        setValue(name, value.value);
+      }
+    };
   }
 
   function handleEditorChange(event: any, editor: any) {
@@ -87,7 +98,7 @@ const SubPolicyForm = ({
   }
 
   if (resourceQ.loading || referenceData.loading) {
-    return <LoadingSpinner centered />;
+    return <LoadingSpinner centered size={30} />;
   }
 
   if (referenceData.loading) {
@@ -99,6 +110,7 @@ const SubPolicyForm = ({
       .referenceIds([])
       .includes(reference.value);
   });
+  const status = oc(defaultValues).status();
 
   return (
     <div>
@@ -109,6 +121,14 @@ const SubPolicyForm = ({
           innerRef={register({ required: true })}
           error={errors.title && errors.title.message}
         />
+        <div className="mb-3">
+          <label>Policy Description</label>
+          <TextEditor
+            data={watch("description")}
+            onChange={handleEditorChange}
+            invalid={errors.description ? true : false}
+          />
+        </div>
         <Select
           label="Sub-Policy Reference"
           onChange={handleReferenceChange}
@@ -116,10 +136,14 @@ const SubPolicyForm = ({
           isMulti
           defaultValue={defaultReference}
         />
-        <TextEditor
-          data={watch("description")}
-          onChange={handleEditorChange}
-          invalid={errors.description ? true : false}
+        <Select
+          name="status"
+          label="Status"
+          options={statuses}
+          onChange={handleChange("status")}
+          error={errors.status && errors.status.message}
+          defaultValue={prepDefaultValue(status, statuses) || Status.Draft}
+          isDisabled={!isAdmin}
         />
 
         <div className="d-flex justify-content-end mt-3">
@@ -243,12 +267,18 @@ const SubPolicyForm = ({
   );
 };
 
+const statuses = Object.entries(Status).map(([label, value]) => ({
+  label,
+  value
+}));
+
 export default SubPolicyForm;
 
 export interface SubPolicyFormProps {
   onSubmit?: (values: SubPolicyFormValues) => void;
   defaultValues: SubPolicyFormValues;
   submitting?: boolean;
+  isAdmin?: boolean;
 }
 
 export interface SubPolicyFormValues {

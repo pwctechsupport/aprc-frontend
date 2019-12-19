@@ -124,7 +124,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           description: values.description,
           referenceIds: values.referenceIds,
           controlIds: values.controlIds,
-          riskIds: values.riskIds
+          riskIds: values.riskIds,
+          status: values.status
         }
       }
     });
