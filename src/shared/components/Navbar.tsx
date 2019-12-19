@@ -27,9 +27,9 @@ const adminMenus = [
 
 const userMenus = [
   { label: "Policy", path: "/policy/dashboard" },
-  { label: "Risk & Control", path: "/policy" },
-  { label: "Control & Risk Management", path: "/policy" },
-  { label: "Report", path: "/policy" }
+  { label: "Risk & Control", path: "/risk-and-control" },
+  { label: "Control & Risk Management", path: "/control-and-risk-management" },
+  { label: "Report", path: "/report" }
 ];
 
 const Navbar = () => {

@@ -17,6 +17,7 @@ import AuthRoute from "./shared/components/AuthRoute";
 import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
 import BookmarksModal from "./containers/policy/components/BookmarksModal";
+import ComingSoonPage from "./shared/components/ComingSoonPage";
 
 export default function() {
   return (
@@ -62,6 +63,7 @@ export default function() {
               <AuthRoute path="/policy" component={PolicyRoute} />
               <AuthRoute path="/resources" component={ResourceRoute} />
               <AuthRoute path="/risk" component={RiskRoute} />
+              <AuthRoute component={ComingSoonPage} />
             </Switch>
           </Layout>
         </Switch>
