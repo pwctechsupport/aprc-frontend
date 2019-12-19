@@ -209,7 +209,10 @@ query bookmarkPolicies($filter: BaseScalar = {}) {
   bookmarkPolicies(filter: $filter) {
     collection {
       id
-      policyId
+      policy {
+        title
+        id
+      }
     }
   }
 }
