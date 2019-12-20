@@ -1,4 +1,3 @@
-import cx from "classnames";
 import React, { ReactNode, useState } from "react";
 import { FaAngleRight } from "react-icons/fa";
 import styled, { css } from "styled-components";
@@ -6,18 +5,12 @@ import styled, { css } from "styled-components";
 const Collapsible = ({
   title,
   children,
-  small = true,
-  initialState = true,
-  withoutCard = false
+  show = true,
+  onClick
 }: CollapsibleProps) => {
-  const [show, setShow] = useState(initialState);
   return (
-    <div
-      className={cx("mb-3 py-3", {
-        "card-container": !withoutCard
-      })}
-    >
-      <div className="clickable" onClick={() => setShow(!show)}>
+    <div className="mb-3 py-3">
+      <div className="clickable" onClick={() => onClick(title)}>
         <H5 open={show}>
           <Icon open={show} /> {title}
         </H5>
@@ -51,8 +44,7 @@ interface IconProps {
 
 interface CollapsibleProps {
   title: string;
-  withoutCard?: boolean;
   children?: ReactNode;
-  small?: boolean;
-  initialState?: boolean;
+  onClick: (title: string) => void;
+  show: boolean;
 }

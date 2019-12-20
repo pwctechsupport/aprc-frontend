@@ -4,6 +4,8 @@ import Helmet from "react-helmet";
 import {
   FaBookmark,
   FaEllipsisV,
+  FaEye,
+  FaEyeSlash,
   FaFilePdf,
   FaTimes,
   FaTrash
@@ -25,6 +27,7 @@ import {
   useUpdatePolicyMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
+import Collapsible from "../../shared/components/Collapsible";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import Menu from "../../shared/components/Menu";
 import ResourceBar, {
@@ -37,9 +40,20 @@ import ResourceForm, {
 } from "../resources/components/ResourceForm";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import Collapsible from "../../shared/components/Collapsible";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
+  const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
+  const [collapse, setCollapse] = useState(initialCollapse);
+  const toggleCollapse = (name: string) =>
+    setCollapse(p => {
+      if (p.includes(name)) {
+        return p.filter(item => item !== name);
+      }
+      return p.concat(name);
+    });
+  const openAllCollapse = () => setCollapse(initialCollapse);
+  const closeAllCollapse = () => setCollapse([]);
+
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode(prev => !prev);
 
@@ -169,7 +183,11 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             __html: description
           }}
         ></div>
-        <Collapsible title="Resources">
+        <Collapsible
+          title="Resources"
+          show={collapse.includes("Resources")}
+          onClick={toggleCollapse}
+        >
           {resources.map(resource => (
             <ResourceBar
               key={resource.id}
@@ -184,7 +202,11 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           <AddResourceButton onClick={toggleAddResourceModal} />
         </Collapsible>
 
-        <Collapsible title="Risks">
+        <Collapsible
+          title="Risks"
+          show={collapse.includes("Risks")}
+          onClick={toggleCollapse}
+        >
           {risks.length ? (
             <div>
               <ul>
@@ -202,7 +224,11 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           )}
         </Collapsible>
 
-        <Collapsible title="Controls">
+        <Collapsible
+          title="Controls"
+          show={collapse.includes("Controls")}
+          onClick={toggleCollapse}
+        >
           {controls.length ? (
             controls.map(control => {
               return (
@@ -244,7 +270,11 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           )}
         </Collapsible>
 
-        <Collapsible title="Sub-Policies">
+        <Collapsible
+          title="Sub-Policies"
+          show={collapse.includes("Sub-Policies")}
+          onClick={toggleCollapse}
+        >
           {children.length ? (
             <Table>
               <thead>
@@ -350,6 +380,21 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             <Button className="pwc">+ Create Sub-Policy</Button>
           </Link>
         )}
+        <div
+          className="ml-3 clickable"
+          onClick={() => {
+            collapse.length === initialCollapse.length
+              ? closeAllCollapse()
+              : openAllCollapse();
+          }}
+        >
+          {collapse.length === initialCollapse.length ? (
+            <FaEyeSlash size={20} />
+          ) : (
+            <FaEye size={20} />
+          )}
+        </div>
+
         <MdModeEdit
           size={22}
           className="mx-3 clickable"
