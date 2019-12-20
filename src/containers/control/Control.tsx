@@ -39,7 +39,8 @@ const Control = ({ match }: RouteComponentProps) => {
           assertion: values.assertion,
           frequency: values.frequency,
           ipo: values.ipo,
-          nature: values.nature
+          nature: values.nature,
+          status: values.status
         }
       }
     });
