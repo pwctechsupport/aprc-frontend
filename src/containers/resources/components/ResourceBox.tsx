@@ -41,6 +41,19 @@ const ResourceBox = ({
       }
     });
   };
+  const handleDownload = (url: string, fileName: string) => {
+    try {
+      const link = document.createElement("a");
+      link.target = "_blank";
+      link.href = url;
+      link.setAttribute("download", fileName || "PwC-Generated");
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode && link.parentNode.removeChild(link);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <ResourceBoxContainer>
       <Tooltip
@@ -52,13 +65,11 @@ const ResourceBox = ({
         Avg. Rating: {rating} <br />
         From {totalRating} user(s)
       </Tooltip>
-      <a
-        href={`http://mandalorian.rubyh.co${resuploadUrl}`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <ResourceBoxImagePreview />
-      </a>
+      <ResourceBoxImagePreview
+        onClick={() =>
+          handleDownload(`http://mandalorian.rubyh.co${resuploadUrl}`, name)
+        }
+      />
       <ResourceBoxMeta>
         <div>{name}</div>
         <ResourceBoxBro>
@@ -71,7 +82,13 @@ const ResourceBox = ({
             />
           </div>
           <RevenueBoxViews>{views} Views</RevenueBoxViews>
-          <GoCloudDownload className="clickable" size={20} onClick={() => {}} />
+          <GoCloudDownload
+            size={20}
+            className="clickable"
+            onClick={() =>
+              handleDownload(`http://mandalorian.rubyh.co${resuploadUrl}`, name)
+            }
+          />
         </ResourceBoxBro>
       </ResourceBoxMeta>
     </ResourceBoxContainer>
@@ -104,6 +121,7 @@ const ResourceBoxImagePreview = styled.div`
   width: 100%;
   height: 100%;
   background: url("/dummy-pdf.jpg") no-repeat center;
+  cursor: pointer;
 `;
 
 const ResourceBoxBro = styled.div`
