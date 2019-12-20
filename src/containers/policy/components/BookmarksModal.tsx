@@ -26,7 +26,9 @@ const BookmarksModal = () => {
 };
 
 const BookmarkContent = () => {
-  const bookmarkPoliciesQ = useBookmarkPoliciesQuery();
+  const bookmarkPoliciesQ = useBookmarkPoliciesQuery({
+    fetchPolicy: "network-only"
+  });
   const bookmarks = oc(bookmarkPoliciesQ).data.bookmarkPolicies.collection([]);
 
   const [deleteBookmark] = useDestroyBookmarkPolicyMutation({
@@ -36,37 +38,39 @@ const BookmarkContent = () => {
     awaitRefetchQueries: true
   });
 
-  if (bookmarkPoliciesQ.loading) return <LoadingSpinner centered size={30} />;
-
   return (
     <>
       <ModalHeader>Bookmarked Policies</ModalHeader>
-      <ModalBody>
-        <div>
-          {bookmarks.length === 0 ? (
-            <div className="text-center my-5">No Bookmarked Policy</div>
-          ) : (
-            bookmarks.map(bookmark => {
-              return (
-                <div
-                  key={bookmark.id}
-                  className="d-flex justify-content-between align-items-center py-3"
-                >
-                  <Link to={`/policy/${oc(bookmark).policy.id("")}`}>
-                    <div>{oc(bookmark).policy.title("")}</div>
-                  </Link>
-                  <FaTrash
-                    onClick={() =>
-                      deleteBookmark({ variables: { id: bookmark.id } })
-                    }
-                    className="text-red clickable"
-                  />
-                </div>
-              );
-            })
-          )}
-        </div>
-      </ModalBody>
+      {bookmarkPoliciesQ.loading ? (
+        <LoadingSpinner centered size={30} className="my-5" />
+      ) : (
+        <ModalBody>
+          <div>
+            {bookmarks.length === 0 ? (
+              <div className="text-center my-5">No Bookmarked Policy</div>
+            ) : (
+              bookmarks.map(bookmark => {
+                return (
+                  <div
+                    key={bookmark.id}
+                    className="d-flex justify-content-between align-items-center py-3"
+                  >
+                    <Link to={`/policy/${oc(bookmark).policy.id("")}`}>
+                      <div>{oc(bookmark).policy.title("")}</div>
+                    </Link>
+                    <FaTrash
+                      onClick={() =>
+                        deleteBookmark({ variables: { id: bookmark.id } })
+                      }
+                      className="text-red clickable"
+                    />
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </ModalBody>
+      )}
     </>
   );
 };
