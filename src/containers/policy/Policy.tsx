@@ -37,6 +37,7 @@ import ResourceForm, {
 } from "../resources/components/ResourceForm";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import Collapsible from "../../shared/components/Collapsible";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -168,67 +169,125 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             __html: description
           }}
         ></div>
-        <h5 className="mt-5">Resources</h5>
-        {resources.map(resource => (
-          <ResourceBar
-            key={resource.id}
-            resourceId={resource.id}
-            name={resource.name}
-            rating={resource.rating || 0}
-            visit={resource.visit}
-            totalRating={resource.totalRating || 0}
-            resuploadUrl={resource.resuploadUrl}
-          />
-        ))}
-        <AddResourceButton onClick={toggleAddResourceModal} />
-        <h5 className="mt-5">Risks</h5>
-        <div>
-          <ul>
-            {risks.map(risk => {
-              return (
-                <li key={risk.id}>
-                  <Link to={`/risk/${risk.id}`}>{risk.name}</Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-        <h5 className="mt-5">Controls</h5>
-        {controls.map(control => {
-          return (
-            <div key={control.id}>
+        <Collapsible title="Resources">
+          {resources.map(resource => (
+            <ResourceBar
+              key={resource.id}
+              resourceId={resource.id}
+              name={resource.name}
+              rating={resource.rating || 0}
+              visit={resource.visit}
+              totalRating={resource.totalRating || 0}
+              resuploadUrl={resource.resuploadUrl}
+            />
+          ))}
+          <AddResourceButton onClick={toggleAddResourceModal} />
+        </Collapsible>
+
+        <Collapsible title="Risks">
+          {risks.length ? (
+            <div>
               <ul>
-                <li>
-                  <Link to={`/control/${control.id}`}>
-                    {control.description}
-                  </Link>
-                </li>
+                {risks.map(risk => {
+                  return (
+                    <li key={risk.id}>
+                      <Link to={`/risk/${risk.id}`}>{risk.name}</Link>
+                    </li>
+                  );
+                })}
               </ul>
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Freq</th>
-                    <th>Type of Control</th>
-                    <th>Nature</th>
-                    <th>IPO</th>
-                    <th>Assertion</th>
-                    <th>Control Owner</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr key={control.id}>
-                    <td>{control.frequency}</td>
-                    <td>{control.typeOfControl}</td>
-                    <td>{control.nature}</td>
-                    <td>{control.ipo}</td>
-                    <td>{control.assertion}</td>
-                    <td>{control.controlOwner}</td>
-                  </tr>
-                </tbody>
-              </Table>
             </div>
-          );
-        })}
+          ) : (
+            <EmptyAttribute />
+          )}
+        </Collapsible>
+
+        <Collapsible title="Controls">
+          {controls.length ? (
+            controls.map(control => {
+              return (
+                <div key={control.id}>
+                  <ul>
+                    <li>
+                      <Link to={`/control/${control.id}`}>
+                        {control.description}
+                      </Link>
+                    </li>
+                  </ul>
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th>Freq</th>
+                        <th>Type of Control</th>
+                        <th>Nature</th>
+                        <th>IPO</th>
+                        <th>Assertion</th>
+                        <th>Control Owner</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr key={control.id}>
+                        <td>{control.frequency}</td>
+                        <td>{control.typeOfControl}</td>
+                        <td>{control.nature}</td>
+                        <td>{control.ipo}</td>
+                        <td>{control.assertion}</td>
+                        <td>{control.controlOwner}</td>
+                      </tr>
+                    </tbody>
+                  </Table>
+                </div>
+              );
+            })
+          ) : (
+            <EmptyAttribute />
+          )}
+        </Collapsible>
+
+        <Collapsible title="Sub-Policies">
+          {children.length ? (
+            <Table>
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>References</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {children.map(item => (
+                  <tr key={item.id}>
+                    <td>
+                      <Link to={`/policy/${item.id}`}>{item.title}</Link>
+                    </td>
+                    <td>
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: item.description ? item.description : ""
+                        }}
+                      ></div>
+                    </td>
+                    <td>
+                      {oc(item)
+                        .references([])
+                        .map(ref => ref.name)
+                        .join(", ")}
+                    </td>
+                    <td>
+                      <FaTrash
+                        onClick={() => handleDelete(item.id)}
+                        className="clickable"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <EmptyAttribute />
+          )}
+        </Collapsible>
       </div>
     );
   };
@@ -365,49 +424,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         {renderPolicyAction()}
       </div>
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
-      {children.length ? (
-        <>
-          <h5 className="mt-5">Sub policies</h5>
-          <Table>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Description</th>
-                <th>References</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {children.map(item => (
-                <tr key={item.id}>
-                  <td>
-                    <Link to={`/policy/${item.id}`}>{item.title}</Link>
-                  </td>
-                  <td>
-                    <div
-                      dangerouslySetInnerHTML={{
-                        __html: item.description ? item.description : ""
-                      }}
-                    ></div>
-                  </td>
-                  <td>
-                    {oc(item)
-                      .references([])
-                      .map(ref => ref.name)
-                      .join(", ")}
-                  </td>
-                  <td>
-                    <FaTrash
-                      onClick={() => handleDelete(item.id)}
-                      className="clickable"
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </>
-      ) : null}
+
       <Modal isOpen={addResourceModal} toggle={toggleAddResourceModal}>
         <ModalHeader>Add Resource</ModalHeader>
         <ModalBody>
@@ -420,14 +437,12 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           />
         </ModalBody>
       </Modal>
-      {/* <Modal isOpen={!!pdf} toggle={() => {}}>
-        <ModalHeader>Test</ModalHeader>
-        <ModalBody>
-          
-        </ModalBody>
-      </Modal> */}
     </div>
   );
 };
 
 export default Policy;
+
+const EmptyAttribute = () => {
+  return <div className="text-grey text-center">Empty</div>;
+};
