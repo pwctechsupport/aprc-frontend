@@ -16,6 +16,7 @@ import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue, prepDefaultValue } from "../../../shared/formatter";
+import { capitalCase } from "capital-case";
 
 const SubPolicyForm = ({
   onSubmit,
@@ -68,7 +69,7 @@ const SubPolicyForm = ({
   }, [register]);
 
   function handleReferenceChange(multiSelect: any) {
-    console.log("ha", multiSelect);
+    // console.log("ha", multiSelect);
     if (multiSelect) {
       setValue(
         "referenceIds",
@@ -80,7 +81,6 @@ const SubPolicyForm = ({
   function handleChange(name: string) {
     return function(value: any) {
       if (value) {
-        console.log("value:", value.value);
         setValue(name, value.value);
       }
     };
@@ -92,7 +92,6 @@ const SubPolicyForm = ({
   }
 
   function submit(values: SubPolicyFormValues) {
-    console.log("values:", values);
     onSubmit && onSubmit(values);
     setShowAttrs(false);
   }
@@ -267,12 +266,20 @@ const SubPolicyForm = ({
   );
 };
 
+export default SubPolicyForm;
+
+// -------------------------------------------------------------------------
+// Construct Options
+// -------------------------------------------------------------------------
+
 const statuses = Object.entries(Status).map(([label, value]) => ({
-  label,
+  label: capitalCase(value),
   value
 }));
 
-export default SubPolicyForm;
+// -------------------------------------------------------------------------
+// Type Definitions
+// -------------------------------------------------------------------------
 
 export interface SubPolicyFormProps {
   onSubmit?: (values: SubPolicyFormValues) => void;

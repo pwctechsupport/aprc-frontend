@@ -7,6 +7,7 @@ import { LevelOfRisk, Status } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
+import { capitalCase } from "capital-case";
 
 const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
   const { register, setValue, errors, handleSubmit } = useForm<RiskFormValues>({
@@ -19,32 +20,16 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
     register({ name: "status", required: true });
   }, [register]);
 
-  // function handleChange(name: string, value: string) {
-  // }
-
   const handleChange = (name: string) => ({ value }: any) => {
     setValue(name, value);
   };
 
   const submit = (values: RiskFormValues) => {
     onSubmit && onSubmit(values);
-    console.log("values:", values);
   };
-
-  const levelOfRisks = Object.entries(LevelOfRisk).map(([label, value]) => ({
-    label,
-    value
-  }));
-  const statuses = Object.entries(Status).map(([label, value]) => ({
-    label,
-    value
-  }));
 
   const levelOfRisk = oc(defaultValues).levelOfRisk();
   const status = oc(defaultValues).status();
-  const name = oc(defaultValues).name();
-
-  console.log("name", name);
 
   return (
     <div>
@@ -85,11 +70,35 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
   );
 };
 
+export default RiskForm;
+
+// -------------------------------------------------------------------------
+// Construct Options
+// -------------------------------------------------------------------------
+
+const levelOfRisks = Object.entries(LevelOfRisk).map(([label, value]) => ({
+  label,
+  value
+}));
+
+const statuses = Object.entries(Status).map(([label, value]) => ({
+  label: capitalCase(value),
+  value
+}));
+
+// -------------------------------------------------------------------------
+// Validation Schema
+// -------------------------------------------------------------------------
+
 const validationSchema = yup.object().shape({
   name: yup.string().required(),
   levelOfRisk: yup.string().required(),
   status: yup.string().required()
 });
+
+// -------------------------------------------------------------------------
+// Type Definitions
+// -------------------------------------------------------------------------
 
 export interface RiskFormValues {
   name: string;
@@ -103,5 +112,3 @@ export interface RiskFormProps {
   submitting?: boolean;
   defaultValues?: RiskFormValues;
 }
-
-export default RiskForm;

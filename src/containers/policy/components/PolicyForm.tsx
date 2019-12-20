@@ -10,6 +10,7 @@ import Select from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
 import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
+import { capitalCase } from "capital-case";
 
 const PolicyForm = ({
   onSubmit,
@@ -113,16 +114,24 @@ const PolicyForm = ({
 
 export default PolicyForm;
 
+// ---------------------------------------------------
+// Construct Options
+// ---------------------------------------------------
+
+const statuses = Object.entries(Status).map(([label, value]) => ({
+  label: capitalCase(value),
+  value
+}));
+
+// ---------------------------------------------------
+// Validation
+// ---------------------------------------------------
+
 const validationSchema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
   policyCategoryId: yup.string().required()
 });
-
-const statuses = Object.entries(Status).map(([label, value]) => ({
-  label,
-  value
-}));
 
 // ---------------------------------------------------
 // Type Definition

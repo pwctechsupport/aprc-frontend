@@ -13,6 +13,7 @@ import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import { oc } from "ts-optchain";
+import { capitalCase } from "capital-case";
 
 const ControlForm = ({
   onSubmit,
@@ -105,32 +106,32 @@ export default ControlForm;
 // -------------------------------------------------------------------------
 
 const frequencies = Object.entries(Frequency).map(([label, value]) => ({
-  label,
+  label: capitalCase(value),
   value
 }));
 
 const typeOfControls = Object.entries(TypeOfControl).map(([label, value]) => ({
-  label,
+  label: capitalCase(value),
   value
 }));
 
 const natures = Object.entries(Nature).map(([label, value]) => ({
-  label,
+  label: capitalCase(value),
   value
 }));
 
 const ipos = Object.entries(Ipo).map(([label, value]) => ({
-  label,
+  label: capitalCase(value),
   value
 }));
 
 const assertions = Object.entries(Assertion).map(([label, value]) => ({
-  label,
+  label: capitalCase(value),
   value
 }));
 
 const statuses = Object.entries(Status).map(([label, value]) => ({
-  label,
+  label: capitalCase(value),
   value
 }));
 
