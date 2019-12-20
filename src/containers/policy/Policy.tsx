@@ -9,7 +9,7 @@ import {
   FaTrash
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
-import { MdEmail, MdModeEdit } from "react-icons/md";
+import { MdModeEdit } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -31,11 +31,7 @@ import ResourceBar, {
   AddResourceButton
 } from "../../shared/components/ResourceBar";
 import Table from "../../shared/components/Table";
-import {
-  downloadPdf,
-  previewPdf,
-  emailPdf
-} from "../../shared/utils/accessGeneratedPdf";
+import { downloadPdf, previewPdf } from "../../shared/utils/accessGeneratedPdf";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
