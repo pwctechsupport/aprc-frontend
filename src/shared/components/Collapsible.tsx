@@ -18,8 +18,8 @@ const Collapsible = ({
       })}
     >
       <div className="clickable" onClick={() => setShow(!show)}>
-        <H5 active={show}>
-          <Icon active={show} /> {title}
+        <H5 open={show}>
+          <Icon open={show} /> {title}
         </H5>
       </div>
       {show && children}
@@ -32,8 +32,8 @@ export default Collapsible;
 const Icon = styled(FaAngleRight)<IconProps>`
   transition: 0.15s ease-in-out;
   color: grey;
-  ${props =>
-    props.active &&
+  ${(p: IconProps) =>
+    p.open &&
     css`
       transform: rotate(90deg);
       color: black;
@@ -42,11 +42,11 @@ const Icon = styled(FaAngleRight)<IconProps>`
 
 const H5 = styled.h5<IconProps>`
   transition: 0.15s ease-in-out;
-  color: ${p => (p.active ? "black" : "grey")};
+  color: ${(p: IconProps) => (p.open ? "black" : "grey")};
 `;
 
 interface IconProps {
-  active?: boolean;
+  open: boolean;
 }
 
 interface CollapsibleProps {
