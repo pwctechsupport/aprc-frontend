@@ -6,13 +6,15 @@ import {
   Status,
   useUpdateRiskMutation,
   RisksDocument,
-  RiskDocument
+  RiskDocument,
+  TypeOfRisk
 } from "../../generated/graphql";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import { oc } from "ts-optchain";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { toast } from "react-toastify";
+import Helmet from "react-helmet";
 
 const Risk = ({ match }: RouteComponentProps) => {
   const id = match.params && (match.params as any).id;
@@ -21,9 +23,13 @@ const Risk = ({ match }: RouteComponentProps) => {
     fetchPolicy: "network-only"
   });
 
+  const name = oc(data).risk.name("");
+
   const defaultValues: RiskFormValues = {
-    name: oc(data).risk.name(""),
+    name,
     levelOfRisk: oc(data).risk.levelOfRisk(LevelOfRisk.Low) as LevelOfRisk,
+    typeOfRisk: oc(data).risk.typeOfRisk() as TypeOfRisk,
+    businessProcessId: oc(data).risk.businessProcessId(""),
     status: oc(data).risk.status(Status.Draft) as Status
   };
 
@@ -52,6 +58,9 @@ const Risk = ({ match }: RouteComponentProps) => {
 
   return (
     <div>
+      <Helmet>
+        <title>{name} - Risk - PricewaterhouseCoopers</title>
+      </Helmet>
       <HeaderWithBackButton heading="Risk" />
       <RiskForm
         defaultValues={defaultValues}

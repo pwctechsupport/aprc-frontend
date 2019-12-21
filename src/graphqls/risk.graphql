@@ -17,9 +17,15 @@ fragment risk on Risk {
   id
   name
   levelOfRisk
+  typeOfRisk
   createdAt
   updatedAt
   status
+  businessProcess {
+    id
+    name
+  }
+  businessProcessId
 }
 
 mutation createRisk($input: CreateRiskInput!) {

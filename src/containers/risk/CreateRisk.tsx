@@ -27,7 +27,7 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
   return (
     <div>
       <Helmet>
-        <title>Create Policy - PricewaterhouseCoopers</title>
+        <title>Create Risk - PricewaterhouseCoopers</title>
       </Helmet>
       <HeaderWithBackButton heading="Create Risk" />
       <RiskForm onSubmit={handleSubmit} submitting={loading} />
