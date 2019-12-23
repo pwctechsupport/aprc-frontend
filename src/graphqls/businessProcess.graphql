@@ -40,6 +40,30 @@ query businessProcess($id: ID!) {
       id
       ancestry
     }
+    risks {
+      name
+      typeOfRisk
+      levelOfRisk
+      controls {
+        description
+        id
+        nature
+        ipo
+        nature
+        assertion
+        frequency
+        typeOfControl
+        controlOwner
+      }
+    }
+    resources {
+      name
+      id
+      rating
+      visit
+      resuploadUrl
+      totalRating
+    }
   }
 }
 

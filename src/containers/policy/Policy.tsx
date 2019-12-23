@@ -189,15 +189,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           onClick={toggleCollapse}
         >
           {resources.map(resource => (
-            <ResourceBar
-              key={resource.id}
-              resourceId={resource.id}
-              name={resource.name}
-              rating={resource.rating || 0}
-              visit={resource.visit}
-              totalRating={resource.totalRating || 0}
-              resuploadUrl={resource.resuploadUrl}
-            />
+            <ResourceBar key={resource.id} {...resource} />
           ))}
           <AddResourceButton onClick={toggleAddResourceModal} />
         </Collapsible>

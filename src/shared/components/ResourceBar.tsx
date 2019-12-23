@@ -11,15 +11,15 @@ import styled from "styled-components";
 
 const ResourceBar = ({
   name,
-  resourceId,
+  id,
   resuploadUrl,
-  rating,
-  visit,
-  totalRating
+  rating = 0,
+  visit = 0,
+  totalRating = 0
 }: ResourceBarProps) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
-  const tooltipId = "resourceBarTooltip" + resourceId;
+  const tooltipId = "resourceBarTooltip" + id;
 
   const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
@@ -35,7 +35,7 @@ const ResourceBar = ({
     mutate({
       variables: {
         input: {
-          resourceId: resourceId,
+          resourceId: id,
           rating: nextValue,
           userId: oc(user).id("")
         }
@@ -54,7 +54,7 @@ const ResourceBar = ({
         From {totalRating} user(s)
       </Tooltip>
       <div className="d-flex align-items-center">
-        <Link to={`/resources/${resourceId}`}>
+        <Link to={`/resources/${id}`}>
           <div className="name">{name}</div>
         </Link>
         <a
@@ -71,7 +71,7 @@ const ResourceBar = ({
         <div id={tooltipId}>
           <StarRatingComponent
             name={name}
-            value={rating}
+            value={rating || 0}
             starCount={5}
             onStarClick={handleStarClick}
             starColor="#d85604"
@@ -112,10 +112,10 @@ interface AddResourceButtonProps {
 }
 
 interface ResourceBarProps {
-  resourceId: string;
+  id: string;
   name: string;
-  rating: number;
-  visit: number;
-  resuploadUrl: string | null | undefined;
-  totalRating: number;
+  resuploadUrl?: string | null | undefined;
+  rating?: number | null | undefined;
+  visit?: number | null | undefined;
+  totalRating?: number | null | undefined;
 }
