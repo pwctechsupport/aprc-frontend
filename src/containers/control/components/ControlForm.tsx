@@ -7,11 +7,12 @@ import {
   Ipo,
   Nature,
   TypeOfControl,
-  Status
+  Status,
+  useRisksQuery
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
-import Select from "../../../shared/components/forms/Select";
+import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import { oc } from "ts-optchain";
 import { capitalCase } from "capital-case";
 
@@ -26,6 +27,11 @@ const ControlForm = ({
   const { register, handleSubmit, setValue } = useForm<CreateControlFormValues>(
     { defaultValues }
   );
+
+  const risksQ = useRisksQuery();
+  const riskOptions = oc(risksQ)
+    .data.risks.collection([])
+    .map(risk => ({ label: risk.name, value: risk.id }));
 
   useEffect(() => {
     register({ name: "frequency" });
@@ -89,6 +95,20 @@ const ControlForm = ({
         onChange={handleSelectChange("status")}
         label="Status"
         defaultValue={pDefVal(status, statuses)}
+      />
+      <FormSelect
+        isMulti
+        name="riskIds"
+        label="Risks"
+        isLoading={risksQ.loading}
+        register={register}
+        setValue={setValue}
+        options={riskOptions}
+        defaultValue={riskOptions.filter(res =>
+          oc(defaultValues)
+            .riskIds([])
+            .includes(res.value)
+        )}
       />
       <div className="d-flex justify-content-end">
         <Button className="pwc px-5" type="submit" loading={submitting}>
@@ -154,9 +174,12 @@ export interface CreateControlFormValues {
   assertion: Assertion;
   description?: string;
   status: Status;
+  riskIds?: string[];
 }
+
 type Option = {
   label: string;
   value: string;
 };
+
 type Options = Option[];

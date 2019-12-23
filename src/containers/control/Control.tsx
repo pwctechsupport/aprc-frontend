@@ -40,7 +40,8 @@ const Control = ({ match }: RouteComponentProps) => {
           frequency: values.frequency,
           ipo: values.ipo,
           nature: values.nature,
-          status: values.status
+          status: values.status,
+          riskIds: values.riskIds
         }
       }
     });
@@ -54,6 +55,9 @@ const Control = ({ match }: RouteComponentProps) => {
   const nature = oc(data).control.nature("");
   const typeOfControl = oc(data).control.typeOfControl("");
   const status = oc(data).control.status("");
+  const riskIds = oc(data)
+    .control.risks([])
+    .map(risk => risk.id);
 
   if (loading) return null;
 
@@ -71,7 +75,8 @@ const Control = ({ match }: RouteComponentProps) => {
           nature: (nature as Nature) || Nature.Corrective,
           typeOfControl:
             (typeOfControl as TypeOfControl) || TypeOfControl.Automatic,
-          status: (status as Status) || Status.Draft
+          status: (status as Status) || Status.Draft,
+          riskIds
         }}
         submitting={updateState.loading}
       />

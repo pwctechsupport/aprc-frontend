@@ -26,7 +26,8 @@ const CreateControl = ({ history }: RouteComponentProps) => {
           ipo: values.ipo,
           nature: values.nature,
           description: values.description,
-          status: values.status
+          status: values.status,
+          riskIds: values.riskIds
         }
       }
     });
