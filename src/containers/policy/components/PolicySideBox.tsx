@@ -1,11 +1,12 @@
+import classnames from "classnames";
 import React, { useState } from "react";
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { FaChevronRight } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse, Input } from "reactstrap";
+import styled, { css } from "styled-components";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { usePolicyTreeQuery } from "../../../generated/graphql";
-import classnames from "classnames";
 import Button from "../../../shared/components/Button";
 
 const PolicySideBox = ({ location }: RouteComponentProps) => {
@@ -97,7 +98,6 @@ const PolicyBranch = ({
 }: PolicyBranchProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
-  const Icon = isOpen ? FaChevronDown : FaChevronRight;
   const isActive = id === activeId;
   const hasChild = Array.isArray(children) && !!children.length;
 
@@ -118,7 +118,7 @@ const PolicyBranch = ({
         </Link>
         {hasChild && (
           <div className="side-box__item__icon clickable" onClick={toggle}>
-            <Icon />
+            <Icon open={isOpen} />
           </div>
         )}
       </div>
@@ -138,6 +138,15 @@ const PolicyBranch = ({
     </div>
   );
 };
+
+const Icon = styled(FaChevronRight)<{ open: boolean }>`
+  transition: 0.15s ease-in-out;
+  ${(p: { open: boolean }) =>
+    p.open &&
+    css`
+      transform: rotate(90deg);
+    `};
+`;
 
 const readCurrentParams = (pathname: string) => {
   const hasParam = pathname.includes("policy/");
