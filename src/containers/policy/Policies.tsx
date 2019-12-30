@@ -11,6 +11,7 @@ import {
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import Helmet from "react-helmet";
+import PolicyBar from "./components/PolicyBar";
 
 const Policies = () => {
   const { loading, data } = usePoliciesQuery({
@@ -43,7 +44,20 @@ const Policies = () => {
           <Button className="pwc">+ Add Policy</Button>
         </Link>
       </div>
-      <Table reloading={loading}>
+      {oc(data)
+        .policies.collection([])
+        .map(policy => {
+          return (
+            <PolicyBar
+              id={policy.id}
+              title={policy.title}
+              status={policy.status}
+              category={oc(policy).policyCategory.name("")}
+              key={policy.id}
+            />
+          );
+        })}
+      {/* <Table reloading={loading}>
         <thead>
           <tr>
             <th>Title</th>
@@ -83,7 +97,7 @@ const Policies = () => {
               );
             })}
         </tbody>
-      </Table>
+      </Table> */}
     </div>
   );
 };

@@ -1,16 +1,16 @@
+import { capitalCase } from "capital-case";
 import React, { useEffect } from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
 import { Status, usePolicyCategoriesQuery } from "../../../generated/graphql";
-import Button from "../../../shared/components/Button";
+import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
-import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { capitalCase } from "capital-case";
+import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
 
 const PolicyForm = ({
   onSubmit,
@@ -41,7 +41,6 @@ const PolicyForm = ({
   function handleChange(name: string) {
     return function(value: any) {
       if (value) {
-        console.log("value:", value.value);
         setValue(name, value.value);
       }
     };
@@ -63,7 +62,7 @@ const PolicyForm = ({
 
   return (
     <div>
-      <Form onSubmit={handleSubmit(submit)}>
+      <Form>
         <Input
           name="title"
           label="Title"
@@ -98,14 +97,14 @@ const PolicyForm = ({
           isDisabled={!isAdmin}
         />
         <div className="d-flex justify-content-end mt-3">
-          <Button
-            type="submit"
+          <DialogButton
             color="primary"
             loading={submitting}
             className="pwc px-5"
+            onConfirm={handleSubmit(submit)}
           >
             {defaultValues ? "Simpan" : "Submit"}
-          </Button>
+          </DialogButton>
         </div>
       </Form>
     </div>

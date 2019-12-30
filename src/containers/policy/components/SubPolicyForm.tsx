@@ -17,6 +17,7 @@ import TextEditor from "../../../shared/components/forms/TextEditor";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue, prepDefaultValue } from "../../../shared/formatter";
 import { capitalCase } from "capital-case";
+import DialogButton from "../../../shared/components/DialogButton";
 
 const SubPolicyForm = ({
   onSubmit,
@@ -113,7 +114,7 @@ const SubPolicyForm = ({
 
   return (
     <div>
-      <Form onSubmit={handleSubmit(submit)}>
+      <Form>
         <Input
           name="title"
           label="Sub-Policy Title"
@@ -153,9 +154,17 @@ const SubPolicyForm = ({
           >
             Insert Attributes
           </Button>
-          <Button type="submit" className="pwc px-5" loading={submitting}>
+          {/* <Button type="submit" className="pwc px-5" loading={submitting}>
             Simpan
-          </Button>
+          </Button> */}
+          <DialogButton
+            color="primary"
+            loading={submitting}
+            className="pwc px-5"
+            onConfirm={handleSubmit(submit)}
+          >
+            Save
+          </DialogButton>
         </div>
       </Form>
 

@@ -3,7 +3,7 @@ import { Button as BsButton, ButtonProps as BsButtonProps } from "reactstrap";
 import LoadingSpinner from "./LoadingSpinner";
 import cx from "classnames";
 
-interface ButtonProps extends BsButtonProps {
+export interface ButtonProps extends BsButtonProps {
   loading?: boolean;
 }
 

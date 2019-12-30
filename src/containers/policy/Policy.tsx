@@ -40,6 +40,7 @@ import ResourceForm, {
 } from "../resources/components/ResourceForm";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import DialogButton from "../../shared/components/DialogButton";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -297,10 +298,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                         .join(", ")}
                     </td>
                     <td>
-                      <FaTrash
-                        onClick={() => handleDelete(item.id)}
-                        className="clickable"
-                      />
+                      <DialogButton onConfirm={() => handleDelete(item.id)}>
+                        <FaTrash />
+                      </DialogButton>
                     </td>
                   </tr>
                 ))}
@@ -372,8 +372,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             <Button className="pwc">+ Create Sub-Policy</Button>
           </Link>
         )}
-        <div
-          className="ml-3 clickable"
+        <Button
+          className="ml-3"
+          color="transparent"
           onClick={() => {
             collapse.length === initialCollapse.length
               ? closeAllCollapse()
@@ -385,17 +386,14 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           ) : (
             <FaEye size={20} />
           )}
-        </div>
+        </Button>
 
-        <MdModeEdit
-          size={22}
-          className="mx-3 clickable"
-          onClick={toggleEditMode}
-        />
-        <FaTrash
-          onClick={handleDeleteMain}
-          className="clickable text-red mr-3"
-        />
+        <Button onClick={toggleEditMode} color="transparent">
+          <MdModeEdit size={22} />
+        </Button>
+        <DialogButton onConfirm={handleDeleteMain} className="mr-3">
+          <FaTrash className="clickable text-red" />
+        </DialogButton>
         <Menu
           data={[
             {
@@ -426,14 +424,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                   onCompleted: () => toast.success("Download Success")
                 })
             },
-            // {
-            //   label: (
-            //     <div>
-            //       <MdEmail /> Mail
-            //     </div>
-            //   ),
-            //   onClick: () => emailPdf(`prints/${id}.pdf`)
-            // },
             {
               label: (
                 <div>
@@ -457,7 +447,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         <title>Policy - {title} - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="d-flex justify-content-between">
-        <HeaderWithBackButton heading={`Policy ${title}`} />
+        <HeaderWithBackButton heading={title} />
         {renderPolicyAction()}
       </div>
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
