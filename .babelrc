@@ -1,3 +1,7 @@
 {
-  "plugins": ["react-hot-loader/babel", "ts-optchain"]
+  "plugins": [
+    "react-hot-loader/babel",
+    "ts-optchain",
+    "babel-plugin-styled-components"
+  ]
 }
