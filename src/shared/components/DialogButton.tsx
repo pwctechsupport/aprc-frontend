@@ -25,7 +25,8 @@ const DialogButton = ({
 }: DialogButtonProps) => {
   const [isOpen, setIsOpen] = useState<boolean>();
 
-  function _onClick() {
+  function _onClick(event: any) {
+    event.stopPropagation();
     setIsOpen(true);
   }
 
