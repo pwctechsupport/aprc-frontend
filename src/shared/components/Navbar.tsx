@@ -26,7 +26,7 @@ const adminMenus = [
 ];
 
 const userMenus = [
-  { label: "Policy", path: "/policy/dashboard" },
+  { label: "Policy", path: "/policy" },
   { label: "Risk & Control", path: "/risk-and-control" },
   // { label: "Control & Risk Management", path: "/control-and-risk-management" },
   { label: "Report", path: "/report" }
