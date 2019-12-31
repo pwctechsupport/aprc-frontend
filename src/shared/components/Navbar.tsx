@@ -104,6 +104,9 @@ const NavbarContainer = styled.div`
   padding: 0 45px 0 45px;
   border: 1px solid #bfbfbf;
   height: 55px;
+  @media (max-width: 768px) {
+    overflow-y: scroll;
+  }
 `;
 
 const Image = styled.img`

@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
+import { FaDownload, FaFile } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import StarRatingComponent from "react-star-rating-component";
 import { toast } from "react-toastify";
+import styled from "styled-components";
 import { oc } from "ts-optchain";
 import { useCreateResourceRatingMutation } from "../../generated/graphql";
 import { useSelector } from "../hooks/useSelector";
-import { FaFile } from "react-icons/fa";
-import { Tooltip } from "reactstrap";
-import styled from "styled-components";
+import StarRating from "./StarRating";
 
 const ResourceBar = ({
   name,
@@ -17,10 +16,6 @@ const ResourceBar = ({
   visit = 0,
   totalRating = 0
 }: ResourceBarProps) => {
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => setTooltipOpen(!tooltipOpen);
-  const tooltipId = "resourceBarTooltip" + id;
-
   const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
     onCompleted: res => {
@@ -43,43 +38,43 @@ const ResourceBar = ({
     });
   };
   return (
-    <div className="resource-bar">
-      <Tooltip
-        placement="top"
-        isOpen={tooltipOpen}
-        target={tooltipId}
-        toggle={toggle}
-      >
-        Avg. Rating: {rating} <br />
-        From {totalRating} user(s)
-      </Tooltip>
-      <div className="d-flex align-items-center">
+    <ResourceBarContainer>
+      <ResourceBarDivider width="40">
         <Link to={`/resources/${id}`}>
-          <div className="name">{name}</div>
+          <ResourceName>{name}</ResourceName>
         </Link>
+      </ResourceBarDivider>
+
+      <ResourceBarDivider width="20" align="right">
         <a
           href={`http://mandalorian.rubyh.co${resuploadUrl}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="ml-3"
+          className="mx-2"
         >
           <FaFile />
         </a>
-      </div>
+        <a
+          href={`http://mandalorian.rubyh.co${resuploadUrl}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          download={`Pwc-Resource ${name}`}
+        >
+          <FaDownload />
+        </a>
+      </ResourceBarDivider>
+      <div></div>
 
-      <div className="star-and-views">
-        <div id={tooltipId}>
-          <StarRatingComponent
-            name={name}
-            value={rating || 0}
-            starCount={5}
-            onStarClick={handleStarClick}
-            starColor="#d85604"
-          />
-        </div>
-        <div className="views">{visit} Views</div>
-      </div>
-    </div>
+      <ResourceBarDivider width="10">
+        <StarRating
+          id={id}
+          rating={rating}
+          totalRating={totalRating}
+          onStarClick={handleStarClick}
+        />
+        <ResourceViewCount className="views">{visit} Views</ResourceViewCount>
+      </ResourceBarDivider>
+    </ResourceBarContainer>
   );
 };
 
@@ -92,6 +87,38 @@ export const AddResourceButton = ({ onClick }: AddResourceButtonProps) => {
     </AddResourceButtonWrapper>
   );
 };
+
+// ------------------------------------------------
+// Styled Components Constructor
+// ------------------------------------------------
+const ResourceBarContainer = styled.div`
+  background: #fbeee6;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  & :last-child {
+    margin-bottom: 0px;
+  }
+`;
+
+const ResourceBarDivider = styled.div<{ width?: string; align?: string }>`
+  width: ${p => p.width + "%"};
+  text-align: ${p => p.align};
+  margin: 0px 5px;
+`;
+
+const ResourceName = styled.div`
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 20px;
+  color: #d85604;
+`;
+const ResourceViewCount = styled.div`
+  font-size: 12px;
+`;
 
 const AddResourceButtonWrapper = styled.div`
   background-color: white;
@@ -107,9 +134,9 @@ const AddResourceButtonWrapper = styled.div`
   }
 `;
 
-interface AddResourceButtonProps {
-  onClick: () => void;
-}
+// ------------------------------------------------
+// Type Definitions
+// ------------------------------------------------
 
 interface ResourceBarProps {
   id: string;
@@ -118,4 +145,8 @@ interface ResourceBarProps {
   rating?: number | null | undefined;
   visit?: number | null | undefined;
   totalRating?: number | null | undefined;
+}
+
+interface AddResourceButtonProps {
+  onClick: () => void;
 }
