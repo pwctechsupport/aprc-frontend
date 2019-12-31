@@ -1322,6 +1322,18 @@
             "deprecationReason": null
           },
           {
+            "name": "resourceId",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "ID",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "resourceIds",
             "description": "",
             "args": [],
@@ -1756,9 +1768,17 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -1948,9 +1968,17 @@
             "description": "",
             "args": [],
             "type": {
-              "kind": "SCALAR",
-              "name": "String",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -6578,6 +6606,16 @@
             "defaultValue": null
           },
           {
+            "name": "resourceId",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "ID",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "itSystemIds",
             "description": "",
             "type": {
@@ -7481,6 +7519,12 @@
           {
             "name": "operational_risk",
             "description": "Operational Risk",
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "business_process",
+            "description": "Business Process",
             "isDeprecated": false,
             "deprecationReason": null
           }

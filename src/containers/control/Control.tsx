@@ -49,9 +49,9 @@ const Control = ({ match }: RouteComponentProps) => {
 
   const controlOwner = oc(data).control.controlOwner("");
   const description = oc(data).control.description("");
-  const assertion = oc(data).control.assertion("");
+  // const assertion = oc(data).control.assertion("");
   const frequency = oc(data).control.frequency("");
-  const ipo = oc(data).control.ipo("");
+  // const ipo = oc(data).control.ipo("");
   const nature = oc(data).control.nature("");
   const typeOfControl = oc(data).control.typeOfControl("");
   const status = oc(data).control.status("");
