@@ -4,7 +4,6 @@ import Helmet from "react-helmet";
 import { FaTrash } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
-import styled from "styled-components";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
@@ -13,6 +12,8 @@ import {
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import SearchBar from "../../shared/components/SearchBar";
+import { ActionTd, EmptyTd, Tr } from "../../shared/components/Table";
 
 const Policies = ({ history }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
@@ -52,7 +53,7 @@ const Policies = ({ history }: RouteComponentProps) => {
           <Button className="pwc">+ Add Policy</Button>
         </Link>
       </div>
-      <Input
+      <SearchBar
         value={search}
         onChange={handleChange}
         placeholder="Search Policies"
@@ -70,19 +71,19 @@ const Policies = ({ history }: RouteComponentProps) => {
           {policies.length ? (
             policies.map(policy => {
               return (
-                <PolicyTr
+                <Tr
                   key={policy.id}
                   onClick={() => history.push(`/policy/${policy.id}`)}
                 >
                   <td>{policy.title}</td>
                   <td>{oc(policy).policyCategory.name("")}</td>
                   <td>{capitalCase(policy.status || "")}</td>
-                  <PolicyActionTd>
+                  <ActionTd>
                     <DialogButton onConfirm={() => handleDelete(policy.id)}>
                       <FaTrash />
                     </DialogButton>
-                  </PolicyActionTd>
-                </PolicyTr>
+                  </ActionTd>
+                </Tr>
               );
             })
           ) : (
@@ -99,50 +100,3 @@ const Policies = ({ history }: RouteComponentProps) => {
 };
 
 export default Policies;
-
-const Input = styled.input`
-  width: 100%;
-  margin-bottom: 20px;
-  ::placeholder {
-    color: grey;
-  }
-  padding: 16px 16px 16px 60px;
-  border: none;
-  background: rgba(0, 0, 0, 0.003);
-  box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
-  font-style: italic;
-  font-weight: 300;
-  font-size: 15px;
-  &::-webkit-input-placeholder {
-    color: "red";
-  }
-`;
-
-const PolicyTr = styled.tr`
-  background: white;
-  box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  height: 60px;
-  color: inherit;
-  &:hover {
-    background: rgba(0, 0, 0, 0.08);
-    text-decoration: none;
-    color: inherit;
-  }
-`;
-
-const PolicyActionTd = styled.td`
-  visibility: hidden;
-  &:hover {
-    visibility: visible;
-  }
-  ${PolicyTr}:hover & {
-    visibility: visible;
-  }
-`;
-
-const EmptyTd = styled.td`
-  text-align: center;
-  padding: 20px 0px;
-  background: rgba(0, 0, 0, 0.1);
-`;

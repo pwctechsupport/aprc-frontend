@@ -15,6 +15,10 @@ query businessProcesses($filter: BaseScalar = {}) {
       id
       name
       parentId
+      risks {
+        id
+        name
+      }
     }
   }
 }
@@ -23,7 +27,7 @@ query businessProcessTree($filter: BaseScalar = {}, $isTree: Boolean = true) {
   businessProcesses(filter: $filter) {
     collection {
       ...businessProcessBranch
-      children @include (if: $isTree) {
+      children @include(if: $isTree) {
         ...businessProcessBranch
         children {
           ...businessProcessBranch

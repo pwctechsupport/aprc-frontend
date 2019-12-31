@@ -1,17 +1,14 @@
-import React from "react";
-import {
-  useBusinessProcessesQuery,
-  useBusinessProcessQuery
-} from "../../generated/graphql";
-import { oc } from "ts-optchain";
-import { RouteComponentProps } from "react-router-dom";
-import get from "lodash/get";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import { UncontrolledCollapsible } from "../../shared/components/Collapsible";
-import { Table, Badge } from "reactstrap";
-import ResourceBar from "../../shared/components/ResourceBar";
 import { capitalCase } from "capital-case";
+import get from "lodash/get";
+import React from "react";
+import { RouteComponentProps } from "react-router-dom";
+import { Badge, Table } from "reactstrap";
+import { oc } from "ts-optchain";
+import { useBusinessProcessQuery } from "../../generated/graphql";
+import { UncontrolledCollapsible } from "../../shared/components/Collapsible";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import ResourceBar from "../../shared/components/ResourceBar";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -63,8 +60,8 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                           <td>{capitalCase(control.frequency || "")}</td>
                           <td>{capitalCase(control.typeOfControl || "")}</td>
                           <td>{capitalCase(control.nature || "")}</td>
-                          <td>{capitalCase(control.ipo || "")}</td>
-                          <td>{capitalCase(control.assertion || "")}</td>
+                          {/* <td>{capitalCase(control.ipo || "")}</td> */}
+                          {/* <td>{capitalCase(control.assertion || "")}</td> */}
                           <td>{control.controlOwner}</td>
                         </tr>
                       </tbody>

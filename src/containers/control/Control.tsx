@@ -3,10 +3,10 @@ import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import {
   useControlQuery,
   useUpdateControlMutation,
-  Assertion,
+  // Assertion,
   TypeOfControl,
   Nature,
-  Ipo,
+  // Ipo,
   Frequency,
   Status
 } from "../../generated/graphql";

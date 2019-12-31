@@ -1,14 +1,16 @@
+import classnames from "classnames";
 import React, { useState } from "react";
-import { useBusinessProcessesQuery, useBusinessProcessTreeQuery } from "../../generated/graphql";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { Link, RouteComponentProps } from "react-router-dom";
+import { Collapse, Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
-import classnames from "classnames";
-import { Link, RouteComponentProps } from "react-router-dom";
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
-import { Collapse, Input } from "reactstrap";
+import { useBusinessProcessTreeQuery } from "../../generated/graphql";
 
-const RiskAndControlSideBox = ({location}: RouteComponentProps) => {
-  const id = oc(location).pathname('').split('risk-and-control/')[1]
+const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
+  const id = oc(location)
+    .pathname("")
+    .split("risk-and-control/")[1];
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
 
@@ -42,18 +44,21 @@ const RiskAndControlSideBox = ({location}: RouteComponentProps) => {
 
 export default RiskAndControlSideBox;
 
-const BusinessProcessTree = ({activeId, search}: BusinessProcessTreeProps) => {
+const BusinessProcessTree = ({
+  activeId,
+  search
+}: BusinessProcessTreeProps) => {
   const { data } = useBusinessProcessTreeQuery({
     variables: {
       filter: { ...(!search && { ancestry_null: true }), name_cont: search },
       isTree: !search
     }
-  })
+  });
 
-  const businessProcesses = oc(data).businessProcesses.collection([])
+  const businessProcesses = oc(data).businessProcesses.collection([]);
 
   if (businessProcesses.length === 0) {
-    return <div className="text-center p-2">Business Process not found</div>
+    return <div className="text-center p-2">Business Process not found</div>;
   }
 
   return (
@@ -68,11 +73,11 @@ const BusinessProcessTree = ({activeId, search}: BusinessProcessTreeProps) => {
             children={businessProcess.children}
             level={0}
           />
-        )
+        );
       })}
     </div>
-  )
-}
+  );
+};
 
 const BusinessProcessBranch = ({
   id,
@@ -125,7 +130,7 @@ const BusinessProcessBranch = ({
   );
 };
 
-interface BusinessProcessTreeProps  {
+interface BusinessProcessTreeProps {
   activeId: string | number | undefined;
   search: string | null | undefined;
 }

@@ -52,8 +52,8 @@ const ControlForm = ({
   const typeOfControl = oc(defaultValues).typeOfControl();
   const frequency = oc(defaultValues).frequency();
   const nature = oc(defaultValues).nature();
-  const assertion = oc(defaultValues).assertion();
-  const ipo = oc(defaultValues).ipo();
+  // const assertion = oc(defaultValues).assertion();
+  // const ipo = oc(defaultValues).ipo();
   const status = oc(defaultValues).status();
 
   return (

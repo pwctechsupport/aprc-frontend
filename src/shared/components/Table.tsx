@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { Table as BsTable, TableProps as BsTableProps } from "reactstrap";
 import { FaSpinner } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
+import styled from "styled-components";
 
 interface TableProps extends BsTableProps {
   loading?: boolean;
@@ -72,5 +73,34 @@ const Table = ({ loading, reloading, ...props }: TableProps) => {
     </BsTable>
   );
 };
+
+export const Tr = styled.tr`
+  background: white;
+  box-shadow: inset 0 -1px 0 0 rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  height: 60px;
+  color: inherit;
+  &:hover {
+    background: rgba(0, 0, 0, 0.08);
+    text-decoration: none;
+    color: inherit;
+  }
+`;
+
+export const ActionTd = styled.td`
+  visibility: hidden;
+  &:hover {
+    visibility: visible;
+  }
+  ${Tr}:hover & {
+    visibility: visible;
+  }
+`;
+
+export const EmptyTd = styled.td`
+  text-align: center;
+  padding: 20px 0px;
+  background: rgba(0, 0, 0, 0.1);
+`;
 
 export default Table;
