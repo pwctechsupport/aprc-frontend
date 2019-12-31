@@ -11,6 +11,7 @@ import {
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import Helmet from "react-helmet";
+import { capitalCase } from "capital-case";
 
 const Risks = () => {
   const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
@@ -60,7 +61,7 @@ const Risks = () => {
                   <td>
                     <Link to={`/risk/${risk.id}`}>{oc(risk).name("")}</Link>
                   </td>
-                  <td>{oc(risk).levelOfRisk("")}</td>
+                  <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                   <td>
                     <FaTrash
                       onClick={() => handleDelete(risk.id)}

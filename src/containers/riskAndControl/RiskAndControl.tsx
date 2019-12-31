@@ -60,11 +60,11 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                       </thead>
                       <tbody>
                         <tr key={control.id}>
-                          <td>{control.frequency}</td>
-                          <td>{control.typeOfControl}</td>
-                          <td>{control.nature}</td>
-                          <td>{control.ipo}</td>
-                          <td>{control.assertion}</td>
+                          <td>{capitalCase(control.frequency || "")}</td>
+                          <td>{capitalCase(control.typeOfControl || "")}</td>
+                          <td>{capitalCase(control.nature || "")}</td>
+                          <td>{capitalCase(control.ipo || "")}</td>
+                          <td>{capitalCase(control.assertion || "")}</td>
                           <td>{control.controlOwner}</td>
                         </tr>
                       </tbody>

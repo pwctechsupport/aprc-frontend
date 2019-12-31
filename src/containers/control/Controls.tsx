@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import ControlSideBox from "./components/ControlSideBox";
 import { useDebounce } from "use-debounce/lib";
 import Helmet from "react-helmet";
+import { capitalCase } from "capital-case";
 
 const Controls = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -74,15 +75,15 @@ const Controls = () => {
                     </Link>
                   </td>
                   {/* <td>{control.description}</td> */}
-                  <td>{control.frequency}</td>
-                  <td>{control.typeOfControl}</td>
+                  <td>{capitalCase(control.frequency || "")}</td>
+                  <td>{capitalCase(control.typeOfControl || "")}</td>
                   <td>
                     {oc(control)
                       .risks([])
                       .map(risk => risk.name)
                       .join(", ")}
                   </td>
-                  <td>{control.nature}</td>
+                  <td>{capitalCase(control.nature || "")}</td>
                   <td>{control.controlOwner}</td>
                   <td>
                     <FaTrash

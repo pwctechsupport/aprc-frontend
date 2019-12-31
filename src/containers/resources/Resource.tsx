@@ -17,6 +17,7 @@ import { FaTimes, FaTrash } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
 import ResourceBox from "./components/ResourceBox";
+import { capitalCase } from "capital-case";
 
 const Resource = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -105,7 +106,7 @@ const Resource = ({ match }: RouteComponentProps) => {
           <h5>
             Category:&nbsp;
             <span className="text-orange">
-              {oc(data).resource.category("")}
+              {capitalCase(oc(data).resource.category(""))}
             </span>
           </h5>
           <h5 className="mt-5">Related Controls:</h5>
