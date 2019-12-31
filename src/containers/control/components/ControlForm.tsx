@@ -78,17 +78,31 @@ const ControlForm = ({
         label="Nature"
         defaultValue={pDefVal(nature, natures)}
       />
-      <Select
+      <FormSelect
+        isMulti
+        name="assertion"
+        label="Assertions"
+        register={register}
+        setValue={setValue}
         options={assertions}
-        onChange={handleSelectChange("assertion")}
-        label="Assertion"
-        defaultValue={pDefVal(assertion, assertions)}
+        defaultValue={assertions.filter(res =>
+          oc(defaultValues)
+            .assertion([])
+            .includes(res.value)
+        )}
       />
-      <Select
+      <FormSelect
+        isMulti
+        name="ipo"
+        label="IPOs"
+        register={register}
+        setValue={setValue}
         options={ipos}
-        onChange={handleSelectChange("ipo")}
-        label="IPO"
-        defaultValue={pDefVal(ipo, ipos)}
+        defaultValue={ipos.filter(res =>
+          oc(defaultValues)
+            .ipo([])
+            .includes(res.value)
+        )}
       />
       <Select
         options={statuses}
@@ -170,8 +184,8 @@ export interface CreateControlFormValues {
   typeOfControl: TypeOfControl;
   frequency: Frequency;
   nature: Nature;
-  ipo: Ipo;
-  assertion: Assertion;
+  ipo: Ipo[];
+  assertion: Assertion[];
   description?: string;
   status: Status;
   riskIds?: string[];

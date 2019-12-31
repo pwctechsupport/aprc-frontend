@@ -21,9 +21,9 @@ const CreateControl = ({ history }: RouteComponentProps) => {
         input: {
           controlOwner: values.controlOwner,
           typeOfControl: values.typeOfControl,
-          assertion: values.assertion,
+          // assertion: values.assertion,
           frequency: values.frequency,
-          ipo: values.ipo,
+          // ipo: values.ipo,
           nature: values.nature,
           description: values.description,
           status: values.status,

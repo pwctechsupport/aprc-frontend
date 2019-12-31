@@ -36,9 +36,9 @@ const Control = ({ match }: RouteComponentProps) => {
           controlOwner: values.controlOwner,
           description: values.description,
           typeOfControl: values.typeOfControl,
-          assertion: values.assertion,
+          // assertion: values.assertion,
           frequency: values.frequency,
-          ipo: values.ipo,
+          // ipo: values.ipo,
           nature: values.nature,
           status: values.status,
           riskIds: values.riskIds
@@ -69,9 +69,9 @@ const Control = ({ match }: RouteComponentProps) => {
         defaultValues={{
           controlOwner,
           description,
-          assertion: (assertion as Assertion) || Assertion.Accuracy,
+          assertion: [],
           frequency: (frequency as Frequency) || Frequency.Annually,
-          ipo: (ipo as Ipo) || Ipo.Accuracy,
+          ipo: [],
           nature: (nature as Nature) || Nature.Corrective,
           typeOfControl:
             (typeOfControl as TypeOfControl) || TypeOfControl.Automatic,
