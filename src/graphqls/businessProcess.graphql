@@ -19,6 +19,36 @@ query businessProcesses($filter: BaseScalar = {}) {
   }
 }
 
+query businessProcessTree($filter: BaseScalar = {}, $isTree: Boolean = true) {
+  businessProcesses(filter: $filter) {
+    collection {
+      ...businessProcessBranch
+      children @include (if: $isTree) {
+        ...businessProcessBranch
+        children {
+          ...businessProcessBranch
+          children {
+            ...businessProcessBranch
+            children {
+              ...businessProcessBranch
+              children {
+                ...businessProcessBranch
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment businessProcessBranch on BusinessProcess {
+  ancestry
+  id
+  name
+  parentId
+}
+
 mutation destroyBusinessProcess($input: DestroyBusinessProcessInput!) {
   destroyBusinessProcess(input: $input) {
     businessProcess {
