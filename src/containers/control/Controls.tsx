@@ -13,6 +13,7 @@ import ControlSideBox from "./components/ControlSideBox";
 import { useDebounce } from "use-debounce/lib";
 import Helmet from "react-helmet";
 import { capitalCase } from "capital-case";
+import DialogButton from "../../shared/components/DialogButton";
 
 const Controls = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -26,7 +27,7 @@ const Controls = () => {
   });
   const controls = oc(data).controls.collection([]);
 
-  const [destroy] = useDestroyControlMutation({
+  const [destroy, destroyM] = useDestroyControlMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["controls"]
@@ -86,10 +87,14 @@ const Controls = () => {
                   <td>{capitalCase(control.nature || "")}</td>
                   <td>{control.controlOwner}</td>
                   <td>
-                    <FaTrash
-                      onClick={() => handleDelete(control.id)}
-                      className="clickable"
-                    />
+                    <DialogButton
+                      onConfirm={() => handleDelete(control.id)}
+                      loading={destroyM.loading}
+                    >
+                      <FaTrash
+                        className="clickable"
+                      />
+                    </DialogButton>
                   </td>
                 </tr>
               );

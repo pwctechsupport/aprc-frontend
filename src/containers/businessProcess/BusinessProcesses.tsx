@@ -12,6 +12,7 @@ import Table from "../../shared/components/Table";
 import BusinessProcessSideBox from "./components/BusinessProcessSideBox";
 import CreateBusinessProcess from "./CreateBusinessProcess";
 import Helmet from "react-helmet";
+import DialogButton from "../../shared/components/DialogButton";
 
 const BusinessProcesses = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -24,7 +25,7 @@ const BusinessProcesses = () => {
     variables: { filter: { name_cont: searchQuery } }
   });
   const bPCollection = oc(businessQuery).data.businessProcesses.collection([]);
-  const [destroy] = useDestroyBusinessProcessMutation({
+  const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["businessProcesses"]
@@ -69,10 +70,14 @@ const BusinessProcesses = () => {
                 <td> {item.id}</td>
                 <td> {item.ancestry}</td>
                 <td>
-                  <FaTrash
-                    onClick={() => handleDelete(item.id)}
-                    className="clickable"
-                  />
+                  <DialogButton
+                    onConfirm={() => handleDelete(item.id)}
+                    loading={destroyM.loading}
+                  >
+                    <FaTrash
+                      className="clickable"
+                    />
+                  </DialogButton>
                 </td>
               </tr>
             ))}

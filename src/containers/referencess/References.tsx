@@ -11,6 +11,7 @@ import Table from "../../shared/components/Table";
 import ControlSideBox from "../control/components/ControlSideBox";
 import CreateReference from "./CreateReference";
 import Helmet from "react-helmet";
+import DialogButton from "../../shared/components/DialogButton";
 
 const References = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -19,7 +20,7 @@ const References = () => {
   const { data, loading } = useReferencesQuery({
     variables: { filter: { name_cont: searchQuery } }
   });
-  const [destroyReference] = useDestroyReferenceMutation({
+  const [destroyReference, destroyM] = useDestroyReferenceMutation({
     refetchQueries: ["references"],
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed")
@@ -59,12 +60,14 @@ const References = () => {
                   <tr key={reference.id}>
                     <td>{reference.name}</td>
                     <td>
-                      <FaTrash
-                        onClick={() =>
-                          destroyReference({ variables: { id: reference.id } })
-                        }
-                        className="clickable"
-                      />
+                      <DialogButton
+                        onConfirm={() => destroyReference({ variables: { id: reference.id } })}
+                        loading={destroyM.loading}
+                      >
+                        <FaTrash
+                          className="clickable"
+                        />
+                      </DialogButton>
                     </td>
                   </tr>
                 );
