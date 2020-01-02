@@ -9,6 +9,7 @@ import { UncontrolledCollapsible } from "../../shared/components/Collapsible";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import ResourceBar from "../../shared/components/ResourceBar";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -25,7 +26,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
 
   return (
     <div>
-      <h1>{name}</h1>
+      <HeaderWithBackButton heading={name} />
       <UncontrolledCollapsible title="Risks">
         {risks.length ? (
           <ul>
