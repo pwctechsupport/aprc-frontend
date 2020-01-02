@@ -50,7 +50,12 @@ fragment businessProcessBranch on BusinessProcess {
   ancestry
   id
   name
+  status
   parentId
+  risks {
+    id
+    name
+  }
 }
 
 mutation destroyBusinessProcess($input: DestroyBusinessProcessInput!) {

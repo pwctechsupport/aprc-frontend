@@ -4,18 +4,25 @@ import Helmet from "react-helmet";
 import { RouteComponentProps } from "react-router-dom";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
-import { useBusinessProcessesQuery } from "../../generated/graphql";
+import {
+  BusinessProcess,
+  useBusinessProcessTreeQuery,
+  Risk
+} from "../../generated/graphql";
 import SearchBar from "../../shared/components/SearchBar";
 import { ActionTd, EmptyTd, Tr } from "../../shared/components/Table";
 
 const RiskAndControls = ({ history }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
-  const { data } = useBusinessProcessesQuery({
+  const isTree = !searchQuery;
+  const { data } = useBusinessProcessTreeQuery({
     variables: {
       filter: {
-        name_cont: searchQuery
-      }
+        name_cont: searchQuery,
+        ...(isTree && { ancestry_null: true })
+      },
+      isTree
     }
   });
 
@@ -49,19 +56,11 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
           {bps.length ? (
             bps.map(bp => {
               return (
-                <Tr
+                <RiskAndControlTableRow
                   key={bp.id}
-                  onClick={() => history.push(`/risk-and-control/${bp.id}`)}
-                >
-                  <td>{bp.name}</td>
-                  <td>
-                    {oc(bp)
-                      .risks([])
-                      .map(({ name }) => capitalCase(name))
-                      .join(", ")}
-                  </td>
-                  <ActionTd></ActionTd>
-                </Tr>
+                  businessProcess={bp}
+                  onClick={id => history.push(`/risk-and-control/${id}`)}
+                />
               );
             })
           ) : (
@@ -78,3 +77,50 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
 };
 
 export default RiskAndControls;
+
+const RiskAndControlTableRow = ({
+  businessProcess,
+  onClick,
+  level = 0
+}: RiskAndControlTableRowProps) => {
+  const childs = oc(businessProcess).children([]);
+  return (
+    <>
+      <Tr key={businessProcess.id} onClick={() => onClick(businessProcess.id)}>
+        <td>
+          {level ? <span style={{ marginLeft: level * 20 }} /> : null}
+          {businessProcess.name}
+        </td>
+        <td>
+          {oc(businessProcess)
+            .risks([])
+            .map(({ name }) => capitalCase(name))
+            .join(", ")}
+        </td>
+        <ActionTd></ActionTd>
+      </Tr>
+      {childs.length
+        ? childs.map(childBp => (
+            <RiskAndControlTableRow
+              key={childBp.id}
+              businessProcess={childBp}
+              onClick={onClick}
+              level={level + 1}
+            />
+          ))
+        : null}
+    </>
+  );
+};
+
+interface RiskAndControlTableRowProps {
+  businessProcess: Partial<FinalBp>;
+  onClick: (value: any) => void;
+  level?: number;
+}
+type MyBp = Pick<BusinessProcess, "name" | "children" | "id">;
+type MyRisk = Pick<Risk, "id" | "name">;
+
+interface FinalBp extends MyBp {
+  risks: Array<MyRisk>;
+}
