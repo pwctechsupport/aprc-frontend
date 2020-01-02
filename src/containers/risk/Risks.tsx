@@ -12,11 +12,12 @@ import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import Helmet from "react-helmet";
 import { capitalCase } from "capital-case";
+import DialogButton from "../../shared/components/DialogButton";
 
 const Risks = () => {
   const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
 
-  const [destroy] = useDestroyRiskMutation({
+  const [destroy, destroyM] = useDestroyRiskMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
     refetchQueries: [
@@ -63,10 +64,14 @@ const Risks = () => {
                   </td>
                   <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                   <td>
-                    <FaTrash
-                      onClick={() => handleDelete(risk.id)}
-                      className="clickable"
-                    />
+                    <DialogButton
+                      onConfirm={() => handleDelete(risk.id)}
+                      loading={destroyM.loading}
+                    >
+                      <FaTrash
+                        className="clickable"
+                      />
+                    </DialogButton>
                   </td>
                 </tr>
               );

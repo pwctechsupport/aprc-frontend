@@ -10,10 +10,11 @@ import {
 import Table from "../../shared/components/Table";
 import Button from "../../shared/components/Button";
 import Helmet from "react-helmet";
+import DialogButton from "../../shared/components/DialogButton";
 
 const Resources = () => {
   const { data, loading } = useResourcesQuery();
-  const [destroyResource] = useDestroyResourceMutation({
+  const [destroyResource, destroyM] = useDestroyResourceMutation({
     refetchQueries: ["resources"],
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed")
@@ -61,12 +62,14 @@ const Resources = () => {
                     </a>
                   </td>
                   <td>
-                    <FaTrash
-                      onClick={() =>
-                        destroyResource({ variables: { id: resource.id } })
-                      }
-                      className="clickable"
-                    />
+                    <DialogButton
+                      onConfirm={() => destroyResource({ variables: { id: resource.id } }) }
+                      loading={destroyM.loading}
+                    >
+                      <FaTrash
+                        className="clickable"
+                      />
+                    </DialogButton>
                   </td>
                 </tr>
               );
