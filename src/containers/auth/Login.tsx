@@ -78,7 +78,7 @@ const Login = ({ history }: RouteComponentProps) => {
           block
           loading={loading}
         >
-          Submit
+          Login
         </Button>
       </Form>
     </Container>
