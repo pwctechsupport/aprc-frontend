@@ -46,27 +46,15 @@ export async function previewPdf(url: string, option: Options) {
   }
 }
 
-export async function emailPdf(url: string) {
+export async function emailPdf(fileName: string) {
   try {
-    // option.onStart && option.onStart();
-    const res = await MyApi.get(url, {
-      responseType: "blob"
-    });
-    const file = new Blob([res.data], {
-      type: "application/pdf"
-    });
-    const targetUrl = window.URL.createObjectURL(file);
     const link = document.createElement("a");
     link.target = "_blank";
-    link.href = `mailto:someone@yoursite.com?subject=${targetUrl}`;
+    link.href = `mailto:?subject=${fileName}`;
     document.body.appendChild(link);
     link.click();
     link.parentNode && link.parentNode.removeChild(link);
-
-    // option.onCompleted && option.onCompleted();
-  } catch (error) {
-    // option.onError && option.onError(error);
-  }
+  } catch (error) {}
 }
 
 interface Options {

@@ -24,7 +24,12 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import ResourceBar from "../../shared/components/ResourceBar";
-import { downloadPdf, previewPdf } from "../../shared/utils/accessGeneratedPdf";
+import {
+  downloadPdf,
+  previewPdf,
+  emailPdf
+} from "../../shared/utils/accessGeneratedPdf";
+import { MdEmail } from "react-icons/md";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -111,6 +116,14 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                 </div>
               ),
               onClick: () => addBookmark({ variables: { id } })
+            },
+            {
+              label: (
+                <div>
+                  <MdEmail /> Mail
+                </div>
+              ),
+              onClick: () => emailPdf(name)
             }
           ]}
         >

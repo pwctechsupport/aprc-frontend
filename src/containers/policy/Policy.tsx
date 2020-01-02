@@ -11,7 +11,7 @@ import {
   FaTrash
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
-import { MdModeEdit } from "react-icons/md";
+import { MdModeEdit, MdEmail } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -34,7 +34,11 @@ import ResourceBar, {
   AddResourceButton
 } from "../../shared/components/ResourceBar";
 import Table from "../../shared/components/Table";
-import { downloadPdf, previewPdf } from "../../shared/utils/accessGeneratedPdf";
+import {
+  downloadPdf,
+  previewPdf,
+  emailPdf
+} from "../../shared/utils/accessGeneratedPdf";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
@@ -423,6 +427,14 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                   onError: () => toast.error("Download Failed"),
                   onCompleted: () => toast.success("Download Success")
                 })
+            },
+            {
+              label: (
+                <div>
+                  <MdEmail /> Mail
+                </div>
+              ),
+              onClick: () => emailPdf(title)
             },
             {
               label: (
