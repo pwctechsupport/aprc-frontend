@@ -1,19 +1,30 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
 import React, { useState } from "react";
+import {
+  FaBookmark,
+  FaEllipsisV,
+  FaEye,
+  FaEyeSlash,
+  FaFilePdf
+} from "react-icons/fa";
+import { IoMdDownload } from "react-icons/io";
 import { RouteComponentProps } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Badge, Table } from "reactstrap";
 import { oc } from "ts-optchain";
-import { useBusinessProcessQuery } from "../../generated/graphql";
-import Collapsible, {
-  UncontrolledCollapsible
-} from "../../shared/components/Collapsible";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import ResourceBar from "../../shared/components/ResourceBar";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
-import { FaEyeSlash, FaEye } from "react-icons/fa";
+import {
+  useBusinessProcessQuery,
+  useCreateBookmarkBusinessProcessMutation
+} from "../../generated/graphql";
 import Button from "../../shared/components/Button";
+import Collapsible from "../../shared/components/Collapsible";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import Menu from "../../shared/components/Menu";
+import ResourceBar from "../../shared/components/ResourceBar";
+import { downloadPdf, previewPdf } from "../../shared/utils/accessGeneratedPdf";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -34,6 +45,11 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
     fetchPolicy: "network-only"
   });
 
+  const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
+    onCompleted: () => toast.success("Added to Bookmark"),
+    onError: () => toast.error("Failed to add")
+  });
+
   const name = oc(data).businessProcess.name("");
   const risks = oc(data).businessProcess.risks([]);
   const resources = oc(data).businessProcess.resources([]);
@@ -42,21 +58,65 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
 
   const renderActions = () => {
     return (
-      <Button
-        className="ml-3"
-        color="transparent"
-        onClick={() => {
-          collapse.length === initialCollapse.length
-            ? closeAllCollapse()
-            : openAllCollapse();
-        }}
-      >
-        {collapse.length === initialCollapse.length ? (
-          <FaEyeSlash size={20} />
-        ) : (
-          <FaEye size={20} />
-        )}
-      </Button>
+      <div className="d-flex align-items-center">
+        <Button
+          className="ml-3"
+          color="transparent"
+          onClick={() => {
+            collapse.length === initialCollapse.length
+              ? closeAllCollapse()
+              : openAllCollapse();
+          }}
+        >
+          {collapse.length === initialCollapse.length ? (
+            <FaEyeSlash size={20} />
+          ) : (
+            <FaEye size={20} />
+          )}
+        </Button>
+        <Menu
+          data={[
+            {
+              label: (
+                <div>
+                  <FaFilePdf /> Preview
+                </div>
+              ),
+              onClick: () =>
+                previewPdf(`prints/${id}.pdf`, {
+                  onStart: () =>
+                    toast.info("Downloading file for preview", {
+                      autoClose: 10000
+                    })
+                })
+            },
+            {
+              label: (
+                <div>
+                  <IoMdDownload /> Download
+                </div>
+              ),
+              onClick: () =>
+                downloadPdf(`prints/${id}.pdf`, {
+                  fileName: name,
+                  onStart: () => toast.info("Download Started"),
+                  onError: () => toast.error("Download Failed"),
+                  onCompleted: () => toast.success("Download Success")
+                })
+            },
+            {
+              label: (
+                <div>
+                  <FaBookmark /> Bookmark
+                </div>
+              ),
+              onClick: () => addBookmark({ variables: { id } })
+            }
+          ]}
+        >
+          <FaEllipsisV />
+        </Menu>
+      </div>
     );
   };
 
