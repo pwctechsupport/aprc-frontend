@@ -54,11 +54,17 @@ const Select = ({
   )
 }
 
+const FalseSelect = (props: SelectProps) => {
+  return <Select {...props} isLoading />
+}
+
 const FormSelect = ({
   name,
   register,
   setValue,
   onChange,
+  loading,
+  defaultValue,
   ...props
 }: FormSelectProps) => {
   useEffect(() => {
@@ -75,7 +81,13 @@ const FormSelect = ({
     props.onChange && props.onChange(e)
   }
 
-  return <Select {...props} onChange={handleChange} />
+  if (loading) {
+    return <FalseSelect label={props.label} />
+  } else {
+    if (name === 'riskIds') console.log(defaultValue)
+    return <Select {...props} onChange={handleChange} defaultValue={defaultValue} />
+  }
+
 }
 
 export interface FormSelectProps extends SelectProps {
@@ -83,6 +95,7 @@ export interface FormSelectProps extends SelectProps {
   register: Function
   setValue: Function
   onChange?: (value: ValueType<OptionTypeBase>) => void
+  loading?: boolean
 }
 
 export { FormSelect }
