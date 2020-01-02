@@ -13,11 +13,22 @@ query policies($filter: BaseScalar = {}) {
       ancestry
       description
     }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
   }
 }
 
-query policyTree($filter: BaseScalar = {}, $isTree: Boolean!) {
-  policies(filter: $filter) {
+query policyTree(
+  $filter: BaseScalar = {}
+  $isTree: Boolean!
+  $limit: Int
+  $page: Int
+) {
+  policies(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...policyBranch
       children @include(if: $isTree) {
@@ -36,6 +47,12 @@ query policyTree($filter: BaseScalar = {}, $isTree: Boolean!) {
         }
       }
     }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
   }
 }
 
@@ -43,6 +60,12 @@ fragment policyBranch on Policy {
   id
   title
   parentId
+  status
+  ancestry
+  policyCategory {
+    id
+    name
+  }
 }
 
 query policy($id: ID!) {
@@ -78,7 +101,6 @@ fragment policyFragment on Policy {
       id
       name
     }
-    ancestry
     description
     parentId
   }

@@ -7,8 +7,9 @@ import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
+  Policy,
   useDestroyPolicyMutation,
-  usePoliciesQuery
+  usePolicyTreeQuery
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
@@ -18,9 +19,14 @@ import { ActionTd, EmptyTd, Tr } from "../../shared/components/Table";
 const Policies = ({ history }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
-  const { data } = usePoliciesQuery({
+
+  const isTree = !searchQuery;
+  const { data } = usePolicyTreeQuery({
+    fetchPolicy: "network-only",
     variables: {
+      isTree,
       filter: {
+        ...(isTree && { ancestry_null: true }),
         title_cont: searchQuery
       }
     }
@@ -69,23 +75,15 @@ const Policies = ({ history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {policies.length ? (
-            policies.map(policy => {
-              return (
-                <Tr
-                  key={policy.id}
-                  onClick={() => history.push(`/policy/${policy.id}`)}
-                >
-                  <td>{policy.title}</td>
-                  <td>{oc(policy).policyCategory.name("")}</td>
-                  <td>{capitalCase(policy.status || "")}</td>
-                  <ActionTd>
-                    <DialogButton onConfirm={() => handleDelete(policy.id)}>
-                      <FaTrash />
-                    </DialogButton>
-                  </ActionTd>
-                </Tr>
-              );
-            })
+            policies.map(policy => (
+              <PolicyTableRow
+                key={policy.id}
+                policy={policy}
+                onClick={id => history.push(`/policy/${id}`)}
+                onDelete={handleDelete}
+                level={0}
+              />
+            ))
           ) : (
             <tr>
               <EmptyTd colSpan={4}>
@@ -100,3 +98,45 @@ const Policies = ({ history }: RouteComponentProps) => {
 };
 
 export default Policies;
+
+const PolicyTableRow = ({
+  policy,
+  onClick,
+  onDelete,
+  level = 0
+}: {
+  policy: Omit<Policy, "createdAt" | "updatedAt" | "visit">;
+  onClick: (value: any) => void;
+  onDelete: (value: any) => void;
+  level?: number;
+}) => {
+  const childs = oc(policy).children([]);
+  return (
+    <>
+      <Tr key={policy.id} onClick={() => onClick(policy.id)}>
+        <td>
+          {level ? <span style={{ marginLeft: level * 20 }} /> : null}
+          {policy.title}
+        </td>
+        <td>{oc(policy).policyCategory.name("")}</td>
+        <td>{capitalCase(policy.status || "")}</td>
+        <ActionTd>
+          <DialogButton onConfirm={() => onDelete(policy.id)}>
+            <FaTrash />
+          </DialogButton>
+        </ActionTd>
+      </Tr>
+      {childs.length
+        ? childs.map(childPol => (
+            <PolicyTableRow
+              key={childPol.id}
+              policy={childPol}
+              onClick={onClick}
+              onDelete={onDelete}
+              level={level + 1}
+            />
+          ))
+        : null}
+    </>
+  );
+};
