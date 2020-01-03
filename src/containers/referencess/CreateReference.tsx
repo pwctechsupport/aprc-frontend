@@ -29,7 +29,7 @@ const CreateReference = () => {
         <Col lg={10}>
           <Input
             name="name"
-            placeholder="Reference Name"
+            placeholder="Add new reference..."
             innerRef={register}
             invalid={errors.name && errors.name.message ? true : false}
           />
@@ -56,19 +56,17 @@ interface CreateReferenceFormValues {
   name: string;
 }
 
-yup.addMethod(yup.string, "reference", function(formats, parsetStrict) {
-  return this.transform(function(value, originalValue) {
-    if (this.isType(value)) return value;
+// yup.addMethod(yup.string, "reference", function(formats, parsetStrict) {
+//   return this.transform(function(value, originalValue) {
+//     if (this.isType(value)) return value;
 
-    return originalValue.includes("#") ? true : false;
-  });
-});
+//     return originalValue.includes("#") ? true : false;
+//   });
+// });
 
 const validationSchema = yup.object().shape({
-  name: yup
-    .string()
-    .required()
-    .test("reference", "Require a hashtag", function(value: string) {
-      return value[0] === "#";
-    })
+  name: yup.string().required("Reference name cannot be empty")
+  // .test("reference", "Require a hashtag", function(value: string) {
+  //   return value[0] === "#";
+  // })
 });

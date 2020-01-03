@@ -1,8 +1,4 @@
-query references(
-  $filter: BaseScalar = {}
-  $page: Int
-  $limit: Int
-) {
+query references($filter: BaseScalar = {}, $page: Int, $limit: Int) {
   references(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
@@ -24,9 +20,15 @@ mutation createReference($input: CreateReferenceInput!) {
   }
 }
 
-mutation destroyReference($id: ID!){
-  destroyReference(input: {id: $id}) {
+mutation destroyReference($id: ID!) {
+  destroyReference(input: { id: $id }) {
     success
     errors
+  }
+}
+
+mutation updateReference($input: UpdateReferenceInput!) {
+  updateReference(input: $input) {
+    success
   }
 }
