@@ -36,9 +36,9 @@ const Control = ({ match }: RouteComponentProps) => {
           controlOwner: values.controlOwner,
           description: values.description,
           typeOfControl: values.typeOfControl,
-          // assertion: values.assertion,
+          assertion: values.assertion,
           frequency: values.frequency,
-          // ipo: values.ipo,
+          ipo: values.ipo,
           nature: values.nature,
           status: values.status,
           riskIds: values.riskIds
@@ -49,9 +49,9 @@ const Control = ({ match }: RouteComponentProps) => {
 
   const controlOwner = oc(data).control.controlOwner("");
   const description = oc(data).control.description("");
-  // const assertion = oc(data).control.assertion("");
+  const assertion = oc(data).control.assertion([]);
   const frequency = oc(data).control.frequency("");
-  // const ipo = oc(data).control.ipo("");
+  const ipo = oc(data).control.ipo([]);
   const nature = oc(data).control.nature("");
   const typeOfControl = oc(data).control.typeOfControl("");
   const status = oc(data).control.status("");
@@ -69,9 +69,9 @@ const Control = ({ match }: RouteComponentProps) => {
         defaultValues={{
           controlOwner,
           description,
-          assertion: [],
+          assertion: assertion as CreateControlFormValues['assertion'],
           frequency: (frequency as Frequency) || Frequency.Annually,
-          ipo: [],
+          ipo: ipo as CreateControlFormValues['ipo'],
           nature: (nature as Nature) || Nature.Corrective,
           typeOfControl:
             (typeOfControl as TypeOfControl) || TypeOfControl.Automatic,

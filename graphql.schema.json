@@ -10457,9 +10457,17 @@
             "name": "assertion",
             "description": "",
             "type": {
-              "kind": "ENUM",
-              "name": "Assertion",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "Assertion",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null
           },
@@ -10467,9 +10475,17 @@
             "name": "ipo",
             "description": "",
             "type": {
-              "kind": "ENUM",
-              "name": "Ipo",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "Ipo",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null
           },

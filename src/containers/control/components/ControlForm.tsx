@@ -118,6 +118,7 @@ const ControlForm = ({
         register={register}
         setValue={setValue}
         options={riskOptions}
+        loading={risksQ.loading}
         defaultValue={riskOptions.filter(res =>
           oc(defaultValues)
             .riskIds([])
