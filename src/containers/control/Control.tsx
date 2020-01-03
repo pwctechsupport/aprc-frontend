@@ -33,15 +33,7 @@ const Control = ({ match }: RouteComponentProps) => {
       variables: {
         input: {
           id,
-          controlOwner: values.controlOwner,
-          description: values.description,
-          typeOfControl: values.typeOfControl,
-          assertion: values.assertion,
-          frequency: values.frequency,
-          ipo: values.ipo,
-          nature: values.nature,
-          status: values.status,
-          riskIds: values.riskIds
+          ...values
         }
       }
     });
@@ -58,6 +50,9 @@ const Control = ({ match }: RouteComponentProps) => {
   const riskIds = oc(data)
     .control.risks([])
     .map(risk => risk.id);
+  const businessProcessIds = oc(data)
+    .control.businessProcesses([])
+    .map(bp => bp.id);
 
   if (loading) return null;
 
@@ -69,14 +64,15 @@ const Control = ({ match }: RouteComponentProps) => {
         defaultValues={{
           controlOwner,
           description,
-          assertion: assertion as CreateControlFormValues['assertion'],
+          assertion: assertion as CreateControlFormValues["assertion"],
           frequency: (frequency as Frequency) || Frequency.Annually,
-          ipo: ipo as CreateControlFormValues['ipo'],
+          ipo: ipo as CreateControlFormValues["ipo"],
           nature: (nature as Nature) || Nature.Corrective,
           typeOfControl:
             (typeOfControl as TypeOfControl) || TypeOfControl.Automatic,
           status: (status as Status) || Status.Draft,
-          riskIds
+          riskIds,
+          businessProcessIds
         }}
         submitting={updateState.loading}
       />

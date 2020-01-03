@@ -80,6 +80,7 @@ query businessProcess($id: ID!) {
       ancestry
     }
     risks {
+      id
       name
       typeOfRisk
       levelOfRisk

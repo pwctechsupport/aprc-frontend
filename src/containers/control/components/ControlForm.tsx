@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import useForm from "react-hook-form";
-import { Form } from "reactstrap";
+import { Form, Row, Col, FormGroup, Label, Input as BsInput } from "reactstrap";
 import {
   Assertion,
   Frequency,
@@ -58,58 +58,8 @@ const ControlForm = ({
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
-      <Input name="controlOwner" label="Control Owner" innerRef={register} />
       <Input name="description" label="Description" innerRef={register} />
-      <Select
-        options={typeOfControls}
-        onChange={handleSelectChange("typeOfControl")}
-        label="Type of Controls"
-        defaultValue={pDefVal(typeOfControl, typeOfControls)}
-      />
-      <Select
-        options={frequencies}
-        onChange={handleSelectChange("frequency")}
-        label="Frequency"
-        defaultValue={pDefVal(frequency, frequencies)}
-      />
-      <Select
-        options={natures}
-        onChange={handleSelectChange("nature")}
-        label="Nature"
-        defaultValue={pDefVal(nature, natures)}
-      />
-      <FormSelect
-        isMulti
-        name="assertion"
-        label="Assertions"
-        register={register}
-        setValue={setValue}
-        options={assertions}
-        defaultValue={assertions.filter(res =>
-          oc(defaultValues)
-            .assertion([])
-            .includes(res.value)
-        )}
-      />
-      <FormSelect
-        isMulti
-        name="ipo"
-        label="IPOs"
-        register={register}
-        setValue={setValue}
-        options={ipos}
-        defaultValue={ipos.filter(res =>
-          oc(defaultValues)
-            .ipo([])
-            .includes(res.value)
-        )}
-      />
-      <Select
-        options={statuses}
-        onChange={handleSelectChange("status")}
-        label="Status"
-        defaultValue={pDefVal(status, statuses)}
-      />
+
       <FormSelect
         isMulti
         name="riskIds"
@@ -125,6 +75,97 @@ const ControlForm = ({
             .includes(res.value)
         )}
       />
+
+      <FormGroup check className="mb-3">
+        <BsInput
+          type="checkbox"
+          name="check"
+          id="exampleCheck"
+          innerRef={register}
+        />
+        <Label for="exampleCheck" check>
+          Key Control
+        </Label>
+      </FormGroup>
+
+      <Select
+        options={typeOfControls}
+        onChange={handleSelectChange("typeOfControl")}
+        label="Type of Controls"
+        defaultValue={pDefVal(typeOfControl, typeOfControls)}
+      />
+
+      {/* businessProcessIds */}
+      <FormSelect
+        isMulti
+        name="businessProcessIds"
+        label="Business Processes"
+        isLoading={risksQ.loading}
+        register={register}
+        setValue={setValue}
+        options={riskOptions}
+        loading={risksQ.loading}
+        defaultValue={riskOptions.filter(res =>
+          oc(defaultValues)
+            .riskIds([])
+            .includes(res.value)
+        )}
+      />
+
+      <Select
+        options={frequencies}
+        onChange={handleSelectChange("frequency")}
+        label="Frequency"
+        defaultValue={pDefVal(frequency, frequencies)}
+      />
+
+      <Select
+        options={natures}
+        onChange={handleSelectChange("nature")}
+        label="Nature"
+        defaultValue={pDefVal(nature, natures)}
+      />
+
+      <Row form>
+        <Col md={6}>
+          <FormSelect
+            isMulti
+            name="assertion"
+            label="Assertions"
+            register={register}
+            setValue={setValue}
+            options={assertions}
+            defaultValue={assertions.filter(res =>
+              oc(defaultValues)
+                .assertion([])
+                .includes(res.value)
+            )}
+          />
+        </Col>
+        <Col md={6}>
+          <FormSelect
+            isMulti
+            name="ipo"
+            label="IPOs"
+            register={register}
+            setValue={setValue}
+            options={ipos}
+            defaultValue={ipos.filter(res =>
+              oc(defaultValues)
+                .ipo([])
+                .includes(res.value)
+            )}
+          />
+        </Col>
+      </Row>
+      <Input name="controlOwner" label="Control Owner" innerRef={register} />
+      <Select
+        options={statuses}
+        onChange={handleSelectChange("status")}
+        label="Status"
+        defaultValue={pDefVal(status, statuses)}
+      />
+
       <div className="d-flex justify-content-end">
         <Button className="pwc px-5" type="submit" loading={submitting}>
           Submit
@@ -175,7 +216,7 @@ const statuses = Object.entries(Status).map(([label, value]) => ({
 // -------------------------------------------------------------------------
 
 export interface ControlFormProps {
-  defaultValues?: CreateControlFormValues;
+  defaultValues?: CreateControlFormDefaultValues;
   onSubmit?: (val: CreateControlFormValues) => void;
   submitting?: boolean;
 }
@@ -189,8 +230,12 @@ export interface CreateControlFormValues {
   assertion: Assertion[];
   description?: string;
   status: Status;
-  riskIds?: string[];
+  riskIds: string[];
+  businessProcessIds: string[];
+  keyControl: boolean;
 }
+
+export type CreateControlFormDefaultValues = Partial<CreateControlFormValues>;
 
 type Option = {
   label: string;

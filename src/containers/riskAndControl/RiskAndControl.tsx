@@ -147,7 +147,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
         {risks.length ? (
           <ul>
             {risks.map(risk => (
-              <li>
+              <li key={risk.id}>
                 <div className="mb-3 d-flex">
                   <h5>
                     {risk.name}{" "}
@@ -159,34 +159,47 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                     </Badge>
                   </h5>
                 </div>
-                {risk.controls.length ? (
-                  risk.controls.map(control => (
-                    <Table>
-                      <thead>
-                        <tr>
-                          <th>Freq</th>
-                          <th>Type of Control</th>
-                          <th>Nature</th>
-                          <th>IPO</th>
-                          <th>Assertion</th>
-                          <th>Control Owner</th>
-                        </tr>
-                      </thead>
-                      <tbody>
+
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Freq</th>
+                      <th>Type of Control</th>
+                      <th>Nature</th>
+                      <th>IPO</th>
+                      <th>Assertion</th>
+                      <th>Control Owner</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {risk.controls.length ? (
+                      risk.controls.map(control => (
                         <tr key={control.id}>
+                          <td>{control.description}</td>
                           <td>{capitalCase(control.frequency || "")}</td>
                           <td>{capitalCase(control.typeOfControl || "")}</td>
                           <td>{capitalCase(control.nature || "")}</td>
-                          {/* <td>{capitalCase(control.ipo || "")}</td> */}
-                          {/* <td>{capitalCase(control.assertion || "")}</td> */}
+                          <td>
+                            {oc(control)
+                              .ipo([])
+                              .map(a => capitalCase(a))
+                              .join(", ")}
+                          </td>
+                          <td>
+                            {oc(control)
+                              .assertion([])
+                              .map(a => capitalCase(a))
+                              .join(", ")}
+                          </td>
                           <td>{control.controlOwner}</td>
                         </tr>
-                      </tbody>
-                    </Table>
-                  ))
-                ) : (
-                  <EmptyAttribute />
-                )}
+                      ))
+                    ) : (
+                      <EmptyAttribute />
+                    )}
+                  </tbody>
+                </Table>
               </li>
             ))}
           </ul>

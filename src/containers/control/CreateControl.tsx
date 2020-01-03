@@ -18,17 +18,7 @@ const CreateControl = ({ history }: RouteComponentProps) => {
   const submit = (values: CreateControlFormValues) => {
     create({
       variables: {
-        input: {
-          controlOwner: values.controlOwner,
-          typeOfControl: values.typeOfControl,
-          // assertion: values.assertion,
-          frequency: values.frequency,
-          // ipo: values.ipo,
-          nature: values.nature,
-          description: values.description,
-          status: values.status,
-          riskIds: values.riskIds
-        }
+        input: values
       }
     });
   };
