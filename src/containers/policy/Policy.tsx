@@ -45,6 +45,7 @@ import ResourceForm, {
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import DialogButton from "../../shared/components/DialogButton";
+import { capitalCase } from "capital-case";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -250,11 +251,21 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                     </thead>
                     <tbody>
                       <tr key={control.id}>
-                        <td>{control.frequency}</td>
-                        <td>{control.typeOfControl}</td>
-                        <td>{control.nature}</td>
-                        <td>{control.ipo}</td>
-                        <td>{control.assertion}</td>
+                        <td>{capitalCase(control.frequency || "")}</td>
+                        <td>{capitalCase(control.typeOfControl || "")}</td>
+                        <td>{capitalCase(control.nature || "")}</td>
+                        <td>
+                          {oc(control)
+                            .ipo([])
+                            .map(a => capitalCase(a))
+                            .join(", ")}
+                        </td>
+                        <td>
+                          {oc(control)
+                            .assertion([])
+                            .map(a => capitalCase(a))
+                            .join(", ")}
+                        </td>
                         <td>{control.controlOwner}</td>
                       </tr>
                     </tbody>
