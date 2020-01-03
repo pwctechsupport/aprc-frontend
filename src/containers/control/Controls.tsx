@@ -1,19 +1,19 @@
+import { capitalCase } from "capital-case";
 import React, { useState } from "react";
-import Table from "../../shared/components/Table";
+import Helmet from "react-helmet";
+import { FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { oc } from "ts-optchain";
+import { useDebounce } from "use-debounce/lib";
 import {
   useControlsQuery,
   useDestroyControlMutation
 } from "../../generated/graphql";
-import { oc } from "ts-optchain";
 import Button from "../../shared/components/Button";
-import { Link } from "react-router-dom";
-import { FaTrash } from "react-icons/fa";
-import { toast } from "react-toastify";
-import ControlSideBox from "./components/ControlSideBox";
-import { useDebounce } from "use-debounce/lib";
-import Helmet from "react-helmet";
-import { capitalCase } from "capital-case";
 import DialogButton from "../../shared/components/DialogButton";
+import SearchBar from "../../shared/components/SearchBar";
+import Table from "../../shared/components/Table";
 
 const Controls = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -36,15 +36,10 @@ const Controls = () => {
     destroy({ variables: { input: { id } } });
   };
   return (
-    <div className="d-flex">
+    <div>
       <Helmet>
         <title>Controls - PricewaterhouseCoopers</title>
       </Helmet>
-      <ControlSideBox
-        searchValue={searchValue}
-        handleChange={handleChange}
-        placeholder="Search Control..."
-      />
       <div className="ml-3 w-100">
         <div className="d-flex justify-content-between align-items-center">
           <h1>Controls</h1>
@@ -52,11 +47,16 @@ const Controls = () => {
             <Button className="pwc">+ Add Control</Button>
           </Link>
         </div>
+        <SearchBar
+          onChange={handleChange}
+          value={searchValue}
+          placeholder="Search Controls"
+        />
         <Table reloading={loading}>
           <thead>
             <tr>
               <th>Id</th>
-              <th>Title</th>
+              <th>Description</th>
               <th>Freq</th>
               <th>Type</th>
               <th>Ass. Risk</th>
@@ -75,7 +75,6 @@ const Controls = () => {
                       {control.description}
                     </Link>
                   </td>
-                  {/* <td>{control.description}</td> */}
                   <td>{capitalCase(control.frequency || "")}</td>
                   <td>{capitalCase(control.typeOfControl || "")}</td>
                   <td>
@@ -91,9 +90,7 @@ const Controls = () => {
                       onConfirm={() => handleDelete(control.id)}
                       loading={destroyM.loading}
                     >
-                      <FaTrash
-                        className="clickable"
-                      />
+                      <FaTrash className="clickable" />
                     </DialogButton>
                   </td>
                 </tr>

@@ -3,10 +3,8 @@ import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import {
   useControlQuery,
   useUpdateControlMutation,
-  // Assertion,
   TypeOfControl,
   Nature,
-  // Ipo,
   Frequency,
   Status
 } from "../../generated/graphql";
@@ -53,6 +51,7 @@ const Control = ({ match }: RouteComponentProps) => {
   const businessProcessIds = oc(data)
     .control.businessProcesses([])
     .map(bp => bp.id);
+  const keyControl = oc(data).control.keyControl(false);
 
   if (loading) return null;
 
@@ -72,7 +71,8 @@ const Control = ({ match }: RouteComponentProps) => {
             (typeOfControl as TypeOfControl) || TypeOfControl.Automatic,
           status: (status as Status) || Status.Draft,
           riskIds,
-          businessProcessIds
+          businessProcessIds,
+          keyControl
         }}
         submitting={updateState.loading}
       />

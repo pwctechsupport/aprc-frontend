@@ -8,7 +8,8 @@ import {
   Nature,
   TypeOfControl,
   Status,
-  useRisksQuery
+  useRisksQuery,
+  useBusinessProcessesQuery
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import Input from "../../../shared/components/forms/Input";
@@ -27,6 +28,11 @@ const ControlForm = ({
   const { register, handleSubmit, setValue } = useForm<CreateControlFormValues>(
     { defaultValues }
   );
+
+  const bpsQ = useBusinessProcessesQuery();
+  const bpOptions = oc(bpsQ)
+    .data.businessProcesses.collection([])
+    .map(bp => ({ label: bp.name, value: bp.id }));
 
   const risksQ = useRisksQuery();
   const riskOptions = oc(risksQ)
@@ -52,8 +58,6 @@ const ControlForm = ({
   const typeOfControl = oc(defaultValues).typeOfControl();
   const frequency = oc(defaultValues).frequency();
   const nature = oc(defaultValues).nature();
-  // const assertion = oc(defaultValues).assertion();
-  // const ipo = oc(defaultValues).ipo();
   const status = oc(defaultValues).status();
 
   return (
@@ -79,11 +83,11 @@ const ControlForm = ({
       <FormGroup check className="mb-3">
         <BsInput
           type="checkbox"
-          name="check"
-          id="exampleCheck"
+          name="keyControl"
+          id="keyControlCheckbox"
           innerRef={register}
         />
-        <Label for="exampleCheck" check>
+        <Label for="keyControlCheckbox" check>
           Key Control
         </Label>
       </FormGroup>
@@ -95,19 +99,18 @@ const ControlForm = ({
         defaultValue={pDefVal(typeOfControl, typeOfControls)}
       />
 
-      {/* businessProcessIds */}
       <FormSelect
         isMulti
         name="businessProcessIds"
         label="Business Processes"
-        isLoading={risksQ.loading}
+        isLoading={bpsQ.loading}
         register={register}
         setValue={setValue}
-        options={riskOptions}
+        options={bpOptions}
         loading={risksQ.loading}
-        defaultValue={riskOptions.filter(res =>
+        defaultValue={bpOptions.filter(res =>
           oc(defaultValues)
-            .riskIds([])
+            .businessProcessIds([])
             .includes(res.value)
         )}
       />

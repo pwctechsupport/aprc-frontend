@@ -14,6 +14,7 @@ query control($id: ID!) {
 
 fragment control on Control {
   id
+  keyControl
   risks {
     id
     name
