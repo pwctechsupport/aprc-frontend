@@ -2,6 +2,7 @@ import React from "react";
 import Button from "../../shared/components/Button";
 import { FaFile, FaDownload } from "react-icons/fa";
 import Helmet from "react-helmet";
+import { FormGroup, Label, Input } from "reactstrap";
 
 const Report = () => {
   return (
@@ -17,6 +18,7 @@ const Report = () => {
             <th>Report Name</th>
             <th>Report Description</th>
             <th>Report Category</th>
+            <th>Format</th>
             <th>Select</th>
           </tr>
         </thead>
@@ -26,6 +28,18 @@ const Report = () => {
             <td>Risk without Policy</td>
             <td>-</td>
             <td>-</td>
+            <td>
+              <FormGroup check>
+                <Label check>
+                  <Input type="radio" name="radio2" /> PDF
+                </Label>
+              </FormGroup>
+              <FormGroup check>
+                <Label check>
+                  <Input type="radio" name="radio2" /> Excel
+                </Label>
+              </FormGroup>
+            </td>
             <td>
               <input type="checkbox" className="text-center" />
             </td>
