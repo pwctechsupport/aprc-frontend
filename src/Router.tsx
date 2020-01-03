@@ -19,6 +19,7 @@ import ScrollToTop from "./shared/components/ScrollToTop";
 import BookmarksModal from "./containers/policy/components/BookmarksModal";
 import ComingSoonPage from "./shared/components/ComingSoonPage";
 import RiskAndControlRoute from "./containers/riskAndControl/RiskAndControlRoute";
+import Report from "./containers/report/Report";
 
 export default function() {
   return (
@@ -68,6 +69,7 @@ export default function() {
                 path="/risk-and-control"
                 component={RiskAndControlRoute}
               />
+              <AuthRoute path="/report" component={Report} />
               <AuthRoute component={ComingSoonPage} />
             </Switch>
           </Layout>
