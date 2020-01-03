@@ -154,9 +154,6 @@ const SubPolicyForm = ({
           >
             Insert Attributes
           </Button>
-          {/* <Button type="submit" className="pwc px-5" loading={submitting}>
-            Simpan
-          </Button> */}
           <DialogButton
             color="primary"
             loading={submitting}
@@ -266,7 +263,7 @@ const SubPolicyForm = ({
               className="pwc px-4"
               onClick={handleSubmit(submit)}
             >
-              Simpan
+              Submit
             </Button>
           </div>
         </ModalBody>

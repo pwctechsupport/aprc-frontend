@@ -164,7 +164,7 @@ const ResourceForm = ({
           className="pwc px-5"
           loading={submitting}
         >
-          Simpan
+          Submit
         </Button>
       </div>
     </Form>

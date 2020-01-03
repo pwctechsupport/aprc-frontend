@@ -103,7 +103,7 @@ const PolicyForm = ({
             className="pwc px-5"
             onConfirm={handleSubmit(submit)}
           >
-            {defaultValues ? "Simpan" : "Submit"}
+            {defaultValues ? "Save" : "Submit"}
           </DialogButton>
         </div>
       </Form>

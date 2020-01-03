@@ -86,7 +86,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
             onSubmit={handleUpdate}
             onCancel={toggleEdit}
             defaultValues={{ name }}
-            submitButtonName="Simpan"
+            submitButtonName="Save"
           />
         </div>
       ) : (
