@@ -163,7 +163,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                 <Table>
                   <thead>
                     <tr>
-                      <th>Name</th>
+                      <th>Description</th>
                       <th>Freq</th>
                       <th>Type of Control</th>
                       <th>Nature</th>
