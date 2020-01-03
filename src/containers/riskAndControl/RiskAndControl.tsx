@@ -88,7 +88,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                 </div>
               ),
               onClick: () =>
-                previewPdf(`prints/${id}.pdf`, {
+                previewPdf(`prints/${id}/business_process.pdf`, {
                   onStart: () =>
                     toast.info("Downloading file for preview", {
                       autoClose: 10000
@@ -102,7 +102,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                 </div>
               ),
               onClick: () =>
-                downloadPdf(`prints/${id}.pdf`, {
+                downloadPdf(`prints/${id}/business_process.pdf`, {
                   fileName: name,
                   onStart: () => toast.info("Download Started"),
                   onError: () => toast.error("Download Failed"),
