@@ -5,3 +5,7 @@
 @import "components/inputs.scss";
 @import "components/resourceBar.scss";
 @import "components/table.scss";
+
+body {
+  font-size: percentage($number: 0.85);
+}
