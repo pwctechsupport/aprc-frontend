@@ -10,6 +10,7 @@ import {
   previewPdfs
 } from "../../shared/utils/accessGeneratedPdf";
 import { toast } from "react-toastify";
+import Table from "../../shared/components/Table";
 
 const options = ["report_risk"];
 
@@ -25,7 +26,10 @@ const Report = () => {
       .filter(item => item.print)
       .map(({ name, format }) => ({
         url: `/prints/${name}.${format}`,
-        options: { onStart: () => toast.info("Preparing File") }
+        options: {
+          onStart: () => toast.info("Preparing File"),
+          fileType: format
+        }
       }));
   };
 
@@ -44,9 +48,9 @@ const Report = () => {
       <Helmet>
         <title>Reports - PricewaterhouseCoopers</title>
       </Helmet>
-      <h1>Reports</h1>
+      <h4>Reports</h4>
       <Form onSubmit={handleSubmit(onDownload)}>
-        <table className="w-100">
+        <Table>
           <thead>
             <tr>
               <th>Nomor</th>
@@ -79,7 +83,7 @@ const Report = () => {
                       <FormGroup check>
                         <Label check>
                           <Input
-                            disabled={!get(value, `print`)}
+                            disabled={!get(value, "print")}
                             type="radio"
                             name="report_risk.format"
                             value="pdf"
@@ -91,10 +95,10 @@ const Report = () => {
                       <FormGroup check>
                         <Label check>
                           <Input
-                            disabled={!get(value, `print`)}
+                            disabled={!get(value, "print")}
                             type="radio"
                             name="report_risk.format"
-                            value="excel"
+                            value="xlsx"
                             innerRef={register}
                           />{" "}
                           Excel
@@ -106,7 +110,7 @@ const Report = () => {
               );
             })}
           </tbody>
-        </table>
+        </Table>
 
         <div className="text-center mt-5">
           <Button
