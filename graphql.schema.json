@@ -8150,8 +8150,8 @@
             "deprecationReason": null
           },
           {
-            "name": "business_process",
-            "description": "Business Process",
+            "name": "business_risk",
+            "description": "Business Risk",
             "isDeprecated": false,
             "deprecationReason": null
           }

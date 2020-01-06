@@ -80,10 +80,7 @@ query businessProcess($id: ID!) {
       ancestry
     }
     risks {
-      id
-      name
-      typeOfRisk
-      levelOfRisk
+      ...risk
       controls {
         description
         id
@@ -94,6 +91,16 @@ query businessProcess($id: ID!) {
         frequency
         typeOfControl
         controlOwner
+        status
+        keyControl
+        businessProcesses {
+          id
+          name
+        }
+        risks {
+          id
+          name
+        }
       }
     }
     resources {

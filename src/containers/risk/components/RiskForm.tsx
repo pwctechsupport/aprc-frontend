@@ -151,9 +151,11 @@ export interface RiskFormValues {
   typeOfRisk?: TypeOfRisk;
 }
 
+export type RiskFormDefaultValues = Partial<RiskFormValues>;
+
 export interface RiskFormProps {
   onCancel?: () => void;
   onSubmit?: (data: RiskFormValues) => void;
   submitting?: boolean;
-  defaultValues?: RiskFormValues;
+  defaultValues?: RiskFormDefaultValues;
 }

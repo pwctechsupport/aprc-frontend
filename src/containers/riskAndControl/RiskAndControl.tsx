@@ -6,7 +6,8 @@ import {
   FaEllipsisV,
   FaEye,
   FaEyeSlash,
-  FaFilePdf
+  FaFilePdf,
+  FaPencilAlt
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { RouteComponentProps } from "react-router-dom";
@@ -15,7 +16,18 @@ import { Badge, Table } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useBusinessProcessQuery,
-  useCreateBookmarkBusinessProcessMutation
+  useCreateBookmarkBusinessProcessMutation,
+  Risk,
+  Status,
+  LevelOfRisk,
+  TypeOfRisk,
+  useUpdateRiskMutation,
+  useUpdateControlMutation,
+  Assertion,
+  TypeOfControl,
+  Ipo,
+  Nature,
+  Frequency
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
@@ -30,6 +42,15 @@ import {
   emailPdf
 } from "../../shared/utils/accessGeneratedPdf";
 import { MdEmail } from "react-icons/md";
+import RiskForm, {
+  RiskFormDefaultValues,
+  RiskFormValues
+} from "../risk/components/RiskForm";
+import Modal from "../../shared/components/Modal";
+import ControlForm, {
+  CreateControlFormValues,
+  CreateControlFormDefaultValues
+} from "../control/components/ControlForm";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -43,6 +64,48 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
     });
   const openAllCollapse = () => setCollapse(initialCollapse);
   const closeAllCollapse = () => setCollapse([]);
+
+  const [riskModal, setRiskModal] = useState(false);
+  const [risk, setRisk] = useState<RiskState>();
+  const toggleRiskModal = () => setRiskModal(p => !p);
+  const editRisk = (risk: RiskState) => {
+    setRiskModal(true);
+    setRisk(risk);
+  };
+  const [updateRisk, updateRiskM] = useUpdateRiskMutation({
+    onCompleted: () => {
+      toast.success("Risk Updated");
+      toggleRiskModal();
+    },
+    onError: () => toast.error("Update Risk Failed"),
+    awaitRefetchQueries: true,
+    refetchQueries: ["businessProcess"]
+  });
+  const handleUpdateRisk = (values: RiskFormValues) => {
+    updateRisk({ variables: { input: { id: oc(risk).id(""), ...values } } });
+  };
+
+  const [controlModal, setControlModal] = useState(false);
+  const [control, setControl] = useState<ControlState>();
+  const toggleControlModal = () => setControlModal(p => !p);
+  const editControl = (control: ControlState) => {
+    setControlModal(true);
+    setControl(control);
+  };
+  const [updateControl, updateControlM] = useUpdateControlMutation({
+    onCompleted: () => {
+      toast.success("Control Updated");
+      toggleControlModal();
+    },
+    onError: () => toast.error("Update control Failed"),
+    awaitRefetchQueries: true,
+    refetchQueries: ["businessProcess"]
+  });
+  const handleUpdateControl = (values: CreateControlFormValues) => {
+    updateControl({
+      variables: { input: { id: oc(control).id(""), ...values } }
+    });
+  };
 
   const id = get(match, "params.id", "");
   const { data, loading } = useBusinessProcessQuery({
@@ -148,9 +211,9 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
           <ul>
             {risks.map(risk => (
               <li key={risk.id}>
-                <div className="mb-3 d-flex">
+                <div className="mb-3 d-flex justify-content-between">
                   <h5>
-                    {risk.name}{" "}
+                    {risk.name.padEnd(1)}
                     <Badge color="danger mx-3">
                       {capitalCase(risk.levelOfRisk || "")}
                     </Badge>
@@ -158,6 +221,21 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                       {capitalCase(risk.typeOfRisk || "")}
                     </Badge>
                   </h5>
+                  <Button
+                    onClick={() =>
+                      editRisk({
+                        id: risk.id,
+                        name: risk.name,
+                        status: oc(risk).status(Status.Draft) as Status,
+                        businessProcessId: oc(risk).businessProcessId(""),
+                        levelOfRisk: oc(risk).levelOfRisk() as LevelOfRisk,
+                        typeOfRisk: oc(risk).typeOfRisk() as TypeOfRisk
+                      })
+                    }
+                    color=""
+                  >
+                    <FaPencilAlt />
+                  </Button>
                 </div>
 
                 <Table>
@@ -170,6 +248,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                       <th>IPO</th>
                       <th>Assertion</th>
                       <th>Control Owner</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -193,6 +272,33 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                               .join(", ")}
                           </td>
                           <td>{control.controlOwner}</td>
+                          <td>
+                            <Button
+                              onClick={() =>
+                                editControl({
+                                  id: control.id,
+                                  assertion: control.assertion as Assertion[],
+                                  controlOwner: control.controlOwner || "",
+                                  description: control.description,
+                                  status: control.status as Status,
+                                  typeOfControl: control.typeOfControl as TypeOfControl,
+                                  nature: control.nature as Nature,
+                                  ipo: control.ipo as Ipo[],
+                                  businessProcessIds: oc(control)
+                                    .businessProcesses([])
+                                    .map(({ id }) => id),
+                                  frequency: control.frequency as Frequency,
+                                  keyControl: control.keyControl || false,
+                                  riskIds: oc(control)
+                                    .risks([])
+                                    .map(({ id }) => id)
+                                })
+                              }
+                              color=""
+                            >
+                              <FaPencilAlt />
+                            </Button>
+                          </td>
                         </tr>
                       ))
                     ) : (
@@ -211,6 +317,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
           <EmptyAttribute />
         )}
       </Collapsible>
+
       <Collapsible
         title="Resources"
         show={collapse.includes("Resources")}
@@ -224,8 +331,36 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
           <EmptyAttribute />
         )}
       </Collapsible>
+
+      <Modal isOpen={riskModal} toggle={toggleRiskModal} title="Edit Risk">
+        <RiskForm
+          defaultValues={risk}
+          onSubmit={handleUpdateRisk}
+          submitting={updateRiskM.loading}
+        />
+      </Modal>
+
+      <Modal
+        isOpen={controlModal}
+        toggle={toggleControlModal}
+        title="Edit Control"
+      >
+        <ControlForm
+          defaultValues={control}
+          onSubmit={handleUpdateControl}
+          submitting={updateControlM.loading}
+        />
+      </Modal>
     </div>
   );
 };
 
 export default RiskAndControls;
+
+interface RiskState extends RiskFormDefaultValues {
+  id: string;
+}
+
+interface ControlState extends CreateControlFormDefaultValues {
+  id: string;
+}
