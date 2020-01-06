@@ -1,9 +1,9 @@
+import classnames from "classnames";
 import React, { Fragment } from "react";
-import { Table as BsTable, TableProps as BsTableProps } from "reactstrap";
 import { FaSpinner } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
+import { TableProps as BsTableProps } from "reactstrap";
 import styled from "styled-components";
-import classnames from "classnames";
 
 interface TableProps extends BsTableProps {
   loading?: boolean;
