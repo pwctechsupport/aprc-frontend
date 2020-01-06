@@ -35,7 +35,7 @@ const Login = ({ history }: RouteComponentProps) => {
           oc(res).data.login.token("")
         )
       );
-      history.push("/policy");
+      history.push("/");
     } catch (error) {
       toast.error(
         <div>
