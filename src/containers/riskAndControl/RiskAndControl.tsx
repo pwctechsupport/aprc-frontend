@@ -196,7 +196,11 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                         </tr>
                       ))
                     ) : (
-                      <EmptyAttribute />
+                      <tr>
+                        <td colSpan={7}>
+                          <EmptyAttribute />
+                        </td>
+                      </tr>
                     )}
                   </tbody>
                 </Table>
