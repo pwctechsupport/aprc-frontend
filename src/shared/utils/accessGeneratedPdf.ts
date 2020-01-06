@@ -1,6 +1,6 @@
 import MyApi from "./api";
 
-export async function downloadPdf(url: string, option: Options) {
+export async function downloadPdf(url: string, option: PdfOptions) {
   try {
     option.onStart && option.onStart();
     const res = await MyApi.get(url, {
@@ -23,7 +23,7 @@ export async function downloadPdf(url: string, option: Options) {
   }
 }
 
-export async function previewPdf(url: string, option: Options) {
+export async function previewPdf(url: string, option: PdfOptions) {
   try {
     option.onStart && option.onStart();
     const res = await MyApi.get(url, {
@@ -57,7 +57,23 @@ export async function emailPdf(fileName: string) {
   } catch (error) {}
 }
 
-interface Options {
+export async function previewPdfs(
+  endpoints: Array<{ url: string; options?: PdfOptions }>
+) {
+  for (const item of endpoints) {
+    await previewPdf(item.url, Object.assign({}, item.options));
+  }
+}
+
+export async function downloadPdfs(
+  endpoints: Array<{ url: string; options?: PdfOptions }>
+) {
+  for (const item of endpoints) {
+    await downloadPdf(item.url, Object.assign({}, item.options));
+  }
+}
+
+export interface PdfOptions {
   fileName?: string;
   onStart?: () => void;
   onCompleted?: () => void;
