@@ -6,17 +6,17 @@ import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
   BusinessProcess,
-  useBusinessProcessTreeQuery,
-  Risk
+  Risk,
+  useBusinessProcessTreeQuery
 } from "../../generated/graphql";
 import SearchBar from "../../shared/components/SearchBar";
-import { ActionTd, EmptyTd, Tr } from "../../shared/components/Table";
+import Table from "../../shared/components/Table";
 
 const RiskAndControls = ({ history }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
   const isTree = !searchQuery;
-  const { data } = useBusinessProcessTreeQuery({
+  const { data, loading } = useBusinessProcessTreeQuery({
     variables: {
       filter: {
         name_cont: searchQuery,
@@ -38,14 +38,14 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
         <title>Risk and Controls - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="d-flex justify-content-between align-items-center">
-        <h1>Risk and Controls</h1>
+        <h4>Risk and Controls</h4>
       </div>
       <SearchBar
         value={search}
         onChange={handleChange}
         placeholder="Search Business Processes"
       />
-      <table className="w-100">
+      <Table reloading={loading}>
         <thead>
           <tr>
             <th>Name</th>
@@ -65,13 +65,13 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
             })
           ) : (
             <tr>
-              <EmptyTd colSpan={4}>
+              <td className="empty" colSpan={4}>
                 No item{search ? ` for search "${search}"` : ""}
-              </EmptyTd>
+              </td>
             </tr>
           )}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };
@@ -86,7 +86,7 @@ const RiskAndControlTableRow = ({
   const childs = oc(businessProcess).children([]);
   return (
     <>
-      <Tr key={businessProcess.id} onClick={() => onClick(businessProcess.id)}>
+      <tr key={businessProcess.id} onClick={() => onClick(businessProcess.id)}>
         <td>
           {level ? <span style={{ marginLeft: level * 20 }} /> : null}
           {businessProcess.name}
@@ -97,8 +97,8 @@ const RiskAndControlTableRow = ({
             .map(({ name }) => capitalCase(name))
             .join(", ")}
         </td>
-        <ActionTd></ActionTd>
-      </Tr>
+        <td></td>
+      </tr>
       {childs.length
         ? childs.map(childBp => (
             <RiskAndControlTableRow

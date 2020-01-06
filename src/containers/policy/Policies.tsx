@@ -14,14 +14,14 @@ import {
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import SearchBar from "../../shared/components/SearchBar";
-import { ActionTd, EmptyTd, Tr } from "../../shared/components/Table";
+import Table from "../../shared/components/Table";
 
 const Policies = ({ history }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
 
   const isTree = !searchQuery;
-  const { data } = usePolicyTreeQuery({
+  const { data, loading } = usePolicyTreeQuery({
     fetchPolicy: "network-only",
     variables: {
       isTree,
@@ -54,7 +54,7 @@ const Policies = ({ history }: RouteComponentProps) => {
         <title>Policies - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="d-flex justify-content-between align-items-center">
-        <h1>Policies</h1>
+        <h4>Policies</h4>
         <Link to="/policy/create">
           <Button className="pwc">+ Add Policy</Button>
         </Link>
@@ -64,7 +64,7 @@ const Policies = ({ history }: RouteComponentProps) => {
         onChange={handleChange}
         placeholder="Search Policies"
       />
-      <table className="w-100">
+      <Table reloading={loading}>
         <thead>
           <tr>
             <th>Title</th>
@@ -86,13 +86,13 @@ const Policies = ({ history }: RouteComponentProps) => {
             ))
           ) : (
             <tr>
-              <EmptyTd colSpan={4}>
+              <td className="empty" colSpan={4}>
                 No item{search ? ` for search "${search}"` : ""}
-              </EmptyTd>
+              </td>
             </tr>
           )}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };
@@ -113,19 +113,19 @@ const PolicyTableRow = ({
   const childs = oc(policy).children([]);
   return (
     <>
-      <Tr key={policy.id} onClick={() => onClick(policy.id)}>
+      <tr key={policy.id} onClick={() => onClick(policy.id)}>
         <td>
           {level ? <span style={{ marginLeft: level * 20 }} /> : null}
           {policy.title}
         </td>
         <td>{oc(policy).policyCategory.name("")}</td>
         <td>{capitalCase(policy.status || "")}</td>
-        <ActionTd>
+        <td className="action">
           <DialogButton onConfirm={() => onDelete(policy.id)}>
             <FaTrash />
           </DialogButton>
-        </ActionTd>
-      </Tr>
+        </td>
+      </tr>
       {childs.length
         ? childs.map(childPol => (
             <PolicyTableRow

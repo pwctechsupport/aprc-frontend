@@ -3,6 +3,7 @@ import { Table as BsTable, TableProps as BsTableProps } from "reactstrap";
 import { FaSpinner } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import styled from "styled-components";
+import classnames from "classnames";
 
 interface TableProps extends BsTableProps {
   loading?: boolean;
@@ -11,7 +12,7 @@ interface TableProps extends BsTableProps {
 
 const skeletonRow = Array.from(new Array(7));
 
-const Table = ({ loading, reloading, ...props }: TableProps) => {
+const Table = ({ loading, reloading, className, ...props }: TableProps) => {
   if (loading) {
     return (
       <div className="text-center py-3">
@@ -21,13 +22,13 @@ const Table = ({ loading, reloading, ...props }: TableProps) => {
   }
 
   return (
-    <BsTable className="table-enlogy" {...props}>
+    <table className={classnames("table-pwc w-100", className)} {...props}>
       {!reloading ? (
         props.children
       ) : (
         <Fragment>
           <thead>
-            <tr>
+            <Tr>
               <td>
                 <Skeleton width="20%" />
               </td>
@@ -43,12 +44,12 @@ const Table = ({ loading, reloading, ...props }: TableProps) => {
               <td>
                 <Skeleton />
               </td>
-            </tr>
+            </Tr>
           </thead>
           <tbody>
             {skeletonRow.map((row, i) => {
               return (
-                <tr key={i}>
+                <Tr key={i}>
                   <td>
                     <Skeleton width="20%" />
                   </td>
@@ -64,13 +65,13 @@ const Table = ({ loading, reloading, ...props }: TableProps) => {
                   <td>
                     <Skeleton />
                   </td>
-                </tr>
+                </Tr>
               );
             })}
           </tbody>
         </Fragment>
       )}
-    </BsTable>
+    </table>
   );
 };
 
@@ -99,6 +100,7 @@ export const ActionTd = styled.td`
 
 export const EmptyTd = styled.td`
   text-align: center;
+  vertical-align: middle;
   padding: 20px 0px;
   background: rgba(0, 0, 0, 0.1);
 `;
