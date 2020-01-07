@@ -13,11 +13,12 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { oc } from "ts-optchain";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import { Button } from "reactstrap";
-import { FaTimes, FaTrash } from "react-icons/fa";
+import { FaTimes, FaTrash, FaPencilAlt } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import { Link } from "react-router-dom";
 import ResourceBox from "./components/ResourceBox";
 import { capitalCase } from "capital-case";
+import DialogButton from "../../shared/components/DialogButton";
 
 const Resource = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -151,15 +152,16 @@ const Resource = ({ match }: RouteComponentProps) => {
     }
     return (
       <div>
-        <MdModeEdit
-          size={22}
-          className="mx-3 clickable"
-          onClick={toggleEditMode}
-        />
-        <FaTrash
-          onClick={handleDeleteMain}
-          className="clickable text-red mr-3"
-        />
+        <Button onClick={toggleEditMode} color="">
+          <MdModeEdit size={22} />
+        </Button>
+        <DialogButton
+          onConfirm={handleDeleteMain}
+          color=""
+          message={`Delete resource "${name}"?`}
+        >
+          <FaTrash className="text-red" />
+        </DialogButton>
       </div>
     );
   };

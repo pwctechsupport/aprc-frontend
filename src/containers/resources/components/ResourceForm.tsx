@@ -12,6 +12,7 @@ import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
+import DialogButton from "../../../shared/components/DialogButton";
 
 const ResourceForm = ({
   defaultValues,
@@ -95,6 +96,8 @@ const ResourceForm = ({
     );
   }
 
+  const name = oc(defaultValues).name("");
+
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <Input
@@ -158,14 +161,16 @@ const ResourceForm = ({
       <Input type="file" label="Upload" onChange={handleChangeFile} />
 
       <div className="d-flex justify-content-end mt-3">
-        <Button
-          type="submit"
+        <DialogButton
+          onConfirm={handleSubmit(submit)}
+          type="button"
           color="primary"
           className="pwc px-5"
           loading={submitting}
+          message={name ? `Save changes on "${name}"?` : "Create new resource?"}
         >
           Submit
-        </Button>
+        </DialogButton>
       </div>
     </Form>
   );

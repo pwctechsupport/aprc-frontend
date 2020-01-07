@@ -1,6 +1,6 @@
 import React from "react";
-import { FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaTrash, FaDownload, FaFileAlt } from "react-icons/fa";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -12,7 +12,7 @@ import Button from "../../shared/components/Button";
 import Helmet from "react-helmet";
 import DialogButton from "../../shared/components/DialogButton";
 
-const Resources = () => {
+const Resources = ({ history }: RouteComponentProps) => {
   const { data, loading } = useResourcesQuery();
   const [destroyResource, destroyM] = useDestroyResourceMutation({
     refetchQueries: ["resources"],
@@ -26,7 +26,7 @@ const Resources = () => {
         <title>Resources - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="d-flex justify-content-between align-items-center">
-        <h1>Resources</h1>
+        <h4>Resources</h4>
 
         <Link to="/resources/create">
           <Button className="pwc">+ Add Resource</Button>
@@ -37,7 +37,6 @@ const Resources = () => {
         <thead>
           <tr>
             <th>Name</th>
-            <th>File</th>
             <th />
           </tr>
         </thead>
@@ -46,30 +45,58 @@ const Resources = () => {
             .resources.collection([])
             .map(resource => {
               return (
-                <tr key={resource.id}>
-                  <td>
-                    <Link to={`/resources/${resource.id}`}>
-                      {resource.name}
-                    </Link>
-                  </td>
-                  <td>
-                    <a
-                      href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Download
-                    </a>
-                  </td>
-                  <td>
-                    <DialogButton
-                      onConfirm={() => destroyResource({ variables: { id: resource.id } }) }
-                      loading={destroyM.loading}
-                    >
-                      <FaTrash
-                        className="clickable"
-                      />
-                    </DialogButton>
+                <tr
+                  key={resource.id}
+                  onClick={() => history.push(`/resources/${resource.id}`)}
+                >
+                  <td>{resource.name}</td>
+                  <td className="action">
+                    <div className="d-flex align-items-center">
+                      <Button color="">
+                        <a
+                          href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(
+                            event: React.MouseEvent<
+                              HTMLAnchorElement,
+                              MouseEvent
+                            >
+                          ) => {
+                            event.stopPropagation();
+                          }}
+                        >
+                          <FaFileAlt size={16} />
+                        </a>
+                      </Button>
+                      <Button color="">
+                        <a
+                          href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(
+                            event: React.MouseEvent<
+                              HTMLAnchorElement,
+                              MouseEvent
+                            >
+                          ) => {
+                            event.stopPropagation();
+                          }}
+                          download
+                        >
+                          <FaDownload size={16} />
+                        </a>
+                      </Button>
+                      <DialogButton
+                        onConfirm={() =>
+                          destroyResource({ variables: { id: resource.id } })
+                        }
+                        loading={destroyM.loading}
+                        message={`Delete resource "${resource.name}"?`}
+                      >
+                        <FaTrash className="clickable text-red" />
+                      </DialogButton>
+                    </div>
                   </td>
                 </tr>
               );
