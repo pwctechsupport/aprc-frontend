@@ -28,6 +28,7 @@ const TextEditor = ({
       ])}
     >
       <CKEditor
+        plugin={[]}
         editor={editor}
         config={config}
         data={data}
@@ -43,25 +44,18 @@ const config = {
     "redo",
     "|",
     "heading",
+    "fontSize",
+    "|",
     "bold",
+    "underline",
     "italic",
     "blockQuote",
-    // 'ckfinder',
-    // 'imageTextAlternative',
-    "imageUpload",
-    // 'imageStyle:full',
-    // 'imageStyle:side',
-    // "indent",
-    // "outdent",
+    "|",
     "numberedList",
     "bulletedList",
     "|",
     "link",
-    "mediaEmbed"
-    // 'insertTable',
-    // 'tableColumn',
-    // 'tableRow',
-    // 'mergeTableCells',
+    "imageUpload"
   ]
 };
 
