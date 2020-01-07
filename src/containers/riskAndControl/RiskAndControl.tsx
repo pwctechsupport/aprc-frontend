@@ -10,24 +10,24 @@ import {
   FaPencilAlt
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
+import { MdEmail } from "react-icons/md";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Badge, Table } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
+  Assertion,
+  Frequency,
+  Ipo,
+  LevelOfRisk,
+  Nature,
+  Status,
+  TypeOfControl,
+  TypeOfRisk,
   useBusinessProcessQuery,
   useCreateBookmarkBusinessProcessMutation,
-  Risk,
-  Status,
-  LevelOfRisk,
-  TypeOfRisk,
-  useUpdateRiskMutation,
   useUpdateControlMutation,
-  Assertion,
-  TypeOfControl,
-  Ipo,
-  Nature,
-  Frequency
+  useUpdateRiskMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
@@ -35,22 +35,21 @@ import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
+import Modal from "../../shared/components/Modal";
 import ResourceBar from "../../shared/components/ResourceBar";
 import {
   downloadPdf,
-  previewPdf,
-  emailPdf
+  emailPdf,
+  previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
-import { MdEmail } from "react-icons/md";
+import ControlForm, {
+  CreateControlFormDefaultValues,
+  CreateControlFormValues
+} from "../control/components/ControlForm";
 import RiskForm, {
   RiskFormDefaultValues,
   RiskFormValues
 } from "../risk/components/RiskForm";
-import Modal from "../../shared/components/Modal";
-import ControlForm, {
-  CreateControlFormValues,
-  CreateControlFormDefaultValues
-} from "../control/components/ControlForm";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];

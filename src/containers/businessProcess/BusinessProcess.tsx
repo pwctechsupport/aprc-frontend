@@ -2,16 +2,16 @@ import get from "lodash/get";
 import React, { useState } from "react";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Route, RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
+  BusinessProcessDocument,
   useBusinessProcessQuery,
   useDestroyBusinessProcessMutation,
-  useUpdateBusinessProcessMutation,
-  BusinessProcessDocument
+  useUpdateBusinessProcessMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
+import DialogButton from "../../shared/components/DialogButton";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import Table from "../../shared/components/Table";
 import BusinessProcessForm, {
@@ -22,11 +22,11 @@ import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
 const BusinessProcess = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   const [editMode, setEditMode] = useState(false);
-  const { data } = useBusinessProcessQuery({ variables: { id } });
+  const { data, loading } = useBusinessProcessQuery({ variables: { id } });
   const childs = oc(data).businessProcess.children([]);
   const parentId = oc(data).businessProcess.parentId("");
 
-  const [destroy] = useDestroyBusinessProcessMutation({
+  const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => {
       toast.success("Delete Success");
     },
@@ -34,7 +34,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
     refetchQueries: ["businessProcess"],
     awaitRefetchQueries: true
   });
-  const [destroyMain] = useDestroyBusinessProcessMutation({
+  const [destroyMain, destroyMainM] = useDestroyBusinessProcessMutation({
     onCompleted: () => {
       toast.success("Delete Success");
       history.goBack();
@@ -96,9 +96,13 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
             <Button onClick={toggleEdit} className="mr-3" color="transparent">
               <FaPencilAlt />
             </Button>
-            <Button onClick={() => handleDeleteMain(id)} color="transparent">
+            <DialogButton
+              onConfirm={() => handleDeleteMain(id)}
+              loading={destroyMainM.loading}
+              message={`Delete Business Process "${name}"`}
+            >
               <FaTrash />
-            </Button>
+            </DialogButton>
           </div>
         </div>
       )}
@@ -106,12 +110,11 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
       <div className="mt-5">
         {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}
       </div>
-      <Table>
+      <Table reloading={loading}>
         <thead>
           <tr>
             <th>Business Process</th>
             <th>Business Process ID</th>
-            <th>Parent</th>
             <th></th>
           </tr>
         </thead>
@@ -119,21 +122,20 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
           {childs.length ? (
             childs.map(child => {
               return (
-                <tr key={child.id}>
-                  <td>
-                    <Link to={`/business-process/${child.id}`}>
-                      {child.name}
-                    </Link>
-                  </td>
+                <tr
+                  key={child.id}
+                  onClick={() => history.push(`/business-process/${child.id}`)}
+                >
+                  <td>{child.name}</td>
                   <td>{child.id}</td>
-                  <td>{child.ancestry}</td>
-                  <td>
-                    <Button
-                      onClick={() => handleDelete(child.id)}
-                      color="transparent"
+                  <td className="action">
+                    <DialogButton
+                      onConfirm={() => handleDelete(child.id)}
+                      loading={destroyM.loading}
+                      message={`Delete Business Process "${child.name}"`}
                     >
                       <FaTrash />
-                    </Button>
+                    </DialogButton>
                   </td>
                 </tr>
               );
