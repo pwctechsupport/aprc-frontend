@@ -5,6 +5,7 @@ import { Form, Input, FormFeedback, Row, Col } from "reactstrap";
 import * as yup from "yup";
 import { useCreateReferenceMutation } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
+import DialogButton from "../../shared/components/DialogButton";
 
 const CreateReference = () => {
   const { register, handleSubmit, reset, errors } = useForm<
@@ -32,18 +33,22 @@ const CreateReference = () => {
             placeholder="Add new reference..."
             innerRef={register}
             invalid={errors.name && errors.name.message ? true : false}
+            required
           />
           <FormFeedback>{errors.name && errors.name.message}</FormFeedback>
         </Col>
         <Col lg={2} className="mt-3 mt-lg-0">
-          <Button
-            block
-            type="submit"
-            className="pwc"
+          <DialogButton
+            onConfirm={handleSubmit(submit)}
             disabled={createReferenceM.loading}
+            color="primary"
+            block
+            type="button"
+            className="pwc"
+            message="Add reference?"
           >
             Add
-          </Button>
+          </DialogButton>
         </Col>
       </Row>
     </Form>

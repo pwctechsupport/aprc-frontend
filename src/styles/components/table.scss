@@ -11,7 +11,12 @@ table.table-pwc {
         text-decoration: none;
         color: inherit;
         td.action {
-          visibility: visible;
+          div {
+            visibility: visible;
+          }
+          button {
+            visibility: visible;
+          }
         }
       }
       td {
@@ -22,7 +27,12 @@ table.table-pwc {
           background: rgba(0, 0, 0, 0.1);
         }
         &.action {
-          visibility: hidden;
+          div {
+            visibility: hidden;
+          }
+          button {
+            visibility: hidden;
+          }
         }
       }
     }

@@ -42,7 +42,7 @@ const References = () => {
       </Helmet>
       <div className="ml-3 flex-grow-1">
         <div className="d-flex justify-content-between align-items-center">
-          <h1>References</h1>
+          <h4>References</h4>
         </div>
         <SearchBar
           onChange={handleChange}
@@ -57,7 +57,7 @@ const References = () => {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Action</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -132,7 +132,7 @@ const ReferenceRow = ({
           reference.name
         )}
       </td>
-      <td className="align-middle" style={{ width: "30%" }}>
+      <td className="align-middle action" style={{ width: "30%" }}>
         <div className="d-flex align-items-center">
           {edit ? (
             <div>
@@ -144,20 +144,26 @@ const ReferenceRow = ({
               >
                 <FaTimes /> Cancel
               </Button>
-              <Button
+              <DialogButton
+                onConfirm={handleSubmit(updateReference)}
                 className="pwc"
-                onClick={handleSubmit(updateReference)}
                 loading={updateM.loading}
+                color="primary"
+                message="Save reference?"
               >
                 Save
-              </Button>
+              </DialogButton>
             </div>
           ) : (
             <div>
               <Button color="" onClick={toggleEdit} className="mr-2">
                 <FaPencilAlt />
               </Button>
-              <DialogButton onConfirm={onDelete} loading={deleteLoading}>
+              <DialogButton
+                onConfirm={onDelete}
+                loading={deleteLoading}
+                message={`Delete ${reference.name}?`}
+              >
                 <FaTrash />
               </DialogButton>
             </div>
