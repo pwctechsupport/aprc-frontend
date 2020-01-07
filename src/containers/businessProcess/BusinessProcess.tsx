@@ -99,7 +99,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
             <DialogButton
               onConfirm={() => handleDeleteMain(id)}
               loading={destroyMainM.loading}
-              message={`Delete Business Process "${name}"`}
+              message={`Delete Business Process "${name}"?`}
             >
               <FaTrash />
             </DialogButton>
@@ -132,7 +132,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
                     <DialogButton
                       onConfirm={() => handleDelete(child.id)}
                       loading={destroyM.loading}
-                      message={`Delete Business Process "${child.name}"`}
+                      message={`Delete Business Process "${child.name}"?`}
                     >
                       <FaTrash />
                     </DialogButton>

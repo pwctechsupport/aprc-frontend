@@ -2,6 +2,7 @@ import React from "react";
 import useForm from "react-hook-form";
 import { Form, Input } from "reactstrap";
 import Button from "../../../shared/components/Button";
+import DialogButton from "../../../shared/components/DialogButton";
 
 const BusinessProcessForm = ({
   onSubmit,
@@ -33,9 +34,15 @@ const BusinessProcessForm = ({
           Cancel
         </Button>
       )}
-      <Button type="submit" className="pwc ml-3">
+      <DialogButton
+        onConfirm={handleSubmit(submit)}
+        className="pwc ml-3"
+        type="button"
+        color="primary"
+        message={`${submitButtonName} business process?`}
+      >
         {submitButtonName}
-      </Button>
+      </DialogButton>
     </Form>
   );
 };

@@ -1,22 +1,21 @@
+import { capitalCase } from "capital-case";
 import React, { useEffect } from "react";
 import useForm from "react-hook-form";
-import { Form, Row, Col, FormGroup, Label, Input as BsInput } from "reactstrap";
+import { Col, Form, FormGroup, Input as BsInput, Label, Row } from "reactstrap";
+import { oc } from "ts-optchain";
 import {
   Assertion,
   Frequency,
   Ipo,
   Nature,
-  TypeOfControl,
   Status,
-  useRisksQuery,
-  useBusinessProcessesQuery
+  TypeOfControl,
+  useBusinessProcessesQuery,
+  useRisksQuery
 } from "../../../generated/graphql";
-import Button from "../../../shared/components/Button";
+import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
-import { oc } from "ts-optchain";
-import { capitalCase } from "capital-case";
-import DialogButton from "../../../shared/components/DialogButton";
 
 const ControlForm = ({
   onSubmit,

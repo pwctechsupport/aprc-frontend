@@ -1,9 +1,9 @@
 import React from "react";
-import { useCreateSubBusinessProcessMutation } from "../../../generated/graphql";
+import useForm from "react-hook-form";
 import { toast } from "react-toastify";
 import { Form, Input } from "reactstrap";
-import Button from "../../../shared/components/Button";
-import useForm from "react-hook-form";
+import { useCreateSubBusinessProcessMutation } from "../../../generated/graphql";
+import DialogButton from "../../../shared/components/DialogButton";
 
 const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
   const { register, handleSubmit, reset } = useForm();
@@ -39,9 +39,15 @@ const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
         innerRef={register}
         required
       />
-      <Button type="submit" className="pwc ml-3">
+      <DialogButton
+        type="button"
+        onConfirm={handleSubmit(submit)}
+        className="pwc ml-3"
+        color="primary"
+        message="Add sub business process?"
+      >
         Add
-      </Button>
+      </DialogButton>
     </Form>
   );
 };
