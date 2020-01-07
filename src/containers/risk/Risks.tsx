@@ -1,6 +1,6 @@
 import React from "react";
 import { FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -14,7 +14,7 @@ import Helmet from "react-helmet";
 import { capitalCase } from "capital-case";
 import DialogButton from "../../shared/components/DialogButton";
 
-const Risks = () => {
+const Risks = ({ history }: RouteComponentProps) => {
   const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
 
   const [destroy, destroyM] = useDestroyRiskMutation({
@@ -57,18 +57,20 @@ const Risks = () => {
             .risks.collection([])
             .map(risk => {
               return (
-                <tr key={risk.id}>
+                <tr
+                  key={risk.id}
+                  onClick={() => history.push(`/risk/${risk.id}`)}
+                >
                   <td>{risk.id}</td>
-                  <td>
-                    <Link to={`/risk/${risk.id}`}>{oc(risk).name("")}</Link>
-                  </td>
+                  <td>{oc(risk).name("")}</td>
                   <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
-                  <td>
+                  <td className="action">
                     <DialogButton
                       onConfirm={() => handleDelete(risk.id)}
                       loading={destroyM.loading}
+                      message={`Delete risk "${risk.name}"?`}
                     >
-                      <FaTrash className="clickable" />
+                      <FaTrash className="clickable text-red" />
                     </DialogButton>
                   </td>
                 </tr>

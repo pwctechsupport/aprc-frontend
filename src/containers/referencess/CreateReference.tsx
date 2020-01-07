@@ -1,10 +1,9 @@
 import React from "react";
 import useForm from "react-hook-form";
 import { toast } from "react-toastify";
-import { Form, Input, FormFeedback, Row, Col } from "reactstrap";
+import { Col, Form, FormFeedback, Input, Row } from "reactstrap";
 import * as yup from "yup";
 import { useCreateReferenceMutation } from "../../generated/graphql";
-import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 
 const CreateReference = () => {

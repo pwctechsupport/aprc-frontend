@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -7,12 +7,11 @@ import {
   Category,
   useResourceFormMasterQuery
 } from "../../../generated/graphql";
-import Button from "../../../shared/components/Button";
+import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
-import DialogButton from "../../../shared/components/DialogButton";
 
 const ResourceForm = ({
   defaultValues,

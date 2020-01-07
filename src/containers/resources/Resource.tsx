@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import { RouteComponentProps } from "react-router";
-import { toast } from "react-toastify";
-import {
-  UpdateResourceInput,
-  useUpdateResourceMutation,
-  useResourceQuery,
-  Category,
-  useDestroyResourceMutation
-} from "../../generated/graphql";
-import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import { oc } from "ts-optchain";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
-import { Button } from "reactstrap";
-import { FaTimes, FaTrash, FaPencilAlt } from "react-icons/fa";
-import { MdModeEdit } from "react-icons/md";
-import { Link } from "react-router-dom";
-import ResourceBox from "./components/ResourceBox";
 import { capitalCase } from "capital-case";
+import React, { useState } from "react";
+import { FaTimes, FaTrash } from "react-icons/fa";
+import { MdModeEdit } from "react-icons/md";
+import { RouteComponentProps } from "react-router";
+import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Button } from "reactstrap";
+import { oc } from "ts-optchain";
+import {
+  Category,
+  UpdateResourceInput,
+  useDestroyResourceMutation,
+  useResourceQuery,
+  useUpdateResourceMutation
+} from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import ResourceBox from "./components/ResourceBox";
+import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 
 const Resource = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);

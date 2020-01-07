@@ -10,7 +10,7 @@ import {
   TypeOfRisk,
   useBusinessProcessesQuery
 } from "../../../generated/graphql";
-import Button from "../../../shared/components/Button";
+import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
@@ -38,6 +38,7 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
     onSubmit && onSubmit(values);
   };
 
+  const name = oc(defaultValues).name();
   const levelOfRisk = oc(defaultValues).levelOfRisk();
   const status = oc(defaultValues).status();
   const businessProcessId = oc(defaultValues).businessProcessId();
@@ -98,9 +99,16 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
           defaultValue={prepDefaultValue(typeOfRisk, typeOfRisks)}
         />
         <div className="d-flex justify-content-end">
-          <Button className="pwc px-5" type="submit" loading={submitting}>
+          <DialogButton
+            onConfirm={handleSubmit(submit)}
+            className="pwc px-5"
+            type="button"
+            color="primary"
+            loading={submitting}
+            message={name ? `Save changes on "${name}"?` : "Create new risk?"}
+          >
             Submit
-          </Button>
+          </DialogButton>
         </div>
       </Form>
     </div>
