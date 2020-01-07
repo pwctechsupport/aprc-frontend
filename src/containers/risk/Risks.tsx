@@ -38,7 +38,7 @@ const Risks = () => {
         <title>Risks - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="d-flex justify-content-between align-items-center">
-        <h1>Risks</h1>
+        <h4>Risks</h4>
         <Link to="/risk/create">
           <Button className="pwc">+ Add Risk</Button>
         </Link>
@@ -68,9 +68,7 @@ const Risks = () => {
                       onConfirm={() => handleDelete(risk.id)}
                       loading={destroyM.loading}
                     >
-                      <FaTrash
-                        className="clickable"
-                      />
+                      <FaTrash className="clickable" />
                     </DialogButton>
                   </td>
                 </tr>

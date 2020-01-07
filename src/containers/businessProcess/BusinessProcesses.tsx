@@ -54,7 +54,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       />
       <div className="ml-3 w-100">
         <div className="d-flex justify-content-between align-items-center">
-          <h1>Business Process </h1>
+          <h4>Business Process </h4>
         </div>
         <div>
           <CreateBusinessProcess />
