@@ -16,6 +16,7 @@ import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import { oc } from "ts-optchain";
 import { capitalCase } from "capital-case";
+import DialogButton from "../../../shared/components/DialogButton";
 
 const ControlForm = ({
   onSubmit,
@@ -55,6 +56,7 @@ const ControlForm = ({
     return options.find(opt => opt.value === value);
   };
 
+  const description = oc(defaultValues).description("");
   const typeOfControl = oc(defaultValues).typeOfControl();
   const frequency = oc(defaultValues).frequency();
   const nature = oc(defaultValues).nature();
@@ -170,9 +172,20 @@ const ControlForm = ({
       />
 
       <div className="d-flex justify-content-end">
-        <Button className="pwc px-5" type="submit" loading={submitting}>
+        <DialogButton
+          onConfirm={handleSubmit(submit)}
+          className="pwc px-5"
+          type="button"
+          loading={submitting}
+          color="primary"
+          message={
+            description
+              ? `Save your changes on control "${description}"?`
+              : "Create new control?"
+          }
+        >
           Submit
-        </Button>
+        </DialogButton>
       </div>
     </Form>
   );

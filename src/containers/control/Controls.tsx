@@ -2,7 +2,7 @@ import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
@@ -15,7 +15,7 @@ import DialogButton from "../../shared/components/DialogButton";
 import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
 
-const Controls = () => {
+const Controls = ({ history }: RouteComponentProps) => {
   const [searchValue, setSearchValue] = useState("");
   const [searchQuery] = useDebounce(searchValue, 700);
 
@@ -42,7 +42,7 @@ const Controls = () => {
       </Helmet>
       <div className="ml-3 w-100">
         <div className="d-flex justify-content-between align-items-center">
-          <h1>Controls</h1>
+          <h4>Controls</h4>
           <Link to="/control/create">
             <Button className="pwc">+ Add Control</Button>
           </Link>
@@ -68,13 +68,12 @@ const Controls = () => {
           <tbody>
             {controls.map(control => {
               return (
-                <tr key={control.id}>
+                <tr
+                  key={control.id}
+                  onClick={() => history.push(`/control/${control.id}`)}
+                >
                   <td>{control.id}</td>
-                  <td>
-                    <Link to={`/control/${control.id}`}>
-                      {control.description}
-                    </Link>
-                  </td>
+                  <td>{control.description}</td>
                   <td>{capitalCase(control.frequency || "")}</td>
                   <td>{capitalCase(control.typeOfControl || "")}</td>
                   <td>
@@ -85,10 +84,11 @@ const Controls = () => {
                   </td>
                   <td>{capitalCase(control.nature || "")}</td>
                   <td>{control.controlOwner}</td>
-                  <td>
+                  <td className="action">
                     <DialogButton
                       onConfirm={() => handleDelete(control.id)}
                       loading={destroyM.loading}
+                      message={`Delete "${control.description}"?`}
                     >
                       <FaTrash className="clickable" />
                     </DialogButton>
