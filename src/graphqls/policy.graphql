@@ -121,10 +121,6 @@ fragment policyFragment on Policy {
     description
     ...control
   }
-  itSystems {
-    id
-    name
-  }
   businessProcesses {
     id
     name

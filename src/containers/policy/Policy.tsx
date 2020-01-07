@@ -139,7 +139,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         input: {
           id,
           resourceIds: values.resourceIds,
-          itSystemIds: values.itSystemIds,
           businessProcessIds: values.businessProcessIds,
           description: values.description,
           referenceIds: values.referenceIds,
@@ -342,9 +341,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           referenceIds,
           resourceIds: oc(data)
             .policy.resources([])
-            .map(r => r.id),
-          itSystemIds: oc(data)
-            .policy.itSystems([])
             .map(r => r.id),
           businessProcessIds: oc(data)
             .policy.businessProcesses([])
