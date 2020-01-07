@@ -42,11 +42,6 @@ const SubPolicyForm = ({
     .resources.collection([])
     .map(toLabelValue);
 
-  // const itSystemsQ = useItSystemsQuery();
-  // const itSystemsOptions = oc(itSystemsQ.data)
-  //   .itSystems.collection([])
-  //   .map(toLabelValue);
-
   const businessProcessesQ = useBusinessProcessesQuery();
   const businessProcessesOptions = oc(businessProcessesQ.data)
     .businessProcesses.collection([])
@@ -189,21 +184,6 @@ const SubPolicyForm = ({
             )}
           />
 
-          {/* <FormSelect
-            isMulti
-            isLoading={itSystemsQ.loading}
-            name="itSystemIds"
-            register={register}
-            setValue={setValue}
-            label="IT Systems"
-            options={itSystemsOptions}
-            defaultValue={itSystemsOptions.filter(res =>
-              oc(defaultValues)
-                .itSystemIds([])
-                .includes(res.value)
-            )}
-          /> */}
-
           <FormSelect
             isMulti
             isLoading={businessProcessesQ.loading}
@@ -262,6 +242,7 @@ const SubPolicyForm = ({
               type="button"
               className="pwc px-4"
               onClick={handleSubmit(submit)}
+              // onClick={() => setShowAttrs(false)}
             >
               Submit
             </Button>

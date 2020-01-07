@@ -72,7 +72,10 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     fetchPolicy: "network-only"
   });
   const [update, updateState] = useUpdatePolicyMutation({
-    onCompleted: () => toast.success("Update Success"),
+    onCompleted: () => {
+      toast.success("Update Success");
+      toggleEditMode();
+    },
     onError: () => toast.error("Update Failed"),
     refetchQueries: ["policies", "policyTree", "policy"],
     awaitRefetchQueries: true
