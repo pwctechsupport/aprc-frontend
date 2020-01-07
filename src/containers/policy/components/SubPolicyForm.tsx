@@ -147,6 +147,11 @@ const SubPolicyForm = ({
             loading={submitting}
             className="pwc px-5"
             onConfirm={handleSubmit(submit)}
+            message={
+              defaultValues.title
+                ? `Save your change on "${defaultValues.title}"?`
+                : "Create Sub-Policy?"
+            }
           >
             Save
           </DialogButton>
