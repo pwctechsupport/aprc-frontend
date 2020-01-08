@@ -232,8 +232,12 @@ const Policy = ({ match, history }: RouteComponentProps) => {
 
   const renderPolicy = () => {
     return (
-      <div className="mt-3">
+      <div>
+        <div className="mb-3 py-3">
+          <PolicyDashboard data={policyChartData} />
+        </div>
         <div
+          className="mb-3 py-3"
           dangerouslySetInnerHTML={{
             __html: description
           }}
@@ -532,9 +536,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         <HeaderWithBackButton heading={title} />
         {renderPolicyAction()}
       </div>
-      <div className="my-5">
-        <PolicyDashboard data={policyChartData} />
-      </div>
+
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
 
       <Modal isOpen={addResourceModal} toggle={toggleAddResourceModal}>
