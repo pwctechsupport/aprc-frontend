@@ -25,7 +25,7 @@ const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
     awaitRefetchQueries: true
   });
 
-  const { loading, data } = usePolicyQuery({
+  const { data } = usePolicyQuery({
     variables: { id },
     fetchPolicy: "network-only"
   });
