@@ -2,7 +2,7 @@ import classnames from "classnames";
 import React, { Fragment } from "react";
 import { FaSpinner } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
-import { TableProps as BsTableProps } from "reactstrap";
+import { Table as BsTable, TableProps as BsTableProps } from "reactstrap";
 import styled from "styled-components";
 
 interface TableProps extends BsTableProps {
@@ -22,7 +22,7 @@ const Table = ({ loading, reloading, className, ...props }: TableProps) => {
   }
 
   return (
-    <table className={classnames("table-pwc w-100", className)} {...props}>
+    <BsTable className={classnames("table-pwc w-100", className)} {...props}>
       {!reloading ? (
         props.children
       ) : (
@@ -71,7 +71,7 @@ const Table = ({ loading, reloading, className, ...props }: TableProps) => {
           </tbody>
         </Fragment>
       )}
-    </table>
+    </BsTable>
   );
 };
 

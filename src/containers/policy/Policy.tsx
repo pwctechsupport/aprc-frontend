@@ -279,55 +279,56 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             show={collapse.includes("Controls")}
             onClick={toggleCollapse}
           >
-            {controls.length ? (
-              controls.map(control => {
-                return (
-                  <div key={control.id}>
-                    <ul>
-                      <li>
-                        <Link to={`/control/${control.id}`}>
-                          {control.description}
-                        </Link>
-                      </li>
-                    </ul>
-                    <Table>
-                      <thead>
-                        <tr>
-                          <th>Freq</th>
-                          <th>Type of Control</th>
-                          <th>Nature</th>
-                          <th>IPO</th>
-                          <th>Assertion</th>
-                          <th>Control Owner</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr key={control.id}>
-                          <td>{capitalCase(control.frequency || "")}</td>
-                          <td>{capitalCase(control.typeOfControl || "")}</td>
-                          <td>{capitalCase(control.nature || "")}</td>
-                          <td>
-                            {oc(control)
-                              .ipo([])
-                              .map(a => capitalCase(a))
-                              .join(", ")}
-                          </td>
-                          <td>
-                            {oc(control)
-                              .assertion([])
-                              .map(a => capitalCase(a))
-                              .join(", ")}
-                          </td>
-                          <td>{control.controlOwner}</td>
-                        </tr>
-                      </tbody>
-                    </Table>
-                  </div>
-                );
-              })
-            ) : (
-              <EmptyAttribute />
-            )}
+            <Table>
+              <thead>
+                <tr>
+                  <th>Desc</th>
+                  <th>Freq</th>
+                  <th>Type of Control</th>
+                  <th>Nature</th>
+                  <th>IPO</th>
+                  <th>Assertion</th>
+                  <th>Control Owner</th>
+                </tr>
+              </thead>
+              <tbody>
+                {controls.length ? (
+                  controls.map(control => {
+                    return (
+                      <tr key={control.id}>
+                        <td>
+                          <Link to={`/control/${control.id}`}>
+                            {control.description}
+                          </Link>
+                        </td>
+                        <td>{capitalCase(control.frequency || "")}</td>
+                        <td>{capitalCase(control.typeOfControl || "")}</td>
+                        <td>{capitalCase(control.nature || "")}</td>
+                        <td>
+                          {oc(control)
+                            .ipo([])
+                            .map(a => capitalCase(a))
+                            .join(", ")}
+                        </td>
+                        <td>
+                          {oc(control)
+                            .assertion([])
+                            .map(a => capitalCase(a))
+                            .join(", ")}
+                        </td>
+                        <td>{control.controlOwner}</td>
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td colSpan={7}>
+                      <EmptyAttribute />
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
           </Collapsible>
         </div>
 
