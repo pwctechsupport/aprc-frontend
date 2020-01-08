@@ -7,7 +7,6 @@ import styled, { css } from "styled-components";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { usePolicyTreeQuery } from "../../../generated/graphql";
-import Button from "../../../shared/components/Button";
 
 const PolicySideBox = ({ location }: RouteComponentProps) => {
   const activeId = readCurrentParams(location.pathname);
@@ -17,21 +16,6 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
     <aside>
       <div className="side-box">
         <div className="side-box__searchbar mb-2">
-          <div className="mx-3 mb-3 mt-2">
-            {location.pathname.includes("/policy/dashboard") ? (
-              <Link to="/policy">
-                <Button className="pwc" block>
-                  View All Policies
-                </Button>
-              </Link>
-            ) : (
-              <Link to="/policy/dashboard">
-                <Button className="pwc" block>
-                  View Dashboard Policies
-                </Button>
-              </Link>
-            )}
-          </div>
           <Input
             value={search}
             placeholder="Search Policies..."

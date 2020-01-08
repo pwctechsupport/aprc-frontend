@@ -1,15 +1,15 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 const mockupData = [
-  { label: "Policy", prepared: 5, reviewed: 5 },
-  { label: "Risk", prepared: 5, reviewed: 5 },
-  { label: "Control", prepared: 5, reviewed: 5 }
+  { label: "Policy", total: 10, reviewed: 8 },
+  { label: "Risk", total: 10, reviewed: 5 },
+  { label: "Control", total: 5, reviewed: 2 }
 ];
 
 const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
   const maxCount = Math.max(
-    ...data.map(item => Math.max(item.prepared, item.reviewed)),
+    ...data.map(item => Math.max(item.total, item.reviewed)),
     1
   );
 
@@ -21,18 +21,17 @@ const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
           <PolicyChartItemWrapper key={item.label}>
             <PolicyChartItem
               onClick={item.onClick}
-              height={(item.prepared / maxCount) * 400}
+              height={(item.total / maxCount) * 400}
               color={colors[2]}
             />
             <PolicyChartItem
               onClick={item.onClick}
               height={(item.reviewed / maxCount) * 400}
               color={colors[1]}
+              inner
             />
             <ChartLabelValueWrapper>
-              <ChartValue color={colors[0]}>
-                {item.prepared + item.reviewed}
-              </ChartValue>
+              <ChartValue color={colors[0]}>{item.total}</ChartValue>
               <ChartLabel color={colors[0]}>{item.label}</ChartLabel>
             </ChartLabelValueWrapper>
           </PolicyChartItemWrapper>
@@ -47,7 +46,7 @@ export default PolicyChart;
 const getColors = (label: string): [string, string, string] => {
   if (label === "Risk")
     return [colors.green, colors.lightGreen, colors.paleGreen];
-  if (label === "Policy")
+  if (label.toUpperCase().includes("POLICY"))
     return [colors.orange, colors.lightOrange, colors.paleOrange];
   if (label === "Control")
     return [colors.blue, colors.lightBlue, colors.paleBlue];
@@ -103,6 +102,12 @@ const PolicyChartItem = styled.div<PolicyChartItemProps>`
   &:hover {
     border-width: 2px;
   }
+  ${(p: PolicyChartItemProps) =>
+    p.inner &&
+    css`
+      width: 98%;
+      bottom: 3px;
+    `};
 `;
 const ChartValue = styled.div<ChartLabelProps>`
   color: ${props => props.color};
@@ -127,13 +132,13 @@ const ChartLabelValueWrapper = styled.div`
 // ---------------------------------------------------
 // Type Definitions
 // ---------------------------------------------------
-interface PolicyChartProps {
-  data?: Array<ChartData>;
+export interface PolicyChartProps {
+  data: Array<ChartData>;
 }
 
 interface ChartData {
   label: string;
-  prepared: number;
+  total: number;
   reviewed: number;
   onClick?: () => void;
 }
@@ -141,6 +146,7 @@ interface ChartData {
 interface PolicyChartItemProps {
   height: number;
   color: string;
+  inner?: boolean;
 }
 
 interface ChartLabelProps {

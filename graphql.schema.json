@@ -2471,6 +2471,18 @@
             "deprecationReason": null
           },
           {
+            "name": "controlCount",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BaseScalar",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "controlIds",
             "description": "",
             "args": [],
@@ -2755,6 +2767,18 @@
             "deprecationReason": null
           },
           {
+            "name": "riskCount",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BaseScalar",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "riskIds",
             "description": "",
             "args": [],
@@ -2801,6 +2825,18 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "subCount",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "BaseScalar",
               "ofType": null
             },
             "isDeprecated": false,
@@ -8250,16 +8286,6 @@
             "defaultValue": null
           },
           {
-            "name": "status",
-            "description": "",
-            "type": {
-              "kind": "ENUM",
-              "name": "Status",
-              "ofType": null
-            },
-            "defaultValue": null
-          },
-          {
             "name": "parentId",
             "description": "",
             "type": {
@@ -8270,6 +8296,16 @@
                 "name": "ID",
                 "ofType": null
               }
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "status",
+            "description": "",
+            "type": {
+              "kind": "ENUM",
+              "name": "Status",
+              "ofType": null
             },
             "defaultValue": null
           },

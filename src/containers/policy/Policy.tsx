@@ -1,3 +1,4 @@
+import { capitalCase } from "capital-case";
 import get from "lodash/get";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
@@ -11,7 +12,7 @@ import {
   FaTrash
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
-import { MdModeEdit, MdEmail } from "react-icons/md";
+import { MdEmail, MdModeEdit } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -28,6 +29,8 @@ import {
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
+import DialogButton from "../../shared/components/DialogButton";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import Menu from "../../shared/components/Menu";
 import ResourceBar, {
@@ -36,16 +39,16 @@ import ResourceBar, {
 import Table from "../../shared/components/Table";
 import {
   downloadPdf,
-  previewPdf,
-  emailPdf
+  emailPdf,
+  previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
+import { formatPolicyChart } from "../../shared/utils/formatPolicy";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
+import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import DialogButton from "../../shared/components/DialogButton";
-import { capitalCase } from "capital-case";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -178,6 +181,15 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   const resources = oc(data).policy.resources([]);
   const controls = oc(data).policy.controls([]);
   const risks = oc(data).policy.risks([]);
+  const controlCount = oc(data).policy.controlCount({});
+  const riskCount = oc(data).policy.riskCount({});
+  const subCount = oc(data).policy.subCount({});
+
+  const policyChartData = formatPolicyChart({
+    controlCount,
+    riskCount,
+    subCount
+  });
 
   const isMaximumLevel = ancestry.split("/").length === 5;
 
@@ -472,6 +484,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         <HeaderWithBackButton heading={title} />
         {renderPolicyAction()}
       </div>
+      <div className="my-5">
+        <PolicyDashboard data={policyChartData} />
+      </div>
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
 
       <Modal isOpen={addResourceModal} toggle={toggleAddResourceModal}>
@@ -491,7 +506,3 @@ const Policy = ({ match, history }: RouteComponentProps) => {
 };
 
 export default Policy;
-
-const EmptyAttribute = () => {
-  return <div className="text-grey text-center">Empty</div>;
-};

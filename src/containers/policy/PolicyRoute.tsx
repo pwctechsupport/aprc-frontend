@@ -5,7 +5,6 @@ import Policy from "./Policy";
 import CreatePolicy from "./CreatePolicy";
 import CreateSubPolicy from "./CreateSubPolicy";
 import PolicySideBox from "./components/PolicySideBox";
-import PolicyDashboard from "./PolicyDashboard";
 
 const PolicyRoute = () => {
   return (
@@ -20,7 +19,6 @@ const PolicyRoute = () => {
               path="/policy/:id/create-sub-policy"
               component={CreateSubPolicy}
             />
-            <Route exact path="/policy/dashboard" component={PolicyDashboard} />
             <Route exact path="/policy/create" component={CreatePolicy} />
             <Route exact path="/policy/:id" component={Policy} />
           </Switch>

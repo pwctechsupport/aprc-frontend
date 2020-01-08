@@ -89,6 +89,9 @@ fragment policyFragment on Policy {
     id
     name
   }
+  controlCount
+  riskCount
+  subCount
   children {
     id
     title
@@ -111,10 +114,12 @@ fragment policyFragment on Policy {
     totalRating
     visit
     resuploadUrl
+    status
   }
   risks {
     id
     name
+    status
   }
   controls {
     id
