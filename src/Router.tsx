@@ -48,13 +48,7 @@ export default function() {
                 path="/business-process/:id"
                 component={BusinessProcess}
               />
-              <AuthRoute
-                exact
-                path="/business-process/:id"
-                component={BusinessProcess}
-              />
               <AuthRoute exact path="/references" component={References} />
-
               <AuthRoute exact path="/control" component={Controls} />
               <AuthRoute
                 exact

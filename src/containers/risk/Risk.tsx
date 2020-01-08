@@ -15,6 +15,7 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { toast } from "react-toastify";
 import Helmet from "react-helmet";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Risk = ({ match }: RouteComponentProps) => {
   const id = match.params && (match.params as any).id;
@@ -61,6 +62,7 @@ const Risk = ({ match }: RouteComponentProps) => {
       <Helmet>
         <title>{name} - Risk - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb crumbs={[["/risk", "Risks"], ["/risk/" + id, name]]} />
       <HeaderWithBackButton heading="Risk" />
       <RiskForm
         defaultValues={defaultValues}

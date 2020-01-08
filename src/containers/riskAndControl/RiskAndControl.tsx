@@ -50,6 +50,7 @@ import RiskForm, {
   RiskFormDefaultValues,
   RiskFormValues
 } from "../risk/components/RiskForm";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -197,6 +198,12 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
 
   return (
     <div>
+      <BreadCrumb
+        crumbs={[
+          ["/risk-and-control", "Risk and Controls"],
+          ["/risk-and-control/" + id, name]
+        ]}
+      />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={name} />
         {renderActions()}

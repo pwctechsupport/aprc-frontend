@@ -18,6 +18,7 @@ import BusinessProcessForm, {
   BusinessProcessFormValues
 } from "./components/BusinessProcessForm";
 import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const BusinessProcess = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -79,6 +80,12 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
 
   return (
     <div>
+      <BreadCrumb
+        crumbs={[
+          ["/business-process", "Business Processes"],
+          ["/business-process/" + id, name]
+        ]}
+      />
       <HeaderWithBackButton heading="" />
       {editMode ? (
         <div className="mt-3">

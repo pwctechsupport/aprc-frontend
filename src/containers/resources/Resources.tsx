@@ -11,6 +11,7 @@ import Table from "../../shared/components/Table";
 import Button from "../../shared/components/Button";
 import Helmet from "react-helmet";
 import DialogButton from "../../shared/components/DialogButton";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const { data, loading } = useResourcesQuery();
@@ -25,6 +26,7 @@ const Resources = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Resources - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb crumbs={[["/resources", "Resources"]]} />
       <div className="d-flex justify-content-between align-items-center">
         <h4>Resources</h4>
 

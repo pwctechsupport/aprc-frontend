@@ -46,6 +46,7 @@ import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import DialogButton from "../../shared/components/DialogButton";
 import { capitalCase } from "capital-case";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -468,6 +469,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       <Helmet>
         <title>Policy - {title} - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb
+        crumbs={[["/policy", "Policies"], ["/policy/" + id, title]]}
+      />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={title} />
         {renderPolicyAction()}

@@ -19,6 +19,7 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Resource = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -168,6 +169,9 @@ const Resource = ({ match }: RouteComponentProps) => {
 
   return (
     <div>
+      <BreadCrumb
+        crumbs={[["/resources", "Resources"], ["/resources/" + id, name]]}
+      />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={name} />
         {renderResourceAction()}

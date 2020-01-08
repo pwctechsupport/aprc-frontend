@@ -13,6 +13,7 @@ import get from "lodash/get";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Control = ({ match }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -57,6 +58,9 @@ const Control = ({ match }: RouteComponentProps) => {
 
   return (
     <div>
+      <BreadCrumb
+        crumbs={[["/control", "Controls"], ["/control/" + id, description]]}
+      />
       <HeaderWithBackButton heading={id} />
       <ControlForm
         onSubmit={handleUpdate}

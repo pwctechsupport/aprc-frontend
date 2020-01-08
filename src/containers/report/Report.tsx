@@ -11,6 +11,7 @@ import {
 } from "../../shared/utils/accessGeneratedPdf";
 import { toast } from "react-toastify";
 import Table from "../../shared/components/Table";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const options = ["report_risk"];
 
@@ -48,6 +49,7 @@ const Report = () => {
       <Helmet>
         <title>Reports - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb crumbs={[["/report", "Reports"]]} />
       <h4>Reports</h4>
       <Form onSubmit={handleSubmit(onDownload)}>
         <Table>
