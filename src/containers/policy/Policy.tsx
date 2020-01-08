@@ -27,6 +27,7 @@ import {
   usePolicyQuery,
   useUpdatePolicyMutation
 } from "../../generated/graphql";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import DialogButton from "../../shared/components/DialogButton";
@@ -480,6 +481,12 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       <Helmet>
         <title>Policy - {title} - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb
+        crumbs={[
+          ["/policy", "Policies"],
+          ["/policy/" + id, title]
+        ]}
+      />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={title} />
         {renderPolicyAction()}

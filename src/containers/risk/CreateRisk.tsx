@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useCreateRiskMutation } from "../../generated/graphql";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const CreateRisk = ({ history }: RouteComponentProps) => {
   const [createRisk, { loading }] = useCreateRiskMutation({
@@ -29,6 +30,9 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Create Risk - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb
+        crumbs={[["/risk", "Risks"], ["/risk/create", "Create Risk"]]}
+      />
       <HeaderWithBackButton heading="Create Risk" />
       <RiskForm onSubmit={handleSubmit} submitting={loading} />
     </div>

@@ -13,6 +13,7 @@ import Table from "../../shared/components/Table";
 import Helmet from "react-helmet";
 import { capitalCase } from "capital-case";
 import DialogButton from "../../shared/components/DialogButton";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Risks = ({ history }: RouteComponentProps) => {
   const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
@@ -37,6 +38,7 @@ const Risks = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Risks - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb crumbs={[["/risk", "Risks"]]} />
       <div className="d-flex justify-content-between align-items-center">
         <h4>Risks</h4>
         <Link to="/risk/create">

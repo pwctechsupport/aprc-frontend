@@ -5,10 +5,13 @@ import { toast } from "react-toastify";
 import {
   PolicyDocument,
   Status,
-  useCreateSubPolicyMutation
+  useCreateSubPolicyMutation,
+  usePolicyQuery
 } from "../../generated/graphql";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import BreadCrumb from "../../shared/components/BreadCrumb";
+import { oc } from "ts-optchain";
 
 const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -20,6 +23,11 @@ const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
     onError: () => toast.error("Gagal"),
     refetchQueries: [{ query: PolicyDocument, variables: { id } }],
     awaitRefetchQueries: true
+  });
+
+  const { loading, data } = usePolicyQuery({
+    variables: { id },
+    fetchPolicy: "network-only"
   });
 
   function createSubPolicy(values: SubPolicyFormValues) {
@@ -36,6 +44,7 @@ const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
     });
   }
 
+  const title = oc(data).policy.title("");
   const defaultValues = {
     parentId: id,
     title: "",
@@ -46,6 +55,13 @@ const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
 
   return (
     <div>
+      <BreadCrumb
+        crumbs={[
+          ["/policy", "Policies"],
+          ["/policy/" + id, title],
+          ["/policy/" + id + "/create-sub-policy", "Create Sub-Policy"]
+        ]}
+      />
       <HeaderWithBackButton heading="Create Sub-Policy" />
       <SubPolicyForm onSubmit={createSubPolicy} defaultValues={defaultValues} />
     </div>

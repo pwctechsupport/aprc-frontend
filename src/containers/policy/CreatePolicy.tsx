@@ -6,6 +6,7 @@ import { oc } from "ts-optchain";
 import { useCreatePolicyMutation } from "../../generated/graphql";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const CreatePolicy = ({ history }: RouteComponentProps) => {
   const [createPolicy, { loading }] = useCreatePolicyMutation({
@@ -35,6 +36,9 @@ const CreatePolicy = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Create Policy - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb
+        crumbs={[["/policy", "Policies"], ["/policy/create", "Create Policy"]]}
+      />
       <HeaderWithBackButton heading="Create Policy" />
       <PolicyForm onSubmit={handleSubmit} submitting={loading} />
     </div>

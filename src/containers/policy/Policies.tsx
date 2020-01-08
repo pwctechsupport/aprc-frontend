@@ -15,6 +15,7 @@ import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Policies = ({ history }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
@@ -53,6 +54,7 @@ const Policies = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Policies - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb crumbs={[["/policy", "Policies"]]} />
       <div className="d-flex justify-content-between align-items-center">
         <h4>Policies</h4>
         <Link to="/policy/create">
