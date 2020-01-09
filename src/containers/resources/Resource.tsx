@@ -32,7 +32,10 @@ const Resource = ({ match }: RouteComponentProps) => {
 
   const [updateResource, updateResourceM] = useUpdateResourceMutation({
     refetchQueries: ["resources", "resource"],
-    onCompleted: _ => toast.success("Updated"),
+    onCompleted: _ => {
+      toast.success("Updated");
+      toggleEditMode();
+    },
     onError: _ => toast.error("Update Failed")
   });
 
@@ -170,7 +173,10 @@ const Resource = ({ match }: RouteComponentProps) => {
   return (
     <div>
       <BreadCrumb
-        crumbs={[["/resources", "Resources"], ["/resources/" + id, name]]}
+        crumbs={[
+          ["/resources", "Resources"],
+          ["/resources/" + id, name]
+        ]}
       />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={name} />

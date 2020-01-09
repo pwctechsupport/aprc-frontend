@@ -35,10 +35,8 @@ const ResourceSideBox = () => {
             to={`/resources/${resource.id}`}
             key={resource.id}
           >
-            <div className="text-small">{resource.name}</div>
-            <div className="text-small">
-              {humanizeDate(new Date(resource.updatedAt))}
-            </div>
+            <div>{resource.name}</div>
+            <div>{humanizeDate(new Date(resource.updatedAt))}</div>
           </Link>
         ))}
       </div>

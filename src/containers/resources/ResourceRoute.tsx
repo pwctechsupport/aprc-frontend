@@ -4,21 +4,22 @@ import Resources from "./Resources";
 import Resource from "./Resource";
 import CreateResource from "./CreateResource";
 import ResourceSideBox from "./components/ResourceSideBox";
+import { Row, Col } from "reactstrap";
 
 const ResourceRoute = () => {
   return (
-    <div className="d-flex">
-      <div>
+    <Row>
+      <Col md={3}>
         <Route path="/resources" component={ResourceSideBox} />
-      </div>
-      <div className="w-100 ml-3">
+      </Col>
+      <Col md={9}>
         <Route exact path="/resources" component={Resources} />
         <Switch>
           <Route exact path="/resources/create" component={CreateResource} />
           <Route exact path="/resources/:id" component={Resource} />
         </Switch>
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 };
 
