@@ -5,8 +5,8 @@ import PolicyChart, { PolicyChartProps } from "./PolicyChart";
 
 const PolicyDashboard = ({ data }: PolicyChartProps) => {
   const subPolicy = data.find(item => item.label === "Sub-Policy");
-  const control = data.find(item => item.label === "control");
-  const risk = data.find(item => item.label === "risk");
+  const control = data.find(item => item.label === "Control");
+  const risk = data.find(item => item.label === "Risk");
   const tableData = [
     {
       label: "Reviewed",
