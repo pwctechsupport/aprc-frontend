@@ -107,6 +107,7 @@ const PolicyChartItem = styled.div<PolicyChartItemProps>`
     css`
       width: 98%;
       bottom: 3px;
+      height: ${(p: PolicyChartItemProps) => p.height - 6 + "px"};
     `};
 `;
 const ChartValue = styled.div<ChartLabelProps>`
