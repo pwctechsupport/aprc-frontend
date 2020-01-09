@@ -10,22 +10,26 @@ const PolicyRoute = () => {
   return (
     <Switch>
       <Route exact path="/policy" component={Policies} />
-      <div className="d-flex">
-        <Route path="/policy" component={PolicySideBox} />
-        <div className="w-100 ml-3">
-          <Switch>
-            <Route
-              exact
-              path="/policy/:id/create-sub-policy"
-              component={CreateSubPolicy}
-            />
-            <Route exact path="/policy/create" component={CreatePolicy} />
-            <Route exact path="/policy/:id" component={Policy} />
-          </Switch>
-        </div>
-      </div>
+      <Route component={RestOfPolicies} />
     </Switch>
   );
 };
+
+const RestOfPolicies = () => (
+  <div className="d-flex">
+    <Route path="/policy" component={PolicySideBox} />
+    <div className="w-100 ml-3">
+      <Switch>
+        <Route
+          exact
+          path="/policy/:id/create-sub-policy"
+          component={CreateSubPolicy}
+        />
+        <Route exact path="/policy/create" component={CreatePolicy} />
+        <Route exact path="/policy/:id" component={Policy} />
+      </Switch>
+    </div>
+  </div>
+);
 
 export default PolicyRoute;
