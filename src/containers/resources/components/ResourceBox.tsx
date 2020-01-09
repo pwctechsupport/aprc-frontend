@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import StarRatingComponent from "react-star-rating-component";
-import { GoCloudDownload } from "react-icons/go";
-import { useSelector } from "../../../shared/hooks/useSelector";
-import { useCreateResourceRatingMutation } from "../../../generated/graphql";
+import { FaDownload } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { oc } from "ts-optchain";
 import { Tooltip } from "reactstrap";
+import styled from "styled-components";
+import { oc } from "ts-optchain";
+import { useCreateResourceRatingMutation } from "../../../generated/graphql";
+import { useSelector } from "../../../shared/hooks/useSelector";
+import StarRating from "../../../shared/components/StarRating";
 
 const ResourceBox = ({
   id,
@@ -72,24 +72,25 @@ const ResourceBox = ({
       />
       <ResourceBoxMeta>
         <div>{name}</div>
-        <ResourceBoxBro>
+        <ResourceBoxMetaWrapper>
           <div id={tooltipId}>
-            <StarRatingComponent
-              name={name}
-              starCount={5}
-              value={rating}
+            <StarRating
+              id={id}
+              rating={rating}
+              totalRating={totalRating}
               onStarClick={handleStarClick}
             />
           </div>
           <RevenueBoxViews>{views} Views</RevenueBoxViews>
-          <GoCloudDownload
-            size={20}
-            className="clickable"
-            onClick={() =>
-              handleDownload(`http://mandalorian.rubyh.co${resuploadUrl}`, name)
-            }
-          />
-        </ResourceBoxBro>
+          <a
+            href={`http://mandalorian.rubyh.co${resuploadUrl}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            download={`Pwc-Resource ${name}`}
+          >
+            <FaDownload size={18} />
+          </a>
+        </ResourceBoxMetaWrapper>
       </ResourceBoxMeta>
     </ResourceBoxContainer>
   );
@@ -124,7 +125,7 @@ const ResourceBoxImagePreview = styled.div`
   cursor: pointer;
 `;
 
-const ResourceBoxBro = styled.div`
+const ResourceBoxMetaWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

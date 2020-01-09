@@ -8,11 +8,17 @@ import {
 import { RouteComponentProps } from "react-router";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import { toast } from "react-toastify";
+import { notifyGraphQLErrors } from "../../shared/utils/notif";
 
 const CreateResource = ({ history }: RouteComponentProps) => {
   const [createResource, createResourceM] = useCreateResourceMutation({
     refetchQueries: ["resources"],
-    onCompleted: _ => history.push("/resources")
+    onCompleted: _ => {
+      toast.success("Resource Created");
+      history.push("/resources");
+    },
+    onError: notifyGraphQLErrors
   });
 
   function handleSubmit(data: ResourceFormValues) {

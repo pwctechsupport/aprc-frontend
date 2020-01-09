@@ -20,6 +20,7 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import { notifyGraphQLErrors } from "../../shared/utils/notif";
 
 const Resource = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -33,10 +34,10 @@ const Resource = ({ match }: RouteComponentProps) => {
   const [updateResource, updateResourceM] = useUpdateResourceMutation({
     refetchQueries: ["resources", "resource"],
     onCompleted: _ => {
-      toast.success("Updated");
+      toast.success("Resource Updated");
       toggleEditMode();
     },
-    onError: _ => toast.error("Update Failed")
+    onError: notifyGraphQLErrors
   });
 
   const [deleteResource] = useDestroyResourceMutation({
