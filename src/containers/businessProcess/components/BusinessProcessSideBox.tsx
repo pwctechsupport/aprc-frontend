@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "reactstrap";
 import { useBusinessProcessesQuery } from "../../../generated/graphql";
 import { oc } from "ts-optchain";
 import { Link } from "react-router-dom";
 import humanizeDate from "../../../shared/utils/humanizeDate";
+import { useDebounce } from "use-debounce/lib";
 
-const BusinessProcessSideBox = ({ searchValue, handleChange }: any) => {
-  const { data } = useBusinessProcessesQuery();
+const BusinessProcessSideBox = () => {
+  const [searchValue, setSearchValue] = useState("");
+  const [searchQuery] = useDebounce(searchValue, 700);
+
+  const handleChange = (event: any) => {
+    setSearchValue(event.target.value);
+  };
+
+  const { data } = useBusinessProcessesQuery({
+    variables: { filter: { name_cont: searchQuery } }
+  });
   const bps = oc(data)
     .businessProcesses.collection([])
     .sort(

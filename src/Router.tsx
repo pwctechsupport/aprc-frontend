@@ -1,25 +1,23 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Login from "./containers/auth/Login";
-import BusinessProcess from "./containers/businessProcess/BusinessProcess";
-import BusinessProcesses from "./containers/businessProcess/BusinessProcesses";
-import CreateBusinessProcess from "./containers/businessProcess/CreateBusinessProcess";
+import BusinessProcessRoute from "./containers/businessProcess/BusinessProcessRoute";
 import Control from "./containers/control/Control";
 import Controls from "./containers/control/Controls";
 import CreateControl from "./containers/control/CreateControl";
 import Homepage from "./containers/homepage/Homepage";
+import BookmarksModal from "./containers/policy/components/BookmarksModal";
 import PolicyRoute from "./containers/policy/PolicyRoute";
 import References from "./containers/referencess/References";
+import Report from "./containers/report/Report";
 import ResourceRoute from "./containers/resources/ResourceRoute";
 import RiskRoute from "./containers/risk/RiskRoute";
+import RiskAndControlRoute from "./containers/riskAndControl/RiskAndControlRoute";
 import AuthListener from "./shared/components/AuthListener";
 import AuthRoute from "./shared/components/AuthRoute";
+import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
-import BookmarksModal from "./containers/policy/components/BookmarksModal";
-import ComingSoonPage from "./shared/components/ComingSoonPage";
-import RiskAndControlRoute from "./containers/riskAndControl/RiskAndControlRoute";
-import Report from "./containers/report/Report";
 
 export default function() {
   return (
@@ -33,21 +31,18 @@ export default function() {
           <Layout>
             <AuthRoute exact path="/" component={Homepage} />
             <Switch>
+              <AuthRoute path="/policy" component={PolicyRoute} />
+              <AuthRoute path="/resources" component={ResourceRoute} />
+              <AuthRoute path="/risk" component={RiskRoute} />
               <AuthRoute
-                exact
                 path="/business-process"
-                component={BusinessProcesses}
+                component={BusinessProcessRoute}
               />
               <AuthRoute
-                exact
-                path="/business-process/create"
-                component={CreateBusinessProcess}
+                path="/risk-and-control"
+                component={RiskAndControlRoute}
               />
-              <AuthRoute
-                exact
-                path="/business-process/:id"
-                component={BusinessProcess}
-              />
+              <AuthRoute path="/report" component={Report} />
               <AuthRoute exact path="/references" component={References} />
               <AuthRoute exact path="/control" component={Controls} />
               <AuthRoute
@@ -56,14 +51,7 @@ export default function() {
                 component={CreateControl}
               />
               <AuthRoute exact path="/control/:id" component={Control} />
-              <AuthRoute path="/policy" component={PolicyRoute} />
-              <AuthRoute path="/resources" component={ResourceRoute} />
-              <AuthRoute path="/risk" component={RiskRoute} />
-              <AuthRoute
-                path="/risk-and-control"
-                component={RiskAndControlRoute}
-              />
-              <AuthRoute path="/report" component={Report} />
+
               <AuthRoute component={ComingSoonPage} />
             </Switch>
           </Layout>

@@ -41,7 +41,7 @@ const References = () => {
       <Helmet>
         <title>References - PricewaterhouseCoopers</title>
       </Helmet>
-      <div className="ml-3 flex-grow-1">
+      <div className="flex-grow-1">
         <BreadCrumb crumbs={[["/references", "References"]]} />
         <div className="d-flex justify-content-between align-items-center">
           <h4>References</h4>

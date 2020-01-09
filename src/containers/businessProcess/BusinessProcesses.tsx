@@ -9,19 +9,15 @@ import {
   useBusinessProcessTreeQuery,
   useDestroyBusinessProcessMutation
 } from "../../generated/graphql";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
-import BusinessProcessSideBox from "./components/BusinessProcessSideBox";
 import CreateBusinessProcess from "./CreateBusinessProcess";
-import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue] = useState("");
   const [searchQuery] = useDebounce(searchValue, 700);
 
-  const handleChange = (event: any) => {
-    setSearchValue(event.target.value);
-  };
   const isTree = !searchQuery;
   const businessQuery = useBusinessProcessTreeQuery({
     variables: {
@@ -51,11 +47,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           Business Process
           <title>Controls - PricewaterhouseCoopers</title>
         </Helmet>
-        <BusinessProcessSideBox
-          searchValue={searchValue}
-          handleChange={handleChange}
-        />
-        <div className="ml-3 w-100">
+        <div className="w-100">
           <div className="d-flex justify-content-between align-items-center">
             <h4>Business Process </h4>
           </div>
