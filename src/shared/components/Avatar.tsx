@@ -5,7 +5,7 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
-import AtlaskitAvatar from "@atlaskit/avatar";
+import styled from "styled-components";
 
 const Avatar = ({ data }: AvatarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -15,11 +15,7 @@ const Avatar = ({ data }: AvatarProps) => {
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
       <DropdownToggle tag="div">
-        <AtlaskitAvatar
-          src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png"
-          presence="online"
-          size="large"
-        />
+        <AvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
       </DropdownToggle>
       <DropdownMenu>
         {data.map((item, index) => {
@@ -42,6 +38,16 @@ const Avatar = ({ data }: AvatarProps) => {
 };
 
 export default Avatar;
+
+const AvatarIcon = styled.img`
+  display: inline-block;
+  position: relative;
+  outline: 0px;
+  height: 44px;
+  width: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+`;
 
 // -------------------------------------------------
 // Type Definition
