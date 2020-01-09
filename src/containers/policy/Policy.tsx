@@ -50,6 +50,7 @@ import ResourceForm, {
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -228,7 +229,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
 
   const isMaximumLevel = ancestry.split("/").length === 5;
 
-  if (loading) return null;
+  if (loading) return <LoadingSpinner centered size={30} />;
 
   const renderPolicy = () => {
     return (
