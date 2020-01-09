@@ -13,30 +13,28 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
   return (
-    <aside>
-      <div className="side-box">
-        <div className="side-box__searchbar mb-2">
-          <Input
-            value={search}
-            placeholder="Search Policies..."
-            onChange={e => setSearch(e.target.value)}
-            className="dark"
-          />
-        </div>
-
-        {searchQuery && (
-          <div
-            className="clickable mx-3 text-right text-small text-italic"
-            onClick={() => setSearch("")}
-          >
-            Clear Search
-          </div>
-        )}
-        <div className="pb-3">
-          <PolicyTree search={searchQuery} activeId={activeId} />
-        </div>
+    <div className="side-box">
+      <div className="side-box__searchbar mb-2">
+        <Input
+          value={search}
+          placeholder="Search Policies..."
+          onChange={e => setSearch(e.target.value)}
+          className="dark"
+        />
       </div>
-    </aside>
+
+      {searchQuery && (
+        <div
+          className="clickable mx-3 text-right text-small text-italic"
+          onClick={() => setSearch("")}
+        >
+          Clear Search
+        </div>
+      )}
+      <div className="side-box__list">
+        <PolicyTree search={searchQuery} activeId={activeId} />
+      </div>
+    </div>
   );
 };
 

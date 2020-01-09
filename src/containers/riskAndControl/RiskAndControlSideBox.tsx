@@ -15,30 +15,28 @@ const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
   const [searchQuery] = useDebounce(search, 700);
 
   return (
-    <aside>
-      <div className="side-box">
-        <h4 className="pt-2 px-2">Business Processes</h4>
-        <div className="side-box__searchbar mb-2">
-          <Input
-            value={search}
-            placeholder="Search Business Process..."
-            onChange={e => setSearch(e.target.value)}
-            className="dark"
-          />
-        </div>
-        {searchQuery && (
-          <div
-            className="clickable mx-3 text-right text-small text-italic"
-            onClick={() => setSearch("")}
-          >
-            Clear Search
-          </div>
-        )}
-        <div className="pb-3">
-          <BusinessProcessTree activeId={id} search={searchQuery} />
-        </div>
+    <div className="side-box">
+      <h4 className="pt-2 px-2">Business Processes</h4>
+      <div className="side-box__searchbar mb-2">
+        <Input
+          value={search}
+          placeholder="Search Business Process..."
+          onChange={e => setSearch(e.target.value)}
+          className="dark"
+        />
       </div>
-    </aside>
+      {searchQuery && (
+        <div
+          className="clickable mx-3 text-right text-small text-italic"
+          onClick={() => setSearch("")}
+        >
+          Clear Search
+        </div>
+      )}
+      <div className="pb-3">
+        <BusinessProcessTree activeId={id} search={searchQuery} />
+      </div>
+    </div>
   );
 };
 

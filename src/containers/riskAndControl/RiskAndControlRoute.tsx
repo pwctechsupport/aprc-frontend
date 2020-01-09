@@ -4,6 +4,7 @@ import RiskAndControl from "./RiskAndControl";
 import RiskAndControlSideBox from "./RiskAndControlSideBox";
 import EmptyData from "./EmptyData";
 import RiskAndControls from "./RiskAndControls";
+import { Row, Col } from "reactstrap";
 
 const RiskAndControlRoute = () => {
   return (
@@ -15,15 +16,17 @@ const RiskAndControlRoute = () => {
 };
 
 const RestOfRiskAndControl = () => (
-  <div className="d-flex">
-    <Route path="/risk-and-control" component={RiskAndControlSideBox} />
-    <div className="w-100 ml-3">
+  <Row>
+    <Col md={3}>
+      <Route path="/risk-and-control" component={RiskAndControlSideBox} />
+    </Col>
+    <Col md={9}>
       <Switch>
         <Route exact path="/risk-and-control/:id" component={RiskAndControl} />
         <Route path="/risk-and-control/" component={EmptyData} />
       </Switch>
-    </div>
-  </div>
+    </Col>
+  </Row>
 );
 
 export default RiskAndControlRoute;
