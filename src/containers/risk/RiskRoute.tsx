@@ -4,25 +4,22 @@ import Risks from "./Risks";
 import CreateRisk from "./CreateRisk";
 import Risk from "./Risk";
 import RiskSideBox from "./components/RiskSideBox";
-// import Policy from "./Policy";
-// import CreatePolicy from "./CreatePolicy";
-// import CreateSubPolicy from "./CreateSubPolicy";
-// import PolicySideBox from "./components/PolicySideBox";
+import { Row, Col } from "reactstrap";
 
 const RiskRoute = () => {
   return (
-    <div className="d-flex">
-      <div>
+    <Row>
+      <Col md={3}>
         <Route path="/risk" component={RiskSideBox} />
-      </div>
-      <div className="w-100 ml-3">
+      </Col>
+      <Col md={9}>
         <Route exact path="/risk" component={Risks} />
         <Switch>
           <Route exact path="/risk/create" component={CreateRisk} />
           <Route exact path="/risk/:id" component={Risk} />
         </Switch>
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
 };
 

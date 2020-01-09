@@ -39,7 +39,7 @@ const Risks = ({ history }: RouteComponentProps) => {
         <title>Risks - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb crumbs={[["/risk", "Risks"]]} />
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="d-flex justify-content-between align-items-center mb-1">
         <h4>Risks</h4>
         <Link to="/risk/create">
           <Button className="pwc">+ Add Risk</Button>
