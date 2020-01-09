@@ -27,9 +27,8 @@ const Resources = ({ history }: RouteComponentProps) => {
         <title>Resources - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb crumbs={[["/resources", "Resources"]]} />
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="d-flex justify-content-between align-items-center mb-1">
         <h4>Resources</h4>
-
         <Link to="/resources/create">
           <Button className="pwc">+ Add Resource</Button>
         </Link>
