@@ -7,12 +7,22 @@
   height: 80vh;
   overflow-y: scroll;
 
-  .side-box__searchbar {
-    padding: 10px;
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 10px;
+    height: 8px;
+    border-radius: 10px;
+    background-color: grey;
   }
 
-  .side-box__list {
-    overflow-y: scroll;
+  &::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background-color: darkgrey;
+    border: 3px solid grey;
+  }
+
+  .side-box__searchbar {
+    padding: 10px;
   }
 
   .side-box__item {
