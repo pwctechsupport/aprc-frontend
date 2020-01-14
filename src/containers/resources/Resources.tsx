@@ -38,6 +38,7 @@ const Resources = ({ history }: RouteComponentProps) => {
         <thead>
           <tr>
             <th>Name</th>
+            <th>File Type</th>
             <th />
           </tr>
         </thead>
@@ -51,6 +52,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                   onClick={() => history.push(`/resources/${resource.id}`)}
                 >
                   <td>{resource.name}</td>
+                  <td>{resource.resourceFileType}</td>
                   <td className="action">
                     <div className="d-flex align-items-center">
                       <Button color="">

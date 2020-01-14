@@ -17,6 +17,7 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int) {
         name
       }
       resuploadUrl
+      resourceFileType
       createdAt
       updatedAt
     }
@@ -83,6 +84,7 @@ query resource($id: ID!) {
     # upload ga ada
     # status ga ada
     resuploadUrl
+    resourceFileType
     rating
     totalRating
     visit
