@@ -14,7 +14,7 @@ import DialogButton from "../../shared/components/DialogButton";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Resources = ({ history }: RouteComponentProps) => {
-  const { data, loading } = useResourcesQuery();
+  const { data, loading } = useResourcesQuery({ fetchPolicy: "network-only" });
   const [destroyResource, destroyM] = useDestroyResourceMutation({
     refetchQueries: ["resources"],
     onCompleted: () => toast.success("Delete Success"),

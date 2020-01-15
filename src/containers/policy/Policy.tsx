@@ -16,7 +16,6 @@ import { MdEmail, MdModeEdit } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   CreateResourceInput,
@@ -44,6 +43,7 @@ import {
   previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
 import { formatPolicyChart } from "../../shared/utils/formatPolicy";
+import { notifyGraphQLErrors } from "../../shared/utils/notif";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
@@ -51,6 +51,7 @@ import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import Modal from "../../shared/components/Modal";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -114,7 +115,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       toast.success("Resource Added");
       toggleAddResourceModal();
     },
-    onError: _ => toast.error("Failed to add resource"),
+    onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
     refetchQueries: ["policy"]
   });
@@ -164,7 +165,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       name: values.name,
       resuploadBase64: values.resuploadBase64,
       resuploadFileName: values.resuploadFileName,
-      policyIds: values.policyId ? [values.policyId] : [],
+      policyIds: values.policyIds,
       controlIds: values.controlId ? [values.controlId] : [],
       businessProcessId: values.businessProcessId
     };
@@ -540,17 +541,19 @@ const Policy = ({ match, history }: RouteComponentProps) => {
 
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
 
-      <Modal isOpen={addResourceModal} toggle={toggleAddResourceModal}>
-        <ModalHeader>Add Resource</ModalHeader>
-        <ModalBody>
-          <ResourceForm
-            defaultValues={{
-              policyId: id
-            }}
-            onSubmit={handleCreateResource}
-            submitting={createResourceM.loading}
-          />
-        </ModalBody>
+      <Modal
+        isOpen={addResourceModal}
+        toggle={toggleAddResourceModal}
+        title="Add Resource"
+      >
+        <ResourceForm
+          defaultValues={{
+            policy: [{ value: id, label: title }],
+            policyIds: [id]
+          }}
+          onSubmit={handleCreateResource}
+          submitting={createResourceM.loading}
+        />
       </Modal>
     </div>
   );

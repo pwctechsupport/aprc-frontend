@@ -9,9 +9,10 @@ import {
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
-import Select from "../../../shared/components/forms/Select";
+import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
+import { capitalCase } from "capital-case";
 
 const ResourceForm = ({
   defaultValues,
@@ -26,7 +27,7 @@ const ResourceForm = ({
   const { data, ...mastersQ } = useResourceFormMasterQuery();
   const masters = {
     policyCategories: Object.entries(Category).map(p => ({
-      label: p[0],
+      label: capitalCase(p[1]),
       value: p[1]
     })),
     policies: oc(data)
@@ -96,6 +97,7 @@ const ResourceForm = ({
   }
 
   const name = oc(defaultValues).name("");
+  const policyIds = oc(defaultValues).policyIds([]);
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -118,16 +120,18 @@ const ResourceForm = ({
       />
       {category !== Category.Flowchart && (
         <Fragment>
-          <Select
-            name="policyId"
-            label="Related Policy"
+          <FormSelect
+            isMulti
+            name="policyIds"
+            label="Related Policies"
+            isLoading={mastersQ.loading}
+            loading={mastersQ.loading}
+            register={register}
+            setValue={setValue}
             options={masters.policies}
-            defaultValue={
-              defaultValues &&
-              masters.policies.find(c => c.value === defaultValues.policyId)
-            }
-            onChange={handleChangeSelect("policyId")}
-            error={oc(errors).policyId.message()}
+            defaultValue={masters.policies.filter(res =>
+              policyIds.includes(res.value)
+            )}
           />
           <Select
             name="controlId"
@@ -195,6 +199,7 @@ export interface ResourceFormValues {
   name: string;
   category: Category;
   policyId: string;
+  policyIds: string[];
   controlId: string;
   businessProcessId: string;
   resuploadBase64?: any;
@@ -202,10 +207,15 @@ export interface ResourceFormValues {
   resuploadUrl?: string;
 }
 
-interface ResourceFormDefaultValues {
+export interface ResourceFormDefaultValues {
   name?: string;
   category?: Category;
   policyId?: string;
+  policy?: Array<{
+    label: string;
+    value: string;
+  }>;
+  policyIds?: string[];
   controlId?: string;
   businessProcessId?: string;
   resuploadBase64?: any;
