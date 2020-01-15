@@ -50,6 +50,10 @@ const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
     title: "",
     description: "",
     referenceIds: [],
+    resourceIds: [],
+    businessProcessIds: [],
+    controlIds: [],
+    riskIds: [],
     status: Status.Draft
   };
 
