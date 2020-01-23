@@ -80,21 +80,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     variables: { id },
     fetchPolicy: "network-only"
   });
-  const [update, updateState] = useUpdatePolicyMutation({
-    onCompleted: () => {
-      toast.success("Update Success");
-      toggleEditMode();
-    },
-    onError: () => toast.error("Update Failed"),
-    refetchQueries: ["policies", "policyTree", "policy"],
-    awaitRefetchQueries: true
-  });
-  const [destroy] = useDestroyPolicyMutation({
-    onCompleted: () => toast.success("Delete Success"),
-    onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["policy"],
-    awaitRefetchQueries: true
-  });
+
+  // Delete current policy
   const [destroyMain] = useDestroyPolicyMutation({
     onCompleted: () => {
       toast.success("Delete Success");
@@ -104,30 +91,39 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     refetchQueries: ["policies", "policyTree"],
     awaitRefetchQueries: true
   });
+  function handleDeleteMain() {
+    destroyMain({ variables: { id } });
+  }
+
+  // Delete child policy
+  const [destroy] = useDestroyPolicyMutation({
+    onCompleted: () => toast.success("Delete Success"),
+    onError: () => toast.error("Delete Failed"),
+    refetchQueries: ["policy"],
+    awaitRefetchQueries: true
+  });
+  function handleDelete(id: string) {
+    destroy({ variables: { id } });
+  }
+
+  // Bookmark policy
   const [addBookmark] = useCreateBookmarkPolicyMutation({
     onCompleted: _ => toast.success("Added to bookmark"),
     onError: _ => toast.error("Failed to add bookmark"),
     awaitRefetchQueries: true,
     refetchQueries: ["bookmarkPolicies"]
   });
-  const [createResource, createResourceM] = useCreateResourceMutation({
-    onCompleted: _ => {
-      toast.success("Resource Added");
-      toggleAddResourceModal();
+
+  // Update Policy / Sub-Policy
+  const [update, updateState] = useUpdatePolicyMutation({
+    onCompleted: () => {
+      toast.success("Update Success");
+      toggleEditMode();
     },
-    onError: notifyGraphQLErrors,
-    awaitRefetchQueries: true,
-    refetchQueries: ["policy"]
+    onError: () => toast.error("Update Failed"),
+    refetchQueries: ["policies", "policyTree", "policy"],
+    awaitRefetchQueries: true
   });
-
-  function handleDeleteMain() {
-    destroyMain({ variables: { id } });
-  }
-
-  function handleDelete(id: string) {
-    destroy({ variables: { id } });
-  }
-
   function handleUpdate(values: PolicyFormValues) {
     update({
       variables: {
@@ -141,7 +137,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       }
     });
   }
-
   function handleUpdateSubPolicy(values: SubPolicyFormValues) {
     update({
       variables: {
@@ -159,6 +154,16 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     });
   }
 
+  // Add Resource for current policy
+  const [createResource, createResourceM] = useCreateResourceMutation({
+    onCompleted: _ => {
+      toast.success("Resource Added");
+      toggleAddResourceModal();
+    },
+    onError: notifyGraphQLErrors,
+    awaitRefetchQueries: true,
+    refetchQueries: ["policy"]
+  });
   function handleCreateResource(values: ResourceFormValues) {
     const input: CreateResourceInput = {
       category: values.category,
@@ -169,7 +174,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       controlIds: values.controlId ? [values.controlId] : [],
       businessProcessId: values.businessProcessId
     };
-
     createResource({ variables: { input } });
   }
 

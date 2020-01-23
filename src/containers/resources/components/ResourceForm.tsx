@@ -1,3 +1,4 @@
+import { capitalCase } from "capital-case";
 import React, { Fragment, useEffect } from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
@@ -5,14 +6,20 @@ import { oc } from "ts-optchain";
 import * as yup from "yup";
 import {
   Category,
+  PoliciesDocument,
   useResourceFormMasterQuery
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
+import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
-import Select, { FormSelect } from "../../../shared/components/forms/Select";
+import Select from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { toBase64, toLabelValue } from "../../../shared/formatter";
-import { capitalCase } from "capital-case";
+import {
+  toBase64,
+  toLabelValue,
+  ToLabelValueOutput
+} from "../../../shared/formatter";
+import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 
 const ResourceForm = ({
   defaultValues,
@@ -88,6 +95,22 @@ const ResourceForm = ({
     onSubmit && onSubmit(data);
   }
 
+  const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
+  async function handleGetPolicies(
+    title_cont: string = ""
+  ): Promise<Array<ToLabelValueOutput>> {
+    try {
+      const { data } = await getPolicies({
+        filter: { title_cont }
+      });
+      return oc(data)
+        .policies.collection([])
+        .map(toLabelValue);
+    } catch (error) {
+      return [];
+    }
+  }
+
   if (mastersQ.loading) {
     return (
       <div>
@@ -98,6 +121,7 @@ const ResourceForm = ({
 
   const name = oc(defaultValues).name("");
   const policyIds = oc(defaultValues).policyIds([]);
+  const policy = oc(defaultValues).policy([]);
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -120,7 +144,7 @@ const ResourceForm = ({
       />
       {category !== Category.Flowchart && (
         <Fragment>
-          <FormSelect
+          {/* <FormSelect
             isMulti
             name="policyIds"
             label="Related Policies"
@@ -132,6 +156,22 @@ const ResourceForm = ({
             defaultValue={masters.policies.filter(res =>
               policyIds.includes(res.value)
             )}
+          /> */}
+          <AsyncSelect
+            name="policyIds"
+            label="Related Policies"
+            register={register}
+            setValue={setValue}
+            cacheOptions
+            loadOptions={handleGetPolicies}
+            defaultOptions
+            defaultValue={
+              policy.length
+                ? policy
+                : masters.policies.filter(res => policyIds.includes(res.value))
+            }
+            isMulti
+            onInputChange={handleChangeSelect("policyIds")}
           />
           <Select
             name="controlId"
