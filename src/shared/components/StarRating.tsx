@@ -57,6 +57,7 @@ const StarRatingContainer = styled.div`
   position: relative;
   margin: 0;
   padding: 0;
+  display: inline-block;
 `;
 const FillRating = styled.div<{ rating: number | null | undefined }>`
   color: #e7711b;
