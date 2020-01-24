@@ -52,6 +52,7 @@ import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Modal from "../../shared/components/Modal";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -460,17 +461,25 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           }}
         >
           {collapse.length === initialCollapse.length ? (
-            <FaEyeSlash size={20} />
+            <Tooltip description="Hide All Attribute">
+              <FaEyeSlash size={20} />
+            </Tooltip>
           ) : (
-            <FaEye size={20} />
+            <Tooltip description="Show All Attribute">
+              <FaEye size={20} />
+            </Tooltip>
           )}
         </Button>
 
         <Button onClick={toggleEditMode} color="transparent">
-          <MdModeEdit size={22} />
+          <Tooltip description="Edit Policy">
+            <MdModeEdit size={22} />
+          </Tooltip>
         </Button>
         <DialogButton onConfirm={handleDeleteMain} className="mr-3">
-          <FaTrash className="clickable text-red" />
+          <Tooltip description="Delete Policy">
+            <FaTrash className="clickable text-red" />
+          </Tooltip>
         </DialogButton>
         <Menu
           data={[

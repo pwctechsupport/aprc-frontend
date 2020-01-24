@@ -1,5 +1,6 @@
 import React from "react";
-import { FaTrash, FaDownload, FaFileAlt } from "react-icons/fa";
+import Helmet from "react-helmet";
+import { FaFile, FaTrash } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
@@ -7,11 +8,11 @@ import {
   useDestroyResourceMutation,
   useResourcesQuery
 } from "../../generated/graphql";
-import Table from "../../shared/components/Table";
-import Button from "../../shared/components/Button";
-import Helmet from "react-helmet";
-import DialogButton from "../../shared/components/DialogButton";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import Button from "../../shared/components/Button";
+import DialogButton from "../../shared/components/DialogButton";
+import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const { data, loading } = useResourcesQuery({ fetchPolicy: "network-only" });
@@ -54,39 +55,26 @@ const Resources = ({ history }: RouteComponentProps) => {
                   <td className="action">
                     <div className="d-flex align-items-center">
                       <Button color="">
-                        <a
-                          href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(
-                            event: React.MouseEvent<
-                              HTMLAnchorElement,
-                              MouseEvent
-                            >
-                          ) => {
-                            event.stopPropagation();
-                          }}
+                        <Tooltip
+                          description="Open File"
+                          subtitle="Will be download if file type not supported"
                         >
-                          <FaFileAlt size={16} />
-                        </a>
-                      </Button>
-                      <Button color="">
-                        <a
-                          href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(
-                            event: React.MouseEvent<
-                              HTMLAnchorElement,
-                              MouseEvent
-                            >
-                          ) => {
-                            event.stopPropagation();
-                          }}
-                          download
-                        >
-                          <FaDownload size={16} />
-                        </a>
+                          <a
+                            href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(
+                              event: React.MouseEvent<
+                                HTMLAnchorElement,
+                                MouseEvent
+                              >
+                            ) => {
+                              event.stopPropagation();
+                            }}
+                          >
+                            <FaFile size={16} />
+                          </a>
+                        </Tooltip>
                       </Button>
                       <DialogButton
                         onConfirm={() =>
@@ -95,7 +83,9 @@ const Resources = ({ history }: RouteComponentProps) => {
                         loading={destroyM.loading}
                         message={`Delete resource "${resource.name}"?`}
                       >
-                        <FaTrash className="clickable text-red" />
+                        <Tooltip description="Delete Resource">
+                          <FaTrash className="clickable text-red" />
+                        </Tooltip>
                       </DialogButton>
                     </div>
                   </td>

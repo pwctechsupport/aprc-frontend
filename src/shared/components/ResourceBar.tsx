@@ -1,12 +1,14 @@
 import React from "react";
-import { FaDownload, FaFile } from "react-icons/fa";
+import { FaFile } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Button } from "reactstrap";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
 import { useCreateResourceRatingMutation } from "../../generated/graphql";
 import { useSelector } from "../hooks/useSelector";
 import StarRating from "./StarRating";
+import Tooltip from "./Tooltip";
 
 const ResourceBar = ({
   name,
@@ -46,24 +48,31 @@ const ResourceBar = ({
       </ResourceBarDivider>
 
       <ResourceBarDivider width="20" align="right">
-        <a
+        {/* <a
           href={`http://mandalorian.rubyh.co${resuploadUrl}`}
           target="_blank"
           rel="noopener noreferrer"
           className="mx-2"
         >
           <FaFile />
-        </a>
-        <a
-          href={`http://mandalorian.rubyh.co${resuploadUrl}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          download={`Pwc-Resource ${name}`}
-        >
-          <FaDownload />
-        </a>
+        </a> */}
+
+        <Button color="transparent">
+          <Tooltip
+            description="Open File"
+            subtitle="Will be download if file type not supported"
+          >
+            <a
+              href={`http://mandalorian.rubyh.co${resuploadUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              download={`Pwc-Resource ${name}`}
+            >
+              <FaFile />
+            </a>
+          </Tooltip>
+        </Button>
       </ResourceBarDivider>
-      <div></div>
 
       <ResourceBarDivider width="10">
         <StarRating
