@@ -1,32 +1,33 @@
-import React from "react";
-import { FaTrash, FaDownload, FaFileAlt } from "react-icons/fa";
-import { Link, RouteComponentProps } from "react-router-dom";
-import { toast } from "react-toastify";
-import { oc } from "ts-optchain";
+import React from 'react'
+import { FaTrash, FaDownload, FaFileAlt } from 'react-icons/fa'
+import { Link, RouteComponentProps } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { oc } from 'ts-optchain'
 import {
   useDestroyResourceMutation,
-  useResourcesQuery
-} from "../../generated/graphql";
-import Table from "../../shared/components/Table";
-import Button from "../../shared/components/Button";
-import Helmet from "react-helmet";
-import DialogButton from "../../shared/components/DialogButton";
-import BreadCrumb from "../../shared/components/BreadCrumb";
+  useResourcesQuery,
+} from '../../generated/graphql'
+import Table from '../../shared/components/Table'
+import Button from '../../shared/components/Button'
+import Helmet from 'react-helmet'
+import DialogButton from '../../shared/components/DialogButton'
+import BreadCrumb from '../../shared/components/BreadCrumb'
+import { capitalCase } from 'capital-case'
 
 const Resources = ({ history }: RouteComponentProps) => {
-  const { data, loading } = useResourcesQuery();
+  const { data, loading } = useResourcesQuery()
   const [destroyResource, destroyM] = useDestroyResourceMutation({
-    refetchQueries: ["resources"],
-    onCompleted: () => toast.success("Delete Success"),
-    onError: () => toast.error("Delete Failed")
-  });
+    refetchQueries: ['resources'],
+    onCompleted: () => toast.success('Delete Success'),
+    onError: () => toast.error('Delete Failed'),
+  })
 
   return (
     <div>
       <Helmet>
         <title>Resources - PricewaterhouseCoopers</title>
       </Helmet>
-      <BreadCrumb crumbs={[["/resources", "Resources"]]} />
+      <BreadCrumb crumbs={[['/resources', 'Resources']]} />
       <div className="d-flex justify-content-between align-items-center mb-1">
         <h4>Resources</h4>
         <Link to="/resources/create">
@@ -39,6 +40,9 @@ const Resources = ({ history }: RouteComponentProps) => {
           <tr>
             <th>Name</th>
             <th>File Type</th>
+            <th>Category</th>
+            <th>Related Control</th>
+            <th>Related Policy</th>
             <th />
           </tr>
         </thead>
@@ -53,6 +57,14 @@ const Resources = ({ history }: RouteComponentProps) => {
                 >
                   <td>{resource.name}</td>
                   <td>{resource.resourceFileType}</td>
+                  <td>{capitalCase(resource.category || '')}</td>
+                  <td>
+                    {resource.controls
+                      ?.map(c => c.typeOfControl)
+                      .map(c => capitalCase(c || ''))
+                      .join(', ')}
+                  </td>
+                  <td>{resource.policies?.map(p => p.title).join(', ')}</td>
                   <td className="action">
                     <div className="d-flex align-items-center">
                       <Button color="">
@@ -66,7 +78,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                               MouseEvent
                             >
                           ) => {
-                            event.stopPropagation();
+                            event.stopPropagation()
                           }}
                         >
                           <FaFileAlt size={16} />
@@ -83,7 +95,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                               MouseEvent
                             >
                           ) => {
-                            event.stopPropagation();
+                            event.stopPropagation()
                           }}
                           download
                         >
@@ -102,12 +114,12 @@ const Resources = ({ history }: RouteComponentProps) => {
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </Table>
     </div>
-  );
-};
+  )
+}
 
-export default Resources;
+export default Resources
