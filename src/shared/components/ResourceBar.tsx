@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
 import { useCreateResourceRatingMutation } from "../../generated/graphql";
-import { useSelector } from "../hooks/useSelector";
+// import { useSelector } from "../hooks/useSelector";
 import StarRating from "./StarRating";
 
 const ResourceBar = ({
@@ -16,7 +16,7 @@ const ResourceBar = ({
   visit = 0,
   totalRating = 0
 }: ResourceBarProps) => {
-  const user = useSelector(state => state.auth.user);
+  // const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
     onCompleted: res => {
       const ratingGiven = oc(res).createResourceRating.resourceRating.rating(0);
@@ -31,8 +31,8 @@ const ResourceBar = ({
       variables: {
         input: {
           resourceId: id,
-          rating: nextValue,
-          userId: oc(user).id("")
+          rating: nextValue
+          // userId: oc(user).id("")
         }
       }
     });
