@@ -32,14 +32,25 @@ export const date = (
   }).format(input);
 };
 
-export const toLabelValue = ({ id, name }: ToLabelValueValues) => ({
-  label: name,
-  value: id
-});
+export const toLabelValue = ({
+  id,
+  name,
+  title
+}: ToLabelValueInput): ToLabelValueOutput => {
+  return {
+    label: name || title || "",
+    value: id
+  };
+};
 
-interface ToLabelValueValues {
+interface ToLabelValueInput {
   id: string;
   name: string;
+  title?: string | undefined | null;
+}
+export interface ToLabelValueOutput {
+  label: string;
+  value: string;
 }
 
 export const prepDefaultValue = (value: any, options: Options) => {

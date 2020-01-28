@@ -18,7 +18,10 @@ import DialogButton from "../../shared/components/DialogButton";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import ResourceBox from "./components/ResourceBox";
-import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
+import ResourceForm, {
+  ResourceFormValues,
+  ResourceFormDefaultValues
+} from "./components/ResourceForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import { notifyGraphQLErrors } from "../../shared/utils/notif";
 
@@ -53,7 +56,7 @@ const Resource = ({ match }: RouteComponentProps) => {
   };
 
   const name = oc(data).resource.name("");
-  const defaultValues: ResourceFormValues = {
+  const defaultValues: ResourceFormDefaultValues = {
     name,
     category: oc(data).resource.category(Category.References) as Category,
     businessProcessId: oc(data).resource.businessProcess.id(""),
@@ -61,10 +64,9 @@ const Resource = ({ match }: RouteComponentProps) => {
       .resource.controls([])
       .map(p => p.id)
       .pop() as string,
-    policyId: oc(data)
+    policyIds: oc(data)
       .resource.policies([])
-      .map(p => p.id)
-      .pop() as string,
+      .map(p => p.id),
     resuploadUrl: oc(data).resource.resuploadUrl("")
   };
 
@@ -73,7 +75,7 @@ const Resource = ({ match }: RouteComponentProps) => {
       id: id,
       category: data.category,
       name: data.name,
-      policyIds: data.policyId ? [data.policyId] : undefined,
+      policyIds: data.policyIds,
       controlIds: data.controlId ? [data.controlId] : undefined,
       businessProcessId: data.businessProcessId,
       resuploadBase64: data.resuploadBase64,

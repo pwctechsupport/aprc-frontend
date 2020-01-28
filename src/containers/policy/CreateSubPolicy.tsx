@@ -15,6 +15,14 @@ import { oc } from "ts-optchain";
 
 const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
+
+  // Fetch parent policy
+  const { data } = usePolicyQuery({
+    variables: { id },
+    fetchPolicy: "network-only"
+  });
+
+  // Create sub-policy handler
   const [create] = useCreateSubPolicyMutation({
     onCompleted: () => {
       toast.success("Berhasil");
@@ -24,32 +32,23 @@ const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
     refetchQueries: [{ query: PolicyDocument, variables: { id } }],
     awaitRefetchQueries: true
   });
-
-  const { data } = usePolicyQuery({
-    variables: { id },
-    fetchPolicy: "network-only"
-  });
-
   function createSubPolicy(values: SubPolicyFormValues) {
-    create({
-      variables: {
-        input: {
-          parentId: values.parentId,
-          title: values.title,
-          description: values.description,
-          referenceIds: values.referenceIds,
-          status: values.status
-        }
-      }
-    });
+    create({ variables: { input: values } });
   }
 
+  // Extract necessary variables for UI
   const title = oc(data).policy.title("");
+
+  // Extract defaultValues for Form
   const defaultValues = {
     parentId: id,
     title: "",
     description: "",
     referenceIds: [],
+    resourceIds: [],
+    businessProcessIds: [],
+    controlIds: [],
+    riskIds: [],
     status: Status.Draft
   };
 

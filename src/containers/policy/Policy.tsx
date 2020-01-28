@@ -16,7 +16,6 @@ import { MdEmail, MdModeEdit } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   CreateResourceInput,
@@ -44,6 +43,7 @@ import {
   previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
 import { formatPolicyChart } from "../../shared/utils/formatPolicy";
+import { notifyGraphQLErrors } from "../../shared/utils/notif";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
@@ -51,6 +51,8 @@ import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import Modal from "../../shared/components/Modal";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -79,21 +81,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     variables: { id },
     fetchPolicy: "network-only"
   });
-  const [update, updateState] = useUpdatePolicyMutation({
-    onCompleted: () => {
-      toast.success("Update Success");
-      toggleEditMode();
-    },
-    onError: () => toast.error("Update Failed"),
-    refetchQueries: ["policies", "policyTree", "policy"],
-    awaitRefetchQueries: true
-  });
-  const [destroy] = useDestroyPolicyMutation({
-    onCompleted: () => toast.success("Delete Success"),
-    onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["policy"],
-    awaitRefetchQueries: true
-  });
+
+  // Delete current policy
   const [destroyMain] = useDestroyPolicyMutation({
     onCompleted: () => {
       toast.success("Delete Success");
@@ -103,30 +92,39 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     refetchQueries: ["policies", "policyTree"],
     awaitRefetchQueries: true
   });
+  function handleDeleteMain() {
+    destroyMain({ variables: { id } });
+  }
+
+  // Delete child policy
+  const [destroy] = useDestroyPolicyMutation({
+    onCompleted: () => toast.success("Delete Success"),
+    onError: () => toast.error("Delete Failed"),
+    refetchQueries: ["policy"],
+    awaitRefetchQueries: true
+  });
+  function handleDelete(id: string) {
+    destroy({ variables: { id } });
+  }
+
+  // Bookmark policy
   const [addBookmark] = useCreateBookmarkPolicyMutation({
     onCompleted: _ => toast.success("Added to bookmark"),
     onError: _ => toast.error("Failed to add bookmark"),
     awaitRefetchQueries: true,
     refetchQueries: ["bookmarkPolicies"]
   });
-  const [createResource, createResourceM] = useCreateResourceMutation({
-    onCompleted: _ => {
-      toast.success("Resource Added");
-      toggleAddResourceModal();
+
+  // Update Policy / Sub-Policy
+  const [update, updateState] = useUpdatePolicyMutation({
+    onCompleted: () => {
+      toast.success("Update Success");
+      toggleEditMode();
     },
-    onError: _ => toast.error("Failed to add resource"),
-    awaitRefetchQueries: true,
-    refetchQueries: ["policy"]
+    onError: () => toast.error("Update Failed"),
+    refetchQueries: ["policies", "policyTree", "policy"],
+    awaitRefetchQueries: true
   });
-
-  function handleDeleteMain() {
-    destroyMain({ variables: { id } });
-  }
-
-  function handleDelete(id: string) {
-    destroy({ variables: { id } });
-  }
-
   function handleUpdate(values: PolicyFormValues) {
     update({
       variables: {
@@ -140,7 +138,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       }
     });
   }
-
   function handleUpdateSubPolicy(values: SubPolicyFormValues) {
     update({
       variables: {
@@ -158,17 +155,26 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     });
   }
 
+  // Add Resource for current policy
+  const [createResource, createResourceM] = useCreateResourceMutation({
+    onCompleted: _ => {
+      toast.success("Resource Added");
+      toggleAddResourceModal();
+    },
+    onError: notifyGraphQLErrors,
+    awaitRefetchQueries: true,
+    refetchQueries: ["policy"]
+  });
   function handleCreateResource(values: ResourceFormValues) {
     const input: CreateResourceInput = {
       category: values.category,
       name: values.name,
       resuploadBase64: values.resuploadBase64,
       resuploadFileName: values.resuploadFileName,
-      policyIds: values.policyId ? [values.policyId] : [],
+      policyIds: values.policyIds,
       controlIds: values.controlId ? [values.controlId] : [],
       businessProcessId: values.businessProcessId
     };
-
     createResource({ variables: { input } });
   }
 
@@ -455,17 +461,25 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           }}
         >
           {collapse.length === initialCollapse.length ? (
-            <FaEyeSlash size={20} />
+            <Tooltip description="Hide All Attribute">
+              <FaEyeSlash size={20} />
+            </Tooltip>
           ) : (
-            <FaEye size={20} />
+            <Tooltip description="Show All Attribute">
+              <FaEye size={20} />
+            </Tooltip>
           )}
         </Button>
 
         <Button onClick={toggleEditMode} color="transparent">
-          <MdModeEdit size={22} />
+          <Tooltip description="Edit Policy">
+            <MdModeEdit size={22} />
+          </Tooltip>
         </Button>
         <DialogButton onConfirm={handleDeleteMain} className="mr-3">
-          <FaTrash className="clickable text-red" />
+          <Tooltip description="Delete Policy">
+            <FaTrash className="clickable text-red" />
+          </Tooltip>
         </DialogButton>
         <Menu
           data={[
@@ -540,17 +554,19 @@ const Policy = ({ match, history }: RouteComponentProps) => {
 
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
 
-      <Modal isOpen={addResourceModal} toggle={toggleAddResourceModal}>
-        <ModalHeader>Add Resource</ModalHeader>
-        <ModalBody>
-          <ResourceForm
-            defaultValues={{
-              policyId: id
-            }}
-            onSubmit={handleCreateResource}
-            submitting={createResourceM.loading}
-          />
-        </ModalBody>
+      <Modal
+        isOpen={addResourceModal}
+        toggle={toggleAddResourceModal}
+        title="Add Resource"
+      >
+        <ResourceForm
+          defaultValues={{
+            policy: [{ value: id, label: title }],
+            policyIds: [id]
+          }}
+          onSubmit={handleCreateResource}
+          submitting={createResourceM.loading}
+        />
       </Modal>
     </div>
   );

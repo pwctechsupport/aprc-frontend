@@ -41,7 +41,7 @@ const DialogButton = ({
 
   return (
     <Fragment>
-      <Button {...btnProps} color={color} onClick={_onClick}>
+      <Button {...btnProps} loading={loading} color={color} onClick={_onClick}>
         {children}
       </Button>
       <ModalDialog

@@ -1,3 +1,4 @@
+import { capitalCase } from "capital-case";
 import React, { Fragment, useEffect } from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
@@ -5,13 +6,20 @@ import { oc } from "ts-optchain";
 import * as yup from "yup";
 import {
   Category,
+  PoliciesDocument,
   useResourceFormMasterQuery
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
+import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { toBase64, toLabelValue } from "../../../shared/formatter";
+import {
+  toBase64,
+  toLabelValue,
+  ToLabelValueOutput
+} from "../../../shared/formatter";
+import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 
 const ResourceForm = ({
   defaultValues,
@@ -26,7 +34,7 @@ const ResourceForm = ({
   const { data, ...mastersQ } = useResourceFormMasterQuery();
   const masters = {
     policyCategories: Object.entries(Category).map(p => ({
-      label: p[0],
+      label: capitalCase(p[1]),
       value: p[1]
     })),
     policies: oc(data)
@@ -87,6 +95,22 @@ const ResourceForm = ({
     onSubmit && onSubmit(data);
   }
 
+  const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
+  async function handleGetPolicies(
+    title_cont: string = ""
+  ): Promise<Array<ToLabelValueOutput>> {
+    try {
+      const { data } = await getPolicies({
+        filter: { title_cont }
+      });
+      return oc(data)
+        .policies.collection([])
+        .map(toLabelValue);
+    } catch (error) {
+      return [];
+    }
+  }
+
   if (mastersQ.loading) {
     return (
       <div>
@@ -96,6 +120,8 @@ const ResourceForm = ({
   }
 
   const name = oc(defaultValues).name("");
+  const policyIds = oc(defaultValues).policyIds([]);
+  const policy = oc(defaultValues).policy([]);
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -118,16 +144,34 @@ const ResourceForm = ({
       />
       {category !== Category.Flowchart && (
         <Fragment>
-          <Select
-            name="policyId"
-            label="Related Policy"
+          {/* <FormSelect
+            isMulti
+            name="policyIds"
+            label="Related Policies"
+            isLoading={mastersQ.loading}
+            loading={mastersQ.loading}
+            register={register}
+            setValue={setValue}
             options={masters.policies}
+            defaultValue={masters.policies.filter(res =>
+              policyIds.includes(res.value)
+            )}
+          /> */}
+          <AsyncSelect
+            name="policyIds"
+            label="Related Policies"
+            register={register}
+            setValue={setValue}
+            cacheOptions
+            loadOptions={handleGetPolicies}
+            defaultOptions
             defaultValue={
-              defaultValues &&
-              masters.policies.find(c => c.value === defaultValues.policyId)
+              policy.length
+                ? policy
+                : masters.policies.filter(res => policyIds.includes(res.value))
             }
-            onChange={handleChangeSelect("policyId")}
-            error={oc(errors).policyId.message()}
+            isMulti
+            onInputChange={handleChangeSelect("policyIds")}
           />
           <Select
             name="controlId"
@@ -195,6 +239,7 @@ export interface ResourceFormValues {
   name: string;
   category: Category;
   policyId: string;
+  policyIds: string[];
   controlId: string;
   businessProcessId: string;
   resuploadBase64?: any;
@@ -202,10 +247,15 @@ export interface ResourceFormValues {
   resuploadUrl?: string;
 }
 
-interface ResourceFormDefaultValues {
+export interface ResourceFormDefaultValues {
   name?: string;
   category?: Category;
   policyId?: string;
+  policy?: Array<{
+    label: string;
+    value: string;
+  }>;
+  policyIds?: string[];
   controlId?: string;
   businessProcessId?: string;
   resuploadBase64?: any;

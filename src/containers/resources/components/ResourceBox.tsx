@@ -65,6 +65,7 @@ const ResourceBox = ({
         From {totalRating} user(s)
       </Tooltip>
       <ResourceBoxImagePreview
+        src={`http://mandalorian.rubyh.co${resuploadUrl}`}
         onClick={() =>
           handleDownload(`http://mandalorian.rubyh.co${resuploadUrl}`, name)
         }
@@ -117,10 +118,9 @@ const ResourceBoxMeta = styled.div`
   background: white;
 `;
 
-const ResourceBoxImagePreview = styled.div`
+const ResourceBoxImagePreview = styled.img`
   width: 100%;
-  height: 100%;
-  background: url("/dummy-pdf.jpg") no-repeat center;
+  border-image-repeat: stretch;
   cursor: pointer;
 `;
 
