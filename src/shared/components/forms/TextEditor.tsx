@@ -1,62 +1,69 @@
-import React from "react";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@sarhanm/ckeditor5-build-classic-full-with-base64-upload";
-import classnames from "classnames";
-import { Class } from "@babel/types";
+import React from 'react'
+import classnames from 'classnames'
+import Quill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
-interface TextEditorProps {
-  wrapperClassName?: string;
-  editor?: Class;
-  data?: string;
-  onChange?: (event: any, editor: any) => void;
-  invalid?: boolean;
+export interface TextEditorProps {
+  wrapperClassName?: string
+  data?: string
+  onChange?: (content: string) => void
+  invalid?: boolean
 }
 
 const TextEditor = ({
-  editor = ClassicEditor,
   data,
   onChange,
   wrapperClassName,
-  invalid
+  invalid,
 }: TextEditorProps) => {
   return (
     <div
       className={classnames([
-        "editor-wrapper",
+        'editor-wrapper',
         wrapperClassName,
-        invalid && "invalid"
+        invalid && 'invalid',
       ])}
     >
-      <CKEditor
-        plugin={[]}
-        editor={editor}
-        config={config}
-        data={data}
+      <Quill
+        value={data}
         onChange={onChange}
+        modules={{
+          toolbar: [
+            [{ header: [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+            [{color: []}, {background: []}],
+            [{ 'font': [] }],
+            [{ 'align': [] }],
+            [
+              { list: 'ordered' },
+              { list: 'bullet' },
+              { indent: '-1' },
+              { indent: '+1' },
+            ],
+            ['link', 'image'],
+            ['clean'],
+          ],
+        }}
+        formats={[
+          'header',
+          'bold',
+          'italic',
+          'underline',
+          'color',
+          'background',
+          'font',
+          'align',
+          'strike',
+          'blockquote',
+          'list',
+          'bullet',
+          'indent',
+          'link',
+          'image',
+        ]}
       />
     </div>
-  );
-};
+  )
+}
 
-const config = {
-  toolbar: [
-    "undo",
-    "redo",
-    "|",
-    "heading",
-    "fontSize",
-    "|",
-    "bold",
-    "underline",
-    "italic",
-    "blockQuote",
-    "|",
-    "numberedList",
-    "bulletedList",
-    "|",
-    "link",
-    "imageUpload"
-  ]
-};
-
-export default TextEditor;
+export default TextEditor

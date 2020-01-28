@@ -75,8 +75,7 @@ const SubPolicyForm = ({
     };
   }
 
-  function handleEditorChange(event: any, editor: any) {
-    const data = editor.getData();
+  function handleEditorChange(data: string) {
     setValue("description", data);
   }
 
