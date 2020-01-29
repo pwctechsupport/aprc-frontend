@@ -5,8 +5,8 @@ import { Tooltip } from "reactstrap";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
 import { useCreateResourceRatingMutation } from "../../../generated/graphql";
-import { useSelector } from "../../../shared/hooks/useSelector";
 import StarRating from "../../../shared/components/StarRating";
+// import { useSelector } from "../../../shared/hooks/useSelector";
 
 const ResourceBox = ({
   id,
@@ -20,7 +20,7 @@ const ResourceBox = ({
   const toggle = () => setTooltipOpen(!tooltipOpen);
   const tooltipId = "resourceBarTooltip" + id;
 
-  const user = useSelector(state => state.auth.user);
+  // const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
     onCompleted: res => {
       const ratingGiven = oc(res).createResourceRating.resourceRating.rating(0);
@@ -35,8 +35,7 @@ const ResourceBox = ({
       variables: {
         input: {
           resourceId: id,
-          rating: nextValue,
-          userId: oc(user).id("")
+          rating: nextValue
         }
       }
     });

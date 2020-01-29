@@ -33,8 +33,7 @@ const PolicyForm = ({
     register({ name: "status" });
   }, [register]);
 
-  function onChangeEditor(event: any, editor: any) {
-    const data = editor.getData();
+  function onChangeEditor(data: string) {
     setValue("description", data);
   }
 

@@ -1,3 +1,4 @@
+import { capitalCase } from "capital-case";
 import React from "react";
 import Helmet from "react-helmet";
 import { FaFile, FaTrash } from "react-icons/fa";
@@ -39,6 +40,10 @@ const Resources = ({ history }: RouteComponentProps) => {
         <thead>
           <tr>
             <th>Name</th>
+            <th>File Type</th>
+            <th>Category</th>
+            <th>Related Control</th>
+            <th>Related Policy</th>
             <th />
           </tr>
         </thead>
@@ -52,6 +57,21 @@ const Resources = ({ history }: RouteComponentProps) => {
                   onClick={() => history.push(`/resources/${resource.id}`)}
                 >
                   <td>{resource.name}</td>
+                  <td>{resource.resourceFileType}</td>
+                  <td>{capitalCase(resource.category || "")}</td>
+                  <td>
+                    {oc(resource)
+                      .controls([])
+                      .map(c => c.typeOfControl)
+                      .map(c => capitalCase(c || ""))
+                      .join(", ")}
+                  </td>
+                  <td>
+                    {oc(resource)
+                      .policies([])
+                      .map(p => p.title)
+                      .join(", ")}
+                  </td>
                   <td className="action">
                     <div className="d-flex align-items-center">
                       <Button color="">

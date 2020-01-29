@@ -1,62 +1,115 @@
-import React from "react";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@sarhanm/ckeditor5-build-classic-full-with-base64-upload";
-import classnames from "classnames";
-import { Class } from "@babel/types";
+import React from 'react'
+import classnames from 'classnames'
+import ReactQuill, { Quill } from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 
-interface TextEditorProps {
-  wrapperClassName?: string;
-  editor?: Class;
-  data?: string;
-  onChange?: (event: any, editor: any) => void;
-  invalid?: boolean;
+export interface TextEditorProps {
+  wrapperClassName?: string
+  data?: string
+  onChange?: (content: string) => void
+  invalid?: boolean
 }
 
+const fontSize = Quill.import('attributors/style/size')
+const defaultFontSize = 13
+const fontSizes = [16, 18, 20, 24, 30]
+fontSize.whitelist = [`${defaultFontSize}px`, ...fontSizes.map(s => `${s}px`)]
+Quill.register(fontSize, true)
+
+const QuillCustomToolbar = () => (
+  <div id="toolbar">
+    <span className="ql-formats">
+      <select className="ql-font"></select>
+    </span>
+    <span className="ql-formats">
+      <select className="ql-header" defaultValue={""} onChange={e => e.persist()}>
+        <option value="1"></option>
+        <option value="2"></option>
+        <option selected></option>
+      </select>
+    </span>
+    <span className="ql-formats">
+      <select className="ql-size">
+        <option selected>{defaultFontSize}</option>
+        {fontSizes.map(size => {
+          return (
+            <option value={`${size}px`}>{size}</option>
+          )
+        })}
+      </select>
+    </span>
+    <span className="ql-formats">
+      <button className="ql-bold"></button>
+      <button className="ql-italic"></button>
+      <button className="ql-underline"></button>
+      <button className="ql-strike"></button>
+      <button className="ql-blockquote"></button>
+    </span>
+    <span className="ql-formats">
+      <select className="ql-color"></select>
+      <select className="ql-background"></select>
+    </span>
+    <span className="ql-formats">
+      <select className="ql-align"></select>
+      <button className="ql-list" value="ordered"></button>
+      <button className="ql-list" value="bullet"></button>
+      <button className="ql-indent" value="-1"></button>
+      <button className="ql-indent" value="+1"></button>
+    </span>
+    <span className="ql-formats">
+      <button className="ql-link"></button>
+      <button className="ql-image"></button>
+    </span>
+    <span className="ql-formats">
+      <button className="ql-clean"></button>
+    </span>
+  </div>
+)
+
 const TextEditor = ({
-  editor = ClassicEditor,
   data,
   onChange,
   wrapperClassName,
-  invalid
+  invalid,
 }: TextEditorProps) => {
   return (
     <div
       className={classnames([
-        "editor-wrapper",
+        'editor-wrapper',
         wrapperClassName,
-        invalid && "invalid"
+        invalid && 'invalid',
       ])}
     >
-      <CKEditor
-        plugin={[]}
-        editor={editor}
-        config={config}
-        data={data}
+      <QuillCustomToolbar/>
+      <ReactQuill
+        value={data}
         onChange={onChange}
+        modules={{
+          toolbar: {
+            container: '#toolbar'
+          },
+        }}
+        formats={[
+          'header',
+          'size',
+          'bold',
+          'italic',
+          'underline',
+          'color',
+          'background',
+          'font',
+          'align',
+          'strike',
+          'blockquote',
+          'list',
+          'bullet',
+          'indent',
+          'link',
+          'image',
+        ]}
       />
     </div>
-  );
-};
+  )
+}
 
-const config = {
-  toolbar: [
-    "undo",
-    "redo",
-    "|",
-    "heading",
-    "fontSize",
-    "|",
-    "bold",
-    "underline",
-    "italic",
-    "blockQuote",
-    "|",
-    "numberedList",
-    "bulletedList",
-    "|",
-    "link",
-    "imageUpload"
-  ]
-};
-
-export default TextEditor;
+export default TextEditor
