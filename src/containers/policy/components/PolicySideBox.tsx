@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import React, { useState } from "react";
-import { FaChevronRight } from "react-icons/fa";
+import { FaCaretRight } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse, Input } from "reactstrap";
 import styled, { css } from "styled-components";
@@ -14,12 +14,12 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
   const [searchQuery] = useDebounce(search, 700);
   return (
     <div className="side-box">
-      <div className="side-box__searchbar mb-2">
+      <div className="side-box__searchbar">
         <Input
           value={search}
           placeholder="Search Policies..."
           onChange={e => setSearch(e.target.value)}
-          className="dark"
+          className="orange"
         />
       </div>
 
@@ -52,7 +52,7 @@ const PolicyTree = ({ activeId, search }: PolicyTreeProps) => {
   const policies = oc(data).policies.collection([]);
 
   if (policies.length === 0) {
-    return <div className="text-center p-2">Policy not found</div>;
+    return <div className="text-center p-2 text-orange">Policy not found</div>;
   }
 
   return (
@@ -90,19 +90,22 @@ const PolicyBranch = ({
           "d-flex justify-content-between align-items-center side-box__item",
           { active: isActive }
         )}
+        style={{ paddingLeft: Number(level) * 10 + 20 }}
       >
         <Link
-          className={classnames("side-box__item__title")}
+          className={classnames("side-box__item__title", { active: isActive })}
           to={`/policy/${id}`}
-          style={{ marginLeft: Number(level) * 10 }}
         >
           {title}
         </Link>
-        {hasChild && (
+        {hasChild ? (
           <div className="side-box__item__icon clickable" onClick={toggle}>
-            <Icon open={isOpen} />
+            <Icon
+              open={isOpen}
+              className={isActive ? "text-white" : "text-orange"}
+            />
           </div>
-        )}
+        ) : null}
       </div>
       {hasChild && (
         <Collapse isOpen={isOpen}>
@@ -121,7 +124,7 @@ const PolicyBranch = ({
   );
 };
 
-const Icon = styled(FaChevronRight)<{ open: boolean }>`
+const Icon = styled(FaCaretRight)<{ open: boolean }>`
   transition: 0.15s ease-in-out;
   ${(p: { open: boolean }) =>
     p.open &&

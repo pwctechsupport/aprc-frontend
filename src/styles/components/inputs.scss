@@ -1,4 +1,12 @@
+.form-control {
+  border-radius: 10px;
+}
+
 .form-control.dark {
   background: $pwc-black;
   color: white;
+}
+.form-control.orange {
+  color: $pwc-orange;
+  border: 1px solid $pwc-orange;
 }
