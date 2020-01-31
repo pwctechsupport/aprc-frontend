@@ -1,0 +1,45 @@
+.navbar {
+  background: white;
+}
+
+.dropdown__user {
+  background: white;
+}
+
+.dropdown-item {
+  &:hover {
+    background: rgba(245, 100, 9, 0.2);
+  }
+}
+
+.dropdown__menu {
+  background: #fff4ed;
+}
+
+.dropdown__active {
+  background: $pwc-orange;
+}
+
+.nav_item__active {
+  color: $pwc-orange;
+  &::after {
+    content: "";
+    display: block;
+    height: 5px;
+    width: 100%;
+    // position: absolute;
+    background: $pwc-orange;
+    // bottom: 0;
+  }
+}
+
+.nav-link {
+  color: black;
+  &:hover {
+    color: $pwc-orange;
+  }
+}
+
+.dropdown__nav {
+  color: $pwc-orange;
+}

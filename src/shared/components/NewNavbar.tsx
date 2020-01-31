@@ -15,6 +15,11 @@ import {
 import { NavLink as RrNavLink } from "react-router-dom";
 import pwcLogo from "../../assets/images/pwc-logo.png";
 import styled from "styled-components";
+import { FaBell, FaBookmark } from "react-icons/fa";
+import { unauthorize } from "../../redux/auth";
+import { toggleModal } from "../../redux/modal";
+import { useDispatch } from "react-redux";
+import Avatar from "./Avatar";
 
 const adminMenus = [
   { label: "Policy", path: "/policy" },
@@ -28,37 +33,54 @@ const adminMenus = [
 const userMenus = [
   { label: "Policy", path: "/policy" },
   { label: "Risk & Control", path: "/risk-and-control" },
-  { label: "Report", path: "/report" },
-  { label: "Admin", path: "/", children: adminMenus }
+  { label: "Reports", path: "/report" },
+  { label: "Administrative", path: "/", children: adminMenus },
+  { label: "Settings", path: "/policy" }
 ];
 
 const NewNavbar = () => {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(p => !p);
+  const handleToggle = () => dispatch(toggleModal("bookmark"));
+
+  function handleLogout() {
+    dispatch(unauthorize());
+  }
 
   return (
     <div>
-      <Navbar color="light" fixed="top" light expand="md">
-        <NavbarBrand href="/">
-          <Image src={pwcLogo} alt="PwC" className="img-fluid" />
-        </NavbarBrand>
+      <Navbar fixed="top" expand="md">
+        <LogoContainer className="pl-5">
+          <NavbarBrand href="/">
+            <Image src={pwcLogo} alt="PwC" className="img-fluid" />
+          </NavbarBrand>
+        </LogoContainer>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
             {userMenus.map(userMenu => {
               const { label, path, children } = userMenu;
-              if (label === "Admin") {
+              if (label === "Administrative") {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
                     <DropdownToggle nav caret>
                       {label}
                     </DropdownToggle>
-                    <DropdownMenu right>
+                    <DropdownMenu right className="p-0 dropdown__menu">
                       {Array.isArray(children) &&
                         children.map(childMenu => (
-                          <DropdownItem key={childMenu.label}>
+                          <DropdownItem key={childMenu.label} className="p-0">
                             <NavItem key={childMenu.label}>
-                              <NavLink tag={RrNavLink} to={childMenu.path}>
+                              <NavLink
+                                tag={RrNavLink}
+                                to={childMenu.path}
+                                className="p-3 dropdown__nav"
+                                activeClassName="dropdown__active"
+                                activeStyle={{
+                                  color: "white"
+                                }}
+                              >
                                 {childMenu.label}
                               </NavLink>
                             </NavItem>
@@ -69,8 +91,15 @@ const NewNavbar = () => {
                 );
               }
               return (
-                <NavItem key={label}>
-                  <NavLink tag={RrNavLink} to={path}>
+                <NavItem key={label} className="px-2 py-0">
+                  <NavLink
+                    tag={RrNavLink}
+                    to={path}
+                    activeClassName="nav_item__active"
+                    activeStyle={{
+                      fontWeight: "bold"
+                    }}
+                  >
                     {label}
                   </NavLink>
                 </NavItem>
@@ -78,6 +107,19 @@ const NewNavbar = () => {
             })}
           </Nav>
         </Collapse>
+        <div className="d-flex align-items-center pr-2">
+          <div className="mr-3">
+            <FaBookmark
+              onClick={handleToggle}
+              className="clickable"
+              size={22}
+            />
+          </div>
+          <div className="mr-4">
+            <FaBell size={22} />
+          </div>
+          <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
+        </div>
       </Navbar>
     </div>
   );
@@ -88,4 +130,8 @@ export default NewNavbar;
 const Image = styled.img`
   width: 50px;
   height: auto;
+`;
+
+const LogoContainer = styled.div`
+  width: 330px;
 `;

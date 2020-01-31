@@ -6,6 +6,7 @@ import {
   DropdownItem
 } from "reactstrap";
 import styled from "styled-components";
+import Button from "./Button";
 
 const Avatar = ({ data }: AvatarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -17,21 +18,17 @@ const Avatar = ({ data }: AvatarProps) => {
       <DropdownToggle tag="div">
         <AvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
       </DropdownToggle>
-      <DropdownMenu>
-        {data.map((item, index) => {
-          if (item.header) {
-            return (
-              <DropdownItem header key={index} onClick={item.onClick}>
-                {item.label}
-              </DropdownItem>
-            );
-          }
-          return (
-            <DropdownItem key={index} onClick={item.onClick}>
-              {item.label}
-            </DropdownItem>
-          );
-        })}
+      <DropdownMenu right className="dropdown__user mr-3 mt-3">
+        {data.map((item, index) => (
+          <div
+            key={index}
+            className="d-flex flex-column justify-content-center p-4"
+          >
+            <AvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
+            <h4>Nama</h4>
+            <Button onClick={item.onClick}>Log out</Button>
+          </div>
+        ))}
       </DropdownMenu>
     </Dropdown>
   );
