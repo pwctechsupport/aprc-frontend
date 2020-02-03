@@ -12,4 +12,6 @@ fragment BasicUser on User {
   id
   email
   phone
+  jobPosition
+  department
 }

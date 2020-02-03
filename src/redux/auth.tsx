@@ -6,6 +6,7 @@ const initialState: AuthStore = {
 
 const AUTHORIZED = "AUTHORIZED";
 const UNAUTHORIZED = "UNAUTHORIZED";
+const UPDATE_USER = "UPDATE_USER";
 
 // ---------------------------------------------------------------
 // Type Definition
@@ -18,10 +19,13 @@ interface AuthStore {
 }
 
 interface User {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string | null | undefined;
   id: string;
-  phone: string;
+  phone: string | null | undefined;
+  jobPosition: string | null | undefined;
+  department: string | null | undefined;
 }
 
 interface AuthorizedAction {
@@ -30,6 +34,10 @@ interface AuthorizedAction {
     user: User;
     token: string;
   };
+}
+interface UpdateUserAction {
+  type: typeof UPDATE_USER;
+  payload: User;
 }
 
 interface UnauthorizeAction {
@@ -57,13 +65,21 @@ export const unauthorize = (): UnauthorizeAction => {
   };
 };
 
+export const updateUser = (user: User): UpdateUserAction => {
+  localStorage.setItem("user", JSON.stringify(user));
+  return {
+    type: UPDATE_USER,
+    payload: user
+  };
+};
+
 // ---------------------------------------------------------------
 // Reducer
 // ---------------------------------------------------------------
 
 export default function(
   state = initialState,
-  action: AuthorizedAction | UnauthorizeAction
+  action: AuthorizedAction | UnauthorizeAction | UpdateUserAction
 ) {
   switch (action.type) {
     case AUTHORIZED:
@@ -77,6 +93,11 @@ export default function(
         isAuthed: false,
         user: initialState.user,
         token: initialState.token
+      };
+    case UPDATE_USER:
+      return {
+        ...state,
+        user: action.payload
       };
   }
   return state;
