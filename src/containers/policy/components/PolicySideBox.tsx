@@ -86,26 +86,28 @@ const PolicyBranch = ({
   return (
     <div>
       <div
-        className={classnames(
-          "d-flex justify-content-between align-items-center side-box__item",
-          { active: isActive }
-        )}
-        style={{ paddingLeft: Number(level) * 10 + 20 }}
+        className={classnames("d-flex align-items-center side-box__item", {
+          active: isActive
+        })}
+        style={{ paddingLeft: Number(level) * 10 }}
       >
+        {hasChild ? (
+          <div className="side-box__item__icon clickable" onClick={toggle}>
+            <Icon
+              open={isOpen}
+              className={isActive ? "text-white" : "text-orange"}
+              size={14}
+            />
+          </div>
+        ) : (
+          <div style={{ width: 34 }} />
+        )}
         <Link
           className={classnames("side-box__item__title", { active: isActive })}
           to={`/policy/${id}`}
         >
           {title}
         </Link>
-        {hasChild ? (
-          <div className="side-box__item__icon clickable" onClick={toggle}>
-            <Icon
-              open={isOpen}
-              className={isActive ? "text-white" : "text-orange"}
-            />
-          </div>
-        ) : null}
       </div>
       {hasChild && (
         <Collapse isOpen={isOpen}>

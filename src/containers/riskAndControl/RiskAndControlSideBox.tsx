@@ -93,26 +93,28 @@ const BusinessProcessBranch = ({
   return (
     <div>
       <div
-        className={classnames(
-          "d-flex justify-content-between align-items-center side-box__item",
-          { active: isActive }
-        )}
+        className={classnames("d-flex align-items-center side-box__item", {
+          active: isActive
+        })}
       >
-        <Link
-          className={classnames("side-box__item__title", { active: isActive })}
-          to={`/risk-and-control/${id}`}
-          style={{ marginLeft: Number(level) * 10 + 20 }}
-        >
-          {name}
-        </Link>
-        {hasChild && (
+        {hasChild ? (
           <div className="side-box__item__icon clickable" onClick={toggle}>
             <Icon
               open={isOpen}
               className={isActive ? "text-white" : "text-orange"}
+              size={14}
             />
           </div>
+        ) : (
+          <div style={{ width: 34 }} />
         )}
+        <Link
+          className={classnames("side-box__item__title", { active: isActive })}
+          to={`/risk-and-control/${id}`}
+          style={{ marginLeft: Number(level) * 10 }}
+        >
+          {name}
+        </Link>
       </div>
       {hasChild && (
         <Collapse isOpen={isOpen}>
