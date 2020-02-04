@@ -6,19 +6,22 @@ import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   UpdateUserInput,
-  useUpdateUserMutation
+  useUpdateUserMutation,
+  User
 } from "../../generated/graphql";
 import { updateUser } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import Input from "../../shared/components/forms/Input";
 import { useSelector } from "../../shared/hooks/useSelector";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 
 const UpdateProfile = () => {
-  const user = useSelector(state => state.auth.user) || {};
+  const user = useSelector(state => state.auth.user);
+  const defaultValues = user || {};
   const dispatch = useDispatch();
 
   const { register, handleSubmit, errors } = useForm<UpdateUserInput>({
-    defaultValues: user
+    defaultValues
   });
 
   const [updateProfile, { loading }] = useUpdateUserMutation({
@@ -43,6 +46,10 @@ const UpdateProfile = () => {
   const temp = (values: UpdateUserInput) => {
     updateProfile({ variables: { input: values } });
   };
+
+  if (!oc(user).email("")) {
+    return <LoadingSpinner centered />;
+  }
 
   return (
     <div>
@@ -89,3 +96,5 @@ const UpdateProfile = () => {
 };
 
 export default UpdateProfile;
+
+type CurrentUser = User | {};
