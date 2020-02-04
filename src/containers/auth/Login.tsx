@@ -9,6 +9,7 @@ import { useLoginMutation } from "../../generated/graphql";
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import { oc } from "ts-optchain";
+import { Link } from "react-router-dom";
 
 const Login = ({ history }: RouteComponentProps) => {
   const dispatch = useDispatch();
@@ -57,7 +58,7 @@ const Login = ({ history }: RouteComponentProps) => {
           placeholder="Enter email address"
           required
           ref={register({ required: true })}
-        />{" "}
+        />{' '}
         <br />
         <br />
         <Label>Password</Label>
@@ -71,6 +72,11 @@ const Login = ({ history }: RouteComponentProps) => {
         />
         <br />
         <br />
+        <div className="text-center my-4">
+          <Link to="/forgot-password" className="link-pwc">
+            Forgot Password?
+          </Link>
+        </div>
         <Button
           className="pwc"
           color="primary"
@@ -82,31 +88,31 @@ const Login = ({ history }: RouteComponentProps) => {
         </Button>
       </Form>
     </Container>
-  );
+  )
 };
 
-const Container = styled.div`
+export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 `;
 
-const Form = styled.form`
-  width: 40vw;
+export const Form = styled.form`
+  width: 30vw;
 `;
 
-const Image = styled.img`
+export const Image = styled.img`
   width: 90px;
   height: auto;
   margin: 70px;
 `;
 
-const H1 = styled.h1`
+export const H1 = styled.h1`
   margin-bottom: 30px;
 `;
 
-const Label = styled.label`
+export const Label = styled.label`
   font-weight: 600;
   font-size: 14px;
   line-height: 16px;
@@ -114,7 +120,7 @@ const Label = styled.label`
   margin-bottom: 10px;
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   border: 1px solid #c4c4c4;
   box-sizing: border-box;
   border-radius: 10px;

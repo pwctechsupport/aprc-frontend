@@ -15,9 +15,11 @@ import RiskRoute from "./containers/risk/RiskRoute";
 import RiskAndControlRoute from "./containers/riskAndControl/RiskAndControlRoute";
 import AuthListener from "./shared/components/AuthListener";
 import AuthRoute from "./shared/components/AuthRoute";
+import ForgotPassword from "./containers/auth/ForgotPassword";
 import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
+import ResetPassword from "./containers/auth/ResetPassword";
 
 export default function() {
   return (
@@ -26,7 +28,13 @@ export default function() {
       <Route component={AuthListener} />
       <ScrollToTop>
         <Switch>
-          <Route path="/auth" component={Login} />
+          <Route exact path="/auth" component={Login} />
+          <Route exact path="/forgot-password" component={ForgotPassword} />
+          <Route
+            exact
+            path="/users/password/edit"
+            component={ResetPassword}
+          />
 
           <Layout>
             <AuthRoute exact path="/" component={Homepage} />
@@ -58,5 +66,5 @@ export default function() {
         </Switch>
       </ScrollToTop>
     </BrowserRouter>
-  );
+  )
 }

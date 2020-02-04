@@ -13,3 +13,17 @@ fragment BasicUser on User {
   email
   phone
 }
+
+mutation forgotPassword($email: String){
+  forgotPassword(input: {email: $email}) {
+    success
+    errors
+  }
+}
+
+mutation updatePassword($input: UpdatePasswordInput!){
+  updatePassword(input: $input) {
+    success
+    errors
+  }
+}
