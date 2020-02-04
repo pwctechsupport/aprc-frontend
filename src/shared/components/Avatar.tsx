@@ -1,13 +1,8 @@
 import React, { useState } from "react";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from "reactstrap";
+import { Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import styled from "styled-components";
-import Button from "./Button";
 import { useSelector } from "../hooks/useSelector";
+import Button from "./Button";
 
 const Avatar = ({ data }: AvatarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);

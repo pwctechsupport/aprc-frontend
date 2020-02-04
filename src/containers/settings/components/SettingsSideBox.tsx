@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Input } from "reactstrap";
-import { Link } from "react-router-dom";
 import classnames from "classnames";
+import React from "react";
+import { Link } from "react-router-dom";
 
 const settingsMenus = [
   { label: "Profile", path: "/settings/update-profile" },

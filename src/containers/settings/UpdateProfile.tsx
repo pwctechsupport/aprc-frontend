@@ -1,32 +1,39 @@
 import React from "react";
-import { Form } from "reactstrap";
-import Input from "../../shared/components/forms/Input";
 import useForm from "react-hook-form";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { Form } from "reactstrap";
+import { oc } from "ts-optchain";
 import {
   UpdateUserInput,
   useUpdateUserMutation
 } from "../../generated/graphql";
-import { useSelector } from "../../shared/hooks/useSelector";
-import Button from "../../shared/components/Button";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
 import { updateUser } from "../../redux/auth";
-import { oc } from "ts-optchain";
-import { omit } from "lodash";
+import Button from "../../shared/components/Button";
+import Input from "../../shared/components/forms/Input";
+import { useSelector } from "../../shared/hooks/useSelector";
 
 const UpdateProfile = () => {
   const user = useSelector(state => state.auth.user) || {};
   const dispatch = useDispatch();
 
-  const { register, setValue, handleSubmit, errors, watch } = useForm<
-    UpdateUserInput
-  >({ defaultValues: user });
+  const { register, handleSubmit, errors } = useForm<UpdateUserInput>({
+    defaultValues: user
+  });
 
   const [updateProfile, { loading }] = useUpdateUserMutation({
     onCompleted: res => {
       toast.success("Update Success");
-      // const newuser = oc(res).updateUser.user();
-      // if (user) dispatch(updateUser(newuser));
+      const newUser = {
+        id: oc(res).updateUser.user.id(""),
+        email: oc(res).updateUser.user.email(""),
+        firstName: oc(res).updateUser.user.firstName(""),
+        lastName: oc(res).updateUser.user.lastName(""),
+        phone: oc(res).updateUser.user.phone(""),
+        jobPosition: oc(res).updateUser.user.jobPosition(""),
+        department: oc(res).updateUser.user.department("")
+      };
+      if (user) dispatch(updateUser(newUser));
     },
     onError: () => {
       toast.error("Update Failed");
