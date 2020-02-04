@@ -52,7 +52,7 @@ export default function() {
                 component={CreateControl}
               />
               <AuthRoute exact path="/control/:id" component={Control} />
-              <AuthRoute exact path="/settings" component={SettingsRoute} />
+              <AuthRoute path="/settings" component={SettingsRoute} />
               <AuthRoute component={ComingSoonPage} />
             </Switch>
           </Layout>

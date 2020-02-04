@@ -1,10 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router";
-// import Policies from "./Policies";
-// import Policy from "./Policy";
-// import CreatePolicy from "./CreatePolicy";
-// import CreateSubPolicy from "./CreateSubPolicy";
-// import PolicySideBox from "./components/PolicySideBox";
+import { Route, Switch, Redirect } from "react-router";
 import { Row, Col, Container } from "reactstrap";
 import History from "./History";
 import UpdateProfile from "./UpdateProfile";
@@ -20,8 +15,9 @@ const SettingsRoute = () => {
           </Col>
           <Col md={9} className="p-4">
             <Switch>
-              <Route exact path="/settings/" component={UpdateProfile} />
+              <Route exact path="/settings/profile" component={UpdateProfile} />
               <Route exact path="/settings/history" component={History} />
+              <Redirect exact from="/settings" to="/settings/profile" />
             </Switch>
           </Col>
         </Row>
