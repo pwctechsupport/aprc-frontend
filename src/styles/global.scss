@@ -47,12 +47,12 @@
 .link-pwc {
   color: $pwc-orange;
   font-weight: 700;
-  border-bottom: 10px solid lighten($pwc-orange, 45);
+  border-bottom: 1.5px solid $pwc-orange;
   padding: 0px 20px;
 
   &:hover {
     text-decoration: none;
     color: darken($pwc-orange, 10);
-    border-bottom: 10px solid lighten($pwc-orange, 43);
+    border-bottom: 1.5px solid $pwc-orange;
   }
 }
