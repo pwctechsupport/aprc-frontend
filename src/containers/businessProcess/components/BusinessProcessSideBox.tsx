@@ -25,14 +25,14 @@ const BusinessProcessSideBox = () => {
     );
   return (
     <aside>
-      <div className="side-box p-2">
+      <div className="side-box p-3">
         <Input
           placeholder="Search..."
           value={searchValue}
           onChange={handleChange}
-          className="dark mb-3"
+          className="orange mb-3"
         />
-        <h5>Recently Added</h5>
+        <h5 className="text-orange">Recently Added</h5>
         <div>
           {bps.map(bp => (
             <Link
@@ -40,8 +40,10 @@ const BusinessProcessSideBox = () => {
               to={`/business-process/${bp.id}`}
               key={bp.id}
             >
-              <div className="">{bp.name}</div>
-              <div className="">{humanizeDate(new Date(bp.updatedAt))}</div>
+              <div className="text-orange">{bp.name}</div>
+              <div className="text-orange">
+                {humanizeDate(new Date(bp.updatedAt))}
+              </div>
             </Link>
           ))}
         </div>

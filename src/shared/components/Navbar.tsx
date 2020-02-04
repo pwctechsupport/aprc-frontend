@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaBell, FaBookmark, FaChevronDown } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { useHistory, NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import {
   Dropdown,
   DropdownItem,
@@ -9,12 +9,12 @@ import {
   DropdownToggle
 } from "reactstrap";
 import styled from "styled-components";
+import { oc } from "ts-optchain";
 import pwcLogo from "../../assets/images/pwc-logo.png";
 import { unauthorize } from "../../redux/auth";
-import Avatar from "./Avatar";
-import { useSelector } from "../hooks/useSelector";
-import { oc } from "ts-optchain";
 import { toggleModal } from "../../redux/modal";
+import { useSelector } from "../hooks/useSelector";
+import Avatar from "./Avatar";
 
 const adminMenus = [
   { label: "Policy", path: "/policy" },
@@ -28,7 +28,6 @@ const adminMenus = [
 const userMenus = [
   { label: "Policy", path: "/policy" },
   { label: "Risk & Control", path: "/risk-and-control" },
-  // { label: "Control & Risk Management", path: "/control-and-risk-management" },
   { label: "Report", path: "/report" }
 ];
 

@@ -4,7 +4,7 @@ import RiskAndControl from "./RiskAndControl";
 import RiskAndControlSideBox from "./RiskAndControlSideBox";
 import EmptyData from "./EmptyData";
 import RiskAndControls from "./RiskAndControls";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Container } from "reactstrap";
 
 const RiskAndControlRoute = () => {
   return (
@@ -16,17 +16,23 @@ const RiskAndControlRoute = () => {
 };
 
 const RestOfRiskAndControl = () => (
-  <Row>
-    <Col md={3}>
-      <Route path="/risk-and-control" component={RiskAndControlSideBox} />
-    </Col>
-    <Col md={9}>
-      <Switch>
-        <Route exact path="/risk-and-control/:id" component={RiskAndControl} />
-        <Route path="/risk-and-control/" component={EmptyData} />
-      </Switch>
-    </Col>
-  </Row>
+  <Container fluid className="p-0">
+    <Row noGutters>
+      <Col md={3}>
+        <Route path="/risk-and-control" component={RiskAndControlSideBox} />
+      </Col>
+      <Col md={9} className="p-4">
+        <Switch>
+          <Route
+            exact
+            path="/risk-and-control/:id"
+            component={RiskAndControl}
+          />
+          <Route path="/risk-and-control/" component={EmptyData} />
+        </Switch>
+      </Col>
+    </Row>
+  </Container>
 );
 
 export default RiskAndControlRoute;

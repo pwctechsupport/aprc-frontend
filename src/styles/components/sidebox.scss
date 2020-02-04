@@ -1,10 +1,9 @@
 .side-box {
-  background: #3a3838;
-  border-radius: 10px;
+  background: #fff4ed;
   color: white;
-  width: 300px;
+  width: 330px;
   position: fixed;
-  height: 80vh;
+  height: 100vh;
   overflow-y: scroll;
 
   // &::-webkit-scrollbar {
@@ -22,46 +21,55 @@
   // }
 
   .side-box__searchbar {
-    padding: 10px;
+    padding: 16px 25px 16px 25px;
   }
 
   .side-box__item {
     position: relative;
     &.active {
-      background: rgba(300, 300, 300, 0.1);
-      &::before {
-        content: "";
-        display: block;
-        width: 5px;
-        height: 100%;
-        position: absolute;
-        background: grey;
-        top: 0px;
-        left: 0px;
-      }
+      background: $pwc-orange;
+      // &::before {
+      //   content: "";
+      //   display: block;
+      //   width: 5px;
+      //   height: 100%;
+      //   position: absolute;
+      //   background: grey;
+      //   top: 0px;
+      //   left: 0px;
+      // }
     }
     &:hover {
       &.active {
-        opacity: 1;
+        background: rgba(245, 100, 9, 0.7);
       }
-      opacity: 0.5;
-      background: rgba(300, 300, 300, 0.05);
+      background: rgba(245, 100, 9, 0.2);
     }
     .side-box__item__title {
-      padding: 10px 10px 10px 20px;
+      padding: 10px 10px 10px 0px;
       text-decoration: none;
       width: 260px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-      color: white;
+      color: $pwc-orange;
+      font-weight: bold;
+      &.active {
+        color: white;
+      }
+      &:hover {
+        &.active {
+          color: white;
+        }
+        color: $pwc-orange;
+      }
     }
     .side-box__item__icon {
       color: white;
-      padding: 0 5px 0 5px;
-      margin: 0 10px 0 0;
+      padding: 10px;
+      margin: 0;
       &:hover {
-        background: rgba(300, 300, 300, 0.2);
+        background: rgba(245, 100, 9, 0.2);
       }
     }
   }

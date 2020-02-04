@@ -20,14 +20,14 @@ const ResourceSideBox = () => {
     );
 
   return (
-    <div className="side-box p-2">
+    <div className="side-box p-3">
       <Input
         value={search}
         placeholder="Search Resources..."
         onChange={e => setSearch(e.target.value)}
-        className="dark mb-3"
+        className="orange mb-3"
       />
-      <h5>Recently Added</h5>
+      <h5 className="text-orange">Recently Added</h5>
       <div>
         {resources.map(resource => (
           <Link
@@ -35,8 +35,10 @@ const ResourceSideBox = () => {
             to={`/resources/${resource.id}`}
             key={resource.id}
           >
-            <div>{resource.name}</div>
-            <div>{humanizeDate(new Date(resource.updatedAt))}</div>
+            <div className="text-orange">{resource.name}</div>
+            <div className="text-orange">
+              {humanizeDate(new Date(resource.updatedAt))}
+            </div>
           </Link>
         ))}
       </div>

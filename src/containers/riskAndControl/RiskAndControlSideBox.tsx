@@ -1,11 +1,12 @@
 import classnames from "classnames";
 import React, { useState } from "react";
-import { FaChevronDown, FaChevronRight } from "react-icons/fa";
+import { FaChevronDown, FaChevronRight, FaCaretRight } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse, Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { useBusinessProcessTreeQuery } from "../../generated/graphql";
+import styled, { css } from "styled-components";
 
 const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
   const id = oc(location)
@@ -16,13 +17,12 @@ const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
 
   return (
     <div className="side-box">
-      <h4 className="pt-2 px-2">Business Processes</h4>
       <div className="side-box__searchbar mb-2">
         <Input
           value={search}
-          placeholder="Search Business Process..."
+          placeholder="Search Risk & Control..."
           onChange={e => setSearch(e.target.value)}
-          className="dark"
+          className="orange"
         />
       </div>
       {searchQuery && (
@@ -86,30 +86,35 @@ const BusinessProcessBranch = ({
 }: BusinessBranchProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
-  const Icon = isOpen ? FaChevronDown : FaChevronRight;
+  // const Icon = isOpen ? FaChevronDown : FaChevronRight;
   const isActive = id === activeId;
   const hasChild = Array.isArray(children) && !!children.length;
 
   return (
     <div>
       <div
-        className={classnames(
-          "d-flex justify-content-between align-items-center side-box__item",
-          { active: isActive }
-        )}
+        className={classnames("d-flex align-items-center side-box__item", {
+          active: isActive
+        })}
       >
+        {hasChild ? (
+          <div className="side-box__item__icon clickable" onClick={toggle}>
+            <Icon
+              open={isOpen}
+              className={isActive ? "text-white" : "text-orange"}
+              size={14}
+            />
+          </div>
+        ) : (
+          <div style={{ width: 34 }} />
+        )}
         <Link
-          className={classnames("side-box__item__title")}
+          className={classnames("side-box__item__title", { active: isActive })}
           to={`/risk-and-control/${id}`}
           style={{ marginLeft: Number(level) * 10 }}
         >
           {name}
         </Link>
-        {hasChild && (
-          <div className="side-box__item__icon clickable" onClick={toggle}>
-            <Icon />
-          </div>
-        )}
       </div>
       {hasChild && (
         <Collapse isOpen={isOpen}>
@@ -127,6 +132,15 @@ const BusinessProcessBranch = ({
     </div>
   );
 };
+
+const Icon = styled(FaCaretRight)<{ open: boolean }>`
+  transition: 0.15s ease-in-out;
+  ${(p: { open: boolean }) =>
+    p.open &&
+    css`
+      transform: rotate(90deg);
+    `};
+`;
 
 interface BusinessProcessTreeProps {
   activeId: string | number | undefined;

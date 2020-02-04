@@ -16,12 +16,12 @@ const RiskSideBox = () => {
   return (
     <aside>
       <div className="side-box p-2">
-        <h4>Recently Added</h4>
+        <h4 className="text-orange">Recently Added</h4>
         <Table>
           <thead>
             <tr>
-              <th className="text-white">Risk</th>
-              <th className="text-white">Added Date</th>
+              <th className="text-orange">Risk</th>
+              <th className="text-orange">Added Date</th>
             </tr>
           </thead>
           <tbody>
@@ -31,11 +31,11 @@ const RiskSideBox = () => {
                 return (
                   <tr key={risk.id}>
                     <td>
-                      <Link to={`/risk/${risk.id}`} className="text-white">
+                      <Link to={`/risk/${risk.id}`} className="text-orange">
                         {oc(risk).name("")}
                       </Link>
                     </td>
-                    <td className="text-white">
+                    <td className="text-orange">
                       {formatDate(oc(risk).updatedAt(""))}
                     </td>
                   </tr>

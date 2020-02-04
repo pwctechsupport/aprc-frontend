@@ -1,13 +1,18 @@
 import React from "react";
-import Navbar from "./Navbar";
+import NewNavbar from "./NewNavbar";
+import styled from "styled-components";
 
 const Layout: React.FC = ({ children }) => {
   return (
     <div>
-      <Navbar />
-      <div className="p-sm-1 p-md-2 p-lg-5">{children}</div>
+      <NewNavbar />
+      <DivWithPaddingTop>{children}</DivWithPaddingTop>
     </div>
   );
 };
 
 export default Layout;
+
+const DivWithPaddingTop = styled.div`
+  padding-top: 63px;
+`;
