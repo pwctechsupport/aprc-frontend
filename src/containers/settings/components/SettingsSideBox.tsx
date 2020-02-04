@@ -13,11 +13,19 @@ const settingsMenus = [
 const SettingsSideBox = () => {
   return (
     <aside>
-      <div className="side-box p-2">
+      <div className="side-box">
         {settingsMenus.map(menu => (
-          <Link className="side-box__item__title" to={menu.path}>
-            {menu.label}
-          </Link>
+          <div className="side-box__list">
+            <div
+              className={classnames(
+                "d-flex align-items-center side-box__item p-2"
+              )}
+            >
+              <Link className="side-box__item__title" to={menu.path}>
+                {menu.label}
+              </Link>
+            </div>
+          </div>
         ))}
       </div>
     </aside>
