@@ -13,8 +13,8 @@ import {
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail, MdModeEdit } from "react-icons/md";
-import { RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
+import { RouteComponentProps, Route } from "react-router";
+import { Link, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -53,6 +53,7 @@ import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Modal from "../../shared/components/Modal";
 import Tooltip from "../../shared/components/Tooltip";
+import { Nav, NavItem, TabContent, TabPane } from "reactstrap";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -238,166 +239,211 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   if (loading) return <LoadingSpinner centered size={30} />;
 
   const renderPolicy = () => {
+    const tabs = [
+      {to: `/policy/${id}`, title: 'Dashboard'},
+      {to: `/policy/${id}/details`, title: 'Details'},
+      {to: `/policy/${id}/resources`, title: 'Resources'},
+    ]
+
     return (
       <div>
-        <div className="mb-3 py-3">
-          <PolicyDashboard data={policyChartData} />
-        </div>
-        <div
-          className="mb-3 py-3"
-          dangerouslySetInnerHTML={{
-            __html: description
-          }}
-        ></div>
-        <Collapsible
-          title="Resources"
-          show={collapse.includes("Resources")}
-          onClick={toggleCollapse}
-        >
-          {resources.map(resource => (
-            <ResourceBar key={resource.id} {...resource} />
+        <Nav tabs className="tabs-pwc">
+          {tabs.map((tab, index) => (
+            <NavItem key={index}>
+              <NavLink
+                exact
+                to={tab.to}
+                className="nav-link"
+                activeClassName="active"
+              >
+                {tab.title}
+              </NavLink>
+            </NavItem>
           ))}
-          <AddResourceButton onClick={toggleAddResourceModal} />
-        </Collapsible>
+        </Nav>
 
-        <div ref={riskRef}>
-          <Collapsible
-            title="Risks"
-            show={collapse.includes("Risks")}
-            onClick={toggleCollapse}
-          >
-            {risks.length ? (
-              <div>
-                <ul>
-                  {risks.map(risk => {
-                    return (
-                      <li key={risk.id}>
-                        <Link to={`/risk/${risk.id}`}>{risk.name}</Link>
-                      </li>
-                    );
-                  })}
-                </ul>
+        <TabContent>
+          <TabPane>
+            <Route exact path="/policy/:id">
+              <div className="mb-3 py-3">
+                <PolicyDashboard data={policyChartData} />
               </div>
-            ) : (
-              <EmptyAttribute />
-            )}
-          </Collapsible>
-        </div>
+            </Route>
+            <Route exact path="/policy/:id/details">
+              <div className="d-flex justify-content-end">{renderPolicyAction()}</div>
 
-        <div ref={controlRef}>
-          <Collapsible
-            title="Controls"
-            show={collapse.includes("Controls")}
-            onClick={toggleCollapse}
-          >
-            <Table>
-              <thead>
-                <tr>
-                  <th>Desc</th>
-                  <th>Freq</th>
-                  <th>Type of Control</th>
-                  <th>Nature</th>
-                  <th>IPO</th>
-                  <th>Assertion</th>
-                  <th>Control Owner</th>
-                </tr>
-              </thead>
-              <tbody>
-                {controls.length ? (
-                  controls.map(control => {
-                    return (
-                      <tr key={control.id}>
-                        <td>
-                          <Link to={`/control/${control.id}`}>
-                            {control.description}
-                          </Link>
-                        </td>
-                        <td>{capitalCase(control.frequency || "")}</td>
-                        <td>{capitalCase(control.typeOfControl || "")}</td>
-                        <td>{capitalCase(control.nature || "")}</td>
-                        <td>
-                          {oc(control)
-                            .ipo([])
-                            .map(a => capitalCase(a))
-                            .join(", ")}
-                        </td>
-                        <td>
-                          {oc(control)
-                            .assertion([])
-                            .map(a => capitalCase(a))
-                            .join(", ")}
-                        </td>
-                        <td>{control.controlOwner}</td>
+              <div
+                className="mb-3 py-3"
+                dangerouslySetInnerHTML={{
+                  __html: description,
+                }}
+              />
+
+              <div ref={riskRef}>
+                <Collapsible
+                  title="Risks"
+                  show={collapse.includes('Risks')}
+                  onClick={toggleCollapse}
+                >
+                  {risks.length ? (
+                    <div>
+                      <ul>
+                        {risks.map(risk => {
+                          return (
+                            <li key={risk.id}>
+                              <Link to={`/risk/${risk.id}`}>
+                                {risk.name}
+                              </Link>
+                            </li>
+                          )
+                        })}
+                      </ul>
+                    </div>
+                  ) : (
+                    <EmptyAttribute />
+                  )}
+                </Collapsible>
+              </div>
+
+              <div ref={controlRef}>
+                <Collapsible
+                  title="Controls"
+                  show={collapse.includes('Controls')}
+                  onClick={toggleCollapse}
+                >
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th>Desc</th>
+                        <th>Freq</th>
+                        <th>Type of Control</th>
+                        <th>Nature</th>
+                        <th>IPO</th>
+                        <th>Assertion</th>
+                        <th>Control Owner</th>
                       </tr>
-                    );
-                  })
-                ) : (
-                  <tr>
-                    <td colSpan={7}>
-                      <EmptyAttribute />
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </Table>
-          </Collapsible>
-        </div>
+                    </thead>
+                    <tbody>
+                      {controls.length ? (
+                        controls.map(control => {
+                          return (
+                            <tr key={control.id}>
+                              <td>
+                                <Link to={`/control/${control.id}`}>
+                                  {control.description}
+                                </Link>
+                              </td>
+                              <td>
+                                {capitalCase(control.frequency || '')}
+                              </td>
+                              <td>
+                                {capitalCase(control.typeOfControl || '')}
+                              </td>
+                              <td>{capitalCase(control.nature || '')}</td>
+                              <td>
+                                {oc(control)
+                                  .ipo([])
+                                  .map(a => capitalCase(a))
+                                  .join(', ')}
+                              </td>
+                              <td>
+                                {oc(control)
+                                  .assertion([])
+                                  .map(a => capitalCase(a))
+                                  .join(', ')}
+                              </td>
+                              <td>{control.controlOwner}</td>
+                            </tr>
+                          )
+                        })
+                      ) : (
+                        <tr>
+                          <td colSpan={7}>
+                            <EmptyAttribute />
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </Table>
+                </Collapsible>
+              </div>
 
-        <div ref={subPolicyRef}>
-          <Collapsible
-            title="Sub-Policies"
-            show={collapse.includes("Sub-Policies")}
-            onClick={toggleCollapse}
-          >
-            {children.length ? (
-              <Table>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>References</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {children.map(item => (
-                    <tr key={item.id}>
-                      <td>
-                        <Link to={`/policy/${item.id}`}>{item.title}</Link>
-                      </td>
-                      <td>
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: item.description ? item.description : ""
-                          }}
-                        ></div>
-                      </td>
-                      <td>
-                        {oc(item)
-                          .references([])
-                          .map(ref => ref.name)
-                          .join(", ")}
-                      </td>
-                      <td>
-                        <DialogButton onConfirm={() => handleDelete(item.id)}>
-                          <FaTrash />
-                        </DialogButton>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            ) : (
-              <EmptyAttribute />
-            )}
-          </Collapsible>
-        </div>
+              <div ref={subPolicyRef}>
+                <Collapsible
+                  title="Sub-Policies"
+                  show={collapse.includes('Sub-Policies')}
+                  onClick={toggleCollapse}
+                >
+                  {children.length ? (
+                    <Table>
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Description</th>
+                          <th>References</th>
+                          <th />
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {children.map(item => (
+                          <tr key={item.id}>
+                            <td>
+                              <Link to={`/policy/${item.id}`}>
+                                {item.title}
+                              </Link>
+                            </td>
+                            <td>
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html: item.description
+                                    ? item.description
+                                    : '',
+                                }}
+                              />
+                            </td>
+                            <td>
+                              {oc(item)
+                                .references([])
+                                .map(ref => ref.name)
+                                .join(', ')}
+                            </td>
+                            <td>
+                              <DialogButton
+                                onConfirm={() => handleDelete(item.id)}
+                              >
+                                <FaTrash />
+                              </DialogButton>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
+                  ) : (
+                    <EmptyAttribute />
+                  )}
+                </Collapsible>
+              </div>
+            </Route>
+            <Route exact path="/policy/:id/resources">
+              <Collapsible
+                title="Resources"
+                show={collapse.includes('Resources')}
+                onClick={toggleCollapse}
+              >
+                {resources.map(resource => (
+                  <ResourceBar key={resource.id} {...resource} />
+                ))}
+                <AddResourceButton onClick={toggleAddResourceModal} />
+              </Collapsible>
+            </Route>
+          </TabPane>
+        </TabContent>
       </div>
-    );
-  };
+    )
+    };
 
-  const renderPolicyInEditMode = () => {
-    return isSubPolicy ? (
+    const renderPolicyInEditMode = () => {
+      return isSubPolicy ? (
       <SubPolicyForm
         defaultValues={{
           parentId,
@@ -549,7 +595,6 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={title} />
-        {renderPolicyAction()}
       </div>
 
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}

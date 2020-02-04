@@ -11,9 +11,9 @@ import {
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, NavLink, Route } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Badge, Table } from "reactstrap";
+import { Badge, Table, Nav, NavItem, TabContent, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   Assertion,
@@ -122,6 +122,11 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const risks = oc(data).businessProcess.risks([]);
   const resources = oc(data).businessProcess.resources([]);
 
+  const tabs = [
+    {to: `/risk-and-control/${id}`, title: 'List'},
+    {to: `/risk-and-control/${id}/resources`, title: 'Resources'}
+  ]
+
   if (loading) return <LoadingSpinner size={30} centered />;
 
   const renderActions = () => {
@@ -200,138 +205,172 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
     <div>
       <BreadCrumb
         crumbs={[
-          ["/risk-and-control", "Risk and Controls"],
-          ["/risk-and-control/" + id, name]
+          ['/risk-and-control', 'Risk and Controls'],
+          ['/risk-and-control/' + id, name],
         ]}
       />
-      <div className="d-flex justify-content-between">
-        <HeaderWithBackButton heading={name} />
-        {renderActions()}
-      </div>
-      <Collapsible
-        title="Risks"
-        show={collapse.includes("Risks")}
-        onClick={toggleCollapse}
-      >
-        {risks.length ? (
-          <ul>
-            {risks.map(risk => (
-              <li key={risk.id}>
-                <div className="mb-3 d-flex justify-content-between">
-                  <h5>
-                    {risk.name.padEnd(1)}
-                    <Badge color="danger mx-3">
-                      {capitalCase(risk.levelOfRisk || "")}
-                    </Badge>
-                    <Badge color="danger">
-                      {capitalCase(risk.typeOfRisk || "")}
-                    </Badge>
-                  </h5>
-                  <Button
-                    onClick={() =>
-                      editRisk({
-                        id: risk.id,
-                        name: risk.name,
-                        status: oc(risk).status(Status.Draft) as Status,
-                        businessProcessId: oc(risk).businessProcessId(""),
-                        levelOfRisk: oc(risk).levelOfRisk() as LevelOfRisk,
-                        typeOfRisk: oc(risk).typeOfRisk() as TypeOfRisk
-                      })
-                    }
-                    color=""
-                  >
-                    <FaPencilAlt />
-                  </Button>
-                </div>
+      <Nav tabs className="tabs-pwc">
+        {tabs.map((tab, index) => (
+          <NavItem key={index}>
+            <NavLink
+              exact
+              to={tab.to}
+              className="nav-link"
+              activeClassName="active"
+            >
+              {tab.title}
+            </NavLink>
+          </NavItem>
+        ))}
+      </Nav>
 
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Description</th>
-                      <th>Freq</th>
-                      <th>Type of Control</th>
-                      <th>Nature</th>
-                      <th>IPO</th>
-                      <th>Assertion</th>
-                      <th>Control Owner</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {risk.controls.length ? (
-                      risk.controls.map(control => (
-                        <tr key={control.id}>
-                          <td>{control.description}</td>
-                          <td>{capitalCase(control.frequency || "")}</td>
-                          <td>{capitalCase(control.typeOfControl || "")}</td>
-                          <td>{capitalCase(control.nature || "")}</td>
-                          <td>
-                            {oc(control)
-                              .ipo([])
-                              .map(a => capitalCase(a))
-                              .join(", ")}
-                          </td>
-                          <td>
-                            {oc(control)
-                              .assertion([])
-                              .map(a => capitalCase(a))
-                              .join(", ")}
-                          </td>
-                          <td>{control.controlOwner}</td>
-                          <td>
-                            <Button
-                              onClick={() =>
-                                editControl({
-                                  id: control.id,
-                                  assertion: control.assertion as Assertion[],
-                                  controlOwner: control.controlOwner || "",
-                                  description: control.description,
-                                  status: control.status as Status,
-                                  typeOfControl: control.typeOfControl as TypeOfControl,
-                                  nature: control.nature as Nature,
-                                  ipo: control.ipo as Ipo[],
-                                  businessProcessIds: oc(control)
-                                    .businessProcesses([])
-                                    .map(({ id }) => id),
-                                  frequency: control.frequency as Frequency,
-                                  keyControl: control.keyControl || false,
-                                  riskIds: oc(control)
-                                    .risks([])
-                                    .map(({ id }) => id)
-                                })
-                              }
-                              color=""
-                            >
-                              <FaPencilAlt />
-                            </Button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan={7}>
-                          <EmptyAttribute />
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </Table>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <EmptyAttribute />
-        )}
-      </Collapsible>
+      <TabContent>
+        <TabPane>
+          <Route exact path="/risk-and-control/:id">
+            <div className="d-flex justify-content-between">
+              <HeaderWithBackButton heading={name} />
+              {renderActions()}
+            </div>
+            <Collapsible
+              title="Risks"
+              show={collapse.includes('Risks')}
+              onClick={toggleCollapse}
+            >
+              {risks.length ? (
+                <ul>
+                  {risks.map(risk => (
+                    <li key={risk.id}>
+                      <div className="mb-3 d-flex justify-content-between">
+                        <h5>
+                          {risk.name.padEnd(1)}
+                          <Badge color="danger mx-3">
+                            {capitalCase(risk.levelOfRisk || '')}
+                          </Badge>
+                          <Badge color="danger">
+                            {capitalCase(risk.typeOfRisk || '')}
+                          </Badge>
+                        </h5>
+                        <Button
+                          onClick={() =>
+                            editRisk({
+                              id: risk.id,
+                              name: risk.name,
+                              status: oc(risk).status(Status.Draft) as Status,
+                              businessProcessId: oc(risk).businessProcessId(
+                                ''
+                              ),
+                              levelOfRisk: oc(
+                                risk
+                              ).levelOfRisk() as LevelOfRisk,
+                              typeOfRisk: oc(risk).typeOfRisk() as TypeOfRisk,
+                            })
+                          }
+                          color=""
+                        >
+                          <FaPencilAlt />
+                        </Button>
+                      </div>
+
+                      <div className="table-responsive">
+                        <Table>
+                          <thead>
+                            <tr>
+                              <th>Description</th>
+                              <th>Freq</th>
+                              <th>Type of Control</th>
+                              <th>Nature</th>
+                              <th>IPO</th>
+                              <th>Assertion</th>
+                              <th>Control Owner</th>
+                              <th />
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {risk.controls.length ? (
+                              risk.controls.map(control => (
+                                <tr key={control.id}>
+                                  <td>{control.description}</td>
+                                  <td>
+                                    {capitalCase(control.frequency || '')}
+                                  </td>
+                                  <td>
+                                    {capitalCase(control.typeOfControl || '')}
+                                  </td>
+                                  <td>{capitalCase(control.nature || '')}</td>
+                                  <td>
+                                    {oc(control)
+                                      .ipo([])
+                                      .map(a => capitalCase(a))
+                                      .join(', ')}
+                                  </td>
+                                  <td>
+                                    {oc(control)
+                                      .assertion([])
+                                      .map(a => capitalCase(a))
+                                      .join(', ')}
+                                  </td>
+                                  <td>{control.controlOwner}</td>
+                                  <td>
+                                    <Button
+                                      onClick={() =>
+                                        editControl({
+                                          id: control.id,
+                                          assertion: control.assertion as Assertion[],
+                                          controlOwner:
+                                            control.controlOwner || '',
+                                          description: control.description,
+                                          status: control.status as Status,
+                                          typeOfControl: control.typeOfControl as TypeOfControl,
+                                          nature: control.nature as Nature,
+                                          ipo: control.ipo as Ipo[],
+                                          businessProcessIds: oc(control)
+                                            .businessProcesses([])
+                                            .map(({ id }) => id),
+                                          frequency: control.frequency as Frequency,
+                                          keyControl:
+                                            control.keyControl || false,
+                                          riskIds: oc(control)
+                                            .risks([])
+                                            .map(({ id }) => id),
+                                        })
+                                      }
+                                      color=""
+                                    >
+                                      <FaPencilAlt />
+                                    </Button>
+                                  </td>
+                                </tr>
+                              ))
+                            ) : (
+                              <tr>
+                                <td colSpan={7}>
+                                  <EmptyAttribute />
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </Table>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <EmptyAttribute />
+              )}
+            </Collapsible>
+          </Route>
+          <Route exact path="/risk-and-contorl/:id/resources" />
+        </TabPane>
+      </TabContent>
 
       <Collapsible
         title="Resources"
-        show={collapse.includes("Resources")}
+        show={collapse.includes('Resources')}
         onClick={toggleCollapse}
       >
         {resources.length ? (
           resources.map(resource => {
-            return <ResourceBar key={resource.id} {...resource} />;
+            return <ResourceBar key={resource.id} {...resource} />
           })
         ) : (
           <EmptyAttribute />
@@ -358,7 +397,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
         />
       </Modal>
     </div>
-  );
+  )
 };
 
 export default RiskAndControls;

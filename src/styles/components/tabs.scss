@@ -1,0 +1,24 @@
+.tabs-pwc {
+  border-bottom: unset;
+  flex-wrap: nowrap;
+  overflow: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-item {
+    white-space: nowrap;
+    font-weight: 700;
+    border-bottom: 1.5px solid #bfbfbf;
+
+    .nav-link {
+      border: unset;
+
+      &.active {
+        margin-bottom: -1.5px;
+        border-bottom: 4px solid #f56409;
+      }
+    }
+  }
+}

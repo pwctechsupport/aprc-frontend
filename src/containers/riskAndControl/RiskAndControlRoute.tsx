@@ -24,7 +24,6 @@ const RestOfRiskAndControl = () => (
       <Col md={9} className="p-4">
         <Switch>
           <Route
-            exact
             path="/risk-and-control/:id"
             component={RiskAndControl}
           />

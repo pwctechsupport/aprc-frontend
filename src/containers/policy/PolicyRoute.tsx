@@ -30,7 +30,7 @@ const RestOfPolicies = () => (
             component={CreateSubPolicy}
           />
           <Route exact path="/policy/create" component={CreatePolicy} />
-          <Route exact path="/policy/:id" component={Policy} />
+          <Route path="/policy/:id" component={Policy} />
         </Switch>
       </Col>
     </Row>
