@@ -24,6 +24,7 @@ import Avatar from "./Avatar";
 const adminMenus = [
   { label: "Policy", path: "/policy" },
   { label: "Control", path: "/control" },
+  { label: "User", path: "/user" },
   { label: "Business Process", path: "/business-process" },
   { label: "References", path: "/references" },
   { label: "Resources", path: "/resources" },

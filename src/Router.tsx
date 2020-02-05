@@ -20,6 +20,7 @@ import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
 import ResetPassword from "./containers/auth/ResetPassword";
+import Users from "./containers/user/Users";
 
 export default function() {
   return (
@@ -30,11 +31,7 @@ export default function() {
         <Switch>
           <Route exact path="/auth" component={Login} />
           <Route exact path="/forgot-password" component={ForgotPassword} />
-          <Route
-            exact
-            path="/users/password/edit"
-            component={ResetPassword}
-          />
+          <Route exact path="/users/password/edit" component={ResetPassword} />
 
           <Layout>
             <AuthRoute exact path="/" component={Homepage} />
@@ -59,6 +56,7 @@ export default function() {
                 component={CreateControl}
               />
               <AuthRoute exact path="/control/:id" component={Control} />
+              <AuthRoute path="/user" component={Users} />
 
               <AuthRoute component={ComingSoonPage} />
             </Switch>
@@ -66,5 +64,5 @@ export default function() {
         </Switch>
       </ScrollToTop>
     </BrowserRouter>
-  )
+  );
 }

@@ -1,0 +1,16 @@
+query users($filter: BaseScalar = {}, $page: Int, $limit: Int) {
+  users(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+      name
+      role
+      # policyCategory { id name }
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}

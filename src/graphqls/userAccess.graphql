@@ -1,0 +1,6 @@
+mutation createUserAccess($input: CreateUserAccessInput!) {
+  createUserAccess(input: $input) {
+    success
+    errors
+  }
+}

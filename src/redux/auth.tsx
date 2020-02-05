@@ -1,5 +1,5 @@
 const initialState: AuthStore = {
-  isAuthed: false,
+  isAuthed: localStorage.getItem("token") ? true : false,
   user: null,
   token: null
 };

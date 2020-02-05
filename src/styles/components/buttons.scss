@@ -6,6 +6,12 @@
   &:hover {
     opacity: 1;
   }
+
+  &.btn-outline-pwc {
+    background: transparent;
+    border: 1px solid $pwc-orange;
+    color: $pwc-orange;
+  }
 }
 
 .button.cancel {
@@ -25,5 +31,19 @@
   opacity: 0.9;
   &:hover {
     opacity: 1;
+  }
+}
+
+.button.soft {
+  border-radius: 10px;
+  border: unset;
+  color: $pwc-orange;
+
+  &.orange {
+    background-color: $soft-orange;
+  }
+
+  &.red {
+    background-color: $soft-red;
   }
 }
