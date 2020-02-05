@@ -1,19 +1,14 @@
 import React, { useState } from "react";
-import useForm from "react-hook-form";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
-import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
-import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import { UsersDocument } from "../../../generated/graphql";
+import Input from "../../../shared/components/forms/Input";
+import { UserRowFragmentFragment } from "../../../generated/graphql";
 import { oc } from "ts-optchain";
-import { toLabelValue, ToLabelValueOutput } from "../../../shared/formatter";
 
-const UserRow = (props: UserRowProps) => {
-  const { register, setValue } = useForm();
+const UserRow = ({ user, ...props }: UserRowProps) => {
   const [isEdit, setIsEdit] = useState(props.isEdit);
-  const getUsers = useLazyQueryReturnPromise(UsersDocument);
 
   function toggleEdit() {
     setIsEdit(!isEdit);
@@ -23,29 +18,21 @@ const UserRow = (props: UserRowProps) => {
     setIsEdit(false);
   }
 
-  async function handleGetUsers(
-    name_cont: string = ""
-  ): Promise<ToLabelValueOutput[]> {
-    try {
-      const { data } = await getUsers({
-        filter: { name_cont }
-      });
-
-      return oc(data)
-        .users.collection([])
-        .map(toLabelValue);
-    } catch (error) {
-      return [];
-    }
-  }
-
   if (!isEdit) {
     return (
       <tr>
-        <td>A</td>
-        <td>B</td>
-        <td>C</td>
-        <td>High Risk</td>
+        <td>{oc(user).name("")}</td>
+        <td>{oc(user).id("")}</td>
+        <td>
+          {oc(user)
+            .roles([])
+            .join(",")}
+        </td>
+        <td>
+          {oc(user)
+            .policyCategories([])
+            .join(",")}
+        </td>
         <td>
           <Button onClick={toggleEdit} className="soft orange mr-2">
             <AiFillEdit />
@@ -61,14 +48,7 @@ const UserRow = (props: UserRowProps) => {
     return (
       <tr>
         <td>
-          <AsyncSelect
-            name="userId"
-            register={register}
-            setValue={setValue}
-            cacheOptions
-            loadOptions={handleGetUsers}
-            defaultOptions
-          />
+          <Input />
         </td>
         <td>B</td>
         <td>C</td>
@@ -85,6 +65,7 @@ const UserRow = (props: UserRowProps) => {
 
 interface UserRowProps {
   isEdit?: boolean;
+  user?: UserRowFragmentFragment;
 }
 
 export default UserRow;

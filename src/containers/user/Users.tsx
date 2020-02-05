@@ -1,17 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import Helmet from "react-helmet";
 import { Col, Container, Row } from "reactstrap";
+import Button from "../../shared/components/Button";
 import Input from "../../shared/components/forms/Input";
 import Table from "../../shared/components/Table";
 import UserRow from "./components/UserRow";
-import Button from "../../shared/components/Button";
+import { NavLink } from "react-router-dom";
+import { useUsersQuery } from "../../generated/graphql";
+import { NetworkStatus } from "apollo-boost";
+import { oc } from "ts-optchain";
 
 const Users = () => {
-  const [addedUsers, setAddedUsers] = useState<Array<any>>([]);
-
-  function handleAdd() {
-    setAddedUsers(addedUsers.concat([{}]));
-  }
+  const { data, networkStatus } = useUsersQuery();
 
   return (
     <div>
@@ -29,7 +29,10 @@ const Users = () => {
         </Row>
 
         <div className="table-responsive">
-          <Table loading={false} reloading={false}>
+          <Table
+            loading={networkStatus === NetworkStatus.loading}
+            reloading={networkStatus === NetworkStatus.setVariables}
+          >
             <thead>
               <tr>
                 <th style={{ width: "20%" }}>Username</th>
@@ -40,18 +43,21 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              <UserRow />
-              {addedUsers.map((user, index) => {
-                return <UserRow key={`added_${index}`} isEdit={true} />;
-              })}
+              {oc(data)
+                .users.collection([])
+                .map(user => {
+                  return <UserRow key={user.id} user={user} />;
+                })}
             </tbody>
           </Table>
         </div>
 
         <div className="text-center">
-          <Button outline color="pwc" className="pwc" onClick={handleAdd}>
-            Add User
-          </Button>
+          <NavLink to="/user/create">
+            <Button outline color="pwc" className="pwc">
+              Add User
+            </Button>
+          </NavLink>
         </div>
       </Container>
     </div>

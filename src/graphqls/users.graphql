@@ -1,10 +1,7 @@
 query users($filter: BaseScalar = {}, $page: Int, $limit: Int) {
   users(filter: $filter, page: $page, limit: $limit) {
     collection {
-      id
-      name
-      role
-      # policyCategory { id name }
+      ...userRowFragment
     }
     metadata {
       currentPage
@@ -12,5 +9,32 @@ query users($filter: BaseScalar = {}, $page: Int, $limit: Int) {
       totalCount
       totalPages
     }
+  }
+}
+
+fragment userRowFragment on User {
+  id
+  name
+  roles { id name }
+  policyCategories { id name }
+}
+
+query user($id: ID!) {
+  user(id: $id) {
+    ...userRowFragment
+  }
+}
+
+mutation createUser($input: CreateUserInput!) {
+  createUser(input: $input) {
+    success
+    errors
+  }
+}
+
+mutation updateUser($input: UpdateUserInput!) {
+  updateUser(input: $input) {
+    success
+    errors
   }
 }

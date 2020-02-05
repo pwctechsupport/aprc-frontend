@@ -20,7 +20,7 @@ import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
 import ResetPassword from "./containers/auth/ResetPassword";
-import Users from "./containers/user/Users";
+import UserRoute from "./containers/user/UserRoute";
 
 export default function() {
   return (
@@ -56,7 +56,7 @@ export default function() {
                 component={CreateControl}
               />
               <AuthRoute exact path="/control/:id" component={Control} />
-              <AuthRoute path="/user" component={Users} />
+              <AuthRoute path="/user" component={UserRoute} />
 
               <AuthRoute component={ComingSoonPage} />
             </Switch>
