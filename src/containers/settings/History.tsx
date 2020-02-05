@@ -65,7 +65,6 @@ const History = () => {
                   {sectionedData[key].map(history => {
                     return (
                       <Fragment key={history.key + " " + history.id}>
-                        {/* <div className="py-3 px-2">{history.description}</div> */}
                         <FormGroup check className="py-3">
                           <Input
                             type="checkbox"
@@ -74,7 +73,7 @@ const History = () => {
                             innerRef={register}
                           />
                           <Label
-                            for={"keyControlCheckbox" + history.id}
+                            for={"historyCheckbox" + history.id}
                             check
                             className="pl-2"
                           >
