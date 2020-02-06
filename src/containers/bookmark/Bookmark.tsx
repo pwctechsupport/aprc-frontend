@@ -1,6 +1,6 @@
 import { NetworkStatus } from "apollo-boost";
 import { get } from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { Link } from "react-router-dom";
 import { Col, Container, Input, Row } from "reactstrap";
@@ -8,13 +8,23 @@ import { oc } from "ts-optchain";
 import { useBookmarksQuery } from "../../generated/graphql";
 import Table from "../../shared/components/Table";
 import { date } from "../../shared/formatter";
+import { useDebounce } from "use-debounce/lib";
 
 const Bookmark = () => {
+  const [search, setSearch] = useState("");
+  const [debounceSearch] = useDebounce(search, 800);
   const { data, networkStatus } = useBookmarksQuery({
     variables: {
-      filter: {}
+      filter: {
+        originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_cont: debounceSearch
+        // originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_or_originator_of_User_type_name_cont: debounceSearch
+      }
     }
   });
+
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearch(e.target.value);
+  }
 
   return (
     <div>
@@ -27,7 +37,7 @@ const Bookmark = () => {
 
         <Row>
           <Col lg={4}>
-            <Input />
+            <Input placeholder="Search..." onChange={handleSearch} />
           </Col>
         </Row>
 
