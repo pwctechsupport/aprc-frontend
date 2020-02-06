@@ -21,6 +21,7 @@ import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
 import ResetPassword from "./containers/auth/ResetPassword";
 import UserRoute from "./containers/user/UserRoute";
+import SettingsRoute from "./containers/settings/SettingsRoute";
 
 export default function() {
   return (
@@ -58,6 +59,7 @@ export default function() {
               <AuthRoute exact path="/control/:id" component={Control} />
               <AuthRoute path="/user" component={UserRoute} />
 
+              <AuthRoute path="/settings" component={SettingsRoute} />
               <AuthRoute component={ComingSoonPage} />
             </Switch>
           </Layout>

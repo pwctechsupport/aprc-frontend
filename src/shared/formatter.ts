@@ -26,10 +26,10 @@ export const date = (
     hour: "numeric",
     minute: "numeric"
   };
-  return new Intl.DateTimeFormat(["ban", "id"], {
-    ...defaultOptions,
-    ...options
-  }).format(input);
+  return new Intl.DateTimeFormat(
+    ["ban", "id"],
+    options || defaultOptions
+  ).format(input);
 };
 
 export const toLabelValue = ({

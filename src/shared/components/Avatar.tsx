@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import {
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
-} from "reactstrap";
+import { Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import styled from "styled-components";
-import Button from "./Button";
 import { useSelector } from "../hooks/useSelector";
+import Button from "./Button";
 
 const Avatar = ({ data }: AvatarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector(state => state.auth.user);
+  const name = user
+    ? user.firstName && user.lastName
+      ? user.firstName + " " + user.lastName
+      : ""
+    : "";
 
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
@@ -29,7 +29,7 @@ const Avatar = ({ data }: AvatarProps) => {
           >
             <div className="d-flex flex-column justify-content-center align-items-center mb-3">
               <DropdownAvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
-              {user ? <h4>{user.name}</h4> : null}
+              {user ? <h4>{name}</h4> : null}
             </div>
             <div className="d-flex justify-content-between">
               {user ? (

@@ -12,6 +12,8 @@ fragment BasicUser on User {
   id
   email
   phone
+  jobPosition
+  department
 }
 
 mutation forgotPassword($email: String){

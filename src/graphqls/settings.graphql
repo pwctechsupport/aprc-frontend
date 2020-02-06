@@ -1,0 +1,15 @@
+query historyList {
+  versions {
+    collection {
+      id
+      description
+      createdAt
+    }
+  }
+}
+
+mutation destroyHistory($input: DestroyVersionInput!) {
+  destroyVersion(input: $input) {
+    clientMutationId
+  }
+}
