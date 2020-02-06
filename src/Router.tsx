@@ -6,7 +6,7 @@ import Control from "./containers/control/Control";
 import Controls from "./containers/control/Controls";
 import CreateControl from "./containers/control/CreateControl";
 import Homepage from "./containers/homepage/Homepage";
-import BookmarksModal from "./containers/policy/components/BookmarksModal";
+// import BookmarksModal from "./containers/policy/components/BookmarksModal";
 import PolicyRoute from "./containers/policy/PolicyRoute";
 import References from "./containers/referencess/References";
 import Report from "./containers/report/Report";
@@ -25,7 +25,7 @@ import UserRoute from "./containers/user/UserRoute";
 export default function() {
   return (
     <BrowserRouter>
-      <BookmarksModal />
+      {/* <BookmarksModal /> */}
       <Route component={AuthListener} />
       <ScrollToTop>
         <Switch>

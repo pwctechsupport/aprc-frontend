@@ -135,18 +135,6 @@ mutation createSubBusinessProcess($input: CreateSubBusinessProcessInput!) {
   }
 }
 
-query bookmarkBusinessProcesses($filter: BaseScalar = {}) {
-  bookmarkBusinessProcesses(filter: $filter) {
-    collection {
-      id
-      businessProcess {
-        id
-        name
-      }
-    }
-  }
-}
-
 mutation createBookmarkBusinessProcess($id: ID!) {
   createBookmarkBusinessProcess(input: { businessProcessId: $id }) {
     success

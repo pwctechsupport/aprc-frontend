@@ -228,17 +228,17 @@ query policyDashboard {
   }
 }
 
-query bookmarkPolicies($filter: BaseScalar = {}) {
-  bookmarkPolicies(filter: $filter) {
-    collection {
-      id
-      policy {
-        title
-        id
-      }
-    }
-  }
-}
+# query bookmarkPolicies($filter: BaseScalar = {}) {
+#   bookmarkPolicies(filter: $filter) {
+#     collection {
+#       id
+#       policy {
+#         title
+#         id
+#       }
+#     }
+#   }
+# }
 
 mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {
   createBookmarkPolicy(input: $input) {

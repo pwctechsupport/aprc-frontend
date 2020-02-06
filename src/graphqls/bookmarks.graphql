@@ -1,0 +1,13 @@
+query bookmarks($filter: BaseScalar = {}, $page: Int, $limit: Int) {
+  bookmarks(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}
