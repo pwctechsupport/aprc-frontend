@@ -1,12 +1,12 @@
 import classnames from "classnames";
 import React, { useState } from "react";
-import { FaChevronDown, FaChevronRight, FaCaretRight } from "react-icons/fa";
+import { FaCaretRight } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse, Input } from "reactstrap";
+import styled, { css } from "styled-components";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { useBusinessProcessTreeQuery } from "../../generated/graphql";
-import styled, { css } from "styled-components";
 
 const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
   const id = oc(location)

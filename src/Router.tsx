@@ -22,6 +22,7 @@ import ScrollToTop from "./shared/components/ScrollToTop";
 import ResetPassword from "./containers/auth/ResetPassword";
 import UserRoute from "./containers/user/UserRoute";
 import Bookmark from "./containers/bookmark/Bookmark";
+import SettingsRoute from "./containers/settings/SettingsRoute";
 
 export default function() {
   return (
@@ -60,6 +61,7 @@ export default function() {
               <AuthRoute path="/user" component={UserRoute} />
               <AuthRoute path="/bookmark" component={Bookmark} />
 
+              <AuthRoute path="/settings" component={SettingsRoute} />
               <AuthRoute component={ComingSoonPage} />
             </Switch>
           </Layout>

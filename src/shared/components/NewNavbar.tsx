@@ -36,7 +36,7 @@ const userMenus = [
   { label: "Risk & Control", path: "/risk-and-control" },
   { label: "Reports", path: "/report" },
   { label: "Administrative", path: "/", children: adminMenus },
-  { label: "Settings", path: "/policy" }
+  { label: "Settings", path: "/settings" }
 ];
 
 const NewNavbar = () => {
