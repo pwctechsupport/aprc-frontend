@@ -1,0 +1,75 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "UNION",
+        "name": "Originator",
+        "possibleTypes": [
+          {
+            "name": "Policy"
+          },
+          {
+            "name": "BusinessProcess"
+          },
+          {
+            "name": "Control"
+          },
+          {
+            "name": "Risk"
+          },
+          {
+            "name": "User"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Item",
+        "possibleTypes": [
+          {
+            "name": "PolicyRisk"
+          },
+          {
+            "name": "Policy"
+          },
+          {
+            "name": "BookmarkBusinessProcess"
+          },
+          {
+            "name": "BookmarkControl"
+          },
+          {
+            "name": "BookmarkPolicy"
+          },
+          {
+            "name": "BookmarkRisk"
+          },
+          {
+            "name": "BusinessProcess"
+          },
+          {
+            "name": "Control"
+          },
+          {
+            "name": "PolicyCategory"
+          },
+          {
+            "name": "Reference"
+          },
+          {
+            "name": "ResourceRating"
+          },
+          {
+            "name": "Resource"
+          },
+          {
+            "name": "Risk"
+          },
+          {
+            "name": "User"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -2,13 +2,23 @@ import React from "react";
 import Router from "./Router";
 import { Provider } from "react-redux";
 import store from "./redux";
-import ApolloClient from "apollo-boost";
+import ApolloClient, {
+  IntrospectionFragmentMatcher,
+  InMemoryCache
+} from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ToastContainer, Slide } from "react-toastify";
 import { hot } from "react-hot-loader/root";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/app.scss";
+import fragmentTypes from "./generated/fragmentTypes.json";
+
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData: fragmentTypes
+});
+
+const cache = new InMemoryCache({ fragmentMatcher });
 
 const client = new ApolloClient({
   uri: "http://mandalorian.rubyh.co/graphql",
@@ -16,7 +26,8 @@ const client = new ApolloClient({
     Authorization: localStorage.token
       ? `Bearer ${localStorage.token}`
       : undefined
-  }
+  },
+  cache
 });
 
 const App: React.FC = () => {
