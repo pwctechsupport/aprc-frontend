@@ -12,7 +12,7 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
-import { NavLink as RrNavLink } from "react-router-dom";
+import { NavLink as RrNavLink, Link } from "react-router-dom";
 import pwcLogo from "../../assets/images/pwc-logo.png";
 import styled from "styled-components";
 import { FaBell, FaBookmark } from "react-icons/fa";
@@ -110,11 +110,15 @@ const NewNavbar = () => {
         </Collapse>
         <div className="d-flex align-items-center pr-2">
           <div className="mr-3">
-            <FaBookmark
+            {/* <FaBookmark
               onClick={handleToggle}
               className="clickable"
               size={22}
-            />
+            /> */}
+
+            <Link to="/bookmark" className="text-dark">
+              <FaBookmark className="clickable" size={22} />
+            </Link>
           </div>
           <div className="mr-4">
             <FaBell size={22} />

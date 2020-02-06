@@ -1,7 +1,38 @@
+fragment policyBookmark on Policy {
+  id
+  title
+}
+fragment businessProcessBookmark on BusinessProcess {
+  id
+  name
+}
+fragment controlBookmark on Control {
+  id
+  description
+}
+fragment riskBookmark on Risk {
+  id
+  name
+}
+fragment userBookmark on User {
+  id
+  name
+}
+
 query bookmarks($filter: BaseScalar = {}, $page: Int, $limit: Int) {
   bookmarks(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
+      originatorId
+      originatorType
+      originator {
+        ...policyBookmark
+        ...businessProcessBookmark
+        ...controlBookmark
+        ...riskBookmark
+        ...userBookmark
+      }
+      createdAt
     }
     metadata {
       currentPage
