@@ -34,12 +34,14 @@ const History = () => {
 
   const handleDelete = (values: any) => {
     const filtered = Object.keys(values).filter(key => values[key]);
-    console.log(filtered);
-    filtered.map(id => {
-      const historyId: DestroyVersionInput = { id };
-      destroy({
-        variables: { input: historyId }
-      });
+    let temp: number[] = [];
+    filtered.map(val => {
+      temp.push(parseInt(val));
+    });
+
+    const historyIds: DestroyVersionInput = { ids: temp };
+    destroy({
+      variables: { input: historyIds }
     });
   };
 
