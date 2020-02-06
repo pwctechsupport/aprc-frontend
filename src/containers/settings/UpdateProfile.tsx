@@ -6,8 +6,8 @@ import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   UpdateUserInput,
-  useUpdateUserMutation,
-  User
+  User,
+  useUpdateProfileMutation
 } from "../../generated/graphql";
 import { updateUser } from "../../redux/auth";
 import Button from "../../shared/components/Button";
@@ -24,7 +24,7 @@ const UpdateProfile = () => {
     defaultValues
   });
 
-  const [updateProfile, { loading }] = useUpdateUserMutation({
+  const [updateProfile, { loading }] = useUpdateProfileMutation({
     onCompleted: res => {
       toast.success("Update Success");
       const newUser = {
