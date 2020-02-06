@@ -10,7 +10,7 @@ import Table from "../../shared/components/Table";
 import { date } from "../../shared/formatter";
 
 const Bookmark = () => {
-  const { data, loading, networkStatus } = useBookmarksQuery({
+  const { data, networkStatus } = useBookmarksQuery({
     variables: {
       filter: {}
     }
