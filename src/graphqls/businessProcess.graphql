@@ -141,8 +141,8 @@ mutation createBookmarkBusinessProcess($id: ID!) {
   }
 }
 
-mutation destroyBookmarkBusinessProcess($id: ID!) {
-  destroyBookmarkBusinessProcess(input: { id: $id }) {
-    success
-  }
-}
+# mutation destroyBookmarkBusinessProcess($id: ID!) {
+#   destroyBookmarkBusinessProcess(input: { id: $id }) {
+#     success
+#   }
+# }

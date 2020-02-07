@@ -246,8 +246,8 @@ mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {
   }
 }
 
-mutation destroyBookmarkPolicy($id: ID!) {
-  destroyBookmarkPolicy(input: { id: $id }) {
-    success
-  }
-}
+# mutation destroyBookmarkPolicy($id: ID!) {
+#   destroyBookmarkPolicy(input: { id: $id }) {
+#     success
+#   }
+# }
