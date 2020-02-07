@@ -38,3 +38,10 @@ mutation updateUser($input: UpdateUserInput!) {
     errors
   }
 }
+
+mutation adminUpdateUser($input: AdminUpdateUserInput!) {
+  adminUpdateUser(input: $input) {
+    success
+    errors
+  }
+}

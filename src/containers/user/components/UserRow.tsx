@@ -3,10 +3,12 @@ import useForm from "react-hook-form";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import { oc } from "ts-optchain";
+import * as yup from "yup";
 import {
   RolesDocument,
   UserRowFragmentFragment,
-  PolicyCategoriesDocument
+  PolicyCategoriesDocument,
+  useAdminUpdateUserMutation
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -14,15 +16,32 @@ import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import { toLabelValue } from "../../../shared/formatter";
+import { notifyGraphQLErrors } from "../../../shared/utils/notif";
 
 const UserRow = ({ user, ...props }: UserRowProps) => {
   const [isEdit, setIsEdit] = useState(props.isEdit);
-  const { register, setValue } = useForm();
+  const { register, setValue, handleSubmit, errors } = useForm<UserRowValues>({
+    defaultValues: {
+      roleIds: oc(user)
+        .roles([])
+        .map(r => r.id),
+      policyCategoryIds: oc(user)
+        .policyCategories([])
+        .map(pc => pc.id)
+    },
+    validationSchema
+  });
 
   const getRoles = useLazyQueryReturnPromise(RolesDocument);
   const getPolicyCategories = useLazyQueryReturnPromise(
     PolicyCategoriesDocument
   );
+
+  const [update, updateM] = useAdminUpdateUserMutation({
+    refetchQueries: ["users"],
+    onCompleted,
+    onError: notifyGraphQLErrors
+  });
 
   async function handleGetRoles(input: string) {
     try {
@@ -56,7 +75,20 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     setIsEdit(!isEdit);
   }
 
-  function handleSave() {
+  function handleSave(data: UserRowValues) {
+    update({
+      variables: {
+        input: {
+          firstName: data.firstName,
+          userId: oc(user).id(""),
+          policyCategoryIds: oc(data).policyCategoryIds([]),
+          roleIds: oc(data).roleIds([])
+        }
+      }
+    });
+  }
+
+  function onCompleted() {
     setIsEdit(false);
   }
 
@@ -68,11 +100,13 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
         <td>
           {oc(user)
             .roles([])
+            .map(r => r.name)
             .join(",")}
         </td>
         <td>
           {oc(user)
             .policyCategories([])
+            .map(p => p.name)
             .join(",")}
         </td>
         <td>
@@ -90,17 +124,26 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     return (
       <tr>
         <td>
-          <Input />
+          <Input
+            required
+            name="firstName"
+            innerRef={register({ required: true })}
+            defaultValue={oc(user).name("")}
+            error={oc(errors).firstName.message()}
+          />
         </td>
         <td>{oc(user).id("")}</td>
         <td>
           <AsyncSelect
             cacheOptions
             defaultOptions
-            name="roles"
+            name="roleIds"
             register={register}
             setValue={setValue}
             loadOptions={handleGetRoles}
+            defaultValue={oc(user)
+              .roles([])
+              .map(toLabelValue)}
           />
         </td>
         <td>
@@ -108,14 +151,21 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
             isMulti
             cacheOptions
             defaultOptions
-            name="policyCategoriesId"
+            name="policyCategoryIds"
             register={register}
             setValue={setValue}
             loadOptions={handleGetPolicyCategories}
+            defaultValue={oc(user)
+              .policyCategories([])
+              .map(toLabelValue)}
           />
         </td>
         <td>
-          <Button className="pwc" onClick={handleSave}>
+          <Button
+            loading={updateM.loading}
+            className="pwc"
+            onClick={handleSubmit(handleSave)}
+          >
             Save
           </Button>
         </td>
@@ -128,5 +178,15 @@ interface UserRowProps {
   isEdit?: boolean;
   user?: UserRowFragmentFragment;
 }
+
+interface UserRowValues {
+  firstName?: string;
+  roleIds?: string[];
+  policyCategoryIds?: string[];
+}
+
+const validationSchema = yup.object().shape({
+  firstName: yup.string().required("Required")
+});
 
 export default UserRow;

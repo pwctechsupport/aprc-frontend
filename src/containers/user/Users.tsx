@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { Col, Container, Row } from "reactstrap";
 import Button from "../../shared/components/Button";
@@ -9,9 +9,22 @@ import { NavLink } from "react-router-dom";
 import { useUsersQuery } from "../../generated/graphql";
 import { NetworkStatus } from "apollo-boost";
 import { oc } from "ts-optchain";
+import { useDebounce } from "use-debounce/lib";
 
 const Users = () => {
-  const { data, networkStatus } = useUsersQuery();
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 800);
+  const { data, networkStatus } = useUsersQuery({
+    variables: {
+      filter: {
+        first_name_cont: debouncedSearch
+      }
+    }
+  });
+
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearch(e.target.value);
+  }
 
   return (
     <div>
@@ -24,7 +37,7 @@ const Users = () => {
 
         <Row>
           <Col lg={4}>
-            <Input placeholder="Search Users..." />
+            <Input placeholder="Search Users..." onChange={handleSearch} />
           </Col>
         </Row>
 
