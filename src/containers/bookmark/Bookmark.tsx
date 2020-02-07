@@ -5,13 +5,20 @@ import Helmet from "react-helmet";
 import { Link } from "react-router-dom";
 import { Col, Container, Input, Row } from "reactstrap";
 import { oc } from "ts-optchain";
-import { useBookmarksQuery } from "../../generated/graphql";
+import {
+  useBookmarksQuery,
+  useDestroyBookmarkMutation
+} from "../../generated/graphql";
 import Table from "../../shared/components/Table";
 import { date } from "../../shared/formatter";
 import { useDebounce } from "use-debounce/lib";
+import { FaTrash } from "react-icons/fa";
+import DialogButton from "../../shared/components/DialogButton";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 
 const Bookmark = () => {
   const [search, setSearch] = useState("");
+  const [checked, setChecked] = useState<string[]>([]);
   const [debounceSearch] = useDebounce(search, 800);
   const { data, networkStatus } = useBookmarksQuery({
     variables: {
@@ -22,8 +29,43 @@ const Bookmark = () => {
     }
   });
 
+  const [deleteBookmarks, deleteBookmarksM] = useDestroyBookmarkMutation({
+    refetchQueries: ["bookmarks"],
+    onError: notifyGraphQLErrors,
+    onCompleted: onDeleteComplete
+  });
+
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
+  }
+
+  function toggleCheck(id: string) {
+    if (checked.includes(id)) {
+      setChecked(checked.filter(i => i !== id));
+    } else {
+      setChecked(checked.concat(id));
+    }
+  }
+
+  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      setChecked(
+        oc(data)
+          .bookmarks.collection([])
+          .map(b => b.id)
+      );
+    } else {
+      setChecked([]);
+    }
+  }
+
+  function handleDelete() {
+    deleteBookmarks({ variables: { ids: checked } });
+  }
+
+  function onDeleteComplete() {
+    notifySuccess();
+    setChecked([]);
   }
 
   return (
@@ -39,6 +81,18 @@ const Bookmark = () => {
           <Col lg={4}>
             <Input placeholder="Search..." onChange={handleSearch} />
           </Col>
+          <Col lg={8}>
+            <div className="text-right">
+              <DialogButton
+                className="soft red"
+                disabled={!checked.length}
+                loading={deleteBookmarksM.loading}
+                onConfirm={handleDelete}
+              >
+                <FaTrash />
+              </DialogButton>
+            </div>
+          </Col>
         </Row>
 
         <div className="table-responsive mt-5">
@@ -48,6 +102,19 @@ const Bookmark = () => {
           >
             <thead>
               <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    checked={
+                      checked.length &&
+                      checked.length ===
+                        oc(data).bookmarks.collection([]).length
+                        ? true
+                        : false
+                    }
+                    onChange={toggleCheckAll}
+                  />
+                </th>
                 <th>Bookmarks Category</th>
                 <th>Title</th>
                 <th>Date Added</th>
@@ -59,6 +126,13 @@ const Bookmark = () => {
                 .map(bookmark => {
                   return (
                     <tr key={bookmark.id}>
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={checked.includes(bookmark.id)}
+                          onChange={e => toggleCheck(bookmark.id)}
+                        />
+                      </td>
                       <td>{bookmark.originatorType}</td>
                       <td>
                         <Title

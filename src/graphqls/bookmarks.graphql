@@ -42,3 +42,10 @@ query bookmarks($filter: BaseScalar = {}, $page: Int, $limit: Int) {
     }
   }
 }
+
+mutation destroyBookmark($ids: [ID!]!) {
+  destroyBookmark(input: {ids: $ids}) {
+    success
+    errors
+  }
+}

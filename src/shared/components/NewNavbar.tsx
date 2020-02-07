@@ -116,7 +116,7 @@ const NewNavbar = () => {
               size={22}
             /> */}
 
-            <Link to="/settings/bookmarks" className="text-dark">
+            <Link to="/bookmark" className="text-dark">
               <FaBookmark className="clickable" size={22} />
             </Link>
           </div>
