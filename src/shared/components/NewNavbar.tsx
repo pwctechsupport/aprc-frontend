@@ -121,7 +121,9 @@ const NewNavbar = () => {
             </Link>
           </div>
           <div className="mr-4">
-            <FaBell size={22} />
+            <Link to="/notifications" className="text-dark">
+              <FaBell className="clickable" size={22} />
+            </Link>
           </div>
           <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
         </div>
