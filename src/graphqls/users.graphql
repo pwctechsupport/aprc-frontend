@@ -45,3 +45,10 @@ mutation adminUpdateUser($input: AdminUpdateUserInput!) {
     errors
   }
 }
+
+mutation destroyUser($id: ID){
+  destroyUser(input: {id: $id}) {
+    success
+    errors
+  }
+}

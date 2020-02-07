@@ -8,7 +8,8 @@ import {
   RolesDocument,
   UserRowFragmentFragment,
   PolicyCategoriesDocument,
-  useAdminUpdateUserMutation
+  useAdminUpdateUserMutation,
+  useDestroyUserMutation
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -40,6 +41,11 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
   const [update, updateM] = useAdminUpdateUserMutation({
     refetchQueries: ["users"],
     onCompleted,
+    onError: notifyGraphQLErrors
+  });
+
+  const [destroy, destroyM] = useDestroyUserMutation({
+    refetchQueries: ["users"],
     onError: notifyGraphQLErrors
   });
 
@@ -92,6 +98,10 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     setIsEdit(false);
   }
 
+  function handleDestroy(id: string) {
+    destroy({ variables: { id } });
+  }
+
   if (!isEdit) {
     return (
       <tr>
@@ -114,7 +124,12 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
             <AiFillEdit />
           </Button>
 
-          <DialogButton className="soft red">
+          <DialogButton
+            data={oc(user).id()}
+            loading={destroyM.loading}
+            className="soft red"
+            onConfirm={handleDestroy}
+          >
             <FaTrash />
           </DialogButton>
         </td>
