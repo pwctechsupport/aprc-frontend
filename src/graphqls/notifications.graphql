@@ -1,0 +1,55 @@
+fragment policyNotifs on Policy {
+  id
+  title
+}
+
+fragment businessProcessNotifs on BusinessProcess {
+  id
+  name
+}
+
+fragment controlNotifs on Control {
+  id
+  description
+}
+
+fragment riskNotifs on Risk {
+  id
+  name
+}
+
+fragment userNotifs on User {
+  id
+  name
+}
+
+query notifications($filter: BaseScalar = {}, $limit: Int) {
+  notifications(filter: $filter, limit: $limit) {
+    collection {
+      id
+      createdAt
+      isRead
+      title
+      originatorType
+      originatorId
+      originator {
+        ...policyNotifs
+        ...businessProcessNotifs
+        ...controlNotifs
+        ...riskNotifs
+        ...userNotifs
+      }
+      senderUser {
+        name
+        firstName
+        lastName
+      }
+    }
+  }
+}
+
+mutation destroyBulkNotification($input: DestroyBulkNotificationInput!) {
+  destroyBulkNotification(input: $input) {
+    clientMutationId
+  }
+}

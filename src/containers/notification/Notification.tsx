@@ -6,27 +6,44 @@ import Tooltip from "../../shared/components/Tooltip";
 import { FaTrash } from "react-icons/fa";
 import Table from "../../shared/components/Table";
 import { date as formatDate } from "../../shared/formatter";
+import {
+  useNotificationsQuery,
+  useDestroyBulkNotificationMutation,
+  DestroyBulkNotificationInput
+} from "../../generated/graphql";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import { RouteComponentProps } from "react-router";
+import { toast } from "react-toastify";
 
 const dummy = [
   {
-    id: 1,
-    name: "Ann Flores",
-    message: "Prepare Tender Proposal",
+    id: 0,
     createdAt: new Date(),
-    selected: false
-  },
-  {
-    id: 2,
-    name: "Ian Reynard",
-    message: "Request to Edit Policy",
-    createdAt: new Date(),
-    selected: false
+    isRead: false,
+    title: "",
+    originatorType: "",
+    originatorId: 0,
+    selected: false,
+    senderUser: {
+      name: "",
+      firstName: "",
+      lastName: ""
+    }
   }
 ];
-const Notification = () => {
+const Notification = ({ history }: RouteComponentProps) => {
+  const { data, loading } = useNotificationsQuery({
+    fetchPolicy: "network-only"
+  });
   const [search, setSearch] = useState("");
   const [selectAll, setSelectAll] = useState(false);
   const [notifs, setNotifs] = useState(dummy);
+  const [destroyNotifs] = useDestroyBulkNotificationMutation({
+    onCompleted: () => toast.success("Delete Success"),
+    onError: () => toast.error("Delete Failed"),
+    refetchQueries: ["notifications"],
+    awaitRefetchQueries: true
+  });
   const setItemChecked = (id: string) => {
     setNotifs(n =>
       n.map(item =>
@@ -35,6 +52,28 @@ const Notification = () => {
     );
     checkSelection();
   };
+
+  const prepareNotifs = () => {
+    const prepared: any[] = [];
+    if (data) {
+      const n = data.notifications;
+      const notifs = n ? n.collection : [];
+      if (notifs) {
+        notifs.map(n => {
+          const temp = {
+            ...n,
+            selected: false
+          };
+          prepared.push(temp);
+        });
+        setNotifs(prepared);
+      }
+    }
+  };
+
+  useEffect(() => {
+    prepareNotifs();
+  }, [data]);
 
   useEffect(() => {
     checkSelection();
@@ -59,6 +98,23 @@ const Notification = () => {
     }
   };
 
+  const redirect = (type: String, id: number) => {
+    if (type == "Policy") history.push(`/policy/${id}`);
+  };
+
+  const handleDelete = () => {
+    const toBeDeleted = notifs.filter(n => n.selected);
+    const temp: string[] = [];
+    toBeDeleted.map(data => {
+      const notifsId = String(data.id);
+      temp.push(notifsId);
+    });
+    const notifIds: DestroyBulkNotificationInput = { ids: temp };
+    destroyNotifs({
+      variables: { input: notifIds }
+    });
+  };
+
   return (
     <div>
       <Container fluid className="p-5">
@@ -72,7 +128,7 @@ const Notification = () => {
               className="orange"
             />
           </div>
-          <DialogButton onConfirm={() => {}}>
+          <DialogButton onConfirm={() => handleDelete()}>
             <Tooltip description="Delete Selected History">
               <div className="clickable d-flex justify-content-center align-items-center deleteButton">
                 <FaTrash className="text-orange " size={22} />
@@ -81,44 +137,57 @@ const Notification = () => {
           </DialogButton>
         </div>
         <div className="table-responsive mt-5">
-          <Table>
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={selectAll}
-                    onChange={e => setSelectAllCheck()}
-                  />
-                </th>
-                <th>Name</th>
-                <th>Subject</th>
-                <th>Date Added</th>
-              </tr>
-            </thead>
-            <tbody>
-              {notifs.map(data => (
-                <tr key={data.id}>
-                  <td>
+          {loading ? (
+            <LoadingSpinner centered size={30} />
+          ) : (
+            <Table>
+              <thead>
+                <tr>
+                  <th>
                     <input
                       type="checkbox"
-                      checked={data.selected}
-                      onChange={e => setItemChecked(String(data.id))}
+                      checked={selectAll}
+                      onChange={e => setSelectAllCheck()}
                     />
-                  </td>
-                  <td>{data.name}</td>
-                  <td>{data.message}</td>
-                  <td>
-                    {formatDate(data.createdAt, {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "numeric"
-                    })}
-                  </td>
+                  </th>
+                  <th>Name</th>
+                  <th>Subject</th>
+                  <th>Date Added</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {notifs.map(data => (
+                  <tr
+                    key={data.id}
+                    // onClick={() =>
+                    //   redirect(data.originatorType, data.originatorId)
+                    // }
+                  >
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={data.selected}
+                        onChange={e => setItemChecked(String(data.id))}
+                      />
+                    </td>
+                    <td className={data.isRead ? "" : "text-orange text-bold"}>
+                      {data.senderUser.name}
+                    </td>
+                    <td className={data.isRead ? "" : "text-orange text-bold"}>
+                      {data.title}
+                    </td>
+                    <td className={data.isRead ? "" : "text-orang text-bold"}>
+                      {formatDate(data.createdAt, {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "numeric"
+                      })}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </div>
       </Container>
     </div>
