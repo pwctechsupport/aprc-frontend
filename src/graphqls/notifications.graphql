@@ -53,3 +53,12 @@ mutation destroyBulkNotification($input: DestroyBulkNotificationInput!) {
     clientMutationId
   }
 }
+
+mutation isRead($input: IsReadInput!) {
+  isRead(input: $input) {
+    clientMutationId
+    errors
+    success
+    notification
+  }
+}

@@ -9,7 +9,9 @@ import { date as formatDate } from "../../shared/formatter";
 import {
   useNotificationsQuery,
   useDestroyBulkNotificationMutation,
-  DestroyBulkNotificationInput
+  DestroyBulkNotificationInput,
+  useIsReadMutation,
+  IsReadInput
 } from "../../generated/graphql";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { RouteComponentProps } from "react-router";
@@ -41,6 +43,10 @@ const Notification = ({ history }: RouteComponentProps) => {
   const [destroyNotifs] = useDestroyBulkNotificationMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
+    refetchQueries: ["notifications"],
+    awaitRefetchQueries: true
+  });
+  const [isRead] = useIsReadMutation({
     refetchQueries: ["notifications"],
     awaitRefetchQueries: true
   });
@@ -100,7 +106,16 @@ const Notification = ({ history }: RouteComponentProps) => {
   };
 
   const redirect = (type: String, id: number) => {
+    const input: IsReadInput = { id: String(id) };
+    console.log("i", input);
+    isRead({
+      variables: { input }
+    });
     if (type == "Policy") history.push(`/policy/${id}`);
+    else if (type == "BusinessProcess") history.push(`/business-process/${id}`);
+    else if (type == "Control") history.push(`/control/${id}`);
+    else if (type == "Risk") history.push(`/risk/${id}`);
+    else if (type == "User") history.push(`/settings/update-profile`);
   };
 
   const handleDelete = () => {
