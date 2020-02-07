@@ -15,8 +15,14 @@ query users($filter: BaseScalar = {}, $page: Int, $limit: Int) {
 fragment userRowFragment on User {
   id
   name
-  roles { id name }
-  policyCategories { id name }
+  roles {
+    id
+    name
+  }
+  policyCategories {
+    id
+    name
+  }
 }
 
 query user($id: ID!) {
@@ -46,8 +52,8 @@ mutation adminUpdateUser($input: AdminUpdateUserInput!) {
   }
 }
 
-mutation destroyUser($id: ID){
-  destroyUser(input: {id: $id}) {
+mutation destroyUser($id: ID!) {
+  destroyUser(input: { id: $id }) {
     success
     errors
   }
