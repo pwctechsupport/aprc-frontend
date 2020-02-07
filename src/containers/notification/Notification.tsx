@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Input } from "reactstrap";
 import DialogButton from "../../shared/components/DialogButton";
@@ -44,13 +44,14 @@ const Notification = ({ history }: RouteComponentProps) => {
     refetchQueries: ["notifications"],
     awaitRefetchQueries: true
   });
-  const setItemChecked = (id: string) => {
+  const setItemChecked = (id: string, e: ChangeEvent) => {
     setNotifs(n =>
       n.map(item =>
         String(item.id) === id ? { ...item, selected: !item.selected } : item
       )
     );
     checkSelection();
+    e.stopPropagation();
   };
 
   const prepareNotifs = () => {
@@ -159,15 +160,15 @@ const Notification = ({ history }: RouteComponentProps) => {
                 {notifs.map(data => (
                   <tr
                     key={data.id}
-                    // onClick={() =>
-                    //   redirect(data.originatorType, data.originatorId)
-                    // }
+                    onClick={() =>
+                      redirect(data.originatorType, data.originatorId)
+                    }
                   >
                     <td>
                       <input
                         type="checkbox"
                         checked={data.selected}
-                        onChange={e => setItemChecked(String(data.id))}
+                        onChange={e => setItemChecked(String(data.id), e)}
                       />
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
