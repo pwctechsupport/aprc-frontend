@@ -24,7 +24,8 @@ import {
   useCreateResourceMutation,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation
+  useUpdatePolicyMutation,
+  useReviewPolicyDraftMutation
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -43,7 +44,7 @@ import {
   previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
 import { formatPolicyChart } from "../../shared/utils/formatPolicy";
-import { notifyGraphQLErrors } from "../../shared/utils/notif";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
@@ -82,6 +83,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     variables: { id },
     fetchPolicy: "network-only"
   });
+
+  const isDraft = oc(data).policy.draft.id() ? true : false
 
   // Delete current policy
   const [destroyMain] = useDestroyPolicyMutation({
@@ -179,8 +182,21 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     createResource({ variables: { input } });
   }
 
+  const [reviewPolicy, reviewPolicyM] = useReviewPolicyDraftMutation({
+    refetchQueries: ["policy"],
+    onError: notifyGraphQLErrors
+  });
+
+  function review({ publish }: { publish: boolean }) {
+    reviewPolicy({ variables: { id, publish } }).then(() => {
+      notifySuccess(publish ? "Changes published" : "Changes rejected");
+    });
+  }
+
   const title = oc(data).policy.title("");
-  const description = oc(data).policy.description("");
+  const description = isDraft
+    ? get(data, "policy.draft.objectResult.description", "")
+    : oc(data).policy.description("");
   const policyCategoryId = oc(data).policy.policyCategory.id("");
   const parentId = oc(data).policy.parentId("");
   const children = oc(data).policy.children([]);
@@ -482,6 +498,29 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   };
 
   const renderPolicyAction = () => {
+    if (isDraft) {
+      return (
+        <div>
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewPolicyM.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewPolicyM.loading}
+          >
+            Approve
+          </DialogButton>
+        </div>
+      );
+    }
+
     if (inEditMode) {
       return (
         <Button onClick={toggleEditMode} color="">
