@@ -69,6 +69,27 @@
             "name": "User"
           }
         ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Object",
+        "possibleTypes": [
+          {
+            "name": "Policy"
+          },
+          {
+            "name": "BusinessProcess"
+          },
+          {
+            "name": "Control"
+          },
+          {
+            "name": "Risk"
+          },
+          {
+            "name": "User"
+          }
+        ]
       }
     ]
   }

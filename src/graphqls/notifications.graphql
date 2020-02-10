@@ -57,8 +57,5 @@ mutation destroyBulkNotification($input: DestroyBulkNotificationInput!) {
 mutation isRead($input: IsReadInput!) {
   isRead(input: $input) {
     clientMutationId
-    errors
-    success
-    notification
   }
 }
