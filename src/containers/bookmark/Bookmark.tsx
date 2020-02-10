@@ -2,7 +2,7 @@ import { NetworkStatus } from "apollo-boost";
 import { get } from "lodash";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { Col, Container, Input, Row } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
@@ -16,7 +16,7 @@ import { FaTrash } from "react-icons/fa";
 import DialogButton from "../../shared/components/DialogButton";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 
-const Bookmark = () => {
+const Bookmark = ({ history }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
   const [checked, setChecked] = useState<string[]>([]);
   const [debounceSearch] = useDebounce(search, 800);
@@ -66,6 +66,32 @@ const Bookmark = () => {
   function onDeleteComplete() {
     notifySuccess();
     setChecked([]);
+  }
+
+  function handleClickRow({
+    id,
+    type
+  }: {
+    id?: string | null;
+    type: OriginatorType;
+  }) {
+    let link: string = "/";
+
+    if (type) {
+      if (type === "Policy") {
+        link = `/business-process/${id}`;
+      } else if (type === "BusinessProcess") {
+        link = `/business-process/${id}`;
+      } else if (type === "Control") {
+        link = `/control/${id}`;
+      } else if (type === "Risk") {
+        link = `/risk-and-control/${id}`;
+      } else if (type === "User") {
+        link = `/user/${id}`;
+      }
+
+      history.push(link);
+    }
   }
 
   return (
@@ -125,24 +151,27 @@ const Bookmark = () => {
                 .bookmarks.collection([])
                 .map(bookmark => {
                   return (
-                    <tr key={bookmark.id}>
+                    <tr
+                      key={bookmark.id}
+                      onClick={() =>
+                        handleClickRow({
+                          id: bookmark.originatorId,
+                          type: bookmark.originatorType as OriginatorType
+                        })
+                      }
+                    >
                       <td>
                         <input
                           type="checkbox"
                           checked={checked.includes(bookmark.id)}
                           onChange={e => toggleCheck(bookmark.id)}
+                          onClick={e => e.stopPropagation()}
                         />
                       </td>
                       <td>{bookmark.originatorType}</td>
                       <td>
-                        <Title
-                          title={
-                            get(bookmark, "originator.name") ||
-                            get(bookmark, "originator.title")
-                          }
-                          id={bookmark.originatorId}
-                          type={bookmark.originatorType as OriginatorType}
-                        />
+                        {get(bookmark, "originator.name") ||
+                          get(bookmark, "originator.title")}
                       </td>
                       <td>{date(bookmark.createdAt)}</td>
                     </tr>
@@ -162,33 +191,5 @@ type OriginatorType =
   | "Control"
   | "Risk"
   | "User";
-
-const Title = ({
-  title,
-  id,
-  type
-}: {
-  title: string;
-  id?: string | null;
-  type: OriginatorType;
-}) => {
-  let link: string = "/";
-
-  if (type) {
-    if (type === "Policy") {
-      link = `/business-process/${id}`;
-    } else if (type === "BusinessProcess") {
-      link = `/business-process/${id}`;
-    } else if (type === "Control") {
-      link = `/control/${id}`;
-    } else if (type === "Risk") {
-      link = `/risk-and-control/${id}`;
-    } else if (type === "User") {
-      link = `/user/${id}`;
-    }
-  }
-
-  return <Link to={link}>{title}</Link>;
-};
 
 export default Bookmark;
