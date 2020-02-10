@@ -14,6 +14,7 @@ import DialogButton from "../../shared/components/DialogButton";
 import Tooltip from "../../shared/components/Tooltip";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 
 const History = () => {
   const { data, loading } = useHistoryListQuery({
@@ -45,6 +46,10 @@ const History = () => {
     });
   };
 
+  // if (loading) {
+  //   return <LoadingSpinner centered />;
+  // }
+
   return (
     <div>
       <Form onSubmit={handleSubmit(handleDelete)}>
@@ -52,9 +57,9 @@ const History = () => {
           <h4>History</h4>
           <DialogButton onConfirm={handleSubmit(handleDelete)}>
             <Tooltip description="Delete Selected History">
-              <DeleteButton className="clickable d-flex justify-content-center align-items-center">
+              <div className="clickable d-flex justify-content-center align-items-center deleteButton">
                 <FaTrash className="text-orange " size={22} />
-              </DeleteButton>
+              </div>
             </Tooltip>
           </DialogButton>
         </div>
@@ -82,7 +87,7 @@ const History = () => {
                             {history.description}
                           </Label>
                         </FormGroup>
-                        <Devider />
+                        <div className="divider" />
                       </Fragment>
                     );
                   })}
