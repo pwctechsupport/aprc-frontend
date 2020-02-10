@@ -71,6 +71,28 @@ fragment policyBranch on Policy {
 query policy($id: ID!) {
   policy(id: $id) {
     ...policyFragment
+    draft {
+      id
+      objectResult {
+        ... on Policy {
+          id
+          title
+          status
+          policyCategory {
+            id
+            name
+          }
+          ancestry
+          description
+          parentId
+          references {
+            id
+            name
+          }
+        }
+      }
+      objectChanges
+    }
   }
 }
 
@@ -251,3 +273,10 @@ mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {
 #     success
 #   }
 # }
+
+mutation reviewPolicyDraft($id: ID!, $publish: Boolean!) {
+  reviewPolicyDraft(input: {id: $id, publish: $publish}) {
+    success
+    errors
+  }
+}
