@@ -12,7 +12,7 @@ query users($filter: BaseScalar = {}, $page: Int, $limit: Int) {
   }
 }
 
-fragment userRowFragment on User {
+fragment userFragment on User {
   id
   name
   roles {
@@ -22,6 +22,18 @@ fragment userRowFragment on User {
   policyCategories {
     id
     name
+  }
+}
+
+fragment userRowFragment on User {
+  ...userFragment
+  draft {
+    id
+    objectResult {
+      ... on User {
+        ...userFragment
+      }
+    }
   }
 }
 
@@ -54,6 +66,13 @@ mutation adminUpdateUser($input: AdminUpdateUserInput!) {
 
 mutation destroyUser($id: ID!) {
   destroyUser(input: { id: $id }) {
+    success
+    errors
+  }
+}
+
+mutation reviewUserDraft($id: ID!, $publish: Boolean!) {
+  reviewUserDraft(input: {id: $id, publish: $publish}) {
     success
     errors
   }

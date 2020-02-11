@@ -5,7 +5,7 @@ fragment policyNotifs on Policy {
 
 fragment businessProcessNotifs on BusinessProcess {
   id
-  name
+  processName: name
 }
 
 fragment controlNotifs on Control {
@@ -15,7 +15,7 @@ fragment controlNotifs on Control {
 
 fragment riskNotifs on Risk {
   id
-  name
+  riskName: name
 }
 
 fragment userNotifs on User {

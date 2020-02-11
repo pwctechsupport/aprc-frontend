@@ -4,7 +4,7 @@ fragment policyBookmark on Policy {
 }
 fragment businessProcessBookmark on BusinessProcess {
   id
-  name
+  processName: name
 }
 fragment controlBookmark on Control {
   id
@@ -12,7 +12,7 @@ fragment controlBookmark on Control {
 }
 fragment riskBookmark on Risk {
   id
-  name
+  riskName: name
 }
 fragment userBookmark on User {
   id
