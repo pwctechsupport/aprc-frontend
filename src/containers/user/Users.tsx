@@ -19,7 +19,8 @@ const Users = () => {
       filter: {
         first_name_cont: debouncedSearch
       }
-    }
+    },
+    fetchPolicy: "no-cache"
   });
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
