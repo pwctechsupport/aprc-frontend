@@ -32,6 +32,7 @@ const UpdateProfile = () => {
         email: oc(res).updateUser.user.email(""),
         firstName: oc(res).updateUser.user.firstName(""),
         lastName: oc(res).updateUser.user.lastName(""),
+        name: oc(res).updateUser.user.name(""),
         phone: oc(res).updateUser.user.phone(""),
         jobPosition: oc(res).updateUser.user.jobPosition(""),
         department: oc(res).updateUser.user.department("")
@@ -56,14 +57,8 @@ const UpdateProfile = () => {
       <h4>Profile</h4>
       <Form onSubmit={handleSubmit(temp)}>
         <Input
-          name="firstName"
+          name="name"
           label="First name"
-          innerRef={register({ required: true })}
-          error={errors.name && errors.name.message}
-        />
-        <Input
-          name="lastName"
-          label="Last name"
           innerRef={register({ required: true })}
           error={errors.name && errors.name.message}
         />

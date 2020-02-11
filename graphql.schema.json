@@ -7211,6 +7211,16 @@
             "defaultValue": null
           },
           {
+            "name": "name",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "email",
             "description": "",
             "type": {
@@ -14333,6 +14343,16 @@
           },
           {
             "name": "passwordConfirmation",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "name",
             "description": "",
             "type": {
               "kind": "SCALAR",
