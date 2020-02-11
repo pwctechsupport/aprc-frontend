@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import useForm from "react-hook-form";
 import { AiFillEdit } from "react-icons/ai";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaCheck, FaTimes } from "react-icons/fa";
 import { oc } from "ts-optchain";
+import get from "lodash/get";
 import * as yup from "yup";
 import {
   RolesDocument,
   UserRowFragmentFragment,
   PolicyCategoriesDocument,
   useAdminUpdateUserMutation,
-  useDestroyUserMutation
+  useDestroyUserMutation,
+  UserFragmentFragment,
+  useReviewUserDraftMutation
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -17,7 +20,10 @@ import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import { toLabelValue } from "../../../shared/formatter";
-import { notifyGraphQLErrors } from "../../../shared/utils/notif";
+import {
+  notifyGraphQLErrors,
+  notifySuccess
+} from "../../../shared/utils/notif";
 
 const UserRow = ({ user, ...props }: UserRowProps) => {
   const [isEdit, setIsEdit] = useState(props.isEdit);
@@ -48,6 +54,19 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     refetchQueries: ["users"],
     onError: notifyGraphQLErrors
   });
+
+  const [reviewUser, reviewM] = useReviewUserDraftMutation({
+    refetchQueries: ["users"],
+    onError: notifyGraphQLErrors
+  });
+
+  const draft = oc(user).draft.objectResult();
+  let name = oc(user).name("");
+
+  if (draft) {
+    const draftData: any = draft || {};
+    name = draftData.name;
+  }
 
   async function handleGetRoles(input: string) {
     try {
@@ -85,7 +104,7 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     update({
       variables: {
         input: {
-          firstName: data.firstName,
+          name: data.name || "",
           userId: oc(user).id(""),
           policyCategoryIds: oc(data).policyCategoryIds([]),
           roleIds: oc(data).roleIds([])
@@ -102,10 +121,25 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     destroy({ variables: { id } });
   }
 
+  function handleApprove(id: string) {
+    reviewUser({ variables: { id, publish: true } }).then(() =>
+      notifySuccess("Changes approved")
+    );
+  }
+
+  function handleReject(id: string) {
+    reviewUser({ variables: { id, publish: false } }).then(() =>
+      notifySuccess("Changes rejected")
+    );
+  }
+
   if (!isEdit) {
     return (
       <tr>
-        <td>{oc(user).name("")}</td>
+        <td>
+          {draft ? <span className="text-orange">[Draft] </span> : null}
+          {name}
+        </td>
         <td>{oc(user).id("")}</td>
         <td>
           {oc(user)
@@ -119,20 +153,44 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
             .map(p => p.name)
             .join(",")}
         </td>
-        <td>
-          <Button onClick={toggleEdit} className="soft orange mr-2">
-            <AiFillEdit />
-          </Button>
+        {draft ? (
+          <td>
+            <DialogButton
+              title="Approve"
+              data={oc(user).id()}
+              onConfirm={handleApprove}
+              className="soft orange mr-2"
+              loading={reviewM.loading}
+            >
+              <FaCheck />
+            </DialogButton>
+            <DialogButton
+              title="Reject"
+              data={oc(user).id()}
+              onConfirm={handleReject}
+              className="soft orange"
+              loading={reviewM.loading}
+            >
+              <FaTimes />
+            </DialogButton>
+          </td>
+        ) : (
+          <td>
+            <Button onClick={toggleEdit} className="soft orange mr-2">
+              <AiFillEdit />
+            </Button>
 
-          <DialogButton
-            data={oc(user).id()}
-            loading={destroyM.loading}
-            className="soft red"
-            onConfirm={handleDestroy}
-          >
-            <FaTrash />
-          </DialogButton>
-        </td>
+            <DialogButton
+              title="Delete"
+              data={oc(user).id()}
+              loading={destroyM.loading}
+              className="soft red"
+              onConfirm={handleDestroy}
+            >
+              <FaTrash />
+            </DialogButton>
+          </td>
+        )}
       </tr>
     );
   } else {
@@ -141,10 +199,10 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
         <td>
           <Input
             required
-            name="firstName"
+            name="name"
             innerRef={register({ required: true })}
-            defaultValue={oc(user).name("")}
-            error={oc(errors).firstName.message()}
+            defaultValue={name}
+            error={get(errors, "name.message", undefined) as string | undefined}
           />
         </td>
         <td>{oc(user).id("")}</td>
@@ -195,13 +253,13 @@ interface UserRowProps {
 }
 
 interface UserRowValues {
-  firstName?: string;
+  name?: string;
   roleIds?: string[];
   policyCategoryIds?: string[];
 }
 
 const validationSchema = yup.object().shape({
-  firstName: yup.string().required("Required")
+  name: yup.string().required("Required")
 });
 
 export default UserRow;
