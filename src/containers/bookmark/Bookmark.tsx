@@ -2,18 +2,18 @@ import { NetworkStatus } from "apollo-boost";
 import { get } from "lodash";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
+import { RouteComponentProps } from "react-router-dom";
 import { Col, Container, Input, Row } from "reactstrap";
 import { oc } from "ts-optchain";
+import { useDebounce } from "use-debounce/lib";
 import {
   useBookmarksQuery,
   useDestroyBookmarkMutation
 } from "../../generated/graphql";
+import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
 import { date } from "../../shared/formatter";
-import { useDebounce } from "use-debounce/lib";
-import { FaTrash } from "react-icons/fa";
-import DialogButton from "../../shared/components/DialogButton";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
@@ -23,7 +23,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const { data, networkStatus } = useBookmarksQuery({
     variables: {
       filter: {
-        originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_cont: debounceSearch
+        originator_of_Policy_type_title_or_originator_o_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_cont: debounceSearch
         // originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_or_originator_of_User_type_name_cont: debounceSearch
       }
     }

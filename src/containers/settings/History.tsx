@@ -1,23 +1,22 @@
-import React, { Fragment } from "react";
-import {
-  useHistoryListQuery,
-  HistoryListQuery,
-  DestroyVersionInput,
-  useDestroyHistoryMutation
-} from "../../generated/graphql";
-import { date as formatDate } from "../../shared/formatter";
-import styled from "styled-components";
 import groupBy from "lodash/groupBy";
-import { Form, FormGroup, Input, Label } from "reactstrap";
+import React, { Fragment } from "react";
 import useForm from "react-hook-form";
-import DialogButton from "../../shared/components/DialogButton";
-import Tooltip from "../../shared/components/Tooltip";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import { Form, FormGroup, Input, Label } from "reactstrap";
+import styled from "styled-components";
+import {
+  DestroyVersionInput,
+  HistoryListQuery,
+  useDestroyHistoryMutation,
+  useHistoryListQuery
+} from "../../generated/graphql";
+import DialogButton from "../../shared/components/DialogButton";
+import Tooltip from "../../shared/components/Tooltip";
+import { date as formatDate } from "../../shared/formatter";
 
 const History = () => {
-  const { data, loading } = useHistoryListQuery({
+  const { data } = useHistoryListQuery({
     fetchPolicy: "network-only"
   });
   const sectionedData = prepareHistory(data);
@@ -29,26 +28,20 @@ const History = () => {
     awaitRefetchQueries: true
   });
 
-  const { register, handleSubmit, errors } = useForm<DestroyVersionInput>({
+  const { register, handleSubmit } = useForm<DestroyVersionInput>({
     defaultValues
   });
 
   const handleDelete = (values: any) => {
-    const filtered = Object.keys(values).filter(key => values[key]);
-    let temp: number[] = [];
-    filtered.map(val => {
-      temp.push(parseInt(val));
-    });
+    const ids = Object.keys(values)
+      .filter(key => values[key])
+      .map(Number);
 
-    const historyIds: DestroyVersionInput = { ids: temp };
+    const historyIds: DestroyVersionInput = { ids };
     destroy({
       variables: { input: historyIds }
     });
   };
-
-  // if (loading) {
-  //   return <LoadingSpinner centered />;
-  // }
 
   return (
     <div>
@@ -100,24 +93,21 @@ const History = () => {
   );
 };
 
+export default History;
+
+//------------------------------------------------------------
+// Building Blocks
+//------------------------------------------------------------
+
 const HistoryTitle = styled.div`
   font-weight: bold;
   margin-top: 35px;
   font-size: 16px;
 `;
 
-const Devider = styled.div`
-  height: 1px;
-  width: 100%;
-  background: rgba(0, 0, 0, 0.2);
-`;
-
-const DeleteButton = styled.div`
-  border-radius: 10px;
-  background: #ffeded;
-  width: 50px;
-  height: 50px;
-`;
+//------------------------------------------------------------
+// Formatter Functions
+//------------------------------------------------------------
 
 const prepareHistory = (history: HistoryListQuery | undefined) => {
   const historyData = history && history.versions;
@@ -134,11 +124,10 @@ const prepareHistory = (history: HistoryListQuery | undefined) => {
       })
       .sort((a, b) => new Date(b.key).getTime() - new Date(a.key).getTime());
     // histories = [ {key: '12-12-12', id: 'b', desc: 'c' }, ...]
-    const groupedHistories = groupBy(histories, item => item.key);
 
+    const groupedHistories = groupBy(histories, item => item.key);
     // groupedHistories = { '12-12-12': [ History ], .... }
+
     return groupedHistories;
   }
 };
-
-export default History;

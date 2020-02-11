@@ -1,24 +1,22 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
-import { Container, Row, Col } from "reactstrap";
-import { Input } from "reactstrap";
-import DialogButton from "../../shared/components/DialogButton";
-import Tooltip from "../../shared/components/Tooltip";
+import { NetworkStatus } from "apollo-boost";
+import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
-import Table from "../../shared/components/Table";
-import { date as formatDate } from "../../shared/formatter";
-import {
-  useNotificationsQuery,
-  useDestroyBulkNotificationMutation,
-  DestroyBulkNotificationInput,
-  useIsReadMutation,
-  IsReadInput
-} from "../../generated/graphql";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
+import { Container, Input } from "reactstrap";
 import { oc } from "ts-optchain";
-import { NetworkStatus } from "apollo-boost";
 import { useDebounce } from "use-debounce/lib";
+import {
+  DestroyBulkNotificationInput,
+  IsReadInput,
+  useDestroyBulkNotificationMutation,
+  useIsReadMutation,
+  useNotificationsQuery
+} from "../../generated/graphql";
+import DialogButton from "../../shared/components/DialogButton";
+import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
+import { date as formatDate } from "../../shared/formatter";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -30,7 +28,6 @@ const Notification = ({ history }: RouteComponentProps) => {
     variables: {
       filter: {
         title_or_originator_type_cont: debounceSearch
-        // originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_or_originator_of_User_type_name_cont: debounceSearch
       }
     }
   });
@@ -57,16 +54,16 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   const redirect = (type: String, id: number, notifId: String) => {
     const readId: IsReadInput = { id: String(notifId) };
-    console.log("i", readId);
     isRead({
       variables: { input: readId }
     });
 
-    if (type == "Policy") history.push(`/policy/${id}`);
-    else if (type == "BusinessProcess") history.push(`/business-process/${id}`);
-    else if (type == "Control") history.push(`/control/${id}`);
-    else if (type == "Risk") history.push(`/risk/${id}`);
-    else if (type == "User") history.push(`/settings/update-profile`);
+    if (type === "Policy") history.push(`/policy/${id}`);
+    else if (type === "BusinessProcess")
+      history.push(`/business-process/${id}`);
+    else if (type === "Control") history.push(`/control/${id}`);
+    else if (type === "Risk") history.push(`/risk/${id}`);
+    else if (type === "User") history.push(`/settings/update-profile`);
   };
 
   const handleDelete = () => {
