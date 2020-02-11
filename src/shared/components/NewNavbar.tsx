@@ -17,7 +17,6 @@ import pwcLogo from "../../assets/images/pwc-logo.png";
 import styled from "styled-components";
 import { FaBell, FaBookmark } from "react-icons/fa";
 import { unauthorize } from "../../redux/auth";
-import { toggleModal } from "../../redux/modal";
 import { useDispatch } from "react-redux";
 import Avatar from "./Avatar";
 
@@ -43,7 +42,6 @@ const NewNavbar = () => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(p => !p);
-  const handleToggle = () => dispatch(toggleModal("bookmark"));
 
   function handleLogout() {
     dispatch(unauthorize());
@@ -110,12 +108,6 @@ const NewNavbar = () => {
         </Collapse>
         <div className="d-flex align-items-center pr-2">
           <div className="mr-3">
-            {/* <FaBookmark
-              onClick={handleToggle}
-              className="clickable"
-              size={22}
-            /> */}
-
             <Link to="/bookmark" className="text-dark">
               <FaBookmark className="clickable" size={22} />
             </Link>
