@@ -12,7 +12,7 @@ const notify = (
 ) => {
   const toastContent = (
     <div className="d-flex align-items-center pl-2">
-      {icon ? icon({ className: "mr-3" }) : null}
+      {icon ? icon({ className: "mr-3", size: 22 }) : null}
       {composeMessage(message)}
     </div>
   );

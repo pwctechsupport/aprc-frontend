@@ -33,7 +33,7 @@ const Users = () => {
         <title>Users - PricewaterhouseCoopers</title>
       </Helmet>
 
-      <Container>
+      <Container fluid className="p-0 pt-3 px-4">
         <h2>User Management</h2>
 
         <Row>
@@ -68,7 +68,7 @@ const Users = () => {
 
         <div className="text-center">
           <NavLink to="/user/create">
-            <Button outline color="pwc" className="pwc">
+            <Button outline color="pwc" className="pwc mb-5">
               Add User
             </Button>
           </NavLink>

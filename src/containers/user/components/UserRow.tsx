@@ -11,7 +11,6 @@ import {
   PolicyCategoriesDocument,
   useAdminUpdateUserMutation,
   useDestroyUserMutation,
-  UserFragmentFragment,
   useReviewUserDraftMutation
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";

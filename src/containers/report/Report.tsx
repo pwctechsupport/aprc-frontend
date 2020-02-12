@@ -3,15 +3,15 @@ import React from "react";
 import Helmet from "react-helmet";
 import useForm from "react-hook-form";
 import { FaDownload, FaFile } from "react-icons/fa";
-import { Form, FormGroup, Input, Label } from "reactstrap";
+import { toast } from "react-toastify";
+import { Container, Form, FormGroup, Input, Label } from "reactstrap";
 import Button from "../../shared/components/Button";
+import Table from "../../shared/components/Table";
 import {
   downloadPdfs,
   previewPdfs
 } from "../../shared/utils/accessGeneratedPdf";
-import { toast } from "react-toastify";
-import Table from "../../shared/components/Table";
-import BreadCrumb from "../../shared/components/BreadCrumb";
+// import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const options = ["report_risk"];
 
@@ -45,11 +45,7 @@ const Report = () => {
   const values = getValues({ nest: true });
 
   return (
-    <div>
-      <Helmet>
-        <title>Reports - PricewaterhouseCoopers</title>
-      </Helmet>
-      <BreadCrumb crumbs={[["/report", "Reports"]]} />
+    <Container fluid className="p-0 pt-5 px-2">
       <h4>Reports</h4>
       <Form onSubmit={handleSubmit(onDownload)}>
         <Table>
@@ -128,7 +124,10 @@ const Report = () => {
           </Button>
         </div>
       </Form>
-    </div>
+      <Helmet>
+        <title>Reports - PricewaterhouseCoopers</title>
+      </Helmet>
+    </Container>
   );
 };
 
