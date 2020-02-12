@@ -8,8 +8,8 @@ const Avatar = ({ data }: AvatarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector(state => state.auth.user);
   const name = user
-    ? user.firstName && user.lastName
-      ? user.firstName + " " + user.lastName
+    ? user.name && user.lastName
+      ? user.name + " " + user.lastName
       : ""
     : "";
 

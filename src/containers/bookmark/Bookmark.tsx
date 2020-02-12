@@ -171,6 +171,8 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                       <td>{bookmark.originatorType}</td>
                       <td>
                         {get(bookmark, "originator.name") ||
+                          get(bookmark, "originator.processName") ||
+                          get(bookmark, "originator.riskName") ||
                           get(bookmark, "originator.title")}
                       </td>
                       <td>{date(bookmark.createdAt)}</td>

@@ -32,6 +32,7 @@ const Login = ({ history }: RouteComponentProps) => {
             email: oc(res).data.login.email(""),
             firstName: oc(res).data.login.firstName(""),
             lastName: oc(res).data.login.lastName(""),
+            name: oc(res).data.login.name(""),
             phone: oc(res).data.login.phone(""),
             jobPosition: oc(res).data.login.jobPosition(""),
             department: oc(res).data.login.department("")
@@ -61,7 +62,7 @@ const Login = ({ history }: RouteComponentProps) => {
           placeholder="Enter email address"
           required
           ref={register({ required: true })}
-        />{' '}
+        />{" "}
         <br />
         <br />
         <Label>Password</Label>
@@ -91,7 +92,7 @@ const Login = ({ history }: RouteComponentProps) => {
         </Button>
       </Form>
     </Container>
-  )
+  );
 };
 
 export const Container = styled.div`

@@ -21,6 +21,7 @@ interface AuthStore {
 interface User {
   firstName: string;
   lastName: string;
+  name: string;
   email: string | null | undefined;
   id: string;
   phone: string | null | undefined;
