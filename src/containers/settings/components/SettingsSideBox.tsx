@@ -14,7 +14,7 @@ const SettingsSideBox = () => {
     <aside>
       <div className="side-box">
         {settingsMenus.map(menu => (
-          <div className="side-box__list">
+          <div key={menu.path} className="side-box__list">
             <div
               className={classnames(
                 "d-flex align-items-center side-box__item p-2"
