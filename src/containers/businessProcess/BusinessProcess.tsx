@@ -19,6 +19,7 @@ import BusinessProcessForm, {
 } from "./components/BusinessProcessForm";
 import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import Helmet from "react-helmet";
 
 const BusinessProcess = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -80,6 +81,9 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
 
   return (
     <div>
+      <Helmet>
+        <title>{name} - Business Process - PricewaterhouseCoopers</title>
+      </Helmet>
       <BreadCrumb
         crumbs={[
           ["/business-process", "Business Processes"],
@@ -100,13 +104,14 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
         <div className="d-flex justify-content-between align-items-center mt-3">
           <h4>{name}</h4>
           <div>
-            <Button onClick={toggleEdit} className="mr-3" color="transparent">
+            <Button onClick={toggleEdit} className="soft orange mr-3" color="">
               <FaPencilAlt />
             </Button>
             <DialogButton
               onConfirm={() => handleDeleteMain(id)}
               loading={destroyMainM.loading}
               message={`Delete Business Process "${name}"?`}
+              className="soft red"
             >
               <FaTrash />
             </DialogButton>
@@ -140,6 +145,8 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
                       onConfirm={() => handleDelete(child.id)}
                       loading={destroyM.loading}
                       message={`Delete Business Process "${child.name}"?`}
+                      className="soft orange"
+                      color=""
                     >
                       <FaTrash />
                     </DialogButton>
