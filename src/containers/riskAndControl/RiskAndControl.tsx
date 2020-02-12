@@ -230,9 +230,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
       <TabContent>
         <TabPane>
           <Route exact path="/risk-and-control/:id">
-            <div className="d-flex justify-content-between">
-              {renderActions()}
-            </div>
+            <div className="d-flex justify-content-end">{renderActions()}</div>
             <Collapsible
               title="Risks"
               show={collapse.includes("Risks")}
