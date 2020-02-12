@@ -1,37 +1,26 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
+import { Col, Container, Row } from "reactstrap";
 import RiskAndControl from "./RiskAndControl";
 import RiskAndControlSideBox from "./RiskAndControlSideBox";
-import EmptyData from "./EmptyData";
-import RiskAndControls from "./RiskAndControls";
-import { Row, Col, Container } from "reactstrap";
+import EmptyScreen from "../../shared/components/EmptyScreen";
 
 const RiskAndControlRoute = () => {
   return (
-    <Switch>
-      <Route exact path="/risk-and-control" component={RiskAndControls} />
-      <Route component={RestOfRiskAndControl} />
-    </Switch>
+    <Container fluid className="p-0">
+      <Row noGutters>
+        <Col md={3}>
+          <Route path="/risk-and-control" component={RiskAndControlSideBox} />
+        </Col>
+        <Col md={9} className="p-4">
+          <Switch>
+            <Route path="/risk-and-control/:id" component={RiskAndControl} />
+            <Route path="/risk-and-control/" component={EmptyScreen} />
+          </Switch>
+        </Col>
+      </Row>
+    </Container>
   );
 };
-
-const RestOfRiskAndControl = () => (
-  <Container fluid className="p-0">
-    <Row noGutters>
-      <Col md={3}>
-        <Route path="/risk-and-control" component={RiskAndControlSideBox} />
-      </Col>
-      <Col md={9} className="p-4">
-        <Switch>
-          <Route
-            path="/risk-and-control/:id"
-            component={RiskAndControl}
-          />
-          <Route path="/risk-and-control/" component={EmptyData} />
-        </Switch>
-      </Col>
-    </Row>
-  </Container>
-);
 
 export default RiskAndControlRoute;

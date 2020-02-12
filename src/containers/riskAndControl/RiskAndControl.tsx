@@ -50,7 +50,7 @@ import RiskForm, {
   RiskFormDefaultValues,
   RiskFormValues
 } from "../risk/components/RiskForm";
-import BreadCrumb from "../../shared/components/BreadCrumb";
+// import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -123,9 +123,9 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const resources = oc(data).businessProcess.resources([]);
 
   const tabs = [
-    {to: `/risk-and-control/${id}`, title: 'List'},
-    {to: `/risk-and-control/${id}/resources`, title: 'Resources'}
-  ]
+    { to: `/risk-and-control/${id}`, title: "List" },
+    { to: `/risk-and-control/${id}/resources`, title: "Resources" }
+  ];
 
   if (loading) return <LoadingSpinner size={30} centered />;
 
@@ -203,12 +203,15 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
 
   return (
     <div>
-      <BreadCrumb
+      {/* <BreadCrumb
         crumbs={[
           ['/risk-and-control', 'Risk and Controls'],
           ['/risk-and-control/' + id, name],
         ]}
-      />
+      /> */}
+      <div className="d-flex justify-content-between">
+        <HeaderWithBackButton heading={name} />
+      </div>
       <Nav tabs className="tabs-pwc">
         {tabs.map((tab, index) => (
           <NavItem key={index}>
@@ -228,12 +231,11 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
         <TabPane>
           <Route exact path="/risk-and-control/:id">
             <div className="d-flex justify-content-between">
-              <HeaderWithBackButton heading={name} />
               {renderActions()}
             </div>
             <Collapsible
               title="Risks"
-              show={collapse.includes('Risks')}
+              show={collapse.includes("Risks")}
               onClick={toggleCollapse}
             >
               {risks.length ? (
@@ -244,10 +246,10 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                         <h5>
                           {risk.name.padEnd(1)}
                           <Badge color="danger mx-3">
-                            {capitalCase(risk.levelOfRisk || '')}
+                            {capitalCase(risk.levelOfRisk || "")}
                           </Badge>
                           <Badge color="danger">
-                            {capitalCase(risk.typeOfRisk || '')}
+                            {capitalCase(risk.typeOfRisk || "")}
                           </Badge>
                         </h5>
                         <Button
@@ -256,13 +258,11 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                               id: risk.id,
                               name: risk.name,
                               status: oc(risk).status(Status.Draft) as Status,
-                              businessProcessId: oc(risk).businessProcessId(
-                                ''
-                              ),
+                              businessProcessId: oc(risk).businessProcessId(""),
                               levelOfRisk: oc(
                                 risk
                               ).levelOfRisk() as LevelOfRisk,
-                              typeOfRisk: oc(risk).typeOfRisk() as TypeOfRisk,
+                              typeOfRisk: oc(risk).typeOfRisk() as TypeOfRisk
                             })
                           }
                           color=""
@@ -291,23 +291,23 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                                 <tr key={control.id}>
                                   <td>{control.description}</td>
                                   <td>
-                                    {capitalCase(control.frequency || '')}
+                                    {capitalCase(control.frequency || "")}
                                   </td>
                                   <td>
-                                    {capitalCase(control.typeOfControl || '')}
+                                    {capitalCase(control.typeOfControl || "")}
                                   </td>
-                                  <td>{capitalCase(control.nature || '')}</td>
+                                  <td>{capitalCase(control.nature || "")}</td>
                                   <td>
                                     {oc(control)
                                       .ipo([])
                                       .map(a => capitalCase(a))
-                                      .join(', ')}
+                                      .join(", ")}
                                   </td>
                                   <td>
                                     {oc(control)
                                       .assertion([])
                                       .map(a => capitalCase(a))
-                                      .join(', ')}
+                                      .join(", ")}
                                   </td>
                                   <td>{control.controlOwner}</td>
                                   <td>
@@ -317,7 +317,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                                           id: control.id,
                                           assertion: control.assertion as Assertion[],
                                           controlOwner:
-                                            control.controlOwner || '',
+                                            control.controlOwner || "",
                                           description: control.description,
                                           status: control.status as Status,
                                           typeOfControl: control.typeOfControl as TypeOfControl,
@@ -331,7 +331,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                                             control.keyControl || false,
                                           riskIds: oc(control)
                                             .risks([])
-                                            .map(({ id }) => id),
+                                            .map(({ id }) => id)
                                         })
                                       }
                                       color=""
@@ -365,12 +365,12 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
 
       <Collapsible
         title="Resources"
-        show={collapse.includes('Resources')}
+        show={collapse.includes("Resources")}
         onClick={toggleCollapse}
       >
         {resources.length ? (
           resources.map(resource => {
-            return <ResourceBar key={resource.id} {...resource} />
+            return <ResourceBar key={resource.id} {...resource} />;
           })
         ) : (
           <EmptyAttribute />
@@ -397,7 +397,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
         />
       </Modal>
     </div>
-  )
+  );
 };
 
 export default RiskAndControls;
