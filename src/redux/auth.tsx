@@ -1,7 +1,22 @@
+const getUser = () => {
+  const localStorageUser = localStorage.getItem("user");
+  if (localStorageUser) {
+    return JSON.parse(localStorageUser);
+  }
+  return null;
+};
+
+const getToken = () => {
+  if (localStorage.getItem("token")) {
+    return localStorage.getItem("token");
+  }
+  return null;
+};
+
 const initialState: AuthStore = {
-  isAuthed: localStorage.getItem("token") ? true : false,
-  user: null,
-  token: null
+  isAuthed: !!getToken(),
+  user: getUser(),
+  token: getToken()
 };
 
 const AUTHORIZED = "AUTHORIZED";
