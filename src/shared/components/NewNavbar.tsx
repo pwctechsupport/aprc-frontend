@@ -63,7 +63,7 @@ const NewNavbar = () => {
               if (label === "Administrative") {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
-                    <DropdownToggle nav caret>
+                    <DropdownToggle nav caret className="nav_item">
                       {label}
                     </DropdownToggle>
                     <DropdownMenu right className="p-0 dropdown__menu">
@@ -94,10 +94,8 @@ const NewNavbar = () => {
                   <NavLink
                     tag={RrNavLink}
                     to={path}
-                    activeClassName="nav_item__active"
-                    activeStyle={{
-                      fontWeight: "bold"
-                    }}
+                    className="nav_item"
+                    activeClassName="active"
                   >
                     {label}
                   </NavLink>

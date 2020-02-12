@@ -20,16 +20,18 @@
   background: $pwc-orange;
 }
 
-.nav_item__active {
+.nav_item {
   color: $pwc-orange;
-  &::after {
-    content: "";
-    display: block;
-    height: 5px;
-    width: 100%;
-    // position: absolute;
-    background: $pwc-orange;
-    // bottom: 0;
+  letter-spacing: 1px;
+  &.active {
+    &::after {
+      content: "";
+      display: block;
+      margin-top: 5px;
+      height: 2px;
+      width: 100%;
+      background: $pwc-orange;
+    }
   }
 }
 
