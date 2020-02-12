@@ -3,7 +3,7 @@
   color: white;
   width: 330px;
   position: fixed;
-  height: 100vh;
+  height: calc(100vh - 63px);
   overflow-y: scroll;
 
   // &::-webkit-scrollbar {

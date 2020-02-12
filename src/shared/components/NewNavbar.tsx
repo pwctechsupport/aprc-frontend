@@ -63,7 +63,7 @@ const NewNavbar = () => {
               if (label === "Administrative") {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
-                    <DropdownToggle nav caret className="nav_item">
+                    <DropdownToggle nav caret className="nav_item_dropdown">
                       {label}
                     </DropdownToggle>
                     <DropdownMenu right className="p-0 dropdown__menu">
