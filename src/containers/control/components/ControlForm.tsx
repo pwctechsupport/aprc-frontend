@@ -173,7 +173,7 @@ const ControlForm = ({
       <div className="d-flex justify-content-end">
         <DialogButton
           onConfirm={handleSubmit(submit)}
-          className="pwc px-5"
+          className="pwc px-5 mb-3"
           type="button"
           loading={submitting}
           color="primary"

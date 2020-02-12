@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useCreateControlMutation } from "../../generated/graphql";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const CreateControl = ({ history }: RouteComponentProps) => {
   const [create, { loading }] = useCreateControlMutation({
@@ -24,7 +25,13 @@ const CreateControl = ({ history }: RouteComponentProps) => {
   };
 
   return (
-    <div>
+    <div className="p-0 pt-3 px-4">
+      <BreadCrumb
+        crumbs={[
+          ["/control", "Controls"],
+          ["/control/create", "Create Control"]
+        ]}
+      />
       <HeaderWithBackButton heading="Create Control" />
       <ControlForm onSubmit={submit} submitting={loading} />
     </div>
