@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const settingsMenus = [
   { label: "Profile", path: "/settings/update-profile" },
   { label: "Notifications", path: "/settings/notifications" },
-  { label: "History", path: "/settings/history" },
-  { label: "Bookmarks", path: "/settings/bookmarks" }
+  { label: "History", path: "/settings/history" }
+  // { label: "Bookmarks", path: "/settings/bookmarks" }
 ];
 
 const SettingsSideBox = () => {
