@@ -17,6 +17,7 @@ const CreateUser = ({ history }: RouteComponentProps) => {
     create({
       variables: {
         input: {
+          name: values.name || "",
           email: values.email || "",
           password: values.password || "",
           passwordConfirmation: values.passwordConfirmation || "",
