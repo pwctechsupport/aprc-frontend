@@ -64,7 +64,7 @@ const Notification = ({ history }: RouteComponentProps) => {
       history.push(`/business-process/${id}`);
     else if (type === "Control") history.push(`/control/${id}`);
     else if (type === "Risk") history.push(`/risk/${id}`);
-    else if (type === "User") history.push(`/settings/update-profile`);
+    else if (type === "User") history.push(`/user`);
   };
 
   const handleDelete = () => {
@@ -103,28 +103,23 @@ const Notification = ({ history }: RouteComponentProps) => {
       <Container fluid className="p-5">
         <h2>Notifications Manager</h2>
 
-        <Row>
-          <Col lg={4}>
-            <Input
-              value={search}
-              placeholder="Search Notifs..."
-              onChange={e => setSearch(e.target.value)}
-            />
-          </Col>
-          <Col lg={8}>
-            <div className="text-right">
-              <Tooltip description="Delete Selected Notification(s)">
-                <DialogButton
-                  className="soft red"
-                  loading={destroyNotifsM.loading}
-                  onConfirm={() => handleDelete()}
-                >
-                  <FaTrash />
-                </DialogButton>
-              </Tooltip>
-            </div>
-          </Col>
-        </Row>
+        <div className="d-flex justify-content-between">
+          <Input
+            value={search}
+            placeholder="Search Notifications..."
+            onChange={e => setSearch(e.target.value)}
+            className="w-50"
+          />
+          <Tooltip description="Delete Selected Notification(s)">
+            <DialogButton
+              className="soft red"
+              loading={destroyNotifsM.loading}
+              onConfirm={() => handleDelete()}
+            >
+              <FaTrash />
+            </DialogButton>
+          </Tooltip>
+        </div>
 
         <div className="table-responsive mt-5">
           <Table
