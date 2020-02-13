@@ -55,6 +55,7 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Modal from "../../shared/components/Modal";
 import Tooltip from "../../shared/components/Tooltip";
 import { Nav, NavItem, TabContent, TabPane } from "reactstrap";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Policy = ({ match, history }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -84,7 +85,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     fetchPolicy: "network-only"
   });
 
-  const isDraft = oc(data).policy.draft.id() ? true : false;
+  const [isAdmin] = useAccessRights(["admin"]);
+  const draft = oc(data).policy.draft.objectResult();
 
   // Delete current policy
   const [destroyMain] = useDestroyPolicyMutation({
@@ -193,8 +195,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     });
   }
 
-  const title = oc(data).policy.title("");
-  const description = isDraft
+  let title: string = oc(data).policy.title("");
+  title = draft ? `[Draft] ${title}` : title;
+  const description = draft
     ? get(data, "policy.draft.objectResult.description", "")
     : oc(data).policy.description("");
   const policyCategoryId = oc(data).policy.policyCategory.id("");
@@ -496,7 +499,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   };
 
   const renderPolicyAction = () => {
-    if (isDraft) {
+    if (draft && isAdmin) {
       return (
         <div>
           <DialogButton
@@ -518,6 +521,8 @@ const Policy = ({ match, history }: RouteComponentProps) => {
         </div>
       );
     }
+
+    if (draft && !isAdmin) return null;
 
     if (inEditMode) {
       return (

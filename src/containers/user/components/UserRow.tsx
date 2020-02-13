@@ -178,7 +178,7 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
                 <FaTimes />
               </DialogButton>
             </Fragment>
-          ) : (
+          ) : draft ? null : (
             <Fragment>
               <Button onClick={toggleEdit} className="soft orange mr-2">
                 <AiFillEdit />
