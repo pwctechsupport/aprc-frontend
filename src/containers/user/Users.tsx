@@ -13,11 +13,11 @@ import { useDebounce } from "use-debounce/lib";
 
 const Users = () => {
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 800);
+  const [debouncedSearch] = useDebounce(search, 400);
   const { data, networkStatus } = useUsersQuery({
     variables: {
       filter: {
-        first_name_cont: debouncedSearch
+        name_or_draft_object_cont: debouncedSearch
       }
     },
     fetchPolicy: "no-cache"
