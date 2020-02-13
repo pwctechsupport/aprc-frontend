@@ -23,7 +23,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const { data, networkStatus } = useBookmarksQuery({
     variables: {
       filter: {
-        originator_of_Policy_type_title_or_originator_o_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_cont: debounceSearch
+        originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_cont: debounceSearch
         // originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_or_originator_of_User_type_name_cont: debounceSearch
       }
     }
