@@ -1,11 +1,11 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
+import Helmet from "react-helmet";
+import { AiFillEdit } from "react-icons/ai";
 import { FaTimes, FaTrash } from "react-icons/fa";
-import { MdModeEdit } from "react-icons/md";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Button } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   Category,
@@ -14,16 +14,17 @@ import {
   useResourceQuery,
   useUpdateResourceMutation
 } from "../../generated/graphql";
+import BreadCrumb from "../../shared/components/BreadCrumb";
+import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import { notifyGraphQLErrors } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, {
-  ResourceFormValues,
-  ResourceFormDefaultValues
+  ResourceFormDefaultValues,
+  ResourceFormValues
 } from "./components/ResourceForm";
-import BreadCrumb from "../../shared/components/BreadCrumb";
-import { notifyGraphQLErrors } from "../../shared/utils/notif";
 
 const Resource = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -151,21 +152,22 @@ const Resource = ({ match }: RouteComponentProps) => {
   const renderResourceAction = () => {
     if (inEditMode) {
       return (
-        <Button onClick={toggleEditMode} color="">
-          <FaTimes size={22} className="mr-2" />
+        <Button onClick={toggleEditMode} className="soft orange" color="">
+          <FaTimes className="mr-2" />
           Cancel Edit
         </Button>
       );
     }
     return (
       <div>
-        <Button onClick={toggleEditMode} color="">
-          <MdModeEdit size={22} />
+        <Button onClick={toggleEditMode} className="soft orange mr-2" color="">
+          <AiFillEdit />
         </Button>
         <DialogButton
           onConfirm={handleDeleteMain}
           color=""
           message={`Delete resource "${name}"?`}
+          className="soft red"
         >
           <FaTrash className="text-red" />
         </DialogButton>
@@ -175,6 +177,9 @@ const Resource = ({ match }: RouteComponentProps) => {
 
   return (
     <div>
+      <Helmet>
+        <title>{name} - Resource - PricewaterhouseCoopers</title>
+      </Helmet>
       <BreadCrumb
         crumbs={[
           ["/resources", "Resources"],
