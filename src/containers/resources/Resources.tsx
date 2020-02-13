@@ -1,7 +1,7 @@
 import { capitalCase } from "capital-case";
 import React from "react";
 import Helmet from "react-helmet";
-import { FaFile, FaTrash } from "react-icons/fa";
+import { FaFile, FaTrash, FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
@@ -31,9 +31,16 @@ const Resources = ({ history }: RouteComponentProps) => {
       <BreadCrumb crumbs={[["/resources", "Resources"]]} />
       <div className="d-flex justify-content-between align-items-center mb-1">
         <h4>Resources</h4>
-        <Link to="/resources/create">
-          <Button className="pwc">+ Add Resource</Button>
-        </Link>
+        <Tooltip description="Add Resource">
+          <Button
+            tag={Link}
+            to="/resources/create"
+            className="soft orange"
+            color=""
+          >
+            <FaPlus />
+          </Button>
+        </Tooltip>
       </div>
 
       <Table loading={loading}>
@@ -74,7 +81,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                   </td>
                   <td className="action">
                     <div className="d-flex align-items-center">
-                      <Button color="">
+                      <Button className="soft orange mr-1" color="">
                         <Tooltip
                           description="Open File"
                           subtitle="Will be download if file type not supported"
@@ -102,6 +109,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                         }
                         loading={destroyM.loading}
                         message={`Delete resource "${resource.name}"?`}
+                        className="soft red"
                       >
                         <Tooltip description="Delete Resource">
                           <FaTrash className="clickable text-red" />

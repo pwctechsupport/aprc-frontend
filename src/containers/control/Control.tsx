@@ -57,9 +57,12 @@ const Control = ({ match }: RouteComponentProps) => {
   if (loading) return null;
 
   return (
-    <div>
+    <div className="p-0 pt-3 px-4">
       <BreadCrumb
-        crumbs={[["/control", "Controls"], ["/control/" + id, description]]}
+        crumbs={[
+          ["/control", "Controls"],
+          ["/control/" + id, description]
+        ]}
       />
       <HeaderWithBackButton heading={id} />
       <ControlForm

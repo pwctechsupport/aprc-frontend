@@ -1,7 +1,7 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
@@ -15,6 +15,7 @@ import DialogButton from "../../shared/components/DialogButton";
 import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Controls = ({ history }: RouteComponentProps) => {
   const [searchValue, setSearchValue] = useState("");
@@ -37,7 +38,7 @@ const Controls = ({ history }: RouteComponentProps) => {
     destroy({ variables: { input: { id } } });
   };
   return (
-    <div>
+    <div className="p-0 pt-3 px-4">
       <Helmet>
         <title>Controls - PricewaterhouseCoopers</title>
       </Helmet>
@@ -45,9 +46,16 @@ const Controls = ({ history }: RouteComponentProps) => {
         <BreadCrumb crumbs={[["/control", "Controls"]]} />
         <div className="d-flex justify-content-between align-items-center">
           <h4>Controls</h4>
-          <Link to="/control/create">
-            <Button className="pwc">+ Add Control</Button>
-          </Link>
+          <Tooltip description="Add Control">
+            <Button
+              tag={Link}
+              to="/control/create"
+              className="soft orange"
+              color=""
+            >
+              <FaPlus />
+            </Button>
+          </Tooltip>
         </div>
         <SearchBar
           onChange={handleChange}
