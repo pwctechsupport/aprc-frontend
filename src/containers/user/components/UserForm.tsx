@@ -20,6 +20,13 @@ const UserForm = (props: UserFormProps) => {
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Input
         required
+        label="Name"
+        name="name"
+        innerRef={register({ required: true })}
+        error={errors && errors.name && errors.name.message}
+      />
+      <Input
+        required
         label="Email"
         name="email"
         type="email"
@@ -59,6 +66,7 @@ const UserForm = (props: UserFormProps) => {
 };
 
 const validationSchema = yup.object().shape({
+  name: yup.string().required(),
   email: yup.string().required(),
   password: yup.string().required(),
   passwordConfirmation: yup
@@ -76,6 +84,7 @@ export interface UserFormProps {
 }
 
 export interface UserFormValues {
+  name?: string;
   email?: string;
   password?: string;
   passwordConfirmation?: string;
