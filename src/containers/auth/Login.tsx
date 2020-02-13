@@ -35,7 +35,8 @@ const Login = ({ history }: RouteComponentProps) => {
             name: oc(res).data.login.name(""),
             phone: oc(res).data.login.phone(""),
             jobPosition: oc(res).data.login.jobPosition(""),
-            department: oc(res).data.login.department("")
+            department: oc(res).data.login.department(""),
+            roles: oc(res).data.login.roles([])
           },
           oc(res).data.login.token("")
         )
