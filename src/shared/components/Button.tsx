@@ -7,9 +7,13 @@ export interface ButtonProps extends BsButtonProps {
   loading?: boolean;
 }
 
-const Button = ({ loading, className, ...props }: ButtonProps) => {
+const Button = ({ loading, className, disabled, ...props }: ButtonProps) => {
   return (
-    <BsButton disabled={loading} {...props} className={cx("button", className)}>
+    <BsButton
+      {...props}
+      disabled={loading || disabled}
+      className={cx("button", { disabled }, className)}
+    >
       {props.children}
       {loading && <LoadingSpinner className="ml-2" />}
     </BsButton>

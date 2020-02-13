@@ -7,6 +7,11 @@
     opacity: 1;
   }
 
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
   &.btn-outline-pwc {
     background: transparent;
     border: 1px solid $pwc-orange;
