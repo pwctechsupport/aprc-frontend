@@ -101,7 +101,7 @@ const Notification = ({ history }: RouteComponentProps) => {
       </Helmet>
 
       <Container fluid className="p-5">
-        <h2>Notification Manager</h2>
+        <h2>Notifications Manager</h2>
 
         <Row>
           <Col lg={4}>
