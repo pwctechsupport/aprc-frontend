@@ -33,7 +33,7 @@ export default function humanizeDate(date: Date | string): string {
   } else {
     fuzzy = formatDate(new Date(date), {
       year: "numeric",
-      month: "long",
+      month: "short",
       day: "numeric"
     });
   }
