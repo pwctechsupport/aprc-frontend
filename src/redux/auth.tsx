@@ -1,3 +1,5 @@
+import { Role } from "../generated/graphql";
+
 const getUser = () => {
   const localStorageUser = localStorage.getItem("user");
   if (localStorageUser) {
@@ -42,6 +44,7 @@ interface User {
   phone: string | null | undefined;
   jobPosition: string | null | undefined;
   department: string | null | undefined;
+  roles?: Partial<Role>[];
 }
 
 interface AuthorizedAction {

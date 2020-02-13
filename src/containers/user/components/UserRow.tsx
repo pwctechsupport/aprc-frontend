@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import useForm from "react-hook-form";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTrash, FaCheck, FaTimes } from "react-icons/fa";
@@ -23,6 +23,7 @@ import {
   notifyGraphQLErrors,
   notifySuccess
 } from "../../../shared/utils/notif";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const UserRow = ({ user, ...props }: UserRowProps) => {
   const [isEdit, setIsEdit] = useState(props.isEdit);
@@ -58,6 +59,8 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     refetchQueries: ["users"],
     onError: notifyGraphQLErrors
   });
+
+  const [isAdmin] = useAccessRights(["admin"]);
 
   const draft = oc(user).draft.objectResult();
   let name = oc(user).name("");
@@ -152,44 +155,47 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
             .map(p => p.name)
             .join(",")}
         </td>
-        {draft ? (
-          <td>
-            <DialogButton
-              title="Approve"
-              data={oc(user).id()}
-              onConfirm={handleApprove}
-              className="soft orange mr-2"
-              loading={reviewM.loading}
-            >
-              <FaCheck />
-            </DialogButton>
-            <DialogButton
-              title="Reject"
-              data={oc(user).id()}
-              onConfirm={handleReject}
-              className="soft orange"
-              loading={reviewM.loading}
-            >
-              <FaTimes />
-            </DialogButton>
-          </td>
-        ) : (
-          <td>
-            <Button onClick={toggleEdit} className="soft orange mr-2">
-              <AiFillEdit />
-            </Button>
 
-            <DialogButton
-              title="Delete"
-              data={oc(user).id()}
-              loading={destroyM.loading}
-              className="soft red"
-              onConfirm={handleDestroy}
-            >
-              <FaTrash />
-            </DialogButton>
-          </td>
-        )}
+        <td>
+          {isAdmin && draft ? (
+            <Fragment>
+              <DialogButton
+                title="Approve"
+                data={oc(user).id()}
+                onConfirm={handleApprove}
+                className="soft orange mr-2"
+                loading={reviewM.loading}
+              >
+                <FaCheck />
+              </DialogButton>
+              <DialogButton
+                title="Reject"
+                data={oc(user).id()}
+                onConfirm={handleReject}
+                className="soft orange"
+                loading={reviewM.loading}
+              >
+                <FaTimes />
+              </DialogButton>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <Button onClick={toggleEdit} className="soft orange mr-2">
+                <AiFillEdit />
+              </Button>
+
+              <DialogButton
+                title="Delete"
+                data={oc(user).id()}
+                loading={destroyM.loading}
+                className="soft red"
+                onConfirm={handleDestroy}
+              >
+                <FaTrash />
+              </DialogButton>
+            </Fragment>
+          )}
+        </td>
       </tr>
     );
   } else {
