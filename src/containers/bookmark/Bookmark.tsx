@@ -79,7 +79,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
 
     if (type) {
       if (type === "Policy") {
-        link = `/business-process/${id}`;
+        link = `/policy/${id}`;
       } else if (type === "BusinessProcess") {
         link = `/business-process/${id}`;
       } else if (type === "Control") {
