@@ -62,8 +62,13 @@ const Risk = ({ match }: RouteComponentProps) => {
       <Helmet>
         <title>{name} - Risk - PricewaterhouseCoopers</title>
       </Helmet>
-      <BreadCrumb crumbs={[["/risk", "Risks"], ["/risk/" + id, name]]} />
-      <HeaderWithBackButton heading="Risk" />
+      <BreadCrumb
+        crumbs={[
+          ["/risk", "Risks"],
+          ["/risk/" + id, name]
+        ]}
+      />
+      <HeaderWithBackButton heading={name} />
       <RiskForm
         defaultValues={defaultValues}
         onSubmit={handleUpdate}

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
@@ -14,6 +14,7 @@ import Helmet from "react-helmet";
 import { capitalCase } from "capital-case";
 import DialogButton from "../../shared/components/DialogButton";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Risks = ({ history }: RouteComponentProps) => {
   const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
@@ -41,9 +42,11 @@ const Risks = ({ history }: RouteComponentProps) => {
       <BreadCrumb crumbs={[["/risk", "Risks"]]} />
       <div className="d-flex justify-content-between align-items-center mb-1">
         <h4>Risks</h4>
-        <Link to="/risk/create">
-          <Button className="pwc">+ Add Risk</Button>
-        </Link>
+        <Tooltip description="Create Risk">
+          <Button className="soft orange" tag={Link} to="/risk/create" color="">
+            <FaPlus />
+          </Button>
+        </Tooltip>
       </div>
       <Table reloading={loading}>
         <thead>
@@ -71,8 +74,9 @@ const Risks = ({ history }: RouteComponentProps) => {
                       onConfirm={() => handleDelete(risk.id)}
                       loading={destroyM.loading}
                       message={`Delete risk "${risk.name}"?`}
+                      className="soft red"
                     >
-                      <FaTrash className="clickable text-red" />
+                      <FaTrash />
                     </DialogButton>
                   </td>
                 </tr>

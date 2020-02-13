@@ -1,6 +1,7 @@
 import { date as formatDate } from "../formatter";
 
-export default function humanizeDate(date: Date): string {
+export default function humanizeDate(date: Date | string): string {
+  date = new Date(date);
   const delta = Math.round((+new Date() - +date) / 1000);
 
   const minute = 60;
@@ -30,7 +31,11 @@ export default function humanizeDate(date: Date): string {
   } else if (delta < month) {
     fuzzy = "last month";
   } else {
-    fuzzy = formatDate(new Date(date));
+    fuzzy = formatDate(new Date(date), {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
   }
 
   return fuzzy;
