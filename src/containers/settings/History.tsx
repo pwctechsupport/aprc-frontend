@@ -14,9 +14,10 @@ import {
 import DialogButton from "../../shared/components/DialogButton";
 import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 
 const History = () => {
-  const { data } = useHistoryListQuery({
+  const { data, loading } = useHistoryListQuery({
     fetchPolicy: "network-only"
   });
   const sectionedData = prepareHistory(data);
@@ -43,18 +44,25 @@ const History = () => {
     });
   };
 
+  if (loading) {
+    return <LoadingSpinner size={30} centered />;
+  }
+
   return (
     <div>
       <Form onSubmit={handleSubmit(handleDelete)}>
         <div className="d-flex flex-row justify-content-between">
           <h4>History</h4>
-          <DialogButton onConfirm={handleSubmit(handleDelete)}>
-            <Tooltip description="Delete Selected History">
-              <div className="clickable d-flex justify-content-center align-items-center deleteButton">
-                <FaTrash className="text-orange " size={22} />
-              </div>
-            </Tooltip>
-          </DialogButton>
+        </div>
+        <div className="d-flex justify-content-end">
+          <Tooltip description="Delete Selected History">
+            <DialogButton
+              onConfirm={handleSubmit(handleDelete)}
+              className="soft red"
+            >
+              <FaTrash className="text-orange " />
+            </DialogButton>
+          </Tooltip>
         </div>
         <div>
           {sectionedData &&

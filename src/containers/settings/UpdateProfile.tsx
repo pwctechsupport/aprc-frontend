@@ -13,7 +13,6 @@ import { updateUser } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import Input from "../../shared/components/forms/Input";
 import { useSelector } from "../../shared/hooks/useSelector";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
 
 const UpdateProfile = () => {
   const user = useSelector(state => state.auth.user);
@@ -49,7 +48,7 @@ const UpdateProfile = () => {
   };
 
   if (!oc(user).email("")) {
-    return <LoadingSpinner centered />;
+    return <h3>You are not signed in</h3>;
   }
 
   return (

@@ -17,7 +17,7 @@ import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
 import CreateReference from "./CreateReference";
 import Button from "../../shared/components/Button";
-import BreadCrumb from "../../shared/components/BreadCrumb";
+// import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const References = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -37,12 +37,12 @@ const References = () => {
   };
 
   return (
-    <div className="d-flex">
+    <div className="d-flex p-0 pt-3 px-4">
       <Helmet>
         <title>References - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="flex-grow-1">
-        <BreadCrumb crumbs={[["/references", "References"]]} />
+        {/* <BreadCrumb crumbs={[["/references", "References"]]} /> */}
         <div className="d-flex justify-content-between align-items-center">
           <h4>References</h4>
         </div>

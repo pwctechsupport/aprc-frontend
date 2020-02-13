@@ -27,7 +27,7 @@ import {
   useUpdatePolicyMutation,
   useReviewPolicyDraftMutation
 } from "../../generated/graphql";
-import BreadCrumb from "../../shared/components/BreadCrumb";
+// import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import DialogButton from "../../shared/components/DialogButton";
@@ -84,7 +84,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     fetchPolicy: "network-only"
   });
 
-  const isDraft = oc(data).policy.draft.id() ? true : false
+  const isDraft = oc(data).policy.draft.id() ? true : false;
 
   // Delete current policy
   const [destroyMain] = useDestroyPolicyMutation({
@@ -256,10 +256,10 @@ const Policy = ({ match, history }: RouteComponentProps) => {
 
   const renderPolicy = () => {
     const tabs = [
-      {to: `/policy/${id}`, title: 'Dashboard'},
-      {to: `/policy/${id}/details`, title: 'Details'},
-      {to: `/policy/${id}/resources`, title: 'Resources'},
-    ]
+      { to: `/policy/${id}`, title: "Dashboard" },
+      { to: `/policy/${id}/details`, title: "Details" },
+      { to: `/policy/${id}/resources`, title: "Resources" }
+    ];
 
     return (
       <div>
@@ -286,19 +286,21 @@ const Policy = ({ match, history }: RouteComponentProps) => {
               </div>
             </Route>
             <Route exact path="/policy/:id/details">
-              <div className="d-flex justify-content-end">{renderPolicyAction()}</div>
+              <div className="d-flex justify-content-end">
+                {renderPolicyAction()}
+              </div>
 
               <div
                 className="mb-3 py-3"
                 dangerouslySetInnerHTML={{
-                  __html: description,
+                  __html: description
                 }}
               />
 
               <div ref={riskRef}>
                 <Collapsible
                   title="Risks"
-                  show={collapse.includes('Risks')}
+                  show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
                 >
                   {risks.length ? (
@@ -307,11 +309,9 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                         {risks.map(risk => {
                           return (
                             <li key={risk.id}>
-                              <Link to={`/risk/${risk.id}`}>
-                                {risk.name}
-                              </Link>
+                              <Link to={`/risk/${risk.id}`}>{risk.name}</Link>
                             </li>
-                          )
+                          );
                         })}
                       </ul>
                     </div>
@@ -324,7 +324,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
               <div ref={controlRef}>
                 <Collapsible
                   title="Controls"
-                  show={collapse.includes('Controls')}
+                  show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
                   <Table>
@@ -349,28 +349,26 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                                   {control.description}
                                 </Link>
                               </td>
+                              <td>{capitalCase(control.frequency || "")}</td>
                               <td>
-                                {capitalCase(control.frequency || '')}
+                                {capitalCase(control.typeOfControl || "")}
                               </td>
-                              <td>
-                                {capitalCase(control.typeOfControl || '')}
-                              </td>
-                              <td>{capitalCase(control.nature || '')}</td>
+                              <td>{capitalCase(control.nature || "")}</td>
                               <td>
                                 {oc(control)
                                   .ipo([])
                                   .map(a => capitalCase(a))
-                                  .join(', ')}
+                                  .join(", ")}
                               </td>
                               <td>
                                 {oc(control)
                                   .assertion([])
                                   .map(a => capitalCase(a))
-                                  .join(', ')}
+                                  .join(", ")}
                               </td>
                               <td>{control.controlOwner}</td>
                             </tr>
-                          )
+                          );
                         })
                       ) : (
                         <tr>
@@ -387,7 +385,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
               <div ref={subPolicyRef}>
                 <Collapsible
                   title="Sub-Policies"
-                  show={collapse.includes('Sub-Policies')}
+                  show={collapse.includes("Sub-Policies")}
                   onClick={toggleCollapse}
                 >
                   {children.length ? (
@@ -413,7 +411,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                                 dangerouslySetInnerHTML={{
                                   __html: item.description
                                     ? item.description
-                                    : '',
+                                    : ""
                                 }}
                               />
                             </td>
@@ -421,7 +419,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                               {oc(item)
                                 .references([])
                                 .map(ref => ref.name)
-                                .join(', ')}
+                                .join(", ")}
                             </td>
                             <td>
                               <DialogButton
@@ -443,7 +441,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
             <Route exact path="/policy/:id/resources">
               <Collapsible
                 title="Resources"
-                show={collapse.includes('Resources')}
+                show={collapse.includes("Resources")}
                 onClick={toggleCollapse}
               >
                 {resources.map(resource => (
@@ -455,11 +453,11 @@ const Policy = ({ match, history }: RouteComponentProps) => {
           </TabPane>
         </TabContent>
       </div>
-    )
-    };
+    );
+  };
 
-    const renderPolicyInEditMode = () => {
-      return isSubPolicy ? (
+  const renderPolicyInEditMode = () => {
+    return isSubPolicy ? (
       <SubPolicyForm
         defaultValues={{
           parentId,
@@ -626,12 +624,12 @@ const Policy = ({ match, history }: RouteComponentProps) => {
       <Helmet>
         <title>Policy - {title} - PricewaterhouseCoopers</title>
       </Helmet>
-      <BreadCrumb
+      {/* <BreadCrumb
         crumbs={[
           ["/policy", "Policies"],
           ["/policy/" + id, title]
         ]}
-      />
+      /> */}
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={title} />
       </div>

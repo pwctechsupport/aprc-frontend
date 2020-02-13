@@ -1,5 +1,6 @@
 .navbar {
   background: white;
+  height: 70px;
 }
 
 .dropdown__user {
@@ -20,17 +21,30 @@
   background: $pwc-orange;
 }
 
-.nav_item__active {
+.nav_item {
   color: $pwc-orange;
+  letter-spacing: 1px;
+  transition: 0.15s ease-in-out;
   &::after {
     content: "";
     display: block;
-    height: 5px;
+    margin-top: 5px;
+    height: 2px;
     width: 100%;
-    // position: absolute;
-    background: $pwc-orange;
-    // bottom: 0;
+    background: white;
   }
+  &.active {
+    &::after {
+      height: 2px;
+      background: $pwc-orange;
+    }
+  }
+}
+
+.nav_item_dropdown {
+  color: $pwc-orange;
+  letter-spacing: 1px;
+  transition: 0.15s ease-in-out;
 }
 
 .nav-link {

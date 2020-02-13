@@ -42,8 +42,8 @@ const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
       <DialogButton
         type="button"
         onConfirm={handleSubmit(submit)}
-        className="pwc ml-3"
-        color="primary"
+        className="soft orange ml-3"
+        color=""
         message="Add sub business process?"
       >
         Add

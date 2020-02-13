@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 const settingsMenus = [
   { label: "Profile", path: "/settings/update-profile" },
   { label: "Notifications", path: "/settings/notifications" },
-  { label: "History", path: "/settings/history" },
-  { label: "Bookmarks", path: "/settings/bookmarks" }
+  { label: "History", path: "/settings/history" }
+  // { label: "Bookmarks", path: "/settings/bookmarks" }
 ];
 
 const SettingsSideBox = () => {
@@ -14,7 +14,7 @@ const SettingsSideBox = () => {
     <aside>
       <div className="side-box">
         {settingsMenus.map(menu => (
-          <div className="side-box__list">
+          <div key={menu.path} className="side-box__list">
             <div
               className={classnames(
                 "d-flex align-items-center side-box__item p-2"

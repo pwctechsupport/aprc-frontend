@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport, FaPlus, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
@@ -10,11 +11,22 @@ import {
   useDestroyBusinessProcessMutation
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import Modal from "../../shared/components/Modal";
 import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
+import MyApi from "../../shared/utils/api";
 import CreateBusinessProcess from "./CreateBusinessProcess";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
+  const [modal, setModal] = useState(false);
+  const toggleImportModal = () => setModal(p => !p);
+
+  const [createBpModal, setCreateBpModal] = useState(false);
+  const toggleCreateBpModal = () => setCreateBpModal(p => !p);
+
+  const [selected, setSelected] = useState<string[]>([]);
   const [searchValue] = useState("");
   const [searchQuery] = useDebounce(searchValue, 700);
 
@@ -28,7 +40,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       isTree
     }
   });
-  const bPCollection = oc(businessQuery).data.businessProcesses.collection([]);
+  const bps = oc(businessQuery).data.businessProcesses.collection([]);
   const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
@@ -39,35 +51,124 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
     destroy({ variables: { input: { id } } });
   };
 
+  function toggleCheck(id: string) {
+    if (selected.includes(id)) {
+      setSelected(selected.filter(i => i !== id));
+    } else {
+      setSelected(selected.concat(id));
+    }
+  }
+
+  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      setSelected(bps.map(n => n.id));
+    } else {
+      setSelected([]);
+    }
+  }
+
+  function handleExport() {
+    downloadXls(
+      "/prints/business_process_excel.xlsx",
+      {
+        business_process_ids: selected.map(Number)
+      },
+      {
+        fileName: "Business Process.xlsx",
+        onStart: () => toast.info("Download Dimulai"),
+        onCompleted: () => toast.success("Download Berhasil"),
+        onError: () => toast.error("Download Gagal")
+      }
+    );
+  }
+
   return (
     <div>
       <BreadCrumb crumbs={[["/business-process", "Business Processes"]]} />
       <div className="d-flex">
         <Helmet>
-          Business Process
-          <title>Controls - PricewaterhouseCoopers</title>
+          <title>Business Process - PricewaterhouseCoopers</title>
         </Helmet>
         <div className="w-100">
-          <div className="d-flex justify-content-between align-items-center">
-            <h4>Business Process </h4>
-          </div>
-          <div>
+          <Modal
+            isOpen={createBpModal}
+            toggle={toggleCreateBpModal}
+            title="Create Business Process"
+          >
             <CreateBusinessProcess />
+          </Modal>
+
+          <div className="mb-3 d-flex justify-content-end">
+            <Tooltip description="Create Business Process">
+              <Button
+                onClick={toggleCreateBpModal}
+                className="soft orange mr-2"
+                color=""
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+            <Tooltip
+              description="Export Business Process"
+              subtitle={
+                selected.length
+                  ? "Export selected business processes"
+                  : "Select BPs first"
+              }
+            >
+              <Button
+                color=""
+                className="soft red mr-2"
+                onClick={handleExport}
+                disabled={!selected.length}
+              >
+                <FaFileExport />
+              </Button>
+            </Tooltip>
+            <Tooltip description="Import Business Process">
+              <Button
+                color=""
+                className="soft orange mr-2"
+                onClick={toggleImportModal}
+              >
+                <FaFileImport />
+              </Button>
+            </Tooltip>
+            <ImportBusinessProcessModal
+              isOpen={modal}
+              toggle={toggleImportModal}
+            />
           </div>
+
           <Table reloading={businessQuery.loading}>
             <thead>
               <tr>
+                <th>
+                  <input
+                    type="checkbox"
+                    checked={selected.length === bps.length}
+                    onChange={toggleCheckAll}
+                  />
+                </th>
                 <th>Business Process</th>
                 <th>Business Process ID</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {bPCollection.map(item => (
+              {bps.map(item => (
                 <tr
                   key={item.id}
                   onClick={() => history.push(`/business-process/${item.id}`)}
                 >
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(item.id)}
+                      onClick={e => e.stopPropagation()}
+                      onChange={() => toggleCheck(item.id)}
+                    />
+                  </td>
                   <td>{item.name}</td>
                   <td>{item.id}</td>
                   <td className="action">
@@ -75,6 +176,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                       onConfirm={() => handleDelete(item.id)}
                       loading={destroyM.loading}
                       message={`Delete Business Process "${item.name}"?`}
+                      className="soft red"
                     >
                       <FaTrash className="clickable" />
                     </DialogButton>
@@ -90,3 +192,78 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 };
 
 export default BusinessProcesses;
+
+const ImportBusinessProcessModal = ({
+  isOpen,
+  toggle
+}: ImportBusinessProcessModalProps) => {
+  const [file, setFile] = useState();
+
+  async function handleImport() {
+    const formData = new FormData();
+    // const fileInBase64 = String(await toBase64(file));
+    formData.append("file", file);
+    try {
+      await MyApi.put("/business_processes/import", formData);
+      toast.success("Import Business Process Berhasil");
+    } catch (error) {
+      toast.error("Import Business Process Gagal");
+    }
+  }
+
+  return (
+    <Modal isOpen={isOpen} title="Import Business Process" toggle={toggle}>
+      <Input
+        type="file"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setFile(e.target.files && e.target.files[0])
+        }
+      />
+      <div className="d-flex justify-content-end mt-3">
+        <Button className="pwc" onClick={handleImport} disabled={!file}>
+          Submit
+        </Button>
+      </div>
+    </Modal>
+  );
+};
+interface ImportBusinessProcessModalProps {
+  isOpen: boolean;
+  toggle: (event: any) => void;
+}
+
+async function downloadXls(url: string, params: any, option: FileOption) {
+  const fileType = option.fileType || "xls";
+  try {
+    option.onStart && option.onStart();
+    const res = await MyApi.get(url, {
+      params,
+      responseType: "blob",
+      data: ["name", "Ancestry"]
+    });
+    const file = new Blob([res.data], {
+      type: `application/${fileType}`
+    });
+    const targetUrl = window.URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = targetUrl;
+    link.setAttribute(
+      "download",
+      option.fileName || `PwC-Generated.${fileType}`
+    );
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode && link.parentNode.removeChild(link);
+
+    option.onCompleted && option.onCompleted();
+  } catch (error) {
+    option.onError && option.onError(error);
+  }
+}
+interface FileOption {
+  fileName?: string;
+  onStart?: () => void;
+  onCompleted?: () => void;
+  onError?: (error: any) => void;
+  fileType?: string;
+}
