@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
-import { Container, Input } from "reactstrap";
+import { Container, Input, Row, Col } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
@@ -17,6 +17,7 @@ import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
+import Helmet from "react-helmet";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -38,7 +39,7 @@ const Notification = ({ history }: RouteComponentProps) => {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
 
-  const [destroyNotifs] = useDestroyBulkNotificationMutation({
+  const [destroyNotifs, destroyNotifsM] = useDestroyBulkNotificationMutation({
     onCompleted: () => {
       toast.success("Delete Success");
       onDeleteComplete();
@@ -95,25 +96,36 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   return (
     <div>
+      <Helmet>
+        <title>Notifications - PricewaterhouseCoopers</title>
+      </Helmet>
+
       <Container fluid className="p-5">
-        <h2 className="mb-3">Notification Manager</h2>
-        <div className="d-flex flex-row justify-content-between">
-          <div className="side-box__searchbar">
+        <h2>Notification Manager</h2>
+
+        <Row>
+          <Col lg={4}>
             <Input
               value={search}
-              placeholder="Search Notification..."
+              placeholder="Search Notifs..."
               onChange={e => setSearch(e.target.value)}
-              className="orange"
             />
-          </div>
-          <DialogButton onConfirm={() => handleDelete()}>
-            <Tooltip description="Delete Selected Notification(s)">
-              <div className="clickable d-flex justify-content-center align-items-center deleteButton">
-                <FaTrash className="text-orange " size={22} />
-              </div>
-            </Tooltip>
-          </DialogButton>
-        </div>
+          </Col>
+          <Col lg={8}>
+            <div className="text-right">
+              <Tooltip description="Delete Selected Notification(s)">
+                <DialogButton
+                  className="soft red"
+                  loading={destroyNotifsM.loading}
+                  onConfirm={() => handleDelete()}
+                >
+                  <FaTrash />
+                </DialogButton>
+              </Tooltip>
+            </div>
+          </Col>
+        </Row>
+
         <div className="table-responsive mt-5">
           <Table
             loading={networkStatus === NetworkStatus.loading}

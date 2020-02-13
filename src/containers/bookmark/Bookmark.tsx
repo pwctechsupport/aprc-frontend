@@ -26,7 +26,8 @@ const Bookmark = ({ history }: RouteComponentProps) => {
         originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_cont: debounceSearch
         // originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_or_originator_of_User_type_name_cont: debounceSearch
       }
-    }
+    },
+    fetchPolicy: "network-only"
   });
 
   const [deleteBookmarks, deleteBookmarksM] = useDestroyBookmarkMutation({
@@ -100,7 +101,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
         <title>Bookmarks - PricewaterhouseCoopers</title>
       </Helmet>
 
-      <Container>
+      <Container fluid className="p-5">
         <h2>Bookmarks Manager</h2>
 
         <Row>
