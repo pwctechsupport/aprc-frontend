@@ -41,7 +41,8 @@ const userMenus = [
 
 const NewNavbar = () => {
   const dispatch = useDispatch();
-  const [isMereUser] = useAccessRights(["user"]);
+  const rolesArray = useAccessRights(["admin", "admin_preparer"]);
+  const isMereUser = rolesArray.every(() => false);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(p => !p);
 
