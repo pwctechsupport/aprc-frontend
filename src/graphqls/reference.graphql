@@ -3,6 +3,7 @@ query references($filter: BaseScalar = {}, $page: Int, $limit: Int) {
     collection {
       id
       name
+      updatedAt
     }
     metadata {
       currentPage

@@ -1,56 +1,38 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import useForm from "react-hook-form";
-import { FaPencilAlt, FaTrash, FaTimes } from "react-icons/fa";
+import { FaPencilAlt, FaTimes, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
-import { useDebounce } from "use-debounce/lib";
 import {
   Reference,
   useDestroyReferenceMutation,
   useReferencesQuery,
   useUpdateReferenceMutation
 } from "../../generated/graphql";
+import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
-import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
 import CreateReference from "./CreateReference";
-import Button from "../../shared/components/Button";
-// import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const References = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [searchQuery] = useDebounce(searchValue, 500);
-
-  const { data, loading } = useReferencesQuery({
-    variables: { filter: { name_cont: searchQuery } }
-  });
+  const { data, loading } = useReferencesQuery();
   const [destroyReference, destroyM] = useDestroyReferenceMutation({
     refetchQueries: ["references"],
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed")
   });
 
-  const handleChange = (event: any) => {
-    setSearchValue(event.target.value);
-  };
-
   return (
-    <div className="d-flex p-0 pt-3 px-4">
+    <div>
       <Helmet>
         <title>References - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="flex-grow-1">
-        {/* <BreadCrumb crumbs={[["/references", "References"]]} /> */}
         <div className="d-flex justify-content-between align-items-center">
           <h4>References</h4>
         </div>
-        <SearchBar
-          onChange={handleChange}
-          value={searchValue}
-          placeholder="Search References"
-        />
         <div>
           <CreateReference />
         </div>
@@ -158,13 +140,18 @@ const ReferenceRow = ({
             </div>
           ) : (
             <div>
-              <Button color="" onClick={toggleEdit} className="mr-2">
+              <Button
+                color=""
+                onClick={toggleEdit}
+                className="soft orange mr-2"
+              >
                 <FaPencilAlt />
               </Button>
               <DialogButton
                 onConfirm={onDelete}
                 loading={deleteLoading}
                 message={`Delete ${reference.name}?`}
+                className="soft red"
               >
                 <FaTrash />
               </DialogButton>

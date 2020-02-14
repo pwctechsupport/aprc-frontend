@@ -8,9 +8,8 @@ import BusinessProcessRoute from "./containers/businessProcess/BusinessProcessRo
 import ControlRoute from "./containers/control/ControlRoute";
 import Homepage from "./containers/homepage/Homepage";
 import Notification from "./containers/notification/Notification";
-// import BookmarksModal from "./containers/policy/components/BookmarksModal";
 import PolicyRoute from "./containers/policy/PolicyRoute";
-import References from "./containers/referencess/References";
+import ReferenceRoute from "./containers/referencess/ReferenceRoute";
 import Report from "./containers/report/Report";
 import ResourceRoute from "./containers/resources/ResourceRoute";
 import RiskRoute from "./containers/risk/RiskRoute";
@@ -56,7 +55,7 @@ export default function() {
 
               <AuthRoute path="/settings" component={SettingsRoute} />
 
-              <AuthRoute exact path="/references" component={References} />
+              <AuthRoute path="/references" component={ReferenceRoute} />
               <AuthRoute component={ComingSoonPage} />
             </Switch>
           </Layout>
