@@ -1,9 +1,10 @@
 import { NetworkStatus } from "apollo-boost";
 import React, { useState } from "react";
+import Helmet from "react-helmet";
 import { FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
-import { Container, Input, Row, Col } from "reactstrap";
+import { Container, Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
@@ -17,7 +18,6 @@ import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
-import Helmet from "react-helmet";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [selected, setSelected] = useState<string[]>([]);
