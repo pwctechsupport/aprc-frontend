@@ -57,7 +57,7 @@ const Control = ({ match }: RouteComponentProps) => {
   if (loading) return null;
 
   return (
-    <div className="p-0 pt-3 px-4">
+    <div>
       <BreadCrumb
         crumbs={[
           ["/control", "Controls"],

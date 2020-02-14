@@ -25,7 +25,7 @@ const CreateControl = ({ history }: RouteComponentProps) => {
   };
 
   return (
-    <div className="p-0 pt-3 px-4">
+    <div>
       <BreadCrumb
         crumbs={[
           ["/control", "Controls"],

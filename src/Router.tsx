@@ -1,11 +1,13 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import ForgotPassword from "./containers/auth/ForgotPassword";
 import Login from "./containers/auth/Login";
+import ResetPassword from "./containers/auth/ResetPassword";
+import Bookmark from "./containers/bookmark/Bookmark";
 import BusinessProcessRoute from "./containers/businessProcess/BusinessProcessRoute";
-import Control from "./containers/control/Control";
-import Controls from "./containers/control/Controls";
-import CreateControl from "./containers/control/CreateControl";
+import ControlRoute from "./containers/control/ControlRoute";
 import Homepage from "./containers/homepage/Homepage";
+import Notification from "./containers/notification/Notification";
 // import BookmarksModal from "./containers/policy/components/BookmarksModal";
 import PolicyRoute from "./containers/policy/PolicyRoute";
 import References from "./containers/referencess/References";
@@ -13,17 +15,13 @@ import Report from "./containers/report/Report";
 import ResourceRoute from "./containers/resources/ResourceRoute";
 import RiskRoute from "./containers/risk/RiskRoute";
 import RiskAndControlRoute from "./containers/riskAndControl/RiskAndControlRoute";
+import SettingsRoute from "./containers/settings/SettingsRoute";
+import UserRoute from "./containers/user/UserRoute";
 import AuthListener from "./shared/components/AuthListener";
 import AuthRoute from "./shared/components/AuthRoute";
-import ForgotPassword from "./containers/auth/ForgotPassword";
 import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
-import ResetPassword from "./containers/auth/ResetPassword";
-import UserRoute from "./containers/user/UserRoute";
-import Bookmark from "./containers/bookmark/Bookmark";
-import Notification from "./containers/notification/Notification";
-import SettingsRoute from "./containers/settings/SettingsRoute";
 
 export default function() {
   return (
@@ -51,19 +49,14 @@ export default function() {
                 component={RiskAndControlRoute}
               />
               <AuthRoute path="/report" component={Report} />
-              <AuthRoute exact path="/references" component={References} />
-              <AuthRoute exact path="/control" component={Controls} />
-              <AuthRoute
-                exact
-                path="/control/create"
-                component={CreateControl}
-              />
-              <AuthRoute exact path="/control/:id" component={Control} />
+              <AuthRoute path="/control" component={ControlRoute} />
               <AuthRoute path="/user" component={UserRoute} />
               <AuthRoute path="/bookmark" component={Bookmark} />
               <AuthRoute path="/notifications" component={Notification} />
 
               <AuthRoute path="/settings" component={SettingsRoute} />
+
+              <AuthRoute exact path="/references" component={References} />
               <AuthRoute component={ComingSoonPage} />
             </Switch>
           </Layout>
