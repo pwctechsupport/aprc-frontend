@@ -15,6 +15,7 @@ import DialogButton from "../../shared/components/DialogButton";
 import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import Helmet from "react-helmet";
 
 const History = () => {
   const { data, loading } = useHistoryListQuery({
@@ -50,6 +51,9 @@ const History = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>History - Settings - PricewaterhouseCoopers</title>
+      </Helmet>
       <Form onSubmit={handleSubmit(handleDelete)}>
         <div className="d-flex flex-row justify-content-between">
           <h4>History</h4>

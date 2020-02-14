@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { Form, FormGroup, Input, Label, Col, Row } from "reactstrap";
 import Button from "../../shared/components/Button";
+import Helmet from "react-helmet";
 
 const settings = [
   { name: "autoForward", label: "Auto Forward Notifications" },
@@ -11,6 +12,9 @@ const settings = [
 const NotificationSettings = () => {
   return (
     <div>
+      <Helmet>
+        <title>Notification - Settings - PricewaterhouseCoopers</title>
+      </Helmet>
       <h4>Notifications</h4>
       <Row>
         <Col md={6}>

@@ -14,6 +14,7 @@ import Button from "../../shared/components/Button";
 import Input from "../../shared/components/forms/Input";
 import { useSelector } from "../../shared/hooks/useSelector";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import Helmet from "react-helmet";
 
 const UpdateProfile = () => {
   const user = useSelector(state => state.auth.user);
@@ -60,6 +61,9 @@ const UpdateProfile = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>Profile - Settings - PricewaterhouseCoopers</title>
+      </Helmet>
       <UpdateProfileForm
         onSubmit={updateProfile}
         submitting={loading}
@@ -115,7 +119,12 @@ const UpdateProfileForm = ({
         error={errors.phone && errors.phone.message}
       />
       <div className="d-flex justify-content-end">
-        <Button type="submit" loading={submitting} className="soft orange">
+        <Button
+          type="submit"
+          loading={submitting}
+          className="soft orange"
+          color=""
+        >
           Save Profile
         </Button>
       </div>
