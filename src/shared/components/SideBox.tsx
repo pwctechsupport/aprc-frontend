@@ -93,7 +93,7 @@ export const SideBoxItemText = styled.div<SideBoxItemTextProps>`
 `;
 
 interface SideBoxItemTextProps {
-  flex: number;
+  flex?: number;
   bold?: boolean;
   right?: boolean;
 }

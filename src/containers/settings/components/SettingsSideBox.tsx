@@ -1,6 +1,12 @@
 import classnames from "classnames";
 import React from "react";
 import { Link } from "react-router-dom";
+import {
+  SideBox,
+  SideBoxItem,
+  SideBoxItemText,
+  SideBoxTitle
+} from "../../../shared/components/SideBox";
 
 const settingsMenus = [
   { label: "Profile", path: "/settings/update-profile" },
@@ -11,23 +17,14 @@ const settingsMenus = [
 
 const SettingsSideBox = () => {
   return (
-    <aside>
-      <div className="side-box">
-        {settingsMenus.map(menu => (
-          <div key={menu.path} className="side-box__list">
-            <div
-              className={classnames(
-                "d-flex align-items-center side-box__item p-2"
-              )}
-            >
-              <Link className="side-box__item__title" to={menu.path}>
-                {menu.label}
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    </aside>
+    <SideBox>
+      <SideBoxTitle>Menu</SideBoxTitle>
+      {settingsMenus.map(menu => (
+        <SideBoxItem key={menu.path} to={menu.path}>
+          <SideBoxItemText>{menu.label}</SideBoxItemText>
+        </SideBoxItem>
+      ))}
+    </SideBox>
   );
 };
 
