@@ -19,6 +19,7 @@ import { FaBell, FaBookmark } from "react-icons/fa";
 import { unauthorize } from "../../redux/auth";
 import { useDispatch } from "react-redux";
 import Avatar from "./Avatar";
+import useAccessRights from "../hooks/useAccessRights";
 
 const adminMenus = [
   { label: "Policy", path: "/policy" },
@@ -40,6 +41,7 @@ const userMenus = [
 
 const NewNavbar = () => {
   const dispatch = useDispatch();
+  const [isMereUser] = useAccessRights(["user"]);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(p => !p);
 
@@ -58,50 +60,59 @@ const NewNavbar = () => {
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="mr-auto" navbar>
-            {userMenus.map(userMenu => {
-              const { label, path, children } = userMenu;
-              if (label === "Administrative") {
+            {userMenus
+              // If the current user role is a 'mere' user,
+              // don't let him access 'Administrative' menu.
+              .filter(userMenu => {
+                if (isMereUser) {
+                  return userMenu.label !== "Administrative";
+                }
+                return true;
+              })
+              .map(userMenu => {
+                const { label, path, children } = userMenu;
+                if (label === "Administrative") {
+                  return (
+                    <UncontrolledDropdown key={label} nav inNavbar>
+                      <DropdownToggle nav caret className="nav_item_dropdown">
+                        {label}
+                      </DropdownToggle>
+                      <DropdownMenu right className="p-0 dropdown__menu">
+                        {Array.isArray(children) &&
+                          children.map(childMenu => (
+                            <DropdownItem key={childMenu.label} className="p-0">
+                              <NavItem key={childMenu.label}>
+                                <NavLink
+                                  tag={RrNavLink}
+                                  to={childMenu.path}
+                                  className="p-3 dropdown__nav"
+                                  activeClassName="dropdown__active"
+                                  activeStyle={{
+                                    color: "white"
+                                  }}
+                                >
+                                  {childMenu.label}
+                                </NavLink>
+                              </NavItem>
+                            </DropdownItem>
+                          ))}
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+                  );
+                }
                 return (
-                  <UncontrolledDropdown key={label} nav inNavbar>
-                    <DropdownToggle nav caret className="nav_item_dropdown">
+                  <NavItem key={label} className="px-2 py-0">
+                    <NavLink
+                      tag={RrNavLink}
+                      to={path}
+                      className="nav_item"
+                      activeClassName="active"
+                    >
                       {label}
-                    </DropdownToggle>
-                    <DropdownMenu right className="p-0 dropdown__menu">
-                      {Array.isArray(children) &&
-                        children.map(childMenu => (
-                          <DropdownItem key={childMenu.label} className="p-0">
-                            <NavItem key={childMenu.label}>
-                              <NavLink
-                                tag={RrNavLink}
-                                to={childMenu.path}
-                                className="p-3 dropdown__nav"
-                                activeClassName="dropdown__active"
-                                activeStyle={{
-                                  color: "white"
-                                }}
-                              >
-                                {childMenu.label}
-                              </NavLink>
-                            </NavItem>
-                          </DropdownItem>
-                        ))}
-                    </DropdownMenu>
-                  </UncontrolledDropdown>
+                    </NavLink>
+                  </NavItem>
                 );
-              }
-              return (
-                <NavItem key={label} className="px-2 py-0">
-                  <NavLink
-                    tag={RrNavLink}
-                    to={path}
-                    className="nav_item"
-                    activeClassName="active"
-                  >
-                    {label}
-                  </NavLink>
-                </NavItem>
-              );
-            })}
+              })}
           </Nav>
         </Collapse>
         <div className="d-flex align-items-center pr-2">
