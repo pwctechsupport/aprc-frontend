@@ -3,15 +3,13 @@ import { Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import styled from "styled-components";
 import { useSelector } from "../hooks/useSelector";
 import Button from "./Button";
+import { Link } from "react-router-dom";
+import { oc } from "ts-optchain";
 
 const Avatar = ({ data }: AvatarProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector(state => state.auth.user);
-  const name = user
-    ? user.name && user.lastName
-      ? user.name + " " + user.lastName
-      : ""
-    : "";
+  const name = oc(user).name("");
 
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
@@ -25,7 +23,7 @@ const Avatar = ({ data }: AvatarProps) => {
           <div
             key={index}
             className="d-flex flex-column p-4"
-            style={{ width: 260 }}
+            style={{ width: 300 }}
           >
             <div className="d-flex flex-column justify-content-center align-items-center mb-3">
               <DropdownAvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
@@ -47,7 +45,16 @@ const Avatar = ({ data }: AvatarProps) => {
                 </>
               ) : null}
             </div>
-            <Button onClick={item.onClick} color="primary" className="pwc mt-4">
+            <Button
+              tag={Link}
+              to="/settings/update-profile"
+              outline
+              color=""
+              className="soft orange mt-4"
+            >
+              Profile
+            </Button>
+            <Button onClick={item.onClick} color="primary" className="pwc mt-2">
               Log out
             </Button>
           </div>
