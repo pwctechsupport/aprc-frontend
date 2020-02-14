@@ -2,10 +2,13 @@ import React from "react";
 import Router from "./Router";
 import { Provider } from "react-redux";
 import store from "./redux";
-import ApolloClient, {
+import {
   IntrospectionFragmentMatcher,
-  InMemoryCache
+  InMemoryCache,
+  ApolloClient
 } from "apollo-boost";
+import { createHttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { ToastContainer, Slide } from "react-toastify";
 import { hot } from "react-hot-loader/root";
@@ -14,6 +17,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/app.scss";
 import fragmentTypes from "./generated/fragmentTypes.json";
 
+const graphqlUri = "http://mandalorian.rubyh.co/graphql";
+const httpLink = createHttpLink({ uri: graphqlUri });
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.token;
+
+  return {
+    headers: {
+      ...headers,
+      Authorization: token ? `Bearer ${token}` : ""
+    }
+  };
+});
+
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData: fragmentTypes
 });
@@ -21,12 +37,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 const cache = new InMemoryCache({ fragmentMatcher });
 
 const client = new ApolloClient({
-  uri: "http://mandalorian.rubyh.co/graphql",
-  headers: {
-    Authorization: localStorage.token
-      ? `Bearer ${localStorage.token}`
-      : undefined
-  },
+  link: authLink.concat(httpLink),
   cache
 });
 
