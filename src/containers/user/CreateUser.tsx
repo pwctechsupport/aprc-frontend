@@ -34,8 +34,13 @@ const CreateUser = ({ history }: RouteComponentProps) => {
 
   return (
     <div>
-      <Container>
-        <BreadCrumb crumbs={[["/user", "User"], ["/create", "Create"]]} />
+      <Container className="p-0 pt-3 px-4">
+        <BreadCrumb
+          crumbs={[
+            ["/user", "User"],
+            ["/create", "Create"]
+          ]}
+        />
         <UserForm onSubmit={handleSubmit} submitting={createM.loading} />
       </Container>
     </div>
