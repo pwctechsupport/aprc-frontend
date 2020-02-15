@@ -45,7 +45,7 @@ export const toLabelValue = ({
 
 interface ToLabelValueInput {
   id: string;
-  name: string;
+  name?: string;
   title?: string | undefined | null;
 }
 export interface ToLabelValueOutput {

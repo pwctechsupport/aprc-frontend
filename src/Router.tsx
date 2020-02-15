@@ -21,6 +21,7 @@ import AuthRoute from "./shared/components/AuthRoute";
 import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import ScrollToTop from "./shared/components/ScrollToTop";
+import PolicyCategoryRoute from "./containers/policyCategory/PolicyCategoryRoute";
 
 export default function() {
   return (
@@ -37,6 +38,10 @@ export default function() {
             <AuthRoute exact path="/" component={Homepage} />
             <Switch>
               <AuthRoute path="/policy" component={PolicyRoute} />
+              <AuthRoute
+                path="/policy-category"
+                component={PolicyCategoryRoute}
+              />
               <AuthRoute path="/resources" component={ResourceRoute} />
               <AuthRoute path="/risk" component={RiskRoute} />
               <AuthRoute

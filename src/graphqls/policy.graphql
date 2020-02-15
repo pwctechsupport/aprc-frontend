@@ -154,15 +154,6 @@ fragment policyFragment on Policy {
   }
 }
 
-query policyCategories($filter: BaseScalar = {}) {
-  policyCategories(filter: $filter) {
-    collection {
-      id
-      name
-    }
-  }
-}
-
 mutation destroyPolicy($id: ID!) {
   destroyPolicy(input: { id: $id }) {
     clientMutationId
@@ -275,7 +266,7 @@ mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {
 # }
 
 mutation reviewPolicyDraft($id: ID!, $publish: Boolean!) {
-  reviewPolicyDraft(input: {id: $id, publish: $publish}) {
+  reviewPolicyDraft(input: { id: $id, publish: $publish }) {
     success
     errors
   }

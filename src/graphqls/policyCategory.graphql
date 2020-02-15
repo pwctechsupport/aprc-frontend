@@ -1,0 +1,43 @@
+query policyCategories($filter: BaseScalar = {}, $limit: Int, $page: Int) {
+  policyCategories(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+      name
+      updatedAt
+      policies {
+        id
+        title
+      }
+    }
+  }
+}
+
+query policyCategory($id: ID!) {
+  policyCategory(id: $id) {
+    id
+    name
+    updatedAt
+    policies {
+      id
+      title
+    }
+  }
+}
+
+mutation createPolicyCategory($input: CreatePolicyCategoryInput!) {
+  createPolicyCategory(input: $input) {
+    success
+  }
+}
+
+mutation updatePolicyCategory($input: UpdatePolicyCategoryInput!) {
+  updatePolicyCategory(input: $input) {
+    success
+  }
+}
+
+mutation destroyPolicyCategory($id: ID!) {
+  destroyPolicyCategory(input: { id: $id }) {
+    success
+  }
+}
