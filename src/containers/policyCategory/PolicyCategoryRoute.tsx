@@ -1,11 +1,10 @@
 import React from "react";
 import { Route, Switch } from "react-router";
-import PolicyCategories from "./PolicyCategories";
+import { Col, Container, Row } from "reactstrap";
+import EmptyScreen from "../../shared/components/EmptyScreen";
+import PolicyCategorySideBox from "./components/PolicyCategorySideBox";
 import CreatePolicyCategory from "./CreatePolicyCategory";
 import PolicyCategory from "./PolicyCategory";
-import PolicyCategorySideBox from "./components/PolicyCategorySideBox";
-import { Row, Col, Container } from "reactstrap";
-import EmptyScreen from "../../shared/components/EmptyScreen";
 
 const PolicyCategoryRoute = () => {
   return (
