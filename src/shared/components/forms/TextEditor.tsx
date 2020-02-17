@@ -33,7 +33,7 @@ const QuillCustomToolbar = () => (
         <option selected>{defaultFontSize}</option>
         {fontSizes.map(size => {
           return (
-            <option value={`${size}px`}>{size}</option>
+            <option key={size} value={`${size}px`}>{size}</option>
           )
         })}
       </select>
@@ -82,7 +82,7 @@ const TextEditor = ({
     >
       <QuillCustomToolbar/>
       <ReactQuill
-        value={data}
+        value={data || ''}
         onChange={onChange}
         modules={{
           toolbar: {
