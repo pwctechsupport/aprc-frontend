@@ -17,7 +17,7 @@ export const SideBox = styled.div`
 export const SideBoxTitle = styled.h4.attrs(() => ({
   className: "text-orange"
 }))`
-  padding: 20px 1rem;
+  padding: 1.5rem 1rem 0.5rem 1rem;
 `;
 
 export const SideBoxSearch = ({

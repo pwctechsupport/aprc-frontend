@@ -1,12 +1,14 @@
 import classnames from "classnames";
 import React, { useState } from "react";
-import { FaCaretRight } from "react-icons/fa";
+import { FaCaretRight, FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse, Input } from "reactstrap";
 import styled, { css } from "styled-components";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { usePolicyTreeQuery } from "../../../generated/graphql";
+import Tooltip from "../../../shared/components/Tooltip";
+import Button from "../../../shared/components/Button";
 
 const PolicySideBox = ({ location }: RouteComponentProps) => {
   const activeId = readCurrentParams(location.pathname);
@@ -14,6 +16,14 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
   const [searchQuery] = useDebounce(search, 700);
   return (
     <div className="side-box">
+      <div className="d-flex justify-content-between mx-3 mt-4">
+        <h4 className="text-orange">Policies</h4>
+        <Tooltip description="Create Policy">
+          <Button tag={Link} to="/policy/create" color="" className="soft red">
+            <FaPlus />
+          </Button>
+        </Tooltip>
+      </div>
       <div className="side-box__searchbar">
         <Input
           value={search}
@@ -25,7 +35,7 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
 
       {searchQuery && (
         <div
-          className="clickable mx-3 text-right text-small text-italic"
+          className="clickable mx-3 text-right text-small text-italic text-orange"
           onClick={() => setSearch("")}
         >
           Clear Search

@@ -21,7 +21,7 @@
   // }
 
   .side-box__searchbar {
-    padding: 16px 25px 16px 25px;
+    padding: 1rem 1rem 1rem 1rem;
   }
 
   .side-box__item {
@@ -41,7 +41,7 @@
     }
     &:hover {
       &.active {
-        background: rgba(245, 100, 9, 0.7);
+        background: rgba(245, 100, 9, 1);
       }
       background: rgba(245, 100, 9, 0.2);
     }
