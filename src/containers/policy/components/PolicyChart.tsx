@@ -44,11 +44,11 @@ const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
 export default PolicyChart;
 
 const getColors = (label: string): [string, string, string] => {
-  if (label === "Risk")
+  if (label.match(/risk/gi))
     return [colors.green, colors.lightGreen, colors.paleGreen];
-  if (label.toUpperCase().includes("POLICY"))
+  if (label.match(/polic/gi))
     return [colors.orange, colors.lightOrange, colors.paleOrange];
-  if (label === "Control")
+  if (label.match(/control/gi))
     return [colors.blue, colors.lightBlue, colors.paleBlue];
   return [colors.red, colors.lightRed, colors.paleRed];
 };

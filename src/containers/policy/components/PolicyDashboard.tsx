@@ -4,9 +4,9 @@ import { oc } from "ts-optchain";
 import PolicyChart, { PolicyChartProps } from "./PolicyChart";
 
 const PolicyDashboard = ({ data }: PolicyChartProps) => {
-  const subPolicy = data.find(item => item.label === "Sub-Policy");
-  const control = data.find(item => item.label === "Control");
-  const risk = data.find(item => item.label === "Risk");
+  const subPolicy = data.find(item => item.label.match(/polic/gi));
+  const control = data.find(item => item.label.match(/control/gi));
+  const risk = data.find(item => item.label.match(/risk/gi));
   const tableData = [
     {
       label: "Reviewed",
