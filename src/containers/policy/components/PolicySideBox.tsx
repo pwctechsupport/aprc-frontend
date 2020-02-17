@@ -146,8 +146,12 @@ const Icon = styled(FaCaretRight)<{ open: boolean }>`
 `;
 
 const readCurrentParams = (pathname: string) => {
-  const hasParam = pathname.includes("policy/");
-  if (hasParam) return pathname.split("policy/")[1];
+  const hasParam = pathname.includes("policy");
+  if (hasParam)
+    return pathname
+      .split("/")
+      .filter(Boolean)
+      .filter(a => !isNaN(Number(a)))[0];
   return "";
 };
 
