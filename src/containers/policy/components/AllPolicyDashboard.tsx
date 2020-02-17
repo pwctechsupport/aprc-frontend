@@ -2,6 +2,7 @@ import React from "react";
 import { usePolicyDashboardQuery } from "../../../generated/graphql";
 import { oc } from "ts-optchain";
 import PolicyDashboard from "./PolicyDashboard";
+import Helmet from "react-helmet";
 
 const AllPolicyDashboard = () => {
   const { data, loading } = usePolicyDashboardQuery();
@@ -18,6 +19,9 @@ const AllPolicyDashboard = () => {
 
   return (
     <div>
+      <Helmet>
+        <title>All Policy Dashboard - PricewaterhouseCoopers</title>
+      </Helmet>
       <h2 className="mb-5">All Policy Summary</h2>
       <PolicyDashboard
         data={[

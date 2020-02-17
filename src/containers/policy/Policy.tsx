@@ -627,7 +627,7 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   return (
     <div>
       <Helmet>
-        <title>Policy - {title} - PricewaterhouseCoopers</title>
+        <title>{title} - Policy - PricewaterhouseCoopers</title>
       </Helmet>
       {/* <BreadCrumb
         crumbs={[
