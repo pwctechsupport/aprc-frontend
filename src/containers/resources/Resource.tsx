@@ -79,8 +79,10 @@ const Resource = ({ match }: RouteComponentProps) => {
       policyIds: data.policyIds,
       controlIds: data.controlId ? [data.controlId] : undefined,
       businessProcessId: data.businessProcessId,
-      resuploadBase64: data.resuploadBase64,
-      resuploadFileName: data.resuploadFileName
+      ...(data.resuploadBase64 && {
+        resuploadBase64: data.resuploadBase64,
+        resuploadFileName: data.resuploadFileName
+      })
     };
 
     updateResource({ variables: { input } });

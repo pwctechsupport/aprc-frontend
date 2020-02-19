@@ -1,17 +1,25 @@
 import React from "react";
+import { RouteComponentProps } from "react-router";
 import PolicyCategoryForm, {
   PolicyCategoryFormValues
 } from "./components/PolicyCategoryForm";
 import { useCreatePolicyCategoryMutation } from "../../generated/graphql";
 import Helmet from "react-helmet";
 import { notifySuccess, notifyGraphQLErrors } from "../../shared/utils/notif";
+import { oc } from "ts-optchain";
 
-const CreatePolicyCategory = () => {
+
+const CreatePolicyCategory = ({history}:RouteComponentProps) => {
   const [mutation, { loading }] = useCreatePolicyCategoryMutation({
-    onCompleted: () => notifySuccess("Policy Category Created"),
+    onCompleted: res => {
+      notifySuccess("Policy Category Created");
+      const id = oc(res).createPolicyCategory.policyCategory.id("");
+      history.replace(`/policy-category/${id}`)
+    },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["policyCategories"]
+    refetchQueries: ["policyCategories"],
+    
   });
   function handleCreate(values: PolicyCategoryFormValues) {
     mutation({ variables: { input: values } });

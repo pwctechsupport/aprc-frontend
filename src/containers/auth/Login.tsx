@@ -10,6 +10,7 @@ import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import { oc } from "ts-optchain";
 import { Link } from "react-router-dom";
+import Helmet from "react-helmet";
 
 const Login = ({ history }: RouteComponentProps) => {
   const dispatch = useDispatch();
@@ -53,6 +54,9 @@ const Login = ({ history }: RouteComponentProps) => {
   };
   return (
     <Container>
+      <Helmet>
+        <title>Login - PricewaterhouseCoopers</title>
+      </Helmet>
       <Image src={pwcLogo} alt="pwc-logo" />
       <H1>Welcome, Please Sign in Here</H1>
       <Form onSubmit={handleSubmit(onSubmit)}>
