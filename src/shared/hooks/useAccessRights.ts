@@ -8,8 +8,8 @@ const useAccessRights = (allowedRoles: string[]): boolean[] => {
     .map(role => role.name);
   let permissions: boolean[] = [];
 
-  for (const role of roleNames) {
-    permissions.push(role ? allowedRoles.includes(role) : false);
+  for (const role of allowedRoles) {
+    permissions.push(role ? roleNames.includes(role) : false);
   }
 
   return permissions;
