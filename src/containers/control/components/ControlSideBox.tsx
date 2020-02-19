@@ -21,7 +21,8 @@ const ControlSideBox = () => {
     .controls.collection([])
     .sort(
       (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        new Date(String(b.updatedAt)).getTime() -
+        new Date(String(a.updatedAt)).getTime()
     );
 
   return (
