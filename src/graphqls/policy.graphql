@@ -93,6 +93,16 @@ query policy($id: ID!) {
       }
       objectChanges
     }
+    hasEditAccess
+    requestStatus
+    requestEdit {
+      id
+      state
+      user {
+        id
+        name
+      }
+    }
   }
 }
 

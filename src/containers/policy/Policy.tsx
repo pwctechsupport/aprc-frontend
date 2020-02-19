@@ -1,6 +1,6 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Helmet from "react-helmet";
 import {
   FaBookmark,
@@ -9,10 +9,12 @@ import {
   FaEyeSlash,
   FaFilePdf,
   FaTimes,
-  FaTrash
+  FaTrash,
+  FaPlus,
+  FaExclamationCircle
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
-import { MdEmail, MdModeEdit } from "react-icons/md";
+import { MdEmail } from "react-icons/md";
 import { RouteComponentProps, Route } from "react-router";
 import { Link, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -25,7 +27,9 @@ import {
   useDestroyPolicyMutation,
   usePolicyQuery,
   useUpdatePolicyMutation,
-  useReviewPolicyDraftMutation
+  useReviewPolicyDraftMutation,
+  useCreateRequestEditMutation,
+  useApproveRequestEditMutation
 } from "../../generated/graphql";
 // import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -44,7 +48,11 @@ import {
   previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
 import { formatPolicyChart } from "../../shared/utils/formatPolicy";
-import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import {
+  notifyGraphQLErrors,
+  notifySuccess,
+  notifyInfo
+} from "../../shared/utils/notif";
 import ResourceForm, {
   ResourceFormValues
 } from "../resources/components/ResourceForm";
@@ -56,6 +64,11 @@ import Modal from "../../shared/components/Modal";
 import Tooltip from "../../shared/components/Tooltip";
 import { Nav, NavItem, TabContent, TabPane } from "reactstrap";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import {
+  AiFillEdit,
+  AiOutlineEdit,
+  AiOutlineClockCircle
+} from "react-icons/ai";
 
 const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -85,14 +98,23 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     fetchPolicy: "network-only"
   });
 
-  const isAdminMenu = location.pathname.split("/")[1] === "policy-admin";
-  const [isAdmin] = useAccessRights(["admin"]);
-  const draft = oc(data).policy.draft.objectResult();
+  const isAdminView = location.pathname.split("/")[1] === "policy-admin";
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
+
+  // Close edit mode when changing screen
+  useEffect(() => {
+    if (inEditMode) setInEditMode(false);
+    // eslint-disable-next-line
+  }, [location.pathname]);
 
   // Delete current policy
   const [destroyMain] = useDestroyPolicyMutation({
     onCompleted: () => {
-      const url = isAdminMenu ? "/policy-admin" : "/policy";
+      const url = isAdminView ? "/policy-admin" : "/policy";
       toast.success("Delete Success");
       history.push(url);
     },
@@ -186,17 +208,46 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     createResource({ variables: { input } });
   }
 
+  const [
+    requestEditMutation,
+    requestEditMutationInfo
+  ] = useCreateRequestEditMutation({
+    variables: { id: oc(data).policy.id(""), type: "Policy" },
+    onError: notifyGraphQLErrors,
+    onCompleted: () => notifyInfo("Edit access requested"),
+    refetchQueries: ["policy"]
+  });
+
+  const [
+    approveEditMutation,
+    approveEditMutationResult
+  ] = useApproveRequestEditMutation({
+    refetchQueries: ["policy"],
+    onError: notifyGraphQLErrors
+  });
+  function handleApproveRequest(id: string) {
+    approveEditMutation({ variables: { id, approve: true } });
+  }
+
+  function handleRejectRequest(id: string) {
+    approveEditMutation({ variables: { id, approve: false } });
+  }
+
   const [reviewPolicy, reviewPolicyM] = useReviewPolicyDraftMutation({
     refetchQueries: ["policy"],
     onError: notifyGraphQLErrors
   });
 
-  function review({ publish }: { publish: boolean }) {
-    reviewPolicy({ variables: { id, publish } }).then(() => {
-      notifySuccess(publish ? "Changes published" : "Changes rejected");
-    });
+  async function review({ publish }: { publish: boolean }) {
+    try {
+      await reviewPolicy({ variables: { id, publish } });
+      notifySuccess(publish ? "Changes Accepted" : "Changes Rejected");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
 
+  const draft = oc(data).policy.draft.objectResult();
   let title: string = oc(data).policy.title("");
   title = draft ? `[Draft] ${title}` : title;
   const description = draft
@@ -217,6 +268,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const controlCount = oc(data).policy.controlCount({});
   const riskCount = oc(data).policy.riskCount({});
   const subCount = oc(data).policy.subCount({});
+  const isMaximumLevel = ancestry.split("/").length === 5;
 
   const scrollToRisk = useCallback(
     () =>
@@ -242,6 +294,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       }),
     []
   );
+
+  if (loading) return <LoadingSpinner centered size={30} />;
+
   const policyChartData = formatPolicyChart({
     controlCount,
     riskCount,
@@ -255,12 +310,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       : scrollToSubPolicy
   }));
 
-  const isMaximumLevel = ancestry.split("/").length === 5;
-
-  if (loading) return <LoadingSpinner centered size={30} />;
-
   const renderPolicy = () => {
-    const tabs = isAdminMenu
+    const tabs = isAdminView
       ? [{ to: `/policy-admin/${id}/details`, title: "Details" }]
       : [
           { to: `/policy/${id}`, title: "Dashboard" },
@@ -295,7 +346,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             <Route
               exact
               path={
-                isAdminMenu
+                isAdminView
                   ? "/policy-admin/:id/details"
                   : "/policy/:id/details"
               }
@@ -418,7 +469,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                             <td>
                               <Link
                                 to={
-                                  isAdminMenu
+                                  isAdminView
                                     ? `/policy-admin/${item.id}/details`
                                     : `/policy/${item.id}`
                                 }
@@ -477,121 +528,95 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   };
 
   const renderPolicyInEditMode = () => {
-    return isSubPolicy ? (
-      <SubPolicyForm
-        defaultValues={{
-          parentId,
-          title,
-          description,
-          referenceIds,
-          resourceIds: oc(data)
-            .policy.resources([])
-            .map(r => r.id),
-          businessProcessIds: oc(data)
-            .policy.businessProcesses([])
-            .map(r => r.id),
-          controlIds: oc(data)
-            .policy.controls([])
-            .map(r => r.id),
-          riskIds: oc(data)
-            .policy.risks([])
-            .map(r => r.id),
-          status: status as Status
-        }}
-        onSubmit={handleUpdateSubPolicy}
-        submitting={updateState.loading}
-      />
-    ) : (
-      <PolicyForm
-        onSubmit={handleUpdate}
-        defaultValues={{
-          title,
-          policyCategoryId,
-          description,
-          status: status as Status
-        }}
-        submitting={updateState.loading}
-      />
+    return (
+      <div>
+        <div className="d-flex justify-content-end">{renderPolicyAction()}</div>
+        {isSubPolicy ? (
+          <SubPolicyForm
+            defaultValues={{
+              parentId,
+              title,
+              description,
+              referenceIds,
+              resourceIds: oc(data)
+                .policy.resources([])
+                .map(r => r.id),
+              businessProcessIds: oc(data)
+                .policy.businessProcesses([])
+                .map(r => r.id),
+              controlIds: oc(data)
+                .policy.controls([])
+                .map(r => r.id),
+              riskIds: oc(data)
+                .policy.risks([])
+                .map(r => r.id),
+              status: status as Status
+            }}
+            onSubmit={handleUpdateSubPolicy}
+            submitting={updateState.loading}
+          />
+        ) : (
+          <PolicyForm
+            onSubmit={handleUpdate}
+            defaultValues={{
+              title,
+              policyCategoryId,
+              description,
+              status: status as Status
+            }}
+            submitting={updateState.loading}
+          />
+        )}
+      </div>
     );
   };
 
-  const renderPolicyAction = () => {
-    if (draft && isAdmin) {
-      return (
-        <div>
-          <DialogButton
-            color="danger"
-            className="mr-2"
-            onConfirm={() => review({ publish: false })}
-            loading={reviewPolicyM.loading}
-          >
-            Reject
-          </DialogButton>
-          <DialogButton
-            color="primary"
-            className="pwc"
-            onConfirm={() => review({ publish: true })}
-            loading={reviewPolicyM.loading}
-          >
-            Approve
-          </DialogButton>
-        </div>
-      );
-    }
-
-    if (draft && !isAdmin) return null;
-
-    if (inEditMode) {
-      return (
-        <Button onClick={toggleEditMode} color="">
-          <FaTimes size={22} className="mr-2" />
-          Cancel Edit
-        </Button>
-      );
-    }
+  const renderGeneralAction = () => {
     return (
       <div className="d-flex align-items-center">
         {!isMaximumLevel && (
-          <Link
+          <Button
+            tag={Link}
             to={
-              isAdminMenu
+              isAdminView
                 ? `/policy-admin/${id}/create-sub-policy`
                 : `/policy/${id}/create-sub-policy`
             }
+            className="pwc"
           >
-            <Button className="pwc">+ Create Sub-Policy</Button>
-          </Link>
+            <FaPlus /> Sub-Policy
+          </Button>
         )}
-        <Button
-          className="ml-3"
-          color="transparent"
-          onClick={() => {
+        <Tooltip
+          description={
             collapse.length === initialCollapse.length
-              ? closeAllCollapse()
-              : openAllCollapse();
-          }}
+              ? "Hide All Attribute"
+              : "Show All Attribute"
+          }
         >
-          {collapse.length === initialCollapse.length ? (
-            <Tooltip description="Hide All Attribute">
+          <Button
+            className="ml-3"
+            color="transparent"
+            onClick={() => {
+              collapse.length === initialCollapse.length
+                ? closeAllCollapse()
+                : openAllCollapse();
+            }}
+          >
+            {collapse.length === initialCollapse.length ? (
               <FaEyeSlash size={20} />
-            </Tooltip>
-          ) : (
-            <Tooltip description="Show All Attribute">
+            ) : (
               <FaEye size={20} />
-            </Tooltip>
-          )}
-        </Button>
+            )}
+          </Button>
+        </Tooltip>
 
-        <Button onClick={toggleEditMode} color="transparent">
-          <Tooltip description="Edit Policy">
-            <MdModeEdit size={22} />
-          </Tooltip>
-        </Button>
-        <DialogButton onConfirm={handleDeleteMain} className="mr-3">
-          <Tooltip description="Delete Policy">
+        <Tooltip description="Delete Policy">
+          <DialogButton onConfirm={handleDeleteMain} className="mr-3">
             <FaTrash className="clickable text-red" />
-          </Tooltip>
-        </DialogButton>
+          </DialogButton>
+        </Tooltip>
+
         <Menu
           data={[
             {
@@ -647,19 +672,131 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     );
   };
 
+  const renderPolicyAction = () => {
+    const hasEditAccess = oc(data).policy.hasEditAccess();
+    const requestStatus = oc(data).policy.requestStatus();
+    const requested = requestStatus === "requested";
+    const notRequested = !requestStatus;
+    const rejected = requestStatus === "rejected";
+    const requestEdit = oc(data).policy.requestEdit.state();
+
+    // PREMISES
+    // 1: None
+    const prem1 = (draft && isAdminPreparer) || (!draft && isAdminReviewer);
+    // 2: Approve or reject
+    const prem2 = draft && (isAdminReviewer || isAdmin);
+    // 3: Edit
+    const prem3 =
+      (hasEditAccess && !draft && isAdminPreparer) || (!draft && isAdmin);
+    // 4: Request for edit
+    const prem4 = !draft && (notRequested || rejected) && isAdminPreparer;
+    // 5: Waiting approval
+    const prem5 = requested && isAdminPreparer;
+    // 6: Accept Request to edit
+    const prem6 = requestEdit === "requested" && (isAdminReviewer || isAdmin);
+
+    if (prem1) return null;
+    if (prem2) {
+      return (
+        <div>
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewPolicyM.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewPolicyM.loading}
+          >
+            Approve
+          </DialogButton>
+        </div>
+      );
+    }
+
+    if (prem3) {
+      if (inEditMode) {
+        return (
+          <Button onClick={toggleEditMode} color="">
+            <FaTimes size={22} className="mr-2" />
+            Cancel Edit
+          </Button>
+        );
+      }
+      return (
+        <Tooltip description="Edit Policy">
+          <Button onClick={toggleEditMode} color="" className="soft orange">
+            <AiFillEdit />
+          </Button>
+        </Tooltip>
+      );
+    }
+
+    if (prem4) {
+      return (
+        <Tooltip description="Request edit access">
+          <DialogButton
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutation()}
+            onClick={requested ? () => {} : undefined}
+            loading={requestEditMutationInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatus === "requested"}
+          >
+            <AiOutlineEdit />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+
+    if (prem5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
+        >
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+
+    if (prem6) {
+      return (
+        <Tooltip description="Accept edit request">
+          <DialogButton
+            title={`Accept request to edit?`}
+            message={`Request by ${oc(data).policy.requestEdit.user.name()}`}
+            className="soft red mr-2"
+            data={oc(data).policy.requestEdit.id()}
+            onConfirm={handleApproveRequest}
+            onReject={handleRejectRequest}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
+          >
+            <FaExclamationCircle />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div>
       <Helmet>
         <title>{title} - Policy - PricewaterhouseCoopers</title>
       </Helmet>
-      {/* <BreadCrumb
-        crumbs={[
-          ["/policy", "Policies"],
-          ["/policy/" + id, title]
-        ]}
-      /> */}
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={title} />
+        {renderGeneralAction()}
       </div>
 
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
