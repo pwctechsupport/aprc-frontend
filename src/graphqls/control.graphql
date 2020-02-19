@@ -2,6 +2,12 @@ query controls($filter: BaseScalar = {}) {
   controls(filter: $filter) {
     collection {
       ...control
+      draft {
+        id
+        objectResult {
+          ...control
+        }
+      }
     }
   }
 }
@@ -9,6 +15,12 @@ query controls($filter: BaseScalar = {}) {
 query control($id: ID!) {
   control(id: $id) {
     ...control
+    draft {
+      id
+      objectResult {
+        ...control
+      }
+    }
   }
 }
 

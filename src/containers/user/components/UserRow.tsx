@@ -1,7 +1,12 @@
 import React, { useState, Fragment } from "react";
 import useForm from "react-hook-form";
-import { AiFillEdit } from "react-icons/ai";
-import { FaTrash, FaCheck, FaTimes } from "react-icons/fa";
+import {
+  AiFillEdit,
+  AiOutlineEdit,
+  AiOutlineClockCircle,
+  AiOutlineFileExclamation
+} from "react-icons/ai";
+import { FaTrash, FaCheck, FaTimes, FaExclamationCircle } from "react-icons/fa";
 import { oc } from "ts-optchain";
 import get from "lodash/get";
 import * as yup from "yup";
@@ -11,7 +16,9 @@ import {
   PolicyCategoriesDocument,
   useAdminUpdateUserMutation,
   useDestroyUserMutation,
-  useReviewUserDraftMutation
+  useReviewUserDraftMutation,
+  useCreateRequestEditMutation,
+  useApproveRequestEditMutation
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -21,7 +28,8 @@ import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnP
 import { toLabelValue } from "../../../shared/formatter";
 import {
   notifyGraphQLErrors,
-  notifySuccess
+  notifySuccess,
+  notifyInfo
 } from "../../../shared/utils/notif";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 
@@ -55,14 +63,36 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     onError: notifyGraphQLErrors
   });
 
+  const [requestEdit, requestEditM] = useCreateRequestEditMutation({
+    variables: { id: oc(user).id(""), type: "User" },
+    onError: notifyGraphQLErrors,
+    onCompleted: () => notifyInfo("Edit access requested"),
+    refetchQueries: ["users"]
+  });
+
+  const [approveEdit, approveEditM] = useApproveRequestEditMutation({
+    refetchQueries: ["users"],
+    onError: notifyGraphQLErrors
+  });
+
   const [reviewUser, reviewM] = useReviewUserDraftMutation({
     refetchQueries: ["users"],
     onError: notifyGraphQLErrors
   });
 
-  const [isAdmin] = useAccessRights(["admin"]);
+  const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
+    "admin",
+    "admin_preparer",
+    "admin_reviewer"
+  ]);
 
   const draft = oc(user).draft.objectResult();
+  const requestStatus = oc(user).requestStatus();
+  const notRequested = !requestStatus;
+  const requested = requestStatus === "requested";
+  const hasEditAccess = oc(user).hasEditAccess();
+  const rejected = requestStatus === "rejected";
+  const id = oc(user).id("");
   let name = oc(user).name("");
 
   if (draft) {
@@ -102,6 +132,10 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     setIsEdit(!isEdit);
   }
 
+  function confirmRequestEdit() {
+    requestEdit();
+  }
+
   function handleSave(data: UserRowValues) {
     update({
       variables: {
@@ -124,15 +158,19 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
   }
 
   function handleApprove(id: string) {
-    reviewUser({ variables: { id, publish: true } }).then(() =>
-      notifySuccess("Changes approved")
-    );
+    reviewUser({ variables: { id, publish: true } });
   }
 
   function handleReject(id: string) {
-    reviewUser({ variables: { id, publish: false } }).then(() =>
-      notifySuccess("Changes rejected")
-    );
+    reviewUser({ variables: { id, publish: false } });
+  }
+
+  function handleApproveRequest(id: string) {
+    approveEdit({ variables: { id, approve: true } });
+  }
+
+  function handleRejectRequest(id: string) {
+    approveEdit({ variables: { id, approve: false } });
   }
 
   if (!isEdit) {
@@ -157,7 +195,11 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
         </td>
 
         <td>
-          {isAdmin && draft ? (
+          {/* premis 1 None */}
+          {(draft && isAdminPreparer) || (!draft && isAdminReviewer && null)}
+
+          {/* premis 2 Approve */}
+          {draft && (isAdminReviewer || isAdmin) && (
             <Fragment>
               <DialogButton
                 title="Approve"
@@ -178,22 +220,66 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
                 <FaTimes />
               </DialogButton>
             </Fragment>
-          ) : draft ? null : (
+          )}
+
+          {/* premis 3 Edit */}
+          {((hasEditAccess && !draft && isAdminPreparer) ||
+            (!draft && isAdmin)) && (
             <Fragment>
               <Button onClick={toggleEdit} className="soft orange mr-2">
                 <AiFillEdit />
               </Button>
-
-              <DialogButton
-                title="Delete"
-                data={oc(user).id()}
-                loading={destroyM.loading}
-                className="soft red"
-                onConfirm={handleDestroy}
-              >
-                <FaTrash />
-              </DialogButton>
             </Fragment>
+          )}
+
+          {/* premis 4 Request Edit */}
+          {!draft && (notRequested || rejected) && isAdminPreparer && (
+            <DialogButton
+              title="Request access to edit?"
+              onConfirm={confirmRequestEdit}
+              onClick={requested ? () => {} : undefined}
+              loading={requestEditM.loading}
+              className="soft red mr-2"
+              disabled={requestStatus === "requested"}
+            >
+              <AiOutlineEdit />
+            </DialogButton>
+          )}
+
+          {/* premis 5 Waiting approval */}
+          {requested && isAdminPreparer && (
+            <Button disabled className="soft orange mr-2">
+              <AiOutlineClockCircle />
+            </Button>
+          )}
+
+          {/* premis 6 Accept request to edit */}
+          {oc(user).requestEdit.state() === "requested" &&
+            (isAdminReviewer || isAdmin) && (
+              <DialogButton
+                title={`Accept request to edit?`}
+                message={`Request by ${oc(user).requestEdit.user.name()}`}
+                className="soft red mr-2"
+                data={oc(user).requestEdit.id()}
+                onConfirm={handleApproveRequest}
+                onReject={handleRejectRequest}
+                actions={{ no: "Reject", yes: "Approve" }}
+                loading={approveEditM.loading}
+              >
+                <FaExclamationCircle />
+              </DialogButton>
+            )}
+
+          {!draft && (
+            <DialogButton
+              title="Delete"
+              data={oc(user).id()}
+              loading={destroyM.loading}
+              className="soft red"
+              onConfirm={handleDestroy}
+            >
+              <FaTrash />
+            </DialogButton>
           )}
         </td>
       </tr>

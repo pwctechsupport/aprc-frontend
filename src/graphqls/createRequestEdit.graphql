@@ -1,0 +1,6 @@
+mutation createRequestEdit($type: String!, $id: ID!) {
+  createRequestEdit(input: {originatorType: $type, originatorId: $id}) {
+    success
+    errors
+  }
+}

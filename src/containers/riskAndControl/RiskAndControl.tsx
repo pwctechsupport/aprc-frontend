@@ -316,7 +316,8 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                                           assertion: control.assertion as Assertion[],
                                           controlOwner:
                                             control.controlOwner || "",
-                                          description: control.description,
+                                          description:
+                                            control.description || "",
                                           status: control.status as Status,
                                           typeOfControl: control.typeOfControl as TypeOfControl,
                                           nature: control.nature as Nature,

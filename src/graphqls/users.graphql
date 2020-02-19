@@ -27,6 +27,15 @@ fragment userFragment on User {
 
 fragment userRowFragment on User {
   ...userFragment
+  hasEditAccess
+  requestStatus
+  requestEdit {
+    id
+    state
+    user {
+      id name
+    }
+  }
   draft {
     id
     objectResult {
@@ -73,6 +82,13 @@ mutation destroyUser($id: ID!) {
 
 mutation reviewUserDraft($id: ID!, $publish: Boolean!) {
   reviewUserDraft(input: {id: $id, publish: $publish}) {
+    success
+    errors
+  }
+}
+
+mutation approveRequestEdit($id: ID!, $approve: Boolean!){
+  approveRequestEdit(input: {id: $id, approve: $approve}) {
     success
     errors
   }

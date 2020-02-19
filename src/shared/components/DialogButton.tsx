@@ -10,6 +10,8 @@ export interface DialogButtonProps extends ButtonProps {
   title?: ModalDialogProps["title"];
   message?: ModalDialogProps["message"];
   onConfirm?: (data: DialogButtonProps["data"]) => void;
+  onReject?: (data: DialogButtonProps["data"]) => void;
+  actions?: ModalDialogProps["actions"];
   loading?: boolean;
 }
 
@@ -20,6 +22,8 @@ const DialogButton = ({
   data,
   children,
   onConfirm,
+  onReject,
+  actions,
   loading,
   ...btnProps
 }: DialogButtonProps) => {
@@ -39,6 +43,11 @@ const DialogButton = ({
     setIsOpen(false);
   }
 
+  function _onNo() {
+    onReject && onReject(data);
+    _toggle();
+  }
+
   return (
     <Fragment>
       <Button {...btnProps} loading={loading} color={color} onClick={_onClick}>
@@ -49,8 +58,9 @@ const DialogButton = ({
         title={title}
         message={message}
         toggle={_toggle}
-        functions={{ onNo: _toggle, onYes: _onConfirm }}
+        functions={{ onNo: _onNo, onYes: _onConfirm }}
         disabled={loading}
+        actions={actions}
       />
     </Fragment>
   );
