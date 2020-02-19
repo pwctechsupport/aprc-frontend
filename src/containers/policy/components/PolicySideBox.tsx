@@ -2,21 +2,38 @@ import classnames from "classnames";
 import React, { useState } from "react";
 import { FaCaretRight, FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { Collapse, Input } from "reactstrap";
+import { Collapse } from "reactstrap";
 import styled, { css } from "styled-components";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { usePolicyTreeQuery } from "../../../generated/graphql";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
+import { SideBoxSearch } from "../../../shared/components/SideBox";
 
 const PolicySideBox = ({ location }: RouteComponentProps) => {
   const activeId = readCurrentParams(location.pathname);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
+
+  // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
+  // When isTree = false, it just query all the policies, to be rendered as search result.
+  const { data, loading } = usePolicyTreeQuery({
+    variables: {
+      filter: {
+        ...(!searchQuery && {
+          ancestry_null: true
+        }),
+        title_cont: searchQuery
+      },
+      isTree: !searchQuery
+    }
+  });
+  const policies = oc(data).policies.collection([]);
+
   return (
     <div className="side-box">
-      <div className="d-flex justify-content-between mx-3 mt-4">
+      <div className="d-flex justify-content-between mx-3 mt-4 mb-3">
         <h4 className="text-orange">Policies</h4>
         <Tooltip description="Create Policy">
           <Button tag={Link} to="/policy/create" color="" className="soft red">
@@ -24,62 +41,34 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
           </Button>
         </Tooltip>
       </div>
-      <div className="side-box__searchbar">
-        <Input
-          value={search}
-          placeholder="Search Policies..."
-          onChange={e => setSearch(e.target.value)}
-          className="orange"
-        />
-      </div>
+      <SideBoxSearch
+        search={search}
+        setSearch={setSearch}
+        loading={loading}
+        placeholder="Search Policies..."
+      />
 
-      {searchQuery && (
-        <div
-          className="clickable mx-3 text-right text-small text-italic text-orange"
-          onClick={() => setSearch("")}
-        >
-          Clear Search
-        </div>
-      )}
       <div className="side-box__list">
-        <PolicyTree search={searchQuery} activeId={activeId} />
+        {policies.length ? (
+          policies.map(policy => (
+            <PolicyBranch
+              key={policy.id}
+              id={policy.id}
+              activeId={activeId}
+              title={policy.title}
+              children={policy.children}
+              level={0}
+            />
+          ))
+        ) : (
+          <div className="text-center p-2 text-orange">Policy not found</div>
+        )}
       </div>
     </div>
   );
 };
 
 export default PolicySideBox;
-
-const PolicyTree = ({ activeId, search }: PolicyTreeProps) => {
-  // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
-  // When isTree = false, it just query all the policies, to be rendered as search result.
-  const { data } = usePolicyTreeQuery({
-    variables: {
-      filter: { ...(!search && { ancestry_null: true }), title_cont: search },
-      isTree: !search
-    }
-  });
-  const policies = oc(data).policies.collection([]);
-
-  if (policies.length === 0) {
-    return <div className="text-center p-2 text-orange">Policy not found</div>;
-  }
-
-  return (
-    <div>
-      {policies.map(policy => (
-        <PolicyBranch
-          key={policy.id}
-          id={policy.id}
-          activeId={activeId}
-          title={policy.title}
-          children={policy.children}
-          level={0}
-        />
-      ))}
-    </div>
-  );
-};
 
 const PolicyBranch = ({
   id,

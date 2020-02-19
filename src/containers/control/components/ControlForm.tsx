@@ -243,7 +243,7 @@ export interface CreateControlFormValues {
   nature: Nature;
   ipo: Ipo[];
   assertion: Assertion[];
-  description?: string;
+  description?: string | null;
   status: Status;
   riskIds: string[];
   businessProcessIds: string[];
