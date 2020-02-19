@@ -35,7 +35,9 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
   return (
     <div className="side-box">
       <div className="d-flex justify-content-between mx-3 mt-4 mb-3">
-        <h4 className="text-orange">Policies</h4>
+        <h4 className="text-orange">
+          {isAdmin ? "Policies Admin" : "Policies"}
+        </h4>
         <Tooltip description="Create Policy">
           <Button
             tag={Link}
