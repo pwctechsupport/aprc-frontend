@@ -182,88 +182,67 @@ mutation createSubPolicy($input: CreateSubPolicyInput!) {
 }
 
 query policyDashboard {
-  draftPolicies: policies(
-    filter: {
-      status_in: [
-        "draft"
-        "waiting_for_approval"
-        "ready_for_edit"
-        "waiting_for_review"
-      ]
+  # POLICY
+  reviewedPolicies: policies(filter: { status_eq: release }) {
+    metadata {
+      totalCount
     }
+  }
+  preparedPolicies: policies(
+    filter: { status_in: ["draft", "waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
-  releasedPolicies: policies(filter: { status_eq: release }) {
+  totalPolicies: policies(filter: {}) {
     metadata {
       totalCount
     }
   }
-  draftControls: controls(
-    filter: {
-      status_in: [
-        "draft"
-        "waiting_for_approval"
-        "ready_for_edit"
-        "waiting_for_review"
-      ]
+
+  # CONTROL
+  reviewedControls: controls(filter: { status_eq: release }) {
+    metadata {
+      totalCount
     }
+  }
+  preparedControls: controls(
+    filter: { status_in: ["draft", "waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
-  releasedControls: controls(filter: { status_eq: release }) {
+  totalControls: controls(filter: {}) {
     metadata {
       totalCount
     }
   }
-  draftRisks: risks(
-    filter: {
-      status_in: [
-        "draft"
-        "waiting_for_approval"
-        "ready_for_edit"
-        "waiting_for_review"
-      ]
-    }
-  ) {
+
+  # RISK
+  reviewedRisks: risks(filter: { status_eq: release }) {
     metadata {
       totalCount
     }
   }
-  releasedRisks: risks(filter: { status_eq: release }) {
+  preparedRisks: risks(filter: { status_in: ["draft", "waiting_for_review"] }) {
+    metadata {
+      totalCount
+    }
+  }
+  totalRisks: risks(filter: {}) {
     metadata {
       totalCount
     }
   }
 }
-
-# query bookmarkPolicies($filter: BaseScalar = {}) {
-#   bookmarkPolicies(filter: $filter) {
-#     collection {
-#       id
-#       policy {
-#         title
-#         id
-#       }
-#     }
-#   }
-# }
 
 mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {
   createBookmarkPolicy(input: $input) {
     success
   }
 }
-
-# mutation destroyBookmarkPolicy($id: ID!) {
-#   destroyBookmarkPolicy(input: { id: $id }) {
-#     success
-#   }
-# }
 
 mutation reviewPolicyDraft($id: ID!, $publish: Boolean!) {
   reviewPolicyDraft(input: { id: $id, publish: $publish }) {
