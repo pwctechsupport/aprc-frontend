@@ -13,7 +13,7 @@ import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import { oc } from "ts-optchain";
 
-const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
+const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
 
   // Fetch parent policy
@@ -52,14 +52,27 @@ const CreateSubPolicy = ({ match, history }: RouteComponentProps) => {
     status: Status.Draft
   };
 
+  const isAdmin = location.pathname.split("/")[1] === "policy-admin";
+
   return (
     <div>
       <BreadCrumb
-        crumbs={[
-          ["/policy", "Policies"],
-          ["/policy/" + id, title],
-          ["/policy/" + id + "/create-sub-policy", "Create Sub-Policy"]
-        ]}
+        crumbs={
+          isAdmin
+            ? [
+                ["/policy-admin", "Policies"],
+                ["/policy-admin/" + id, title],
+                [
+                  "/policy-admin/" + id + "/create-sub-policy",
+                  "Create Sub-Policy"
+                ]
+              ]
+            : [
+                ["/policy", "Policies"],
+                ["/policy/" + id, title],
+                ["/policy/" + id + "/create-sub-policy", "Create Sub-Policy"]
+              ]
+        }
       />
       <HeaderWithBackButton heading="Create Sub-Policy" />
       <SubPolicyForm onSubmit={createSubPolicy} defaultValues={defaultValues} />

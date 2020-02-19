@@ -9,6 +9,7 @@ import ControlRoute from "./containers/control/ControlRoute";
 import Homepage from "./containers/homepage/Homepage";
 import Notification from "./containers/notification/Notification";
 import PolicyRoute from "./containers/policy/PolicyRoute";
+import PolicyAdminRoute from "./containers/policy/PolicyAdminRoute";
 import ReferenceRoute from "./containers/referencess/ReferenceRoute";
 import Report from "./containers/report/Report";
 import ResourceRoute from "./containers/resources/ResourceRoute";
@@ -42,6 +43,7 @@ export default function() {
                 path="/policy-category"
                 component={PolicyCategoryRoute}
               />
+              <AuthRoute path="/policy-admin" component={PolicyAdminRoute} />
               <AuthRoute path="/resources" component={ResourceRoute} />
               <AuthRoute path="/risk" component={RiskRoute} />
               <AuthRoute
