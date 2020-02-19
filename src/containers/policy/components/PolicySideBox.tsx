@@ -15,6 +15,7 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
   const activeId = readCurrentParams(location.pathname);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
+  const isAdmin = location.pathname.split("/")[1] === "policy-admin";
 
   // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
   // When isTree = false, it just query all the policies, to be rendered as search result.
@@ -36,7 +37,12 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
       <div className="d-flex justify-content-between mx-3 mt-4 mb-3">
         <h4 className="text-orange">Policies</h4>
         <Tooltip description="Create Policy">
-          <Button tag={Link} to="/policy/create" color="" className="soft red">
+          <Button
+            tag={Link}
+            to={isAdmin ? "/policy-admin/create" : "/policy/create"}
+            color=""
+            className="soft red"
+          >
             <FaPlus />
           </Button>
         </Tooltip>
@@ -58,6 +64,7 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
               title={policy.title}
               children={policy.children}
               level={0}
+              isAdmin={isAdmin}
             />
           ))
         ) : (
@@ -75,7 +82,8 @@ const PolicyBranch = ({
   activeId,
   title,
   children = [],
-  level
+  level,
+  isAdmin
 }: PolicyBranchProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
@@ -103,7 +111,7 @@ const PolicyBranch = ({
         )}
         <Link
           className={classnames("side-box__item__title", { active: isActive })}
-          to={`/policy/${id}`}
+          to={isAdmin ? `/policy-admin/${id}/details` : `/policy/${id}`}
         >
           {title}
         </Link>
@@ -117,6 +125,7 @@ const PolicyBranch = ({
                 {...child}
                 activeId={activeId}
                 level={Number(level) + 1}
+                isAdmin={isAdmin}
               />
             ))}
         </Collapse>
@@ -150,6 +159,7 @@ interface PolicyBranchProps {
   title?: string | null | undefined;
   children?: Array<PolicyBranchProps> | null | undefined;
   level?: number;
+  isAdmin?: boolean;
 }
 
 interface PolicyTreeProps {

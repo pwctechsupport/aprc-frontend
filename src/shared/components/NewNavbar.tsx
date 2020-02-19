@@ -22,7 +22,7 @@ import Avatar from "./Avatar";
 import useAccessRights from "../hooks/useAccessRights";
 
 const adminMenus = [
-  { label: "Policy", path: "/policy" },
+  { label: "Policy", path: "/policy-admin" },
   { label: "Policy Category", path: "/policy-category" },
   { label: "Control", path: "/control" },
   { label: "User", path: "/user" },

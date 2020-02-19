@@ -8,7 +8,7 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 
-const CreatePolicy = ({ history }: RouteComponentProps) => {
+const CreatePolicy = ({ history, location }: RouteComponentProps) => {
   const [createPolicy, { loading }] = useCreatePolicyMutation({
     onCompleted: res => {
       toast.success("Create Success");
@@ -31,13 +31,22 @@ const CreatePolicy = ({ history }: RouteComponentProps) => {
       }
     });
   }
+  const isAdmin = location.pathname.split("/")[1] === "policy-admin";
+
   return (
     <div>
       <Helmet>
         <title>Create Policy - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb
-        crumbs={[["/policy", "Policies"], ["/policy/create", "Create Policy"]]}
+        crumbs={
+          isAdmin
+            ? [
+                ["/policy-admin", "Policies"],
+                ["/policy-admin/create", "Create Policy"]
+              ]
+            : [["/policy", "Policies"], ["/policy/create", "Create Policy"]]
+        }
       />
       <HeaderWithBackButton heading="Create Policy" />
       <PolicyForm onSubmit={handleSubmit} submitting={loading} />

@@ -57,7 +57,7 @@ import Tooltip from "../../shared/components/Tooltip";
 import { Nav, NavItem, TabContent, TabPane } from "reactstrap";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 
-const Policy = ({ match, history }: RouteComponentProps) => {
+const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
   const riskRef = useRef<HTMLInputElement>(null);
   const controlRef = useRef<HTMLInputElement>(null);
@@ -85,14 +85,16 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     fetchPolicy: "network-only"
   });
 
+  const isAdminMenu = location.pathname.split("/")[1] === "policy-admin";
   const [isAdmin] = useAccessRights(["admin"]);
   const draft = oc(data).policy.draft.objectResult();
 
   // Delete current policy
   const [destroyMain] = useDestroyPolicyMutation({
     onCompleted: () => {
+      const url = isAdminMenu ? "/policy-admin" : "/policy";
       toast.success("Delete Success");
-      history.push("/policy");
+      history.push(url);
     },
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["policies", "policyTree"],
@@ -258,11 +260,13 @@ const Policy = ({ match, history }: RouteComponentProps) => {
   if (loading) return <LoadingSpinner centered size={30} />;
 
   const renderPolicy = () => {
-    const tabs = [
-      { to: `/policy/${id}`, title: "Dashboard" },
-      { to: `/policy/${id}/details`, title: "Details" },
-      { to: `/policy/${id}/resources`, title: "Resources" }
-    ];
+    const tabs = isAdminMenu
+      ? [{ to: `/policy-admin/${id}/details`, title: "Details" }]
+      : [
+          { to: `/policy/${id}`, title: "Dashboard" },
+          { to: `/policy/${id}/details`, title: "Details" },
+          { to: `/policy/${id}/resources`, title: "Resources" }
+        ];
 
     return (
       <div>
@@ -288,7 +292,14 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                 <PolicyDashboard data={policyChartData} />
               </div>
             </Route>
-            <Route exact path="/policy/:id/details">
+            <Route
+              exact
+              path={
+                isAdminMenu
+                  ? "/policy-admin/:id/details"
+                  : "/policy/:id/details"
+              }
+            >
               <div className="d-flex justify-content-end">
                 {renderPolicyAction()}
               </div>
@@ -405,7 +416,13 @@ const Policy = ({ match, history }: RouteComponentProps) => {
                         {children.map(item => (
                           <tr key={item.id}>
                             <td>
-                              <Link to={`/policy/${item.id}`}>
+                              <Link
+                                to={
+                                  isAdminMenu
+                                    ? `/policy-admin/${item.id}/details`
+                                    : `/policy/${item.id}`
+                                }
+                              >
                                 {item.title}
                               </Link>
                             </td>
@@ -535,7 +552,13 @@ const Policy = ({ match, history }: RouteComponentProps) => {
     return (
       <div className="d-flex align-items-center">
         {!isMaximumLevel && (
-          <Link to={`/policy/${id}/create-sub-policy`}>
+          <Link
+            to={
+              isAdminMenu
+                ? `/policy-admin/${id}/create-sub-policy`
+                : `/policy/${id}/create-sub-policy`
+            }
+          >
             <Button className="pwc">+ Create Sub-Policy</Button>
           </Link>
         )}
