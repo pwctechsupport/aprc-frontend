@@ -5,7 +5,8 @@ import { oc } from "ts-optchain";
 import {
   usePolicyCategoryQuery,
   useUpdatePolicyCategoryMutation,
-  useDestroyPolicyCategoryMutation
+  useDestroyPolicyCategoryMutation,
+  useReviewPolicyCategoryDraftMutation
 } from "../../generated/graphql";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import PolicyCategoryForm, {
@@ -16,6 +17,8 @@ import Helmet from "react-helmet";
 import { toLabelValue } from "../../shared/formatter";
 import DialogButton from "../../shared/components/DialogButton";
 import { FaTrash } from "react-icons/fa";
+import useAccessRights from "../../shared/hooks/useAccessRights";
+
 
 const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -25,6 +28,9 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     },
     fetchPolicy: "network-only"
   });
+  
+  
+
   const [updateMutation, updateInfo] = useUpdatePolicyCategoryMutation({
     onCompleted: () => notifySuccess("Policy Category Updated"),
     onError: notifyGraphQLErrors,
@@ -41,7 +47,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
       }
     });
   }
-
+  const [isAdmin] = useAccessRights(["admin"]);
   const [deleteMutation, deleteInfo] = useDestroyPolicyCategoryMutation({
     onCompleted: () => {
       notifySuccess("Policy Category Deleted");
@@ -54,23 +60,55 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   function handleDelete() {
     deleteMutation({ variables: { id } });
   }
-
+  const draft = oc(data).policyCategory.draft.objectResult();
+  const [reviewPolicyCategory, reviewPolicyCategoryM] = useReviewPolicyCategoryDraftMutation({
+    refetchQueries: ["policyCategory"],
+    onError: notifyGraphQLErrors
+  });
   if (loading) return <LoadingSpinner size={30} centered />;
 
-  const name = oc(data).policyCategory.name("");
+  
+ 
+  let name = oc(data).policyCategory.name("");
+  name = draft ? `[Draft] ${name}`: name
   const policies = oc(data).policyCategory.policies([]);
-
+  
   const defaultValues = {
     name,
     policies: policies.map(toLabelValue)
   };
-  return (
-    <div>
-      <Helmet>
-        <title>{name} - Policy Category - PricewaterhouseCoopers</title>
-      </Helmet>
-      <div className="d-flex justify-content-between align-items-center">
-        <h1>{name}</h1>
+  
+  function review({ publish }: { publish: boolean }) {
+    reviewPolicyCategory({ variables: { id, publish } }).then(() => {
+      notifySuccess(publish ? "Changes published" : "Changes rejected");
+    });
+  }
+  const renderPolicyCategoryAction = () => {
+    if (draft && isAdmin) {
+      return (
+        <div>
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewPolicyCategoryM.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewPolicyCategoryM.loading}
+          >
+            Approve
+          </DialogButton>
+        </div>
+      );
+    }
+    if (draft && !isAdmin) return null
+    if(!draft){
+      return(
         <DialogButton
           onConfirm={handleDelete}
           loading={deleteInfo.loading}
@@ -79,13 +117,40 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
         >
           <FaTrash className="clickable" />
         </DialogButton>
+      )
+    }
+
+  }
+
+
+  return (
+    <div>
+      <Helmet>
+        <title>{name} - Policy Category - PricewaterhouseCoopers</title>
+      </Helmet>
+      
+      <div className="d-flex justify-content-between align-items-center">
+        <h1>{name}</h1>
+        {renderPolicyCategoryAction()}
+        {/* <DialogButton
+          onConfirm={handleDelete}
+          loading={deleteInfo.loading}
+          message={`Delete Policy Category "${name}"?`}
+          className="soft red"
+        >
+          <FaTrash className="clickable" />
+        </DialogButton> */}
       </div>
       <PolicyCategoryForm
         onSubmit={handleUpdate}
         submitting={updateInfo.loading}
         defaultValues={defaultValues}
+        isDraft={draft? true:false}
       />
     </div>
+            
+            
+          
   );
 };
 
