@@ -6,6 +6,7 @@ import pwcLogo from '../../assets/images/pwc-logo.png'
 import { useForgotPasswordMutation } from '../../generated/graphql'
 import Button from '../../shared/components/Button'
 import { Container, Form, H1, Image, Input, Label } from './Login'
+import Helmet from 'react-helmet'
 
 const ForgotPassword = ({ history }: RouteComponentProps) => {
   const { register, handleSubmit } = useForm()
@@ -34,6 +35,9 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
 
   return (
     <Container>
+      <Helmet>
+        <title>Forgot Password - PricewaterhouseCoopers</title>
+      </Helmet>
       <Image src={pwcLogo} alt="pwc-logo" />
       <H1>Forgot Your Password? Dont Worry,</H1>
       <h4>We got you, Just send us your email</h4>
@@ -60,7 +64,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
         </Button>
       </Form>
     </Container>
-  )
+  );
 }
 
 export default ForgotPassword
