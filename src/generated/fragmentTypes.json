@@ -19,6 +19,9 @@
           },
           {
             "name": "User"
+          },
+          {
+            "name": "PolicyCategory"
           }
         ]
       },
@@ -88,6 +91,9 @@
           },
           {
             "name": "User"
+          },
+          {
+            "name": "PolicyCategory"
           }
         ]
       }

@@ -12,7 +12,8 @@ import Button from "../../../shared/components/Button";
 const PolicyCategoryForm = ({
   defaultValues,
   onSubmit,
-  submitting
+  submitting,
+  isDraft,
 }: PolicyCategoryFormProps) => {
   const { register, setValue, handleSubmit } = useForm<
     PolicyCategoryFormValues
@@ -38,6 +39,22 @@ const PolicyCategoryForm = ({
 
   const policies = oc(defaultValues).policies([]);
 
+  const renderSubmit = () => {
+    if (!isDraft) {
+      return (
+        <div className="d-flex justify-content-end">
+        <Button
+          type="submit"
+          className="soft red"
+          color=""
+          loading={submitting}
+        >
+          {oc(defaultValues).name("") ? "Save" : "Submit"}
+        </Button>
+      </div>
+      );
+    }
+  }
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Input name="name" innerRef={register} label="Name" />
@@ -53,16 +70,7 @@ const PolicyCategoryForm = ({
         isMulti
         // onInputChange={handleChangeSelect("policyIds")}
       />
-      <div className="d-flex justify-content-end">
-        <Button
-          type="submit"
-          className="soft red"
-          color=""
-          loading={submitting}
-        >
-          {oc(defaultValues).name("") ? "Save" : "Submit"}
-        </Button>
-      </div>
+      {renderSubmit()}
     </Form>
   );
 };
@@ -78,6 +86,7 @@ interface PolicyCategoryFormProps {
   onSubmit: (data: PolicyCategoryFormValues) => void;
   submitting: boolean;
   defaultValues?: PolicyCategoryFormDefaultValues;
+  isDraft?: boolean
 }
 
 interface PolicyCategoryFormDefaultValues {

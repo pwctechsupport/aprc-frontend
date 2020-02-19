@@ -12,21 +12,37 @@ query policyCategories($filter: BaseScalar = {}, $limit: Int, $page: Int) {
   }
 }
 
-query policyCategory($id: ID!) {
-  policyCategory(id: $id) {
-    id
-    name
-    updatedAt
-    policies {
+query policyCategory($id: ID!){
+  policyCategory(id:$id){
+    ...policyCategoryFragment
+    draft{
       id
-      title
+      objectResult{
+        ...on PolicyCategory{
+          name
+          id
+         	updatedAt
+        }
+      }
     }
+  }
+}
+fragment policyCategoryFragment on PolicyCategory{
+  id
+  name
+  updatedAt
+  policies{
+    id
+    title
   }
 }
 
 mutation createPolicyCategory($input: CreatePolicyCategoryInput!) {
   createPolicyCategory(input: $input) {
     success
+    policyCategory{
+      id
+    }
   }
 }
 
@@ -39,5 +55,12 @@ mutation updatePolicyCategory($input: UpdatePolicyCategoryInput!) {
 mutation destroyPolicyCategory($id: ID!) {
   destroyPolicyCategory(input: { id: $id }) {
     success
+  }
+}
+
+mutation reviewPolicyCategoryDraft($id: ID!, $publish: Boolean!) {
+  reviewPolicyCategoryDraft(input: { id: $id, publish: $publish }) {
+    success
+    errors
   }
 }
