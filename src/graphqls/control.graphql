@@ -9,10 +9,10 @@ query controls($filter: BaseScalar = {}) {
 query control($id: ID!) {
   control(id: $id) {
     ...control
-    draft{
+    draft {
       id
-      objectResult{
-        ... on Control{
+      objectResult {
+        ... on Control {
           ...control
         }
       }
@@ -45,7 +45,7 @@ fragment control on Control {
 mutation createControl($input: CreateControlInput!) {
   createControl(input: $input) {
     clientMutationId
-    control{
+    control {
       id
     }
   }

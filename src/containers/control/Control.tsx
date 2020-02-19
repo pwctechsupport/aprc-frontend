@@ -1,23 +1,23 @@
-import React from "react";
-import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
-import DialogButton from "../../shared/components/DialogButton";
-import {
-  useControlQuery,
-  useUpdateControlMutation,
-  TypeOfControl,
-  Nature,
-  Frequency,
-  Status,
-  useReviewControlDraftMutation
-} from "../../generated/graphql";
-import { RouteComponentProps } from "react-router";
-import { notifySuccess, notifyGraphQLErrors } from "../../shared/utils/notif";
 import get from "lodash/get";
+import React from "react";
+import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import {
+  Frequency,
+  Nature,
+  Status,
+  TypeOfControl,
+  useControlQuery,
+  useReviewControlDraftMutation,
+  useUpdateControlMutation
+} from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import DialogButton from "../../shared/components/DialogButton";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 
 const Control = ({ match }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
@@ -64,8 +64,8 @@ const Control = ({ match }: RouteComponentProps) => {
         </div>
       );
     }
-    if (draft && !isAdmin) return null
-  }
+    if (draft && !isAdmin) return null;
+  };
   const handleUpdate = (values: CreateControlFormValues) => {
     update({
       variables: {
@@ -79,7 +79,7 @@ const Control = ({ match }: RouteComponentProps) => {
 
   const controlOwner = oc(data).control.controlOwner("");
   let description = oc(data).control.description("");
-  description= draft? `[Draft] ${description}`: description
+  description = draft ? `[Draft] ${description}` : description;
   const assertion = oc(data).control.assertion([]);
   const frequency = oc(data).control.frequency("");
   const ipo = oc(data).control.ipo([]);
@@ -105,13 +105,12 @@ const Control = ({ match }: RouteComponentProps) => {
         ]}
       />
       <div className="d-flex justify-content-between align-items-center">
-      
-      <HeaderWithBackButton heading={description} />
-      {renderControlAction()}
+        <HeaderWithBackButton heading={description} />
+        {renderControlAction()}
       </div>
       <ControlForm
         onSubmit={handleUpdate}
-        isDraft={draft? true:false}
+        isDraft={draft ? true : false}
         defaultValues={{
           controlOwner,
           description,

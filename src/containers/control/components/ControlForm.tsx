@@ -66,24 +66,24 @@ const ControlForm = ({
     if (!isDraft) {
       return (
         <div className="d-flex justify-content-end">
-        <DialogButton
-          onConfirm={handleSubmit(submit)}
-          className="pwc px-5 mb-3"
-          type="button"
-          loading={submitting}
-          color="primary"
-          message={
-            description
-              ? `Save your changes on control "${description}"?`
-              : "Create new control?"
-          }
-        >
-          Submit
-        </DialogButton>
-      </div>
+          <DialogButton
+            onConfirm={handleSubmit(submit)}
+            className="pwc px-5 mb-3"
+            type="button"
+            loading={submitting}
+            color="primary"
+            message={
+              description
+                ? `Save your changes on control "${description}"?`
+                : "Create new control?"
+            }
+          >
+            Submit
+          </DialogButton>
+        </div>
       );
     }
-  }
+  };
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
