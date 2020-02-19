@@ -9,6 +9,14 @@ query controls($filter: BaseScalar = {}) {
 query control($id: ID!) {
   control(id: $id) {
     ...control
+    draft{
+      id
+      objectResult{
+        ... on Control{
+          ...control
+        }
+      }
+    }
   }
 }
 
@@ -37,6 +45,9 @@ fragment control on Control {
 mutation createControl($input: CreateControlInput!) {
   createControl(input: $input) {
     clientMutationId
+    control{
+      id
+    }
   }
 }
 
@@ -51,5 +62,11 @@ mutation updateControl($input: UpdateControlInput!) {
     control {
       ...control
     }
+  }
+}
+mutation reviewControlDraft($id: ID!, $publish: Boolean!) {
+  reviewControlDraft(input: { id: $id, publish: $publish }) {
+    success
+    errors
   }
 }

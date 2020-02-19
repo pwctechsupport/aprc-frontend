@@ -20,7 +20,8 @@ import Select, { FormSelect } from "../../../shared/components/forms/Select";
 const ControlForm = ({
   onSubmit,
   defaultValues,
-  submitting
+  submitting,
+  isDraft
 }: ControlFormProps) => {
   const submit = (values: CreateControlFormValues) => {
     onSubmit && onSubmit(values);
@@ -60,6 +61,29 @@ const ControlForm = ({
   const frequency = oc(defaultValues).frequency();
   const nature = oc(defaultValues).nature();
   const status = oc(defaultValues).status();
+
+  const renderSubmit = () => {
+    if (!isDraft) {
+      return (
+        <div className="d-flex justify-content-end">
+        <DialogButton
+          onConfirm={handleSubmit(submit)}
+          className="pwc px-5 mb-3"
+          type="button"
+          loading={submitting}
+          color="primary"
+          message={
+            description
+              ? `Save your changes on control "${description}"?`
+              : "Create new control?"
+          }
+        >
+          Submit
+        </DialogButton>
+      </div>
+      );
+    }
+  }
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -170,22 +194,7 @@ const ControlForm = ({
         defaultValue={pDefVal(status, statuses)}
       />
 
-      <div className="d-flex justify-content-end">
-        <DialogButton
-          onConfirm={handleSubmit(submit)}
-          className="pwc px-5 mb-3"
-          type="button"
-          loading={submitting}
-          color="primary"
-          message={
-            description
-              ? `Save your changes on control "${description}"?`
-              : "Create new control?"
-          }
-        >
-          Submit
-        </DialogButton>
-      </div>
+      {renderSubmit()}
     </Form>
   );
 };
@@ -234,6 +243,7 @@ export interface ControlFormProps {
   defaultValues?: CreateControlFormDefaultValues;
   onSubmit?: (val: CreateControlFormValues) => void;
   submitting?: boolean;
+  isDraft?: boolean;
 }
 
 export interface CreateControlFormValues {

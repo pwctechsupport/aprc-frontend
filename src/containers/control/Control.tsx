@@ -1,23 +1,38 @@
 import React from "react";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
+import DialogButton from "../../shared/components/DialogButton";
 import {
   useControlQuery,
   useUpdateControlMutation,
   TypeOfControl,
   Nature,
   Frequency,
-  Status
+  Status,
+  useReviewControlDraftMutation
 } from "../../generated/graphql";
 import { RouteComponentProps } from "react-router";
+import { notifySuccess, notifyGraphQLErrors } from "../../shared/utils/notif";
 import get from "lodash/get";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Control = ({ match }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   const { loading, data } = useControlQuery({ variables: { id } });
+  const draft = oc(data).control.draft.objectResult();
+  const [reviewControl, reviewControlM] = useReviewControlDraftMutation({
+    refetchQueries: ["control"],
+    onError: notifyGraphQLErrors
+  });
+  function review({ publish }: { publish: boolean }) {
+    reviewControl({ variables: { id, publish } }).then(() => {
+      notifySuccess(publish ? "Changes published" : "Changes rejected");
+    });
+  }
+  const [isAdmin] = useAccessRights(["admin"]);
   const [update, updateState] = useUpdateControlMutation({
     onCompleted: () => {
       toast.success("Update Success");
@@ -26,7 +41,31 @@ const Control = ({ match }: RouteComponentProps) => {
     refetchQueries: ["control"],
     awaitRefetchQueries: true
   });
-
+  const renderControlAction = () => {
+    if (draft && isAdmin) {
+      return (
+        <div>
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewControlM.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewControlM.loading}
+          >
+            Approve
+          </DialogButton>
+        </div>
+      );
+    }
+    if (draft && !isAdmin) return null
+  }
   const handleUpdate = (values: CreateControlFormValues) => {
     update({
       variables: {
@@ -39,7 +78,8 @@ const Control = ({ match }: RouteComponentProps) => {
   };
 
   const controlOwner = oc(data).control.controlOwner("");
-  const description = oc(data).control.description("");
+  let description = oc(data).control.description("");
+  description= draft? `[Draft] ${description}`: description
   const assertion = oc(data).control.assertion([]);
   const frequency = oc(data).control.frequency("");
   const ipo = oc(data).control.ipo([]);
@@ -64,9 +104,14 @@ const Control = ({ match }: RouteComponentProps) => {
           ["/control/" + id, description]
         ]}
       />
-      <HeaderWithBackButton heading={id} />
+      <div className="d-flex justify-content-between align-items-center">
+      
+      <HeaderWithBackButton heading={description} />
+      {renderControlAction()}
+      </div>
       <ControlForm
         onSubmit={handleUpdate}
+        isDraft={draft? true:false}
         defaultValues={{
           controlOwner,
           description,
