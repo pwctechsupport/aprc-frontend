@@ -3,8 +3,7 @@ import useForm from "react-hook-form";
 import {
   AiFillEdit,
   AiOutlineEdit,
-  AiOutlineClockCircle,
-  AiOutlineFileExclamation
+  AiOutlineClockCircle
 } from "react-icons/ai";
 import { FaTrash, FaCheck, FaTimes, FaExclamationCircle } from "react-icons/fa";
 import { oc } from "ts-optchain";
@@ -26,11 +25,7 @@ import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import { toLabelValue } from "../../../shared/formatter";
-import {
-  notifyGraphQLErrors,
-  notifySuccess,
-  notifyInfo
-} from "../../../shared/utils/notif";
+import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const UserRow = ({ user, ...props }: UserRowProps) => {
@@ -92,7 +87,6 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
   const requested = requestStatus === "requested";
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
-  const id = oc(user).id("");
   let name = oc(user).name("");
 
   if (draft) {
