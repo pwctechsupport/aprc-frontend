@@ -19,7 +19,6 @@ import DialogButton from "../../shared/components/DialogButton";
 import { FaTrash } from "react-icons/fa";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 
-
 const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   const { data, loading } = usePolicyCategoryQuery({
@@ -28,8 +27,6 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     },
     fetchPolicy: "network-only"
   });
-  
-  
 
   const [updateMutation, updateInfo] = useUpdatePolicyCategoryMutation({
     onCompleted: () => notifySuccess("Policy Category Updated"),
@@ -61,23 +58,24 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     deleteMutation({ variables: { id } });
   }
   const draft = oc(data).policyCategory.draft.objectResult();
-  const [reviewPolicyCategory, reviewPolicyCategoryM] = useReviewPolicyCategoryDraftMutation({
+  const [
+    reviewPolicyCategory,
+    reviewPolicyCategoryM
+  ] = useReviewPolicyCategoryDraftMutation({
     refetchQueries: ["policyCategory"],
     onError: notifyGraphQLErrors
   });
   if (loading) return <LoadingSpinner size={30} centered />;
 
-  
- 
   let name = oc(data).policyCategory.name("");
-  name = draft ? `[Draft] ${name}`: name
+  name = draft ? `[Draft] ${name}` : name;
   const policies = oc(data).policyCategory.policies([]);
-  
+
   const defaultValues = {
     name,
     policies: policies.map(toLabelValue)
   };
-  
+
   function review({ publish }: { publish: boolean }) {
     reviewPolicyCategory({ variables: { id, publish } }).then(() => {
       notifySuccess(publish ? "Changes published" : "Changes rejected");
@@ -106,9 +104,9 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
         </div>
       );
     }
-    if (draft && !isAdmin) return null
-    if(!draft){
-      return(
+    if (draft && !isAdmin) return null;
+    if (!draft) {
+      return (
         <DialogButton
           onConfirm={handleDelete}
           loading={deleteInfo.loading}
@@ -117,18 +115,16 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
         >
           <FaTrash className="clickable" />
         </DialogButton>
-      )
+      );
     }
-
-  }
-
+  };
 
   return (
     <div>
       <Helmet>
         <title>{name} - Policy Category - PricewaterhouseCoopers</title>
       </Helmet>
-      
+
       <div className="d-flex justify-content-between align-items-center">
         <h1>{name}</h1>
         {renderPolicyCategoryAction()}
@@ -145,12 +141,9 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
         onSubmit={handleUpdate}
         submitting={updateInfo.loading}
         defaultValues={defaultValues}
-        isDraft={draft? true:false}
+        isDraft={draft ? true : false}
       />
     </div>
-            
-            
-          
   );
 };
 
