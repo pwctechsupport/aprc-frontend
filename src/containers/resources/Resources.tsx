@@ -131,7 +131,7 @@ const Resources = ({ history }: RouteComponentProps) => {
             <th>Name</th>
             <th>File Type</th>
             <th>Category</th>
-            <th>Related resource</th>
+            <th>Related Resource</th>
             <th>Related Policy</th>
             <th />
           </tr>
