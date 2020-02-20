@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router";
 import { Col, Container, Row } from "reactstrap";
-import EmptyScreen from "../../shared/components/EmptyScreen";
+import PolicyCategoryLines from "../../../src/containers/policyCategory/components/PolicyCategoryLines";
 import PolicyCategorySideBox from "./components/PolicyCategorySideBox";
 import CreatePolicyCategory from "./CreatePolicyCategory";
 import PolicyCategory from "./PolicyCategory";
@@ -14,7 +14,11 @@ const PolicyCategoryRoute = () => {
           <Route path="/policy-category" component={PolicyCategorySideBox} />
         </Col>
         <Col md={9} className="p-4">
-          <Route exact path="/policy-category" component={EmptyScreen} />
+          <Route
+            exact
+            path="/policy-category"
+            component={PolicyCategoryLines}
+          />
           <Switch>
             <Route
               exact
