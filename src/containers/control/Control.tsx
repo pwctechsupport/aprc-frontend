@@ -24,13 +24,15 @@ const Control = ({ match }: RouteComponentProps) => {
   const { loading, data } = useControlQuery({ variables: { id } });
   const draft = oc(data).control.draft.objectResult();
   const [reviewControl, reviewControlM] = useReviewControlDraftMutation({
-    refetchQueries: ["control"],
-    onError: notifyGraphQLErrors
+    refetchQueries: ["control"]
   });
-  function review({ publish }: { publish: boolean }) {
-    reviewControl({ variables: { id, publish } }).then(() => {
-      notifySuccess(publish ? "Changes published" : "Changes rejected");
-    });
+  async function review({ publish }: { publish: boolean }) {
+    try {
+      await reviewControl({ variables: { id, publish } });
+      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
   const [isAdmin] = useAccessRights(["admin"]);
   const [update, updateState] = useUpdateControlMutation({
