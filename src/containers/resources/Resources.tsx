@@ -1,7 +1,13 @@
 import { capitalCase } from "capital-case";
-import React from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFile, FaTrash, FaPlus } from "react-icons/fa";
+import {
+  FaFile,
+  FaTrash,
+  FaPlus,
+  FaFileExport,
+  FaFileImport
+} from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
@@ -14,6 +20,9 @@ import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
+import downloadXls from "../../shared/utils/downloadXls";
+import { notifySuccess } from "../../shared/utils/notif";
+import ImportModal from "../../shared/components/ImportModal";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const { data, loading } = useResourcesQuery({ fetchPolicy: "network-only" });
@@ -22,34 +31,107 @@ const Resources = ({ history }: RouteComponentProps) => {
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed")
   });
+  const [selected, setSelected] = useState<string[]>([]);
+  const resources = oc(data).resources.collection([]);
+  const [modal, setModal] = useState(false);
+  const toggleImportModal = () => setModal(p => !p);
+  function toggleCheck(id: string) {
+    if (selected.includes(id)) {
+      setSelected(selected.filter(i => i !== id));
+    } else {
+      setSelected(selected.concat(id));
+    }
+  }
 
+  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      setSelected(resources.map(n => n.id));
+    } else {
+      setSelected([]);
+    }
+  }
+  function handleExport() {
+    downloadXls(
+      "/prints/resource_excel.xlsx",
+      {
+        resource_ids: selected.map(Number)
+      },
+      {
+        fileName: "resources.xlsx",
+        onStart: () => toast.info("Download Start"),
+        onCompleted: () => notifySuccess("Download Success"),
+        onError: () => toast.error("Download Failed")
+      }
+    );
+  }
   return (
     <div>
       <Helmet>
         <title>Resources - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb crumbs={[["/resources", "Resources"]]} />
-      <div className="d-flex justify-content-between align-items-center mb-1">
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Resources</h4>
-        <Tooltip description="Add Resource">
-          <Button
-            tag={Link}
-            to="/resources/create"
-            className="soft orange"
-            color=""
+        <div className="d-flex">
+          <Tooltip description="Add Resource">
+            <Button
+              tag={Link}
+              to="/resources/create"
+              className="soft orange mr-2"
+              color=""
+            >
+              <FaPlus />
+            </Button>
+          </Tooltip>
+          <Tooltip
+            description="Export Resource"
+            subtitle={
+              selected.length
+                ? "Export selected resource"
+                : "Select resources first"
+            }
           >
-            <FaPlus />
-          </Button>
-        </Tooltip>
+            <Button
+              color=""
+              className="soft red mr-2"
+              onClick={handleExport}
+              disabled={!selected.length}
+            >
+              <FaFileExport />
+            </Button>
+          </Tooltip>
+          <Tooltip description="Import Resource">
+            <Button
+              color=""
+              className="soft orange mr-2"
+              onClick={toggleImportModal}
+            >
+              <FaFileImport />
+            </Button>
+          </Tooltip>
+          <ImportModal
+            title="Import Resources"
+            endpoint="/resources/import"
+            isOpen={modal}
+            toggle={toggleImportModal}
+          />
+        </div>
       </div>
 
       <Table loading={loading}>
         <thead>
           <tr>
+            <th>
+              <input
+                type="checkbox"
+                checked={selected.length === resources.length}
+                onChange={toggleCheckAll}
+              />
+            </th>
             <th>Name</th>
             <th>File Type</th>
             <th>Category</th>
-            <th>Related Control</th>
+            <th>Related Resource</th>
             <th>Related Policy</th>
             <th />
           </tr>
@@ -63,6 +145,14 @@ const Resources = ({ history }: RouteComponentProps) => {
                   key={resource.id}
                   onClick={() => history.push(`/resources/${resource.id}`)}
                 >
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(resource.id)}
+                      onClick={e => e.stopPropagation()}
+                      onChange={() => toggleCheck(resource.id)}
+                    />
+                  </td>
                   <td>{resource.name}</td>
                   <td>{resource.resourceFileType}</td>
                   <td>{capitalCase(resource.category || "")}</td>
