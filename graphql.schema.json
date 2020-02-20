@@ -1664,6 +1664,26 @@
             "deprecationReason": null
           },
           {
+            "name": "requestEdits",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "RequestEdit",
+                  "ofType": null
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "requestStatus",
             "description": "",
             "args": [],
@@ -4568,7 +4588,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "ISO8601DateTime",
+                "name": "String",
                 "ofType": null
               }
             },
@@ -4752,7 +4772,7 @@
               "name": null,
               "ofType": {
                 "kind": "SCALAR",
-                "name": "ISO8601DateTime",
+                "name": "String",
                 "ofType": null
               }
             },
