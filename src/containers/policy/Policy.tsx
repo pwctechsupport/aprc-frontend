@@ -679,6 +679,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     const notRequested = !requestStatus;
     const rejected = requestStatus === "rejected";
     const requestEdit = oc(data).policy.requestEdit.state();
+    let actions: React.ReactNode = null;
 
     // PREMISES
     // 1: None
@@ -695,9 +696,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     // 6: Accept Request to edit
     const prem6 = requestEdit === "requested" && (isAdminReviewer || isAdmin);
 
-    if (prem1) return null;
+    if (prem1) actions = null;
     if (prem2) {
-      return (
+      actions = (
         <div>
           <DialogButton
             color="danger"
@@ -721,14 +722,14 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
 
     if (prem3) {
       if (inEditMode) {
-        return (
+        actions = (
           <Button onClick={toggleEditMode} color="">
             <FaTimes size={22} className="mr-2" />
             Cancel Edit
           </Button>
         );
       }
-      return (
+      actions = (
         <Tooltip description="Edit Policy">
           <Button onClick={toggleEditMode} color="" className="soft orange">
             <AiFillEdit />
@@ -738,7 +739,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     }
 
     if (prem4) {
-      return (
+      actions = (
         <Tooltip description="Request edit access">
           <DialogButton
             title="Request access to edit?"
@@ -755,7 +756,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     }
 
     if (prem5) {
-      return (
+      actions = (
         <Tooltip
           description="Waiting approval"
           subtitle="You will be able to edit as soon as Admin gave you permission"
@@ -768,7 +769,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     }
 
     if (prem6) {
-      return (
+      actions = (
         <Tooltip description="Accept edit request">
           <DialogButton
             title={`Accept request to edit?`}
@@ -786,7 +787,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       );
     }
 
-    return null;
+    return actions;
   };
 
   return (
