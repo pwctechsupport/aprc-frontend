@@ -84,7 +84,7 @@ const Resources = ({ history }: RouteComponentProps) => {
             </Button>
           </Tooltip>
           <Tooltip
-            description="Export resource"
+            description="Export Resource"
             subtitle={
               selected.length
                 ? "Export selected resource"
@@ -100,7 +100,7 @@ const Resources = ({ history }: RouteComponentProps) => {
               <FaFileExport />
             </Button>
           </Tooltip>
-          <Tooltip description="Import resource">
+          <Tooltip description="Import Resource">
             <Button
               color=""
               className="soft orange mr-2"
@@ -110,7 +110,7 @@ const Resources = ({ history }: RouteComponentProps) => {
             </Button>
           </Tooltip>
           <ImportModal
-            title="Import resources"
+            title="Import Resources"
             endpoint="/resources/import"
             isOpen={modal}
             toggle={toggleImportModal}
