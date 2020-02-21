@@ -1,5 +1,6 @@
 {
   "plugins": [
+    "@babel/plugin-proposal-optional-chaining",
     "react-hot-loader/babel",
     "ts-optchain",
     "babel-plugin-styled-components"
