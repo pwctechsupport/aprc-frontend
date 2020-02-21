@@ -22,7 +22,7 @@ import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 const Control = ({ match }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   const { loading, data } = useControlQuery({ variables: { id } });
-  const draft = oc(data).control.draft.objectResult();
+  const draft = data?.control?.draft?.objectResult;
   const [reviewControl, reviewControlM] = useReviewControlDraftMutation({
     refetchQueries: ["control"]
   });
@@ -78,11 +78,10 @@ const Control = ({ match }: RouteComponentProps) => {
       }
     });
   };
-
-  const controlOwner = oc(data).control.controlOwner("");
-  let description = oc(data).control.description("");
+  const controlOwner = data?.control?.controlOwner || "";
+  let description = data?.control?.description || "";
   description = draft ? `[Draft] ${description}` : description;
-  const assertion = oc(data).control.assertion([]);
+  const assertion = data?.control?.assertion || [];
   const frequency = oc(data).control.frequency("");
   const ipo = oc(data).control.ipo([]);
   const nature = oc(data).control.nature("");
