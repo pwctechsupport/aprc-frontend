@@ -1,0 +1,21 @@
+.pagination {
+  .page-item {
+    .page-link {
+      color: $pwc-orange;
+      z-index: unset;
+
+      &.disabled {
+        background-color: lightgray;
+        color: gray;
+      }
+    }
+
+    &.active {
+      .page-link {
+        background-color: $pwc-orange;
+        color: whitesmoke;
+        border-color: $pwc-orange;
+      }
+    }
+  }
+}
