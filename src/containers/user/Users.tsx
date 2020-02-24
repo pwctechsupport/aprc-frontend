@@ -40,6 +40,13 @@ const Users = () => {
           <Col lg={4}>
             <Input placeholder="Search Users..." onChange={handleSearch} />
           </Col>
+          <Col className="text-right">
+            <NavLink to="/user/create">
+              <Button outline color="pwc" className="pwc mb-5">
+                Add User
+              </Button>
+            </NavLink>
+          </Col>
         </Row>
 
         <div className="table-responsive">
@@ -64,14 +71,6 @@ const Users = () => {
                 })}
             </tbody>
           </Table>
-        </div>
-
-        <div className="text-center">
-          <NavLink to="/user/create">
-            <Button outline color="pwc" className="pwc mb-5">
-              Add User
-            </Button>
-          </NavLink>
         </div>
       </Container>
     </div>
