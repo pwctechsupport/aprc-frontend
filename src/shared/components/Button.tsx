@@ -7,11 +7,18 @@ export interface ButtonProps extends BsButtonProps {
   loading?: boolean;
 }
 
-const Button = ({ loading, className, disabled, ...props }: ButtonProps) => {
+const Button = ({
+  loading,
+  color = "",
+  className,
+  disabled,
+  ...props
+}: ButtonProps) => {
   return (
     <BsButton
       {...props}
       disabled={loading || disabled}
+      color={color}
       className={cx("button", { disabled }, className)}
     >
       {props.children}
