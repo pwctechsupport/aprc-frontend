@@ -19,7 +19,7 @@ import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import { notifyGraphQLErrors } from "../../shared/utils/notif";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, {
   ResourceFormDefaultValues,
@@ -37,11 +37,7 @@ const Resource = ({ match }: RouteComponentProps) => {
 
   const [updateResource, updateResourceM] = useUpdateResourceMutation({
     refetchQueries: ["resources", "resource"],
-    onCompleted: _ => {
-      toast.success("Resource Updated");
-      toggleEditMode();
-    },
-    onError: notifyGraphQLErrors
+    awaitRefetchQueries: true
   });
 
   const [deleteResource] = useDestroyResourceMutation({
@@ -57,6 +53,28 @@ const Resource = ({ match }: RouteComponentProps) => {
   };
 
   const name = oc(data).resource.name("");
+
+  async function handleSubmit(data: ResourceFormValues) {
+    const input: UpdateResourceInput = {
+      id: id,
+      category: data.category,
+      name: data.name,
+      policyIds: data.policyIds,
+      controlIds: data.controlId ? [data.controlId] : undefined,
+      businessProcessId: data.businessProcessId,
+      ...(data.resuploadBase64 && {
+        resuploadBase64: data.resuploadBase64,
+        resuploadFileName: data.resuploadFileName
+      })
+    };
+    try {
+      await updateResource({ variables: { input } });
+      toggleEditMode();
+      notifySuccess("Resource Updated");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
   const defaultValues: ResourceFormDefaultValues = {
     name,
     category: oc(data).resource.category(Category.References) as Category,
@@ -71,21 +89,18 @@ const Resource = ({ match }: RouteComponentProps) => {
     resuploadUrl: oc(data).resource.resuploadUrl("")
   };
 
-  function handleSubmit(data: ResourceFormValues) {
-    const input: UpdateResourceInput = {
+  async function handleErase() {
+    const input = {
       id: id,
-      category: data.category,
-      name: data.name,
-      policyIds: data.policyIds,
-      controlIds: data.controlId ? [data.controlId] : undefined,
-      businessProcessId: data.businessProcessId,
-      ...(data.resuploadBase64 && {
-        resuploadBase64: data.resuploadBase64,
-        resuploadFileName: data.resuploadFileName
-      })
+      resuploadBase64: "",
+      resuploadFileName: ""
     };
-
-    updateResource({ variables: { input } });
+    try {
+      await updateResource({ variables: { input } });
+      notifySuccess("File Removed");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
 
   if (loading) {
@@ -112,6 +127,7 @@ const Resource = ({ match }: RouteComponentProps) => {
           totalRating={oc(data).resource.totalRating(0)}
           views={oc(data).resource.visit(0)}
           resuploadUrl={oc(data).resource.resuploadUrl("")}
+          handleErase={handleErase}
         />
         <div className="ml-3">
           <h5>

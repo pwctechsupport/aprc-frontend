@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { FaDownload } from "react-icons/fa";
+import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { toast } from "react-toastify";
-import { Tooltip } from "reactstrap";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
 import { useCreateResourceRatingMutation } from "../../../generated/graphql";
+import Button from "../../../shared/components/Button";
+import DialogButton from "../../../shared/components/DialogButton";
 import StarRating from "../../../shared/components/StarRating";
+import Tooltip from "../../../shared/components/Tooltip";
 // import { useSelector } from "../../../shared/hooks/useSelector";
 
 const ResourceBox = ({
@@ -14,12 +17,9 @@ const ResourceBox = ({
   views,
   rating,
   totalRating,
-  resuploadUrl
+  resuploadUrl,
+  handleErase
 }: ResourceBoxProps) => {
-  const [tooltipOpen, setTooltipOpen] = useState(false);
-  const toggle = () => setTooltipOpen(!tooltipOpen);
-  const tooltipId = "resourceBarTooltip" + id;
-
   // const user = useSelector(state => state.auth.user);
   const [mutate] = useCreateResourceRatingMutation({
     onCompleted: res => {
@@ -55,15 +55,6 @@ const ResourceBox = ({
   };
   return (
     <ResourceBoxContainer>
-      <Tooltip
-        placement="top"
-        isOpen={tooltipOpen}
-        target={tooltipId}
-        toggle={toggle}
-      >
-        Avg. Rating: {rating} <br />
-        From {totalRating} user(s)
-      </Tooltip>
       <ResourceBoxImagePreview
         src={`http://mandalorian.rubyh.co${resuploadUrl}`}
         onClick={() =>
@@ -73,23 +64,38 @@ const ResourceBox = ({
       <ResourceBoxMeta>
         <div>{name}</div>
         <ResourceBoxMetaWrapper>
-          <div id={tooltipId}>
+          <Tooltip
+            description={`Avg. Rating: ${rating} <br /> From ${totalRating} user(s)`}
+          >
             <StarRating
               id={id}
               rating={rating}
               totalRating={totalRating}
               onStarClick={handleStarClick}
             />
-          </div>
+          </Tooltip>
           <RevenueBoxViews>{views} Views</RevenueBoxViews>
-          <a
-            href={`http://mandalorian.rubyh.co${resuploadUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            download={`Pwc-Resource ${name}`}
-          >
-            <FaDownload size={18} />
-          </a>
+          <Tooltip>
+            <DialogButton
+              onConfirm={handleErase}
+              color="soft red"
+              message={`Delete attached file in "${name}"?`}
+              className="soft red"
+            >
+              <IoMdRemoveCircleOutline />
+            </DialogButton>
+          </Tooltip>
+          <Tooltip>
+            <Button
+              href={`http://mandalorian.rubyh.co${resuploadUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              download={`Pwc-Resource ${name}`}
+              className="soft red"
+            >
+              <FaDownload size={18} />
+            </Button>
+          </Tooltip>
         </ResourceBoxMetaWrapper>
       </ResourceBoxMeta>
     </ResourceBoxContainer>
@@ -143,4 +149,14 @@ interface ResourceBoxProps {
   rating: number;
   resuploadUrl: string | null | undefined;
   totalRating: number;
+  handleErase: () => void;
 }
+// interface onEraseValues {
+//   id: string;
+//   name: string;
+//   views: number;
+//   rating: number;
+//   resuploadUrl: string | null | undefined;
+//   totalRating: number;
+//   onErase: () => void;
+// }
