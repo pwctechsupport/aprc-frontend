@@ -24,6 +24,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import { Row, Col } from "reactstrap";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Control = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -100,9 +101,11 @@ const Control = ({ match }: RouteComponentProps) => {
               </DialogButton>
             </>
           ) : (
-            <Button className="soft red" onClick={() => setInEditMode(true)}>
-              <AiFillEdit />
-            </Button>
+            <Tooltip description="Edit Control">
+              <Button className="soft red" onClick={() => setInEditMode(true)}>
+                <AiFillEdit />
+              </Button>
+            </Tooltip>
           )}
         </div>
       );
