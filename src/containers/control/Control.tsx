@@ -1,5 +1,8 @@
+import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React from "react";
+import React, { useState } from "react";
+import { AiFillEdit } from "react-icons/ai";
+import { FaTimes } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
@@ -13,13 +16,18 @@ import {
   useUpdateControlMutation
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
+import { Row, Col } from "reactstrap";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Control = ({ match }: RouteComponentProps) => {
+  const [inEditMode, setInEditMode] = useState(false);
   const id = get(match, "params.id", "");
   const { loading, data } = useControlQuery({ variables: { id } });
   const draft = data?.control?.draft?.objectResult;
@@ -43,32 +51,7 @@ const Control = ({ match }: RouteComponentProps) => {
     refetchQueries: ["control"],
     awaitRefetchQueries: true
   });
-  const renderControlAction = () => {
-    if (draft && isAdmin) {
-      return (
-        <div>
-          <DialogButton
-            color="danger"
-            className="mr-2"
-            onConfirm={() => review({ publish: false })}
-            loading={reviewControlM.loading}
-          >
-            Reject
-          </DialogButton>
-          <DialogButton
-            color="primary"
-            className="pwc"
-            onConfirm={() => review({ publish: true })}
-            loading={reviewControlM.loading}
-          >
-            Approve
-          </DialogButton>
-        </div>
-      );
-    }
-    if (draft && !isAdmin) return null;
-  };
-  const handleUpdate = (values: CreateControlFormValues) => {
+  function handleUpdate(values: CreateControlFormValues) {
     update({
       variables: {
         input: {
@@ -77,7 +60,8 @@ const Control = ({ match }: RouteComponentProps) => {
         }
       }
     });
-  };
+  }
+
   const controlOwner = data?.control?.controlOwner || "";
   let description = data?.control?.description || "";
   description = draft ? `[Draft] ${description}` : description;
@@ -86,29 +70,119 @@ const Control = ({ match }: RouteComponentProps) => {
   const ipo = oc(data).control.ipo([]);
   const nature = oc(data).control.nature("");
   const typeOfControl = oc(data).control.typeOfControl("");
-  const status = oc(data).control.status("");
-  const riskIds = oc(data)
-    .control.risks([])
-    .map(risk => risk.id);
-  const businessProcessIds = oc(data)
-    .control.businessProcesses([])
-    .map(bp => bp.id);
-  const keyControl = oc(data).control.keyControl(false);
+  const status = data?.control?.status || "";
+  const keyControl = data?.control?.keyControl || false;
+  const risks = data?.control?.risks || [];
+  const riskIds = risks.map(a => a.id);
+  const businessProcesses = data?.control?.businessProcesses || [];
+  const businessProcessIds = businessProcesses.map(bp => bp.id);
 
-  if (loading) return null;
-
-  return (
-    <div>
-      <BreadCrumb
-        crumbs={[
-          ["/control", "Controls"],
-          ["/control/" + id, description]
-        ]}
-      />
-      <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton heading={description} />
-        {renderControlAction()}
+  const renderControlAction = () => {
+    if (!inEditMode) {
+      return (
+        <div>
+          {draft && isAdmin ? (
+            <>
+              <DialogButton
+                color="danger"
+                className="mr-2"
+                onConfirm={() => review({ publish: false })}
+                loading={reviewControlM.loading}
+              >
+                Reject
+              </DialogButton>
+              <DialogButton
+                color="primary"
+                className="pwc"
+                onConfirm={() => review({ publish: true })}
+                loading={reviewControlM.loading}
+              >
+                Approve
+              </DialogButton>
+            </>
+          ) : (
+            <Tooltip description="Edit Control">
+              <Button className="soft red" onClick={() => setInEditMode(true)}>
+                <AiFillEdit />
+              </Button>
+            </Tooltip>
+          )}
+        </div>
+      );
+    }
+    return (
+      <div>
+        <Button onClick={() => setInEditMode(false)}>
+          <FaTimes />
+        </Button>
       </div>
+    );
+  };
+
+  const renderControlNonEditable = () => {
+    const details = [
+      { label: "Control Owner", value: controlOwner },
+      {
+        label: "Key Control",
+        value: <input type="checkbox" checked={keyControl} />
+      },
+      { label: "Type of Control", value: capitalCase(typeOfControl) },
+      {
+        label: "Assertion",
+        value: assertion.map(x => capitalCase(x)).join(", ")
+      },
+      {
+        label: "IPO",
+        value: ipo.map(x => capitalCase(x)).join(", ")
+      },
+      { label: "Frequency", value: capitalCase(frequency) },
+      { label: "Status", value: capitalCase(status) }
+    ];
+    return (
+      <Row>
+        <Col xs={6}>
+          <dl>
+            {details.slice(0, Math.ceil(details.length / 2)).map(item => (
+              <>
+                <dt>{item.label}</dt>
+                <dd>{item.value || "-"}</dd>
+              </>
+            ))}
+          </dl>
+        </Col>
+        <Col xs={6}>
+          <dl>
+            {details
+              .slice(Math.ceil(details.length / 2), details.length)
+              .map(item => (
+                <>
+                  <dt>{item.label}</dt>
+                  <dd>{item.value || "-"}</dd>
+                </>
+              ))}
+          </dl>
+        </Col>
+
+        <Col xs={12} className="mt-3">
+          <h5>Risks</h5>
+          {risks.length ? (
+            risks.map(risk => <tr>{risk.name}</tr>)
+          ) : (
+            <EmptyAttribute />
+          )}
+          <h5 className="mt-2">Business Processes</h5>
+          {businessProcesses.length ? (
+            businessProcesses.map(bp => <tr>{bp.name}</tr>)
+          ) : (
+            <EmptyAttribute />
+          )}
+        </Col>
+      </Row>
+    );
+  };
+
+  const renderControlEditable = () => {
+    return (
       <ControlForm
         onSubmit={handleUpdate}
         isDraft={draft ? true : false}
@@ -128,6 +202,24 @@ const Control = ({ match }: RouteComponentProps) => {
         }}
         submitting={updateState.loading}
       />
+    );
+  };
+
+  if (loading) return null;
+
+  return (
+    <div>
+      <BreadCrumb
+        crumbs={[
+          ["/control", "Controls"],
+          ["/control/" + id, description]
+        ]}
+      />
+      <div className="d-flex justify-content-between align-items-center">
+        <HeaderWithBackButton heading={description} />
+        {renderControlAction()}
+      </div>
+      {inEditMode ? renderControlEditable() : renderControlNonEditable()}
     </div>
   );
 };
