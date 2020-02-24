@@ -18,18 +18,27 @@ import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
+import Pagination from "../../shared/components/Pagination";
+import useListState from "../../shared/hooks/useList";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [debounceSearch] = useDebounce(search, 800);
 
+  const { limit, page, handlePageChange } = useListState({
+    limit: 10,
+    page: 1
+  });
+
   const { data, networkStatus } = useNotificationsQuery({
     fetchPolicy: "network-only",
     variables: {
       filter: {
         title_or_originator_type_cont: debounceSearch
-      }
+      },
+      limit,
+      page
     }
   });
   const notifications = oc(data)
@@ -143,8 +152,21 @@ const Notification = ({ history }: RouteComponentProps) => {
               </tr>
             </thead>
             <tbody>
-              {notifications.map(data =>
-                data ? (
+              {notifications.map(data => {
+                let dataType: string = "";
+
+                switch (data.dataType) {
+                  case "request_edit":
+                    dataType = "edit";
+                    break;
+                  case "request_draft":
+                    dataType = "approve";
+                    break;
+                  default:
+                    break;
+                }
+
+                return data ? (
                   <tr
                     key={String(data.id)}
                     onClick={() =>
@@ -169,10 +191,9 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {data.senderUser ? data.senderUser.name : ""}
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {"Request to edit " +
-                        data.originatorType +
-                        " : " +
-                        data.title}
+                      {`Request to ${dataType} ${data.originatorType} : ${
+                        data.title
+                      }`}
                     </td>
                     <td className={data.isRead ? "" : "text-orang text-bold"}>
                       {formatDate(data.createdAt, {
@@ -182,11 +203,17 @@ const Notification = ({ history }: RouteComponentProps) => {
                       })}
                     </td>
                   </tr>
-                ) : null
-              )}
+                ) : null;
+              })}
             </tbody>
           </Table>
         </div>
+
+        <Pagination
+          totalCount={oc(data).notifications.metadata.totalCount()}
+          perPage={limit}
+          onPageChange={handlePageChange}
+        />
       </Container>
     </div>
   );

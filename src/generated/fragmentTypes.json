@@ -3,30 +3,6 @@
     "types": [
       {
         "kind": "UNION",
-        "name": "Originator",
-        "possibleTypes": [
-          {
-            "name": "Policy"
-          },
-          {
-            "name": "BusinessProcess"
-          },
-          {
-            "name": "Control"
-          },
-          {
-            "name": "Risk"
-          },
-          {
-            "name": "User"
-          },
-          {
-            "name": "PolicyCategory"
-          }
-        ]
-      },
-      {
-        "kind": "UNION",
         "name": "Item",
         "possibleTypes": [
           {
@@ -70,6 +46,30 @@
           },
           {
             "name": "User"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "Originator",
+        "possibleTypes": [
+          {
+            "name": "Policy"
+          },
+          {
+            "name": "BusinessProcess"
+          },
+          {
+            "name": "Control"
+          },
+          {
+            "name": "Risk"
+          },
+          {
+            "name": "User"
+          },
+          {
+            "name": "PolicyCategory"
           }
         ]
       },

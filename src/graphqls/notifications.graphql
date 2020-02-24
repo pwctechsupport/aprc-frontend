@@ -23,13 +23,14 @@ fragment userNotifs on User {
   name
 }
 
-query notifications($filter: BaseScalar = {}, $limit: Int) {
-  notifications(filter: $filter, limit: $limit) {
+query notifications($filter: BaseScalar = {}, $limit: Int, $page: Int) {
+  notifications(filter: $filter, limit: $limit, page: $page) {
     collection {
       id
       createdAt
       isRead
       title
+      dataType
       originatorType
       originatorId
       originator {
@@ -44,6 +45,12 @@ query notifications($filter: BaseScalar = {}, $limit: Int) {
         firstName
         lastName
       }
+    }
+    metadata {
+      totalCount
+      currentPage
+      limitValue
+      totalPages
     }
   }
 }
