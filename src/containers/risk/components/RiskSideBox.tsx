@@ -21,7 +21,8 @@ const RiskSideBox = () => {
     .risks.collection([])
     .sort(
       (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        new Date(b.updatedAt || "").getTime() -
+        new Date(a.updatedAt || "").getTime()
     );
 
   return (

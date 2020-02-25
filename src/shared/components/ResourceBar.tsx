@@ -149,11 +149,11 @@ const AddResourceButtonWrapper = styled.div`
 
 interface ResourceBarProps {
   id: string;
-  name: string;
-  resuploadUrl?: string | null | undefined;
-  rating?: number | null | undefined;
-  visit?: number | null | undefined;
-  totalRating?: number | null | undefined;
+  name?: string | null;
+  resuploadUrl?: string | null;
+  rating?: number | null;
+  visit?: number | null;
+  totalRating?: number | null;
 }
 
 interface AddResourceButtonProps {

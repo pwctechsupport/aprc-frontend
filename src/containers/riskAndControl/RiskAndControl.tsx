@@ -242,7 +242,9 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                     <li key={risk.id}>
                       <div className="mb-3 d-flex justify-content-between">
                         <h5>
-                          {risk.name.padEnd(1)}
+                          {oc(risk)
+                            .name("")
+                            .padEnd(1)}
                           <Badge color="danger mx-3">
                             {capitalCase(risk.levelOfRisk || "")}
                           </Badge>
@@ -254,7 +256,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                           onClick={() =>
                             editRisk({
                               id: risk.id,
-                              name: risk.name,
+                              name: oc(risk).name(""),
                               status: oc(risk).status(Status.Draft) as Status,
                               businessProcessId: oc(risk).businessProcessId(""),
                               levelOfRisk: oc(
@@ -284,62 +286,64 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                             </tr>
                           </thead>
                           <tbody>
-                            {risk.controls.length ? (
-                              risk.controls.map(control => (
-                                <tr key={control.id}>
-                                  <td>{control.description}</td>
-                                  <td>
-                                    {capitalCase(control.frequency || "")}
-                                  </td>
-                                  <td>
-                                    {capitalCase(control.typeOfControl || "")}
-                                  </td>
-                                  <td>{capitalCase(control.nature || "")}</td>
-                                  <td>
-                                    {oc(control)
-                                      .ipo([])
-                                      .map(a => capitalCase(a))
-                                      .join(", ")}
-                                  </td>
-                                  <td>
-                                    {oc(control)
-                                      .assertion([])
-                                      .map(a => capitalCase(a))
-                                      .join(", ")}
-                                  </td>
-                                  <td>{control.controlOwner}</td>
-                                  <td>
-                                    <Button
-                                      onClick={() =>
-                                        editControl({
-                                          id: control.id,
-                                          assertion: control.assertion as Assertion[],
-                                          controlOwner:
-                                            control.controlOwner || "",
-                                          description:
-                                            control.description || "",
-                                          status: control.status as Status,
-                                          typeOfControl: control.typeOfControl as TypeOfControl,
-                                          nature: control.nature as Nature,
-                                          ipo: control.ipo as Ipo[],
-                                          businessProcessIds: oc(control)
-                                            .businessProcesses([])
-                                            .map(({ id }) => id),
-                                          frequency: control.frequency as Frequency,
-                                          keyControl:
-                                            control.keyControl || false,
-                                          riskIds: oc(control)
-                                            .risks([])
-                                            .map(({ id }) => id)
-                                        })
-                                      }
-                                      color=""
-                                    >
-                                      <FaPencilAlt />
-                                    </Button>
-                                  </td>
-                                </tr>
-                              ))
+                            {oc(risk).controls([]).length ? (
+                              oc(risk)
+                                .controls([])
+                                .map(control => (
+                                  <tr key={control.id}>
+                                    <td>{control.description}</td>
+                                    <td>
+                                      {capitalCase(control.frequency || "")}
+                                    </td>
+                                    <td>
+                                      {capitalCase(control.typeOfControl || "")}
+                                    </td>
+                                    <td>{capitalCase(control.nature || "")}</td>
+                                    <td>
+                                      {oc(control)
+                                        .ipo([])
+                                        .map(a => capitalCase(a))
+                                        .join(", ")}
+                                    </td>
+                                    <td>
+                                      {oc(control)
+                                        .assertion([])
+                                        .map(a => capitalCase(a))
+                                        .join(", ")}
+                                    </td>
+                                    <td>{control.controlOwner}</td>
+                                    <td>
+                                      <Button
+                                        onClick={() =>
+                                          editControl({
+                                            id: control.id,
+                                            assertion: control.assertion as Assertion[],
+                                            controlOwner:
+                                              control.controlOwner || "",
+                                            description:
+                                              control.description || "",
+                                            status: control.status as Status,
+                                            typeOfControl: control.typeOfControl as TypeOfControl,
+                                            nature: control.nature as Nature,
+                                            ipo: control.ipo as Ipo[],
+                                            businessProcessIds: oc(control)
+                                              .businessProcesses([])
+                                              .map(({ id }) => id),
+                                            frequency: control.frequency as Frequency,
+                                            keyControl:
+                                              control.keyControl || false,
+                                            riskIds: oc(control)
+                                              .risks([])
+                                              .map(({ id }) => id)
+                                          })
+                                        }
+                                        color=""
+                                      >
+                                        <FaPencilAlt />
+                                      </Button>
+                                    </td>
+                                  </tr>
+                                ))
                             ) : (
                               <tr>
                                 <td colSpan={7}>

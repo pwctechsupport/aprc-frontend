@@ -141,7 +141,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                 </td>
                 <td>{policyCategory.name}</td>
                 <td>
-                  {policyCategory.policies
+                  {oc(policyCategory)
+                    .policies([])
                     .map(policy => policy.title)
                     .join(", ")}
                 </td>

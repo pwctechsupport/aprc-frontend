@@ -75,7 +75,7 @@ const ReferenceRow = ({
 }: ReferenceRowProps) => {
   const { register, handleSubmit } = useForm<{ name: string }>({
     defaultValues: {
-      name: reference.name
+      name: reference.name || ""
     }
   });
   const [edit, setEdit] = useState(false);
@@ -108,7 +108,7 @@ const ReferenceRow = ({
             <Input
               className="p-0 m-0"
               name="name"
-              defaultValue={reference.name}
+              defaultValue={reference.name || ""}
               innerRef={register}
             />
           </form>

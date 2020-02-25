@@ -96,7 +96,7 @@ const RiskAndControlTableRow = ({
         <td>
           {oc(businessProcess)
             .risks([])
-            .map(({ name }) => capitalCase(name))
+            .map(({ name }) => capitalCase(name || ""))
             .join(", ")}
         </td>
         <td></td>

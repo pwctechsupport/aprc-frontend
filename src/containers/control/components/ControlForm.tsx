@@ -38,7 +38,7 @@ const ControlForm = ({
   const risksQ = useRisksQuery();
   const riskOptions = oc(risksQ)
     .data.risks.collection([])
-    .map(risk => ({ label: risk.name, value: risk.id }));
+    .map(risk => ({ label: risk.name || "", value: risk.id }));
 
   useEffect(() => {
     register({ name: "frequency" });
