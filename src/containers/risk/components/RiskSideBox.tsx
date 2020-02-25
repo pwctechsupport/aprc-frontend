@@ -9,12 +9,14 @@ import {
   SideBox
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
+import { useDebounce } from "use-debounce/lib";
 
 const RiskSideBox = () => {
   const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebounce(search, 500);
   const { data, loading } = useRisksQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { name_cont: search } }
+    variables: { filter: { name_cont: debouncedSearch } }
   });
 
   const risks = oc(data)
