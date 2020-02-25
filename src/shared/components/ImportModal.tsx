@@ -5,7 +5,14 @@ import Modal from "./Modal";
 import { Input } from "reactstrap";
 import Button from "./Button";
 
-const ImportModal = ({ isOpen, toggle, title, endpoint }: ImportModalProps) => {
+const ImportModal = ({
+  isOpen,
+  toggle,
+  title,
+  endpoint,
+  onCompleted,
+  onError
+}: ImportModalProps) => {
   const [file, setFile] = useState();
   const [error, setError] = useState<null | string>(null);
   const [loading, setLoading] = useState(false);
@@ -33,9 +40,11 @@ const ImportModal = ({ isOpen, toggle, title, endpoint }: ImportModalProps) => {
       await MyApi.put(endpoint, formData);
       notifySuccess(`${title} Success`);
       toggle();
+      onCompleted && onCompleted();
     } catch (error) {
       setError("Error uploading document");
       notifyError(`${title} Failed`);
+      onError && onError();
     } finally {
       setLoading(false);
     }
@@ -66,4 +75,6 @@ interface ImportModalProps {
   toggle: () => void;
   title: string;
   endpoint: string;
+  onCompleted?: Function;
+  onError?: Function;
 }
