@@ -31,11 +31,11 @@ const ImportModal = ({ isOpen, toggle, title, endpoint }: ImportModalProps) => {
     try {
       setLoading(true);
       await MyApi.put(endpoint, formData);
-      notifySuccess(`Import ${title} Success`);
+      notifySuccess(`${title} Success`);
       toggle();
     } catch (error) {
-      setError(error);
-      notifyError(`Import ${title} Failed`);
+      setError("Error uploading document");
+      notifyError(`${title} Failed`);
     } finally {
       setLoading(false);
     }
