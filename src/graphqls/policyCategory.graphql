@@ -15,6 +15,18 @@ query policyCategories($filter: BaseScalar = {}, $limit: Int, $page: Int) {
 query policyCategory($id: ID!) {
   policyCategory(id: $id) {
     ...policyCategoryFragment
+    hasEditAccess
+    requestStatus
+    requestEdit {
+      state
+      approver {
+        id
+        userReviewer {
+          id
+          name
+        }
+      }
+    }
     draft {
       id
       objectResult {

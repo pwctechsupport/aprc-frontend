@@ -1,26 +1,25 @@
 import useAccessRights from "./useAccessRights";
-import { RequestEdit } from "../../generated/graphql";
 
 export default function useEditState({
   draft,
   hasEditAccess,
-  notRequested,
-  rejected,
-  requested,
-  requestEdit
+  requestEditState,
+  requestStatus
 }: {
   draft: any;
   hasEditAccess: boolean;
-  notRequested: boolean;
-  rejected: boolean;
-  requested: boolean;
-  requestEdit: RequestEdit;
+  requestEditState: string | null | undefined;
+  requestStatus: string | null | undefined;
 }) {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
     "admin",
     "admin_preparer",
     "admin_reviewer"
   ]);
+
+  const requested = requestStatus === "requested";
+  const notRequested = !requestStatus;
+  const rejected = requestStatus === "rejected";
 
   let premise: number = 1;
 
@@ -45,7 +44,7 @@ export default function useEditState({
   if (requested && isAdminPreparer) {
     premise = 5;
   }
-  if (requestEdit?.state === "requested" && (isAdminReviewer || isAdmin)) {
+  if (requestEditState === "requested" && (isAdminReviewer || isAdmin)) {
     premise = 6;
   }
 
