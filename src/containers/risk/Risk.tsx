@@ -88,10 +88,10 @@ const Risk = ({ match, history }: RouteComponentProps) => {
   const [destoryRisk, destoryRiskInfo] = useDestroyRiskMutation({
     onCompleted: () => {
       notifySuccess("Delete Success");
-      history.push("/risks");
+      history.push("/risk");
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["risks", "risk"],
+    refetchQueries: ["risks"],
     awaitRefetchQueries: true
   });
 

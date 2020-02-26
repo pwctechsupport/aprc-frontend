@@ -33,7 +33,7 @@ const Controls = ({ history }: RouteComponentProps) => {
     refetchQueries: ["controls"]
   });
   const handleDelete = (id: string) => {
-    destroy({ variables: { input: { id } } });
+    destroy({ variables: { id } });
   };
 
   function toggleCheck(id: string) {

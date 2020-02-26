@@ -1,11 +1,14 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React, { useState, Fragment } from "react";
-import { AiFillEdit } from "react-icons/ai";
-import { FaTimes } from "react-icons/fa";
+import React, { Fragment, useState } from "react";
+import {
+  AiFillEdit,
+  AiOutlineEdit,
+  AiOutlineClockCircle
+} from "react-icons/ai";
+import { FaTimes, FaTrash, FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
-import { toast } from "react-toastify";
-import { oc } from "ts-optchain";
+import { Col, Row } from "reactstrap";
 import {
   Frequency,
   Nature,
@@ -13,41 +16,66 @@ import {
   TypeOfControl,
   useControlQuery,
   useReviewControlDraftMutation,
-  useUpdateControlMutation
+  useUpdateControlMutation,
+  useDestroyControlMutation,
+  useCreateRequestEditMutation,
+  useApproveRequestEditMutation
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
-import useAccessRights from "../../shared/hooks/useAccessRights";
-import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
-import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
-import { Row, Col } from "reactstrap";
 import Tooltip from "../../shared/components/Tooltip";
+import useAccessRights from "../../shared/hooks/useAccessRights";
+import {
+  notifyGraphQLErrors,
+  notifySuccess,
+  notifyInfo
+} from "../../shared/utils/notif";
+import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
+import useEditState from "../../shared/hooks/useEditState";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 
-const Control = ({ match }: RouteComponentProps) => {
-  const [inEditMode, setInEditMode] = useState(false);
+const Control = ({ match, history }: RouteComponentProps) => {
+  const [inEditMode, setInEditMode] = useState<boolean>(false);
+  function toggleEditMode() {
+    setInEditMode(p => !p);
+  }
+
   const id = get(match, "params.id", "");
   const { loading, data } = useControlQuery({ variables: { id } });
+
   const draft = data?.control?.draft?.objectResult;
-  const [reviewControl, reviewControlM] = useReviewControlDraftMutation({
+  const hasEditAccess = data?.control?.hasEditAccess || false;
+  const requestStatus = data?.control?.requestStatus;
+  const requestEditState = data?.control?.requestEdit?.state;
+  const premise = useEditState({
+    draft,
+    hasEditAccess,
+    requestStatus,
+    requestEditState
+  });
+
+  // Review handlers
+  const [reviewMutation, reviewMutationInfo] = useReviewControlDraftMutation({
     refetchQueries: ["control"]
   });
   async function review({ publish }: { publish: boolean }) {
     try {
-      await reviewControl({ variables: { id, publish } });
+      await reviewMutation({ variables: { id, publish } });
       notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
     } catch (error) {
       notifyGraphQLErrors(error);
     }
   }
-  const [isAdmin] = useAccessRights(["admin"]);
+
+  // Update handlers
   const [update, updateState] = useUpdateControlMutation({
     onCompleted: () => {
-      toast.success("Update Success");
+      notifySuccess("Update Success");
     },
-    onError: () => toast.error("Update Failed"),
+    onError: notifyGraphQLErrors,
     refetchQueries: ["control"],
     awaitRefetchQueries: true
   });
@@ -62,14 +90,53 @@ const Control = ({ match }: RouteComponentProps) => {
     });
   }
 
-  const controlOwner = data?.control?.controlOwner || "";
+  // Delete handlers
+  const [destoryControl, destoryControlInfo] = useDestroyControlMutation({
+    onCompleted: () => {
+      notifySuccess("Delete Success");
+      history.push("/control");
+    },
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["controls"],
+    awaitRefetchQueries: true
+  });
+
+  // Request Edit handlers
+  const [
+    requestEditMutation,
+    requestEditMutationInfo
+  ] = useCreateRequestEditMutation({
+    variables: { id, type: "Control" },
+    onError: notifyGraphQLErrors,
+    onCompleted: () => notifyInfo("Edit access requested"),
+    refetchQueries: ["control"]
+  });
+
+  // Approve and Reject handlers
+  const [
+    approveEditMutation,
+    approveEditMutationResult
+  ] = useApproveRequestEditMutation({
+    refetchQueries: ["control"],
+    onError: notifyGraphQLErrors
+  });
+  function handleApproveRequest(id: string) {
+    approveEditMutation({ variables: { id, approve: true } });
+  }
+  function handleRejectRequest(id: string) {
+    approveEditMutation({ variables: { id, approve: false } });
+  }
+
+  if (loading) return <LoadingSpinner centered size={30} />;
+
   let description = data?.control?.description || "";
   description = draft ? `[Draft] ${description}` : description;
+  const controlOwner = data?.control?.controlOwner || "";
   const assertion = data?.control?.assertion || [];
-  const frequency = oc(data).control.frequency("");
-  const ipo = oc(data).control.ipo([]);
-  const nature = oc(data).control.nature("");
-  const typeOfControl = oc(data).control.typeOfControl("");
+  const frequency = data?.control?.frequency || "";
+  const ipo = data?.control?.ipo || [];
+  const nature = data?.control?.nature || "";
+  const typeOfControl = data?.control?.typeOfControl || "";
   const status = data?.control?.status || "";
   const keyControl = data?.control?.keyControl || false;
   const risks = data?.control?.risks || [];
@@ -79,45 +146,101 @@ const Control = ({ match }: RouteComponentProps) => {
   const activityControls = data?.control?.activityControls || [];
 
   const renderControlAction = () => {
-    if (!inEditMode) {
+    if (premise === 2) {
       return (
-        <div>
-          {draft && isAdmin ? (
-            <>
-              <DialogButton
-                color="danger"
-                className="mr-2"
-                onConfirm={() => review({ publish: false })}
-                loading={reviewControlM.loading}
-              >
-                Reject
-              </DialogButton>
-              <DialogButton
-                color="primary"
-                className="pwc"
-                onConfirm={() => review({ publish: true })}
-                loading={reviewControlM.loading}
-              >
-                Approve
-              </DialogButton>
-            </>
-          ) : (
-            <Tooltip description="Edit Control">
-              <Button className="soft red" onClick={() => setInEditMode(true)}>
-                <AiFillEdit />
-              </Button>
-            </Tooltip>
-          )}
+        <div className="d-flex">
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewMutationInfo.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewMutationInfo.loading}
+          >
+            Approve
+          </DialogButton>
         </div>
       );
     }
-    return (
-      <div>
-        <Button onClick={() => setInEditMode(false)}>
-          <FaTimes />
-        </Button>
-      </div>
-    );
+    if (premise === 3) {
+      if (inEditMode) {
+        return (
+          <Button onClick={toggleEditMode} color="">
+            <FaTimes size={22} className="mr-2" />
+            Cancel Edit
+          </Button>
+        );
+      }
+      return (
+        <div className="d-flex">
+          <DialogButton
+            onConfirm={() => destoryControl({ variables: { id } })}
+            loading={destoryControlInfo.loading}
+            message={`Delete Control "${description}"?`}
+            className="soft red mr-2"
+          >
+            <FaTrash />
+          </DialogButton>
+          <Tooltip description="Edit Control">
+            <Button onClick={toggleEditMode} color="" className="soft orange">
+              <AiFillEdit />
+            </Button>
+          </Tooltip>
+        </div>
+      );
+    }
+    if (premise === 4) {
+      return (
+        <Tooltip description="Request edit access">
+          <DialogButton
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutation()}
+            loading={requestEditMutationInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatus === "requested"}
+          >
+            <AiOutlineEdit />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premise === 5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
+        >
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+    if (premise === 6) {
+      return (
+        <Tooltip description="Accept edit request">
+          <DialogButton
+            title={`Accept request to edit?`}
+            message={`Request by ${data?.control?.requestEdit?.user?.name}`}
+            className="soft red mr-2"
+            data={id}
+            onConfirm={handleApproveRequest}
+            onReject={handleRejectRequest}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
+          >
+            <FaExclamationCircle />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    return null;
   };
 
   const renderControlNonEditable = () => {
@@ -208,8 +331,6 @@ const Control = ({ match }: RouteComponentProps) => {
       />
     );
   };
-
-  if (loading) return null;
 
   return (
     <div>

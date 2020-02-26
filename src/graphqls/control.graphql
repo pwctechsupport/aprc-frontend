@@ -2,12 +2,6 @@ query controls($filter: BaseScalar = {}) {
   controls(filter: $filter) {
     collection {
       ...control
-      draft {
-        id
-        objectResult {
-          ...control
-        }
-      }
     }
   }
 }
@@ -20,10 +14,20 @@ query control($id: ID!) {
       activity
       guidance
     }
+    hasEditAccess
+    requestStatus
+    requestEdit {
+      id
+      state
+      user {
+        id
+        name
+      }
+    }
     draft {
       id
       objectResult {
-        ...control
+        __typename
       }
     }
   }
@@ -60,8 +64,8 @@ mutation createControl($input: CreateControlInput!) {
   }
 }
 
-mutation destroyControl($input: DestroyControlInput!) {
-  destroyControl(input: $input) {
+mutation destroyControl($id: ID!) {
+  destroyControl(input: { id: $id }) {
     clientMutationId
   }
 }
