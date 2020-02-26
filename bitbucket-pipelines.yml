@@ -4,7 +4,7 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 # trigger deployment
-image: node:8.12
+image: node:12.16.1
 
 pipelines:
   branches:
@@ -32,8 +32,8 @@ pipelines:
     staging:
       - step:
           deployment: staging
-          # caches:
-          # - node
+          caches:
+            - node
           # size: 2x
           script:
             - yarn install
