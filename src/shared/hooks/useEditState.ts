@@ -49,7 +49,7 @@ export default function useEditState({
     premise = 6;
   }
 
-  return premise;
+  // return premise;
 }
 
 // How to use:
