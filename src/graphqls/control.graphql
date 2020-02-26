@@ -15,6 +15,11 @@ query controls($filter: BaseScalar = {}) {
 query control($id: ID!) {
   control(id: $id) {
     ...control
+    activityControls {
+      id
+      activity
+      guidance
+    }
     draft {
       id
       objectResult {

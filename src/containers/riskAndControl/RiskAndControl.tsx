@@ -44,7 +44,8 @@ import {
 } from "../../shared/utils/accessGeneratedPdf";
 import ControlForm, {
   CreateControlFormDefaultValues,
-  CreateControlFormValues
+  CreateControlFormValues,
+  ControlFormValues
 } from "../control/components/ControlForm";
 import RiskForm, {
   RiskFormDefaultValues,
@@ -334,7 +335,9 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                                               control.keyControl || false,
                                             riskIds: oc(control)
                                               .risks([])
-                                              .map(({ id }) => id)
+                                              .map(({ id }) => id),
+                                            activityControls:
+                                              control.activityControls
                                           })
                                         }
                                         color=""
@@ -409,6 +412,6 @@ interface RiskState extends RiskFormDefaultValues {
   id: string;
 }
 
-interface ControlState extends CreateControlFormDefaultValues {
+interface ControlState extends ControlFormValues {
   id: string;
 }
