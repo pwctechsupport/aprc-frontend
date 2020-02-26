@@ -102,6 +102,11 @@ query businessProcess($id: ID!) {
           id
           name
         }
+        activityControls {
+          id
+          activity
+          guidance
+        }
       }
     }
     resources {

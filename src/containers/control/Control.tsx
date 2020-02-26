@@ -76,6 +76,7 @@ const Control = ({ match }: RouteComponentProps) => {
   const riskIds = risks.map(a => a.id);
   const businessProcesses = data?.control?.businessProcesses || [];
   const businessProcessIds = businessProcesses.map(bp => bp.id);
+  const activityControls = data?.control?.activityControls || [];
 
   const renderControlAction = () => {
     if (!inEditMode) {
@@ -198,7 +199,8 @@ const Control = ({ match }: RouteComponentProps) => {
           status: (status as Status) || Status.Draft,
           riskIds,
           businessProcessIds,
-          keyControl
+          keyControl,
+          activityControls
         }}
         submitting={updateState.loading}
       />
