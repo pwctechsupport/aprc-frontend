@@ -10,6 +10,22 @@ query risks($filter: BaseScalar = {}, $limit: Int) {
 query risk($id: ID!) {
   risk(id: $id) {
     ...risk
+    hasEditAccess
+    requestStatus
+    requestEdit {
+      id
+      state
+      user {
+        id
+        name
+      }
+    }
+    draft {
+      id
+      objectResult {
+        __typename
+      }
+    }
   }
 }
 
@@ -42,6 +58,12 @@ mutation destroyRisk($id: ID!) {
 
 mutation updateRisk($input: UpdateRiskInput!) {
   updateRisk(input: $input) {
+    success
+  }
+}
+
+mutation reviewRiskDraft($id: ID!, $publish: Boolean!) {
+  reviewRiskDraft(input: { id: $id, publish: $publish }) {
     success
   }
 }
