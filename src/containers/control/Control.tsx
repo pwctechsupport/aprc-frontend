@@ -1,6 +1,6 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTimes } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
@@ -125,7 +125,9 @@ const Control = ({ match }: RouteComponentProps) => {
       { label: "Control Owner", value: controlOwner },
       {
         label: "Key Control",
-        value: <input type="checkbox" checked={keyControl} />
+        value: (
+          <input type="checkbox" checked={keyControl} onChange={() => {}} />
+        )
       },
       { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
@@ -144,10 +146,10 @@ const Control = ({ match }: RouteComponentProps) => {
         <Col xs={6}>
           <dl>
             {details.slice(0, Math.ceil(details.length / 2)).map(item => (
-              <>
+              <Fragment key={item.label}>
                 <dt>{item.label}</dt>
                 <dd>{item.value || "-"}</dd>
-              </>
+              </Fragment>
             ))}
           </dl>
         </Col>
@@ -156,10 +158,10 @@ const Control = ({ match }: RouteComponentProps) => {
             {details
               .slice(Math.ceil(details.length / 2), details.length)
               .map(item => (
-                <>
+                <Fragment key={item.label}>
                   <dt>{item.label}</dt>
                   <dd>{item.value || "-"}</dd>
-                </>
+                </Fragment>
               ))}
           </dl>
         </Col>
@@ -167,13 +169,13 @@ const Control = ({ match }: RouteComponentProps) => {
         <Col xs={12} className="mt-3">
           <h5>Risks</h5>
           {risks.length ? (
-            risks.map(risk => <tr>{risk.name}</tr>)
+            risks.map(risk => <p key={risk.id}>{risk.name}</p>)
           ) : (
             <EmptyAttribute />
           )}
           <h5 className="mt-2">Business Processes</h5>
           {businessProcesses.length ? (
-            businessProcesses.map(bp => <tr>{bp.name}</tr>)
+            businessProcesses.map(bp => <p key={bp.id}>{bp.name}</p>)
           ) : (
             <EmptyAttribute />
           )}

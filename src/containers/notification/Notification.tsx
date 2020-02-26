@@ -58,7 +58,7 @@ const Notification = ({ history }: RouteComponentProps) => {
     awaitRefetchQueries: true
   });
   const [isRead] = useIsReadMutation({
-    refetchQueries: ["notifications"],
+    refetchQueries: ["notifications", "notificationsCount"],
     awaitRefetchQueries: true
   });
 
@@ -191,9 +191,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {data.senderUser ? data.senderUser.name : ""}
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {`Request to ${dataType} ${data.originatorType} : ${
-                        data.title
-                      }`}
+                      {`Request to ${dataType} ${data.originatorType} : ${data.title}`}
                     </td>
                     <td className={data.isRead ? "" : "text-orang text-bold"}>
                       {formatDate(data.createdAt, {
