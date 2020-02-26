@@ -124,7 +124,9 @@ const Control = ({ match }: RouteComponentProps) => {
       { label: "Control Owner", value: controlOwner },
       {
         label: "Key Control",
-        value: <input type="checkbox" defaultChecked={keyControl} />
+        value: (
+          <input type="checkbox" checked={keyControl} onChange={() => {}} />
+        )
       },
       { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
