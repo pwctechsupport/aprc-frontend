@@ -22,7 +22,7 @@ export default function useEditState({
     "admin_reviewer"
   ]);
 
-  let premise: number;
+  let premise: number = 1;
 
   /* premis 1 None */
   /* premis 2 Approve */
@@ -49,7 +49,7 @@ export default function useEditState({
     premise = 6;
   }
 
-  // return premise;
+  return premise;
 }
 
 // How to use:
