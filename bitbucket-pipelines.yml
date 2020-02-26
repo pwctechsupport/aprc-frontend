@@ -20,32 +20,32 @@ pipelines:
             - CI=false yarn run build
             - pipe: atlassian/ssh-run:0.1.4
               variables:
-                SSH_USER: 'deploy'
-                SERVER: 'www.moodah.id'
-                COMMAND: 'cd app/skywalker/build/ && rm -rf *'
+                SSH_USER: "deploy"
+                SERVER: "www.moodah.id"
+                COMMAND: "cd app/skywalker/build/ && rm -rf *"
             - pipe: atlassian/scp-deploy:0.3.3
               variables:
-                USER: 'deploy'
-                SERVER: 'www.moodah.id'
-                REMOTE_PATH: '/home/deploy/app/skywalker'
-                LOCAL_PATH: 'build'
+                USER: "deploy"
+                SERVER: "www.moodah.id"
+                REMOTE_PATH: "/home/deploy/app/skywalker"
+                LOCAL_PATH: "build"
     staging:
       - step:
           deployment: staging
-          caches:
-            - node
+          # caches:
+          # - node
           # size: 2x
           script:
             - yarn install
             - CI=false yarn run build
             - pipe: atlassian/ssh-run:0.1.4
               variables:
-                SSH_USER: 'deploy'
-                SERVER: 'skywalker.rubyh.co'
-                COMMAND: 'cd app/skywalker/build/ && rm -rf *'
+                SSH_USER: "deploy"
+                SERVER: "skywalker.rubyh.co"
+                COMMAND: "cd app/skywalker/build/ && rm -rf *"
             - pipe: atlassian/scp-deploy:0.3.3
               variables:
-                USER: 'deploy'
-                SERVER: 'skywalker.rubyh.co'
-                REMOTE_PATH: '/home/deploy/app/skywalker'
-                LOCAL_PATH: 'build'
+                USER: "deploy"
+                SERVER: "skywalker.rubyh.co"
+                REMOTE_PATH: "/home/deploy/app/skywalker"
+                LOCAL_PATH: "build"
