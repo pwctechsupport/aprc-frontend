@@ -14,7 +14,7 @@ import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { prepDefaultValue } from "../../../shared/formatter";
+import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
 
 const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
   const bussinessProcessesQ = useBusinessProcessesQuery();
@@ -48,10 +48,7 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
 
   const businessProcesses = oc(bussinessProcessesQ)
     .data.businessProcesses.collection([])
-    .map(bp => ({
-      label: bp.name,
-      value: bp.id
-    }));
+    .map(toLabelValue);
 
   return (
     <div>

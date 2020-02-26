@@ -124,5 +124,5 @@ type MyBp = Pick<BusinessProcess, "name" | "children" | "id">;
 type MyRisk = Pick<Risk, "id" | "name">;
 
 interface FinalBp extends MyBp {
-  risks: Array<MyRisk>;
+  risks: Array<MyRisk> | null;
 }

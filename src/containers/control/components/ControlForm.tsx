@@ -16,6 +16,7 @@ import {
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
+import { toLabelValue } from "../../../shared/formatter";
 
 const ControlForm = ({
   onSubmit,
@@ -33,7 +34,7 @@ const ControlForm = ({
   const bpsQ = useBusinessProcessesQuery();
   const bpOptions = oc(bpsQ)
     .data.businessProcesses.collection([])
-    .map(bp => ({ label: bp.name, value: bp.id }));
+    .map(toLabelValue);
 
   const risksQ = useRisksQuery();
   const riskOptions = oc(risksQ)
