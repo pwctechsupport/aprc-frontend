@@ -64,18 +64,16 @@ const ResourceBox = ({
       <ResourceBoxMeta>
         <div>{name}</div>
         <ResourceBoxMetaWrapper>
-          <Tooltip
-            description={`Avg. Rating: ${rating} <br /> From ${totalRating} user(s)`}
-          >
+          <div>
             <StarRating
               id={id}
               rating={rating}
               totalRating={totalRating}
               onStarClick={handleStarClick}
             />
-          </Tooltip>
+          </div>
           <RevenueBoxViews>{views} Views</RevenueBoxViews>
-          <Tooltip>
+          <Tooltip description="Delete resource attachment">
             <DialogButton
               onConfirm={handleErase}
               color="soft red"
@@ -85,7 +83,7 @@ const ResourceBox = ({
               <IoMdRemoveCircleOutline />
             </DialogButton>
           </Tooltip>
-          <Tooltip>
+          <Tooltip description="Download resource attachment">
             <Button
               href={`http://mandalorian.rubyh.co${resuploadUrl}`}
               target="_blank"
