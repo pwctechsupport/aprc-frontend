@@ -20,6 +20,8 @@ import { unauthorize } from "../../redux/auth";
 import { useDispatch } from "react-redux";
 import Avatar from "./Avatar";
 import useAccessRights from "../hooks/useAccessRights";
+import { useNotificationsCountQuery } from "../../generated/graphql";
+import NotificationBadge from "./NotificationBadge";
 
 const adminMenus = [
   { label: "Policy", path: "/policy-admin" },
@@ -42,7 +44,11 @@ const userMenus = [
 
 const NewNavbar = () => {
   const dispatch = useDispatch();
-  const rolesArray = useAccessRights(["admin", "admin_preparer"]);
+  const rolesArray = useAccessRights([
+    "admin",
+    "admin_preparer",
+    "admin_reviewer"
+  ]);
   const isMereUser = rolesArray.every(() => false);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(p => !p);
@@ -50,6 +56,9 @@ const NewNavbar = () => {
   function handleLogout() {
     dispatch(unauthorize());
   }
+
+  const unreadCount =
+    useNotificationsCountQuery().data?.notifications?.metadata.totalCount || 0;
 
   return (
     <div>
@@ -125,7 +134,8 @@ const NewNavbar = () => {
           </div>
           <div className="mr-4">
             <Link to="/notifications" className="text-dark">
-              <FaBell className="clickable" size={22} />
+              <NotificationBadge count={unreadCount} />
+              <FaBell size={22} />
             </Link>
           </div>
           <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />

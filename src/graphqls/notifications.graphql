@@ -55,6 +55,14 @@ query notifications($filter: BaseScalar = {}, $limit: Int, $page: Int) {
   }
 }
 
+query notificationsCount {
+  notifications(filter: { is_read_eq: false }) {
+    metadata {
+      totalCount
+    }
+  }
+}
+
 mutation destroyBulkNotification($input: DestroyBulkNotificationInput!) {
   destroyBulkNotification(input: $input) {
     clientMutationId
