@@ -30,7 +30,7 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
     register({ name: "typeOfRisk" });
   }, [register]);
 
-  const handleChange = (name: string) => ({ value }: any) => {
+  const handleChange = (name: keyof RiskFormValues) => ({ value }: any) => {
     setValue(name, value);
   };
 

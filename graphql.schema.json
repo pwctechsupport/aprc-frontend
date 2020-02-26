@@ -15,7 +15,7 @@
         "fields": [
           {
             "name": "activityControl",
-            "description": "Returns the Activity Control and its Guidance of an Object",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -85,7 +85,7 @@
           },
           {
             "name": "bookmark",
-            "description": "Returns Bookmark Originator Based By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -155,7 +155,7 @@
           },
           {
             "name": "businessProcess",
-            "description": "Returns Business Process By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -225,7 +225,7 @@
           },
           {
             "name": "control",
-            "description": "Returns Control By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -295,7 +295,7 @@
           },
           {
             "name": "description",
-            "description": "Returns Description By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -322,7 +322,7 @@
           },
           {
             "name": "fileAttachment",
-            "description": "Returns the File Attachment of an Object",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -392,7 +392,7 @@
           },
           {
             "name": "itSystem",
-            "description": "Returns IT System By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -462,7 +462,7 @@
           },
           {
             "name": "me",
-            "description": "Returns the current user",
+            "description": "",
             "args": [],
             "type": {
               "kind": "OBJECT",
@@ -474,7 +474,7 @@
           },
           {
             "name": "notification",
-            "description": "Returns the notification of an object",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -587,7 +587,7 @@
           },
           {
             "name": "policy",
-            "description": "Returns Policy By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -667,7 +667,7 @@
           },
           {
             "name": "policyCategory",
-            "description": "Returns Policy Category By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -694,7 +694,7 @@
           },
           {
             "name": "reference",
-            "description": "Returns Reference By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -764,7 +764,7 @@
           },
           {
             "name": "requestEdit",
-            "description": "Returns the Current Edit Request",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -834,7 +834,7 @@
           },
           {
             "name": "resource",
-            "description": "Returns Resource By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -861,7 +861,7 @@
           },
           {
             "name": "resourceRating",
-            "description": "Returns the Current Resource Rating and Rating Calculation",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -974,7 +974,7 @@
           },
           {
             "name": "risk",
-            "description": "Returns Risk By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -1087,7 +1087,7 @@
           },
           {
             "name": "user",
-            "description": "Returns User By ID",
+            "description": "",
             "args": [
               {
                 "name": "id",
@@ -1157,7 +1157,7 @@
           },
           {
             "name": "version",
-            "description": "Returns the Version of an Object",
+            "description": "",
             "args": [],
             "type": {
               "kind": "LIST",
@@ -2140,7 +2140,7 @@
       {
         "kind": "SCALAR",
         "name": "ISO8601DateTime",
-        "description": "An ISO 8601-encoded datetime",
+        "description": null,
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -2801,7 +2801,7 @@
       {
         "kind": "SCALAR",
         "name": "BaseScalar",
-        "description": "",
+        "description": null,
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -2811,7 +2811,7 @@
       {
         "kind": "OBJECT",
         "name": "Version",
-        "description": "Version of an Object",
+        "description": "",
         "fields": [
           {
             "name": "createdAt",
@@ -2946,7 +2946,7 @@
       {
         "kind": "UNION",
         "name": "Item",
-        "description": "Types of an Items",
+        "description": "",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -4409,7 +4409,7 @@
       {
         "kind": "UNION",
         "name": "Originator",
-        "description": "Types of an Originator",
+        "description": "",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -5463,7 +5463,7 @@
       {
         "kind": "UNION",
         "name": "Object",
-        "description": "Types of an Object",
+        "description": "",
         "fields": null,
         "inputFields": null,
         "interfaces": null,
@@ -6410,13 +6410,13 @@
         "enumValues": [
           {
             "name": "yes",
-            "description": "Yes",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "no",
-            "description": "No",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -7996,7 +7996,7 @@
           },
           {
             "name": "login",
-            "description": "Login for users",
+            "description": "",
             "args": [
               {
                 "name": "email",
@@ -8611,7 +8611,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "AdminUpdateUserInput",
-        "description": "Autogenerated input type of AdminUpdateUser",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -8756,7 +8756,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -8772,11 +8772,11 @@
       {
         "kind": "OBJECT",
         "name": "AdminUpdateUserPayload",
-        "description": "Autogenerated return type of AdminUpdateUser",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -8843,7 +8843,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ApproveRequestEditInput",
-        "description": "Autogenerated input type of ApproveRequestEdit",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -8876,7 +8876,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -8892,11 +8892,11 @@
       {
         "kind": "OBJECT",
         "name": "ApproveRequestEditPayload",
-        "description": "Autogenerated return type of ApproveRequestEdit",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -8963,7 +8963,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateActivityControlInput",
-        "description": "Autogenerated input type of CreateActivityControl",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -9022,7 +9022,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -9038,7 +9038,7 @@
       {
         "kind": "OBJECT",
         "name": "CreateActivityControlPayload",
-        "description": "Autogenerated return type of CreateActivityControl",
+        "description": "",
         "fields": [
           {
             "name": "activityControl",
@@ -9054,7 +9054,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9109,7 +9109,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateBookmarkBusinessProcessInput",
-        "description": "Autogenerated input type of CreateBookmarkBusinessProcess",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -9128,7 +9128,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -9144,7 +9144,7 @@
       {
         "kind": "OBJECT",
         "name": "CreateBookmarkBusinessProcessPayload",
-        "description": "Autogenerated return type of CreateBookmarkBusinessProcess",
+        "description": "",
         "fields": [
           {
             "name": "bookmark",
@@ -9160,7 +9160,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9215,7 +9215,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateBookmarkControlInput",
-        "description": "Autogenerated input type of CreateBookmarkControl",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -9234,7 +9234,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -9250,7 +9250,7 @@
       {
         "kind": "OBJECT",
         "name": "CreateBookmarkControlPayload",
-        "description": "Autogenerated return type of CreateBookmarkControl",
+        "description": "",
         "fields": [
           {
             "name": "bookmark",
@@ -9266,7 +9266,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9321,7 +9321,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateBookmarkPolicyInput",
-        "description": "Autogenerated input type of CreateBookmarkPolicy",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -9340,7 +9340,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -9356,7 +9356,7 @@
       {
         "kind": "OBJECT",
         "name": "CreateBookmarkPolicyPayload",
-        "description": "Autogenerated return type of CreateBookmarkPolicy",
+        "description": "",
         "fields": [
           {
             "name": "bookmark",
@@ -9372,7 +9372,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9427,7 +9427,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateBookmarkRiskInput",
-        "description": "Autogenerated input type of CreateBookmarkRisk",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -9446,7 +9446,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -9462,7 +9462,7 @@
       {
         "kind": "OBJECT",
         "name": "CreateBookmarkRiskPayload",
-        "description": "Autogenerated return type of CreateBookmarkRisk",
+        "description": "",
         "fields": [
           {
             "name": "bookmark",
@@ -9478,7 +9478,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9533,7 +9533,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateBusinessProcessInput",
-        "description": "Autogenerated input type of CreateBusinessProcess",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -9562,7 +9562,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -9585,31 +9585,31 @@
         "enumValues": [
           {
             "name": "draft",
-            "description": "Draft",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "waiting_for_approval",
-            "description": "waiting for Approval",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "release",
-            "description": "Release",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "ready_for_edit",
-            "description": "Ready for Edit",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "waiting_for_review",
-            "description": "Waiting For Review",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -9619,7 +9619,7 @@
       {
         "kind": "OBJECT",
         "name": "CreateBusinessProcessPayload",
-        "description": "Autogenerated return type of CreateBusinessProcess",
+        "description": "",
         "fields": [
           {
             "name": "businessProcess",
@@ -9635,7 +9635,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -9690,7 +9690,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateControlInput",
-        "description": "Autogenerated input type of CreateControl",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -9865,7 +9865,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -9888,31 +9888,31 @@
         "enumValues": [
           {
             "name": "manual",
-            "description": "Manual",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "automatic",
-            "description": "Automatic",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "it_dependent_manual",
-            "description": "IT Dependent Manual",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "manual_ssc",
-            "description": "Manual SSC",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "manual_sdc",
-            "description": "Manual SDC",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -9929,43 +9929,43 @@
         "enumValues": [
           {
             "name": "daily",
-            "description": "Daily",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "weekly",
-            "description": "Weekly",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "monthly",
-            "description": "Monthly",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "annually",
-            "description": "Annually",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "semiannually",
-            "description": "Semi Annually",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "quarterly",
-            "description": "Quarterly",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "multiple_a_day",
-            "description": "Multiple A Day",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -9982,19 +9982,19 @@
         "enumValues": [
           {
             "name": "preventive",
-            "description": "Preventive",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "detective",
-            "description": "Detective",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "corrective",
-            "description": "Corrective",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -10011,43 +10011,43 @@
         "enumValues": [
           {
             "name": "completeness",
-            "description": "C",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "accuracy",
-            "description": "A",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "cut_over",
-            "description": "CO",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "existence_and_occurence",
-            "description": "E/O",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "rights_and_obligation",
-            "description": "R&O",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "presentation_and_disclosure",
-            "description": "P&D",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "validation",
-            "description": "V",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -10064,25 +10064,25 @@
         "enumValues": [
           {
             "name": "completeness",
-            "description": "C",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "accuracy",
-            "description": "A",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "validation",
-            "description": "V",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "restriction",
-            "description": "R",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -10092,11 +10092,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateControlPayload",
-        "description": "Autogenerated return type of CreateControl",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -10163,7 +10163,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateDescriptionInput",
-        "description": "Autogenerated input type of CreateDescription",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -10182,7 +10182,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -10198,11 +10198,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateDescriptionPayload",
-        "description": "Autogenerated return type of CreateDescription",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -10269,7 +10269,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateFileAttachmentInput",
-        "description": "Autogenerated input type of CreateFileAttachment",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -10322,7 +10322,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -10338,11 +10338,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateFileAttachmentPayload",
-        "description": "Autogenerated return type of CreateFileAttachment",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -10409,7 +10409,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateItSystemInput",
-        "description": "Autogenerated input type of CreateItSystem",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -10428,7 +10428,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -10444,7 +10444,7 @@
       {
         "kind": "OBJECT",
         "name": "CreateItSystemPayload",
-        "description": "Autogenerated return type of CreateItSystem",
+        "description": "",
         "fields": [
           {
             "name": "ItSystem",
@@ -10460,7 +10460,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -10515,7 +10515,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreatePolicyInput",
-        "description": "Autogenerated input type of CreatePolicy",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -10668,7 +10668,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -10684,11 +10684,11 @@
       {
         "kind": "OBJECT",
         "name": "CreatePolicyPayload",
-        "description": "Autogenerated return type of CreatePolicy",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -10755,7 +10755,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreatePolicyCategoryInput",
-        "description": "Autogenerated input type of CreatePolicyCategory",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -10792,7 +10792,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -10808,11 +10808,11 @@
       {
         "kind": "OBJECT",
         "name": "CreatePolicyCategoryPayload",
-        "description": "Autogenerated return type of CreatePolicyCategory",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -10879,7 +10879,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateReferenceInput",
-        "description": "Autogenerated input type of CreateReference",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -10908,7 +10908,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -10924,11 +10924,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateReferencePayload",
-        "description": "Autogenerated return type of CreateReference",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -10995,7 +10995,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateRequestEditInput",
-        "description": "Autogenerated input type of CreateRequestEdit",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -11028,7 +11028,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -11044,11 +11044,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateRequestEditPayload",
-        "description": "Autogenerated return type of CreateRequestEdit",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -11115,7 +11115,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateResourceInput",
-        "description": "Autogenerated input type of CreateResource",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -11244,7 +11244,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -11267,31 +11267,31 @@
         "enumValues": [
           {
             "name": "references",
-            "description": "References",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "sop",
-            "description": "SOP",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "template",
-            "description": "Template",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "flowchart",
-            "description": "Flowchart",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "add_new_category",
-            "description": "Add New Category",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -11301,11 +11301,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateResourcePayload",
-        "description": "Autogenerated return type of CreateResource",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -11372,7 +11372,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateResourceRatingInput",
-        "description": "Autogenerated input type of CreateResourceRating",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -11405,7 +11405,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -11421,11 +11421,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateResourceRatingPayload",
-        "description": "Autogenerated return type of CreateResourceRating",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -11492,7 +11492,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateRiskInput",
-        "description": "Autogenerated input type of CreateRisk",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -11555,7 +11555,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -11578,19 +11578,19 @@
         "enumValues": [
           {
             "name": "low",
-            "description": "L",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "medium",
-            "description": "M",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "high",
-            "description": "H",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -11607,19 +11607,19 @@
         "enumValues": [
           {
             "name": "financial_risk",
-            "description": "Financial Risk",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "operational_risk",
-            "description": "Operational Risk",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "business_risk",
-            "description": "Business Risk",
+            "description": "",
             "isDeprecated": false,
             "deprecationReason": null
           }
@@ -11629,11 +11629,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateRiskPayload",
-        "description": "Autogenerated return type of CreateRisk",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -11700,7 +11700,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateSubBusinessProcessInput",
-        "description": "Autogenerated input type of CreateSubBusinessProcess",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -11743,7 +11743,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -11759,7 +11759,7 @@
       {
         "kind": "OBJECT",
         "name": "CreateSubBusinessProcessPayload",
-        "description": "Autogenerated return type of CreateSubBusinessProcess",
+        "description": "",
         "fields": [
           {
             "name": "businessProcess",
@@ -11775,7 +11775,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -11830,7 +11830,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateSubPolicyInput",
-        "description": "Autogenerated input type of CreateSubPolicy",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -11977,7 +11977,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -11993,11 +11993,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateSubPolicyPayload",
-        "description": "Autogenerated return type of CreateSubPolicy",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -12064,7 +12064,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "CreateUserInput",
-        "description": "Autogenerated input type of CreateUser",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -12135,7 +12135,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -12151,11 +12151,11 @@
       {
         "kind": "OBJECT",
         "name": "CreateUserPayload",
-        "description": "Autogenerated return type of CreateUser",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -12222,7 +12222,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyActivityControlInput",
-        "description": "Autogenerated input type of DestroyActivityControl",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -12249,7 +12249,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -12265,7 +12265,7 @@
       {
         "kind": "OBJECT",
         "name": "DestroyActivityControlPayload",
-        "description": "Autogenerated return type of DestroyActivityControl",
+        "description": "",
         "fields": [
           {
             "name": "activityControl",
@@ -12285,7 +12285,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -12340,7 +12340,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyBookmarkByChoiceInput",
-        "description": "Autogenerated input type of DestroyBookmarkByChoice",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -12367,7 +12367,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -12383,7 +12383,7 @@
       {
         "kind": "OBJECT",
         "name": "DestroyBookmarkByChoicePayload",
-        "description": "Autogenerated return type of DestroyBookmarkByChoice",
+        "description": "",
         "fields": [
           {
             "name": "bookmark",
@@ -12403,7 +12403,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -12458,7 +12458,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyBulkNotificationInput",
-        "description": "Autogenerated input type of DestroyBulkNotification",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -12485,7 +12485,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -12501,11 +12501,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyBulkNotificationPayload",
-        "description": "Autogenerated return type of DestroyBulkNotification",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -12572,7 +12572,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyBusinessProcessInput",
-        "description": "Autogenerated input type of DestroyBusinessProcess",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -12591,7 +12591,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -12607,7 +12607,7 @@
       {
         "kind": "OBJECT",
         "name": "DestroyBusinessProcessPayload",
-        "description": "Autogenerated return type of DestroyBusinessProcess",
+        "description": "",
         "fields": [
           {
             "name": "businessProcess",
@@ -12627,7 +12627,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -12682,7 +12682,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyControlInput",
-        "description": "Autogenerated input type of DestroyControl",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -12701,7 +12701,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -12717,11 +12717,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyControlPayload",
-        "description": "Autogenerated return type of DestroyControl",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -12792,7 +12792,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyDescriptionInput",
-        "description": "Autogenerated input type of DestroyDescription",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -12811,7 +12811,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -12827,11 +12827,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyDescriptionPayload",
-        "description": "Autogenerated return type of DestroyDescription",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -12902,7 +12902,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyFileAttachmentInput",
-        "description": "Autogenerated input type of DestroyFileAttachment",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -12929,7 +12929,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -12945,11 +12945,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyFileAttachmentPayload",
-        "description": "Autogenerated return type of DestroyFileAttachment",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13020,7 +13020,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyItSystemInput",
-        "description": "Autogenerated input type of DestroyItSystem",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13039,7 +13039,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13055,11 +13055,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyItSystemPayload",
-        "description": "Autogenerated return type of DestroyItSystem",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13130,7 +13130,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyNotificationInput",
-        "description": "Autogenerated input type of DestroyNotification",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13149,7 +13149,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13165,11 +13165,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyNotificationPayload",
-        "description": "Autogenerated return type of DestroyNotification",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13240,7 +13240,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyPolicyInput",
-        "description": "Autogenerated input type of DestroyPolicy",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13259,7 +13259,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13275,11 +13275,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyPolicyPayload",
-        "description": "Autogenerated return type of DestroyPolicy",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13350,7 +13350,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyPolicyCategoryInput",
-        "description": "Autogenerated input type of DestroyPolicyCategory",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13369,7 +13369,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13385,11 +13385,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyPolicyCategoryPayload",
-        "description": "Autogenerated return type of DestroyPolicyCategory",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13460,7 +13460,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyReferenceInput",
-        "description": "Autogenerated input type of DestroyReference",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13479,7 +13479,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13495,11 +13495,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyReferencePayload",
-        "description": "Autogenerated return type of DestroyReference",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13570,7 +13570,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyResourceInput",
-        "description": "Autogenerated input type of DestroyResource",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13589,7 +13589,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13605,11 +13605,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyResourcePayload",
-        "description": "Autogenerated return type of DestroyResource",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13680,7 +13680,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyResourceRatingInput",
-        "description": "Autogenerated input type of DestroyResourceRating",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13699,7 +13699,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13715,11 +13715,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyResourceRatingPayload",
-        "description": "Autogenerated return type of DestroyResourceRating",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13786,7 +13786,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyRiskInput",
-        "description": "Autogenerated input type of DestroyRisk",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13805,7 +13805,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13821,11 +13821,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyRiskPayload",
-        "description": "Autogenerated return type of DestroyRisk",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -13896,7 +13896,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyUserInput",
-        "description": "Autogenerated input type of DestroyUser",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -13915,7 +13915,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -13931,11 +13931,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyUserPayload",
-        "description": "Autogenerated return type of DestroyUser",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14006,7 +14006,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "DestroyVersionInput",
-        "description": "Autogenerated input type of DestroyVersion",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14033,7 +14033,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -14049,11 +14049,11 @@
       {
         "kind": "OBJECT",
         "name": "DestroyVersionPayload",
-        "description": "Autogenerated return type of DestroyVersion",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14124,7 +14124,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ForgotPasswordInput",
-        "description": "Autogenerated input type of ForgotPassword",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14139,7 +14139,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -14155,11 +14155,11 @@
       {
         "kind": "OBJECT",
         "name": "ForgotPasswordPayload",
-        "description": "Autogenerated return type of ForgotPassword",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14230,7 +14230,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "IsReadInput",
-        "description": "Autogenerated input type of IsRead",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14249,7 +14249,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -14265,11 +14265,11 @@
       {
         "kind": "OBJECT",
         "name": "IsReadPayload",
-        "description": "Autogenerated return type of IsRead",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14340,7 +14340,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ReviewControlDraftInput",
-        "description": "Autogenerated input type of ReviewControlDraft",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14373,7 +14373,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -14389,11 +14389,11 @@
       {
         "kind": "OBJECT",
         "name": "ReviewControlDraftPayload",
-        "description": "Autogenerated return type of ReviewControlDraft",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14460,7 +14460,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ReviewPolicyCategoryDraftInput",
-        "description": "Autogenerated input type of ReviewPolicyCategoryDraft",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14493,7 +14493,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -14509,11 +14509,11 @@
       {
         "kind": "OBJECT",
         "name": "ReviewPolicyCategoryDraftPayload",
-        "description": "Autogenerated return type of ReviewPolicyCategoryDraft",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14580,7 +14580,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ReviewPolicyDraftInput",
-        "description": "Autogenerated input type of ReviewPolicyDraft",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14613,7 +14613,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -14629,11 +14629,11 @@
       {
         "kind": "OBJECT",
         "name": "ReviewPolicyDraftPayload",
-        "description": "Autogenerated return type of ReviewPolicyDraft",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14700,7 +14700,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ReviewRiskDraftInput",
-        "description": "Autogenerated input type of ReviewRiskDraft",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14733,7 +14733,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -14749,11 +14749,11 @@
       {
         "kind": "OBJECT",
         "name": "ReviewRiskDraftPayload",
-        "description": "Autogenerated return type of ReviewRiskDraft",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14820,7 +14820,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "ReviewUserDraftInput",
-        "description": "Autogenerated input type of ReviewUserDraft",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14853,7 +14853,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -14869,11 +14869,11 @@
       {
         "kind": "OBJECT",
         "name": "ReviewUserDraftPayload",
-        "description": "Autogenerated return type of ReviewUserDraft",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -14940,7 +14940,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateActivityControlInput",
-        "description": "Autogenerated input type of UpdateActivityControl",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -14999,7 +14999,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -15015,7 +15015,7 @@
       {
         "kind": "OBJECT",
         "name": "UpdateActivityControlPayload",
-        "description": "Autogenerated return type of UpdateActivityControl",
+        "description": "",
         "fields": [
           {
             "name": "activityControl",
@@ -15031,7 +15031,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -15086,7 +15086,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateBusinessProcessInput",
-        "description": "Autogenerated input type of UpdateBusinessProcess",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -15125,7 +15125,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -15141,7 +15141,7 @@
       {
         "kind": "OBJECT",
         "name": "UpdateBusinessProcessPayload",
-        "description": "Autogenerated return type of UpdateBusinessProcess",
+        "description": "",
         "fields": [
           {
             "name": "businessProcess",
@@ -15161,7 +15161,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -15216,7 +15216,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateControlInput",
-        "description": "Autogenerated input type of UpdateControl",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -15405,7 +15405,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -15421,11 +15421,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateControlPayload",
-        "description": "Autogenerated return type of UpdateControl",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -15492,7 +15492,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateDescriptionInput",
-        "description": "Autogenerated input type of UpdateDescription",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -15521,7 +15521,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -15537,11 +15537,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateDescriptionPayload",
-        "description": "Autogenerated return type of UpdateDescription",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -15612,7 +15612,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateFileAttachmentInput",
-        "description": "Autogenerated input type of UpdateFileAttachment",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -15651,7 +15651,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -15667,11 +15667,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateFileAttachmentPayload",
-        "description": "Autogenerated return type of UpdateFileAttachment",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -15738,7 +15738,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateItSystemInput",
-        "description": "Autogenerated input type of UpdateItSystem",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -15767,7 +15767,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -15783,11 +15783,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateItSystemPayload",
-        "description": "Autogenerated return type of UpdateItSystem",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -15858,7 +15858,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdatePasswordInput",
-        "description": "Autogenerated input type of UpdatePassword",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -15893,7 +15893,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -15909,11 +15909,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdatePasswordPayload",
-        "description": "Autogenerated return type of UpdatePassword",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -15984,7 +15984,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdatePolicyInput",
-        "description": "Autogenerated input type of UpdatePolicy",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -16161,7 +16161,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -16177,11 +16177,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdatePolicyPayload",
-        "description": "Autogenerated return type of UpdatePolicy",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -16252,7 +16252,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdatePolicyCategoryInput",
-        "description": "Autogenerated input type of UpdatePolicyCategory",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -16299,7 +16299,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -16315,11 +16315,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdatePolicyCategoryPayload",
-        "description": "Autogenerated return type of UpdatePolicyCategory",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -16390,7 +16390,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdatesubPolicyReferenceInput",
-        "description": "Autogenerated input type of UpdatesubPolicyReference",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -16461,7 +16461,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -16477,11 +16477,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdatesubPolicyReferencePayload",
-        "description": "Autogenerated return type of UpdatesubPolicyReference",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -16552,7 +16552,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateReferenceInput",
-        "description": "Autogenerated input type of UpdateReference",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -16591,7 +16591,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -16607,11 +16607,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateReferencePayload",
-        "description": "Autogenerated return type of UpdateReference",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -16682,7 +16682,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateResourceInput",
-        "description": "Autogenerated input type of UpdateResource",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -16817,7 +16817,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -16833,11 +16833,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateResourcePayload",
-        "description": "Autogenerated return type of UpdateResource",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -16908,7 +16908,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateResourceRatingInput",
-        "description": "Autogenerated input type of UpdateResourceRating",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -16955,7 +16955,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -16971,11 +16971,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateResourceRatingPayload",
-        "description": "Autogenerated return type of UpdateResourceRating",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -17042,7 +17042,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateRiskInput",
-        "description": "Autogenerated input type of UpdateRisk",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -17111,7 +17111,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -17127,11 +17127,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateRiskPayload",
-        "description": "Autogenerated return type of UpdateRisk",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -17202,7 +17202,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateUserInput",
-        "description": "Autogenerated input type of UpdateUser",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -17297,7 +17297,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -17313,11 +17313,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateUserPayload",
-        "description": "Autogenerated return type of UpdateUser",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -17388,7 +17388,7 @@
       {
         "kind": "INPUT_OBJECT",
         "name": "UpdateCurrentUserPasswordInput",
-        "description": "Autogenerated input type of UpdateCurrentUserPassword",
+        "description": "",
         "fields": null,
         "inputFields": [
           {
@@ -17417,7 +17417,7 @@
           },
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "type": {
               "kind": "SCALAR",
               "name": "String",
@@ -17433,11 +17433,11 @@
       {
         "kind": "OBJECT",
         "name": "UpdateCurrentUserPasswordPayload",
-        "description": "Autogenerated return type of UpdateCurrentUserPassword",
+        "description": "",
         "fields": [
           {
             "name": "clientMutationId",
-            "description": "A unique identifier for the client performing the mutation.",
+            "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",

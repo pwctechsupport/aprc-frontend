@@ -67,7 +67,7 @@ const SubPolicyForm = ({
     }
   }
 
-  function handleChange(name: string) {
+  function handleChange(name: keyof SubPolicyFormValues) {
     return function(value: any) {
       if (value) {
         setValue(name, value.value);

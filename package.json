@@ -86,6 +86,7 @@
     "@types/styled-components": "^4.4.0",
     "@types/yup": "^0.26.26",
     "babel-plugin-styled-components": "^1.10.6",
-    "babel-plugin-ts-optchain": "^1.1.5"
+    "babel-plugin-ts-optchain": "^1.1.5",
+    "eslint": "^6.8.0"
   }
 }

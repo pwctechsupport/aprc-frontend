@@ -164,7 +164,7 @@ const UpdatePasswordForm = ({
         label="New Password"
         type="password"
         innerRef={register({ required: true })}
-        error={errors.name && errors.name.message}
+        error={errors.password?.message}
         required
       />
       <Input
@@ -172,7 +172,7 @@ const UpdatePasswordForm = ({
         label="New Password Confirmation"
         type="password"
         innerRef={register({ required: true })}
-        error={errors.name && errors.name.message}
+        error={errors.passwordConfirmation?.message}
         required
       />
       <div className="d-flex justify-content-end">

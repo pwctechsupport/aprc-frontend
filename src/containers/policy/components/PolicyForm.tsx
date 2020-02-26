@@ -37,7 +37,7 @@ const PolicyForm = ({
     setValue("description", data);
   }
 
-  function handleChange(name: string) {
+  function handleChange(name: keyof PolicyFormValues) {
     return function(value: any) {
       if (value) {
         setValue(name, value.value);

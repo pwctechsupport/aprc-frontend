@@ -49,8 +49,9 @@ const ControlForm = ({
     register({ name: "status" });
   }, [register]);
 
-  const handleSelectChange = (name: string) => ({ value }: any) =>
-    setValue(name, value);
+  const handleSelectChange = (name: keyof CreateControlFormValues) => ({
+    value
+  }: any) => setValue(name, value);
 
   const pDefVal = (value: any, options: Options) => {
     return options.find(opt => opt.value === value);
