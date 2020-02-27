@@ -127,11 +127,21 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     refetchQueries: ["risk"],
     onError: notifyGraphQLErrors
   });
-  function handleApproveRequest(id: string) {
-    approveEditMutation({ variables: { id, approve: true } });
+  async function handleApproveRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: true } });
+      notifySuccess("You Gave Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
-  function handleRejectRequest(id: string) {
-    approveEditMutation({ variables: { id, approve: false } });
+  async function handleRejectRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: false } });
+      notifySuccess("You Restrict Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
 
   if (loading) return <LoadingSpinner centered size={30} />;
@@ -220,7 +230,7 @@ const Risk = ({ match, history }: RouteComponentProps) => {
             title={`Accept request to edit?`}
             message={`Request by ${data?.risk?.requestEdit?.user?.name}`}
             className="soft red mr-2"
-            data={id}
+            data={data?.risk?.requestEdit?.id}
             onConfirm={handleApproveRequest}
             onReject={handleRejectRequest}
             actions={{ no: "Reject", yes: "Approve" }}

@@ -121,11 +121,21 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     refetchQueries: ["policy"],
     onError: notifyGraphQLErrors
   });
-  function handleApproveRequest(id: string) {
-    approveEditMutation({ variables: { id, approve: true } });
+  async function handleApproveRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: true } });
+      notifySuccess("You Gave Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
-  function handleRejectRequest(id: string) {
-    approveEditMutation({ variables: { id, approve: false } });
+  async function handleRejectRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: false } });
+      notifySuccess("You Restrict Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
 
   if (loading) return <LoadingSpinner size={30} centered />;
@@ -221,9 +231,9 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
         <Tooltip description="Accept edit request">
           <DialogButton
             title={`Accept request to edit?`}
-            message={`Request by ${data?.policyCategory?.requestEdit?.approver?.userReviewer?.name}`}
+            message={`Request by ${data?.policyCategory?.requestEdit?.user?.name}`}
             className="soft red mr-2"
-            data={id}
+            data={data?.policyCategory?.requestEdit?.id}
             onConfirm={handleApproveRequest}
             onReject={handleRejectRequest}
             actions={{ no: "Reject", yes: "Approve" }}
