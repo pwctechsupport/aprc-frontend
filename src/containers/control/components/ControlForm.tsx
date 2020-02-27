@@ -22,6 +22,7 @@ import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toLabelValue } from "../../../shared/formatter";
+import { AiFillEdit } from "react-icons/ai";
 
 const ControlForm = ({
   onSubmit,
@@ -34,7 +35,11 @@ const ControlForm = ({
   );
   const [isOpen, setIsOpen] = useState(false);
   const toogleModal = () => setIsOpen(p => !p);
-  const [selectActivity, setSelectActivity] = useState(null);
+  const closeModal = () => {
+    setIsOpen(false);
+    setSelectActivity("");
+  };
+  const [selectActivity, setSelectActivity] = useState("");
 
   const bpsQ = useBusinessProcessesQuery();
   const bpOptions = oc(bpsQ)
@@ -79,30 +84,56 @@ const ControlForm = ({
   );
 
   const submit = (values: CreateControlFormValues) => {
+    const prepare = beforeSubmit(cool)
+
     onSubmit &&
       onSubmit({
         ...values,
-        activityControlsAttributes: cool
+        activityControlsAttributes: prepare
       });
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
     // update
-    if (values.id) {
+    const id = cool.filter(c => String(c.id) === selectActivity);
+    console.log(id);
+    if (id.length > 0) {
+      console.log("update");
       setCool(cool =>
         cool.map(c => {
-          if (c.id === values.id) {
-            return values;
+          if (String(c.id) === selectActivity) {
+            console.log("Aa");
+            return {
+              ...values,
+              id: c.id
+            };
           }
           return c;
         })
       );
     } else {
       //create
-      setCool(cool => cool.concat(values));
+      console.log("create");
+      setCool(cool =>
+        cool.concat({
+          ...values,
+          id: "temp" + randomId(1000)
+        })
+      );
     }
+    setSelectActivity("");
     setIsOpen(false);
   }
+
+  const handleEdit = (id?: string | number) => {
+    setSelectActivity(String(id));
+    setIsOpen(true);
+  };
+
+  const handleDelete = (id?: string | number) => {
+    console.log("huh", id);
+    setCool(cool.filter(c => c.id !== id));
+  };
 
   const renderSubmit = () => {
     if (!isDraft) {
@@ -257,22 +288,19 @@ const ControlForm = ({
               </tr>
             </thead>
             <tbody>
-              {cool?.map(activity => (
-                <tr key={activity.id}>
+              {cool.map(activity => (
+                <tr key={"Row" + activity.id}>
                   <td>{activity.activity}</td>
                   <td>{activity.guidance}</td>
                   <td className="action">
-                    <DialogButton
-                      // onConfirm={() => handleDelete(control.id)}
-                      // loading={destroyM.loading}
-                      message={`Delete "${activity.activity}"?`}
+                    <Button
+                      onClick={() => handleEdit(activity.id)}
                       className="soft red mr-2"
                     >
-                      <FaPencilAlt className="clickable" />
-                    </DialogButton>
+                      <AiFillEdit />
+                    </Button>
                     <DialogButton
-                      // onConfirm={() => handleDelete(control.id)}
-                      // loading={destroyM.loading}
+                      onConfirm={() => handleDelete(activity.id)}
                       message={`Delete "${activity.activity}"?`}
                       className="soft red"
                     >
@@ -286,12 +314,12 @@ const ControlForm = ({
         )}
         {renderSubmit()}
       </Form>
-      <ActivityModal
-        isOpen={isOpen}
-        toogleModal={toogleModal}
-        activityDefaultValue={cool.find(c => c.id === selectActivity)}
-        onSubmit={handleActivitySubmit}
-      />
+      <Modal isOpen={isOpen} toggle={closeModal} title="Add Control Activity">
+        <ActivityModalForm
+          activityDefaultValue={cool.find(c => String(c.id) === selectActivity)}
+          onSubmit={handleActivitySubmit}
+        />
+      </Modal>
     </Fragment>
   );
 };
@@ -299,75 +327,103 @@ const ControlForm = ({
 const susah = (input: Partial<ActivityControl>): MyCoolControlActivity => {
   const output = {
     activity: input.activity,
-    guidance: input.guidance
+    guidance: input.guidance,
+    id: Number(input.id)
   };
   return output;
 };
 
-const ActivityModal = ({
-  isOpen,
-  toogleModal,
+const beforeSubmit = (input: MyCoolControlActivity[]) => {
+  const output:MyCoolControlActivity[] = input.map(data => {
+    if(String(data.id).includes("temp")){
+      const {id, ...rest} = data
+      return rest
+    } else return data
+  })
+
+  return output
+}
+
+const randomId = (max: number) => {
+  return Math.floor(Math.random() * Math.floor(max));
+};
+
+const ActivityModalForm = ({
   activityDefaultValue,
   onSubmit
 }: ActivityControlModalProps) => {
+  const [error, setError] = useState<string | null>(null);
+  const [file, setFile] = useState();
   const [activityType, setActivityType] = useState("text");
-  const { register, handleSubmit } = useForm<MyCoolControlActivity>();
+  const { register, handleSubmit } = useForm<MyCoolControlActivity>({
+    defaultValues: activityDefaultValue
+  });
 
   const handleSaveActivity = (values: MyCoolControlActivity) => {
     console.log("apa si", values);
     onSubmit(values);
   };
+
+  function handleSetFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      if (
+        file.type !==
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ) {
+        setError("File type not supported. Allowed type are: .xls, .xlsx");
+      } else {
+        setError(null);
+        setFile(file);
+      }
+    }
+  }
+
   return (
-    <Modal isOpen={isOpen} toggle={toogleModal} title="Add Control Activity">
-      <Form onSubmit={handleSubmit(handleSaveActivity)}>
+    <Form onSubmit={handleSubmit(handleSaveActivity)}>
+      <Input
+        name="activity"
+        label="Activity Control Title"
+        required
+        innerRef={register}
+      />
+      <span className="mt-2 mb-3">Activity Control Guidance</span>
+      <div className="d-flex ml-3">
+        <Label check className="d-flex align-items-center pr-4">
+          <Input
+            type="radio"
+            name="controlActivity_type"
+            value="text"
+            onChange={() => setActivityType("text")}
+            defaultChecked={activityType === "text"}
+          />{" "}
+          Free text
+        </Label>
+        <Label check className="d-flex align-items-center pl-3">
+          <Input
+            type="radio"
+            name="controlActivity_type"
+            value="attachment"
+            onChange={() => setActivityType("attachment")}
+            defaultChecked={activityType === "attachment"}
+          />{" "}
+          Attachment
+        </Label>
+      </div>
+      <div className="mt-1">
         <Input
-          name="activity"
-          label="Activity Control Title"
-          required
+          type={activityType === "text" ? "text" : "file"}
+          name="guidance"
           innerRef={register}
+          // onChange={handleSetFile}
         />
-        <span className="mt-2 mb-3">Activity Control Guidance</span>
-        <div className="d-flex ml-3">
-          <Label check className="d-flex align-items-center pr-4">
-            <Input
-              type="radio"
-              name="controlActivity_type"
-              value="text"
-              onChange={() => setActivityType("text")}
-              defaultChecked={activityType === "text"}
-            />{" "}
-            Free text
-          </Label>
-          <Label check className="d-flex align-items-center pl-3">
-            <Input
-              type="radio"
-              name="controlActivity_type"
-              value="attachment"
-              onChange={() => setActivityType("attachment")}
-              defaultChecked={activityType === "attachment"}
-            />{" "}
-            Attachment
-          </Label>
-        </div>
-        <div className="mt-1">
-          {activityType === "text" ? (
-            <Input name="guidance" innerRef={register} />
-          ) : activityType === "attachment" ? (
-            <Input
-              type="file"
-              name="guidance"
-              innerRef={register}
-              // onChange={handleSetFile}
-            />
-          ) : null}
-        </div>
-        <div>
-          <Button className="pwc" type="submit">
-            Add Activity
-          </Button>
-        </div>
-      </Form>
-    </Modal>
+      </div>
+      <div>
+        <Button className="pwc" type="submit">
+          {activityDefaultValue?.id ? "Update Activity": "Add Activity"}
+        </Button>
+      </div>
+    </Form>
   );
 };
 
@@ -450,9 +506,7 @@ type Option = {
 type Options = Option[];
 
 interface ActivityControlModalProps {
-  isOpen: boolean;
-  toogleModal: () => void;
-  activityDefaultValue?: MyCoolControlActivity | null;
+  activityDefaultValue?: MyCoolControlActivity;
   onSubmit: (Activity: MyCoolControlActivity) => void;
 }
 
