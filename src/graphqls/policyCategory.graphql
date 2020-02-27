@@ -18,13 +18,11 @@ query policyCategory($id: ID!) {
     hasEditAccess
     requestStatus
     requestEdit {
+      id
       state
-      approver {
+      user {
         id
-        userReviewer {
-          id
-          name
-        }
+        name
       }
     }
     draft {
