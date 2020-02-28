@@ -74,6 +74,7 @@ const Notification = ({ history }: RouteComponentProps) => {
     else if (type === "Control") history.push(`/control/${id}`);
     else if (type === "Risk") history.push(`/risk/${id}`);
     else if (type === "User") history.push(`/user`);
+    else if (type === "PolicyCategory") history.push(`/policy-category/${id}`);
   };
 
   const handleDelete = () => {
