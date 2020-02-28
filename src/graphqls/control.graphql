@@ -13,6 +13,8 @@ query control($id: ID!) {
       id
       activity
       guidance
+      guidanceFileName
+      guidanceResuploadUrl
     }
     hasEditAccess
     requestStatus

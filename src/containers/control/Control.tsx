@@ -35,6 +35,7 @@ import {
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import useEditState from "../../shared/hooks/useEditState";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import Table from "../../shared/components/Table";
 
 const Control = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -297,6 +298,30 @@ const Control = ({ match, history }: RouteComponentProps) => {
               ))}
           </dl>
         </Col>
+
+        {activityControls ? <Col xs={7} className="mt-2">
+        <dl>
+          <dt>Activity Controls</dt>
+        <dd>
+        <Table>
+            <thead>
+              <tr>
+                <th>Activity</th>
+                <th>Guidance</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activityControls.map(activity => (
+                <tr key={"Row" + activity.id}>
+                  <td>{activity.activity}</td>
+                  <td>{activity.guidance ? activity.guidance : activity.guidanceFileName}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+          </dd>
+          </dl>
+        </Col>: null}
 
         <Col xs={12} className="mt-3">
           <h5>Risks</h5>
