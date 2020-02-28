@@ -12,21 +12,30 @@ import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import ImportModal from "../../../shared/components/ImportModal";
-import { notifySuccess } from "../../../shared/utils/notif";
+import {
+  notifySuccess,
+  notifyGraphQLErrors
+} from "../../../shared/utils/notif";
 import { toast } from "react-toastify";
 import downloadXls from "../../../shared/utils/downloadXls";
 import DialogButton from "../../../shared/components/DialogButton";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [selected, setSelected] = useState<string[]>([]);
-  const { loading, data } = usePolicyCategoriesQuery();
+  const { loading, data } = usePolicyCategoriesQuery({
+    fetchPolicy: "network-only"
+  });
   const policyCategories = oc(data).policyCategories.collection([]);
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal(p => !p);
   const [destroy, destroyM] = useDestroyPolicyCategoriesMutation({
-    onCompleted: () => toast.success("Delete Success"),
-    onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["controls"]
+    onCompleted: () => {
+      history.push("/policy-category");
+      notifySuccess("Delete Success");
+    },
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["policyCategories"],
+    awaitRefetchQueries: true
   });
   const handleDelete = (id: string) => {
     destroy({ variables: { input: { id } } });
@@ -74,11 +83,11 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           <h4>Policy Category</h4>
           <div className="d-flex">
             <Tooltip
-              description="Export Control"
+              description="Export Policy Categories"
               subtitle={
                 selected.length
-                  ? "Export selected control"
-                  : "Select controls first"
+                  ? "Export selected policy categories"
+                  : "Select policy categories first"
               }
             >
               <Button
@@ -90,7 +99,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                 <FaFileExport />
               </Button>
             </Tooltip>
-            <Tooltip description="Import Control">
+            <Tooltip description="Import Policy Categories">
               <Button
                 color=""
                 className="soft orange mr-2"
@@ -100,8 +109,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
               </Button>
             </Tooltip>
             <ImportModal
-              title="Import Controls"
-              endpoint="/controls/import"
+              title="Import Policy Categories"
+              endpoint="/policy_categories/import"
               isOpen={modal}
               toggle={toggleImportModal}
             />
@@ -120,6 +129,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
             </th>
             <th>Category Name</th>
             <th>Related Policies</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

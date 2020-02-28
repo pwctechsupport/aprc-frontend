@@ -27,7 +27,7 @@ const PolicyCategorySideBox = () => {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          Recently Updated
+          Policy Category
           <Tooltip description="Create Policy Category">
             <Button
               tag={Link}
