@@ -40,7 +40,8 @@ const ControlForm = ({
     setSelectActivity("");
   };
   const [selectActivity, setSelectActivity] = useState("");
-
+  const [deleteActivity, setDeleteActivity] = useState<MyCoolControlActivity[]>([]);
+  
   const bpsQ = useBusinessProcessesQuery();
   const bpOptions = oc(bpsQ)
     .data.businessProcesses.collection([])
@@ -84,7 +85,7 @@ const ControlForm = ({
   );
 
   const submit = (values: CreateControlFormValues) => {
-    const prepare = beforeSubmit(cool)
+    const prepare = beforeSubmit(cool).concat(deleteActivity)
 
     onSubmit &&
       onSubmit({
@@ -132,6 +133,15 @@ const ControlForm = ({
 
   const handleDelete = (id?: string | number) => {
     console.log("huh", id);
+    const deleted = cool.find(c => String(c.id) === String(id))
+    if(String(deleted?.id).includes("temp")){}
+    else{
+      const temp = {
+        ...deleted,
+        _destroy: 1
+      }
+      setDeleteActivity(deleteActivity.concat(temp))
+    }
     setCool(cool.filter(c => c.id !== id));
   };
 
@@ -415,9 +425,10 @@ const ActivityModalForm = ({
           type={activityType === "text" ? "text" : "file"}
           name="guidance"
           innerRef={register}
-          // onChange={handleSetFile}
+          onChange={activityType === "attachment" ? handleSetFile : () => {console.log("test")}}
         />
       </div>
+      {error && <h6 className="text-red mt-2">{error}</h6>}
       <div>
         <Button className="pwc" type="submit">
           {activityDefaultValue?.id ? "Update Activity": "Add Activity"}
@@ -511,10 +522,11 @@ interface ActivityControlModalProps {
 }
 
 interface MyCoolControlActivity {
-  _destroy?: boolean;
+  _destroy?: number;
   id?: string | number;
   activity?: string | null;
   guidance?: string | null;
+  resuploadBase64?: string
 }
 
 // export interface CreateActivityControlFormValues {
