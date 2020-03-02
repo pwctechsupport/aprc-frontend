@@ -36,6 +36,7 @@ import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import useEditState from "../../shared/hooks/useEditState";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Table from "../../shared/components/Table";
+import { IoMdOpen } from "react-icons/io";
 
 const Control = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -155,6 +156,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
   const businessProcesses = data?.control?.businessProcesses || [];
   const businessProcessIds = businessProcesses.map(bp => bp.id);
   const activityControls = data?.control?.activityControls || [];
+  console.log("activity", activityControls)
 
   const renderControlAction = () => {
     if (premise === 2) {
@@ -328,7 +330,21 @@ const Control = ({ match, history }: RouteComponentProps) => {
               {activityControls.map(activity => (
                 <tr key={"Row" + activity.id}>
                   <td>{activity.activity}</td>
-                  <td>{activity.guidance ? activity.guidance : activity.guidanceFileName}</td>
+                  <td>{activity.guidance ? activity.guidance : 
+                  <div className="d-flex align-items-center ">
+                  <Button color="" className="soft orange">
+                    <a
+                      href={`http://mandalorian.rubyh.co${activity.guidanceResuploadUrl}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download={`Pwc-ActivityControl ${activity.guidanceFileName}`}
+                      className="text-orange"
+                    >
+                      <span className="mr-2">{activity.guidanceFileName}</span>
+                      <IoMdOpen />
+                    </a>
+                  </Button>
+                </div>}</td>
                 </tr>
               ))}
             </tbody>
@@ -337,7 +353,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
       </Row>
     );
   };
-
+  
   const renderControlEditable = () => {
     return (
       <ControlForm

@@ -352,10 +352,10 @@ const beforeSubmit = (input: MyCoolControlActivity[]) => {
     const {resuploadFileName, resupload, ...theRest} = data
     if(String(theRest.id).includes("temp")){
       const {id, ...rest} = theRest
-      if(resupload) return {...rest, resupload}
+      if(resupload) return {...rest, resupload, resupload_file_name: resuploadFileName}
       return rest
     } else {
-      if(resupload) return {...theRest, resupload}
+      if(resupload) return {...theRest, resupload, resupload_file_name: resuploadFileName}
       else return theRest}
   })
 
@@ -371,7 +371,6 @@ const ActivityModalForm = ({
   onSubmit
 }: ActivityControlModalProps) => {
   const [error, setError] = useState<string | null>(null);
-  const [file, setFile] = useState();
   const [activityType, setActivityType] = useState(activityDefaultValue?.resupload ? "attachment" : "text");
   const { register, handleSubmit, setValue } = useForm<MyCoolControlActivity>({
     defaultValues: activityDefaultValue
