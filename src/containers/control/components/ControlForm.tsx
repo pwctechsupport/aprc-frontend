@@ -23,6 +23,9 @@ import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toLabelValue } from "../../../shared/formatter";
 import { AiFillEdit } from "react-icons/ai";
+import {
+  toBase64
+} from "../../../shared/formatter";
 
 const ControlForm = ({
   onSubmit,
@@ -78,14 +81,13 @@ const ControlForm = ({
   const status = oc(defaultValues).status();
   const activityControls = oc(defaultValues).activityControls() || [];
 
-  // const cool: MyCoolControlActivity[] = activityControls.map(susah)
-
   const [cool, setCool] = useState<MyCoolControlActivity[]>(() =>
     activityControls.map(susah)
   );
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity)
+    console.log("mau dikirim", prepare)
 
     onSubmit &&
       onSubmit({
@@ -96,6 +98,7 @@ const ControlForm = ({
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
     // update
+    console.log("test", values)
     const id = cool.filter(c => String(c.id) === selectActivity);
     console.log(id);
     if (id.length > 0) {
@@ -113,8 +116,6 @@ const ControlForm = ({
         })
       );
     } else {
-      //create
-      console.log("create");
       setCool(cool =>
         cool.concat({
           ...values,
@@ -137,7 +138,9 @@ const ControlForm = ({
     if(String(deleted?.id).includes("temp")){}
     else{
       const temp = {
-        ...deleted,
+        id: deleted?.id,
+  activity: deleted?.activity,
+  guidance: deleted?.guidance,
         _destroy: 1
       }
       setDeleteActivity(deleteActivity.concat(temp))
@@ -301,7 +304,7 @@ const ControlForm = ({
               {cool.map(activity => (
                 <tr key={"Row" + activity.id}>
                   <td>{activity.activity}</td>
-                  <td>{activity.guidance}</td>
+                  <td>{activity.guidance ? activity.guidance : activity.resuploadFileName}</td>
                   <td className="action">
                     <Button
                       onClick={() => handleEdit(activity.id)}
@@ -338,17 +341,22 @@ const susah = (input: Partial<ActivityControl>): MyCoolControlActivity => {
   const output = {
     activity: input.activity,
     guidance: input.guidance,
-    id: Number(input.id)
+    id: Number(input.id),
+    resuploadFileName: input.guidanceFileName
   };
   return output;
 };
 
 const beforeSubmit = (input: MyCoolControlActivity[]) => {
   const output:MyCoolControlActivity[] = input.map(data => {
-    if(String(data.id).includes("temp")){
-      const {id, ...rest} = data
+    const {resuploadFileName, resupload, ...theRest} = data
+    if(String(theRest.id).includes("temp")){
+      const {id, ...rest} = theRest
+      if(resupload) return {...rest, resupload}
       return rest
-    } else return data
+    } else {
+      if(resupload) return {...theRest, resupload}
+      else return theRest}
   })
 
   return output
@@ -364,27 +372,36 @@ const ActivityModalForm = ({
 }: ActivityControlModalProps) => {
   const [error, setError] = useState<string | null>(null);
   const [file, setFile] = useState();
-  const [activityType, setActivityType] = useState("text");
-  const { register, handleSubmit } = useForm<MyCoolControlActivity>({
+  const [activityType, setActivityType] = useState(activityDefaultValue?.resupload ? "attachment" : "text");
+  const { register, handleSubmit, setValue } = useForm<MyCoolControlActivity>({
     defaultValues: activityDefaultValue
   });
+
+  useEffect(() => {
+    register({ name: "resupload", type: "custom" });
+    register({ name: "resuploadFileName" });
+  }, [register]);
 
   const handleSaveActivity = (values: MyCoolControlActivity) => {
     console.log("apa si", values);
     onSubmit(values);
   };
 
-  function handleSetFile(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleSetFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files && e.target.files[0];
     if (file) {
       if (
-        file.type !==
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        !["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(file.type) 
       ) {
-        setError("File type not supported. Allowed type are: .xls, .xlsx");
+        setError("File type not supported. Allowed type are: PDF, Excel, Word");
       } else {
         setError(null);
-        setFile(file);
+        setValue("resuploadFileName", file.name);
+        setValue(
+          "resupload",
+          String(await toBase64(file)),
+          true
+        );
       }
     }
   }
@@ -421,12 +438,15 @@ const ActivityModalForm = ({
         </Label>
       </div>
       <div className="mt-1">
-        <Input
-          type={activityType === "text" ? "text" : "file"}
+        {activityType === "text" ? <Input
+          type="text"
           name="guidance"
           innerRef={register}
-          onChange={activityType === "attachment" ? handleSetFile : () => {console.log("test")}}
-        />
+        />: <Input
+        type="file"
+        onChange={activityType === "attachment" ? handleSetFile : () => {console.log("test")}}
+      />
+        }
       </div>
       {error && <h6 className="text-red mt-2">{error}</h6>}
       <div>
@@ -526,7 +546,8 @@ interface MyCoolControlActivity {
   id?: string | number;
   activity?: string | null;
   guidance?: string | null;
-  resuploadBase64?: string
+  resupload?: string;
+  resuploadFileName?: string | null;
 }
 
 // export interface CreateActivityControlFormValues {

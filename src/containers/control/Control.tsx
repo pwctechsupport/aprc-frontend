@@ -74,6 +74,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
   const [update, updateState] = useUpdateControlMutation({
     onCompleted: () => {
       notifySuccess("Update Success");
+      setInEditMode(false)
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["control"],
@@ -86,7 +87,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
           id,
           ...values
         }
-      }
+      },
     });
   }
 
@@ -299,10 +300,23 @@ const Control = ({ match, history }: RouteComponentProps) => {
           </dl>
         </Col>
 
-        {activityControls ? <Col xs={7} className="mt-2">
-        <dl>
-          <dt>Activity Controls</dt>
-        <dd>
+        <Col xs={12} className="mt-3">
+          <h5>Risks</h5>
+          {risks.length ? (
+            risks.map(risk => <p key={risk.id}>{risk.name}</p>)
+          ) : (
+            <EmptyAttribute />
+          )}
+          <h5 className="mt-2">Business Processes</h5>
+          {businessProcesses.length ? (
+            businessProcesses.map(bp => <p key={bp.id}>{bp.name}</p>)
+          ) : (
+            <EmptyAttribute />
+          )}
+        </Col>
+
+        {activityControls.length > 0 ? <Col xs={7} className="mt-2">
+        <h5>Activity Controls</h5>
         <Table>
             <thead>
               <tr>
@@ -319,24 +333,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
               ))}
             </tbody>
           </Table>
-          </dd>
-          </dl>
         </Col>: null}
-
-        <Col xs={12} className="mt-3">
-          <h5>Risks</h5>
-          {risks.length ? (
-            risks.map(risk => <p key={risk.id}>{risk.name}</p>)
-          ) : (
-            <EmptyAttribute />
-          )}
-          <h5 className="mt-2">Business Processes</h5>
-          {businessProcesses.length ? (
-            businessProcesses.map(bp => <p key={bp.id}>{bp.name}</p>)
-          ) : (
-            <EmptyAttribute />
-          )}
-        </Col>
       </Row>
     );
   };
