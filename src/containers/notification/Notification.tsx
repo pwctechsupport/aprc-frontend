@@ -5,7 +5,6 @@ import { FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import { Container, Input } from "reactstrap";
-import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
   DestroyBulkNotificationInput,
@@ -41,12 +40,8 @@ const Notification = ({ history }: RouteComponentProps) => {
       page
     }
   });
-  const notifications = oc(data)
-    .notifications.collection([])
-    .sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+  const notifications = data?.notifications?.collection || [];
+  const totalCount = data?.notifications?.metadata?.totalCount || 0;
 
   const [destroyNotifs, destroyNotifsM] = useDestroyBulkNotificationMutation({
     onCompleted: () => {
@@ -62,7 +57,7 @@ const Notification = ({ history }: RouteComponentProps) => {
     awaitRefetchQueries: true
   });
 
-  const redirect = (type: String, id: number, notifId: String) => {
+  const redirect = (type: string, id: number, notifId: string) => {
     const readId: IsReadInput = { id: String(notifId) };
     isRead({
       variables: { input: readId }
@@ -185,7 +180,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                         type="checkbox"
                         checked={selected.includes(String(data.id))}
                         onClick={e => e.stopPropagation()}
-                        onChange={e => toggleCheck(String(data.id))}
+                        onChange={() => toggleCheck(String(data.id))}
                       />
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
@@ -195,11 +190,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {`Request to ${dataType} ${data.originatorType} : ${data.title}`}
                     </td>
                     <td className={data.isRead ? "" : "text-orang text-bold"}>
-                      {formatDate(data.createdAt, {
-                        year: "numeric",
-                        month: "2-digit",
-                        day: "numeric"
-                      })}
+                      {formatDate(data.createdAt)}
                     </td>
                   </tr>
                 ) : null;
@@ -209,7 +200,7 @@ const Notification = ({ history }: RouteComponentProps) => {
         </div>
 
         <Pagination
-          totalCount={oc(data).notifications.metadata.totalCount()}
+          totalCount={totalCount}
           perPage={limit}
           onPageChange={handlePageChange}
         />
