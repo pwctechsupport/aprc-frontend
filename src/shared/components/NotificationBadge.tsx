@@ -6,11 +6,13 @@ const NotificationBadge = ({
 }: {
   count?: number | string | null;
 }) => {
+  if (!count) return null;
+  const displayCount = count > 99 ? "99+" : String(count);
   if (count) {
     return (
       <NotifWrapper>
         <NotifBadge>
-          <NotifNumber>{count}</NotifNumber>
+          <NotifNumber count={displayCount}>{displayCount}</NotifNumber>
         </NotifBadge>
       </NotifWrapper>
     );
@@ -26,7 +28,7 @@ const NotifWrapper = styled.div`
 
 const NotifBadge = styled.div`
   position: absolute;
-  width: 19px;
+  width: 22px;
   height: 19px;
   left: 12px;
   top: -10px;
@@ -37,13 +39,13 @@ const NotifBadge = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 2px;
 `;
 
-const NotifNumber = styled.div`
+const NotifNumber = styled.div<{ count: string }>`
   font-style: normal;
   font-weight: 600;
-  font-size: 11px;
+  font-size: ${p => (p.count.length >= 3 ? "9" : "11")}px;
   line-height: 12px;
-
   color: #ffffff;
 `;
