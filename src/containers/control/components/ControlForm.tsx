@@ -1,7 +1,7 @@
 import { capitalCase } from "capital-case";
 import React, { Fragment, useEffect, useState } from "react";
 import useForm from "react-hook-form";
-import { FaPencilAlt, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { Col, Form, FormGroup, Input as BsInput, Label, Row } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
@@ -23,9 +23,7 @@ import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toLabelValue } from "../../../shared/formatter";
 import { AiFillEdit } from "react-icons/ai";
-import {
-  toBase64
-} from "../../../shared/formatter";
+import { toBase64 } from "../../../shared/formatter";
 
 const ControlForm = ({
   onSubmit,
@@ -43,8 +41,10 @@ const ControlForm = ({
     setSelectActivity("");
   };
   const [selectActivity, setSelectActivity] = useState("");
-  const [deleteActivity, setDeleteActivity] = useState<MyCoolControlActivity[]>([]);
-  
+  const [deleteActivity, setDeleteActivity] = useState<MyCoolControlActivity[]>(
+    []
+  );
+
   const bpsQ = useBusinessProcessesQuery();
   const bpOptions = oc(bpsQ)
     .data.businessProcesses.collection([])
@@ -86,8 +86,8 @@ const ControlForm = ({
   );
 
   const submit = (values: CreateControlFormValues) => {
-    const prepare = beforeSubmit(cool).concat(deleteActivity)
-    console.log("mau dikirim", prepare)
+    const prepare = beforeSubmit(cool).concat(deleteActivity);
+    console.log("mau dikirim", prepare);
 
     onSubmit &&
       onSubmit({
@@ -98,7 +98,7 @@ const ControlForm = ({
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
     // update
-    console.log("test", values)
+    console.log("test", values);
     const id = cool.filter(c => String(c.id) === selectActivity);
     console.log(id);
     if (id.length > 0) {
@@ -134,16 +134,16 @@ const ControlForm = ({
 
   const handleDelete = (id?: string | number) => {
     console.log("huh", id);
-    const deleted = cool.find(c => String(c.id) === String(id))
-    if(String(deleted?.id).includes("temp")){}
-    else{
+    const deleted = cool.find(c => String(c.id) === String(id));
+    if (String(deleted?.id).includes("temp")) {
+    } else {
       const temp = {
         id: deleted?.id,
-  activity: deleted?.activity,
-  guidance: deleted?.guidance,
+        activity: deleted?.activity,
+        guidance: deleted?.guidance,
         _destroy: 1
-      }
-      setDeleteActivity(deleteActivity.concat(temp))
+      };
+      setDeleteActivity(deleteActivity.concat(temp));
     }
     setCool(cool.filter(c => c.id !== id));
   };
@@ -304,7 +304,11 @@ const ControlForm = ({
               {cool.map(activity => (
                 <tr key={"Row" + activity.id}>
                   <td>{activity.activity}</td>
-                  <td>{activity.guidance ? activity.guidance : activity.resuploadFileName}</td>
+                  <td>
+                    {activity.guidance
+                      ? activity.guidance
+                      : activity.resuploadFileName}
+                  </td>
                   <td className="action">
                     <Button
                       onClick={() => handleEdit(activity.id)}
@@ -348,19 +352,26 @@ const susah = (input: Partial<ActivityControl>): MyCoolControlActivity => {
 };
 
 const beforeSubmit = (input: MyCoolControlActivity[]) => {
-  const output:MyCoolControlActivity[] = input.map(data => {
-    const {resuploadFileName, resupload, ...theRest} = data
-    if(String(theRest.id).includes("temp")){
-      const {id, ...rest} = theRest
-      if(resupload) return {...rest, resupload, resupload_file_name: resuploadFileName}
-      return rest
+  const output: MyCoolControlActivity[] = input.map(data => {
+    const { resuploadFileName, resupload, ...theRest } = data;
+    if (String(theRest.id).includes("temp")) {
+      const { id, ...rest } = theRest;
+      if (resupload)
+        return { ...rest, resupload, resupload_file_name: resuploadFileName };
+      return rest;
     } else {
-      if(resupload) return {...theRest, resupload, resupload_file_name: resuploadFileName}
-      else return theRest}
-  })
+      if (resupload)
+        return {
+          ...theRest,
+          resupload,
+          resupload_file_name: resuploadFileName
+        };
+      else return theRest;
+    }
+  });
 
-  return output
-}
+  return output;
+};
 
 const randomId = (max: number) => {
   return Math.floor(Math.random() * Math.floor(max));
@@ -371,7 +382,9 @@ const ActivityModalForm = ({
   onSubmit
 }: ActivityControlModalProps) => {
   const [error, setError] = useState<string | null>(null);
-  const [activityType, setActivityType] = useState(activityDefaultValue?.resupload ? "attachment" : "text");
+  const [activityType, setActivityType] = useState(
+    activityDefaultValue?.resupload ? "attachment" : "text"
+  );
   const { register, handleSubmit, setValue } = useForm<MyCoolControlActivity>({
     defaultValues: activityDefaultValue
   });
@@ -390,17 +403,17 @@ const ActivityModalForm = ({
     const file = e.target.files && e.target.files[0];
     if (file) {
       if (
-        !["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"].includes(file.type) 
+        ![
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/pdf",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        ].includes(file.type)
       ) {
         setError("File type not supported. Allowed type are: PDF, Excel, Word");
       } else {
         setError(null);
         setValue("resuploadFileName", file.name);
-        setValue(
-          "resupload",
-          String(await toBase64(file)),
-          true
-        );
+        setValue("resupload", String(await toBase64(file)), true);
       }
     }
   }
@@ -437,20 +450,25 @@ const ActivityModalForm = ({
         </Label>
       </div>
       <div className="mt-1">
-        {activityType === "text" ? <Input
-          type="text"
-          name="guidance"
-          innerRef={register}
-        />: <Input
-        type="file"
-        onChange={activityType === "attachment" ? handleSetFile : () => {console.log("test")}}
-      />
-        }
+        {activityType === "text" ? (
+          <Input type="text" name="guidance" innerRef={register} />
+        ) : (
+          <Input
+            type="file"
+            onChange={
+              activityType === "attachment"
+                ? handleSetFile
+                : () => {
+                    console.log("test");
+                  }
+            }
+          />
+        )}
       </div>
       {error && <h6 className="text-red mt-2">{error}</h6>}
       <div>
         <Button className="pwc" type="submit">
-          {activityDefaultValue?.id ? "Update Activity": "Add Activity"}
+          {activityDefaultValue?.id ? "Update Activity" : "Add Activity"}
         </Button>
       </div>
     </Form>

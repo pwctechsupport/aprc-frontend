@@ -43,7 +43,6 @@ import {
   previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
 import ControlForm, {
-  CreateControlFormDefaultValues,
   CreateControlFormValues,
   ControlFormValues
 } from "../control/components/ControlForm";
