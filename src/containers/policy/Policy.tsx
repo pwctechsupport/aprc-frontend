@@ -17,7 +17,6 @@ import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { RouteComponentProps, Route } from "react-router";
 import { Link, NavLink } from "react-router-dom";
-import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
   CreateResourceInput,
@@ -31,7 +30,6 @@ import {
   useCreateRequestEditMutation,
   useApproveRequestEditMutation
 } from "../../generated/graphql";
-// import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import DialogButton from "../../shared/components/DialogButton";
@@ -51,7 +49,8 @@ import { formatPolicyChart } from "../../shared/utils/formatPolicy";
 import {
   notifyGraphQLErrors,
   notifySuccess,
-  notifyInfo
+  notifyInfo,
+  notifyError
 } from "../../shared/utils/notif";
 import ResourceForm, {
   ResourceFormValues
@@ -115,10 +114,10 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const [destroyMain] = useDestroyPolicyMutation({
     onCompleted: () => {
       const url = isAdminView ? "/policy-admin" : "/policy";
-      toast.success("Delete Success");
+      notifySuccess("Delete Success");
       history.push(url);
     },
-    onError: () => toast.error("Delete Failed"),
+    onError: notifyGraphQLErrors,
     refetchQueries: ["policies", "policyTree"],
     awaitRefetchQueries: true
   });
@@ -128,8 +127,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
 
   // Delete child policy
   const [destroy] = useDestroyPolicyMutation({
-    onCompleted: () => toast.success("Delete Success"),
-    onError: () => toast.error("Delete Failed"),
+    onCompleted: () => notifySuccess("Delete Success"),
+    onError: notifyGraphQLErrors,
     refetchQueries: ["policy"],
     awaitRefetchQueries: true
   });
@@ -139,8 +138,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
 
   // Bookmark policy
   const [addBookmark] = useCreateBookmarkPolicyMutation({
-    onCompleted: _ => toast.success("Added to bookmark"),
-    onError: _ => toast.error("Failed to add bookmark"),
+    onCompleted: _ => notifySuccess("Added to bookmark"),
+    onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
     refetchQueries: ["bookmarkPolicies"]
   });
@@ -148,10 +147,10 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   // Update Policy / Sub-Policy
   const [update, updateState] = useUpdatePolicyMutation({
     onCompleted: () => {
-      toast.success("Update Success");
+      notifySuccess("Update Success");
       toggleEditMode();
     },
-    onError: () => toast.error("Update Failed"),
+    onError: notifyGraphQLErrors,
     refetchQueries: ["policies", "policyTree", "policy"],
     awaitRefetchQueries: true
   });
@@ -188,7 +187,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   // Add Resource for current policy
   const [createResource, createResourceM] = useCreateResourceMutation({
     onCompleted: _ => {
-      toast.success("Resource Added");
+      notifySuccess("Resource Added");
       toggleAddResourceModal();
     },
     onError: notifyGraphQLErrors,
@@ -635,7 +634,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               onClick: () =>
                 previewPdf(`prints/${id}.pdf`, {
                   onStart: () =>
-                    toast.info("Downloading file for preview", {
+                    notifySuccess("Downloading file for preview", {
                       autoClose: 10000
                     })
                 })
@@ -649,9 +648,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               onClick: () =>
                 downloadPdf(`prints/${id}.pdf`, {
                   fileName: title,
-                  onStart: () => toast.info("Download Started"),
-                  onError: () => toast.error("Download Failed"),
-                  onCompleted: () => toast.success("Download Success")
+                  onStart: () => notifyInfo("Download Started"),
+                  onError: () => notifyError("Download Failed"),
+                  onCompleted: () => notifySuccess("Download Success")
                 })
             },
             {
