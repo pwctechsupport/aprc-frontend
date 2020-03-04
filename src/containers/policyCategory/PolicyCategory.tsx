@@ -150,26 +150,49 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   };
 
   const renderPolicyCategoryAction = () => {
-    if (premise === 2) {
+    if (premise === 6) {
       return (
-        <div className="d-flex">
+        <Tooltip description="Accept edit request">
           <DialogButton
-            color="danger"
-            className="mr-2"
-            onConfirm={() => review({ publish: false })}
-            loading={reviewPolicyCategoryM.loading}
+            title={`Accept request to edit?`}
+            message={`Request by ${data?.policyCategory?.requestEdit?.user?.name}`}
+            className="soft red mr-2"
+            data={data?.policyCategory?.requestEdit?.id}
+            onConfirm={handleApproveRequest}
+            onReject={handleRejectRequest}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
           >
-            Reject
+            <FaExclamationCircle />
           </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premise === 5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
+        >
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+    if (premise === 4) {
+      return (
+        <Tooltip description="Request edit access">
           <DialogButton
-            color="primary"
-            className="pwc"
-            onConfirm={() => review({ publish: true })}
-            loading={reviewPolicyCategoryM.loading}
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutation()}
+            loading={requestEditMutationInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatus === "requested"}
           >
-            Approve
+            <AiOutlineEdit />
           </DialogButton>
-        </div>
+        </Tooltip>
       );
     }
     if (premise === 3) {
@@ -199,49 +222,26 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
         </div>
       );
     }
-    if (premise === 4) {
+    if (premise === 2) {
       return (
-        <Tooltip description="Request edit access">
+        <div className="d-flex">
           <DialogButton
-            title="Request access to edit?"
-            onConfirm={() => requestEditMutation()}
-            loading={requestEditMutationInfo.loading}
-            className="soft red mr-2"
-            disabled={requestStatus === "requested"}
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewPolicyCategoryM.loading}
           >
-            <AiOutlineEdit />
+            Reject
           </DialogButton>
-        </Tooltip>
-      );
-    }
-    if (premise === 5) {
-      return (
-        <Tooltip
-          description="Waiting approval"
-          subtitle="You will be able to edit as soon as Admin gave you permission"
-        >
-          <Button disabled className="soft orange mr-2">
-            <AiOutlineClockCircle />
-          </Button>
-        </Tooltip>
-      );
-    }
-    if (premise === 6) {
-      return (
-        <Tooltip description="Accept edit request">
           <DialogButton
-            title={`Accept request to edit?`}
-            message={`Request by ${data?.policyCategory?.requestEdit?.user?.name}`}
-            className="soft red mr-2"
-            data={data?.policyCategory?.requestEdit?.id}
-            onConfirm={handleApproveRequest}
-            onReject={handleRejectRequest}
-            actions={{ no: "Reject", yes: "Approve" }}
-            loading={approveEditMutationResult.loading}
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewPolicyCategoryM.loading}
           >
-            <FaExclamationCircle />
+            Approve
           </DialogButton>
-        </Tooltip>
+        </div>
       );
     }
     return null;

@@ -75,7 +75,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
   const [update, updateState] = useUpdateControlMutation({
     onCompleted: () => {
       notifySuccess("Update Success");
-      setInEditMode(false)
+      setInEditMode(false);
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["control"],
@@ -88,7 +88,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
           id,
           ...values
         }
-      },
+      }
     });
   }
 
@@ -156,29 +156,51 @@ const Control = ({ match, history }: RouteComponentProps) => {
   const businessProcesses = data?.control?.businessProcesses || [];
   const businessProcessIds = businessProcesses.map(bp => bp.id);
   const activityControls = data?.control?.activityControls || [];
-  console.log("activity", activityControls)
 
   const renderControlAction = () => {
-    if (premise === 2) {
+    if (premise === 6) {
       return (
-        <div className="d-flex">
+        <Tooltip description="Accept edit request">
           <DialogButton
-            color="danger"
-            className="mr-2"
-            onConfirm={() => review({ publish: false })}
-            loading={reviewMutationInfo.loading}
+            title={`Accept request to edit?`}
+            message={`Request by ${data?.control?.requestEdit?.user?.name}`}
+            className="soft red mr-2"
+            data={data?.control?.requestEdit?.id}
+            onConfirm={handleApproveRequest}
+            onReject={handleRejectRequest}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
           >
-            Reject
+            <FaExclamationCircle />
           </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premise === 5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
+        >
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+    if (premise === 4) {
+      return (
+        <Tooltip description="Request edit access">
           <DialogButton
-            color="primary"
-            className="pwc"
-            onConfirm={() => review({ publish: true })}
-            loading={reviewMutationInfo.loading}
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutation()}
+            loading={requestEditMutationInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatus === "requested"}
           >
-            Approve
+            <AiOutlineEdit />
           </DialogButton>
-        </div>
+        </Tooltip>
       );
     }
     if (premise === 3) {
@@ -208,49 +230,26 @@ const Control = ({ match, history }: RouteComponentProps) => {
         </div>
       );
     }
-    if (premise === 4) {
+    if (premise === 2) {
       return (
-        <Tooltip description="Request edit access">
+        <div className="d-flex">
           <DialogButton
-            title="Request access to edit?"
-            onConfirm={() => requestEditMutation()}
-            loading={requestEditMutationInfo.loading}
-            className="soft red mr-2"
-            disabled={requestStatus === "requested"}
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewMutationInfo.loading}
           >
-            <AiOutlineEdit />
+            Reject
           </DialogButton>
-        </Tooltip>
-      );
-    }
-    if (premise === 5) {
-      return (
-        <Tooltip
-          description="Waiting approval"
-          subtitle="You will be able to edit as soon as Admin gave you permission"
-        >
-          <Button disabled className="soft orange mr-2">
-            <AiOutlineClockCircle />
-          </Button>
-        </Tooltip>
-      );
-    }
-    if (premise === 6) {
-      return (
-        <Tooltip description="Accept edit request">
           <DialogButton
-            title={`Accept request to edit?`}
-            message={`Request by ${data?.control?.requestEdit?.user?.name}`}
-            className="soft red mr-2"
-            data={data?.control?.requestEdit?.id}
-            onConfirm={handleApproveRequest}
-            onReject={handleRejectRequest}
-            actions={{ no: "Reject", yes: "Approve" }}
-            loading={approveEditMutationResult.loading}
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewMutationInfo.loading}
           >
-            <FaExclamationCircle />
+            Approve
           </DialogButton>
-        </Tooltip>
+        </div>
       );
     }
     return null;
@@ -317,43 +316,52 @@ const Control = ({ match, history }: RouteComponentProps) => {
           )}
         </Col>
 
-        {activityControls.length > 0 ? <Col xs={7} className="mt-2">
-        <h5>Activity Controls</h5>
-        <Table>
-            <thead>
-              <tr>
-                <th>Activity</th>
-                <th>Guidance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {activityControls.map(activity => (
-                <tr key={"Row" + activity.id}>
-                  <td>{activity.activity}</td>
-                  <td>{activity.guidance ? activity.guidance : 
-                  <div className="d-flex align-items-center ">
-                  <Button color="" className="soft orange">
-                    <a
-                      href={`http://mandalorian.rubyh.co${activity.guidanceResuploadUrl}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      download={`Pwc-ActivityControl ${activity.guidanceFileName}`}
-                      className="text-orange"
-                    >
-                      <span className="mr-2">{activity.guidanceFileName}</span>
-                      <IoMdOpen />
-                    </a>
-                  </Button>
-                </div>}</td>
+        {activityControls.length > 0 ? (
+          <Col xs={7} className="mt-2">
+            <h5>Activity Controls</h5>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Activity</th>
+                  <th>Guidance</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </Col>: null}
+              </thead>
+              <tbody>
+                {activityControls.map(activity => (
+                  <tr key={"Row" + activity.id}>
+                    <td>{activity.activity}</td>
+                    <td>
+                      {activity.guidance ? (
+                        activity.guidance
+                      ) : (
+                        <div className="d-flex align-items-center ">
+                          <Button color="" className="soft orange">
+                            <a
+                              href={`http://mandalorian.rubyh.co${activity.guidanceResuploadUrl}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              download={`Pwc-ActivityControl ${activity.guidanceFileName}`}
+                              className="text-orange"
+                            >
+                              <span className="mr-2">
+                                {activity.guidanceFileName}
+                              </span>
+                              <IoMdOpen />
+                            </a>
+                          </Button>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Col>
+        ) : null}
       </Row>
     );
   };
-  
+
   const renderControlEditable = () => {
     return (
       <ControlForm
