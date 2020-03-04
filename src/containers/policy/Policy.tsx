@@ -160,9 +160,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
         input: {
           id,
           title: values.title,
-          policyCategoryId: values.policyCategoryId,
           description: values.description,
-          status: values.status
+          policyCategoryId: values.policyCategoryId
         }
       }
     });
@@ -172,9 +171,10 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       variables: {
         input: {
           id,
+          title: values.title,
+          description: values.description,
           resourceIds: values.resourceIds,
           businessProcessIds: values.businessProcessIds,
-          description: values.description,
           referenceIds: values.referenceIds,
           controlIds: values.controlIds,
           riskIds: values.riskIds,
@@ -567,8 +567,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             defaultValues={{
               title,
               policyCategoryId,
-              description,
-              status: status as Status
+              description
             }}
             submitting={updateState.loading}
           />

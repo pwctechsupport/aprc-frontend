@@ -25,8 +25,7 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
         input: {
           title: values.title,
           policyCategoryId: values.policyCategoryId,
-          description: values.description,
-          status: values.status
+          description: values.description
         }
       }
     });
@@ -45,7 +44,10 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
                 ["/policy-admin", "Policies"],
                 ["/policy-admin/create", "Create Policy"]
               ]
-            : [["/policy", "Policies"], ["/policy/create", "Create Policy"]]
+            : [
+                ["/policy", "Policies"],
+                ["/policy/create", "Create Policy"]
+              ]
         }
       />
       <HeaderWithBackButton heading="Create Policy" />

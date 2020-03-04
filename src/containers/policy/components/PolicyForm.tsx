@@ -1,16 +1,15 @@
-import { capitalCase } from "capital-case";
 import React, { useEffect } from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
-import { Status, usePolicyCategoriesQuery } from "../../../generated/graphql";
+import { usePolicyCategoriesQuery } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
+import { toLabelValue } from "../../../shared/formatter";
 
 const PolicyForm = ({
   onSubmit,
@@ -49,7 +48,6 @@ const PolicyForm = ({
     onSubmit && onSubmit(values);
   }
 
-  const status = oc(defaultValues).status();
   const options = oc(policyCategoriesState)
     .data.policyCategories.collection([])
     .map(toLabelValue);
@@ -86,15 +84,6 @@ const PolicyForm = ({
           )}
           error={errors.policyCategoryId && errors.policyCategoryId.message}
         />
-        <Select
-          name="status"
-          label="Status"
-          options={statuses}
-          onChange={handleChange("status")}
-          error={errors.status && errors.status.message}
-          defaultValue={prepDefaultValue(status, statuses) || Status.Draft}
-          isDisabled={!isAdmin}
-        />
         <div className="d-flex justify-content-end mt-3">
           <DialogButton
             color="primary"
@@ -111,15 +100,6 @@ const PolicyForm = ({
 };
 
 export default PolicyForm;
-
-// ---------------------------------------------------
-// Construct Options
-// ---------------------------------------------------
-
-const statuses = Object.entries(Status).map(([label, value]) => ({
-  label: capitalCase(value),
-  value
-}));
 
 // ---------------------------------------------------
 // Validation
@@ -139,7 +119,6 @@ export interface PolicyFormValues {
   title: string;
   description: string;
   policyCategoryId: string;
-  status: Status;
 }
 
 export interface PolicyFormProps {
