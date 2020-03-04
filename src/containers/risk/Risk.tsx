@@ -10,7 +10,6 @@ import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import {
   LevelOfRisk,
-  Status,
   TypeOfRisk,
   useApproveRequestEditMutation,
   useCreateRequestEditMutation,
@@ -25,13 +24,17 @@ import DialogButton from "../../shared/components/DialogButton";
 import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Tooltip from "../../shared/components/Tooltip";
+import { toLabelValue } from "../../shared/formatter";
 import useEditState from "../../shared/hooks/useEditState";
 import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess
 } from "../../shared/utils/notif";
-import RiskForm, { RiskFormValues } from "./components/RiskForm";
+import RiskForm, {
+  RiskFormDefaultValues,
+  RiskFormValues
+} from "./components/RiskForm";
 
 const Risk = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -58,12 +61,11 @@ const Risk = ({ match, history }: RouteComponentProps) => {
 
   const name = data?.risk?.name || "";
 
-  const defaultValues: RiskFormValues = {
+  const defaultValues: RiskFormDefaultValues = {
     name,
-    businessProcessId: data?.risk?.businessProcessId || "",
+    businessProcesses: data?.risk?.businessProcesses?.map(toLabelValue) || [],
     levelOfRisk: data?.risk?.levelOfRisk as LevelOfRisk,
-    typeOfRisk: data?.risk?.typeOfRisk as TypeOfRisk,
-    status: data?.risk?.status as Status
+    typeOfRisk: data?.risk?.typeOfRisk as TypeOfRisk
   };
 
   // Update handlers
@@ -147,26 +149,49 @@ const Risk = ({ match, history }: RouteComponentProps) => {
   if (loading) return <LoadingSpinner centered size={30} />;
 
   const renderRiskAction = () => {
-    if (premise === 2) {
+    if (premise === 6) {
       return (
-        <div className="d-flex">
+        <Tooltip description="Accept edit request">
           <DialogButton
-            color="danger"
-            className="mr-2"
-            onConfirm={() => review({ publish: false })}
-            loading={reviewMutationInfo.loading}
+            title={`Accept request to edit?`}
+            message={`Request by ${data?.risk?.requestEdit?.user?.name}`}
+            className="soft red mr-2"
+            data={data?.risk?.requestEdit?.id}
+            onConfirm={handleApproveRequest}
+            onReject={handleRejectRequest}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
           >
-            Reject
+            <FaExclamationCircle />
           </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premise === 5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
+        >
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+    if (premise === 4) {
+      return (
+        <Tooltip description="Request edit access">
           <DialogButton
-            color="primary"
-            className="pwc"
-            onConfirm={() => review({ publish: true })}
-            loading={reviewMutationInfo.loading}
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutation()}
+            loading={requestEditMutationInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatus === "requested"}
           >
-            Approve
+            <AiOutlineEdit />
           </DialogButton>
-        </div>
+        </Tooltip>
       );
     }
     if (premise === 3) {
@@ -196,49 +221,26 @@ const Risk = ({ match, history }: RouteComponentProps) => {
         </div>
       );
     }
-    if (premise === 4) {
+    if (premise === 2) {
       return (
-        <Tooltip description="Request edit access">
+        <div className="d-flex">
           <DialogButton
-            title="Request access to edit?"
-            onConfirm={() => requestEditMutation()}
-            loading={requestEditMutationInfo.loading}
-            className="soft red mr-2"
-            disabled={requestStatus === "requested"}
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewMutationInfo.loading}
           >
-            <AiOutlineEdit />
+            Reject
           </DialogButton>
-        </Tooltip>
-      );
-    }
-    if (premise === 5) {
-      return (
-        <Tooltip
-          description="Waiting approval"
-          subtitle="You will be able to edit as soon as Admin gave you permission"
-        >
-          <Button disabled className="soft orange mr-2">
-            <AiOutlineClockCircle />
-          </Button>
-        </Tooltip>
-      );
-    }
-    if (premise === 6) {
-      return (
-        <Tooltip description="Accept edit request">
           <DialogButton
-            title={`Accept request to edit?`}
-            message={`Request by ${data?.risk?.requestEdit?.user?.name}`}
-            className="soft red mr-2"
-            data={data?.risk?.requestEdit?.id}
-            onConfirm={handleApproveRequest}
-            onReject={handleRejectRequest}
-            actions={{ no: "Reject", yes: "Approve" }}
-            loading={approveEditMutationResult.loading}
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewMutationInfo.loading}
           >
-            <FaExclamationCircle />
+            Approve
           </DialogButton>
-        </Tooltip>
+        </div>
       );
     }
     return null;
@@ -255,7 +257,10 @@ const Risk = ({ match, history }: RouteComponentProps) => {
         label: "Type of Risk",
         value: capitalCase(data?.risk?.typeOfRisk || "")
       },
-      { label: "Business Process", value: data?.risk?.businessProcess?.name },
+      {
+        label: "Business Process",
+        value: data?.risk?.businessProcesses?.join(", ")
+      },
       {
         label: "Status",
         value: capitalCase(data?.risk?.status || "")

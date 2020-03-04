@@ -50,6 +50,7 @@ import RiskForm, {
   RiskFormDefaultValues,
   RiskFormValues
 } from "../risk/components/RiskForm";
+import { toLabelValue } from "../../shared/formatter";
 // import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
@@ -257,8 +258,9 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                             editRisk({
                               id: risk.id,
                               name: oc(risk).name(""),
-                              status: oc(risk).status(Status.Draft) as Status,
-                              businessProcessId: oc(risk).businessProcessId(""),
+                              businessProcesses: oc(risk)
+                                .businessProcesses([])
+                                .map(toLabelValue),
                               levelOfRisk: oc(
                                 risk
                               ).levelOfRisk() as LevelOfRisk,

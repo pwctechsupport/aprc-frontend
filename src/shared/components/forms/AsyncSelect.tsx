@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import AsyncReactSelect, { Props } from "react-select/async";
 import classnames from "classnames";
 import { FormGroup, Label, Col } from "reactstrap";
+import { ToLabelValueOutput } from "../../formatter";
 
 export default function AsyncSelect({
   name,
@@ -52,7 +53,7 @@ interface AsyncSelectProps extends Props<Option> {
   register: Function;
   setValue: Function;
   label?: string;
-  defaultValue?: any;
+  defaultValue?: ToLabelValueOutput[];
   row?: boolean;
   required?: boolean;
   formText?: string;

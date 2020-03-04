@@ -2,22 +2,24 @@ import { capitalCase } from "capital-case";
 import React, { useEffect } from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
-import { oc } from "ts-optchain";
 import * as yup from "yup";
 import {
+  BusinessProcessesDocument,
   LevelOfRisk,
-  Status,
-  TypeOfRisk,
-  useBusinessProcessesQuery
+  TypeOfRisk
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
+import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
-import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
+import {
+  prepDefaultValue,
+  toLabelValue,
+  ToLabelValueOutput
+} from "../../../shared/formatter";
+import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 
 const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
-  const bussinessProcessesQ = useBusinessProcessesQuery();
   const { register, setValue, errors, handleSubmit } = useForm<RiskFormValues>({
     validationSchema,
     defaultValues
@@ -25,8 +27,6 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
 
   useEffect(() => {
     register({ name: "levelOfRisk", required: true });
-    register({ name: "status", required: true });
-    register({ name: "businessProcessId" });
     register({ name: "typeOfRisk" });
   }, [register]);
 
@@ -38,17 +38,26 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
     onSubmit && onSubmit(values);
   };
 
-  const name = oc(defaultValues).name();
-  const levelOfRisk = oc(defaultValues).levelOfRisk();
-  const status = oc(defaultValues).status();
-  const businessProcessId = oc(defaultValues).businessProcessId();
-  const typeOfRisk = oc(defaultValues).typeOfRisk();
+  const name = defaultValues?.name;
+  const levelOfRisk = defaultValues?.levelOfRisk;
+  const businessProcesses = defaultValues?.businessProcesses || [];
+  const typeOfRisk = defaultValues?.typeOfRisk;
 
-  if (bussinessProcessesQ.loading) return <LoadingSpinner size={30} centered />;
-
-  const businessProcesses = oc(bussinessProcessesQ)
-    .data.businessProcesses.collection([])
-    .map(toLabelValue);
+  const getBusinessProcesses = useLazyQueryReturnPromise(
+    BusinessProcessesDocument
+  );
+  async function handleGetBps(
+    name_cont: string = ""
+  ): Promise<Array<ToLabelValueOutput>> {
+    try {
+      const { data } = await getBusinessProcesses({
+        filter: { name_cont }
+      });
+      return data?.businessProcesses?.collection?.map(toLabelValue);
+    } catch (error) {
+      return [];
+    }
+  }
 
   return (
     <div>
@@ -58,6 +67,17 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
           label="Name"
           innerRef={register({ required: true })}
           error={errors.name && errors.name.message}
+        />
+        <AsyncSelect
+          name="businessProcessIds"
+          label="Business Process"
+          register={register}
+          setValue={setValue}
+          cacheOptions
+          loadOptions={handleGetBps}
+          defaultOptions
+          defaultValue={businessProcesses}
+          isMulti
         />
         <Select
           name="levelOfRisk"
@@ -70,29 +90,11 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
           )}
         />
         <Select
-          name="status"
-          label="Status"
-          options={statuses}
-          onChange={handleChange("status")}
-          error={errors.status && errors.status.message}
-          defaultValue={statuses.find(option => option.value === status)}
-        />
-        <Select
-          name="businessProcessId"
-          label="Business Process"
-          options={businessProcesses}
-          onChange={handleChange("businessProcessId")}
-          error={errors.businessProcessId && errors.businessProcessId.message}
-          defaultValue={businessProcesses.find(
-            option => option.value === businessProcessId
-          )}
-        />
-        <Select
           name="typeOfRisk"
           label={capitalCase("typeOfRisk")}
           options={typeOfRisks}
           onChange={handleChange("typeOfRisk")}
-          error={oc(errors).typeOfRisk.message("")}
+          error={errors?.typeOfRisk?.message || ""}
           defaultValue={prepDefaultValue(typeOfRisk, typeOfRisks)}
         />
         <div className="d-flex justify-content-end">
@@ -123,11 +125,6 @@ const levelOfRisks = Object.entries(LevelOfRisk).map(([label, value]) => ({
   value
 }));
 
-const statuses = Object.entries(Status).map(([label, value]) => ({
-  label: capitalCase(value),
-  value
-}));
-
 const typeOfRisks = Object.entries(TypeOfRisk).map(([label, value]) => ({
   label: capitalCase(value),
   value
@@ -139,8 +136,8 @@ const typeOfRisks = Object.entries(TypeOfRisk).map(([label, value]) => ({
 
 const validationSchema = yup.object().shape({
   name: yup.string().required(),
-  levelOfRisk: yup.string().required(),
-  status: yup.string().required(),
+  businessProcessIds: yup.array().of(yup.string()),
+  levelOfRisk: yup.string(),
   typeOfRisk: yup.string()
 });
 
@@ -150,13 +147,17 @@ const validationSchema = yup.object().shape({
 
 export interface RiskFormValues {
   name: string;
+  businessProcessIds?: string[];
   levelOfRisk: LevelOfRisk;
-  status: Status;
-  businessProcessId?: string;
   typeOfRisk?: TypeOfRisk;
 }
 
-export type RiskFormDefaultValues = Partial<RiskFormValues>;
+export interface RiskFormDefaultValues {
+  name?: string;
+  businessProcesses?: ToLabelValueOutput[];
+  levelOfRisk?: LevelOfRisk;
+  typeOfRisk?: TypeOfRisk;
+}
 
 export interface RiskFormProps {
   onCancel?: () => void;

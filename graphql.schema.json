@@ -3197,25 +3197,21 @@
         "description": "",
         "fields": [
           {
-            "name": "businessProcess",
+            "name": "businessProcesses",
             "description": "",
             "args": [],
             "type": {
-              "kind": "OBJECT",
-              "name": "BusinessProcess",
-              "ofType": null
-            },
-            "isDeprecated": false,
-            "deprecationReason": null
-          },
-          {
-            "name": "businessProcessId",
-            "description": "",
-            "args": [],
-            "type": {
-              "kind": "SCALAR",
-              "name": "ID",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "BusinessProcess",
+                  "ofType": null
+                }
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -11703,13 +11699,9 @@
             "name": "levelOfRisk",
             "description": "",
             "type": {
-              "kind": "NON_NULL",
-              "name": null,
-              "ofType": {
-                "kind": "ENUM",
-                "name": "LevelOfRisk",
-                "ofType": null
-              }
+              "kind": "ENUM",
+              "name": "LevelOfRisk",
+              "ofType": null
             },
             "defaultValue": null
           },
@@ -11734,12 +11726,20 @@
             "defaultValue": null
           },
           {
-            "name": "businessProcessId",
+            "name": "businessProcessIds",
             "description": "",
             "type": {
-              "kind": "SCALAR",
-              "name": "ID",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null
           },
@@ -17308,12 +17308,20 @@
             "defaultValue": null
           },
           {
-            "name": "businessProcessId",
+            "name": "businessProcessIds",
             "description": "",
             "type": {
-              "kind": "SCALAR",
-              "name": "ID",
-              "ofType": null
+              "kind": "LIST",
+              "name": null,
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              }
             },
             "defaultValue": null
           },
