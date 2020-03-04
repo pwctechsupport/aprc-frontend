@@ -62,7 +62,7 @@ import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Modal from "../../shared/components/Modal";
 import Tooltip from "../../shared/components/Tooltip";
-import { Nav, NavItem, TabContent, TabPane } from "reactstrap";
+import { Nav, NavItem, TabContent, TabPane, Badge } from "reactstrap";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import {
   AiFillEdit,
@@ -258,9 +258,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
   const ancestry = oc(data).policy.ancestry("");
-  const referenceIds = oc(data)
-    .policy.references([])
-    .map(item => item.id);
+  const references = data?.policy?.references || [];
+  const referenceIds = references.map(item => item.id);
   const status = oc(data).policy.status("");
   const resources = oc(data).policy.resources([]);
   const controls = oc(data).policy.controls([]);
@@ -361,6 +360,14 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                   __html: description
                 }}
               />
+
+              <div className="d-flex">
+                <h6>
+                  {references.map(reference => (
+                    <Badge className="mx-1">{reference.name}</Badge>
+                  ))}
+                </h6>
+              </div>
 
               <div ref={riskRef}>
                 <Collapsible
