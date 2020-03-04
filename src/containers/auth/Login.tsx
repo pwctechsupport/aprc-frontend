@@ -1,31 +1,29 @@
 import React from "react";
+import Helmet from "react-helmet";
 import useForm from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { RouteComponentProps } from "react-router";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
+import { oc } from "ts-optchain";
 import pwcLogo from "../../assets/images/pwc-logo.png";
 import { useLoginMutation } from "../../generated/graphql";
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
-import { oc } from "ts-optchain";
-import { Link } from "react-router-dom";
-import Helmet from "react-helmet";
+import { notifySuccess } from "../../shared/utils/notif";
 
 const Login = ({ history }: RouteComponentProps) => {
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
-  const [login, { loading }] = useLoginMutation({
-    onCompleted: res => {},
-    onError: () => {}
-  });
+  const [login, { loading }] = useLoginMutation();
   const onSubmit = async (data: any) => {
     try {
       const res = await login({ variables: data });
       if (!oc(res).data.login()) {
         throw new Error("Error");
       }
-      toast.success("Welcome");
+      notifySuccess("Welcome");
       dispatch(
         authorize(
           {
@@ -67,7 +65,7 @@ const Login = ({ history }: RouteComponentProps) => {
           placeholder="Enter email address"
           required
           ref={register({ required: true })}
-        />{" "}
+        />
         <br />
         <br />
         <Label>Password</Label>

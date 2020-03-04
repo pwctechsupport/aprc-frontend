@@ -58,7 +58,8 @@ const NewNavbar = () => {
   }
 
   const unreadCount =
-    useNotificationsCountQuery().data?.notifications?.metadata.totalCount || 0;
+    useNotificationsCountQuery({ fetchPolicy: "network-only" }).data
+      ?.notifications?.metadata.totalCount || 0;
 
   return (
     <div>

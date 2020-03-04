@@ -49,7 +49,7 @@ const Notification = ({ history }: RouteComponentProps) => {
       onDeleteComplete();
     },
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["notifications"],
+    refetchQueries: ["notifications", "notificationsCount"],
     awaitRefetchQueries: true
   });
   const [isRead] = useIsReadMutation({
