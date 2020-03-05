@@ -233,8 +233,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   }
 
   const [reviewPolicy, reviewPolicyM] = useReviewPolicyDraftMutation({
-    refetchQueries: ["policy"],
-    onError: notifyGraphQLErrors
+    refetchQueries: ["policy"]
   });
 
   async function review({ publish }: { publish: boolean }) {
@@ -247,8 +246,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   }
 
   const draft = oc(data).policy.draft.objectResult();
-  let title: string = oc(data).policy.title("");
-  title = draft ? `[Draft] ${title}` : title;
+  const title: string = oc(data).policy.title("");
   const description = draft
     ? get(data, "policy.draft.objectResult.description", "")
     : oc(data).policy.description("");
@@ -801,7 +799,14 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
         <title>{title} - Policy - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="d-flex justify-content-between">
-        <HeaderWithBackButton heading={title} />
+        <HeaderWithBackButton flex>
+          {title}
+          {draft && (
+            <span className="ml-2">
+              <Badge>Draft</Badge>
+            </span>
+          )}
+        </HeaderWithBackButton>
         {renderGeneralAction()}
       </div>
 
