@@ -94,7 +94,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   const { loading, data } = usePolicyQuery({
     variables: { id },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
+    pollInterval: 30000
   });
 
   const isAdminView = location.pathname.split("/")[1] === "policy-admin";
@@ -221,21 +222,28 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     approveEditMutation,
     approveEditMutationResult
   ] = useApproveRequestEditMutation({
-    refetchQueries: ["policy"],
-    onError: notifyGraphQLErrors
+    refetchQueries: ["policy", "policyTree"],
+    awaitRefetchQueries: true
   });
-  function handleApproveRequest(id: string) {
-    approveEditMutation({ variables: { id, approve: true } });
+  async function handleApproveRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: true } });
+      notifySuccess("You Gave Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
-
-  function handleRejectRequest(id: string) {
-    approveEditMutation({ variables: { id, approve: false } });
+  async function handleRejectRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: false } });
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
   }
 
   const [reviewPolicy, reviewPolicyM] = useReviewPolicyDraftMutation({
-    refetchQueries: ["policy"]
+    refetchQueries: ["policy", "policyTree"]
   });
-
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewPolicy({ variables: { id, publish } });
@@ -799,14 +807,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
         <title>{title} - Policy - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="d-flex justify-content-between">
-        <HeaderWithBackButton flex>
-          {title}
-          {draft && (
-            <span className="ml-2">
-              <Badge>Draft</Badge>
-            </span>
-          )}
-        </HeaderWithBackButton>
+        <HeaderWithBackButton draft={!!draft}>{title}</HeaderWithBackButton>
         {renderGeneralAction()}
       </div>
 

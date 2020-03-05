@@ -1,32 +1,27 @@
 import React from "react";
 import Helmet from "react-helmet";
 import { RouteComponentProps } from "react-router";
-import { toast } from "react-toastify";
-import { oc } from "ts-optchain";
 import { useCreatePolicyMutation } from "../../generated/graphql";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
-import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 
 const CreatePolicy = ({ history, location }: RouteComponentProps) => {
   const [createPolicy, { loading }] = useCreatePolicyMutation({
     onCompleted: res => {
-      toast.success("Create Success");
-      const id = oc(res).createPolicy.policy.id("");
+      notifySuccess("Create Success");
+      const id = res.createPolicy?.policy?.id || "";
       history.replace(`/policy/${id}`);
     },
-    onError: () => toast.error("Create Failed"),
-    refetchQueries: ["policies"],
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["policyTree"],
     awaitRefetchQueries: true
   });
   function handleSubmit(values: PolicyFormValues) {
     createPolicy({
       variables: {
-        input: {
-          title: values.title,
-          policyCategoryId: values.policyCategoryId,
-          description: values.description
-        }
+        input: values
       }
     });
   }
