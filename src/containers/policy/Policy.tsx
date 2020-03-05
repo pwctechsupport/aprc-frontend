@@ -369,7 +369,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               <div className="d-flex">
                 <h6>
                   {references.map(reference => (
-                    <Badge className="mx-1">{reference.name}</Badge>
+                    <Badge key={reference.id} className="mx-1">
+                      {reference.name}
+                    </Badge>
                   ))}
                 </h6>
               </div>
