@@ -1,30 +1,32 @@
 import React from "react";
 import styled from "styled-components";
+import { Badge } from "reactstrap";
 
-function HeaderWithBackButton({
-  heading = "",
-  children,
-  flex
-}: HeaderWithBackButtonProps) {
+function Header({ heading = "", children, draft }: Header) {
   return (
-    <Heading className="text-orange" flex={flex}>
+    <Heading className="text-orange">
       {heading || children}
+      {draft && (
+        <span className="ml-2">
+          <Badge>Draft</Badge>
+        </span>
+      )}
     </Heading>
   );
 }
 
-export default HeaderWithBackButton;
+export default Header;
 
-interface HeaderWithBackButtonProps {
+interface Header {
   heading?: string;
   children?: React.ReactNode;
-  flex?: boolean;
+  draft?: boolean;
 }
 
-const Heading = styled.div<{ flex?: boolean }>`
+const Heading = styled.div`
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 20px;
-  display: ${p => (p.flex ? "flex" : "block")};
+  display: flex;
   align-items: center;
 `;
