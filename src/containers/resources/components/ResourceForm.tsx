@@ -5,7 +5,7 @@ import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
 import {
-  Category,
+  // Category,
   PoliciesDocument,
   useResourceFormMasterQuery
 } from "../../../generated/graphql";
@@ -33,10 +33,10 @@ const ResourceForm = ({
 
   const { data, ...mastersQ } = useResourceFormMasterQuery();
   const masters = {
-    policyCategories: Object.entries(Category).map(p => ({
-      label: capitalCase(p[1]),
-      value: p[1]
-    })),
+    // policyCategories: Object.entries(Category).map(p => ({
+    //   label: capitalCase(p[1]),
+    //   value: p[1]
+    // })),
     policies: oc(data)
       .policies.collection([])
       .map(p => ({ ...p, value: String(p.id), label: String(p.title) })),
@@ -61,7 +61,7 @@ const ResourceForm = ({
     register({ name: "resuploadFileName" });
   }, [register]);
 
-  watch("policyId", category === Category.Flowchart ? "" : undefined);
+  // watch("policyId", category === Category.Flowchart ? "" : undefined);
 
   function handleChangeSelect(name: keyof ResourceFormValues) {
     return function(e: any) {
@@ -69,16 +69,16 @@ const ResourceForm = ({
     };
   }
 
-  function handleChangeCategory(e: any) {
-    if (e.value && e.value === Category.Flowchart) {
-      setValue("policyId", "", true);
-      setValue("controlId", "", true);
-    } else if (e.value && e.value !== Category.Flowchart) {
-      setValue("businessProcessId", "", true);
-    }
+  // function handleChangeCategory(e: any) {
+  //   if (e.value && e.value === Category.Flowchart) {
+  //     setValue("policyId", "", true);
+  //     setValue("controlId", "", true);
+  //   } else if (e.value && e.value !== Category.Flowchart) {
+  //     setValue("businessProcessId", "", true);
+  //   }
 
-    if (e) setValue("category", e.value);
-  }
+  //   if (e) setValue("category", e.value);
+  // }
 
   async function handleChangeFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -131,18 +131,18 @@ const ResourceForm = ({
         innerRef={register({ required: true })}
         error={errors.name && errors.name.message}
       />
-      <Select
+      {/* <Select
         name="category"
         label="Category"
-        options={masters.policyCategories}
+        // options={masters.policyCategories}
         defaultValue={
           defaultValues &&
           masters.policyCategories.find(c => c.value === defaultValues.category)
         }
         onChange={handleChangeCategory}
         error={oc(errors).category.message()}
-      />
-      {category !== Category.Flowchart && (
+      /> */}
+      {category ? (
         <Fragment>
           {/* <FormSelect
             isMulti
@@ -185,8 +185,7 @@ const ResourceForm = ({
             error={oc(errors).controlId.message()}
           />
         </Fragment>
-      )}
-      {category === Category.Flowchart && (
+      ) : (
         <Select
           name="businessProcessId"
           label="Related sub-business Process"
@@ -223,10 +222,7 @@ export default ResourceForm;
 
 const validationSchema = yup.object().shape({
   name: yup.string().required(),
-  category: yup
-    .string()
-    .oneOf(Object.values(Category))
-    .required()
+  category: yup.string().required()
 });
 
 interface ResourceFormProps {
@@ -237,7 +233,7 @@ interface ResourceFormProps {
 
 export interface ResourceFormValues {
   name: string;
-  category: Category;
+  category: string;
   policyId: string;
   policyIds: string[];
   controlId: string;
@@ -249,7 +245,7 @@ export interface ResourceFormValues {
 
 export interface ResourceFormDefaultValues {
   name?: string;
-  category?: Category;
+  category?: string;
   policyId?: string;
   policy?: Array<{
     label: string;

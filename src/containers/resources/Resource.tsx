@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  Category,
+  // Category,
   UpdateResourceInput,
   useDestroyResourceMutation,
   useResourceQuery,
@@ -77,7 +77,7 @@ const Resource = ({ match }: RouteComponentProps) => {
   }
   const defaultValues: ResourceFormDefaultValues = {
     name,
-    category: oc(data).resource.category(Category.References) as Category,
+    category: oc(data).resource.category(""),
     businessProcessId: oc(data).resource.businessProcess.id(""),
     controlId: oc(data)
       .resource.controls([])
