@@ -2,11 +2,12 @@ import classnames from "classnames";
 import React, { useState } from "react";
 import { FaCaretRight } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { Collapse, Input } from "reactstrap";
+import { Collapse } from "reactstrap";
 import styled, { css } from "styled-components";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { useBusinessProcessTreeQuery } from "../../generated/graphql";
+import { SideBoxSearch } from "../../shared/components/SideBox";
 
 const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
   const id = oc(location)
@@ -15,38 +16,7 @@ const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
 
-  return (
-    <div className="side-box">
-      <div className="side-box__searchbar mb-2">
-        <Input
-          value={search}
-          placeholder="Search Risk & Control..."
-          onChange={e => setSearch(e.target.value)}
-          className="orange"
-        />
-      </div>
-      {searchQuery && (
-        <div
-          className="clickable mx-3 text-right text-small text-italic"
-          onClick={() => setSearch("")}
-        >
-          Clear Search
-        </div>
-      )}
-      <div className="pb-3">
-        <BusinessProcessTree activeId={id} search={searchQuery} />
-      </div>
-    </div>
-  );
-};
-
-export default RiskAndControlSideBox;
-
-const BusinessProcessTree = ({
-  activeId,
-  search
-}: BusinessProcessTreeProps) => {
-  const { data } = useBusinessProcessTreeQuery({
+  const { data, loading } = useBusinessProcessTreeQuery({
     variables: {
       filter: { ...(!search && { ancestry_null: true }), name_cont: search },
       isTree: !search
@@ -55,27 +25,43 @@ const BusinessProcessTree = ({
 
   const businessProcesses = oc(data).businessProcesses.collection([]);
 
-  if (businessProcesses.length === 0) {
-    return <div className="text-center p-2">Business Process not found</div>;
-  }
-
+  // if (businessProcesses.length === 0) {
+  //   return <div className="text-center p-2">Business Process not found</div>;
+  // }
   return (
-    <div>
-      {businessProcesses.map(businessProcess => {
-        return (
-          <BusinessProcessBranch
-            key={businessProcess.id}
-            id={businessProcess.id}
-            activeId={activeId}
-            name={businessProcess.name}
-            children={businessProcess.children}
-            level={0}
-          />
-        );
-      })}
+    <div className="side-box">
+      <div className="d-flex justify-content-between mx-3 mt-4 mb-3">
+        <h4 className="text-orange">{"Risk & Control"}</h4>
+      </div>
+
+      <SideBoxSearch
+        search={search}
+        setSearch={setSearch}
+        loading={loading}
+        placeholder="Search Risk & Control..."
+      />
+
+      <div className="pb-3">
+        <div>
+          {businessProcesses.map(businessProcess => {
+            return (
+              <BusinessProcessBranch
+                key={businessProcess.id}
+                id={businessProcess.id}
+                activeId={id}
+                name={businessProcess.name}
+                children={businessProcess.children}
+                level={0}
+              />
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };
+
+export default RiskAndControlSideBox;
 
 const BusinessProcessBranch = ({
   id,
