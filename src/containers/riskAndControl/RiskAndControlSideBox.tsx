@@ -128,11 +128,6 @@ const Icon = styled(FaCaretRight)<{ open: boolean }>`
     `};
 `;
 
-interface BusinessProcessTreeProps {
-  activeId: string | number | undefined;
-  search: string | null | undefined;
-}
-
 interface BusinessBranchProps {
   id: string | number;
   activeId?: string | number | undefined;
