@@ -51,6 +51,7 @@ import RiskForm, {
   RiskFormValues
 } from "../risk/components/RiskForm";
 import { toLabelValue } from "../../shared/formatter";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 // import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
@@ -204,12 +205,12 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
 
   return (
     <div>
-      {/* <BreadCrumb
+      <BreadCrumb
         crumbs={[
-          ['/risk-and-control', 'Risk and Controls'],
-          ['/risk-and-control/' + id, name],
+          ["/risk-and-control", "Risk and Controls"],
+          ["/risk-and-control/" + id, name]
         ]}
-      /> */}
+      />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={name} />
       </div>
