@@ -822,7 +822,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       >
         <ResourceForm
           defaultValues={{
-            policy: [{ value: id, label: title }],
+            policies: [{ value: id, label: title }],
             policyIds: [id]
           }}
           onSubmit={handleCreateResource}

@@ -1,4 +1,17 @@
-# Write your query or mutation here
+fragment risk on Risk {
+  id
+  name
+  levelOfRisk
+  typeOfRisk
+  createdAt
+  updatedAt
+  status
+  businessProcesses {
+    id
+    name
+  }
+}
+
 query risks($filter: BaseScalar = {}, $limit: Int) {
   risks(filter: $filter, limit: $limit) {
     collection {
@@ -23,23 +36,11 @@ query risk($id: ID!) {
     draft {
       id
       objectResult {
-        __typename
+        ... on Risk {
+          ...risk
+        }
       }
     }
-  }
-}
-
-fragment risk on Risk {
-  id
-  name
-  levelOfRisk
-  typeOfRisk
-  createdAt
-  updatedAt
-  status
-  businessProcesses {
-    id
-    name
   }
 }
 

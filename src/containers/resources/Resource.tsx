@@ -25,6 +25,7 @@ import ResourceForm, {
   ResourceFormDefaultValues,
   ResourceFormValues
 } from "./components/ResourceForm";
+import { toLabelValue } from "../../shared/formatter";
 
 const Resource = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -79,10 +80,7 @@ const Resource = ({ match }: RouteComponentProps) => {
     name,
     category: oc(data).resource.category(""),
     businessProcessId: oc(data).resource.businessProcess.id(""),
-    controlId: oc(data)
-      .resource.controls([])
-      .map(p => p.id)
-      .pop() as string,
+    controls: data?.resource?.controls?.map(toLabelValue) || [],
     policyIds: oc(data)
       .resource.policies([])
       .map(p => p.id),

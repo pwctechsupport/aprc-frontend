@@ -1,13 +1,17 @@
-import { capitalCase } from "capital-case";
 import React, { Fragment, useEffect } from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
 import {
+  EnumListsDocument,
   // Category,
   PoliciesDocument,
-  useResourceFormMasterQuery
+  useResourceFormMasterQuery,
+  ControlsDocument,
+  ControlsQuery,
+  PoliciesQuery,
+  EnumListsQuery
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
@@ -15,11 +19,14 @@ import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import {
+  Suggestions,
+  Suggestion,
   toBase64,
-  toLabelValue,
-  ToLabelValueOutput
+  toLabelValue
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import ApolloSelect from "../../../shared/components/forms/ApolloSelect";
+import { DocumentNode } from "graphql";
 
 const ResourceForm = ({
   defaultValues,
@@ -29,17 +36,9 @@ const ResourceForm = ({
   const { register, setValue, handleSubmit, errors, watch } = useForm<
     ResourceFormValues
   >({ defaultValues, validationSchema });
-  const category = watch("category");
 
   const { data, ...mastersQ } = useResourceFormMasterQuery();
   const masters = {
-    // policyCategories: Object.entries(Category).map(p => ({
-    //   label: capitalCase(p[1]),
-    //   value: p[1]
-    // })),
-    policies: oc(data)
-      .policies.collection([])
-      .map(p => ({ ...p, value: String(p.id), label: String(p.title) })),
     controls: oc(data)
       .controls.collection([])
       .map(p => ({
@@ -53,32 +52,17 @@ const ResourceForm = ({
   };
 
   useEffect(() => {
-    register({ name: "category", required: true, type: "custom" });
-    register({ name: "policyId", required: true, type: "custom" });
     register({ name: "controlId", required: true, type: "custom" });
     register({ name: "businessProcessId", required: true, type: "custom" });
     register({ name: "resuploadBase64", type: "custom" });
     register({ name: "resuploadFileName" });
   }, [register]);
 
-  // watch("policyId", category === Category.Flowchart ? "" : undefined);
-
   function handleChangeSelect(name: keyof ResourceFormValues) {
     return function(e: any) {
       if (e) setValue(name, e.value, true);
     };
   }
-
-  // function handleChangeCategory(e: any) {
-  //   if (e.value && e.value === Category.Flowchart) {
-  //     setValue("policyId", "", true);
-  //     setValue("controlId", "", true);
-  //   } else if (e.value && e.value !== Category.Flowchart) {
-  //     setValue("businessProcessId", "", true);
-  //   }
-
-  //   if (e) setValue("category", e.value);
-  // }
 
   async function handleChangeFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -92,24 +76,45 @@ const ResourceForm = ({
   }
 
   function submit(data: ResourceFormValues) {
-    onSubmit && onSubmit(data);
+    console.log("values:", data);
+    // onSubmit && onSubmit(data);
   }
 
-  const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
-  async function handleGetPolicies(
-    title_cont: string = ""
-  ): Promise<Array<ToLabelValueOutput>> {
-    try {
-      const { data } = await getPolicies({
-        filter: { title_cont }
-      });
-      return oc(data)
-        .policies.collection([])
-        .map(toLabelValue);
-    } catch (error) {
-      return [];
-    }
-  }
+  // const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
+  // async function handleGetPolicies(
+  //   title_cont: string = ""
+  // ): Promise<Suggestions> {
+  //   try {
+  //     const { data } = await getPolicies({
+  //       filter: { title_cont }
+  //     });
+  //     return oc(data)
+  //       .policies.collection([])
+  //       .map(toLabelValue);
+  //   } catch (error) {
+  //     return [];
+  //   }
+  // }
+
+  // const getCategories = useLazyQueryReturnPromise(EnumListsDocument);
+  // async function handleGetCategories(
+  //   name_cont: string = ""
+  // ): Promise<Suggestions> {
+  //   try {
+  //     const { data } = await getCategories({
+  //       filter: { name_cont, category_type_eq: "Category" }
+  //     });
+  //     const options = data?.enumLists?.collection?.map(toLabelValue) || [];
+  //     console.log("options: ", options);
+  //     return options;
+  //   } catch (error) {
+  //     return [];
+  //   }
+  // }
+
+  const handleGetCategories = useLoadCategories();
+  const handleGetPolicies = useLoadPolicies();
+  const handleGetControls = useLoadControls();
 
   if (mastersQ.loading) {
     return (
@@ -119,9 +124,10 @@ const ResourceForm = ({
     );
   }
 
+  const selectedCategory = watch("category", "");
+  console.log("selectedCategory:", selectedCategory);
+
   const name = oc(defaultValues).name("");
-  const policyIds = oc(defaultValues).policyIds([]);
-  const policy = oc(defaultValues).policy([]);
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -131,61 +137,16 @@ const ResourceForm = ({
         innerRef={register({ required: true })}
         error={errors.name && errors.name.message}
       />
-      {/* <Select
+      <AsyncSelect
         name="category"
         label="Category"
-        // options={masters.policyCategories}
-        defaultValue={
-          defaultValues &&
-          masters.policyCategories.find(c => c.value === defaultValues.category)
-        }
-        onChange={handleChangeCategory}
-        error={oc(errors).category.message()}
-      /> */}
-      {category ? (
-        <Fragment>
-          {/* <FormSelect
-            isMulti
-            name="policyIds"
-            label="Related Policies"
-            isLoading={mastersQ.loading}
-            loading={mastersQ.loading}
-            register={register}
-            setValue={setValue}
-            options={masters.policies}
-            defaultValue={masters.policies.filter(res =>
-              policyIds.includes(res.value)
-            )}
-          /> */}
-          <AsyncSelect
-            name="policyIds"
-            label="Related Policies"
-            register={register}
-            setValue={setValue}
-            cacheOptions
-            loadOptions={handleGetPolicies}
-            defaultOptions
-            defaultValue={
-              policy.length
-                ? policy
-                : masters.policies.filter(res => policyIds.includes(res.value))
-            }
-            isMulti
-            onInputChange={handleChangeSelect("policyIds")}
-          />
-          <Select
-            name="controlId"
-            label="Related Control"
-            options={masters.controls}
-            defaultValue={
-              defaultValues &&
-              masters.controls.find(c => c.value === defaultValues.controlId)
-            }
-            onChange={handleChangeSelect("controlId")}
-            error={oc(errors).controlId.message()}
-          />
-        </Fragment>
-      ) : (
+        register={register}
+        setValue={setValue}
+        cacheOptions
+        loadOptions={handleGetCategories}
+        defaultOptions
+      />
+      {selectedCategory === "Flowchart" ? (
         <Select
           name="businessProcessId"
           label="Related sub-business Process"
@@ -199,6 +160,42 @@ const ResourceForm = ({
           onChange={handleChangeSelect("businessProcessId")}
           error={oc(errors).businessProcessId.message()}
         />
+      ) : (
+        <Fragment>
+          <AsyncSelect
+            name="policyIds"
+            label="Related Policies"
+            register={register}
+            setValue={setValue}
+            cacheOptions
+            loadOptions={handleGetPolicies}
+            defaultOptions
+            defaultValue={defaultValues?.policies || []}
+            isMulti
+          />
+          <AsyncSelect
+            name="controlId"
+            label="Related Control"
+            register={register}
+            setValue={setValue}
+            cacheOptions
+            loadOptions={handleGetControls}
+            defaultOptions
+            defaultValue={defaultValues?.controls || []}
+            isMulti
+          />
+          {/* <Select
+            name="controlId"
+            label="Related Control"
+            options={masters.controls}
+            defaultValue={
+              defaultValues &&
+              masters.controls.find(c => c.value === defaultValues.controlId)
+            }
+            onChange={handleChangeSelect("controlId")}
+            error={oc(errors).controlId.message()}
+          /> */}
+        </Fragment>
       )}
       <Input type="file" label="Upload" onChange={handleChangeFile} />
 
@@ -220,10 +217,18 @@ const ResourceForm = ({
 
 export default ResourceForm;
 
+// ==========================================
+// Form Validation
+// ==========================================
+
 const validationSchema = yup.object().shape({
   name: yup.string().required(),
   category: yup.string().required()
 });
+
+// ==========================================
+// Type Definitions
+// ==========================================
 
 interface ResourceFormProps {
   defaultValues?: ResourceFormDefaultValues;
@@ -234,10 +239,9 @@ interface ResourceFormProps {
 export interface ResourceFormValues {
   name: string;
   category: string;
-  policyId: string;
   policyIds: string[];
   controlId: string;
-  businessProcessId: string;
+  businessProcessId?: string;
   resuploadBase64?: any;
   resuploadFileName?: string;
   resuploadUrl?: string;
@@ -246,15 +250,65 @@ export interface ResourceFormValues {
 export interface ResourceFormDefaultValues {
   name?: string;
   category?: string;
-  policyId?: string;
-  policy?: Array<{
-    label: string;
-    value: string;
-  }>;
+  policies?: Suggestions;
+  controls?: Suggestions;
   policyIds?: string[];
-  controlId?: string;
+  // controlId?: Suggestion;
   businessProcessId?: string;
   resuploadBase64?: any;
   resuploadFileName?: string;
   resuploadUrl?: string;
+}
+
+// ==========================================
+// Custom Hooks
+// ==========================================
+
+function useLoadCategories() {
+  const query = useLazyQueryReturnPromise<EnumListsQuery>(EnumListsDocument);
+  async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
+    try {
+      const { data } = await query({
+        filter: { name_cont, category_type_eq: "Category" }
+      });
+      return data.enumLists?.collection.map(toLabelValue) || [];
+    } catch (error) {
+      return [];
+    }
+  }
+  return getSuggestions;
+}
+
+function useLoadPolicies() {
+  const query = useLazyQueryReturnPromise<PoliciesQuery>(PoliciesDocument);
+  async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
+    try {
+      const { data } = await query({
+        filter: { title_cont }
+      });
+      return oc(data)
+        .policies.collection([])
+        .map(toLabelValue);
+    } catch (error) {
+      return [];
+    }
+  }
+  return getSuggestions;
+}
+
+function useLoadControls() {
+  const query = useLazyQueryReturnPromise<ControlsQuery>(ControlsDocument);
+  async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
+    try {
+      const { data } = await query({
+        filter: { title_cont }
+      });
+      return oc(data)
+        .controls.collection([])
+        .map(toLabelValue);
+    } catch (error) {
+      return [];
+    }
+  }
+  return getSuggestions;
 }

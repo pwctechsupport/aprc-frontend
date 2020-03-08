@@ -384,7 +384,7 @@
             ],
             "type": {
               "kind": "OBJECT",
-              "name": "TagCollection",
+              "name": "EnumListCollection",
               "ofType": null
             },
             "isDeprecated": false,
@@ -6601,7 +6601,7 @@
       },
       {
         "kind": "OBJECT",
-        "name": "TagCollection",
+        "name": "EnumListCollection",
         "description": "",
         "fields": [
           {
@@ -6619,7 +6619,7 @@
                   "name": null,
                   "ofType": {
                     "kind": "OBJECT",
-                    "name": "Tag",
+                    "name": "EnumList",
                     "ofType": null
                   }
                 }
@@ -7403,6 +7403,57 @@
                   "ofType": {
                     "kind": "OBJECT",
                     "name": "Role",
+                    "ofType": null
+                  }
+                }
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "metadata",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "CollectionMetadata",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "TagCollection",
+        "description": "",
+        "fields": [
+          {
+            "name": "collection",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "OBJECT",
+                    "name": "Tag",
                     "ofType": null
                   }
                 }
