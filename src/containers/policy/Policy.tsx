@@ -68,6 +68,7 @@ import {
   AiOutlineEdit,
   AiOutlineClockCircle
 } from "react-icons/ai";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -298,6 +299,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       }),
     []
   );
+  // Breadcrumb
 
   if (loading) return <LoadingSpinner centered size={30} />;
 
@@ -808,6 +810,12 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       <Helmet>
         <title>{title} - Policy - PricewaterhouseCoopers</title>
       </Helmet>
+      <BreadCrumb
+        crumbs={[
+          ["/policy", "Policies"],
+          ["/policy/" + id, title]
+        ]}
+      />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton draft={!!draft}>{title}</HeaderWithBackButton>
         {renderGeneralAction()}
