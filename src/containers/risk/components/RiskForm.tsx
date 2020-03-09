@@ -14,8 +14,8 @@ import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
 import {
   prepDefaultValue,
-  toLabelValue,
-  ToLabelValueOutput
+  Suggestions,
+  toLabelValue
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 
@@ -46,9 +46,7 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
   const getBusinessProcesses = useLazyQueryReturnPromise(
     BusinessProcessesDocument
   );
-  async function handleGetBps(
-    name_cont: string = ""
-  ): Promise<Array<ToLabelValueOutput>> {
+  async function handleGetBps(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await getBusinessProcesses({
         filter: { name_cont }
@@ -154,7 +152,7 @@ export interface RiskFormValues {
 
 export interface RiskFormDefaultValues {
   name?: string;
-  businessProcesses?: ToLabelValueOutput[];
+  businessProcesses?: Suggestions;
   levelOfRisk?: LevelOfRisk;
   typeOfRisk?: TypeOfRisk;
 }

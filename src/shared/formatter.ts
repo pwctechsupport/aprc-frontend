@@ -34,33 +34,19 @@ export const date = (
 
 export const toLabelValue = ({
   id,
+  code,
   name,
   title
 }: ToLabelValueInput): ToLabelValueOutput => {
   return {
-    label: name || title || "",
-    value: id
+    label: code || name || title || "",
+    value: id || code || ""
   };
 };
 
-interface ToLabelValueInput {
-  id: string;
-  name?: string | null;
-  title?: string | null;
-}
-export interface ToLabelValueOutput {
-  label: string;
-  value: string;
-}
-
-export const prepDefaultValue = (value: any, options: Options) => {
+export const prepDefaultValue = (value: any, options: Suggestions) => {
   return options.find(opt => opt.value === value);
 };
-
-type Options = Array<{
-  label: string;
-  value: string;
-}>;
 
 export const toBase64 = (file: File) =>
   new Promise((resolve, reject) => {
@@ -70,3 +56,25 @@ export const toBase64 = (file: File) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = error => reject(error);
   });
+
+// ==========================================
+// Type Definitions
+// ==========================================
+
+interface ToLabelValueInput {
+  id?: string;
+  code?: string | null;
+  name?: string | null;
+  title?: string | null;
+}
+export interface ToLabelValueOutput {
+  label: string;
+  value: string;
+}
+
+export type Suggestions = Array<Suggestion>;
+
+export interface Suggestion {
+  label: string;
+  value: string;
+}

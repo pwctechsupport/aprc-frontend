@@ -23,13 +23,13 @@ const CreateResource = ({ history }: RouteComponentProps) => {
 
   function handleSubmit(data: ResourceFormValues) {
     const input: CreateResourceInput = {
-      category: data.category,
-      name: data.name,
+      category: data.category?.value || "",
+      name: data.name || "",
       resuploadBase64: data.resuploadBase64,
       resuploadFileName: data.resuploadFileName,
-      policyIds: data.policyId ? [data.policyId] : [],
-      controlIds: data.controlId ? [data.controlId] : [],
-      businessProcessId: data.businessProcessId
+      policyIds: data.policyIds?.map(a => a.value),
+      controlIds: data.controlIds?.map(a => a.value),
+      businessProcessId: data.businessProcessId?.value
     };
 
     createResource({ variables: { input } });

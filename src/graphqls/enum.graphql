@@ -1,0 +1,14 @@
+query enumLists($filter: BaseScalar = {}, $page: Int, $limit: Int) {
+  enumLists(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      code
+      name
+      categoryType
+    }
+    metadata {
+      totalCount
+    }
+  }
+}
+
+# { category_type_eq: "Category" }

@@ -22,9 +22,11 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, {
-  ResourceFormDefaultValues,
+  // ResourceFormValues,
   ResourceFormValues
 } from "./components/ResourceForm";
+import { toLabelValue } from "../../shared/formatter";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
 
 const Resource = ({ match }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
@@ -57,11 +59,11 @@ const Resource = ({ match }: RouteComponentProps) => {
   async function handleSubmit(data: ResourceFormValues) {
     const input: UpdateResourceInput = {
       id: id,
-      category: data.category,
+      category: data.category?.value,
       name: data.name,
-      policyIds: data.policyIds,
-      controlIds: data.controlId ? [data.controlId] : undefined,
-      businessProcessId: data.businessProcessId,
+      policyIds: data.policyIds?.map(a => a.value),
+      controlIds: data.controlIds?.map(a => a.value),
+      businessProcessId: data.businessProcessId?.value,
       ...(data.resuploadBase64 && {
         resuploadBase64: data.resuploadBase64,
         resuploadFileName: data.resuploadFileName
@@ -75,17 +77,15 @@ const Resource = ({ match }: RouteComponentProps) => {
       notifyGraphQLErrors(error);
     }
   }
-  const defaultValues: ResourceFormDefaultValues = {
+  const defaultValues: ResourceFormValues = {
     name,
-    category: oc(data).resource.category(""),
-    businessProcessId: oc(data).resource.businessProcess.id(""),
-    controlId: oc(data)
-      .resource.controls([])
-      .map(p => p.id)
-      .pop() as string,
-    policyIds: oc(data)
-      .resource.policies([])
-      .map(p => p.id),
+    category: {
+      label: data?.resource?.category || "",
+      value: data?.resource?.category || ""
+    },
+    businessProcessId: toLabelValue(data?.resource?.businessProcess || {}),
+    controlIds: data?.resource?.controls?.map(toLabelValue) || [],
+    policyIds: data?.resource?.policies?.map(toLabelValue) || [],
     resuploadUrl: oc(data).resource.resuploadUrl("")
   };
 
@@ -106,6 +106,9 @@ const Resource = ({ match }: RouteComponentProps) => {
   if (loading) {
     return <LoadingSpinner centered size={30} />;
   }
+
+  const policies = data?.resource?.policies || [];
+  const controls = data?.resource?.controls || [];
 
   const renderResourceInEditMode = () => {
     return (
@@ -138,29 +141,33 @@ const Resource = ({ match }: RouteComponentProps) => {
           </h5>
           <h5 className="mt-5">Related Controls:</h5>
           <div>
-            <ul>
-              {oc(data)
-                .resource.controls([])
-                .map(control => (
+            {controls.length ? (
+              <ul>
+                {controls.map(control => (
                   <li key={control.id}>
                     <Link to={`/control/${control.id}`}>
                       {control.description}
                     </Link>
                   </li>
                 ))}
-            </ul>
+              </ul>
+            ) : (
+              <EmptyAttribute centered={false} />
+            )}
           </div>
           <h5 className="mt-5">Related Policies:</h5>
           <div>
-            <ul>
-              {oc(data)
-                .resource.policies([])
-                .map(policy => (
+            {policies.length ? (
+              <ul>
+                {policies.map(policy => (
                   <li key={policy.id}>
                     <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
                   </li>
                 ))}
-            </ul>
+              </ul>
+            ) : (
+              <EmptyAttribute centered={false} />
+            )}
           </div>
         </div>
       </div>
