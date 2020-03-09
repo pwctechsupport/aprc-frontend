@@ -259,7 +259,7 @@ const Risk = ({ match, history }: RouteComponentProps) => {
       },
       {
         label: "Business Process",
-        value: data?.risk?.businessProcesses?.join(", ")
+        value: data?.risk?.businessProcesses?.map(a => a.name).join(", ")
       },
       {
         label: "Status",

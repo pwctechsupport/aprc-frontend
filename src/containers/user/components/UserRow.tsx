@@ -24,7 +24,11 @@ import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import { toLabelValue } from "../../../shared/formatter";
+import {
+  toLabelValue,
+  Suggestions,
+  Suggestion
+} from "../../../shared/formatter";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 
@@ -34,10 +38,10 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     defaultValues: {
       roleIds: oc(user)
         .roles([])
-        .map(r => r.id),
+        .map(toLabelValue),
       policyCategoryIds: oc(user)
         .policyCategories([])
-        .map(pc => pc.id)
+        .map(toLabelValue)
     },
     validationSchema
   });
@@ -136,8 +140,8 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
         input: {
           name: data.name || "",
           userId: oc(user).id(""),
-          policyCategoryIds: oc(data).policyCategoryIds([]),
-          roleIds: oc(data).roleIds([])
+          policyCategoryIds: data.policyCategoryIds?.map(a => a.value),
+          roleIds: data.roleIds?.map(a => a.value)
         }
       }
     });
@@ -293,15 +297,14 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
         <td>{oc(user).id("")}</td>
         <td>
           <AsyncSelect
+            isMulti
             cacheOptions
             defaultOptions
             name="roleIds"
             register={register}
             setValue={setValue}
             loadOptions={handleGetRoles}
-            defaultValue={oc(user)
-              .roles([])
-              .map(toLabelValue)}
+            defaultValue={user?.roles?.map(toLabelValue) || []}
           />
         </td>
         <td>
@@ -313,9 +316,7 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
             register={register}
             setValue={setValue}
             loadOptions={handleGetPolicyCategories}
-            defaultValue={oc(user)
-              .policyCategories([])
-              .map(toLabelValue)}
+            defaultValue={user?.policyCategories?.map(toLabelValue) || []}
           />
         </td>
         <td>
@@ -339,8 +340,8 @@ interface UserRowProps {
 
 interface UserRowValues {
   name?: string;
-  roleIds?: string[];
-  policyCategoryIds?: string[];
+  roleIds?: Suggestions;
+  policyCategoryIds?: Suggestions;
 }
 
 const validationSchema = yup.object().shape({

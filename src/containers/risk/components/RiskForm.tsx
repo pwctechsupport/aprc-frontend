@@ -134,7 +134,12 @@ const typeOfRisks = Object.entries(TypeOfRisk).map(([label, value]) => ({
 
 const validationSchema = yup.object().shape({
   name: yup.string().required(),
-  businessProcessIds: yup.array().of(yup.string()),
+  businessProcessIds: yup.array().of(
+    yup.object().shape({
+      label: yup.string(),
+      value: yup.string()
+    })
+  ),
   levelOfRisk: yup.string(),
   typeOfRisk: yup.string()
 });

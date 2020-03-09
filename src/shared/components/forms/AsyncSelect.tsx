@@ -31,6 +31,7 @@ export default function AsyncSelect({
   const Select = (
     <AsyncReactSelect
       {...rest}
+      closeMenuOnSelect={!rest.isMulti}
       className={classnames(
         "enlogy-react-select",
         error ? "invalid" : undefined
