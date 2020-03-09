@@ -26,7 +26,7 @@ const ReferenceSideBox = () => {
 
   return (
     <SideBox>
-      <SideBoxTitle>Recently Updated</SideBoxTitle>
+      <SideBoxTitle>Policy Reference</SideBoxTitle>
       <SideBoxSearch
         search={search}
         setSearch={setSearch}

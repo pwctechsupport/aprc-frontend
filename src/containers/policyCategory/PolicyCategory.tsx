@@ -30,6 +30,8 @@ import {
 import PolicyCategoryForm, {
   PolicyCategoryFormValues
 } from "./components/PolicyCategoryForm";
+import BreadCrumb from "../../shared/components/BreadCrumb";
+import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 
 const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -43,6 +45,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     },
     fetchPolicy: "network-only"
   });
+
   const draft = data?.policyCategory?.draft?.objectResult;
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
@@ -141,7 +144,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   if (loading) return <LoadingSpinner size={30} centered />;
 
   let name = data?.policyCategory?.name || "";
-  name = draft ? `[Draft] ${name}` : name;
+  // name = draft ? `[Draft] ${name}` : name;
   const policies = data?.policyCategory?.policies || [];
 
   const defaultValues = {
@@ -267,9 +270,14 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
       <Helmet>
         <title>{name} - Policy Category - PricewaterhouseCoopers</title>
       </Helmet>
-
+      <BreadCrumb
+        crumbs={[
+          ["/policy-category", "Policy Category"],
+          ["/policy-category/" + id, name]
+        ]}
+      />
       <div className="d-flex justify-content-between align-items-center">
-        <h4>{name}</h4>
+        <HeaderWithBackButton draft={!!draft}>{name}</HeaderWithBackButton>
         {renderPolicyCategoryAction()}
       </div>
       {inEditMode ? (
