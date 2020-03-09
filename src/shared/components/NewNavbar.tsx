@@ -26,10 +26,10 @@ import NotificationBadge from "./NotificationBadge";
 const adminMenus = [
   { label: "Policy", path: "/policy-admin" },
   { label: "Policy Category", path: "/policy-category" },
+  { label: "Policy Reference", path: "/references" },
   { label: "Control", path: "/control" },
   { label: "User", path: "/user" },
   { label: "Business Process", path: "/business-process" },
-  { label: "References", path: "/references" },
   { label: "Resources", path: "/resources" },
   { label: "Risks", path: "/risk" }
 ];
