@@ -15,7 +15,8 @@ import {
   Reference,
   useDestroyReferenceMutation,
   useReferencesQuery,
-  useUpdateReferenceMutation
+  useUpdateReferenceMutation,
+  PoliciesDocument
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
@@ -24,6 +25,9 @@ import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import downloadXls from "../../shared/utils/downloadXls";
 import CreateReference from "./CreateReference";
+import AsyncSelect from "../../shared/components/forms/AsyncSelect";
+import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnPromise";
+import { toLabelValue, Suggestions } from "../../shared/formatter";
 
 const References = () => {
   const [modal, setModal] = useState(false);
@@ -126,6 +130,7 @@ const References = () => {
                 />
               </th>
               <th>Name</th>
+              <th>Policy</th>
               <th></th>
             </tr>
           </thead>
@@ -162,14 +167,28 @@ const ReferenceRow = ({
   selected,
   toggleCheck
 }: ReferenceRowProps) => {
-  const { register, handleSubmit } = useForm<{ name: string }>({
+  const { register, handleSubmit, setValue } = useForm<ReferenceRowFormValues>({
     defaultValues: {
-      name: reference.name || ""
+      name: reference.name || "",
+      policyIds: oc(reference)
+        .policies([])
+        .map(toLabelValue)
     }
   });
+  const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
+  async function handleGetPolicies(input: string) {
+    try {
+      return oc(await getPolicies({ filter: { name_cont: input } }))
+        .data.policies.collection([])
+        .map(toLabelValue);
+    } catch (error) {
+      return [];
+    }
+  }
   const [edit, setEdit] = useState(false);
   const toggleEdit = () => setEdit(p => !p);
   const [update, updateM] = useUpdateReferenceMutation({
+    awaitRefetchQueries: true,
     refetchQueries: ["references"],
     onCompleted: () => {
       toast.success("Update Success");
@@ -178,12 +197,14 @@ const ReferenceRow = ({
     onError: () => toast.error("Update Failed")
   });
 
-  function updateReference(values: { name: string }) {
+  function updateReference(values: ReferenceRowFormValues) {
+    console.log("values", values);
     update({
       variables: {
         input: {
-          id: reference.id,
-          name: values.name
+          id: reference.id || "",
+          name: values.name,
+          policyIds: values.policyIds.map(a => a.value)
         }
       }
     });
@@ -211,6 +232,24 @@ const ReferenceRow = ({
           </form>
         ) : (
           reference.name
+        )}
+      </td>
+      <td className="align-middle" style={{ width: "70%" }}>
+        {edit ? (
+          <AsyncSelect
+            isMulti
+            cacheOptions
+            defaultOptions
+            name="policyIds"
+            register={register}
+            setValue={setValue}
+            loadOptions={handleGetPolicies}
+            defaultValue={oc(reference)
+              .policies([])
+              .map(toLabelValue)}
+          />
+        ) : (
+          reference.policies?.map(a => a.title).join(", ")
         )}
       </td>
       <td className="align-middle action" style={{ width: "30%" }}>
@@ -261,9 +300,13 @@ const ReferenceRow = ({
 };
 
 interface ReferenceRowProps {
-  reference: Omit<Reference, "createdAt" | "policies" | "updatedAt">;
+  reference: Partial<Reference>;
   onDelete: () => void;
   deleteLoading: boolean;
   selected: boolean;
   toggleCheck: any;
+}
+interface ReferenceRowFormValues {
+  name: string;
+  policyIds: Suggestions;
 }

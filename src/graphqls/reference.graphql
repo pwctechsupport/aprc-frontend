@@ -4,6 +4,10 @@ query references($filter: BaseScalar = {}, $page: Int, $limit: Int) {
       id
       name
       updatedAt
+      policies {
+        id
+        title
+      }
     }
     metadata {
       currentPage
