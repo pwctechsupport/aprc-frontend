@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
-import { oc } from "ts-optchain";
 import * as yup from "yup";
 import {
   BusinessProcessesDocument,
@@ -10,7 +9,6 @@ import {
   ControlsQuery,
   EnumListsDocument,
   EnumListsQuery,
-  // Category,
   PoliciesDocument,
   PoliciesQuery
 } from "../../../generated/graphql";
@@ -35,17 +33,9 @@ const ResourceForm = ({
   >({ defaultValues, validationSchema });
 
   useEffect(() => {
-    // register({ name: "controlId", required: true, type: "custom" });
-    // register({ name: "businessProcessId", required: true, type: "custom" });
     register({ name: "resuploadBase64", type: "custom" });
     register({ name: "resuploadFileName" });
   }, [register]);
-
-  // function handleChangeSelect(name: keyof ResourceFormValues) {
-  //   return function(e: any) {
-  //     if (e) setValue(name, e.value, true);
-  //   };
-  // }
 
   async function handleChangeFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -68,8 +58,11 @@ const ResourceForm = ({
   const handleGetControls = useLoadControls();
   const handleGetBps = useLoadBps();
 
-  const selectedCategory = watch("category", "");
-  // console.log("selectedCategory:", selectedCategory);
+  const selectedCategory = watch(
+    "category",
+    defaultValues?.category?.value || ""
+  );
+  console.log("selectedCategory:", selectedCategory);
 
   const name = defaultValues?.name;
 
@@ -153,7 +146,13 @@ export default ResourceForm;
 
 const validationSchema = yup.object().shape({
   name: yup.string().required(),
-  category: yup.string().required()
+  category: yup
+    .object()
+    .shape({
+      label: yup.string(),
+      value: yup.string()
+    })
+    .required()
 });
 
 // ==========================================
@@ -188,7 +187,9 @@ function useLoadCategories() {
       const { data } = await query({
         filter: { name_cont, category_type_eq: "Category" }
       });
-      return data.enumLists?.collection.map(toLabelValue) || [];
+      const bro = data.enumLists?.collection.map(toLabelValue) || [];
+      console.log("bro:", bro);
+      return bro;
     } catch (error) {
       return [];
     }
@@ -203,9 +204,7 @@ function useLoadPolicies() {
       const { data } = await query({
         filter: { title_cont }
       });
-      return oc(data)
-        .policies.collection([])
-        .map(toLabelValue);
+      return data.policies?.collection?.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }
@@ -222,9 +221,11 @@ function useLoadControls() {
       const { data } = await query({
         filter: { description_cont }
       });
-      return oc(data)
-        .controls.collection([])
-        .map(toLabelValue);
+      return (
+        data.controls?.collection
+          ?.map(({ description, id }) => ({ id, name: description }))
+          .map(toLabelValue) || []
+      );
     } catch (error) {
       return [];
     }

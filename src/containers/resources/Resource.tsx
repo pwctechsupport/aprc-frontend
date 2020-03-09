@@ -84,7 +84,10 @@ const Resource = ({ match }: RouteComponentProps) => {
       value: data?.resource?.category || ""
     },
     businessProcessId: toLabelValue(data?.resource?.businessProcess || {}),
-    controlIds: data?.resource?.controls?.map(toLabelValue) || [],
+    controlIds:
+      data?.resource?.controls
+        ?.map(({ id, description }) => ({ id, name: description }))
+        .map(toLabelValue) || [],
     policyIds: data?.resource?.policies?.map(toLabelValue) || [],
     resuploadUrl: oc(data).resource.resuploadUrl("")
   };
@@ -135,40 +138,48 @@ const Resource = ({ match }: RouteComponentProps) => {
         <div className="ml-3">
           <h5>
             Category:&nbsp;
-            <span className="text-orange">
-              {capitalCase(oc(data).resource.category(""))}
-            </span>
+            <span className="text-orange">{data?.resource?.category}</span>
           </h5>
-          <h5 className="mt-5">Related Controls:</h5>
-          <div>
-            {controls.length ? (
-              <ul>
-                {controls.map(control => (
-                  <li key={control.id}>
-                    <Link to={`/control/${control.id}`}>
-                      {control.description}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <EmptyAttribute centered={false} />
-            )}
-          </div>
-          <h5 className="mt-5">Related Policies:</h5>
-          <div>
-            {policies.length ? (
-              <ul>
-                {policies.map(policy => (
-                  <li key={policy.id}>
-                    <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <EmptyAttribute centered={false} />
-            )}
-          </div>
+
+          {data?.resource?.category === "Flowchart" ? (
+            <>
+              <h5 className="mt-5">Business Process:</h5>
+              {data.resource.businessProcess?.name}
+            </>
+          ) : (
+            <>
+              <div>
+                <h5 className="mt-5">Related Controls:</h5>
+                {controls.length ? (
+                  <ul>
+                    {controls.map(control => (
+                      <li key={control.id}>
+                        <Link to={`/control/${control.id}`}>
+                          {control.description}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <EmptyAttribute centered={false} />
+                )}
+              </div>
+              <div>
+                <h5 className="mt-5">Related Policies:</h5>
+                {policies.length ? (
+                  <ul>
+                    {policies.map(policy => (
+                      <li key={policy.id}>
+                        <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <EmptyAttribute centered={false} />
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
     );

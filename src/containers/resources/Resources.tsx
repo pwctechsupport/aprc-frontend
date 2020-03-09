@@ -73,16 +73,6 @@ const Resources = ({ history }: RouteComponentProps) => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Resources</h4>
         <div className="d-flex">
-          <Tooltip description="Add Resource">
-            <Button
-              tag={Link}
-              to="/resources/create"
-              className="soft orange mr-2"
-              color=""
-            >
-              <FaPlus />
-            </Button>
-          </Tooltip>
           <Tooltip
             description="Export Resource"
             subtitle={

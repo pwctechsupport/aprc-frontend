@@ -39,7 +39,7 @@ const CreateResource = ({ history }: RouteComponentProps) => {
     <div>
       <BreadCrumb
         crumbs={[
-          ["/resources", "Resource"],
+          ["/resources", "Resources"],
           ["/resources/create", "Create Resource"]
         ]}
       />

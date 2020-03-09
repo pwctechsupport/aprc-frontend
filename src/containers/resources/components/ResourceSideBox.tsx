@@ -10,6 +10,10 @@ import {
   SideBoxTitle
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
+import Tooltip from "../../../shared/components/Tooltip";
+import Button from "../../../shared/components/Button";
+import { Link } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
 
 const ResourceSideBox = () => {
   const [search, setSearch] = useState("");
@@ -26,7 +30,21 @@ const ResourceSideBox = () => {
 
   return (
     <SideBox>
-      <SideBoxTitle>Recently Added</SideBoxTitle>
+      <SideBoxTitle>
+        <div className="d-flex justify-content-between">
+          Resources
+          <Tooltip description="Create Resource">
+            <Button
+              tag={Link}
+              to="/resources/create"
+              className="soft red"
+              color=""
+            >
+              <FaPlus />
+            </Button>
+          </Tooltip>
+        </div>
+      </SideBoxTitle>
       <SideBoxSearch
         search={search}
         setSearch={setSearch}

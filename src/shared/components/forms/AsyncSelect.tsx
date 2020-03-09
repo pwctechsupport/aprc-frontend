@@ -19,11 +19,13 @@ export default function AsyncSelect({
   }, [name, register]);
 
   function handleChange(e: any) {
-    if (rest.isMulti) {
-      setValue(name, e && e.map((v: any) => v.value));
-    } else {
-      setValue(name, e && e.value);
-    }
+    console.log("ini valuenya:", e);
+    setValue(name, e);
+    // if (rest.isMulti) {
+    //   setValue(name, e && e.map((v: any) => v.value));
+    // } else {
+    //   setValue(name, e && e.value);
+    // }
   }
 
   const Select = (
