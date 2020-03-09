@@ -1,6 +1,8 @@
+import { capitalCase } from "capital-case";
 import React, { useState } from "react";
-import { FaTrash, FaPlus, FaFileExport, FaFileImport } from "react-icons/fa";
-import { Link, RouteComponentProps } from "react-router-dom";
+import Helmet from "react-helmet";
+import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -8,14 +10,12 @@ import {
   useDestroyRiskMutation,
   useRisksQuery
 } from "../../generated/graphql";
-import Button from "../../shared/components/Button";
-import Table from "../../shared/components/Table";
-import Helmet from "react-helmet";
-import { capitalCase } from "capital-case";
-import DialogButton from "../../shared/components/DialogButton";
 import BreadCrumb from "../../shared/components/BreadCrumb";
-import Tooltip from "../../shared/components/Tooltip";
+import Button from "../../shared/components/Button";
+import DialogButton from "../../shared/components/DialogButton";
 import ImportModal from "../../shared/components/ImportModal";
+import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
 
@@ -83,16 +83,6 @@ const Risks = ({ history }: RouteComponentProps) => {
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h4>Risks</h4>
         <div className="d-flex">
-          <Tooltip description="Create Risk">
-            <Button
-              className="soft orange mr-2"
-              tag={Link}
-              to="/risk/create"
-              color=""
-            >
-              <FaPlus />
-            </Button>
-          </Tooltip>
           <Tooltip
             description="Export Risk"
             subtitle={
