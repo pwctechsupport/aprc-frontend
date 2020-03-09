@@ -69,6 +69,7 @@ import {
   AiOutlineClockCircle
 } from "react-icons/ai";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import { CrumbItem } from "../../shared/components/BreadCrumb";
 
 const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -93,6 +94,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const toggleAddResourceModal = () => setAddResourceModal(prev => !prev);
 
   const id = get(match, "params.id", "");
+
   const { loading, data } = usePolicyQuery({
     variables: { id },
     fetchPolicy: "network-only",
@@ -256,6 +258,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
 
   const draft = oc(data).policy.draft.objectResult();
   const title: string = oc(data).policy.title("");
+
   const description = draft
     ? get(data, "policy.draft.objectResult.description", "")
     : oc(data).policy.description("");
@@ -274,6 +277,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const riskCount = oc(data).policy.riskCount({});
   const subCount = oc(data).policy.subCount({});
   const isMaximumLevel = ancestry.split("/").length === 5;
+  const ancestors = data?.policy?.ancestors || [];
+  const breadcrumb = ancestors.map((a: any) => ["/policy/" + a.id, a.title]);
 
   const scrollToRisk = useCallback(
     () =>
@@ -810,9 +815,11 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       <Helmet>
         <title>{title} - Policy - PricewaterhouseCoopers</title>
       </Helmet>
+
       <BreadCrumb
         crumbs={[
           ["/policy", "Policies"],
+          ...(breadcrumb as CrumbItem[]),
           ["/policy/" + id, title]
         ]}
       />

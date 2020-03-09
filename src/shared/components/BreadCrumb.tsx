@@ -4,7 +4,7 @@ import { Breadcrumb, BreadcrumbItem } from "reactstrap";
 
 type PathType = string;
 type LabelType = string;
-type CrumbItem = [PathType, LabelType];
+export type CrumbItem = [PathType, LabelType];
 
 interface BreadCrumbProps {
   crumbs: CrumbItem[];

@@ -70,6 +70,10 @@ fragment policyBranch on Policy {
 
 query policy($id: ID!) {
   policy(id: $id) {
+    ancestors {
+      id
+      title
+    }
     ...policyFragment
     draft {
       id
