@@ -52,7 +52,7 @@ import RiskForm, {
 } from "../risk/components/RiskForm";
 import { toLabelValue } from "../../shared/formatter";
 import BreadCrumb from "../../shared/components/BreadCrumb";
-// import BreadCrumb from "../../shared/components/BreadCrumb";
+import { CrumbItem } from "../../shared/components/BreadCrumb";
 
 const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
@@ -114,6 +114,12 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
     variables: { id },
     fetchPolicy: "network-only"
   });
+  const ancestors = data?.businessProcess?.ancestors || [];
+
+  const breadcrumb = ancestors.map((a: any) => [
+    "/risk-and-control/" + a.id,
+    a.name
+  ]) as CrumbItem[];
 
   const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
     onCompleted: () => toast.success("Added to Bookmark"),
@@ -208,6 +214,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/risk-and-control", "Risk and Controls"],
+          ...breadcrumb,
           ["/risk-and-control/" + id, name]
         ]}
       />

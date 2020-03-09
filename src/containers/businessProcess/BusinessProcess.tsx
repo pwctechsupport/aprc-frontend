@@ -18,7 +18,7 @@ import BusinessProcessForm, {
   BusinessProcessFormValues
 } from "./components/BusinessProcessForm";
 import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
-import BreadCrumb from "../../shared/components/BreadCrumb";
+import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Helmet from "react-helmet";
 
 const BusinessProcess = ({ match, history }: RouteComponentProps) => {
@@ -27,7 +27,12 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
   const { data, loading } = useBusinessProcessQuery({ variables: { id } });
   const childs = oc(data).businessProcess.children([]);
   const parentId = oc(data).businessProcess.parentId("");
+  const ancestors = data?.businessProcess?.ancestors || [];
 
+  const breadcrumb = ancestors.map((a: any) => [
+    "/business-process/" + a.id,
+    a.name
+  ]) as CrumbItem[];
   const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => {
       toast.success("Delete Success");
@@ -87,6 +92,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/business-process", "Business Processes"],
+          ...breadcrumb,
           ["/business-process/" + id, name]
         ]}
       />

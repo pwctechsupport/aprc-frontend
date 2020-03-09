@@ -307,7 +307,6 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       }),
     []
   );
-  // Breadcrumb
 
   if (loading) return <LoadingSpinner centered size={30} />;
 

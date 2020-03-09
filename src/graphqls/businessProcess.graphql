@@ -71,6 +71,10 @@ mutation destroyBusinessProcess($input: DestroyBusinessProcessInput!) {
 
 query businessProcess($id: ID!) {
   businessProcess(id: $id) {
+    ancestors {
+      id
+      name
+    }
     ancestry
     id
     name
