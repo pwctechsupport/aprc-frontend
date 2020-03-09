@@ -30,7 +30,7 @@ const ReferenceSideBox = () => {
       <SideBoxSearch
         search={search}
         setSearch={setSearch}
-        placeholder="Search Controls..."
+        placeholder="Search Policy Reference..."
         loading={loading}
       />
       {references.map(reference => {
