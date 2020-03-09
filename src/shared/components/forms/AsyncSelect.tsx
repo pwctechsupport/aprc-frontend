@@ -32,10 +32,7 @@ export default function AsyncSelect({
     <AsyncReactSelect
       {...rest}
       closeMenuOnSelect={!rest.isMulti}
-      className={classnames(
-        "enlogy-react-select",
-        error ? "invalid" : undefined
-      )}
+      className={classnames(error ? "invalid" : undefined)}
       onChange={handleChange}
     />
   );
@@ -46,7 +43,7 @@ export default function AsyncSelect({
           {label}
         </Label>
       ) : null}
-      {row ? <Col sm={9}>{Select}</Col> : Select}
+      {row ? <Col sm={label ? 9 : undefined}>{Select}</Col> : Select}
     </FormGroup>
   );
 }

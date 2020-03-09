@@ -8,39 +8,44 @@ import {
   FaTimes,
   FaTrash
 } from "react-icons/fa";
-import { toast } from "react-toastify";
 import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
+  PoliciesDocument,
   Reference,
   useDestroyReferenceMutation,
   useReferencesQuery,
-  useUpdateReferenceMutation,
-  PoliciesDocument
+  useUpdateReferenceMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import AsyncSelect from "../../shared/components/forms/AsyncSelect";
 import ImportModal from "../../shared/components/ImportModal";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
-import downloadXls from "../../shared/utils/downloadXls";
-import CreateReference from "./CreateReference";
-import AsyncSelect from "../../shared/components/forms/AsyncSelect";
+import { Suggestions, toLabelValue } from "../../shared/formatter";
 import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnPromise";
-import { toLabelValue, Suggestions } from "../../shared/formatter";
+import downloadXls from "../../shared/utils/downloadXls";
+import {
+  notifyError,
+  notifyGraphQLErrors,
+  notifyInfo,
+  notifySuccess
+} from "../../shared/utils/notif";
+import CreateReference from "./CreateReference";
 
 const References = () => {
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal(p => !p);
 
   const { data, loading } = useReferencesQuery();
+  const references = data?.references?.collection || [];
 
   const [selected, setSelected] = useState<string[]>([]);
-  const references = oc(data).references.collection([]);
   const [destroyReference, destroyM] = useDestroyReferenceMutation({
     refetchQueries: ["references"],
-    onCompleted: () => toast.success("Delete Success"),
-    onError: () => toast.error("Delete Failed")
+    onCompleted: () => notifySuccess("Delete Success"),
+    onError: notifyGraphQLErrors
   });
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
@@ -65,9 +70,9 @@ const References = () => {
       },
       {
         fileName: "Policy Reference.xlsx",
-        onStart: () => toast.info("Download Dimulai"),
-        onCompleted: () => toast.success("Download Berhasil"),
-        onError: () => toast.error("Download Gagal")
+        onStart: () => notifyInfo("Download Dimulai"),
+        onCompleted: () => notifySuccess("Download Berhasil"),
+        onError: () => notifyError("Download Gagal")
       }
     );
   }
@@ -80,43 +85,44 @@ const References = () => {
       <div className="flex-grow-1">
         <div className="d-flex justify-content-between align-items-center">
           <h4>References</h4>
-          <div className="mb-3 d-flex justify-content-end">
-            <Tooltip
-              description="Export Policy Reference"
-              subtitle={
-                selected.length
-                  ? "Export selected Policy References"
-                  : "Select References first"
-              }
-            >
-              <Button
-                color=""
-                className="soft red mr-2"
-                onClick={handleExport}
-                disabled={!selected.length}
-              >
-                <FaFileExport />
-              </Button>
-            </Tooltip>
-            <Tooltip description="Import Policy Reference">
-              <Button
-                color=""
-                className="soft orange mr-2"
-                onClick={toggleImportModal}
-              >
-                <FaFileImport />
-              </Button>
-            </Tooltip>
-            <ImportModal
-              title="Import Policy Reference"
-              endpoint="/references/import"
-              isOpen={modal}
-              toggle={toggleImportModal}
-            />
-          </div>
         </div>
         <div>
           <CreateReference />
+        </div>
+
+        <div className="mb-3 d-flex justify-content-end">
+          <Tooltip
+            description="Export Policy Reference"
+            subtitle={
+              selected.length
+                ? "Export selected Policy References"
+                : "Select References first"
+            }
+          >
+            <Button
+              color=""
+              className="soft red mr-2"
+              onClick={handleExport}
+              disabled={!selected.length}
+            >
+              <FaFileExport />
+            </Button>
+          </Tooltip>
+          <Tooltip description="Import Policy Reference">
+            <Button
+              color=""
+              className="soft orange mr-2"
+              onClick={toggleImportModal}
+            >
+              <FaFileImport />
+            </Button>
+          </Tooltip>
+          <ImportModal
+            title="Import Policy Reference"
+            endpoint="/references/import"
+            isOpen={modal}
+            toggle={toggleImportModal}
+          />
         </div>
 
         <Table reloading={loading}>
@@ -135,22 +141,20 @@ const References = () => {
             </tr>
           </thead>
           <tbody>
-            {oc(data)
-              .references.collection([])
-              .map(reference => {
-                return (
-                  <ReferenceRow
-                    toggleCheck={() => toggleCheck(reference.id)}
-                    selected={selected.includes(reference.id)}
-                    key={reference.id}
-                    reference={reference}
-                    onDelete={() =>
-                      destroyReference({ variables: { id: reference.id } })
-                    }
-                    deleteLoading={destroyM.loading}
-                  />
-                );
-              })}
+            {references.map(reference => {
+              return (
+                <ReferenceRow
+                  toggleCheck={() => toggleCheck(reference.id)}
+                  selected={selected.includes(reference.id)}
+                  key={reference.id}
+                  reference={reference}
+                  onDelete={() =>
+                    destroyReference({ variables: { id: reference.id } })
+                  }
+                  deleteLoading={destroyM.loading}
+                />
+              );
+            })}
           </tbody>
         </Table>
       </div>
@@ -191,14 +195,14 @@ const ReferenceRow = ({
     awaitRefetchQueries: true,
     refetchQueries: ["references"],
     onCompleted: () => {
-      toast.success("Update Success");
+      notifySuccess("Update Success");
       toggleEdit();
     },
-    onError: () => toast.error("Update Failed")
+    onError: notifyGraphQLErrors
   });
 
   function updateReference(values: ReferenceRowFormValues) {
-    console.log("values", values);
+    // console.log("values", values);
     update({
       variables: {
         input: {
@@ -220,23 +224,22 @@ const ReferenceRow = ({
           onChange={toggleCheck}
         />
       </td>
-      <td className="align-middle" style={{ width: "70%" }}>
+      <td className="align-middle" style={{ width: "20%" }}>
         {edit ? (
-          <form>
-            <Input
-              className="p-0 m-0"
-              name="name"
-              defaultValue={reference.name || ""}
-              innerRef={register}
-            />
-          </form>
+          <Input
+            className="p-0 m-0"
+            name="name"
+            defaultValue={reference.name || ""}
+            innerRef={register}
+          />
         ) : (
           reference.name
         )}
       </td>
-      <td className="align-middle" style={{ width: "70%" }}>
+      <td className="align-middle" style={{ width: "50%" }}>
         {edit ? (
           <AsyncSelect
+            row
             isMulti
             cacheOptions
             defaultOptions
@@ -252,8 +255,8 @@ const ReferenceRow = ({
           reference.policies?.map(a => a.title).join(", ")
         )}
       </td>
-      <td className="align-middle action" style={{ width: "30%" }}>
-        <div className="d-flex align-items-center">
+      <td className="align-middle text-right action" style={{ width: "30%" }}>
+        <div className="d-flex align-items-center justify-content-end">
           {edit ? (
             <div>
               <Button
