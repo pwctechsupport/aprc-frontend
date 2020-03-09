@@ -21,7 +21,12 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
   function handleSubmit(values: RiskFormValues) {
     createRisk({
       variables: {
-        input: values
+        input: {
+          name: values.name || "",
+          businessProcessIds: values.businessProcessIds?.map(a => a.value),
+          levelOfRisk: values.levelOfRisk,
+          typeOfRisk: values.typeOfRisk
+        }
       }
     });
   }
@@ -31,7 +36,10 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
         <title>Create Risk - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb
-        crumbs={[["/risk", "Risks"], ["/risk/create", "Create Risk"]]}
+        crumbs={[
+          ["/risk", "Risks"],
+          ["/risk/create", "Create Risk"]
+        ]}
       />
       <HeaderWithBackButton heading="Create Risk" />
       <RiskForm onSubmit={handleSubmit} submitting={loading} />

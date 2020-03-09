@@ -31,10 +31,7 @@ import {
   notifyInfo,
   notifySuccess
 } from "../../shared/utils/notif";
-import RiskForm, {
-  RiskFormDefaultValues,
-  RiskFormValues
-} from "./components/RiskForm";
+import RiskForm, { RiskFormValues } from "./components/RiskForm";
 
 const Risk = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -61,9 +58,9 @@ const Risk = ({ match, history }: RouteComponentProps) => {
 
   const name = data?.risk?.name || "";
 
-  const defaultValues: RiskFormDefaultValues = {
+  const defaultValues: RiskFormValues = {
     name,
-    businessProcesses: data?.risk?.businessProcesses?.map(toLabelValue) || [],
+    businessProcessIds: data?.risk?.businessProcesses?.map(toLabelValue) || [],
     levelOfRisk: data?.risk?.levelOfRisk as LevelOfRisk,
     typeOfRisk: data?.risk?.typeOfRisk as TypeOfRisk
   };
@@ -80,7 +77,10 @@ const Risk = ({ match, history }: RouteComponentProps) => {
       variables: {
         input: {
           id,
-          ...values
+          name: values.name,
+          businessProcessIds: values.businessProcessIds?.map(a => a.value),
+          levelOfRisk: values.levelOfRisk,
+          typeOfRisk: values.typeOfRisk
         }
       }
     });

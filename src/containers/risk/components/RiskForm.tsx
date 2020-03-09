@@ -40,7 +40,7 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
 
   const name = defaultValues?.name;
   const levelOfRisk = defaultValues?.levelOfRisk;
-  const businessProcesses = defaultValues?.businessProcesses || [];
+  const businessProcesses = defaultValues?.businessProcessIds || [];
   const typeOfRisk = defaultValues?.typeOfRisk;
 
   const getBusinessProcesses = useLazyQueryReturnPromise(
@@ -144,22 +144,22 @@ const validationSchema = yup.object().shape({
 // -------------------------------------------------------------------------
 
 export interface RiskFormValues {
-  name: string;
-  businessProcessIds?: string[];
-  levelOfRisk: LevelOfRisk;
-  typeOfRisk?: TypeOfRisk;
-}
-
-export interface RiskFormDefaultValues {
   name?: string;
-  businessProcesses?: Suggestions;
+  businessProcessIds?: Suggestions;
   levelOfRisk?: LevelOfRisk;
   typeOfRisk?: TypeOfRisk;
 }
+
+// export interface RiskFormDefaultValues {
+//   name?: string;
+//   businessProcesses?: Suggestions;
+//   levelOfRisk?: LevelOfRisk;
+//   typeOfRisk?: TypeOfRisk;
+// }
 
 export interface RiskFormProps {
   onCancel?: () => void;
   onSubmit?: (data: RiskFormValues) => void;
   submitting?: boolean;
-  defaultValues?: RiskFormDefaultValues;
+  defaultValues?: RiskFormValues;
 }

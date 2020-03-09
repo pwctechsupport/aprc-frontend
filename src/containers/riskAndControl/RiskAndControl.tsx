@@ -47,7 +47,7 @@ import ControlForm, {
   ControlFormValues
 } from "../control/components/ControlForm";
 import RiskForm, {
-  RiskFormDefaultValues,
+  // RiskFormDefaultValues,
   RiskFormValues
 } from "../risk/components/RiskForm";
 import { toLabelValue } from "../../shared/formatter";
@@ -84,7 +84,17 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
     refetchQueries: ["businessProcess"]
   });
   const handleUpdateRisk = (values: RiskFormValues) => {
-    updateRisk({ variables: { input: { id: oc(risk).id(""), ...values } } });
+    updateRisk({
+      variables: {
+        input: {
+          id: risk?.id || "",
+          name: values.name,
+          businessProcessIds: values.businessProcessIds?.map(a => a.value),
+          levelOfRisk: values.levelOfRisk,
+          typeOfRisk: values.typeOfRisk
+        }
+      }
+    });
   };
 
   const [controlModal, setControlModal] = useState(false);
@@ -266,7 +276,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
                             editRisk({
                               id: risk.id,
                               name: oc(risk).name(""),
-                              businessProcesses: oc(risk)
+                              businessProcessIds: oc(risk)
                                 .businessProcesses([])
                                 .map(toLabelValue),
                               levelOfRisk: oc(
@@ -417,7 +427,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
 
 export default RiskAndControls;
 
-interface RiskState extends RiskFormDefaultValues {
+interface RiskState extends RiskFormValues {
   id: string;
 }
 
