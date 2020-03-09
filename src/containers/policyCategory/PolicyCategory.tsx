@@ -69,7 +69,8 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
       variables: {
         input: {
           id,
-          ...values
+          name: values.name || "",
+          policyIds: values.policyIds?.map(a => a.value)
         }
       }
     });

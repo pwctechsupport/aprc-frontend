@@ -20,7 +20,14 @@ const CreatePolicyCategory = ({ history }: RouteComponentProps) => {
     refetchQueries: ["policyCategories"]
   });
   function handleCreate(values: PolicyCategoryFormValues) {
-    mutation({ variables: { input: values } });
+    mutation({
+      variables: {
+        input: {
+          name: values.name || "",
+          policyIds: values.policyIds?.map(a => a.value)
+        }
+      }
+    });
   }
   return (
     <div>

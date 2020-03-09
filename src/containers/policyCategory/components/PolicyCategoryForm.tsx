@@ -2,7 +2,7 @@ import React from "react";
 import useForm from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
-import { PoliciesDocument } from "../../../generated/graphql";
+import { PoliciesDocument, PoliciesQuery } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
@@ -21,23 +21,8 @@ const PolicyCategoryForm = ({
     defaultValues
   });
 
-  const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
-  async function handleGetPolicies(
-    title_cont: string = ""
-  ): Promise<Suggestions> {
-    try {
-      const { data } = await getPolicies({
-        filter: { title_cont }
-      });
-      return oc(data)
-        .policies.collection([])
-        .map(toLabelValue);
-    } catch (error) {
-      return [];
-    }
-  }
-
-  const policies = oc(defaultValues).policies([]);
+  const getPolicies = useLoadPolicies();
+  const policies = defaultValues?.policyIds || [];
 
   const renderSubmit = () => {
     if (!isDraft) {
@@ -64,11 +49,10 @@ const PolicyCategoryForm = ({
         register={register}
         setValue={setValue}
         cacheOptions
-        loadOptions={handleGetPolicies}
+        loadOptions={getPolicies}
         defaultOptions
         defaultValue={policies}
         isMulti
-        // onInputChange={handleChangeSelect("policyIds")}
       />
       {renderSubmit()}
     </Form>
@@ -78,18 +62,28 @@ const PolicyCategoryForm = ({
 export default PolicyCategoryForm;
 
 export interface PolicyCategoryFormValues {
-  name: string;
-  policyIds: string[];
+  name?: string;
+  policyIds?: Suggestions;
 }
 
 interface PolicyCategoryFormProps {
   onSubmit: (data: PolicyCategoryFormValues) => void;
   submitting: boolean;
-  defaultValues?: PolicyCategoryFormDefaultValues;
+  defaultValues?: PolicyCategoryFormValues;
   isDraft?: boolean;
 }
 
-interface PolicyCategoryFormDefaultValues {
-  name?: string;
-  policies?: Suggestions;
+function useLoadPolicies() {
+  const query = useLazyQueryReturnPromise<PoliciesQuery>(PoliciesDocument);
+  async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
+    try {
+      const { data } = await query({
+        filter: { title_cont }
+      });
+      return data.policies?.collection?.map(toLabelValue) || [];
+    } catch (error) {
+      return [];
+    }
+  }
+  return getSuggestions;
 }
