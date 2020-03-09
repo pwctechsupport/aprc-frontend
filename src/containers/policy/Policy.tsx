@@ -278,7 +278,10 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subCount = oc(data).policy.subCount({});
   const isMaximumLevel = ancestry.split("/").length === 5;
   const ancestors = data?.policy?.ancestors || [];
-  const breadcrumb = ancestors.map((a: any) => ["/policy/" + a.id, a.title]);
+  const breadcrumb = ancestors.map((a: any) => [
+    "/policy/" + a.id,
+    a.title
+  ]) as CrumbItem[];
 
   const scrollToRisk = useCallback(
     () =>
@@ -819,7 +822,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/policy", "Policies"],
-          ...(breadcrumb as CrumbItem[]),
+          ...breadcrumb,
           ["/policy/" + id, title]
         ]}
       />
