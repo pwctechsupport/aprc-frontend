@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { oc } from "ts-optchain";
 import { useRisksQuery } from "../../../generated/graphql";
 import {
   SideBoxItem,
