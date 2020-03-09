@@ -6,7 +6,8 @@ import * as yup from "yup";
 import {
   BusinessProcessesDocument,
   LevelOfRisk,
-  TypeOfRisk
+  TypeOfRisk,
+  BusinessProcessesQuery
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
@@ -43,15 +44,15 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
   const businessProcesses = defaultValues?.businessProcessIds || [];
   const typeOfRisk = defaultValues?.typeOfRisk;
 
-  const getBusinessProcesses = useLazyQueryReturnPromise(
-    BusinessProcessesDocument
-  );
+  const getBusinessProcesses = useLazyQueryReturnPromise<
+    BusinessProcessesQuery
+  >(BusinessProcessesDocument);
   async function handleGetBps(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await getBusinessProcesses({
         filter: { name_cont }
       });
-      return data?.businessProcesses?.collection?.map(toLabelValue);
+      return data.businessProcesses?.collection.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }

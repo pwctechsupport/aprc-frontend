@@ -1,5 +1,5 @@
 import { capitalCase } from "capital-case";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import {
   AiFillEdit,
@@ -39,6 +39,12 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     setInEditMode(p => !p);
   }
 
+  // Close edit mode when changing screen
+  useEffect(() => {
+    if (inEditMode) setInEditMode(false);
+    // eslint-disable-next-line
+  }, [location.pathname]);
+
   const id = match.params && (match.params as any).id;
   const { data, loading } = useRiskQuery({
     variables: { id },
@@ -67,7 +73,10 @@ const Risk = ({ match, history }: RouteComponentProps) => {
 
   // Update handlers
   const [update, updateRiskMutation] = useUpdateRiskMutation({
-    onCompleted: () => notifySuccess("Update Success"),
+    onCompleted: () => {
+      notifySuccess("Update Success");
+      setInEditMode(false);
+    },
     onError: notifyGraphQLErrors,
     refetchQueries: ["risks", "risk"],
     awaitRefetchQueries: true
@@ -250,20 +259,16 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     const details = [
       { label: "Name", value: data?.risk?.name },
       {
+        label: "Business Process",
+        value: data?.risk?.businessProcesses?.map(a => a.name).join(", ")
+      },
+      {
         label: "Level of Risk",
         value: capitalCase(data?.risk?.levelOfRisk || "")
       },
       {
         label: "Type of Risk",
         value: capitalCase(data?.risk?.typeOfRisk || "")
-      },
-      {
-        label: "Business Process",
-        value: data?.risk?.businessProcesses?.map(a => a.name).join(", ")
-      },
-      {
-        label: "Status",
-        value: capitalCase(data?.risk?.status || "")
       }
     ];
     return (
@@ -290,7 +295,7 @@ const Risk = ({ match, history }: RouteComponentProps) => {
         ]}
       />
       <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton heading={name} />
+        <HeaderWithBackButton heading={name} draft={!!draft} />
         {renderRiskAction()}
       </div>
       {inEditMode ? (
