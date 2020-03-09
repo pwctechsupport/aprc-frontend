@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import useForm from "react-hook-form";
-import { FaPencilAlt, FaTimes, FaTrash } from "react-icons/fa";
+import {
+  FaFileExport,
+  FaFileImport,
+  FaPencilAlt,
+  FaTimes,
+  FaTrash
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -9,29 +15,105 @@ import {
   Reference,
   useDestroyReferenceMutation,
   useReferencesQuery,
-  useUpdateReferenceMutation
+  useUpdateReferenceMutation,
+  PoliciesDocument
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import ImportModal from "../../shared/components/ImportModal";
 import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
+import downloadXls from "../../shared/utils/downloadXls";
 import CreateReference from "./CreateReference";
+import AsyncSelect from "../../shared/components/forms/AsyncSelect";
+import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnPromise";
+import { toLabelValue, Suggestions } from "../../shared/formatter";
 
 const References = () => {
+  const [modal, setModal] = useState(false);
+  const toggleImportModal = () => setModal(p => !p);
+
   const { data, loading } = useReferencesQuery();
+
+  const [selected, setSelected] = useState<string[]>([]);
+  const references = oc(data).references.collection([]);
   const [destroyReference, destroyM] = useDestroyReferenceMutation({
     refetchQueries: ["references"],
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed")
   });
+  function toggleCheck(id: string) {
+    if (selected.includes(id)) {
+      setSelected(selected.filter(i => i !== id));
+    } else {
+      setSelected(selected.concat(id));
+    }
+  }
 
+  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      setSelected(references.map(n => n.id));
+    } else {
+      setSelected([]);
+    }
+  }
+  function handleExport() {
+    downloadXls(
+      "/prints/reference_excel.xlsx",
+      {
+        reference_ids: selected.map(Number)
+      },
+      {
+        fileName: "Policy Reference.xlsx",
+        onStart: () => toast.info("Download Dimulai"),
+        onCompleted: () => toast.success("Download Berhasil"),
+        onError: () => toast.error("Download Gagal")
+      }
+    );
+  }
   return (
     <div>
       <Helmet>
         <title>References - PricewaterhouseCoopers</title>
       </Helmet>
+
       <div className="flex-grow-1">
         <div className="d-flex justify-content-between align-items-center">
           <h4>References</h4>
+          <div className="mb-3 d-flex justify-content-end">
+            <Tooltip
+              description="Export Policy Reference"
+              subtitle={
+                selected.length
+                  ? "Export selected Policy References"
+                  : "Select References first"
+              }
+            >
+              <Button
+                color=""
+                className="soft red mr-2"
+                onClick={handleExport}
+                disabled={!selected.length}
+              >
+                <FaFileExport />
+              </Button>
+            </Tooltip>
+            <Tooltip description="Import Policy Reference">
+              <Button
+                color=""
+                className="soft orange mr-2"
+                onClick={toggleImportModal}
+              >
+                <FaFileImport />
+              </Button>
+            </Tooltip>
+            <ImportModal
+              title="Import Policy Reference"
+              endpoint="/references/import"
+              isOpen={modal}
+              toggle={toggleImportModal}
+            />
+          </div>
         </div>
         <div>
           <CreateReference />
@@ -40,7 +122,15 @@ const References = () => {
         <Table reloading={loading}>
           <thead>
             <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  checked={selected.length === references.length}
+                  onChange={toggleCheckAll}
+                />
+              </th>
               <th>Name</th>
+              <th>Policy</th>
               <th></th>
             </tr>
           </thead>
@@ -50,6 +140,8 @@ const References = () => {
               .map(reference => {
                 return (
                   <ReferenceRow
+                    toggleCheck={() => toggleCheck(reference.id)}
+                    selected={selected.includes(reference.id)}
                     key={reference.id}
                     reference={reference}
                     onDelete={() =>
@@ -71,16 +163,32 @@ export default References;
 const ReferenceRow = ({
   reference,
   onDelete,
-  deleteLoading
+  deleteLoading,
+  selected,
+  toggleCheck
 }: ReferenceRowProps) => {
-  const { register, handleSubmit } = useForm<{ name: string }>({
+  const { register, handleSubmit, setValue } = useForm<ReferenceRowFormValues>({
     defaultValues: {
-      name: reference.name || ""
+      name: reference.name || "",
+      policyIds: oc(reference)
+        .policies([])
+        .map(toLabelValue)
     }
   });
+  const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
+  async function handleGetPolicies(input: string) {
+    try {
+      return oc(await getPolicies({ filter: { name_cont: input } }))
+        .data.policies.collection([])
+        .map(toLabelValue);
+    } catch (error) {
+      return [];
+    }
+  }
   const [edit, setEdit] = useState(false);
   const toggleEdit = () => setEdit(p => !p);
   const [update, updateM] = useUpdateReferenceMutation({
+    awaitRefetchQueries: true,
     refetchQueries: ["references"],
     onCompleted: () => {
       toast.success("Update Success");
@@ -89,12 +197,14 @@ const ReferenceRow = ({
     onError: () => toast.error("Update Failed")
   });
 
-  function updateReference(values: { name: string }) {
+  function updateReference(values: ReferenceRowFormValues) {
+    console.log("values", values);
     update({
       variables: {
         input: {
-          id: reference.id,
-          name: values.name
+          id: reference.id || "",
+          name: values.name,
+          policyIds: values.policyIds.map(a => a.value)
         }
       }
     });
@@ -102,6 +212,14 @@ const ReferenceRow = ({
 
   return (
     <tr>
+      <td>
+        <input
+          type="checkbox"
+          checked={selected}
+          onClick={e => e.stopPropagation()}
+          onChange={toggleCheck}
+        />
+      </td>
       <td className="align-middle" style={{ width: "70%" }}>
         {edit ? (
           <form>
@@ -114,6 +232,24 @@ const ReferenceRow = ({
           </form>
         ) : (
           reference.name
+        )}
+      </td>
+      <td className="align-middle" style={{ width: "70%" }}>
+        {edit ? (
+          <AsyncSelect
+            isMulti
+            cacheOptions
+            defaultOptions
+            name="policyIds"
+            register={register}
+            setValue={setValue}
+            loadOptions={handleGetPolicies}
+            defaultValue={oc(reference)
+              .policies([])
+              .map(toLabelValue)}
+          />
+        ) : (
+          reference.policies?.map(a => a.title).join(", ")
         )}
       </td>
       <td className="align-middle action" style={{ width: "30%" }}>
@@ -164,7 +300,13 @@ const ReferenceRow = ({
 };
 
 interface ReferenceRowProps {
-  reference: Omit<Reference, "createdAt" | "policies" | "updatedAt">;
+  reference: Partial<Reference>;
   onDelete: () => void;
   deleteLoading: boolean;
+  selected: boolean;
+  toggleCheck: any;
+}
+interface ReferenceRowFormValues {
+  name: string;
+  policyIds: Suggestions;
 }
