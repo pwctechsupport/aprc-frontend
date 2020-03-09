@@ -4,29 +4,26 @@ import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
 import {
-  EnumListsDocument,
-  // Category,
-  PoliciesDocument,
-  useResourceFormMasterQuery,
+  BusinessProcessesDocument,
+  BusinessProcessesQuery,
   ControlsDocument,
   ControlsQuery,
-  PoliciesQuery,
-  EnumListsQuery
+  EnumListsDocument,
+  EnumListsQuery,
+  // Category,
+  PoliciesDocument,
+  PoliciesQuery
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
-import Select from "../../../shared/components/forms/Select";
-import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import {
-  Suggestions,
   Suggestion,
+  Suggestions,
   toBase64,
   toLabelValue
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import ApolloSelect from "../../../shared/components/forms/ApolloSelect";
-import { DocumentNode } from "graphql";
 
 const ResourceForm = ({
   defaultValues,
@@ -37,32 +34,18 @@ const ResourceForm = ({
     ResourceFormValues
   >({ defaultValues, validationSchema });
 
-  const { data, ...mastersQ } = useResourceFormMasterQuery();
-  const masters = {
-    controls: oc(data)
-      .controls.collection([])
-      .map(p => ({
-        ...p,
-        value: String(p.id),
-        label: String(p.description)
-      })),
-    businessProcesses: oc(data)
-      .businessProcesses.collection([])
-      .map(toLabelValue)
-  };
-
   useEffect(() => {
-    register({ name: "controlId", required: true, type: "custom" });
-    register({ name: "businessProcessId", required: true, type: "custom" });
+    // register({ name: "controlId", required: true, type: "custom" });
+    // register({ name: "businessProcessId", required: true, type: "custom" });
     register({ name: "resuploadBase64", type: "custom" });
     register({ name: "resuploadFileName" });
   }, [register]);
 
-  function handleChangeSelect(name: keyof ResourceFormValues) {
-    return function(e: any) {
-      if (e) setValue(name, e.value, true);
-    };
-  }
+  // function handleChangeSelect(name: keyof ResourceFormValues) {
+  //   return function(e: any) {
+  //     if (e) setValue(name, e.value, true);
+  //   };
+  // }
 
   async function handleChangeFile(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files[0]) {
@@ -76,58 +59,19 @@ const ResourceForm = ({
   }
 
   function submit(data: ResourceFormValues) {
-    console.log("values:", data);
-    // onSubmit && onSubmit(data);
+    // console.log("values:", data);
+    onSubmit && onSubmit(data);
   }
-
-  // const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
-  // async function handleGetPolicies(
-  //   title_cont: string = ""
-  // ): Promise<Suggestions> {
-  //   try {
-  //     const { data } = await getPolicies({
-  //       filter: { title_cont }
-  //     });
-  //     return oc(data)
-  //       .policies.collection([])
-  //       .map(toLabelValue);
-  //   } catch (error) {
-  //     return [];
-  //   }
-  // }
-
-  // const getCategories = useLazyQueryReturnPromise(EnumListsDocument);
-  // async function handleGetCategories(
-  //   name_cont: string = ""
-  // ): Promise<Suggestions> {
-  //   try {
-  //     const { data } = await getCategories({
-  //       filter: { name_cont, category_type_eq: "Category" }
-  //     });
-  //     const options = data?.enumLists?.collection?.map(toLabelValue) || [];
-  //     console.log("options: ", options);
-  //     return options;
-  //   } catch (error) {
-  //     return [];
-  //   }
-  // }
 
   const handleGetCategories = useLoadCategories();
   const handleGetPolicies = useLoadPolicies();
   const handleGetControls = useLoadControls();
-
-  if (mastersQ.loading) {
-    return (
-      <div>
-        <LoadingSpinner size={30} centered />
-      </div>
-    );
-  }
+  const handleGetBps = useLoadBps();
 
   const selectedCategory = watch("category", "");
-  console.log("selectedCategory:", selectedCategory);
+  // console.log("selectedCategory:", selectedCategory);
 
-  const name = oc(defaultValues).name("");
+  const name = defaultValues?.name;
 
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -146,19 +90,16 @@ const ResourceForm = ({
         loadOptions={handleGetCategories}
         defaultOptions
       />
-      {selectedCategory === "Flowchart" ? (
-        <Select
+      {selectedCategory?.value === "Flowchart" ? (
+        <AsyncSelect
           name="businessProcessId"
-          label="Related sub-business Process"
-          options={masters.businessProcesses}
-          defaultValue={
-            defaultValues &&
-            masters.businessProcesses.find(
-              c => c.value === defaultValues.businessProcessId
-            )
-          }
-          onChange={handleChangeSelect("businessProcessId")}
-          error={oc(errors).businessProcessId.message()}
+          label="Related Sub-business Process"
+          register={register}
+          setValue={setValue}
+          cacheOptions
+          loadOptions={handleGetBps}
+          defaultOptions
+          defaultValue={defaultValues?.businessProcessId}
         />
       ) : (
         <Fragment>
@@ -170,7 +111,7 @@ const ResourceForm = ({
             cacheOptions
             loadOptions={handleGetPolicies}
             defaultOptions
-            defaultValue={defaultValues?.policies || []}
+            defaultValue={defaultValues?.policyIds || []}
             isMulti
           />
           <AsyncSelect
@@ -181,20 +122,9 @@ const ResourceForm = ({
             cacheOptions
             loadOptions={handleGetControls}
             defaultOptions
-            defaultValue={defaultValues?.controls || []}
+            defaultValue={defaultValues?.controlIds || []}
             isMulti
           />
-          {/* <Select
-            name="controlId"
-            label="Related Control"
-            options={masters.controls}
-            defaultValue={
-              defaultValues &&
-              masters.controls.find(c => c.value === defaultValues.controlId)
-            }
-            onChange={handleChangeSelect("controlId")}
-            error={oc(errors).controlId.message()}
-          /> */}
         </Fragment>
       )}
       <Input type="file" label="Upload" onChange={handleChangeFile} />
@@ -231,30 +161,17 @@ const validationSchema = yup.object().shape({
 // ==========================================
 
 interface ResourceFormProps {
-  defaultValues?: ResourceFormDefaultValues;
+  defaultValues?: ResourceFormValues;
   onSubmit?: (data: ResourceFormValues) => void;
   submitting?: boolean;
 }
 
 export interface ResourceFormValues {
-  name: string;
-  category: string;
-  policyIds: string[];
-  controlId: string;
-  businessProcessId?: string;
-  resuploadBase64?: any;
-  resuploadFileName?: string;
-  resuploadUrl?: string;
-}
-
-export interface ResourceFormDefaultValues {
   name?: string;
-  category?: string;
-  policies?: Suggestions;
-  controls?: Suggestions;
-  policyIds?: string[];
-  // controlId?: Suggestion;
-  businessProcessId?: string;
+  category?: Suggestion;
+  policyIds?: Suggestions;
+  controlIds?: Suggestions;
+  businessProcessId?: Suggestion;
   resuploadBase64?: any;
   resuploadFileName?: string;
   resuploadUrl?: string;
@@ -298,14 +215,33 @@ function useLoadPolicies() {
 
 function useLoadControls() {
   const query = useLazyQueryReturnPromise<ControlsQuery>(ControlsDocument);
-  async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
+  async function getSuggestions(
+    description_cont: string = ""
+  ): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { title_cont }
+        filter: { description_cont }
       });
       return oc(data)
         .controls.collection([])
         .map(toLabelValue);
+    } catch (error) {
+      return [];
+    }
+  }
+  return getSuggestions;
+}
+
+function useLoadBps() {
+  const query = useLazyQueryReturnPromise<BusinessProcessesQuery>(
+    BusinessProcessesDocument
+  );
+  async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
+    try {
+      const { data } = await query({
+        filter: { name_cont }
+      });
+      return data.businessProcesses?.collection.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }

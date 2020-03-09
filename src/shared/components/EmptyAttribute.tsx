@@ -1,7 +1,10 @@
 import React from "react";
+import c from "classnames";
 
-const EmptyAttribute = () => {
-  return <div className="text-grey text-center">Empty</div>;
+const EmptyAttribute = ({ centered = true }: { centered?: boolean }) => {
+  return (
+    <div className={c("text-grey", { "text-center": centered })}>Empty</div>
+  );
 };
 
 export default EmptyAttribute;

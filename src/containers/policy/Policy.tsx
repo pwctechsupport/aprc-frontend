@@ -198,13 +198,13 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   });
   function handleCreateResource(values: ResourceFormValues) {
     const input: CreateResourceInput = {
-      category: values.category,
-      name: values.name,
+      name: values.name || "",
+      category: values.category?.value || "",
       resuploadBase64: values.resuploadBase64,
       resuploadFileName: values.resuploadFileName,
-      policyIds: values.policyIds,
-      controlIds: values.controlId ? [values.controlId] : [],
-      businessProcessId: values.businessProcessId
+      policyIds: values.policyIds?.map(a => a.value),
+      controlIds: values.controlIds?.map(a => a.value),
+      businessProcessId: values.businessProcessId?.value
     };
     createResource({ variables: { input } });
   }
@@ -830,8 +830,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       >
         <ResourceForm
           defaultValues={{
-            policies: [{ value: id, label: title }],
-            policyIds: [id]
+            policyIds: [{ value: id, label: title }]
           }}
           onSubmit={handleCreateResource}
           submitting={createResourceM.loading}

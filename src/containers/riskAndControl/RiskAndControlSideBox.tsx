@@ -18,7 +18,10 @@ const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
 
   const { data, loading } = useBusinessProcessTreeQuery({
     variables: {
-      filter: { ...(!search && { ancestry_null: true }), name_cont: search },
+      filter: {
+        ...(!search && { ancestry_null: true }),
+        name_cont: searchQuery
+      },
       isTree: !search
     }
   });
