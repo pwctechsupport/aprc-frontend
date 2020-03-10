@@ -13,7 +13,14 @@ import {
 } from "../../shared/utils/accessGeneratedPdf";
 // import BreadCrumb from "../../shared/components/BreadCrumb";
 
-const options = ["report_risk"];
+const options = [
+  {
+    description: "",
+    category: "",
+    name: "Risk without Policy",
+    id: "report_risk"
+  }
+];
 
 const Report = () => {
   const { register, handleSubmit, getValues, watch } = useForm();
@@ -61,11 +68,11 @@ const Report = () => {
           </thead>
           <tbody>
             {options.map(option => {
-              const value = watch(option);
+              const value = watch(option.id);
               return (
-                <tr key={option}>
+                <tr key={option.id}>
                   <td>1</td>
-                  <td>Risk without Policy</td>
+                  <td>{option.name}</td>
                   <td>-</td>
                   <td>-</td>
                   <td>
