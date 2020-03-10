@@ -17,7 +17,7 @@ import {
 
 const options = [
   {
-    name: "Report Risk",
+    name: "Risk",
     id: "report_risk",
     formats: [
       { id: "pdf", name: "PDF" },
@@ -25,14 +25,22 @@ const options = [
     ]
   },
   {
-    name: "Report Risk Without Control",
+    name: "Risk Without Control",
     id: "report_risk_policy",
     formats: [{ id: "pdf", name: "PDF" }]
   },
   {
-    name: "Report Control Without Risk",
+    name: "Control Without Risk",
     id: "report_control_policy",
     formats: [{ id: "pdf", name: "PDF" }]
+  },
+  {
+    name: "Resources with rating",
+    id: "report_resource_rating",
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
   }
 ];
 
