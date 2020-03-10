@@ -61,20 +61,21 @@ export async function emailPdf(fileName: string) {
   } catch (error) {}
 }
 
-export async function previewPdfs(
-  endpoints: Array<{ url: string; options?: FileOption }>
-) {
+export async function previewPdfs(endpoints: DownloadPdfInput[]) {
   for (const item of endpoints) {
     await previewPdf(item.url, Object.assign({}, item.options));
   }
 }
 
-export async function downloadPdfs(
-  endpoints: Array<{ url: string; options?: FileOption }>
-) {
+export async function downloadPdfs(endpoints: DownloadPdfInput[]) {
   for (const item of endpoints) {
     await downloadPdf(item.url, Object.assign({}, item.options));
   }
+}
+
+export interface DownloadPdfInput {
+  url: string;
+  options?: FileOption;
 }
 
 export interface FileOption {
