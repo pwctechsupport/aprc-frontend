@@ -1,4 +1,5 @@
 import get from "lodash/get";
+import capitalize from "lodash/startCase";
 import React from "react";
 import Helmet from "react-helmet";
 import useForm from "react-hook-form";
@@ -9,16 +10,19 @@ import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import {
   downloadPdfs,
-  previewPdfs
+  previewPdfs,
+  DownloadPdfInput
 } from "../../shared/utils/accessGeneratedPdf";
 // import BreadCrumb from "../../shared/components/BreadCrumb";
 
-const options = ["report_risk"];
+const options = ["report_risk", "report_risk_policy", "report_control_policy"];
 
 const Report = () => {
-  const { register, handleSubmit, getValues, watch } = useForm();
+  const { register, handleSubmit, getValues, watch } = useForm<
+    ReportFormValues
+  >();
 
-  const constructDataFromForm = (values: any) => {
+  const constructDataFromForm = (values: any): DownloadPdfInput[] => {
     return Object.keys(values)
       .map(key => ({
         name: key,
@@ -34,6 +38,8 @@ const Report = () => {
       }));
   };
 
+  const values = getValues({ nest: true });
+
   function onPreview(values: any) {
     previewPdfs(constructDataFromForm(values));
   }
@@ -41,8 +47,6 @@ const Report = () => {
   function onDownload() {
     downloadPdfs(constructDataFromForm(values));
   }
-
-  const values = getValues({ nest: true });
 
   return (
     <Container fluid className="p-0 pt-5 px-2">
@@ -60,17 +64,18 @@ const Report = () => {
             </tr>
           </thead>
           <tbody>
-            {options.map(option => {
-              const value = watch(option);
+            {options.map((option, index) => {
+              const value = watch(option as keyof ReportFormValues);
+              console.log("value:", value);
               return (
                 <tr key={option}>
-                  <td>1</td>
-                  <td>Risk without Policy</td>
+                  <td>{index + 1}</td>
+                  <td>{capitalize(option)}</td>
                   <td>-</td>
                   <td>-</td>
                   <td>
                     <input
-                      name="report_risk.print"
+                      name={`${option}.print`}
                       type="checkbox"
                       className="text-center"
                       ref={register}
@@ -83,7 +88,7 @@ const Report = () => {
                           <Input
                             disabled={!get(value, "print")}
                             type="radio"
-                            name="report_risk.format"
+                            name={`${option}.format`}
                             value="pdf"
                             innerRef={register}
                           />{" "}
@@ -95,7 +100,7 @@ const Report = () => {
                           <Input
                             disabled={!get(value, "print")}
                             type="radio"
-                            name="report_risk.format"
+                            name={`${option}.format`}
                             value="xlsx"
                             innerRef={register}
                           />{" "}
@@ -132,3 +137,10 @@ const Report = () => {
 };
 
 export default Report;
+
+interface ReportFormValues {
+  report_risk?: {
+    print: boolean;
+    format: string;
+  };
+}
