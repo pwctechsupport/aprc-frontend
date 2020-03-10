@@ -24,11 +24,7 @@ import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import {
-  toLabelValue,
-  Suggestions,
-  Suggestion
-} from "../../../shared/formatter";
+import { toLabelValue, Suggestions } from "../../../shared/formatter";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 

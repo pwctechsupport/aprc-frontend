@@ -1,4 +1,3 @@
-import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { AiFillEdit } from "react-icons/ai";
