@@ -141,8 +141,8 @@ const Control = ({ match, history }: RouteComponentProps) => {
 
   if (loading) return <LoadingSpinner centered size={30} />;
 
-  let description = data?.control?.description || "";
-  description = draft ? `[Draft] ${description}` : description;
+  const description = data?.control?.description || "";
+  // description = draft ? `[Draft] ${description}` : description;
   const controlOwner = data?.control?.controlOwner || "";
   const assertion = data?.control?.assertion || [];
   const frequency = data?.control?.frequency || "";
@@ -396,7 +396,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
         ]}
       />
       <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton heading={description} />
+        <HeaderWithBackButton heading={description} draft={!!draft} />
         {renderControlAction()}
       </div>
       {inEditMode ? renderControlEditable() : renderControlNonEditable()}

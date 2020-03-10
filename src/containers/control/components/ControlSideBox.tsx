@@ -1,13 +1,17 @@
 import React, { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { oc } from "ts-optchain";
 import { useControlsQuery } from "../../../generated/graphql";
+import Button from "../../../shared/components/Button";
 import {
+  SideBox,
   SideBoxItem,
   SideBoxItemText,
   SideBoxSearch,
-  SideBoxTitle,
-  SideBox
+  SideBoxTitle
 } from "../../../shared/components/SideBox";
+import Tooltip from "../../../shared/components/Tooltip";
 import humanizeDate from "../../../shared/utils/humanizeDate";
 
 const ControlSideBox = () => {
@@ -27,7 +31,21 @@ const ControlSideBox = () => {
 
   return (
     <SideBox>
-      <SideBoxTitle>Recently Updated</SideBoxTitle>
+      <SideBoxTitle>
+        <div className="d-flex justify-content-between">
+          Control
+          <Tooltip description="Create Control">
+            <Button
+              tag={Link}
+              to="/control/create"
+              color=""
+              className="soft red"
+            >
+              <FaPlus />
+            </Button>
+          </Tooltip>
+        </div>
+      </SideBoxTitle>
       <SideBoxSearch
         search={search}
         setSearch={setSearch}

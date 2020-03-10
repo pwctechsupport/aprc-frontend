@@ -1,8 +1,8 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaPlus, FaTrash, FaFileExport, FaFileImport } from "react-icons/fa";
-import { Link, RouteComponentProps } from "react-router-dom";
+import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -12,11 +12,11 @@ import {
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import ImportModal from "../../shared/components/ImportModal";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
-import ImportModal from "../../shared/components/ImportModal";
 
 const Controls = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -77,16 +77,6 @@ const Controls = ({ history }: RouteComponentProps) => {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h4>Controls</h4>
           <div className="d-flex">
-            <Tooltip description="Create Control">
-              <Button
-                tag={Link}
-                to="/control/create"
-                className="soft orange mr-2"
-                color=""
-              >
-                <FaPlus />
-              </Button>
-            </Tooltip>
             <Tooltip
               description="Export Control"
               subtitle={
