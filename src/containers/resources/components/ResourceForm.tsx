@@ -14,6 +14,7 @@ import {
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
+import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatableSelect";
 import Input from "../../../shared/components/forms/Input";
 import {
   Suggestion,
@@ -74,7 +75,7 @@ const ResourceForm = ({
         innerRef={register({ required: true })}
         error={errors.name && errors.name.message}
       />
-      <AsyncSelect
+      <AsyncCreatableSelect
         name="category"
         label="Category"
         register={register}
@@ -108,7 +109,7 @@ const ResourceForm = ({
             isMulti
           />
           <AsyncSelect
-            name="controlId"
+            name="controlIds"
             label="Related Control"
             register={register}
             setValue={setValue}
