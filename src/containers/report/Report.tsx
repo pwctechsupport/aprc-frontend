@@ -27,12 +27,18 @@ const options = [
   {
     name: "Risk Without Control",
     id: "report_risk_policy",
-    formats: [{ id: "pdf", name: "PDF" }]
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Control Without Risk",
     id: "report_control_policy",
-    formats: [{ id: "pdf", name: "PDF" }]
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Resources with rating",
