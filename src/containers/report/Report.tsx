@@ -15,7 +15,34 @@ import {
 } from "../../shared/utils/accessGeneratedPdf";
 // import BreadCrumb from "../../shared/components/BreadCrumb";
 
-const options = ["report_risk", "report_risk_policy", "report_control_policy"];
+const options = [
+  {
+    name: "Risk",
+    id: "report_risk",
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
+  },
+  {
+    name: "Risk Without Control",
+    id: "report_risk_policy",
+    formats: [{ id: "pdf", name: "PDF" }]
+  },
+  {
+    name: "Control Without Risk",
+    id: "report_control_policy",
+    formats: [{ id: "pdf", name: "PDF" }]
+  },
+  {
+    name: "Resources with rating",
+    id: "report_resource_rating",
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
+  }
+];
 
 const Report = () => {
   const { register, handleSubmit, getValues, watch } = useForm<
@@ -65,17 +92,17 @@ const Report = () => {
           </thead>
           <tbody>
             {options.map((option, index) => {
-              const value = watch(option as keyof ReportFormValues);
-              console.log("value:", value);
+              const value = watch(option.id as keyof ReportFormValues);
+
               return (
-                <tr key={option}>
+                <tr key={option.id}>
                   <td>{index + 1}</td>
-                  <td>{capitalize(option)}</td>
+                  <td>{capitalize(option.name)}</td>
                   <td>-</td>
                   <td>-</td>
                   <td>
                     <input
-                      name={`${option}.print`}
+                      name={`${option.id}.print`}
                       type="checkbox"
                       className="text-center"
                       ref={register}
@@ -83,30 +110,20 @@ const Report = () => {
                   </td>
                   <td>
                     <FormGroup tag="fieldset">
-                      <FormGroup check>
-                        <Label check>
-                          <Input
-                            disabled={!get(value, "print")}
-                            type="radio"
-                            name={`${option}.format`}
-                            value="pdf"
-                            innerRef={register}
-                          />{" "}
-                          PDF
-                        </Label>
-                      </FormGroup>
-                      <FormGroup check>
-                        <Label check>
-                          <Input
-                            disabled={!get(value, "print")}
-                            type="radio"
-                            name={`${option}.format`}
-                            value="xlsx"
-                            innerRef={register}
-                          />{" "}
-                          Excel
-                        </Label>
-                      </FormGroup>
+                      {option.formats.map(format => (
+                        <FormGroup check>
+                          <Label check>
+                            <Input
+                              disabled={!get(value, "print")}
+                              type="radio"
+                              name={`${option.id}.format`}
+                              value={format.id}
+                              innerRef={register}
+                            />{" "}
+                            {format.name}
+                          </Label>
+                        </FormGroup>
+                      ))}
                     </FormGroup>
                   </td>
                 </tr>
