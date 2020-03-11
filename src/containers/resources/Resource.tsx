@@ -59,8 +59,7 @@ const Resource = ({ match }: RouteComponentProps) => {
       controlIds: data.controlIds?.map(a => a.value),
       businessProcessId: data.businessProcessId?.value,
       ...(data.resuploadBase64 && {
-        resuploadBase64: data.resuploadBase64,
-        resuploadFileName: data.resuploadFileName
+        resuploadBase64: data.resuploadBase64
       })
     };
     try {
@@ -89,8 +88,7 @@ const Resource = ({ match }: RouteComponentProps) => {
   async function handleErase() {
     const input = {
       id: id,
-      resuploadBase64: "",
-      resuploadFileName: ""
+      resuploadBase64: ""
     };
     try {
       await updateResource({ variables: { input } });
