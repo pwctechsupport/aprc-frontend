@@ -4,13 +4,21 @@ import styled from "styled-components";
 import {
   Tag,
   useCreateTagMutation,
-  useTagsQuery
+  useTagsQuery,
+  RisksOrControlsQuery,
+  RisksOrControlsDocument
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import {
   notifyGraphQLErrors,
   notifySuccess
 } from "../../../shared/utils/notif";
+import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import {
+  Suggestions,
+  toLabelValue,
+  Suggestion
+} from "../../../shared/formatter";
 
 interface FlowchartProps {
   bpId: string;
@@ -25,6 +33,7 @@ export default function Flowchart({
   bpId,
   resourceId
 }: FlowchartProps) {
+  const [selected, setSelected] = useState<Suggestion | null>(null);
   const { data } = useTagsQuery({
     fetchPolicy: "network-only",
     variables: {
@@ -47,7 +56,7 @@ export default function Flowchart({
   const init = { active: false, x: 0, y: 0, body: "" };
   const [tag, setTag] = useState(init);
 
-  const handleLoadOptions = () => {};
+  const handleLoadOptions = useLoadRiskAndControls({ bpId });
 
   function handleClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     e.persist();
@@ -71,7 +80,7 @@ export default function Flowchart({
       variables: {
         input: {
           businessProcessId: bpId,
-          body: "hard coded",
+          body: "",
           xCoordinates: x,
           yCoordinates: y,
           resourceId: resourceId
@@ -94,40 +103,25 @@ export default function Flowchart({
     <div className={className}>
       <FlowchartWrapper onClick={handleClick}>
         <Image src={img} />
-        {tags.map(tag => (
+        {tags.map((tag, index) => (
           <PreviewTag
-            key={[tag.xCoordinates, tag.yCoordinates].join()}
+            key={index}
             onClick={handlePreviewTagClick(tag)}
             x={tag.xCoordinates || 0}
             y={tag.yCoordinates || 0}
           >
-            {tag.body?.concat(tag.body)}
+            {tag.body}
           </PreviewTag>
         ))}
         {tag.active && (
           <Tagger onClick={e => e.stopPropagation()} x={tag.x} y={tag.y}>
             <Async
               loadOptions={handleLoadOptions}
+              defaultOptions
               onFocus={e => e.stopPropagation()}
               placeholder="Select..."
               value={tag.body ? { label: tag.body, value: tag.body } : null}
-              options={[
-                {
-                  label: "Control",
-                  options: [
-                    { label: "Satu", value: "1" },
-                    { label: "Dua", value: "2" }
-                  ]
-                },
-                {
-                  label: "Risk",
-                  options: [
-                    { label: "Satu", value: "1" },
-                    { label: "Dua", value: "2" },
-                    { label: "Tiga", value: "3" }
-                  ]
-                }
-              ]}
+              // onChange={s => s && setSelected(s)}
             />
             <div className="d-flex justify-content-end">
               <Button
@@ -199,8 +193,8 @@ const Tagger = styled.div<{ x: number; y: number }>`
   position: absolute;
   top: ${p => p.y}px;
   left: ${p => p.x}px;
-  background-color: rgba(0, 0, 0, 0.25);
-  width: 200px;
+  background-color: rgba(0, 0, 0, 1);
+  width: 400px;
   height: 300px;
   border-radius: 5px;
   padding: 20px;
@@ -208,21 +202,47 @@ const Tagger = styled.div<{ x: number; y: number }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  color: black;
+  z-index: 1000000;
 `;
 
-// function useLoadRiskAndControls() {
-//   const query = useLazyQueryReturnPromise<BusinessProcessesQuery>(
-//     BusinessProcessesDocument
-//   );
-//   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
-//     try {
-//       const { data } = await query({
-//         filter: { name_cont }
-//       });
-//       return data.businessProcesses?.collection.map(toLabelValue) || [];
-//     } catch (error) {
-//       return [];
-//     }
-//   }
-//   return getSuggestions;
-// }
+function useLoadRiskAndControls({ bpId }: { bpId: string }) {
+  const query = useLazyQueryReturnPromise<RisksOrControlsQuery>(
+    RisksOrControlsDocument
+  );
+  async function getSuggestions(
+    name: string = ""
+  ): Promise<MultipleSuggestion[]> {
+    try {
+      const { data } = await query({
+        filter: {
+          name_cont: name,
+          description_cont: name,
+          business_processes_id_eq: bpId
+        }
+      });
+      const options = [
+        {
+          label: "Risks",
+          options: data.risks?.collection.map(toLabelValue) || []
+        },
+        {
+          label: "Controls",
+          options:
+            data.controls?.collection
+              .map(({ id, description }) => ({ id, name: description }))
+              .map(toLabelValue) || []
+        }
+      ];
+      return options;
+    } catch (error) {
+      return [];
+    }
+  }
+  return getSuggestions;
+}
+
+interface MultipleSuggestion {
+  label: string;
+  options: Suggestions;
+}

@@ -8,14 +8,14 @@ query tags($filter: BaseScalar = {}, $limit: Int, $page: Int) {
   }
 }
 
-query risksAndControls($keyword: String) {
-  risks(filter: { name_cont: $keyword }) {
+query risksOrControls($filter: BaseScalar = {}) {
+  risks(filter: $filter) {
     collection {
       id
       name
     }
   }
-  controls(filter: { description_cont: $keyword }) {
+  controls(filter: $filter) {
     collection {
       id
       description

@@ -1,10 +1,5 @@
 import React, { useState } from "react";
-import {
-  Tag,
-  useCreateTagMutation,
-  useTagsQuery,
-  Resource
-} from "../../../generated/graphql";
+import { Resource } from "../../../generated/graphql";
 import Flowchart from "./Flowchart";
 import styled from "styled-components";
 
