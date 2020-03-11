@@ -159,6 +159,8 @@ const FlowchartWrapper = styled.div`
 const Image = styled.img`
   cursor: crosshair;
   position: absolute;
+  width: 800px;
+  height: 500px;
 `;
 
 const PreviewTag = styled.div<{ x: number; y: number }>`

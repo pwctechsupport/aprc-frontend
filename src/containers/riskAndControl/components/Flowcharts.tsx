@@ -21,7 +21,7 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
     a => a.id === activeResourceid
   );
   return (
-    <div>
+    <div className="mt-3">
       <Flowchart
         img={
           "http://mandalorian.rubyh.co" + currentResource?.resuploadUrl || ""
@@ -59,12 +59,13 @@ const ButtonImage = styled.div`
   float: left;
   overflow: hidden;
   cursor: pointer;
+  margin-top: 550px;
 `;
 
 const ButtonImage2 = styled.div`
   background-color: transparent;
   display: inline-block;
-  height: auto;
+  height: 100%;
   margin: 0 auto;
   position: relative;
   text-align: center;
@@ -75,7 +76,7 @@ const Image = styled.img`
   object-fit: contain;
   background-color: transparent;
   display: inline-block;
-  height: auto;
+  height: 100%;
   margin: 0 auto;
   position: relative;
   text-align: center;
