@@ -22,11 +22,21 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
   );
   return (
     <div>
+      <Flowchart
+        img={
+          "http://mandalorian.rubyh.co" + currentResource?.resuploadUrl || ""
+        }
+        resourceId={currentResource?.id || ""}
+        bpId={bpId}
+      />
       <div>
         {resources.map(resource => (
-          <ButtonImage key={resource.id}>
+          <ButtonImage
+            key={resource.id}
+            onClick={() => setActiveResourceId(resource.id)}
+          >
             <ButtonImage2>
-              <img
+              <Image
                 src={
                   "http://mandalorian.rubyh.co" + resource.resuploadUrl || ""
                 }
@@ -36,13 +46,6 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
           </ButtonImage>
         ))}
       </div>
-      <Flowchart
-        img={
-          "http://mandalorian.rubyh.co" + currentResource?.resuploadUrl || ""
-        }
-        resourceId={currentResource?.id || ""}
-        bpId={bpId}
-      />
     </div>
   );
 }
@@ -55,9 +58,21 @@ const ButtonImage = styled.div`
   margin: 8.5px;
   float: left;
   overflow: hidden;
+  cursor: pointer;
 `;
 
 const ButtonImage2 = styled.div`
+  background-color: transparent;
+  display: inline-block;
+  height: auto;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+  width: 100%;
+`;
+
+const Image = styled.img`
+  object-fit: contain;
   background-color: transparent;
   display: inline-block;
   height: auto;
