@@ -1,6 +1,6 @@
 import { capitalCase } from "capital-case";
 import React, { useEffect, useState } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import {

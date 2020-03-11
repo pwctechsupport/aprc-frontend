@@ -1,6 +1,6 @@
 import React from "react";
 import Helmet from "react-helmet";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";

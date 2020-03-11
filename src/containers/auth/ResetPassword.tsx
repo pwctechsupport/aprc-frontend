@@ -1,34 +1,39 @@
-import React from 'react'
-import useForm from 'react-hook-form'
-import { RouteComponentProps } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import * as yup from 'yup'
-import { get } from 'lodash'
-import pwcLogo from '../../assets/images/pwc-logo.png'
-import { useUpdatePasswordMutation } from '../../generated/graphql'
-import Button from '../../shared/components/Button'
-import { Container, Form, H1, Image, Input, Label } from './Login'
-import { FieldError } from 'react-hook-form/dist/types'
+import React from "react";
+import { useForm } from "react-hook-form";
+import { RouteComponentProps } from "react-router-dom";
+import { toast } from "react-toastify";
+import * as yup from "yup";
+import { get } from "lodash";
+import pwcLogo from "../../assets/images/pwc-logo.png";
+import { useUpdatePasswordMutation } from "../../generated/graphql";
+import Button from "../../shared/components/Button";
+import { Container, Form, H1, Image, Input, Label } from "./Login";
+import { FieldError } from "react-hook-form/dist/types";
 
-const required = 'Wajib diisi'
+const required = "Wajib diisi";
 const validationSchema = yup.object().shape({
   password: yup.string().required(),
   passwordConfirmation: yup
     .string()
     .trim()
     .required(required)
-    .oneOf([yup.ref('password')], 'Password tidak sama'),
-})
-
+    .oneOf([yup.ref("password")], "Password tidak sama")
+});
+interface ResetPasswordFormValues {
+  password: string;
+  passwordConfirmation: string;
+}
 const ResetPassword = ({ history, location }: RouteComponentProps) => {
-  const searhParams = new URLSearchParams(location.search)
-  const token = searhParams.get('reset_password_token')
+  const searhParams = new URLSearchParams(location.search);
+  const token = searhParams.get("reset_password_token");
 
-  const { register, handleSubmit, errors } = useForm({ validationSchema })
+  const { register, handleSubmit, errors } = useForm<ResetPasswordFormValues>({
+    validationSchema
+  });
   const [updatePassword, { loading }] = useUpdatePasswordMutation({
     onCompleted,
-    onError,
-  })
+    onError
+  });
 
   const onSubmit = (data: any) => {
     updatePassword({
@@ -36,15 +41,15 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
         input: {
           password: data.password,
           passwordConfirmation: data.passwordConfirmation,
-          resetPasswordToken: token,
-        },
-      },
-    })
-  }
+          resetPasswordToken: token
+        }
+      }
+    });
+  };
 
   function onCompleted() {
-    toast.success('Password berhasil diubah')
-    history.push('/auth')
+    toast.success("Password berhasil diubah");
+    history.push("/auth");
   }
 
   function onError() {
@@ -53,10 +58,10 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
         <h5>Error!</h5>
         <div>Mohon coba lagi</div>
       </div>
-    )
+    );
   }
 
-  console.log({ errors })
+  console.log({ errors });
 
   return (
     <Container>
@@ -85,7 +90,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
             required
             ref={register({ required: true })}
           />
-          <FormError error={get(errors, 'passwordConfirmation.message')} />
+          <FormError error={get(errors, "passwordConfirmation.message")} />
         </div>
 
         <Button
@@ -99,15 +104,15 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
         </Button>
       </Form>
     </Container>
-  )
-}
+  );
+};
 
 const FormError = ({ error }: { error?: FieldError }) => {
   if (error) {
-    return <span className="text-danger">{error}</span>
+    return <span className="text-danger">{error}</span>;
   } else {
-    return null
+    return null;
   }
-}
+};
 
-export default ResetPassword
+export default ResetPassword;

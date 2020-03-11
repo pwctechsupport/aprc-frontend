@@ -1,5 +1,5 @@
 import React from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form, Input } from "reactstrap";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
