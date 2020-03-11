@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import * as yup from "yup";
 import {
@@ -50,7 +50,6 @@ const ResourceForm = ({
   }
 
   function submit(data: ResourceFormValues) {
-    // console.log("values:", data);
     onSubmit && onSubmit(data);
   }
 
@@ -59,12 +58,7 @@ const ResourceForm = ({
   const handleGetControls = useLoadControls();
   const handleGetBps = useLoadBps();
 
-  const selectedCategory = watch(
-    "category",
-    defaultValues?.category?.value || ""
-  );
-  console.log("selectedCategory:", selectedCategory);
-
+  const selectedCategory = watch("category");
   const name = defaultValues?.name;
 
   return (
@@ -83,6 +77,7 @@ const ResourceForm = ({
         cacheOptions
         loadOptions={handleGetCategories}
         defaultOptions
+        defaultValue={defaultValues?.category}
       />
       {selectedCategory?.value === "Flowchart" ? (
         <AsyncSelect
@@ -188,9 +183,7 @@ function useLoadCategories() {
       const { data } = await query({
         filter: { name_cont, category_type_eq: "Category" }
       });
-      const bro = data.enumLists?.collection.map(toLabelValue) || [];
-      console.log("bro:", bro);
-      return bro;
+      return data.enumLists?.collection.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }

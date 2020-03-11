@@ -1,0 +1,30 @@
+query tags($filter: BaseScalar = {}, $limit: Int, $page: Int) {
+  tags(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      xCoordinates
+      yCoordinates
+      body
+    }
+  }
+}
+
+query risksAndControls($keyword: String) {
+  risks(filter: { name_cont: $keyword }) {
+    collection {
+      id
+      name
+    }
+  }
+  controls(filter: { description_cont: $keyword }) {
+    collection {
+      id
+      description
+    }
+  }
+}
+
+mutation createTag($input: CreateTagInput!) {
+  createTag(input: $input) {
+    success
+  }
+}
