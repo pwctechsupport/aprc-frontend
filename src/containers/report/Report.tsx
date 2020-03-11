@@ -47,6 +47,14 @@ const options = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" }
     ]
+  },
+  {
+    name: "Unmapped Risk",
+    id: "unmapped_risk",
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
   }
 ];
 
