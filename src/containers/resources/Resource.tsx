@@ -63,6 +63,7 @@ const Resource = ({ match }: RouteComponentProps) => {
       policyIds: data.policyIds?.map(a => a.value),
       controlIds: data.controlIds?.map(a => a.value),
       businessProcessId: data.businessProcessId?.value,
+      resuploadLink: data.resuploadLink,
       ...(data.resuploadBase64 && {
         resuploadBase64: data.resuploadBase64,
         resuploadFileName: data.resuploadFileName
