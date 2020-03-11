@@ -4,10 +4,8 @@ import { AiFillEdit } from "react-icons/ai";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  // Category,
   UpdateResourceInput,
   useDestroyResourceMutation,
   useResourceQuery,
@@ -20,10 +18,7 @@ import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
-import ResourceForm, {
-  // ResourceFormValues,
-  ResourceFormValues
-} from "./components/ResourceForm";
+import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 import { toLabelValue } from "../../shared/formatter";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 
@@ -43,8 +38,8 @@ const Resource = ({ match }: RouteComponentProps) => {
 
   const [deleteResource] = useDestroyResourceMutation({
     refetchQueries: ["resources", "resource"],
-    onCompleted: _ => toast.success("Delete Success"),
-    onError: _ => toast.error("Delete Failed")
+    onCompleted: _ => notifySuccess("Delete Success"),
+    onError: notifyGraphQLErrors
   });
 
   const handleDeleteMain = () => {
@@ -53,7 +48,7 @@ const Resource = ({ match }: RouteComponentProps) => {
     });
   };
 
-  const name = oc(data).resource.name("");
+  const name = data?.resource?.name || "";
 
   async function handleSubmit(data: ResourceFormValues) {
     const input: UpdateResourceInput = {
@@ -89,7 +84,7 @@ const Resource = ({ match }: RouteComponentProps) => {
         ?.map(({ id, description }) => ({ id, name: description }))
         .map(toLabelValue) || [],
     policyIds: data?.resource?.policies?.map(toLabelValue) || [],
-    resuploadUrl: oc(data).resource.resuploadUrl("")
+    resuploadUrl: data?.resource?.resuploadUrl || ""
   };
 
   async function handleErase() {

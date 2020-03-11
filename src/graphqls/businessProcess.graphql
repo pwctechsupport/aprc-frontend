@@ -115,6 +115,7 @@ query businessProcess($id: ID!) {
     }
     resources {
       name
+      category
       id
       rating
       visit
