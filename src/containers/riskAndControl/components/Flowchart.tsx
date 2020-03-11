@@ -4,8 +4,7 @@ import styled from "styled-components";
 import {
   Tag,
   useCreateTagMutation,
-  useTagsQuery,
-  Resource
+  useTagsQuery
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import {

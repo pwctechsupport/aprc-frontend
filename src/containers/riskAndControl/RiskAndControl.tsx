@@ -11,8 +11,8 @@ import {
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { RouteComponentProps, NavLink, Route } from "react-router-dom";
-import { Badge, Table, Nav, NavItem, TabContent, TabPane } from "reactstrap";
+import { NavLink, Route, RouteComponentProps } from "react-router-dom";
+import { Badge, Nav, NavItem, TabContent, Table, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   Assertion,
@@ -28,6 +28,7 @@ import {
   useUpdateControlMutation,
   useUpdateRiskMutation
 } from "../../generated/graphql";
+import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
@@ -36,29 +37,23 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import Modal from "../../shared/components/Modal";
 import ResourceBar from "../../shared/components/ResourceBar";
+import { toLabelValue } from "../../shared/formatter";
 import {
   downloadPdf,
   emailPdf,
   previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
-import ControlForm, {
-  CreateControlFormValues,
-  ControlFormValues
-} from "../control/components/ControlForm";
-import RiskForm, {
-  // RiskFormDefaultValues,
-  RiskFormValues
-} from "../risk/components/RiskForm";
-import { toLabelValue } from "../../shared/formatter";
-import BreadCrumb from "../../shared/components/BreadCrumb";
-import { CrumbItem } from "../../shared/components/BreadCrumb";
 import {
-  notifySuccess,
+  notifyError,
   notifyGraphQLErrors,
   notifyInfo,
-  notifyError
+  notifySuccess
 } from "../../shared/utils/notif";
-import Flowchart from "./components/Flowchart";
+import ControlForm, {
+  ControlFormValues,
+  CreateControlFormValues
+} from "../control/components/ControlForm";
+import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
 
 const RiskAndControls = ({ match }: RouteComponentProps) => {
