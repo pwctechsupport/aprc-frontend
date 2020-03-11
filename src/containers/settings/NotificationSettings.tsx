@@ -1,48 +1,55 @@
-import React, { Fragment } from "react";
-import { Form, FormGroup, Input, Label, Col, Row } from "reactstrap";
-import Button from "../../shared/components/Button";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
-
-const settings = [
-  { name: "autoForward", label: "Auto Forward Notifications" },
-  { name: "iconBadges", label: "Notifications Icon Badges" },
-  { name: "doNotDisturb", label: "Do not Disturb" }
-];
+import Switch from "react-switch";
+import { Col, Row } from "reactstrap";
+import { toast } from "react-toastify";
+import { useNotifBadgesMutation } from "../../generated/graphql";
+import { useDebouncedCallback } from "use-debounce/lib";
 
 const NotificationSettings = () => {
+  const settings = [{ name: "iconBadges", label: "Notifications Icon Badges" }];
+
+  const [notifBadgesMutation] = useNotifBadgesMutation({
+    onCompleted: () => {
+      toast.success("Notification Disabled");
+    },
+    onError: () => toast.error("Disable Notification Failed")
+  });
+
+  const handleSwitch = (notifShow: boolean) => {
+    notifBadgesMutation({ variables: { input: { notifShow } } });
+  };
+  const [show, setShow] = useState(false);
+
+  const firstPhase = (a: boolean) => {
+    setShow(a);
+    handleSwitch(a);
+  };
+  const [debouncedCallback] = useDebouncedCallback(firstPhase, 400);
   return (
     <div>
       <Helmet>
         <title>Notification - Settings - PricewaterhouseCoopers</title>
       </Helmet>
-      <h4>Notifications</h4>
-      <Row>
-        <Col md={6}>
-          <Form>
+      <div>
+        <h4>Notifications</h4>
+        <br />
+        <Row>
+          <Col md={6}>
             {settings.map(s => (
-              <Fragment key={s.name}>
-                <FormGroup check className="py-3">
-                  <Input
-                    type="checkbox"
-                    name={s.name}
-                    id={s.name + "Checkbox"}
-                    // innerRef={register}
-                  />
-                  <Label for={s.name + "Checkbox"} check className="pl-2">
-                    {s.label}
-                  </Label>
-                </FormGroup>
-                <div className="divider" />
-              </Fragment>
+              <div key={s.name} className="d-flex justify-content-between">
+                <h6>{s.label}</h6>
+                <Switch
+                  checked={show}
+                  height={25}
+                  width={50}
+                  onChange={e => debouncedCallback(e)}
+                />
+              </div>
             ))}
-            <div className="d-flex justify-content-end mt-3">
-              <Button type="submit" className="pwc">
-                Save Settings
-              </Button>
-            </div>
-          </Form>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </div>
     </div>
   );
 };
