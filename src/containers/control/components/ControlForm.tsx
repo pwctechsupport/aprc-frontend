@@ -1,6 +1,6 @@
 import { capitalCase } from "capital-case";
 import React, { Fragment, useEffect, useState } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
 import { Col, Form, FormGroup, Input as BsInput, Label, Row } from "reactstrap";
 import { oc } from "ts-optchain";

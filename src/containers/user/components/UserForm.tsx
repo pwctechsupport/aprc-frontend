@@ -1,5 +1,5 @@
 import React from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import Button from "../../../shared/components/Button";
@@ -7,7 +7,7 @@ import Input from "../../../shared/components/forms/Input";
 import * as yup from "yup";
 
 const UserForm = (props: UserFormProps) => {
-  const { register, handleSubmit, errors } = useForm({
+  const { register, handleSubmit, errors } = useForm<UserFormValues>({
     validationSchema,
     defaultValues: props.defaultValues
   });

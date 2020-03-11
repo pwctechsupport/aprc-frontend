@@ -1,6 +1,6 @@
 import groupBy from "lodash/groupBy";
 import React, { Fragment } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Form, FormGroup, Input, Label } from "reactstrap";

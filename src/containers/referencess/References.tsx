@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   FaFileExport,
   FaFileImport,

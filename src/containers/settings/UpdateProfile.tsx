@@ -1,5 +1,5 @@
 import React from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";

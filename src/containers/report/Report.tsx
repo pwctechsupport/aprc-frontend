@@ -2,7 +2,7 @@ import get from "lodash/get";
 import capitalize from "lodash/startCase";
 import React from "react";
 import Helmet from "react-helmet";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FaDownload, FaFile } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Container, Form, FormGroup, Input, Label } from "reactstrap";
