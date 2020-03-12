@@ -4,6 +4,15 @@ query tags($filter: BaseScalar = {}, $limit: Int, $page: Int) {
       xCoordinates
       yCoordinates
       body
+      id
+      risk {
+        id
+        name
+      }
+      control {
+        id
+        description
+      }
     }
   }
 }
@@ -25,6 +34,18 @@ query risksOrControls($filter: BaseScalar = {}) {
 
 mutation createTag($input: CreateTagInput!) {
   createTag(input: $input) {
+    success
+  }
+}
+mutation deleteTag($input: DestroyTagInput!) {
+  destroyTag(input: $input) {
+    success
+    errors
+  }
+}
+mutation updateTag($input: UpdateTagInput!) {
+  updateTag(input: $input) {
+    errors
     success
   }
 }

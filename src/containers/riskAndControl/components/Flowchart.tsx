@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { GroupType } from "react-select";
 import Async from "react-select/async";
 import styled from "styled-components";
 import {
@@ -33,7 +34,9 @@ export default function Flowchart({
   bpId,
   resourceId
 }: FlowchartProps) {
-  const [selected, setSelected] = useState<Suggestion | null>(null);
+  const init = { active: false, x: 0, y: 0, body: "" };
+  const [tag, setTag] = useState(init);
+  const [selected, setSelected] = useState<NeedProperName | null>(null);
   const { data } = useTagsQuery({
     fetchPolicy: "network-only",
     variables: {
@@ -44,6 +47,14 @@ export default function Flowchart({
     }
   });
   const tags = data?.tags?.collection || [];
+
+  const restrictedControlIds = tags
+    .map(a => a.control?.id)
+    .filter(Boolean) as string[];
+  const restrictedRiskIds = tags
+    .map(a => a.risk?.id)
+    .filter(Boolean) as string[];
+
   const [createTagMutation] = useCreateTagMutation({
     onCompleted: () => {
       notifySuccess("Tag Saved");
@@ -53,10 +64,12 @@ export default function Flowchart({
     awaitRefetchQueries: true,
     refetchQueries: ["tags"]
   });
-  const init = { active: false, x: 0, y: 0, body: "" };
-  const [tag, setTag] = useState(init);
 
-  const handleLoadOptions = useLoadRiskAndControls({ bpId });
+  const handleLoadOptions = useLoadRiskAndControls({
+    bpId,
+    restrictedControlIds: restrictedControlIds,
+    restrictedRiskIds: restrictedRiskIds
+  });
 
   function handleClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     e.persist();
@@ -75,12 +88,14 @@ export default function Flowchart({
   function handleClose() {
     setTag(init);
   }
-  function handleSave(x: number, y: number) {
+  function handleCreate(x: number, y: number) {
     createTagMutation({
       variables: {
         input: {
           businessProcessId: bpId,
-          body: "",
+          // body: selected,
+          ...selected,
+
           xCoordinates: x,
           yCoordinates: y,
           resourceId: resourceId
@@ -99,6 +114,12 @@ export default function Flowchart({
       });
     };
   }
+
+  function handleSelectChange(e: any) {
+    console.log(e);
+    e && setSelected(e.value);
+  }
+
   return (
     <div className={className}>
       <FlowchartWrapper onClick={handleClick}>
@@ -110,18 +131,20 @@ export default function Flowchart({
             x={tag.xCoordinates || 0}
             y={tag.yCoordinates || 0}
           >
-            {tag.body}
+            {tag.risk?.name || tag.control?.description}
           </PreviewTag>
         ))}
         {tag.active && (
           <Tagger onClick={e => e.stopPropagation()} x={tag.x} y={tag.y}>
-            <Async
+            <Async<Suggestion>
               loadOptions={handleLoadOptions}
               defaultOptions
               onFocus={e => e.stopPropagation()}
               placeholder="Select..."
-              value={tag.body ? { label: tag.body, value: tag.body } : null}
-              // onChange={s => s && setSelected(s)}
+              // value={selected}
+              // value={tag.body ? { label: tag.body, value: tag.body } : null}
+              onChange={handleSelectChange}
+              // onChange={a => console.log(a)}
             />
             <div className="d-flex justify-content-end">
               <Button
@@ -132,7 +155,7 @@ export default function Flowchart({
                 Cancel
               </Button>
               <Button
-                onClick={() => handleSave(tag.x, tag.y)}
+                onClick={() => handleCreate(tag.x, tag.y)}
                 size="sm"
                 className="pwc"
               >
@@ -175,6 +198,13 @@ const PreviewTag = styled.div<{ x: number; y: number }>`
   overflow-x: hidden;
   overflow: hidden;
   white-space: nowrap;
+  // transition: 0.15s ease-in-out;
+  &:hover {
+    width: 200px;
+    text-overflow: unset;
+    overflow: unset;
+    white-space: unset;
+  }
   &::before {
     content: "";
     display: block;
@@ -206,13 +236,28 @@ const Tagger = styled.div<{ x: number; y: number }>`
   z-index: 1000000;
 `;
 
-function useLoadRiskAndControls({ bpId }: { bpId: string }) {
+function useLoadRiskAndControls({
+  bpId,
+  restrictedRiskIds,
+  restrictedControlIds
+}: {
+  bpId: string;
+  restrictedRiskIds: string[];
+  restrictedControlIds: string[];
+}) {
   const query = useLazyQueryReturnPromise<RisksOrControlsQuery>(
     RisksOrControlsDocument
   );
+  // Ini adalah high order function. Digunakan agar dapat mengubah nilai 'a' tanpa menulis function 2 kali.
+  // Higher Order Function adalah fungsi yang return fungsi.
+  const constructValue = (a: string) => (f: Suggestion) => ({
+    label: f.label,
+    value: { [a]: f.value }
+  });
+
   async function getSuggestions(
     name: string = ""
-  ): Promise<MultipleSuggestion[]> {
+  ): Promise<GroupType<FlowchartSuggestion>[]> {
     try {
       const { data } = await query({
         filter: {
@@ -224,14 +269,22 @@ function useLoadRiskAndControls({ bpId }: { bpId: string }) {
       const options = [
         {
           label: "Risks",
-          options: data.risks?.collection.map(toLabelValue) || []
+          options:
+            data.risks?.collection
+              .filter(({ id }) => {
+                return !restrictedRiskIds.includes(id);
+              })
+              .map(toLabelValue)
+              .map(constructValue("riskId")) || []
         },
         {
           label: "Controls",
           options:
             data.controls?.collection
+              .filter(({ id }) => !restrictedControlIds.includes(id))
               .map(({ id, description }) => ({ id, name: description }))
-              .map(toLabelValue) || []
+              .map(toLabelValue)
+              .map(constructValue("controlId")) || []
         }
       ];
       return options;
@@ -242,7 +295,12 @@ function useLoadRiskAndControls({ bpId }: { bpId: string }) {
   return getSuggestions;
 }
 
-interface MultipleSuggestion {
+interface FlowchartSuggestion {
   label: string;
-  options: Suggestions;
+  value: NeedProperName;
+}
+
+interface NeedProperName {
+  riskId?: string;
+  controlId?: string;
 }
