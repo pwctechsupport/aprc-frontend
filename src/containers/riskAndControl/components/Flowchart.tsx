@@ -7,6 +7,7 @@ import {
   useCreateTagMutation,
   useTagsQuery,
   RisksOrControlsQuery,
+  useDeleteTagMutation,
   RisksOrControlsDocument
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
@@ -34,7 +35,7 @@ export default function Flowchart({
   bpId,
   resourceId
 }: FlowchartProps) {
-  const init = { active: false, x: 0, y: 0, body: "" };
+  const init = { id: "", active: false, x: 0, y: 0, body: "" };
   const [tag, setTag] = useState(init);
   const [selected, setSelected] = useState<NeedProperName | null>(null);
   const { data } = useTagsQuery({
@@ -55,9 +56,19 @@ export default function Flowchart({
     .map(a => a.risk?.id)
     .filter(Boolean) as string[];
 
-  const [createTagMutation] = useCreateTagMutation({
+  const [createTagMutation, createTagMutationInfo] = useCreateTagMutation({
     onCompleted: () => {
       notifySuccess("Tag Saved");
+      handleClose();
+    },
+    onError: notifyGraphQLErrors,
+    awaitRefetchQueries: true,
+    refetchQueries: ["tags"]
+  });
+
+  const [deleteTagMutation] = useDeleteTagMutation({
+    onCompleted: () => {
+      notifySuccess("Tag Deleted");
       handleClose();
     },
     onError: notifyGraphQLErrors,
@@ -78,6 +89,7 @@ export default function Flowchart({
       setTag(init);
     } else {
       setTag({
+        id: "",
         active: true,
         x: e.nativeEvent.offsetX,
         y: e.nativeEvent.offsetY,
@@ -103,10 +115,20 @@ export default function Flowchart({
       }
     });
   }
+  function handleDelete(id: string) {
+    deleteTagMutation({
+      variables: {
+        input: {
+          id: id
+        }
+      }
+    });
+  }
   function handlePreviewTagClick(tag: Partial<Tag>) {
     return function(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
       e.stopPropagation();
       setTag({
+        id: tag.id || "",
         active: true,
         x: tag.xCoordinates || 0,
         y: tag.yCoordinates || 0,
@@ -116,7 +138,6 @@ export default function Flowchart({
   }
 
   function handleSelectChange(e: any) {
-    console.log(e);
     e && setSelected(e.value);
   }
 
@@ -140,13 +161,22 @@ export default function Flowchart({
               loadOptions={handleLoadOptions}
               defaultOptions
               onFocus={e => e.stopPropagation()}
-              placeholder="Select..."
+              placeholder={tag.id ? "..." : "Select..."}
               // value={selected}
               // value={tag.body ? { label: tag.body, value: tag.body } : null}
               onChange={handleSelectChange}
               // onChange={a => console.log(a)}
             />
             <div className="d-flex justify-content-end">
+              {tag.id ? (
+                <Button
+                  onClick={() => handleDelete(tag.id)}
+                  size="sm"
+                  className="mr-1 pwc cancel"
+                >
+                  Delete
+                </Button>
+              ) : null}
               <Button
                 onClick={handleClose}
                 size="sm"
@@ -158,6 +188,7 @@ export default function Flowchart({
                 onClick={() => handleCreate(tag.x, tag.y)}
                 size="sm"
                 className="pwc"
+                loading={createTagMutationInfo.loading}
               >
                 Save
               </Button>
