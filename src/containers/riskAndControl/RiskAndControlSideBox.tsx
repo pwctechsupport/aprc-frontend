@@ -8,11 +8,13 @@ import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { useBusinessProcessTreeQuery } from "../../generated/graphql";
 import { SideBoxSearch } from "../../shared/components/SideBox";
+import { getActiveIdFromPathname } from "../../shared/formatter";
 
 const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
-  const id = oc(location)
-    .pathname("")
-    .split("risk-and-control/")[1];
+  const acitveId = getActiveIdFromPathname(
+    location.pathname,
+    "risk-and-control"
+  );
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
 
@@ -51,7 +53,7 @@ const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
               <BusinessProcessBranch
                 key={businessProcess.id}
                 id={businessProcess.id}
-                activeId={id}
+                activeId={acitveId}
                 name={businessProcess.name}
                 children={businessProcess.children}
                 level={0}

@@ -10,9 +10,10 @@ import { usePolicyTreeQuery } from "../../../generated/graphql";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { SideBoxSearch } from "../../../shared/components/SideBox";
+import { getActiveIdFromPathname } from "../../../shared/formatter";
 
 const PolicySideBox = ({ location }: RouteComponentProps) => {
-  const activeId = readCurrentParams(location.pathname);
+  const activeId = getActiveIdFromPathname(location.pathname, "policy");
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
   const isAdmin = location.pathname.split("/")[1] === "policy-admin";
@@ -145,16 +146,6 @@ const Icon = styled(FaCaretRight)<{ open: boolean }>`
     `};
 `;
 
-const readCurrentParams = (pathname: string) => {
-  const hasParam = pathname.includes("policy");
-  if (hasParam)
-    return pathname
-      .split("/")
-      .filter(Boolean)
-      .filter(a => !isNaN(Number(a)))[0];
-  return "";
-};
-
 interface PolicyBranchProps {
   id: string | number;
   activeId?: string | number | undefined;
@@ -162,9 +153,4 @@ interface PolicyBranchProps {
   children?: Array<PolicyBranchProps> | null | undefined;
   level?: number;
   isAdmin?: boolean;
-}
-
-interface PolicyTreeProps {
-  activeId: string | number | undefined;
-  search: string | null | undefined;
 }

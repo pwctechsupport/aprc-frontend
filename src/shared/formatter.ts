@@ -78,3 +78,16 @@ export interface Suggestion {
   label: string;
   value: string;
 }
+
+export function getActiveIdFromPathname(
+  pathname: string,
+  basePathname: string
+): string {
+  const hasParam = pathname.includes(basePathname);
+  if (hasParam)
+    return pathname
+      .split("/")
+      .filter(Boolean)
+      .filter(a => !isNaN(Number(a)))[0];
+  return "";
+}
