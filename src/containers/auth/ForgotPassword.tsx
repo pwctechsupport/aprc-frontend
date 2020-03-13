@@ -1,27 +1,27 @@
-import React from 'react'
-import useForm from 'react-hook-form'
-import { RouteComponentProps } from 'react-router-dom'
-import { toast } from 'react-toastify'
-import pwcLogo from '../../assets/images/pwc-logo.png'
-import { useForgotPasswordMutation } from '../../generated/graphql'
-import Button from '../../shared/components/Button'
-import { Container, Form, H1, Image, Input, Label } from './Login'
-import Helmet from 'react-helmet'
+import React from "react";
+import { useForm } from "react-hook-form";
+import { RouteComponentProps } from "react-router-dom";
+import { toast } from "react-toastify";
+import pwcLogo from "../../assets/images/pwc-logo.png";
+import { useForgotPasswordMutation } from "../../generated/graphql";
+import Button from "../../shared/components/Button";
+import { Container, Form, H1, Image, Input, Label } from "./Login";
+import Helmet from "react-helmet";
 
 const ForgotPassword = ({ history }: RouteComponentProps) => {
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit } = useForm();
   const [forgotPassword, { loading }] = useForgotPasswordMutation({
     onCompleted,
-    onError,
-  })
+    onError
+  });
 
   const onSubmit = (data: any) => {
-    forgotPassword({ variables: { email: data.email } })
-  }
+    forgotPassword({ variables: { email: data.email } });
+  };
 
   function onCompleted() {
-    toast.success('Cek email anda untuk mengganti password')
-    history.push('/auth')
+    toast.success("Cek email anda untuk mengganti password");
+    history.push("/auth");
   }
 
   function onError() {
@@ -30,7 +30,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
         <h5>Error!</h5>
         <div>Mohon coba lagi</div>
       </div>
-    )
+    );
   }
 
   return (
@@ -65,6 +65,6 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
       </Form>
     </Container>
   );
-}
+};
 
-export default ForgotPassword
+export default ForgotPassword;

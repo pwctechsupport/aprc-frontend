@@ -1,6 +1,6 @@
-import React, { Fragment, useEffect } from "react";
-import useForm from "react-hook-form";
-import { Form } from "reactstrap";
+import React, { Fragment, useEffect, useState } from "react";
+import { Form, Label } from "reactstrap";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import {
   BusinessProcessesDocument,
@@ -32,6 +32,7 @@ const ResourceForm = ({
   const { register, setValue, handleSubmit, errors, watch } = useForm<
     ResourceFormValues
   >({ defaultValues, validationSchema });
+  const [activityType, setActivityType] = useState("text");
 
   useEffect(() => {
     register({ name: "resuploadBase64", type: "custom" });
@@ -50,7 +51,6 @@ const ResourceForm = ({
   }
 
   function submit(data: ResourceFormValues) {
-    // console.log("values:", data);
     onSubmit && onSubmit(data);
   }
 
@@ -59,12 +59,7 @@ const ResourceForm = ({
   const handleGetControls = useLoadControls();
   const handleGetBps = useLoadBps();
 
-  const selectedCategory = watch(
-    "category",
-    defaultValues?.category?.value || ""
-  );
-  console.log("selectedCategory:", selectedCategory);
-
+  const selectedCategory = watch("category");
   const name = defaultValues?.name;
 
   return (
@@ -83,6 +78,7 @@ const ResourceForm = ({
         cacheOptions
         loadOptions={handleGetCategories}
         defaultOptions
+        defaultValue={defaultValues?.category}
       />
       {selectedCategory?.value === "Flowchart" ? (
         <AsyncSelect
@@ -121,7 +117,36 @@ const ResourceForm = ({
           />
         </Fragment>
       )}
-      <Input type="file" label="Upload" onChange={handleChangeFile} />
+      <span className="mt-2 mb-3">Upload</span>
+      <div className="d-flex ml-4">
+        <Label check className="d-flex align-items-center pr-4">
+          <Input
+            type="radio"
+            name="controlActivity_type"
+            value="text"
+            onChange={() => setActivityType("text")}
+            defaultChecked={activityType === "text"}
+          />{" "}
+          Free text
+        </Label>
+        <Label check className="d-flex align-items-center pl-3">
+          <Input
+            type="radio"
+            name="controlActivity_type"
+            value="attachment"
+            onChange={() => setActivityType("attachment")}
+            defaultChecked={activityType === "attachment"}
+          />{" "}
+          Attachment
+        </Label>
+      </div>
+      <div className="mt-1">
+        {activityType === "text" ? (
+          <Input type="text" name="resuploadLink" innerRef={register} />
+        ) : (
+          <Input type="file" onChange={handleChangeFile} />
+        )}
+      </div>
 
       <div className="d-flex justify-content-end mt-3">
         <DialogButton
@@ -175,6 +200,7 @@ export interface ResourceFormValues {
   resuploadBase64?: any;
   resuploadFileName?: string;
   resuploadUrl?: string;
+  resuploadLink?: string;
 }
 
 // ==========================================
@@ -188,9 +214,7 @@ function useLoadCategories() {
       const { data } = await query({
         filter: { name_cont, category_type_eq: "Category" }
       });
-      const bro = data.enumLists?.collection.map(toLabelValue) || [];
-      console.log("bro:", bro);
-      return bro;
+      return data.enumLists?.collection.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }

@@ -1,0 +1,51 @@
+query tags($filter: BaseScalar = {}, $limit: Int, $page: Int) {
+  tags(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      xCoordinates
+      yCoordinates
+      body
+      id
+      risk {
+        id
+        name
+      }
+      control {
+        id
+        description
+      }
+    }
+  }
+}
+
+query risksOrControls($filter: BaseScalar = {}) {
+  risks(filter: $filter) {
+    collection {
+      id
+      name
+    }
+  }
+  controls(filter: $filter) {
+    collection {
+      id
+      description
+    }
+  }
+}
+
+mutation createTag($input: CreateTagInput!) {
+  createTag(input: $input) {
+    success
+  }
+}
+mutation deleteTag($input: DestroyTagInput!) {
+  destroyTag(input: $input) {
+    success
+    errors
+  }
+}
+mutation updateTag($input: UpdateTagInput!) {
+  updateTag(input: $input) {
+    errors
+    success
+  }
+}

@@ -1,5 +1,5 @@
 import React from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Col, Form, FormFeedback, Input, Row } from "reactstrap";
 import * as yup from "yup";

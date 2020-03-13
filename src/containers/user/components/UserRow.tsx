@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from "react";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   AiFillEdit,
   AiOutlineEdit,

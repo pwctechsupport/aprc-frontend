@@ -2,7 +2,7 @@ import get from "lodash/get";
 import capitalize from "lodash/startCase";
 import React from "react";
 import Helmet from "react-helmet";
-import useForm from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FaDownload, FaFile } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Container, Form, FormGroup, Input, Label } from "reactstrap";
@@ -27,12 +27,18 @@ const options = [
   {
     name: "Risk Without Control",
     id: "report_risk_policy",
-    formats: [{ id: "pdf", name: "PDF" }]
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Control Without Risk",
     id: "report_control_policy",
-    formats: [{ id: "pdf", name: "PDF" }]
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Resources with rating",

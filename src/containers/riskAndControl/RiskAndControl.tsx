@@ -11,9 +11,8 @@ import {
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { RouteComponentProps, NavLink, Route } from "react-router-dom";
-import { toast } from "react-toastify";
-import { Badge, Table, Nav, NavItem, TabContent, TabPane } from "reactstrap";
+import { NavLink, Route, RouteComponentProps } from "react-router-dom";
+import { Badge, Nav, NavItem, TabContent, Table, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   Assertion,
@@ -29,6 +28,7 @@ import {
   useUpdateControlMutation,
   useUpdateRiskMutation
 } from "../../generated/graphql";
+import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
@@ -37,25 +37,27 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import Modal from "../../shared/components/Modal";
 import ResourceBar from "../../shared/components/ResourceBar";
+import { toLabelValue } from "../../shared/formatter";
 import {
   downloadPdf,
   emailPdf,
   previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
+import {
+  notifyError,
+  notifyGraphQLErrors,
+  notifyInfo,
+  notifySuccess
+} from "../../shared/utils/notif";
 import ControlForm, {
-  CreateControlFormValues,
-  ControlFormValues
+  ControlFormValues,
+  CreateControlFormValues
 } from "../control/components/ControlForm";
-import RiskForm, {
-  // RiskFormDefaultValues,
-  RiskFormValues
-} from "../risk/components/RiskForm";
-import { toLabelValue } from "../../shared/formatter";
-import BreadCrumb from "../../shared/components/BreadCrumb";
-import { CrumbItem } from "../../shared/components/BreadCrumb";
+import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
+import Flowcharts from "./components/Flowcharts";
 
-const RiskAndControls = ({ match, history }: RouteComponentProps) => {
-  const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
+const RiskAndControls = ({ match }: RouteComponentProps) => {
+  const initialCollapse = ["Risks"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse(p => {
@@ -76,10 +78,10 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   };
   const [updateRisk, updateRiskM] = useUpdateRiskMutation({
     onCompleted: () => {
-      toast.success("Risk Updated");
+      notifySuccess("Risk Updated");
       toggleRiskModal();
     },
-    onError: () => toast.error("Update Risk Failed"),
+    onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
     refetchQueries: ["businessProcess"]
   });
@@ -106,10 +108,10 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   };
   const [updateControl, updateControlM] = useUpdateControlMutation({
     onCompleted: () => {
-      toast.success("Control Updated");
+      notifySuccess("Control Updated");
       toggleControlModal();
     },
-    onError: () => toast.error("Update control Failed"),
+    onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
     refetchQueries: ["businessProcess"]
   });
@@ -132,15 +134,16 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
   ]) as CrumbItem[];
 
   const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
-    onCompleted: () => toast.success("Added to Bookmark"),
-    onError: () => toast.error("Failed to add")
+    onCompleted: () => notifySuccess("Added to Bookmark"),
+    onError: notifyGraphQLErrors
   });
 
-  const name = oc(data).businessProcess.name("");
-  const risks = oc(data).businessProcess.risks([]);
-  const resources = oc(data).businessProcess.resources([]);
+  const name = data?.businessProcess?.name || "";
+  const risks = data?.businessProcess?.risks || [];
+  const resources = data?.businessProcess?.resources || [];
 
   const tabs = [
+    { to: `/risk-and-control/${id}/flowchart`, title: "Flowchart" },
     { to: `/risk-and-control/${id}`, title: "List" },
     { to: `/risk-and-control/${id}/resources`, title: "Resources" }
   ];
@@ -176,7 +179,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
               onClick: () =>
                 previewPdf(`prints/${id}/business_process.pdf`, {
                   onStart: () =>
-                    toast.info("Downloading file for preview", {
+                    notifyInfo("Downloading file for preview", {
                       autoClose: 10000
                     })
                 })
@@ -190,9 +193,9 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
               onClick: () =>
                 downloadPdf(`prints/${id}/business_process.pdf`, {
                   fileName: name,
-                  onStart: () => toast.info("Download Started"),
-                  onError: () => toast.error("Download Failed"),
-                  onCompleted: () => toast.success("Download Success")
+                  onStart: () => notifyInfo("Download Started"),
+                  onError: () => notifyError("Download Failed"),
+                  onCompleted: () => notifySuccess("Download Success")
                 })
             },
             {
@@ -230,6 +233,7 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
       />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton heading={name} />
+        {renderActions()}
       </div>
       <Nav tabs className="tabs-pwc">
         {tabs.map((tab, index) => (
@@ -248,8 +252,19 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
 
       <TabContent>
         <TabPane>
+          <Route
+            exact
+            path="/risk-and-control/:id/flowchart"
+            render={() => (
+              <Flowcharts
+                bpId={id}
+                resources={resources.filter(resource =>
+                  resource.category?.match(/flowchart/gi)
+                )}
+              />
+            )}
+          />
           <Route exact path="/risk-and-control/:id">
-            <div className="d-flex justify-content-end">{renderActions()}</div>
             <Collapsible
               title="Risks"
               show={collapse.includes("Risks")}
@@ -384,23 +399,19 @@ const RiskAndControls = ({ match, history }: RouteComponentProps) => {
               )}
             </Collapsible>
           </Route>
-          <Route exact path="/risk-and-contorl/:id/resources" />
+          <Route exact path="/risk-and-control/:id/resources">
+            <div className="mt-3">
+              {resources.length ? (
+                resources.map(resource => {
+                  return <ResourceBar key={resource.id} {...resource} />;
+                })
+              ) : (
+                <EmptyAttribute />
+              )}
+            </div>
+          </Route>
         </TabPane>
       </TabContent>
-
-      <Collapsible
-        title="Resources"
-        show={collapse.includes("Resources")}
-        onClick={toggleCollapse}
-      >
-        {resources.length ? (
-          resources.map(resource => {
-            return <ResourceBar key={resource.id} {...resource} />;
-          })
-        ) : (
-          <EmptyAttribute />
-        )}
-      </Collapsible>
 
       <Modal isOpen={riskModal} toggle={toggleRiskModal} title="Edit Risk">
         <RiskForm

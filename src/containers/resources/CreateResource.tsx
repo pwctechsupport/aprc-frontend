@@ -29,7 +29,8 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       resuploadFileName: data.resuploadFileName,
       policyIds: data.policyIds?.map(a => a.value),
       controlIds: data.controlIds?.map(a => a.value),
-      businessProcessId: data.businessProcessId?.value
+      businessProcessId: data.businessProcessId?.value,
+      resuploadLink: data.resuploadLink
     };
 
     createResource({ variables: { input } });

@@ -80,11 +80,10 @@ query resource($id: ID!) {
       id
       name
     }
-    # file size ga ada
-    # upload ga ada
-    # status ga ada
     resuploadUrl
     resourceFileType
+    resourceFileName
+    resourceFileSize
     rating
     totalRating
     visit

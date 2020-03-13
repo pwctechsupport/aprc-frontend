@@ -184,7 +184,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       />
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {data.senderUser ? data.senderUser.name : ""}
+                      {data.senderUserName}
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
                       {`Request to ${dataType} ${data.originatorType} : ${data.title}`}
