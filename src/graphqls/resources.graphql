@@ -81,10 +81,24 @@ query resource($id: ID!) {
       id
       name
     }
+    hasEditAccess
+    requestStatus
+    requestEdit {
+      id
+      state
+      user {
+        id
+        name
+      }
+    }
     draft {
       id
       objectResult {
-        __typename
+        ... on Resource {
+          name
+          id
+          updatedAt
+        }
       }
     }
     resuploadUrl
@@ -123,5 +137,11 @@ mutation createResourceRating($input: CreateResourceRatingInput!) {
 mutation updateResourceRating($input: UpdateResourceRatingInput!) {
   updateResourceRating(input: $input) {
     success
+  }
+}
+mutation reviewResourceDraft($id: ID!, $publish: Boolean!) {
+  reviewResourceDraft(input: { id: $id, publish: $publish }) {
+    success
+    errors
   }
 }
