@@ -13,6 +13,8 @@ import {
   PoliciesQuery
 } from "../../../generated/graphql";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
+import Button from "../../../shared/components/Button";
+import { oc } from "ts-optchain";
 
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
@@ -63,23 +65,19 @@ const ResourceForm = ({
   const handleGetBps = useLoadBps();
 
   const selectedCategory = watch("category");
-  const name = defaultValues?.name;
+
   const renderSubmit = () => {
     if (!isDraft) {
       return (
-        <div className="d-flex justify-content-end mt-3">
-          <DialogButton
-            onConfirm={handleSubmit(submit)}
-            type="button"
-            color="primary"
-            className="pwc px-5"
+        <div className="d-flex justify-content-end">
+          <Button
+            type="submit"
+            className="soft red"
+            color=""
             loading={submitting}
-            message={
-              name ? `Save changes on "${name}"?` : "Create new resource?"
-            }
           >
-            Submit
-          </DialogButton>
+            {oc(defaultValues).name("") ? "Save" : "Submit"}
+          </Button>
         </div>
       );
     }
