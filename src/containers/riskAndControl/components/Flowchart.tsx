@@ -8,7 +8,10 @@ import {
   Tag,
   useCreateTagMutation,
   useDeleteTagMutation,
-  useTagsQuery
+  useTagsQuery,
+  Risk,
+  Control,
+  useUpdateTagMutation
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import { Suggestion, toLabelValue } from "../../../shared/formatter";
@@ -17,6 +20,7 @@ import {
   notifyGraphQLErrors,
   notifySuccess
 } from "../../../shared/utils/notif";
+import { FaTimes } from "react-icons/fa";
 
 interface FlowchartProps {
   bpId: string;
@@ -24,6 +28,25 @@ interface FlowchartProps {
   img: string;
   editable: boolean;
   className?: string;
+}
+
+interface FlowchartSuggestion {
+  label: string;
+  value: FlowchartSuggestionValue;
+}
+
+interface FlowchartSuggestionValue {
+  riskId?: string;
+  controlId?: string;
+}
+
+interface CurrentTag {
+  id: string;
+  active: boolean;
+  x: number;
+  y: number;
+  risk?: Pick<Risk, "id" | "name"> | null;
+  control?: Pick<Control, "id" | "description"> | null;
 }
 
 export default function Flowchart({
@@ -35,7 +58,6 @@ export default function Flowchart({
 }: FlowchartProps) {
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
   const [currentTag, setCurrentTag] = useState(init);
-  const [selected, setSelected] = useState<NeedProperName | null>(null);
   const { data } = useTagsQuery({
     fetchPolicy: "network-only",
     variables: {
@@ -63,6 +85,41 @@ export default function Flowchart({
     awaitRefetchQueries: true,
     refetchQueries: ["tags"]
   });
+  function handleCreate(x: number, y: number) {
+    createTagMutation({
+      variables: {
+        input: {
+          businessProcessId: bpId,
+          resourceId: resourceId,
+          xCoordinates: x,
+          yCoordinates: y,
+          riskId: currentTag.risk?.id,
+          controlId: currentTag.control?.id
+        }
+      }
+    });
+  }
+
+  const [updateMutation, updateMutationInfo] = useUpdateTagMutation({
+    onCompleted: () => {
+      notifySuccess("Tag Updated");
+      handleClose();
+    },
+    onError: notifyGraphQLErrors,
+    awaitRefetchQueries: true,
+    refetchQueries: ["tags"]
+  });
+  function handleUpdate(id: string) {
+    updateMutation({
+      variables: {
+        input: {
+          id,
+          riskId: currentTag.risk?.id,
+          controlId: currentTag.control?.id
+        }
+      }
+    });
+  }
 
   const [deleteTagMutation, deleteTagMutationInfo] = useDeleteTagMutation({
     onCompleted: () => {
@@ -73,6 +130,15 @@ export default function Flowchart({
     awaitRefetchQueries: true,
     refetchQueries: ["tags"]
   });
+  function handleDelete(id: string) {
+    deleteTagMutation({
+      variables: {
+        input: {
+          id: id
+        }
+      }
+    });
+  }
 
   useEscapeDetection(() => {
     if (currentTag.active) setCurrentTag(init);
@@ -101,28 +167,6 @@ export default function Flowchart({
   function handleClose() {
     setCurrentTag(init);
   }
-  function handleCreate(x: number, y: number) {
-    createTagMutation({
-      variables: {
-        input: {
-          businessProcessId: bpId,
-          resourceId: resourceId,
-          xCoordinates: x,
-          yCoordinates: y,
-          ...selected
-        }
-      }
-    });
-  }
-  function handleDelete(id: string) {
-    deleteTagMutation({
-      variables: {
-        input: {
-          id: id
-        }
-      }
-    });
-  }
   function handlePreviewTagClick(tag: Omit<Tag, "createdAt" | "updatedAt">) {
     return function(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
       e.stopPropagation();
@@ -131,14 +175,24 @@ export default function Flowchart({
         active: true,
         x: tag.xCoordinates || 0,
         y: tag.yCoordinates || 0,
-        riskId: tag.risk?.id,
-        controlId: tag.control?.id
+        risk: tag.risk,
+        control: tag.control
       });
     };
   }
 
   function handleSelectChange(e: any) {
-    e && setSelected(e.value);
+    // e && setSelected(e.value);
+    if (e) {
+      const { label, value } = e;
+      setCurrentTag(prevTag => ({
+        ...prevTag,
+        ...(value.riskId && { risk: { id: value.riskId, name: label } }),
+        ...(value.controlId && {
+          control: { id: value.controlId, description: label }
+        })
+      }));
+    }
   }
 
   return (
@@ -159,46 +213,66 @@ export default function Flowchart({
           </PreviewTag>
         ))}
         {currentTag.active && (
-          <Tagger
+          <TaggerBox
             onClick={e => e.stopPropagation()}
             x={currentTag.x}
             y={currentTag.y}
           >
-            <Async<Suggestion>
-              loadOptions={handleLoadOptions}
-              defaultOptions
-              onFocus={e => e.stopPropagation()}
-              placeholder="Select..."
-              onChange={handleSelectChange}
-            />
-            <div className="d-flex justify-content-end">
-              {currentTag.id ? (
-                <Button
-                  onClick={() => handleDelete(currentTag.id)}
-                  size="sm"
-                  className="mr-1 pwc cancel"
-                  loading={deleteTagMutationInfo.loading}
-                >
-                  Delete
-                </Button>
-              ) : null}
-              <Button
+            <TaggerBoxInner>
+              <TaggerBoxCloseButton
                 onClick={handleClose}
-                size="sm"
-                className="mr-1 pwc cancel"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={() => handleCreate(currentTag.x, currentTag.y)}
-                size="sm"
-                className="pwc"
-                loading={createTagMutationInfo.loading}
-              >
-                Save
-              </Button>
-            </div>
-          </Tagger>
+                size={13}
+                color="lightgrey"
+              />
+              <Async
+                loadOptions={handleLoadOptions}
+                defaultOptions
+                onFocus={e => e.stopPropagation()}
+                placeholder="Select..."
+                onChange={handleSelectChange}
+                value={
+                  currentTag.risk
+                    ? {
+                        label: currentTag.risk?.name,
+                        value: { riskId: currentTag.risk?.id }
+                      }
+                    : currentTag.control
+                    ? {
+                        label: currentTag.control?.description,
+                        value: { controlId: currentTag.control?.id }
+                      }
+                    : undefined
+                }
+              />
+              <div className="d-flex justify-content-end">
+                {currentTag.id ? (
+                  <Button
+                    onClick={() => handleDelete(currentTag.id)}
+                    size="sm"
+                    className="mr-1 pwc cancel"
+                    loading={deleteTagMutationInfo.loading}
+                    color="danger"
+                  >
+                    Delete
+                  </Button>
+                ) : null}
+                <Button
+                  onClick={() =>
+                    currentTag.id
+                      ? handleUpdate(currentTag.id)
+                      : handleCreate(currentTag.x, currentTag.y)
+                  }
+                  size="sm"
+                  className="pwc"
+                  loading={
+                    createTagMutationInfo.loading || updateMutationInfo.loading
+                  }
+                >
+                  Save
+                </Button>
+              </div>
+            </TaggerBoxInner>
+          </TaggerBox>
         )}
       </FlowchartWrapper>
     </div>
@@ -246,6 +320,7 @@ const PreviewTag = styled.div<{ x: number; y: number }>`
     left: 40px;
   }
 `;
+
 const PreviewTagText = styled.div`
   color: white;
   font-size: smaller;
@@ -258,7 +333,7 @@ const PreviewTagText = styled.div`
   }
 `;
 
-const Tagger = styled.div<{ x: number; y: number }>`
+const TaggerBox = styled.div<{ x: number; y: number }>`
   position: absolute;
   top: ${p => p.y + 10}px;
   left: ${p => p.x - 50}px;
@@ -266,12 +341,7 @@ const Tagger = styled.div<{ x: number; y: number }>`
   width: 300px;
   height: 120px;
   border-radius: 5px;
-  padding: 20px;
   border: 1px solid black;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  color: black;
   z-index: 1000000;
   &::before {
     content: "";
@@ -285,6 +355,23 @@ const Tagger = styled.div<{ x: number; y: number }>`
     top: -8px;
     left: 40px;
   }
+`;
+
+const TaggerBoxInner = styled.div`
+  position: relative;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: black;
+  height: 100%;
+`;
+
+const TaggerBoxCloseButton = styled(FaTimes)`
+  cursor: pointer;
+  position: absolute;
+  top: 4px;
+  right: 4px;
 `;
 
 function useLoadRiskAndControls({
@@ -358,23 +445,4 @@ function useEscapeDetection(callback: Function) {
       document.removeEventListener("keydown", escFunction, false);
     };
   });
-}
-
-interface FlowchartSuggestion {
-  label: string;
-  value: NeedProperName;
-}
-
-interface NeedProperName {
-  riskId?: string;
-  controlId?: string;
-}
-
-interface CurrentTag {
-  id: string;
-  active: boolean;
-  x: number;
-  y: number;
-  riskId?: string;
-  controlId?: string;
 }
