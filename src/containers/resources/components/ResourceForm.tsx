@@ -127,7 +127,7 @@ const ResourceForm = ({
             onChange={() => setActivityType("text")}
             defaultChecked={activityType === "text"}
           />{" "}
-          Free text
+          Image URL
         </Label>
         <Label check className="d-flex align-items-center pl-3">
           <Input
