@@ -4,18 +4,27 @@ query tags($filter: BaseScalar = {}, $limit: Int, $page: Int) {
       xCoordinates
       yCoordinates
       body
+      id
+      risk {
+        id
+        name
+      }
+      control {
+        id
+        description
+      }
     }
   }
 }
 
-query risksAndControls($keyword: String) {
-  risks(filter: { name_cont: $keyword }) {
+query risksOrControls($filter: BaseScalar = {}) {
+  risks(filter: $filter) {
     collection {
       id
       name
     }
   }
-  controls(filter: { description_cont: $keyword }) {
+  controls(filter: $filter) {
     collection {
       id
       description
@@ -25,6 +34,18 @@ query risksAndControls($keyword: String) {
 
 mutation createTag($input: CreateTagInput!) {
   createTag(input: $input) {
+    success
+  }
+}
+mutation deleteTag($input: DestroyTagInput!) {
+  destroyTag(input: $input) {
+    success
+    errors
+  }
+}
+mutation updateTag($input: UpdateTagInput!) {
+  updateTag(input: $input) {
+    errors
     success
   }
 }
