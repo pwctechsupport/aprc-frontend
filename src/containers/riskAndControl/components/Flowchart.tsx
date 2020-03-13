@@ -22,14 +22,16 @@ interface FlowchartProps {
   bpId: string;
   resourceId: string;
   img: string;
+  editable: boolean;
   className?: string;
 }
 
 export default function Flowchart({
-  img,
-  className,
   bpId,
-  resourceId
+  resourceId,
+  img,
+  editable,
+  className
 }: FlowchartProps) {
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
   const [currentTag, setCurrentTag] = useState(init);
@@ -141,12 +143,12 @@ export default function Flowchart({
 
   return (
     <div className={className}>
-      <FlowchartWrapper onClick={handleClick}>
-        <Image src={img} />
+      <FlowchartWrapper onClick={editable ? handleClick : undefined}>
+        <Image src={img} editable={editable} />
         {tags.map((tag, index) => (
           <PreviewTag
             key={index}
-            onClick={handlePreviewTagClick(tag)}
+            onClick={editable ? handlePreviewTagClick(tag) : undefined}
             x={tag.xCoordinates || 0}
             y={tag.yCoordinates || 0}
           >
@@ -207,8 +209,8 @@ const FlowchartWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img`
-  cursor: crosshair;
+const Image = styled.img<{ editable: boolean }>`
+  cursor: ${p => (p.editable ? "crosshair" : "")};
   position: absolute;
   width: 800px;
   height: 500px;

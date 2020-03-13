@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Resource } from "../../../generated/graphql";
 import Flowchart from "./Flowchart";
 import styled, { css } from "styled-components";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 interface FlowchartsProps {
   bpId: string;
@@ -9,6 +10,9 @@ interface FlowchartsProps {
 }
 
 export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
+  const rolesArray = useAccessRights(["admin", "admin_preparer"]);
+  const userCanEdit = rolesArray.every(() => true);
+
   const [activeResourceid, setActiveResourceId] = useState(
     () => resources[0]?.id
   );
@@ -23,6 +27,7 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
         }
         resourceId={currentResource?.id || ""}
         bpId={bpId}
+        editable={userCanEdit}
       />
       <div>
         {resources.map(resource => (
