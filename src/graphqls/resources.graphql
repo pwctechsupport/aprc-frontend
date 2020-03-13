@@ -16,6 +16,7 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int) {
         id
         name
       }
+
       resuploadUrl
       resourceFileType
       createdAt
@@ -79,6 +80,12 @@ query resource($id: ID!) {
     businessProcess {
       id
       name
+    }
+    draft {
+      id
+      objectResult {
+        __typename
+      }
     }
     resuploadUrl
     resourceFileType

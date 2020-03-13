@@ -30,6 +30,7 @@ const Resource = ({ match }: RouteComponentProps) => {
     variables: { id },
     fetchPolicy: "network-only"
   });
+  const draft = data?.resource?.draft?.objectResult;
 
   const [updateResource, updateResourceM] = useUpdateResourceMutation({
     refetchQueries: ["resources", "resource"],
@@ -109,6 +110,7 @@ const Resource = ({ match }: RouteComponentProps) => {
   const renderResourceInEditMode = () => {
     return (
       <ResourceForm
+        isDraft={draft ? true : false}
         defaultValues={defaultValues}
         onSubmit={handleSubmit}
         submitting={updateResourceM.loading}
@@ -216,7 +218,7 @@ const Resource = ({ match }: RouteComponentProps) => {
         ]}
       />
       <div className="d-flex justify-content-between">
-        <HeaderWithBackButton heading={name} />
+        <HeaderWithBackButton heading={name} draft={!!draft} />
         {renderResourceAction()}
       </div>
       {inEditMode ? renderResourceInEditMode() : renderResource()}
