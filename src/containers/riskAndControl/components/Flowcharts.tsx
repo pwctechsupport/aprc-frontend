@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Resource } from "../../../generated/graphql";
 import Flowchart from "./Flowchart";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface FlowchartsProps {
   bpId: string;
@@ -29,6 +29,7 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
           <ButtonImage
             key={resource.id}
             onClick={() => setActiveResourceId(resource.id)}
+            isActive={resource.id === activeResourceid}
           >
             <ButtonImage2>
               <Image
@@ -45,16 +46,25 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
   );
 }
 
-const ButtonImage = styled.div`
+const ButtonImage = styled.div<{ isActive: boolean }>`
   width: 72px;
   height: 72px;
-  box-shadow: 0 3px 6px 0 rgba(49, 53, 59, 0.5);
   border-radius: 8px;
   margin: 8.5px;
   float: left;
   overflow: hidden;
   cursor: pointer;
   margin-top: 550px;
+  border: 0px solid black;
+  border-width: ${p => (p.isActive ? 1 : 0)}px;
+  &:hover {
+    box-shadow: 0 3px 6px 0 rgba(49, 53, 59, 0.5);
+  }
+  ${p =>
+    p.isActive &&
+    css`
+      box-shadow: 0 3px 6px 0 rgba(49, 53, 59, 0.5);
+    `};
 `;
 
 const ButtonImage2 = styled.div`
