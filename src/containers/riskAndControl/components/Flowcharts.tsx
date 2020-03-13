@@ -1,12 +1,7 @@
 import React, { useState } from "react";
-import {
-  Tag,
-  useCreateTagMutation,
-  useTagsQuery,
-  Resource
-} from "../../../generated/graphql";
+import { Resource } from "../../../generated/graphql";
 import Flowchart from "./Flowchart";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface FlowchartsProps {
   bpId: string;
@@ -21,12 +16,23 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
     a => a.id === activeResourceid
   );
   return (
-    <div>
+    <div className="mt-3">
+      <Flowchart
+        img={
+          "http://mandalorian.rubyh.co" + currentResource?.resuploadUrl || ""
+        }
+        resourceId={currentResource?.id || ""}
+        bpId={bpId}
+      />
       <div>
         {resources.map(resource => (
-          <ButtonImage key={resource.id}>
+          <ButtonImage
+            key={resource.id}
+            onClick={() => setActiveResourceId(resource.id)}
+            isActive={resource.id === activeResourceid}
+          >
             <ButtonImage2>
-              <img
+              <Image
                 src={
                   "http://mandalorian.rubyh.co" + resource.resuploadUrl || ""
                 }
@@ -36,31 +42,46 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
           </ButtonImage>
         ))}
       </div>
-      <Flowchart
-        img={
-          "http://mandalorian.rubyh.co" + currentResource?.resuploadUrl || ""
-        }
-        resourceId={currentResource?.id || ""}
-        bpId={bpId}
-      />
     </div>
   );
 }
 
-const ButtonImage = styled.div`
+const ButtonImage = styled.div<{ isActive: boolean }>`
   width: 72px;
   height: 72px;
-  box-shadow: 0 3px 6px 0 rgba(49, 53, 59, 0.5);
   border-radius: 8px;
   margin: 8.5px;
   float: left;
   overflow: hidden;
+  cursor: pointer;
+  margin-top: 550px;
+  border: 0px solid black;
+  border-width: ${p => (p.isActive ? 1 : 0)}px;
+  &:hover {
+    box-shadow: 0 3px 6px 0 rgba(49, 53, 59, 0.5);
+  }
+  ${p =>
+    p.isActive &&
+    css`
+      box-shadow: 0 3px 6px 0 rgba(49, 53, 59, 0.5);
+    `};
 `;
 
 const ButtonImage2 = styled.div`
   background-color: transparent;
   display: inline-block;
-  height: auto;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  text-align: center;
+  width: 100%;
+`;
+
+const Image = styled.img`
+  object-fit: contain;
+  background-color: transparent;
+  display: inline-block;
+  height: 100%;
   margin: 0 auto;
   position: relative;
   text-align: center;
