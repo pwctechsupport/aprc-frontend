@@ -2,30 +2,27 @@ import React, { useState } from "react";
 import Helmet from "react-helmet";
 import Switch from "react-switch";
 import { Col, Row } from "reactstrap";
-import { toast } from "react-toastify";
-import { useNotifBadgesMutation } from "../../generated/graphql";
 import { useDebouncedCallback } from "use-debounce/lib";
+import { useNotifBadgesMutation } from "../../generated/graphql";
 
 const NotificationSettings = () => {
   const settings = [{ name: "iconBadges", label: "Notifications Icon Badges" }];
-
-  const [notifBadgesMutation] = useNotifBadgesMutation({
-    onCompleted: () => {
-      toast.success("Notification Disabled");
-    },
-    onError: () => toast.error("Disable Notification Failed")
-  });
-
-  const handleSwitch = (notifShow: boolean) => {
-    notifBadgesMutation({ variables: { input: { notifShow } } });
-  };
   const [show, setShow] = useState(false);
 
-  const firstPhase = (a: boolean) => {
+  const [notifBadgesMutation] = useNotifBadgesMutation({
+    awaitRefetchQueries: true,
+    refetchQueries: ["notificationsCount"]
+  });
+  async function handleSwitch(notifShow: boolean) {
+    notifBadgesMutation({ variables: { input: { notifShow } } });
+  }
+
+  const [debouncedHandleSwitch] = useDebouncedCallback(handleSwitch, 900);
+  const handleClick = (a: boolean) => {
     setShow(a);
-    handleSwitch(a);
+    debouncedHandleSwitch(a);
   };
-  const [debouncedCallback] = useDebouncedCallback(firstPhase, 400);
+
   return (
     <div>
       <Helmet>
@@ -43,7 +40,7 @@ const NotificationSettings = () => {
                   checked={show}
                   height={25}
                   width={50}
-                  onChange={e => debouncedCallback(e)}
+                  onChange={handleClick}
                 />
               </div>
             ))}

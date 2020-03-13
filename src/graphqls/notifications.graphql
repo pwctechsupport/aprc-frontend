@@ -57,6 +57,9 @@ query notificationsCount {
       totalCount
     }
   }
+  me {
+    notifShow
+  }
 }
 
 mutation destroyBulkNotification($input: DestroyBulkNotificationInput!) {

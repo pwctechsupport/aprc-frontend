@@ -57,9 +57,12 @@ const NewNavbar = () => {
     dispatch(unauthorize());
   }
 
-  const unreadCount =
-    useNotificationsCountQuery({ fetchPolicy: "network-only" }).data
-      ?.notifications?.metadata.totalCount || 0;
+  const { data } = useNotificationsCountQuery({
+    fetchPolicy: "network-only"
+  });
+
+  const unreadCount = data?.notifications?.metadata.totalCount || 0;
+  const showNotif = data?.me?.notifShow || false;
 
   return (
     <div>
@@ -139,7 +142,7 @@ const NewNavbar = () => {
           </div>
           <div className="mr-4">
             <Link to="/notifications" className="text-dark">
-              <NotificationBadge count={unreadCount} />
+              {showNotif && <NotificationBadge count={unreadCount} />}
               <FaBell size={22} />
             </Link>
           </div>
