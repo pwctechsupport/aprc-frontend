@@ -70,3 +70,9 @@ mutation isRead($input: IsReadInput!) {
     clientMutationId
   }
 }
+mutation notifBadges($input: NotifBadgesInput!) {
+  notifBadges(input: $input) {
+    success
+    errors
+  }
+}
