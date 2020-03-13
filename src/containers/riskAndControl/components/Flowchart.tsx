@@ -1,26 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GroupType } from "react-select";
 import Async from "react-select/async";
 import styled from "styled-components";
 import {
+  RisksOrControlsDocument,
+  RisksOrControlsQuery,
   Tag,
   useCreateTagMutation,
-  useTagsQuery,
-  RisksOrControlsQuery,
   useDeleteTagMutation,
-  RisksOrControlsDocument
+  useTagsQuery
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
+import { Suggestion, toLabelValue } from "../../../shared/formatter";
+import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import {
   notifyGraphQLErrors,
   notifySuccess
 } from "../../../shared/utils/notif";
-import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import {
-  Suggestions,
-  toLabelValue,
-  Suggestion
-} from "../../../shared/formatter";
 
 interface FlowchartProps {
   bpId: string;
@@ -35,8 +31,8 @@ export default function Flowchart({
   bpId,
   resourceId
 }: FlowchartProps) {
-  const init = { id: "", active: false, x: 0, y: 0, body: "" };
-  const [tag, setTag] = useState(init);
+  const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
+  const [currentTag, setCurrentTag] = useState(init);
   const [selected, setSelected] = useState<NeedProperName | null>(null);
   const { data } = useTagsQuery({
     fetchPolicy: "network-only",
@@ -66,7 +62,7 @@ export default function Flowchart({
     refetchQueries: ["tags"]
   });
 
-  const [deleteTagMutation] = useDeleteTagMutation({
+  const [deleteTagMutation, deleteTagMutationInfo] = useDeleteTagMutation({
     onCompleted: () => {
       notifySuccess("Tag Deleted");
       handleClose();
@@ -74,6 +70,10 @@ export default function Flowchart({
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
     refetchQueries: ["tags"]
+  });
+
+  useEscapeDetection(() => {
+    if (currentTag.active) setCurrentTag(init);
   });
 
   const handleLoadOptions = useLoadRiskAndControls({
@@ -85,32 +85,29 @@ export default function Flowchart({
   function handleClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     e.persist();
     e.stopPropagation();
-    if (tag.active) {
-      setTag(init);
+    if (currentTag.active) {
+      setCurrentTag(init);
     } else {
-      setTag({
+      setCurrentTag({
         id: "",
         active: true,
         x: e.nativeEvent.offsetX,
-        y: e.nativeEvent.offsetY,
-        body: ""
+        y: e.nativeEvent.offsetY
       });
     }
   }
   function handleClose() {
-    setTag(init);
+    setCurrentTag(init);
   }
   function handleCreate(x: number, y: number) {
     createTagMutation({
       variables: {
         input: {
           businessProcessId: bpId,
-          // body: selected,
-          ...selected,
-
+          resourceId: resourceId,
           xCoordinates: x,
           yCoordinates: y,
-          resourceId: resourceId
+          ...selected
         }
       }
     });
@@ -124,15 +121,16 @@ export default function Flowchart({
       }
     });
   }
-  function handlePreviewTagClick(tag: Partial<Tag>) {
+  function handlePreviewTagClick(tag: Omit<Tag, "createdAt" | "updatedAt">) {
     return function(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
       e.stopPropagation();
-      setTag({
-        id: tag.id || "",
+      setCurrentTag({
+        id: tag.id,
         active: true,
         x: tag.xCoordinates || 0,
         y: tag.yCoordinates || 0,
-        body: tag.body || ""
+        riskId: tag.risk?.id,
+        controlId: tag.control?.id
       });
     };
   }
@@ -152,27 +150,31 @@ export default function Flowchart({
             x={tag.xCoordinates || 0}
             y={tag.yCoordinates || 0}
           >
-            {tag.risk?.name || tag.control?.description}
+            <PreviewTagText>
+              {tag.risk?.name || tag.control?.description}
+            </PreviewTagText>
           </PreviewTag>
         ))}
-        {tag.active && (
-          <Tagger onClick={e => e.stopPropagation()} x={tag.x} y={tag.y}>
+        {currentTag.active && (
+          <Tagger
+            onClick={e => e.stopPropagation()}
+            x={currentTag.x}
+            y={currentTag.y}
+          >
             <Async<Suggestion>
               loadOptions={handleLoadOptions}
               defaultOptions
               onFocus={e => e.stopPropagation()}
-              placeholder={tag.id ? "..." : "Select..."}
-              // value={selected}
-              // value={tag.body ? { label: tag.body, value: tag.body } : null}
+              placeholder="Select..."
               onChange={handleSelectChange}
-              // onChange={a => console.log(a)}
             />
             <div className="d-flex justify-content-end">
-              {tag.id ? (
+              {currentTag.id ? (
                 <Button
-                  onClick={() => handleDelete(tag.id)}
+                  onClick={() => handleDelete(currentTag.id)}
                   size="sm"
                   className="mr-1 pwc cancel"
+                  loading={deleteTagMutationInfo.loading}
                 >
                   Delete
                 </Button>
@@ -185,7 +187,7 @@ export default function Flowchart({
                 Cancel
               </Button>
               <Button
-                onClick={() => handleCreate(tag.x, tag.y)}
+                onClick={() => handleCreate(currentTag.x, currentTag.y)}
                 size="sm"
                 className="pwc"
                 loading={createTagMutationInfo.loading}
@@ -216,8 +218,6 @@ const PreviewTag = styled.div<{ x: number; y: number }>`
   top: ${p => p.y}px;
   left: ${p => p.x}px;
   background-color: rgba(0, 0, 0, 0.85);
-  color: white;
-  font-weight: bold;
   width: 100px;
   border-radius: 4px;
   text-align: center;
@@ -225,15 +225,9 @@ const PreviewTag = styled.div<{ x: number; y: number }>`
   z-index: 10;
   cursor: pointer;
   padding: 5px 8px;
-  text-overflow: ellipsis;
-  overflow-x: hidden;
-  overflow: hidden;
+  transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
   white-space: nowrap;
-  // transition: 0.15s ease-in-out;
   &:hover {
-    width: 200px;
-    text-overflow: unset;
-    overflow: unset;
     white-space: unset;
   }
   &::before {
@@ -246,7 +240,18 @@ const PreviewTag = styled.div<{ x: number; y: number }>`
     border-bottom: 8px solid rgba(0, 0, 0, 0.85);
     position: absolute;
     top: -8px;
-    left: 32px;
+    left: 40px;
+  }
+`;
+const PreviewTagText = styled.div`
+  color: white;
+  font-size: smaller;
+  font-weight: bold;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  ${PreviewTag}:hover & {
+    text-overflow: unset;
+    overflow-x: unset;
   }
 `;
 
@@ -255,8 +260,8 @@ const Tagger = styled.div<{ x: number; y: number }>`
   top: ${p => p.y}px;
   left: ${p => p.x}px;
   background-color: rgba(0, 0, 0, 1);
-  width: 400px;
-  height: 300px;
+  width: 300px;
+  height: 120px;
   border-radius: 5px;
   padding: 20px;
   border: 1px solid black;
@@ -279,11 +284,11 @@ function useLoadRiskAndControls({
   const query = useLazyQueryReturnPromise<RisksOrControlsQuery>(
     RisksOrControlsDocument
   );
-  // Ini adalah high order function. Digunakan agar dapat mengubah nilai 'a' tanpa menulis function 2 kali.
+  // Ini adalah high order function. Digunakan agar dapat mengubah nilai 'key' tanpa menulis function 2 kali.
   // Higher Order Function adalah fungsi yang return fungsi.
-  const constructValue = (a: string) => (f: Suggestion) => ({
+  const constructValue = (key: string) => (f: Suggestion) => ({
     label: f.label,
-    value: { [a]: f.value }
+    value: { [key]: f.value }
   });
 
   async function getSuggestions(
@@ -326,12 +331,35 @@ function useLoadRiskAndControls({
   return getSuggestions;
 }
 
+function useEscapeDetection(callback: Function) {
+  useEffect(() => {
+    function escFunction(event: KeyboardEvent): any {
+      if (event.keyCode === 27) {
+        callback();
+      }
+    }
+    document.addEventListener("keydown", escFunction, false);
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+    };
+  });
+}
+
 interface FlowchartSuggestion {
   label: string;
   value: NeedProperName;
 }
 
 interface NeedProperName {
+  riskId?: string;
+  controlId?: string;
+}
+
+interface CurrentTag {
+  id: string;
+  active: boolean;
+  x: number;
+  y: number;
   riskId?: string;
   controlId?: string;
 }
