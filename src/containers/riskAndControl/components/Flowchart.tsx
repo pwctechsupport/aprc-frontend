@@ -218,8 +218,8 @@ const Image = styled.img<{ editable: boolean }>`
 
 const PreviewTag = styled.div<{ x: number; y: number }>`
   position: absolute;
-  top: ${p => p.y}px;
-  left: ${p => p.x}px;
+  top: ${p => p.y + 10}px;
+  left: ${p => p.x - 50}px;
   background-color: rgba(0, 0, 0, 0.85);
   width: 100px;
   border-radius: 4px;
@@ -260,8 +260,8 @@ const PreviewTagText = styled.div`
 
 const Tagger = styled.div<{ x: number; y: number }>`
   position: absolute;
-  top: ${p => p.y}px;
-  left: ${p => p.x}px;
+  top: ${p => p.y + 10}px;
+  left: ${p => p.x - 50}px;
   background-color: rgba(0, 0, 0, 1);
   width: 300px;
   height: 120px;
@@ -273,6 +273,18 @@ const Tagger = styled.div<{ x: number; y: number }>`
   justify-content: space-between;
   color: black;
   z-index: 1000000;
+  &::before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid rgba(0, 0, 0, 0.85);
+    position: absolute;
+    top: -8px;
+    left: 40px;
+  }
 `;
 
 function useLoadRiskAndControls({
