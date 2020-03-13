@@ -151,6 +151,7 @@ export default function Flowchart({
             y={tag.yCoordinates || 0}
           >
             <PreviewTagText>
+              {tag.risk ? "Risk: " : "Control: "}
               {tag.risk?.name || tag.control?.description}
             </PreviewTagText>
           </PreviewTag>
