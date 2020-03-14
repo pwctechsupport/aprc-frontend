@@ -6,7 +6,7 @@ import {
   CreateResourceInput
 } from "../../generated/graphql";
 import { RouteComponentProps } from "react-router";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import HeaderWithBackButton from "../../shared/components/Header";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import { toast } from "react-toastify";
 import { notifyGraphQLErrors } from "../../shared/utils/notif";

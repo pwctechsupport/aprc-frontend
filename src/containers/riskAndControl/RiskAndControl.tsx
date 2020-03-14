@@ -32,7 +32,7 @@ import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import Modal from "../../shared/components/Modal";

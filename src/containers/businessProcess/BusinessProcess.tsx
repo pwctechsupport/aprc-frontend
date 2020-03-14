@@ -12,7 +12,7 @@ import {
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import HeaderWithBackButton from "../../shared/components/Header";
 import Table from "../../shared/components/Table";
 import BusinessProcessForm, {
   BusinessProcessFormValues

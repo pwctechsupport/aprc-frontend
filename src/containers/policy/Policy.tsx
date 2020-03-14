@@ -34,7 +34,7 @@ import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import HeaderWithBackButton from "../../shared/components/Header";
 import Menu from "../../shared/components/Menu";
 import ResourceBar, {
   AddResourceButton

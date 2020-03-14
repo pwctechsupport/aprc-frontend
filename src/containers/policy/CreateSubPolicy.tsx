@@ -8,7 +8,7 @@ import {
   useCreateSubPolicyMutation,
   usePolicyQuery
 } from "../../generated/graphql";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import HeaderWithBackButton from "../../shared/components/Header";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import { oc } from "ts-optchain";

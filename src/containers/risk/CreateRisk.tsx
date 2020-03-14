@@ -3,7 +3,7 @@ import Helmet from "react-helmet";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import { useCreateRiskMutation } from "../../generated/graphql";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import HeaderWithBackButton from "../../shared/components/Header";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 

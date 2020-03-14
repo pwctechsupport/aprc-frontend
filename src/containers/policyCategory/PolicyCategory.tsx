@@ -31,7 +31,7 @@ import PolicyCategoryForm, {
   PolicyCategoryFormValues
 } from "./components/PolicyCategoryForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import HeaderWithBackButton from "../../shared/components/Header";
 
 const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);

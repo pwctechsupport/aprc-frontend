@@ -3,7 +3,7 @@ import Helmet from "react-helmet";
 import { RouteComponentProps } from "react-router";
 import { useCreatePolicyMutation } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
-import HeaderWithBackButton from "../../shared/components/HeaderWithBack";
+import HeaderWithBackButton from "../../shared/components/Header";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 
