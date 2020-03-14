@@ -363,7 +363,7 @@ const Resource = ({ match, history }: RouteComponentProps) => {
           ["/resources/" + id, name]
         ]}
       />
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between align-items-center">
         <HeaderWithBackButton heading={name} draft={!!draft} />
         {renderResourceAction()}
       </div>
