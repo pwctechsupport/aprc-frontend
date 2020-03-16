@@ -142,9 +142,14 @@ const ResourceForm = ({
       </div>
       <div className="mt-1">
         {activityType === "text" ? (
-          <Input type="text" name="resuploadLink" innerRef={register} />
+          <Input
+            type="text"
+            name="resuploadLink"
+            placeholder="Type image URL..."
+            innerRef={register}
+          />
         ) : (
-          <Input type="file" onChange={handleChangeFile} />
+          <input type="file" onChange={handleChangeFile} />
         )}
       </div>
 
