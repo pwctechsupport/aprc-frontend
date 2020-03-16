@@ -139,18 +139,7 @@ const ResourceForm = ({
       )}
       <span className="mt-2 mb-3">Upload</span>
       {selectedCategory?.value === "Flowchart" ? (
-        <div className="d-flex ml-4">
-          <Label check className="d-flex align-items-center pr-4">
-            <Input
-              type="radio"
-              name="controlActivity_type"
-              value="text"
-              onChange={() => setActivityType("text")}
-              defaultChecked={activityType === "text"}
-            />{" "}
-            URL
-          </Label>
-        </div>
+        <div></div>
       ) : (
         <div className="d-flex ml-4">
           <Label check className="d-flex align-items-center pr-4">
