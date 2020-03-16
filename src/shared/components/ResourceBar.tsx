@@ -62,17 +62,10 @@ export default function ResourceBar({
   );
 }
 
-export const AddResourceButton = ({ onClick }: AddResourceButtonProps) => {
-  return (
-    <AddResourceButtonWrapper onClick={onClick}>
-      + Add Resource
-    </AddResourceButtonWrapper>
-  );
-};
-
 // ------------------------------------------------
 // Styled Components Constructor
 // ------------------------------------------------
+
 const ResourceBarContainer = styled.div`
   background: #fbeee6;
   display: flex;
@@ -98,28 +91,7 @@ const ResourceName = styled.div`
   line-height: 20px;
   color: #d85604;
 `;
+
 const ResourceViewCount = styled.div`
   font-size: 12px;
 `;
-
-const AddResourceButtonWrapper = styled.div`
-  background-color: white;
-  text-align: center;
-  cursor: pointer;
-  padding: 5px 0;
-  border-radius: 3px;
-  transition: 0.15s ease-in-out;
-  color: grey;
-  &:hover {
-    background: lightgrey;
-    color: black;
-  }
-`;
-
-// ------------------------------------------------
-// Type Definitions
-// ------------------------------------------------
-
-interface AddResourceButtonProps {
-  onClick: () => void;
-}
