@@ -56,7 +56,7 @@ const ResourceForm = ({
   }
 
   function submit(data: ResourceFormValues) {
-    onSubmit && onSubmit(data);
+    // onSubmit && onSubmit(data);
   }
 
   const handleGetCategories = useLoadCategories();
@@ -138,33 +138,49 @@ const ResourceForm = ({
         </Fragment>
       )}
       <span className="mt-2 mb-3">Upload</span>
-      <div className="d-flex ml-4">
-        <Label check className="d-flex align-items-center pr-4">
-          <Input
-            type="radio"
-            name="controlActivity_type"
-            value="text"
-            onChange={() => setActivityType("text")}
-            defaultChecked={activityType === "text"}
-          />{" "}
-          Image URL
-        </Label>
-        <Label check className="d-flex align-items-center pl-3">
-          <Input
-            type="radio"
-            name="controlActivity_type"
-            value="attachment"
-            onChange={() => setActivityType("attachment")}
-            defaultChecked={activityType === "attachment"}
-          />{" "}
-          Attachment
-        </Label>
-      </div>
+      {selectedCategory?.value === "Flowchart" ? (
+        <div className="d-flex ml-4">
+          <Label check className="d-flex align-items-center pr-4">
+            <Input
+              type="radio"
+              name="controlActivity_type"
+              value="text"
+              onChange={() => setActivityType("text")}
+              defaultChecked={activityType === "text"}
+            />{" "}
+            URL
+          </Label>
+        </div>
+      ) : (
+        <div className="d-flex ml-4">
+          <Label check className="d-flex align-items-center pr-4">
+            <Input
+              type="radio"
+              name="controlActivity_type"
+              value="text"
+              onChange={() => setActivityType("text")}
+              defaultChecked={activityType === "text"}
+            />{" "}
+            URL
+          </Label>
+          <Label check className="d-flex align-items-center pl-3">
+            <Input
+              type="radio"
+              name="controlActivity_type"
+              value="attachment"
+              onChange={() => setActivityType("attachment")}
+              defaultChecked={activityType === "attachment"}
+            />{" "}
+            Attachment
+          </Label>
+        </div>
+      )}
+
       <div className="mt-1">
         {activityType === "text" ? (
           <Input type="text" name="resuploadLink" innerRef={register} />
         ) : (
-          <Input type="file" onChange={handleChangeFile} />
+          <Input type="file" name="" onChange={handleChangeFile} />
         )}
       </div>
 
