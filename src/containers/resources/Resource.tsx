@@ -1,52 +1,127 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { AiFillEdit } from "react-icons/ai";
-import { FaTimes, FaTrash } from "react-icons/fa";
+import {
+  AiFillEdit,
+  AiOutlineClockCircle,
+  AiOutlineEdit
+} from "react-icons/ai";
+import { FaTimes, FaTrash, FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { oc } from "ts-optchain";
 import {
   UpdateResourceInput,
   useDestroyResourceMutation,
+  useCreateRequestEditMutation,
+  useApproveRequestEditMutation,
   useResourceQuery,
-  useUpdateResourceMutation
+  useUpdateResourceMutation,
+  useReviewResourceDraftMutation
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import {
+  notifyGraphQLErrors,
+  notifySuccess,
+  notifyInfo
+} from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 import { toLabelValue } from "../../shared/formatter";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import useEditState from "../../shared/hooks/useEditState";
+import Tooltip from "../../shared/components/Tooltip";
 
-const Resource = ({ match }: RouteComponentProps) => {
+const Resource = ({ match, history }: RouteComponentProps) => {
+  // Delete handlers
+  const [deleteMutation, deleteInfo] = useDestroyResourceMutation({
+    onCompleted: () => {
+      notifySuccess("Resource Deleted");
+      history.push("/resource");
+    },
+    onError: notifyGraphQLErrors,
+    awaitRefetchQueries: true,
+    refetchQueries: ["resource"]
+  });
+  function handleDelete() {
+    deleteMutation({ variables: { id } });
+  }
+
+  // Review handlers
+  const [reviewResource, reviewResourceM] = useReviewResourceDraftMutation({
+    refetchQueries: ["resource"]
+  });
+  async function review({ publish }: { publish: boolean }) {
+    try {
+      await reviewResource({ variables: { id, publish } });
+      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+
+  // Request Edit handlers
+  const id = match.params && (match.params as any).id;
+
+  const [
+    requestEditMutation,
+    requestEditMutationInfo
+  ] = useCreateRequestEditMutation({
+    variables: { id, type: "Resource" },
+    onError: notifyGraphQLErrors,
+    onCompleted: () => notifyInfo("Edit access requested"),
+    refetchQueries: ["resource"]
+  });
+
+  // Approve and Reject handlers
+  const [
+    approveEditMutation,
+    approveEditMutationResult
+  ] = useApproveRequestEditMutation({
+    refetchQueries: ["resource"],
+    onError: notifyGraphQLErrors
+  });
+
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode(prev => !prev);
-  const id = match.params && (match.params as any).id;
+
+  async function handleApproveRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: true } });
+      notifySuccess("You Gave Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  async function handleRejectRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: false } });
+      notifySuccess("You Restrict Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
   const { data, loading } = useResourceQuery({
     variables: { id },
     fetchPolicy: "network-only"
   });
-
+  const draft = data?.resource?.draft?.objectResult;
+  const hasEditAccess = data?.resource?.hasEditAccess || false;
+  const requestStatus = data?.resource?.requestStatus;
+  const requestEditState = data?.resource?.requestEdit?.state;
+  const premise = useEditState({
+    draft,
+    hasEditAccess,
+    requestStatus,
+    requestEditState
+  });
   const [updateResource, updateResourceM] = useUpdateResourceMutation({
     refetchQueries: ["resources", "resource"],
     awaitRefetchQueries: true
   });
-
-  const [deleteResource] = useDestroyResourceMutation({
-    refetchQueries: ["resources", "resource"],
-    onCompleted: _ => notifySuccess("Delete Success"),
-    onError: notifyGraphQLErrors
-  });
-
-  const handleDeleteMain = () => {
-    deleteResource({
-      variables: { id }
-    });
-  };
 
   const name = data?.resource?.name || "";
 
@@ -109,6 +184,7 @@ const Resource = ({ match }: RouteComponentProps) => {
   const renderResourceInEditMode = () => {
     return (
       <ResourceForm
+        isDraft={draft ? true : false}
         defaultValues={defaultValues}
         onSubmit={handleSubmit}
         submitting={updateResourceM.loading}
@@ -179,29 +255,101 @@ const Resource = ({ match }: RouteComponentProps) => {
   };
 
   const renderResourceAction = () => {
-    if (inEditMode) {
+    if (premise === 6) {
       return (
-        <Button onClick={toggleEditMode} className="soft orange" color="">
-          <FaTimes className="mr-2" />
-          Cancel Edit
-        </Button>
+        <Tooltip description="Accept edit request">
+          <DialogButton
+            title={`Accept request to edit?`}
+            message={`Request by ${data?.resource?.requestEdit?.user?.name}`}
+            className="soft red mr-2"
+            data={data?.resource?.requestEdit?.id}
+            onConfirm={handleApproveRequest}
+            onReject={handleRejectRequest}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
+          >
+            <FaExclamationCircle />
+          </DialogButton>
+        </Tooltip>
       );
     }
-    return (
-      <div>
-        <Button onClick={toggleEditMode} className="soft orange mr-2" color="">
-          <AiFillEdit />
-        </Button>
-        <DialogButton
-          onConfirm={handleDeleteMain}
-          color=""
-          message={`Delete resource "${name}"?`}
-          className="soft red"
+    if (premise === 5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
         >
-          <FaTrash className="text-red" />
-        </DialogButton>
-      </div>
-    );
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+    if (premise === 4) {
+      return (
+        <Tooltip description="Request edit access">
+          <DialogButton
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutation()}
+            loading={requestEditMutationInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatus === "requested"}
+          >
+            <AiOutlineEdit />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premise === 3) {
+      if (inEditMode) {
+        return (
+          <Button onClick={toggleEditMode} color="">
+            <FaTimes size={22} className="mr-2" />
+            Cancel Edit
+          </Button>
+        );
+      }
+      return (
+        <div className="d-flex">
+          <DialogButton
+            onConfirm={handleDelete}
+            loading={deleteInfo.loading}
+            message={`Delete Resource "${name}"?`}
+            className="soft red mr-2"
+          >
+            <FaTrash />
+          </DialogButton>
+          <Tooltip description="Edit Resource">
+            <Button onClick={toggleEditMode} color="" className="soft orange">
+              <AiFillEdit />
+            </Button>
+          </Tooltip>
+        </div>
+      );
+    }
+    if (premise === 2) {
+      return (
+        <div className="d-flex">
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewResourceM.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewResourceM.loading}
+          >
+            Approve
+          </DialogButton>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -215,8 +363,8 @@ const Resource = ({ match }: RouteComponentProps) => {
           ["/resources/" + id, name]
         ]}
       />
-      <div className="d-flex justify-content-between">
-        <HeaderWithBackButton heading={name} />
+      <div className="d-flex justify-content-between align-items-center">
+        <HeaderWithBackButton heading={name} draft={!!draft} />
         {renderResourceAction()}
       </div>
       {inEditMode ? renderResourceInEditMode() : renderResource()}

@@ -114,7 +114,8 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     variables: { id, type: "PolicyCategory" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["policy"]
+    awaitRefetchQueries: true,
+    refetchQueries: ["policyCategory"]
   });
 
   // Approve and Reject handlers
@@ -122,7 +123,8 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     approveEditMutation,
     approveEditMutationResult
   ] = useApproveRequestEditMutation({
-    refetchQueries: ["policy"],
+    awaitRefetchQueries: true,
+    refetchQueries: ["policyCategory"],
     onError: notifyGraphQLErrors
   });
   async function handleApproveRequest(id: string) {
