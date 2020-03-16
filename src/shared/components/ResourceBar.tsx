@@ -1,44 +1,28 @@
 import React from "react";
 import { FaFile } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import { oc } from "ts-optchain";
-import { useCreateResourceRatingMutation } from "../../generated/graphql";
-// import { useSelector } from "../hooks/useSelector";
 import StarRating from "./StarRating";
 import Tooltip from "./Tooltip";
 
-const ResourceBar = ({
+interface ResourceBarProps {
+  id: string;
+  name?: string | null;
+  resuploadUrl?: string | null;
+  rating?: number | null;
+  visit?: number | null;
+  totalRating?: number | null;
+}
+
+export default function ResourceBar({
   name,
   id,
   resuploadUrl,
   rating = 0,
   visit = 0,
   totalRating = 0
-}: ResourceBarProps) => {
-  // const user = useSelector(state => state.auth.user);
-  const [mutate] = useCreateResourceRatingMutation({
-    onCompleted: res => {
-      const ratingGiven = oc(res).createResourceRating.resourceRating.rating(0);
-      toast.success(`You gave ${ratingGiven} star rating`);
-    },
-    onError: () => toast.error("Update Rating Failed"),
-    awaitRefetchQueries: true,
-    refetchQueries: ["policy", "resource", "resources"]
-  });
-  const handleStarClick = (nextValue: number) => {
-    mutate({
-      variables: {
-        input: {
-          resourceId: id,
-          rating: nextValue
-          // userId: oc(user).id("")
-        }
-      }
-    });
-  };
+}: ResourceBarProps) {
   return (
     <ResourceBarContainer>
       <ResourceBarDivider width="40">
@@ -48,15 +32,6 @@ const ResourceBar = ({
       </ResourceBarDivider>
 
       <ResourceBarDivider width="20" align="right">
-        {/* <a
-          href={`http://mandalorian.rubyh.co${resuploadUrl}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="mx-2"
-        >
-          <FaFile />
-        </a> */}
-
         <Button color="transparent">
           <Tooltip
             description="Open File"
@@ -79,15 +54,13 @@ const ResourceBar = ({
           id={id}
           rating={rating}
           totalRating={totalRating}
-          onStarClick={handleStarClick}
+          // onStarClick={handleStarClick}
         />
         <ResourceViewCount className="views">{visit} Views</ResourceViewCount>
       </ResourceBarDivider>
     </ResourceBarContainer>
   );
-};
-
-export default ResourceBar;
+}
 
 export const AddResourceButton = ({ onClick }: AddResourceButtonProps) => {
   return (
@@ -146,15 +119,6 @@ const AddResourceButtonWrapper = styled.div`
 // ------------------------------------------------
 // Type Definitions
 // ------------------------------------------------
-
-interface ResourceBarProps {
-  id: string;
-  name?: string | null;
-  resuploadUrl?: string | null;
-  rating?: number | null;
-  visit?: number | null;
-  totalRating?: number | null;
-}
 
 interface AddResourceButtonProps {
   onClick: () => void;

@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import { Tooltip } from "reactstrap";
 import styled from "styled-components";
 
-const StarRating = ({
+interface StarRatingProps {
+  id: string;
+  rating?: number | null | undefined;
+  totalRating?: number | null | undefined;
+  onStarClick?: (value: number) => void;
+}
+
+export default function StarRating({
   id,
   rating,
   totalRating,
   onStarClick
-}: StarRatingProps) => {
+}: StarRatingProps) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
   const tooltipId = "resourceBarTooltip" + id;
@@ -27,14 +34,22 @@ const StarRating = ({
         <StarRatingContainer>
           <FillRating rating={rating}>
             {Array.from({ length: 5 }).map((_, i) => (
-              <Span key={i} onClick={() => onStarClick(i + 1)}>
+              <Span
+                key={i}
+                onClick={() => onStarClick?.(i + 1)}
+                pointer={Boolean(onStarClick)}
+              >
                 ★
               </Span>
             ))}
           </FillRating>
           <EmptyRating>
             {Array.from({ length: 5 }).map((_, i) => (
-              <EmptySpan key={i} onClick={() => onStarClick(i + 1)}>
+              <EmptySpan
+                key={i}
+                onClick={() => onStarClick?.(i + 1)}
+                pointer={Boolean(onStarClick)}
+              >
                 ★
               </EmptySpan>
             ))}
@@ -43,9 +58,7 @@ const StarRating = ({
       </div>
     </div>
   );
-};
-
-export default StarRating;
+}
 
 // ------------------------------------------------
 // Styled Components Constructor
@@ -75,21 +88,9 @@ const EmptyRating = styled.div`
   display: block;
   z-index: 0;
 `;
-const Span = styled.span`
-  /* display: inline-block; */
-  cursor: pointer;
+const Span = styled.span<{ pointer: boolean }>`
+  cursor: ${p => (p.pointer ? "pointer" : "default")};
 `;
-const EmptySpan = styled.span`
-  cursor: pointer;
+const EmptySpan = styled.span<{ pointer: boolean }>`
+  cursor: ${p => (p.pointer ? "pointer" : "default")};
 `;
-
-// ------------------------------------------------
-// Type Definitions
-// ------------------------------------------------
-
-interface StarRatingProps {
-  id: string;
-  rating?: number | null | undefined;
-  totalRating?: number | null | undefined;
-  onStarClick: (value: number) => void;
-}
