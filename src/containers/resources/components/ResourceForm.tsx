@@ -51,7 +51,7 @@ const ResourceForm = ({
   }
 
   function submit(data: ResourceFormValues) {
-    // onSubmit && onSubmit(data);
+    onSubmit && onSubmit(data);
   }
 
   const handleGetCategories = useLoadCategories();
@@ -147,9 +147,14 @@ const ResourceForm = ({
 
       <div className="mt-1">
         {activityType === "text" ? (
-          <Input type="text" name="resuploadLink" innerRef={register} />
+          <Input
+            type="text"
+            name="resuploadLink"
+            placeholder="Type image URL..."
+            innerRef={register}
+          />
         ) : (
-          <Input type="file" name="" onChange={handleChangeFile} />
+          <input type="file" onChange={handleChangeFile} />
         )}
       </div>
 
