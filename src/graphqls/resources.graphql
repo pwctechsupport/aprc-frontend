@@ -35,6 +35,9 @@ mutation createResource($input: CreateResourceInput!) {
   createResource(input: $input) {
     success
     errors
+    resource {
+      id
+    }
   }
 }
 
