@@ -56,7 +56,7 @@ const ResourceForm = ({
   }
 
   function submit(data: ResourceFormValues) {
-    // onSubmit && onSubmit(data);
+    onSubmit && onSubmit(data);
   }
 
   const handleGetCategories = useLoadCategories();

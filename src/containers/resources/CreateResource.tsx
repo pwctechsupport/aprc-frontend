@@ -1,5 +1,4 @@
 import React from "react";
-
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 import {
   useCreateResourceMutation,
