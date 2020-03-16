@@ -118,9 +118,7 @@ const ResourceForm = ({
         </Fragment>
       )}
       <span className="mt-2 mb-3">Upload</span>
-      {selectedCategory?.value === "Flowchart" ? (
-        <div></div>
-      ) : (
+      {selectedCategory?.value === "Flowchart" ? null : (
         <div className="d-flex ml-4">
           <Label check className="d-flex align-items-center pr-4">
             <Input
@@ -146,7 +144,7 @@ const ResourceForm = ({
       )}
 
       <div className="mt-1">
-        {activityType === "text" ? (
+        {selectedCategory?.value !== "Flowchart" && activityType === "text" ? (
           <Input
             type="text"
             name="resuploadLink"
