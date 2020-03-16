@@ -36,9 +36,7 @@ import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/Header";
 import Menu from "../../shared/components/Menu";
-import ResourceBar, {
-  AddResourceButton
-} from "../../shared/components/ResourceBar";
+import ResourceBar from "../../shared/components/ResourceBar";
 import Table from "../../shared/components/Table";
 import {
   downloadPdf,
@@ -70,6 +68,7 @@ import {
 } from "react-icons/ai";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import { CrumbItem } from "../../shared/components/BreadCrumb";
+import OpacityButton from "../../shared/components/OpacityButton";
 
 const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -533,16 +532,14 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               </div>
             </Route>
             <Route exact path="/policy/:id/resources">
-              <Collapsible
-                title="Resources"
-                show={collapse.includes("Resources")}
-                onClick={toggleCollapse}
-              >
+              <div className="mt-3">
                 {resources.map(resource => (
                   <ResourceBar key={resource.id} {...resource} />
                 ))}
-                <AddResourceButton onClick={toggleAddResourceModal} />
-              </Collapsible>
+                <OpacityButton onClick={toggleAddResourceModal}>
+                  + Add Resource
+                </OpacityButton>
+              </div>
             </Route>
           </TabPane>
         </TabContent>
