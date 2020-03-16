@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
+import { FaTimes } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import { GroupType } from "react-select";
 import Async from "react-select/async";
-import styled from "styled-components";
+import Switch from "react-switch";
+import styled, { keyframes } from "styled-components";
 import {
+  Control,
+  Risk,
   RisksOrControlsDocument,
   RisksOrControlsQuery,
   Tag,
   useCreateTagMutation,
   useDeleteTagMutation,
   useTagsQuery,
-  Risk,
-  Control,
   useUpdateTagMutation
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
@@ -20,7 +23,6 @@ import {
   notifyGraphQLErrors,
   notifySuccess
 } from "../../../shared/utils/notif";
-import { FaTimes } from "react-icons/fa";
 
 interface FlowchartProps {
   bpId: string;
@@ -56,6 +58,7 @@ export default function Flowchart({
   editable,
   className
 }: FlowchartProps) {
+  const [show, setShow] = useState(true);
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
   const [currentTag, setCurrentTag] = useState(init);
   const { data } = useTagsQuery({
@@ -164,9 +167,11 @@ export default function Flowchart({
       });
     }
   }
+
   function handleClose() {
     setCurrentTag(init);
   }
+
   function handlePreviewTagClick(tag: Omit<Tag, "createdAt" | "updatedAt">) {
     return function(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
       e.stopPropagation();
@@ -182,7 +187,6 @@ export default function Flowchart({
   }
 
   function handleSelectChange(e: any) {
-    // e && setSelected(e.value);
     if (e) {
       const { label, value } = e;
       setCurrentTag(prevTag => ({
@@ -197,21 +201,56 @@ export default function Flowchart({
 
   return (
     <div className={className}>
+      <div className="d-flex align-items-center justify-content-start">
+        <h5>Show Tag</h5>
+        &nbsp;
+        <Switch
+          checked={show}
+          width={50}
+          height={25}
+          onChange={setShow}
+          className="mb-2"
+        />
+      </div>
       <FlowchartWrapper onClick={editable ? handleClick : undefined}>
         <Image src={img} editable={editable} />
-        {tags.map((tag, index) => (
-          <PreviewTag
-            key={index}
-            onClick={editable ? handlePreviewTagClick(tag) : undefined}
-            x={tag.xCoordinates || 0}
-            y={tag.yCoordinates || 0}
-          >
-            <PreviewTagText>
-              {tag.risk ? "Risk: " : "Control: "}
-              {tag.risk?.name || tag.control?.description}
-            </PreviewTagText>
-          </PreviewTag>
-        ))}
+        {tags.map((tag, index) => {
+          if (editable) {
+            return (
+              <PreviewTag
+                key={tag.id}
+                show={show}
+                onClick={handlePreviewTagClick(tag)}
+                x={tag.xCoordinates || 0}
+                y={tag.yCoordinates || 0}
+              >
+                <PreviewTagText>
+                  {tag.risk ? "Risk: " : "Control: "}
+                  {tag.risk?.name || tag.control?.description}
+                </PreviewTagText>
+              </PreviewTag>
+            );
+          }
+          return (
+            <PreviewTag
+              key={tag.id}
+              show={show}
+              x={tag.xCoordinates || 0}
+              y={tag.yCoordinates || 0}
+              as={Link}
+              to={
+                tag.risk?.id
+                  ? `/risk/${tag.risk?.id}`
+                  : `/control/${tag.control?.id}`
+              }
+            >
+              <PreviewTagText>
+                {tag.risk ? "Risk: " : "Control: "}
+                {tag.risk?.name || tag.control?.description}
+              </PreviewTagText>
+            </PreviewTag>
+          );
+        })}
         {currentTag.active && (
           <TaggerBox
             onClick={e => e.stopPropagation()}
@@ -290,7 +329,16 @@ const Image = styled.img<{ editable: boolean }>`
   height: 500px;
 `;
 
-const PreviewTag = styled.div<{ x: number; y: number }>`
+const fadeIn = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const fadeOut = keyframes`
+  from { opacity: 1; }
+  to { opacity: 0; }
+`;
+const PreviewTag = styled.div<{ x: number; y: number; show: boolean }>`
   position: absolute;
   top: ${p => p.y + 10}px;
   left: ${p => p.x - 50}px;
@@ -302,11 +350,28 @@ const PreviewTag = styled.div<{ x: number; y: number }>`
   z-index: 10;
   cursor: pointer;
   padding: 5px 8px;
-  transition: 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  /* in and out transition */
+  visibility: ${props => (!props.show ? "hidden" : "visible")};
+  transition: visibility 1s linear;
+  animation: ${props => (!props.show ? fadeOut : fadeIn)} 1s linear;
+  /* hover transition */
+  transition: 1s cubic-bezier(0.075, 0.82, 0.165, 1);
   white-space: nowrap;
   &:hover {
     white-space: unset;
+    z-index: 100;
+    background-color: black;
   }
+  /* remove default Link style */
+  text-decoration: none;
+  &:focus,
+  &:hover,
+  &:visited,
+  &:link,
+  &:active {
+    text-decoration: none;
+  }
+  /* create the tip */
   &::before {
     content: "";
     display: block;
