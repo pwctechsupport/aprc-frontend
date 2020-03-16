@@ -19,7 +19,7 @@ export default function AsyncCreatableSelect({
   }, [name, register]);
 
   function handleChange(e: any) {
-    console.log("ini valuenya:", e);
+    // console.log("ini valuenya:", e);
     setValue(name, e);
     // if (rest.isMulti) {
     //   setValue(name, e && e.map((v: any) => v.value));

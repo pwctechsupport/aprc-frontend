@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Form, Label } from "reactstrap";
 import { useForm } from "react-hook-form";
+import { Form, Label } from "reactstrap";
 import * as yup from "yup";
 import {
   BusinessProcessesDocument,
@@ -12,13 +12,9 @@ import {
   PoliciesDocument,
   PoliciesQuery
 } from "../../../generated/graphql";
-import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Button from "../../../shared/components/Button";
-import { oc } from "ts-optchain";
-
-import DialogButton from "../../../shared/components/DialogButton";
-import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatableSelect";
+import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import {
   Suggestion,
@@ -76,7 +72,7 @@ const ResourceForm = ({
             color=""
             loading={submitting}
           >
-            {oc(defaultValues).name("") ? "Save" : "Submit"}
+            {defaultValues?.name ? "Save" : "Submit"}
           </Button>
         </div>
       );
