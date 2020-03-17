@@ -8,6 +8,7 @@ import { RouteComponentProps } from "react-router";
 import HeaderWithBackButton from "../../shared/components/Header";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import Helmet from "react-helmet";
 
 const CreateResource = ({ history }: RouteComponentProps) => {
   const [createResource, createResourceM] = useCreateResourceMutation({
@@ -36,6 +37,9 @@ const CreateResource = ({ history }: RouteComponentProps) => {
 
   return (
     <div>
+      <Helmet>
+        <title>Create Resource - PricewaterhouseCoopers</title>
+      </Helmet>
       <BreadCrumb
         crumbs={[
           ["/resources", "Resources"],
