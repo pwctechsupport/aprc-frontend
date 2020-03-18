@@ -25,7 +25,6 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       category: data.category?.value || "",
       name: data.name || "",
       resuploadBase64: data.resuploadBase64,
-      resuploadFileName: data.resuploadFileName,
       policyIds: data.policyIds?.map(a => a.value),
       controlIds: data.controlIds?.map(a => a.value),
       businessProcessId: data.businessProcessId?.value,

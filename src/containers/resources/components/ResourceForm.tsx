@@ -41,7 +41,6 @@ export interface ResourceFormValues {
   controlIds?: Suggestions;
   businessProcessId?: Suggestion;
   resuploadBase64?: any;
-  resuploadFileName?: string;
   resuploadUrl?: string;
   resuploadLink?: string;
   tagsAttributes?: Omit<Tag, "createdAt" | "updatedAt">[];
