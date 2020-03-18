@@ -29,7 +29,11 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       policyIds: data.policyIds?.map(a => a.value),
       controlIds: data.controlIds?.map(a => a.value),
       businessProcessId: data.businessProcessId?.value,
-      resuploadLink: data.resuploadLink
+      resuploadLink: data.resuploadLink,
+      tagsAttributes: data.tagsAttributes?.map(tag => {
+        const { id, risk, control, ...rest } = tag;
+        return { ...rest, riskId: risk?.id, control: control?.id };
+      })
     };
 
     createResource({ variables: { input } });

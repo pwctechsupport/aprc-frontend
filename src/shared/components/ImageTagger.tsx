@@ -22,6 +22,7 @@ interface ImageTaggerProps {
   src: string;
   editable: boolean;
   className?: string;
+  onTagsChanged?: (tags: Omit<Tag, "createdAt" | "updatedAt">[]) => void;
 }
 
 interface FlowchartSuggestion {
@@ -47,7 +48,8 @@ export default function ImageTagger({
   bpId,
   src,
   editable,
-  className
+  className,
+  onTagsChanged
 }: ImageTaggerProps) {
   const [show, setShow] = useState(true);
   const [tags, setTags] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
@@ -61,6 +63,10 @@ export default function ImageTagger({
     .map(a => a.risk?.id)
     .filter(Boolean) as string[];
 
+  useEffect(() => {
+    onTagsChanged?.(tags);
+  }, [tags, onTagsChanged]);
+
   useEscapeDetection(() => {
     if (currentTag.active) setCurrentTag(init);
   });
@@ -72,15 +78,18 @@ export default function ImageTagger({
   });
 
   function handleCreate(x: number, y: number) {
-    setTags(tags =>
-      tags.concat({
-        id: uniqueId(),
-        xCoordinates: x,
-        yCoordinates: y,
-        risk: currentTag.risk,
-        control: currentTag.control
-      })
-    );
+    if (currentTag.risk?.id || currentTag.control?.id) {
+      setTags(tags =>
+        tags.concat({
+          id: uniqueId(),
+          xCoordinates: x,
+          yCoordinates: y,
+          risk: currentTag.risk,
+          control: currentTag.control
+        })
+      );
+      setCurrentTag(init);
+    }
   }
 
   function handleUpdate(id: string) {
@@ -91,10 +100,12 @@ export default function ImageTagger({
           : tag
       )
     );
+    setCurrentTag(init);
   }
 
   function handleDelete(id: string) {
     setTags(tags => tags.filter(tag => tag.id !== id));
+    setCurrentTag(init);
   }
 
   function handleClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
@@ -264,9 +275,7 @@ const FlowchartWrapper = styled.div`
 
 const Image = styled.img<{ editable: boolean }>`
   cursor: ${p => (p.editable ? "crosshair" : "")};
-  position: absolute;
-  width: 800px;
-  height: 500px;
+  width: 100%;
 `;
 
 const fadeIn = keyframes`
