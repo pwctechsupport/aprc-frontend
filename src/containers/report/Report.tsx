@@ -55,6 +55,14 @@ const options = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" }
     ]
+  },
+  {
+    name: "Unmapped Control",
+    id: "unmapped_control",
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" }
+    ]
   }
 ];
 
