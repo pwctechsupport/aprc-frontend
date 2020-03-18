@@ -146,7 +146,6 @@ const RiskAndControls = ({ match }: RouteComponentProps) => {
           name: values.name || "",
           category: values.category?.value || "",
           resuploadBase64: values.resuploadBase64,
-          resuploadFileName: values.resuploadFileName,
           policyIds: values.policyIds?.map(a => a.value),
           controlIds: values.controlIds?.map(a => a.value),
           businessProcessId: values.businessProcessId?.value
