@@ -55,7 +55,7 @@ const ButtonImage = styled.div<{ isActive: boolean }>`
   float: left;
   overflow: hidden;
   cursor: pointer;
-  margin-top: 550px;
+  margin-top: 20px;
   border: 0px solid black;
   border-width: ${p => (p.isActive ? 1 : 0)}px;
   &:hover {
