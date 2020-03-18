@@ -324,9 +324,10 @@ const FlowchartWrapper = styled.div`
 
 const Image = styled.img<{ editable: boolean }>`
   cursor: ${p => (p.editable ? "crosshair" : "")};
-  position: absolute;
+  /* position: absolute;
   width: 800px;
-  height: 500px;
+  height: 500px; */
+  width: 100%;
 `;
 
 const fadeIn = keyframes`
