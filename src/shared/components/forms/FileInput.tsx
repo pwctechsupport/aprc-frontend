@@ -34,11 +34,11 @@ export default function FileInput({
     e.persist();
     if (e.target.files && e.target.files[0]) {
       if (supportedFileTypes.includes(e.target.files[0].type)) {
-        setError(null);
-        setValue(name, String(await toBase64(e.target.files[0])), true);
         const reader = new FileReader();
         reader.onload = () => setPreview(reader.result as string);
         reader.readAsDataURL(e.target.files[0]);
+        setError(null);
+        setValue(name, String(await toBase64(e.target.files[0])), true);
       } else {
         setError(fileTypeErrorMsg);
       }
@@ -67,13 +67,13 @@ export default function FileInput({
     e.stopPropagation();
     e.persist();
     setDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       if (supportedFileTypes.includes(e.dataTransfer.files[0].type)) {
-        setError(null);
-        setValue(name, String(await toBase64(e.dataTransfer.files[0])), true);
         const reader = new FileReader();
         reader.onload = () => setPreview(reader.result as string);
         reader.readAsDataURL(e.dataTransfer.files[0]);
+        setError(null);
+        setValue(name, String(await toBase64(e.dataTransfer.files[0])), true);
       } else {
         setError(fileTypeErrorMsg);
       }
@@ -82,11 +82,6 @@ export default function FileInput({
 
   return (
     <div>
-      {preview ? (
-        <div>
-          <img src={preview} alt="" className="img-fluid" />
-        </div>
-      ) : null}
       <Wrapper
         dragging={dragging}
         onDragEnter={handleDragEnter}
@@ -94,6 +89,7 @@ export default function FileInput({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
+        {preview ? <PreviewImg src={preview} alt="preview-img" /> : null}
         {dragging ? "Release File" : "Drag File Here"}
         {!dragging && <span className="mx-2">Or</span>}
         <UploadButton hidden={dragging} className="custom-file-upload">
@@ -142,4 +138,9 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
       background: green;
       color: white;
     `}
+`;
+
+const PreviewImg = styled.img`
+  height: 70px;
+  margin-right: 10px;
 `;
