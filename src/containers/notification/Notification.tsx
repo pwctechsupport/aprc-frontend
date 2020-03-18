@@ -19,6 +19,7 @@ import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
 import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
+import { notifyError } from "../../shared/utils/notif";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -57,20 +58,25 @@ const Notification = ({ history }: RouteComponentProps) => {
     awaitRefetchQueries: true
   });
 
-  const redirect = (type: string, id: number, notifId: string) => {
-    const readId: IsReadInput = { id: String(notifId) };
-    isRead({
-      variables: { input: readId }
-    });
+  async function redirect(type: string, id: number | string, notifId: string) {
+    try {
+      await isRead({
+        variables: { input: { id: String(notifId) } }
+      });
 
-    if (type === "Policy") history.push(`/policy/${id}`);
-    else if (type === "BusinessProcess")
-      history.push(`/business-process/${id}`);
-    else if (type === "Control") history.push(`/control/${id}`);
-    else if (type === "Risk") history.push(`/risk/${id}`);
-    else if (type === "User") history.push(`/user`);
-    else if (type === "PolicyCategory") history.push(`/policy-category/${id}`);
-  };
+      if (type === "Policy") history.push(`/policy/${id}`);
+      else if (type === "BusinessProcess")
+        history.push(`/business-process/${id}`);
+      else if (type === "Control") history.push(`/control/${id}`);
+      else if (type === "Risk") history.push(`/risk/${id}`);
+      else if (type === "User") history.push(`/user`);
+      else if (type === "PolicyCategory")
+        history.push(`/policy-category/${id}`);
+      else if (type === "Resource") history.push(`/resources/${id}`);
+    } catch (error) {
+      notifyError("Item does not exist");
+    }
+  }
 
   const handleDelete = () => {
     const notifIds: DestroyBulkNotificationInput = { ids: selected };
@@ -169,8 +175,8 @@ const Notification = ({ history }: RouteComponentProps) => {
                       data.originatorType
                         ? redirect(
                             data.originatorType,
-                            Number(data.originatorId),
-                            String(data.id)
+                            data.originatorId || "",
+                            data.id || ""
                           )
                         : null
                     }
