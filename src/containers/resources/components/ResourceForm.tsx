@@ -10,7 +10,8 @@ import {
   EnumListsDocument,
   EnumListsQuery,
   PoliciesDocument,
-  PoliciesQuery
+  PoliciesQuery,
+  Tag
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatableSelect";
@@ -23,6 +24,8 @@ import {
   toLabelValue
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import ImageTagger from "../../../shared/components/ImageTagger";
+import DialogButton from "../../../shared/components/DialogButton";
 
 interface ResourceFormProps {
   defaultValues?: ResourceFormValues;
@@ -41,6 +44,7 @@ export interface ResourceFormValues {
   resuploadFileName?: string;
   resuploadUrl?: string;
   resuploadLink?: string;
+  tagsAttributes?: Omit<Tag, "createdAt" | "updatedAt">[];
 }
 
 export default function ResourceForm({
@@ -53,9 +57,11 @@ export default function ResourceForm({
     ResourceFormValues
   >({ defaultValues, validationSchema });
   const [activityType, setActivityType] = useState("text");
+  const [tags, setTags] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
+  const [preview, setPreview] = useState<string | null>(null);
 
   function submit(data: ResourceFormValues) {
-    onSubmit && onSubmit(data);
+    onSubmit && onSubmit({ ...data, tagsAttributes: tags });
   }
 
   const handleGetCategories = useLoadCategories();
@@ -64,25 +70,27 @@ export default function ResourceForm({
   const handleGetBps = useLoadBps();
 
   const selectedCategory = watch("category");
+  const selectedBusinessProcess = watch("businessProcessId");
 
   const renderSubmit = () => {
     if (!isDraft) {
       return (
         <div className="d-flex justify-content-end mt-3">
-          <Button
-            type="submit"
+          <DialogButton
             className="soft red"
             color=""
             loading={submitting}
+            onConfirm={handleSubmit(submit)}
+            message="Create New Resource?"
           >
             {defaultValues?.name ? "Save" : "Submit"}
-          </Button>
+          </DialogButton>
         </div>
       );
     }
   };
   return (
-    <Form onSubmit={handleSubmit(submit)}>
+    <Form>
       <Input
         name="name"
         label="Name"
@@ -175,9 +183,21 @@ export default function ResourceForm({
             name="resuploadBase64"
             register={register}
             setValue={setValue}
+            onFileSelect={setPreview}
           />
         )}
       </div>
+
+      {preview && (
+        <div>
+          <ImageTagger
+            src={preview}
+            bpId={selectedBusinessProcess?.value || ""}
+            editable
+            onTagsChanged={setTags}
+          />
+        </div>
+      )}
 
       {renderSubmit()}
     </Form>

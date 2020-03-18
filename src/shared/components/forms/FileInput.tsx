@@ -8,6 +8,7 @@ interface FileInputProps {
   register: Function;
   setValue: Function;
   supportedFileTypes?: string[];
+  onFileSelect?: (data: string) => void;
 }
 
 const defaultSupportedFileTypes = ["image/jpeg", "image/png"];
@@ -16,7 +17,8 @@ export default function FileInput({
   name,
   register,
   setValue,
-  supportedFileTypes = defaultSupportedFileTypes
+  supportedFileTypes = defaultSupportedFileTypes,
+  onFileSelect
 }: FileInputProps) {
   const fileTypeErrorMsg =
     "File type not supported. Supported types are PNG and JPG/JPEG.";
@@ -35,10 +37,35 @@ export default function FileInput({
     if (e.target.files && e.target.files[0]) {
       if (supportedFileTypes.includes(e.target.files[0].type)) {
         const reader = new FileReader();
-        reader.onload = () => setPreview(reader.result as string);
+        reader.onload = () => {
+          setPreview(reader.result as string);
+          onFileSelect?.(reader.result as string);
+        };
         reader.readAsDataURL(e.target.files[0]);
+
         setError(null);
         setValue(name, String(await toBase64(e.target.files[0])), true);
+      } else {
+        setError(fileTypeErrorMsg);
+      }
+    }
+  }
+
+  async function handleDrop(e: React.DragEvent<HTMLDivElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.persist();
+    setDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      if (supportedFileTypes.includes(e.dataTransfer.files[0].type)) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setPreview(reader.result as string);
+          onFileSelect?.(reader.result as string);
+        };
+        reader.readAsDataURL(e.dataTransfer.files[0]);
+        setError(null);
+        setValue(name, String(await toBase64(e.dataTransfer.files[0])), true);
       } else {
         setError(fileTypeErrorMsg);
       }
@@ -60,24 +87,6 @@ export default function FileInput({
 
   function handleDragLeave() {
     setDragging(false);
-  }
-
-  async function handleDrop(e: React.DragEvent<HTMLDivElement>) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.persist();
-    setDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      if (supportedFileTypes.includes(e.dataTransfer.files[0].type)) {
-        const reader = new FileReader();
-        reader.onload = () => setPreview(reader.result as string);
-        reader.readAsDataURL(e.dataTransfer.files[0]);
-        setError(null);
-        setValue(name, String(await toBase64(e.dataTransfer.files[0])), true);
-      } else {
-        setError(fileTypeErrorMsg);
-      }
-    }
   }
 
   return (
@@ -112,11 +121,12 @@ const UploadButton = styled.label`
   display: unset;
   margin-bottom: unset;
   padding: 5px;
+  margin: 0px 4px;
   border-radius: 2px;
-  background: rgba(0, 0, 0, 0.1);
-  transition: 0.3s linear;
+  transition: background 0.1s ease-out 0s;
+  background: none rgb(244, 245, 247);
   &:hover {
-    background: rgba(0, 0, 0, 0.3);
+    background-color: rgb(235, 236, 240);
   }
 `;
 
