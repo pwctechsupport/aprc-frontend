@@ -25,7 +25,7 @@ query policies($filter: BaseScalar = {}) {
 query policyTree(
   $filter: BaseScalar = {}
   $isTree: Boolean!
-  $limit: Int
+  $limit: Int = 1000
   $page: Int
 ) {
   policies(filter: $filter, limit: $limit, page: $page) {

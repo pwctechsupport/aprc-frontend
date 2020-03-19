@@ -1,4 +1,4 @@
-query resources($filter: BaseScalar = {}, $page: Int, $limit: Int) {
+query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   resources(filter: $filter, page: $page, limit: $limit) {
     collection {
       id

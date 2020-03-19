@@ -23,7 +23,7 @@ fragment userNotifs on User {
   name
 }
 
-query notifications($filter: BaseScalar = {}, $limit: Int, $page: Int) {
+query notifications($filter: BaseScalar = {}, $limit: Int = 1000, $page: Int) {
   notifications(filter: $filter, limit: $limit, page: $page) {
     collection {
       id

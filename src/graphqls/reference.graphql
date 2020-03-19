@@ -1,4 +1,4 @@
-query references($filter: BaseScalar = {}, $page: Int, $limit: Int) {
+query references($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   references(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
