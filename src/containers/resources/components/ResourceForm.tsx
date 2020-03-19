@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form, Label } from "reactstrap";
 import * as yup from "yup";
@@ -10,49 +10,57 @@ import {
   EnumListsDocument,
   EnumListsQuery,
   PoliciesDocument,
-  PoliciesQuery
+  PoliciesQuery,
+  Tag
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatableSelect";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
+import FileInput from "../../../shared/components/forms/FileInput";
 import Input from "../../../shared/components/forms/Input";
 import {
   Suggestion,
   Suggestions,
-  toBase64,
   toLabelValue
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import ImageTagger from "../../../shared/components/ImageTagger";
+import DialogButton from "../../../shared/components/DialogButton";
 
-const ResourceForm = ({
+interface ResourceFormProps {
+  defaultValues?: ResourceFormValues;
+  onSubmit?: (data: ResourceFormValues) => void;
+  submitting?: boolean;
+  isDraft?: boolean;
+}
+
+export interface ResourceFormValues {
+  name?: string;
+  category?: Suggestion;
+  policyIds?: Suggestions;
+  controlIds?: Suggestions;
+  businessProcessId?: Suggestion;
+  resuploadBase64?: any;
+  resuploadUrl?: string;
+  resuploadLink?: string;
+  tagsAttributes?: Omit<Tag, "createdAt" | "updatedAt">[];
+}
+
+export default function ResourceForm({
   defaultValues,
   onSubmit,
   submitting,
   isDraft
-}: ResourceFormProps) => {
+}: ResourceFormProps) {
   const { register, setValue, handleSubmit, errors, watch } = useForm<
     ResourceFormValues
   >({ defaultValues, validationSchema });
   const [activityType, setActivityType] = useState("text");
-
-  useEffect(() => {
-    register({ name: "resuploadBase64", type: "custom" });
-    register({ name: "resuploadFileName" });
-  }, [register]);
-
-  async function handleChangeFile(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files && e.target.files[0]) {
-      setValue("resuploadFileName", e.target.files[0].name);
-      setValue(
-        "resuploadBase64",
-        String(await toBase64(e.target.files[0])),
-        true
-      );
-    }
-  }
+  const [tags, setTags] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
+  const [preview, setPreview] = useState<string | null>(null);
 
   function submit(data: ResourceFormValues) {
-    onSubmit && onSubmit(data);
+    onSubmit && onSubmit({ ...data, tagsAttributes: tags });
   }
 
   const handleGetCategories = useLoadCategories();
@@ -61,25 +69,27 @@ const ResourceForm = ({
   const handleGetBps = useLoadBps();
 
   const selectedCategory = watch("category");
+  const selectedBusinessProcess = watch("businessProcessId");
 
   const renderSubmit = () => {
     if (!isDraft) {
       return (
-        <div className="d-flex justify-content-end">
-          <Button
-            type="submit"
+        <div className="d-flex justify-content-end mt-3">
+          <DialogButton
             className="soft red"
             color=""
             loading={submitting}
+            onConfirm={handleSubmit(submit)}
+            message="Create New Resource?"
           >
             {defaultValues?.name ? "Save" : "Submit"}
-          </Button>
+          </DialogButton>
         </div>
       );
     }
   };
   return (
-    <Form onSubmit={handleSubmit(submit)}>
+    <Form>
       <Input
         name="name"
         label="Name"
@@ -168,16 +178,30 @@ const ResourceForm = ({
             innerRef={register}
           />
         ) : (
-          <input type="file" onChange={handleChangeFile} />
+          <FileInput
+            name="resuploadBase64"
+            register={register}
+            setValue={setValue}
+            onFileSelect={setPreview}
+          />
         )}
       </div>
+
+      {preview && (
+        <div>
+          <ImageTagger
+            src={preview}
+            bpId={selectedBusinessProcess?.value || ""}
+            editable
+            onTagsChanged={setTags}
+          />
+        </div>
+      )}
 
       {renderSubmit()}
     </Form>
   );
-};
-
-export default ResourceForm;
+}
 
 // ==========================================
 // Form Validation
@@ -193,29 +217,6 @@ const validationSchema = yup.object().shape({
     })
     .required()
 });
-
-// ==========================================
-// Type Definitions
-// ==========================================
-
-interface ResourceFormProps {
-  defaultValues?: ResourceFormValues;
-  onSubmit?: (data: ResourceFormValues) => void;
-  submitting?: boolean;
-  isDraft?: boolean;
-}
-
-export interface ResourceFormValues {
-  name?: string;
-  category?: Suggestion;
-  policyIds?: Suggestions;
-  controlIds?: Suggestions;
-  businessProcessId?: Suggestion;
-  resuploadBase64?: any;
-  resuploadFileName?: string;
-  resuploadUrl?: string;
-  resuploadLink?: string;
-}
 
 // ==========================================
 // Custom Hooks

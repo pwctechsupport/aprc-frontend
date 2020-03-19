@@ -32,7 +32,7 @@ const Input = ({
         placeholder={inputProps.placeholder || label}
         className={type === "checkbox" ? "ml-2" : ""}
       />
-      <FormFeedback className="pl-3">{error}</FormFeedback>
+      <FormFeedback>{error}</FormFeedback>
       <FormText>{formText}</FormText>
     </Fragment>
   );

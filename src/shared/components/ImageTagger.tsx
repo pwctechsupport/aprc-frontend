@@ -1,3 +1,4 @@
+import uniqueId from "lodash/uniqueId";
 import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -10,26 +11,18 @@ import {
   Risk,
   RisksOrControlsDocument,
   RisksOrControlsQuery,
-  Tag,
-  useCreateTagMutation,
-  useDeleteTagMutation,
-  useTagsQuery,
-  useUpdateTagMutation
-} from "../../../generated/graphql";
-import Button from "../../../shared/components/Button";
-import { Suggestion, toLabelValue } from "../../../shared/formatter";
-import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import {
-  notifyGraphQLErrors,
-  notifySuccess
-} from "../../../shared/utils/notif";
+  Tag
+} from "../../generated/graphql";
+import Button from "../../shared/components/Button";
+import { Suggestion, toLabelValue } from "../../shared/formatter";
+import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnPromise";
 
-interface FlowchartProps {
+interface ImageTaggerProps {
   bpId: string;
-  resourceId: string;
-  img: string;
+  src: string;
   editable: boolean;
   className?: string;
+  onTagsChanged?: (tags: Omit<Tag, "createdAt" | "updatedAt">[]) => void;
 }
 
 interface FlowchartSuggestion {
@@ -51,26 +44,17 @@ interface CurrentTag {
   control?: Pick<Control, "id" | "description"> | null;
 }
 
-export default function Flowchart({
+export default function ImageTagger({
   bpId,
-  resourceId,
-  img,
+  src,
   editable,
-  className
-}: FlowchartProps) {
+  className,
+  onTagsChanged
+}: ImageTaggerProps) {
   const [show, setShow] = useState(true);
+  const [tags, setTags] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
   const [currentTag, setCurrentTag] = useState(init);
-  const { data } = useTagsQuery({
-    fetchPolicy: "network-only",
-    variables: {
-      filter: {
-        resource_id_eq: resourceId,
-        business_process_id_eq: bpId
-      }
-    }
-  });
-  const tags = data?.tags?.collection || [];
 
   const restrictedControlIds = tags
     .map(a => a.control?.id)
@@ -79,69 +63,9 @@ export default function Flowchart({
     .map(a => a.risk?.id)
     .filter(Boolean) as string[];
 
-  const [createTagMutation, createTagMutationInfo] = useCreateTagMutation({
-    onCompleted: () => {
-      notifySuccess("Tag Saved");
-      handleClose();
-    },
-    onError: notifyGraphQLErrors,
-    awaitRefetchQueries: true,
-    refetchQueries: ["tags"]
-  });
-  function handleCreate(x: number, y: number) {
-    createTagMutation({
-      variables: {
-        input: {
-          businessProcessId: bpId,
-          resourceId: resourceId,
-          xCoordinates: x,
-          yCoordinates: y,
-          riskId: currentTag.risk?.id,
-          controlId: currentTag.control?.id
-        }
-      }
-    });
-  }
-
-  const [updateMutation, updateMutationInfo] = useUpdateTagMutation({
-    onCompleted: () => {
-      notifySuccess("Tag Updated");
-      handleClose();
-    },
-    onError: notifyGraphQLErrors,
-    awaitRefetchQueries: true,
-    refetchQueries: ["tags"]
-  });
-  function handleUpdate(id: string) {
-    updateMutation({
-      variables: {
-        input: {
-          id,
-          riskId: currentTag.risk?.id,
-          controlId: currentTag.control?.id
-        }
-      }
-    });
-  }
-
-  const [deleteTagMutation, deleteTagMutationInfo] = useDeleteTagMutation({
-    onCompleted: () => {
-      notifySuccess("Tag Deleted");
-      handleClose();
-    },
-    onError: notifyGraphQLErrors,
-    awaitRefetchQueries: true,
-    refetchQueries: ["tags"]
-  });
-  function handleDelete(id: string) {
-    deleteTagMutation({
-      variables: {
-        input: {
-          id: id
-        }
-      }
-    });
-  }
+  useEffect(() => {
+    onTagsChanged?.(tags);
+  }, [tags, onTagsChanged]);
 
   useEscapeDetection(() => {
     if (currentTag.active) setCurrentTag(init);
@@ -149,9 +73,40 @@ export default function Flowchart({
 
   const handleLoadOptions = useLoadRiskAndControls({
     bpId,
-    restrictedControlIds: restrictedControlIds,
-    restrictedRiskIds: restrictedRiskIds
+    restrictedControlIds,
+    restrictedRiskIds
   });
+
+  function handleCreate(x: number, y: number) {
+    if (currentTag.risk?.id || currentTag.control?.id) {
+      setTags(tags =>
+        tags.concat({
+          id: uniqueId(),
+          xCoordinates: x,
+          yCoordinates: y,
+          risk: currentTag.risk,
+          control: currentTag.control
+        })
+      );
+      setCurrentTag(init);
+    }
+  }
+
+  function handleUpdate(id: string) {
+    setTags(tags =>
+      tags.map(tag =>
+        tag.id === id
+          ? { ...tag, risk: currentTag.risk, control: currentTag.control }
+          : tag
+      )
+    );
+    setCurrentTag(init);
+  }
+
+  function handleDelete(id: string) {
+    setTags(tags => tags.filter(tag => tag.id !== id));
+    setCurrentTag(init);
+  }
 
   function handleClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     e.persist();
@@ -213,7 +168,7 @@ export default function Flowchart({
         />
       </div>
       <FlowchartWrapper onClick={editable ? handleClick : undefined}>
-        <Image src={img} editable={editable} />
+        <Image src={src} editable={editable} />
         {tags.map((tag, index) => {
           if (editable) {
             return (
@@ -289,7 +244,6 @@ export default function Flowchart({
                     onClick={() => handleDelete(currentTag.id)}
                     size="sm"
                     className="mr-1 pwc cancel"
-                    loading={deleteTagMutationInfo.loading}
                     color="danger"
                   >
                     Delete
@@ -303,9 +257,6 @@ export default function Flowchart({
                   }
                   size="sm"
                   className="pwc"
-                  loading={
-                    createTagMutationInfo.loading || updateMutationInfo.loading
-                  }
                 >
                   Save
                 </Button>
@@ -324,9 +275,6 @@ const FlowchartWrapper = styled.div`
 
 const Image = styled.img<{ editable: boolean }>`
   cursor: ${p => (p.editable ? "crosshair" : "")};
-  /* position: absolute;
-  width: 800px;
-  height: 500px; */
   width: 100%;
 `;
 

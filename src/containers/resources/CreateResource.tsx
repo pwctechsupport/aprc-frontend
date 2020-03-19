@@ -8,6 +8,7 @@ import { RouteComponentProps } from "react-router";
 import HeaderWithBackButton from "../../shared/components/Header";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import Helmet from "react-helmet";
 
 const CreateResource = ({ history }: RouteComponentProps) => {
   const [createResource, createResourceM] = useCreateResourceMutation({
@@ -24,11 +25,14 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       category: data.category?.value || "",
       name: data.name || "",
       resuploadBase64: data.resuploadBase64,
-      resuploadFileName: data.resuploadFileName,
       policyIds: data.policyIds?.map(a => a.value),
       controlIds: data.controlIds?.map(a => a.value),
       businessProcessId: data.businessProcessId?.value,
-      resuploadLink: data.resuploadLink
+      resuploadLink: data.resuploadLink,
+      tagsAttributes: data.tagsAttributes?.map(tag => {
+        const { id, risk, control, ...rest } = tag;
+        return { ...rest, riskId: risk?.id, control: control?.id };
+      })
     };
 
     createResource({ variables: { input } });
@@ -36,6 +40,9 @@ const CreateResource = ({ history }: RouteComponentProps) => {
 
   return (
     <div>
+      <Helmet>
+        <title>Create Resource - PricewaterhouseCoopers</title>
+      </Helmet>
       <BreadCrumb
         crumbs={[
           ["/resources", "Resources"],
