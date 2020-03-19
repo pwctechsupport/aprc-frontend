@@ -19,7 +19,7 @@ fragment userBookmark on User {
   name
 }
 
-query bookmarks($filter: BaseScalar = {}, $page: Int, $limit: Int) {
+query bookmarks($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   bookmarks(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
@@ -44,7 +44,7 @@ query bookmarks($filter: BaseScalar = {}, $page: Int, $limit: Int) {
 }
 
 mutation destroyBookmark($ids: [ID!]!) {
-  destroyBookmark(input: {ids: $ids}) {
+  destroyBookmark(input: { ids: $ids }) {
     success
     errors
   }

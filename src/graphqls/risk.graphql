@@ -12,7 +12,7 @@ fragment risk on Risk {
   }
 }
 
-query risks($filter: BaseScalar = {}, $limit: Int) {
+query risks($filter: BaseScalar = {}, $limit: Int = 1000) {
   risks(filter: $filter, limit: $limit) {
     collection {
       ...risk

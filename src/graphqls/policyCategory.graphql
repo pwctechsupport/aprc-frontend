@@ -1,4 +1,8 @@
-query policyCategories($filter: BaseScalar = {}, $limit: Int, $page: Int) {
+query policyCategories(
+  $filter: BaseScalar = {}
+  $limit: Int = 1000
+  $page: Int
+) {
   policyCategories(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
