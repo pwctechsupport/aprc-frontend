@@ -77,7 +77,7 @@ const Report = () => {
         name: key,
         ...values[key]
       }))
-      .filter(item => item.print)
+      .filter(item => item.format)
       .map(({ name, format }) => ({
         url: `/prints/${name}.${format}`,
         options: {
@@ -95,6 +95,7 @@ const Report = () => {
 
   function onDownload() {
     downloadPdfs(constructDataFromForm(values));
+    console.log("values", values);
   }
 
   return (
@@ -108,7 +109,7 @@ const Report = () => {
               <th>Report Name</th>
               <th>Report Description</th>
               <th>Report Category</th>
-              <th>Select</th>
+              {/* <th>Select</th> */}
               <th>Format</th>
             </tr>
           </thead>
@@ -122,21 +123,13 @@ const Report = () => {
                   <td>{capitalize(option.name)}</td>
                   <td>-</td>
                   <td>-</td>
-                  <td>
-                    <input
-                      name={`${option.id}.print`}
-                      type="checkbox"
-                      className="text-center"
-                      ref={register}
-                    />
-                  </td>
+
                   <td>
                     <FormGroup tag="fieldset">
                       {option.formats.map(format => (
                         <FormGroup check>
                           <Label check>
                             <Input
-                              disabled={!get(value, "print")}
                               type="radio"
                               name={`${option.id}.format`}
                               value={format.id}
