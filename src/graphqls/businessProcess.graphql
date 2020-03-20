@@ -121,6 +121,18 @@ query businessProcess($id: ID!) {
       visit
       resuploadUrl
       totalRating
+      tags {
+        xCoordinates
+        yCoordinates
+        businessProcess {
+          id
+          name
+        }
+        risk {
+          id
+          name
+        }
+      }
     }
   }
 }

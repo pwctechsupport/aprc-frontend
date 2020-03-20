@@ -1,4 +1,4 @@
-query users($filter: BaseScalar = {}, $page: Int, $limit: Int) {
+query users($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   users(filter: $filter, page: $page, limit: $limit) {
     collection {
       ...userRowFragment
@@ -33,7 +33,8 @@ fragment userRowFragment on User {
     id
     state
     user {
-      id name
+      id
+      name
     }
   }
   draft {
@@ -81,14 +82,14 @@ mutation destroyUser($id: ID!) {
 }
 
 mutation reviewUserDraft($id: ID!, $publish: Boolean!) {
-  reviewUserDraft(input: {id: $id, publish: $publish}) {
+  reviewUserDraft(input: { id: $id, publish: $publish }) {
     success
     errors
   }
 }
 
-mutation approveRequestEdit($id: ID!, $approve: Boolean!){
-  approveRequestEdit(input: {id: $id, approve: $approve}) {
+mutation approveRequestEdit($id: ID!, $approve: Boolean!) {
+  approveRequestEdit(input: { id: $id, approve: $approve }) {
     success
     errors
   }
