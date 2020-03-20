@@ -19,7 +19,6 @@ const CreateResource = ({ history }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors
   });
-
   function handleSubmit(data: ResourceFormValues) {
     const input: CreateResourceInput = {
       category: data.category?.value || "",
@@ -30,8 +29,15 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       businessProcessId: data.businessProcessId?.value,
       resuploadLink: data.resuploadLink,
       tagsAttributes: data.tagsAttributes?.map(tag => {
-        const { id, risk, control, ...rest } = tag;
-        return { ...rest, riskId: risk?.id, control: control?.id };
+        const { id, risk, control, yCoordinates, xCoordinates, ...rest } = tag;
+        return {
+          ...rest,
+          risk_id: risk?.id,
+          control_id: control?.id,
+          business_process_id: data.businessProcessId?.value,
+          x_coordinates: xCoordinates,
+          y_coordinates: yCoordinates
+        };
       })
     };
 
