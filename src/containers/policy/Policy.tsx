@@ -59,7 +59,7 @@ import {
 } from "../../shared/utils/notif";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
-import ResourcesTab from "./components/ResourcesTab";
+import ResourcesTab from "../../shared/components/ResourcesTab";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import { previewHtml } from "../../shared/formatter";
 
@@ -524,15 +524,19 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               </div>
             </Route>
             <Route exact path="/policy/:id/resources">
-              <ResourcesTab policyId={id} policyName={title} />
-              {/* <div className="mt-3">
-                {resources.map(resource => (
-                  <ResourceBar key={resource.id} {...resource} />
-                ))}
-                <OpacityButton onClick={toggleAddResourceModal}>
-                  + Add Resource
-                </OpacityButton>
-              </div> */}
+              <ResourcesTab
+                formDefaultValues={{
+                  policyIds: [
+                    {
+                      value: id,
+                      label: title
+                    }
+                  ]
+                }}
+                queryFilters={{
+                  policies_id_in: id
+                }}
+              />
             </Route>
           </TabPane>
         </TabContent>

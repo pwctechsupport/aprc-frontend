@@ -4,14 +4,15 @@ import { FaCaretRight } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import styled, { css } from "styled-components";
-import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { useBusinessProcessTreeQuery } from "../../generated/graphql";
 import { SideBoxSearch } from "../../shared/components/SideBox";
-import { getActiveIdFromPathname } from "../../shared/formatter";
+import { getPathnameParams } from "../../shared/formatter";
 
-const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
-  const acitveId = getActiveIdFromPathname(
+export default function RiskAndControlSideBox({
+  location
+}: RouteComponentProps) {
+  const [activeId, activeMode] = getPathnameParams(
     location.pathname,
     "risk-and-control"
   );
@@ -28,11 +29,8 @@ const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
     }
   });
 
-  const businessProcesses = oc(data).businessProcesses.collection([]);
+  const businessProcesses = data?.businessProcesses?.collection || [];
 
-  // if (businessProcesses.length === 0) {
-  //   return <div className="text-center p-2">Business Process not found</div>;
-  // }
   return (
     <div className="side-box">
       <div className="d-flex justify-content-between mx-3 mt-4 mb-3">
@@ -53,7 +51,8 @@ const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
               <BusinessProcessBranch
                 key={businessProcess.id}
                 id={businessProcess.id}
-                activeId={acitveId}
+                activeId={activeId}
+                activeMode={activeMode}
                 name={businessProcess.name}
                 children={businessProcess.children}
                 level={0}
@@ -64,20 +63,18 @@ const RiskAndControlSideBox = ({ location }: RouteComponentProps) => {
       </div>
     </div>
   );
-};
-
-export default RiskAndControlSideBox;
+}
 
 const BusinessProcessBranch = ({
   id,
   activeId,
+  activeMode,
   name,
   children = [],
   level
 }: BusinessBranchProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
-  // const Icon = isOpen ? FaChevronDown : FaChevronRight;
   const isActive = id === activeId;
   const hasChild = Array.isArray(children) && !!children.length;
 
@@ -101,7 +98,11 @@ const BusinessProcessBranch = ({
         )}
         <Link
           className={classnames("side-box__item__title", { active: isActive })}
-          to={`/risk-and-control/${id}`}
+          to={
+            activeMode
+              ? `/risk-and-control/${id}/${activeMode}`
+              : `/risk-and-control/${id}`
+          }
           style={{ marginLeft: Number(level) * 10 }}
         >
           {name}
@@ -115,6 +116,7 @@ const BusinessProcessBranch = ({
                 key={child.id}
                 {...child}
                 activeId={activeId}
+                activeMode={activeMode}
                 level={Number(level) + 1}
               />
             ))}
@@ -136,6 +138,7 @@ const Icon = styled(FaCaretRight)<{ open: boolean }>`
 interface BusinessBranchProps {
   id: string | number;
   activeId?: string | number | undefined;
+  activeMode?: string;
   name?: string | null | undefined;
   children?: Array<BusinessBranchProps> | null | undefined;
   level?: number;
