@@ -1,4 +1,3 @@
-import get from "lodash/get";
 import capitalize from "lodash/startCase";
 import React from "react";
 import Helmet from "react-helmet";
@@ -9,11 +8,10 @@ import { Container, Form, FormGroup, Input, Label } from "reactstrap";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import {
+  DownloadPdfInput,
   downloadPdfs,
-  previewPdfs,
-  DownloadPdfInput
+  previewPdfs
 } from "../../shared/utils/accessGeneratedPdf";
-// import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const options = [
   {
@@ -67,9 +65,7 @@ const options = [
 ];
 
 const Report = () => {
-  const { register, handleSubmit, getValues, watch } = useForm<
-    ReportFormValues
-  >();
+  const { register, handleSubmit, getValues } = useForm<ReportFormValues>();
 
   const constructDataFromForm = (values: any): DownloadPdfInput[] => {
     return Object.keys(values)
@@ -109,14 +105,11 @@ const Report = () => {
               <th>Report Name</th>
               <th>Report Description</th>
               <th>Report Category</th>
-              {/* <th>Select</th> */}
               <th>Format</th>
             </tr>
           </thead>
           <tbody>
             {options.map((option, index) => {
-              const value = watch(option.id as keyof ReportFormValues);
-
               return (
                 <tr key={option.id}>
                   <td>{index + 1}</td>
@@ -127,7 +120,7 @@ const Report = () => {
                   <td>
                     <FormGroup tag="fieldset">
                       {option.formats.map(format => (
-                        <FormGroup check>
+                        <FormGroup key={format.id} check>
                           <Label check>
                             <Input
                               type="radio"
