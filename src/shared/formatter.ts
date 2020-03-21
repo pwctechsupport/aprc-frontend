@@ -91,3 +91,19 @@ export function getActiveIdFromPathname(
       .filter(a => !isNaN(Number(a)))[0];
   return "";
 }
+
+export function getPathnameParams(
+  pathname: string,
+  basePathname: string
+): Array<string | undefined> {
+  const hasParam = pathname.includes(basePathname);
+  if (hasParam) {
+    const params = pathname
+      .split("/")
+      .filter(Boolean)
+      .filter(a => a !== basePathname);
+    return params;
+  }
+  return [];
+}
+
