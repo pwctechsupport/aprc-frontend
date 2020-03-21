@@ -7,13 +7,13 @@ import styled, { css } from "styled-components";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { usePolicyTreeQuery } from "../../../generated/graphql";
-import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { SideBoxSearch } from "../../../shared/components/SideBox";
-import { getActiveIdFromPathname } from "../../../shared/formatter";
+import Tooltip from "../../../shared/components/Tooltip";
+import { getPathnameParams } from "../../../shared/formatter";
 
 const PolicySideBox = ({ location }: RouteComponentProps) => {
-  const activeId = getActiveIdFromPathname(location.pathname, "policy");
+  const [activeId, activeMode] = getPathnameParams(location.pathname, "policy");
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
   const isAdmin = location.pathname.split("/")[1] === "policy-admin";
@@ -64,6 +64,7 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
               key={policy.id}
               id={policy.id}
               activeId={activeId}
+              activeMode={activeMode}
               title={policy.title}
               children={policy.children}
               level={0}
@@ -83,6 +84,7 @@ export default PolicySideBox;
 const PolicyBranch = ({
   id,
   activeId,
+  activeMode,
   title,
   children = [],
   level,
@@ -114,7 +116,13 @@ const PolicyBranch = ({
         )}
         <Link
           className={classnames("side-box__item__title", { active: isActive })}
-          to={isAdmin ? `/policy-admin/${id}/details` : `/policy/${id}`}
+          to={
+            isAdmin
+              ? `/policy-admin/${id}/details`
+              : activeMode
+              ? `/policy/${id}/${activeMode}`
+              : `/policy/${id}`
+          }
         >
           {title}
         </Link>
@@ -127,6 +135,7 @@ const PolicyBranch = ({
                 key={child.id}
                 {...child}
                 activeId={activeId}
+                activeMode={activeMode}
                 level={Number(level) + 1}
                 isAdmin={isAdmin}
               />
@@ -149,6 +158,7 @@ const Icon = styled(FaCaretRight)<{ open: boolean }>`
 interface PolicyBranchProps {
   id: string | number;
   activeId?: string | number | undefined;
+  activeMode?: string;
   title?: string | null | undefined;
   children?: Array<PolicyBranchProps> | null | undefined;
   level?: number;
