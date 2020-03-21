@@ -1,43 +1,50 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Helmet from "react-helmet";
+import {
+  AiFillEdit,
+  AiOutlineClockCircle,
+  AiOutlineEdit
+} from "react-icons/ai";
 import {
   FaBookmark,
   FaEllipsisV,
+  FaExclamationCircle,
   FaEye,
   FaEyeSlash,
   FaFilePdf,
-  FaTimes,
-  FaTrash,
   FaPlus,
-  FaExclamationCircle
+  FaTimes,
+  FaTrash
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { RouteComponentProps, Route } from "react-router";
+import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
+import { Badge, Nav, NavItem, TabContent, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
-  CreateResourceInput,
   Status,
+  useApproveRequestEditMutation,
   useCreateBookmarkPolicyMutation,
-  useCreateResourceMutation,
+  useCreateRequestEditMutation,
   useDestroyPolicyMutation,
   usePolicyQuery,
-  useUpdatePolicyMutation,
   useReviewPolicyDraftMutation,
-  useCreateRequestEditMutation,
-  useApproveRequestEditMutation
+  useUpdatePolicyMutation
 } from "../../generated/graphql";
+import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/Header";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
-import ResourceBar from "../../shared/components/ResourceBar";
 import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 import {
   downloadPdf,
   emailPdf,
@@ -45,30 +52,16 @@ import {
 } from "../../shared/utils/accessGeneratedPdf";
 import { formatPolicyChart } from "../../shared/utils/formatPolicy";
 import {
+  notifyError,
   notifyGraphQLErrors,
-  notifySuccess,
   notifyInfo,
-  notifyError
+  notifySuccess
 } from "../../shared/utils/notif";
-import ResourceForm, {
-  ResourceFormValues
-} from "../resources/components/ResourceForm";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
+import ResourcesTab from "./components/ResourcesTab";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import Modal from "../../shared/components/Modal";
-import Tooltip from "../../shared/components/Tooltip";
-import { Nav, NavItem, TabContent, TabPane, Badge } from "reactstrap";
-import useAccessRights from "../../shared/hooks/useAccessRights";
-import {
-  AiFillEdit,
-  AiOutlineEdit,
-  AiOutlineClockCircle
-} from "react-icons/ai";
-import BreadCrumb from "../../shared/components/BreadCrumb";
-import { CrumbItem } from "../../shared/components/BreadCrumb";
-import OpacityButton from "../../shared/components/OpacityButton";
+import { previewHtml } from "../../shared/formatter";
 
 const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -89,8 +82,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode(prev => !prev);
 
-  const [addResourceModal, setAddResourceModal] = useState(false);
-  const toggleAddResourceModal = () => setAddResourceModal(prev => !prev);
+  // const [addResourceModal, setAddResourceModal] = useState(false);
+  // const toggleAddResourceModal = () => setAddResourceModal(prev => !prev);
 
   const id = get(match, "params.id", "");
 
@@ -188,26 +181,26 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   }
 
   // Add Resource for current policy
-  const [createResource, createResourceM] = useCreateResourceMutation({
-    onCompleted: _ => {
-      notifySuccess("Resource Added");
-      toggleAddResourceModal();
-    },
-    onError: notifyGraphQLErrors,
-    awaitRefetchQueries: true,
-    refetchQueries: ["policy"]
-  });
-  function handleCreateResource(values: ResourceFormValues) {
-    const input: CreateResourceInput = {
-      name: values.name || "",
-      category: values.category?.value || "",
-      resuploadBase64: values.resuploadBase64,
-      policyIds: values.policyIds?.map(a => a.value),
-      controlIds: values.controlIds?.map(a => a.value),
-      businessProcessId: values.businessProcessId?.value
-    };
-    createResource({ variables: { input } });
-  }
+  // const [createResource, createResourceM] = useCreateResourceMutation({
+  //   onCompleted: _ => {
+  //     notifySuccess("Resource Added");
+  //     toggleAddResourceModal();
+  //   },
+  //   onError: notifyGraphQLErrors,
+  //   awaitRefetchQueries: true,
+  //   refetchQueries: ["policy"]
+  // });
+  // function handleCreateResource(values: ResourceFormValues) {
+  //   const input: CreateResourceInput = {
+  //     name: values.name || "",
+  //     category: values.category?.value || "",
+  //     resuploadBase64: values.resuploadBase64,
+  //     policyIds: values.policyIds?.map(a => a.value),
+  //     controlIds: values.controlIds?.map(a => a.value),
+  //     businessProcessId: values.businessProcessId?.value
+  //   };
+  //   createResource({ variables: { input } });
+  // }
 
   const [
     requestEditMutation,
@@ -268,7 +261,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const references = data?.policy?.references || [];
   const referenceIds = references.map(item => item.id);
   const status = oc(data).policy.status("");
-  const resources = oc(data).policy.resources([]);
+  // const resources = oc(data).policy.resources([]);
   const controls = oc(data).policy.controls([]);
   const risks = oc(data).policy.risks([]);
   const controlCount = oc(data).policy.controlCount({});
@@ -502,7 +495,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                               <div
                                 dangerouslySetInnerHTML={{
                                   __html: item.description
-                                    ? item.description
+                                    ? previewHtml(item.description)
                                     : ""
                                 }}
                               />
@@ -531,14 +524,15 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               </div>
             </Route>
             <Route exact path="/policy/:id/resources">
-              <div className="mt-3">
+              <ResourcesTab policyId={id} policyName={title} />
+              {/* <div className="mt-3">
                 {resources.map(resource => (
                   <ResourceBar key={resource.id} {...resource} />
                 ))}
                 <OpacityButton onClick={toggleAddResourceModal}>
                   + Add Resource
                 </OpacityButton>
-              </div>
+              </div> */}
             </Route>
           </TabPane>
         </TabContent>
@@ -827,20 +821,6 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       </div>
 
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
-
-      <Modal
-        isOpen={addResourceModal}
-        toggle={toggleAddResourceModal}
-        title="Add Resource"
-      >
-        <ResourceForm
-          defaultValues={{
-            policyIds: [{ value: id, label: title }]
-          }}
-          onSubmit={handleCreateResource}
-          submitting={createResourceM.loading}
-        />
-      </Modal>
     </div>
   );
 };
