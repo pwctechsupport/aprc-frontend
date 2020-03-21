@@ -8,23 +8,23 @@ import LoadingSpinner from "./LoadingSpinner";
 export const SideBox = styled.div`
   background: #fff4ed;
   color: white;
-  width: 330px;
+  width: 25vw;
   position: fixed;
   height: calc(100vh - 63px);
   overflow-y: scroll;
   z-index: 100;
   transition: 0.7s cubic-bezier(0.075, 0.82, 0.165, 1);
 
-  @media (max-width: 900px) {
-    width: 60px;
+  @media (max-width: 940px) {
+    width: 20vw;
     &:hover {
-      width: 330px;
+      width: 50vw;
       box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.38);
       -webkit-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.38);
     }
   }
 
-  @media (max-width: 320px) {
+  @media (max-width: 767px) {
     width: 0px;
   }
 `;

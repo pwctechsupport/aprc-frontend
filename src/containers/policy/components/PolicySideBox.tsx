@@ -34,7 +34,7 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
   const policies = oc(data).policies.collection([]);
 
   return (
-    <div className="side-box">
+    <div className="side-box d-none d-md-block">
       <div className="d-flex justify-content-between mx-3 mt-4 mb-3">
         <h4 className="text-orange">
           {isAdmin ? "Policies Admin" : "Policies"}
