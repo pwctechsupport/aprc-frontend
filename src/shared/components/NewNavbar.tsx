@@ -30,7 +30,7 @@ export default function NewNavbar() {
     "admin_preparer",
     "admin_reviewer"
   ]);
-  const isMereUser = rolesArray.every(() => false);
+  const isMereUser = rolesArray.every(a => !a);
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(p => !p);
 
