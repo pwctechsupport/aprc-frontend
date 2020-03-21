@@ -6,9 +6,10 @@ import { Container, Row, Col } from "reactstrap";
 import { useHomepageQuery } from "../../generated/graphql";
 import { toLabelValue } from "../../shared/formatter";
 import get from "lodash/get";
+import HomepageSearch from "./HomepageSearch";
 
 export default function Homepage() {
-  const { data } = useHomepageQuery();
+  const { data } = useHomepageQuery({ fetchPolicy: "network-only" });
   const popularPolicies = data?.popularPolicies?.collection || [];
   const recentlyAddedPolicies = data?.recentlyAddedPolicies?.collection || [];
   const recentlyVisitedPolicies =
@@ -17,7 +18,9 @@ export default function Homepage() {
   const savedPolicies = data?.bookmarks?.collection || [];
   return (
     <Background>
-      <BackgroundImage />
+      <BackgroundImage>
+        <HomepageSearch />
+      </BackgroundImage>
       <Container className="mt-5 pb-5">
         <Row>
           <Col xs={12} md={6} lg={4}>

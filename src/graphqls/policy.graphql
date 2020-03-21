@@ -1,4 +1,4 @@
-query policies($filter: BaseScalar = {}) {
+query policies($filter: BaseScalar = {}, $withDetail: Boolean = false) {
   policies(filter: $filter) {
     collection {
       id
@@ -12,6 +12,7 @@ query policies($filter: BaseScalar = {}) {
       }
       ancestry
       description
+      ...policyFragment @include(if: $withDetail)
     }
     metadata {
       totalCount
