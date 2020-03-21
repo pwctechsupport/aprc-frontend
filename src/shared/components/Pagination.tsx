@@ -90,7 +90,7 @@ const Pagination = ({
           {startRecord}-{endRecord} of {totalCount}
         </div>
       ) : null}
-      <BsPagination className="enlogy-pagination">
+      <BsPagination className="">
         <PaginationItem>
           <PaginationLink
             previous

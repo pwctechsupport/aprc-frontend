@@ -1,9 +1,17 @@
 import React from "react";
 import c from "classnames";
 
-const EmptyAttribute = ({ centered = true }: { centered?: boolean }) => {
+const EmptyAttribute = ({
+  children,
+  centered = true
+}: {
+  children?: React.ReactNode;
+  centered?: boolean;
+}) => {
   return (
-    <div className={c("text-grey", { "text-center": centered })}>Empty</div>
+    <div className={c("text-grey", "my-2", { "text-center": centered })}>
+      {children || "Empty"}
+    </div>
   );
 };
 

@@ -107,3 +107,7 @@ export function getPathnameParams(
   return [];
 }
 
+export function previewHtml(html: string, length: number = 300): string {
+  var doc = new DOMParser().parseFromString(html, "text/html");
+  return doc.body.textContent?.substring(0, length).concat("...") || "";
+}

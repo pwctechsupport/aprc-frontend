@@ -13,19 +13,18 @@ import {
   PoliciesQuery,
   Tag
 } from "../../../generated/graphql";
-import Button from "../../../shared/components/Button";
+import DialogButton from "../../../shared/components/DialogButton";
 import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatableSelect";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import FileInput from "../../../shared/components/forms/FileInput";
 import Input from "../../../shared/components/forms/Input";
+import ImageTagger from "../../../shared/components/ImageTagger";
 import {
   Suggestion,
   Suggestions,
   toLabelValue
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import ImageTagger from "../../../shared/components/ImageTagger";
-import DialogButton from "../../../shared/components/DialogButton";
 
 interface ResourceFormProps {
   defaultValues?: ResourceFormValues;
