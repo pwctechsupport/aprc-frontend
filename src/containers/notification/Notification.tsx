@@ -8,7 +8,6 @@ import { Container, Input } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
 import {
   DestroyBulkNotificationInput,
-  IsReadInput,
   useDestroyBulkNotificationMutation,
   useIsReadMutation,
   useNotificationsQuery
