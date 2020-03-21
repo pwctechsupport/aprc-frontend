@@ -1,0 +1,35 @@
+query homepage {
+  popularPolicies(filter: {}, limit: 5) {
+    collection {
+      id
+      title
+    }
+  }
+  recentlyAddedPolicies(filter: {}, limit: 5) {
+    collection {
+      id
+      title
+    }
+  }
+  recentlyVisitedPolicies(filter: {}, limit: 5) {
+    collection {
+      id
+      title
+    }
+  }
+  popularResources(filter: {}, limit: 5) {
+    collection {
+      id
+      name
+    }
+  }
+  bookmarks(filter: { originator_type_eq: "policy" }, limit: 5) {
+    collection {
+      originatorId
+      name
+      originator {
+        ...policyBookmark
+      }
+    }
+  }
+}

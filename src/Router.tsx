@@ -17,57 +17,48 @@ import RiskRoute from "./containers/risk/RiskRoute";
 import RiskAndControlRoute from "./containers/riskAndControl/RiskAndControlRoute";
 import SettingsRoute from "./containers/settings/SettingsRoute";
 import UserRoute from "./containers/user/UserRoute";
-import AuthListener from "./shared/components/AuthListener";
 import AuthRoute from "./shared/components/AuthRoute";
 import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
-import ScrollToTop from "./shared/components/ScrollToTop";
 import PolicyCategoryRoute from "./containers/policyCategory/PolicyCategoryRoute";
 
 export default function() {
   return (
     <BrowserRouter>
-      {/* <BookmarksModal /> */}
-      <Route component={AuthListener} />
-      <ScrollToTop>
-        <Switch>
-          <Route exact path="/auth" component={Login} />
-          <Route exact path="/forgot-password" component={ForgotPassword} />
-          <Route exact path="/users/password/edit" component={ResetPassword} />
-
-          <Layout>
+      <Switch>
+        <Route exact path="/auth" component={Login} />
+        <Route exact path="/forgot-password" component={ForgotPassword} />
+        <Route exact path="/users/password/edit" component={ResetPassword} />
+        <Layout>
+          <Switch>
             <AuthRoute exact path="/" component={Homepage} />
-            <Switch>
-              <AuthRoute path="/policy" component={PolicyRoute} />
-              <AuthRoute
-                path="/policy-category"
-                component={PolicyCategoryRoute}
-              />
-              <AuthRoute path="/policy-admin" component={PolicyAdminRoute} />
-              <AuthRoute path="/resources" component={ResourceRoute} />
-              <AuthRoute path="/risk" component={RiskRoute} />
-              <AuthRoute
-                path="/business-process"
-                component={BusinessProcessRoute}
-              />
-              <AuthRoute
-                path="/risk-and-control"
-                component={RiskAndControlRoute}
-              />
-              <AuthRoute path="/report" component={Report} />
-              <AuthRoute path="/control" component={ControlRoute} />
-              <AuthRoute path="/user" component={UserRoute} />
-              <AuthRoute path="/bookmark" component={Bookmark} />
-              <AuthRoute path="/notifications" component={Notification} />
-
-              <AuthRoute path="/settings" component={SettingsRoute} />
-
-              <AuthRoute path="/references" component={ReferenceRoute} />
-              <AuthRoute component={ComingSoonPage} />
-            </Switch>
-          </Layout>
-        </Switch>
-      </ScrollToTop>
+            <AuthRoute path="/policy" component={PolicyRoute} />
+            <AuthRoute
+              path="/policy-category"
+              component={PolicyCategoryRoute}
+            />
+            <AuthRoute path="/policy-admin" component={PolicyAdminRoute} />
+            <AuthRoute path="/resources" component={ResourceRoute} />
+            <AuthRoute path="/risk" component={RiskRoute} />
+            <AuthRoute
+              path="/business-process"
+              component={BusinessProcessRoute}
+            />
+            <AuthRoute
+              path="/risk-and-control"
+              component={RiskAndControlRoute}
+            />
+            <AuthRoute path="/report" component={Report} />
+            <AuthRoute path="/control" component={ControlRoute} />
+            <AuthRoute path="/user" component={UserRoute} />
+            <AuthRoute path="/bookmark" component={Bookmark} />
+            <AuthRoute path="/notifications" component={Notification} />
+            <AuthRoute path="/settings" component={SettingsRoute} />
+            <AuthRoute path="/references" component={ReferenceRoute} />
+            <AuthRoute component={ComingSoonPage} />
+          </Switch>
+        </Layout>
+      </Switch>
     </BrowserRouter>
   );
 }
