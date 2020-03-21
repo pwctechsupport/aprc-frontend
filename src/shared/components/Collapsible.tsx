@@ -72,7 +72,7 @@ interface CollapsibleProps {
 }
 
 interface UncontrolledCollapsibleProps {
-  title: string;
+  title?: string | null;
   children?: ReactNode;
   initialState?: boolean;
 }

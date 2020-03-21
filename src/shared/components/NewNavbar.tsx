@@ -1,48 +1,29 @@
 import React, { useState } from "react";
+import { FaBell, FaBookmark } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { Link, NavLink as RrNavLink } from "react-router-dom";
 import {
   Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   Nav,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
   NavItem,
   NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem
+  UncontrolledDropdown
 } from "reactstrap";
-import { NavLink as RrNavLink, Link } from "react-router-dom";
-import pwcLogo from "../../assets/images/pwc-logo.png";
 import styled from "styled-components";
-import { FaBell, FaBookmark } from "react-icons/fa";
-import { unauthorize } from "../../redux/auth";
-import { useDispatch } from "react-redux";
-import Avatar from "./Avatar";
-import useAccessRights from "../hooks/useAccessRights";
+import pwcLogo from "../../assets/images/pwc-logo.png";
 import { useNotificationsCountQuery } from "../../generated/graphql";
+import { unauthorize } from "../../redux/auth";
+import useAccessRights from "../hooks/useAccessRights";
+import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
 
-const adminMenus = [
-  { label: "Policy", path: "/policy-admin" },
-  { label: "Policy Category", path: "/policy-category" },
-  { label: "Policy Reference", path: "/references" },
-  { label: "Control", path: "/control" },
-  { label: "User", path: "/user" },
-  { label: "Business Process", path: "/business-process" },
-  { label: "Resources", path: "/resources" },
-  { label: "Risks", path: "/risk" }
-];
-
-const userMenus = [
-  { label: "Policy", path: "/policy" },
-  { label: "Risk & Control", path: "/risk-and-control" },
-  { label: "Reports", path: "/report" },
-  { label: "Administrative", path: "/", children: adminMenus },
-  { label: "Settings", path: "/settings" }
-];
-
-const NewNavbar = () => {
+export default function NewNavbar() {
   const dispatch = useDispatch();
   const rolesArray = useAccessRights([
     "admin",
@@ -105,10 +86,7 @@ const NewNavbar = () => {
                                   tag={RrNavLink}
                                   to={childMenu.path}
                                   className="p-3 dropdown__nav"
-                                  activeClassName="dropdown__active"
-                                  activeStyle={{
-                                    color: "white"
-                                  }}
+                                  activeClassName="dropdown__active text-white"
                                 >
                                   {childMenu.label}
                                 </NavLink>
@@ -124,6 +102,7 @@ const NewNavbar = () => {
                     <NavLink
                       tag={RrNavLink}
                       to={path}
+                      exact={path === "/"}
                       className="nav_item"
                       activeClassName="active"
                     >
@@ -151,9 +130,37 @@ const NewNavbar = () => {
       </Navbar>
     </div>
   );
-};
+}
 
-export default NewNavbar;
+// =============================================
+// Available Routes
+// =============================================
+
+const userMenus = [
+  { label: "Home", path: "/" },
+  { label: "Policy", path: "/policy" },
+  { label: "Risk & Control", path: "/risk-and-control" },
+  { label: "Reports", path: "/report" },
+  {
+    label: "Administrative",
+    path: "/",
+    children: [
+      { label: "Policy", path: "/policy-admin" },
+      { label: "Policy Category", path: "/policy-category" },
+      { label: "Policy Reference", path: "/references" },
+      { label: "Control", path: "/control" },
+      { label: "User", path: "/user" },
+      { label: "Business Process", path: "/business-process" },
+      { label: "Resources", path: "/resources" },
+      { label: "Risks", path: "/risk" }
+    ]
+  },
+  { label: "Settings", path: "/settings" }
+];
+
+// =============================================
+// Styled Components
+// =============================================
 
 const Image = styled.img`
   width: 50px;
