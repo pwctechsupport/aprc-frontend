@@ -1,9 +1,8 @@
 import capitalize from "lodash/startCase";
-import React from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { FaDownload, FaFile } from "react-icons/fa";
-import { toast } from "react-toastify";
 import { Container, Form, FormGroup, Input, Label } from "reactstrap";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
@@ -12,8 +11,9 @@ import {
   downloadPdfs,
   previewPdfs
 } from "../../shared/utils/accessGeneratedPdf";
+import { notifyError, notifyInfo } from "../../shared/utils/notif";
 
-const options = [
+const reportOptions = [
   {
     name: "Risk",
     id: "report_risk",
@@ -64,40 +64,53 @@ const options = [
   }
 ];
 
-const Report = () => {
-  const { register, handleSubmit, getValues } = useForm<ReportFormValues>();
+export default function Report() {
+  const [downloading, setDownloading] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
+  const { register, handleSubmit } = useForm<ReportFormValues>();
 
-  const constructDataFromForm = (values: any): DownloadPdfInput[] => {
-    return Object.keys(values)
-      .map(key => ({
-        name: key,
-        ...values[key]
-      }))
-      .filter(item => item.format)
-      .map(({ name, format }) => ({
-        url: `/prints/${name}.${format}`,
-        options: {
-          onStart: () => toast.info("Preparing File"),
-          fileType: format
-        }
-      }));
+  const constructDataFromForm = (
+    values: ReportFormValues
+  ): DownloadPdfInput[] => {
+    return (Object.keys(values) as Array<Key>)
+      .map((key: Key) => {
+        const bro = values[key];
+        return { name: key, format: bro };
+      })
+      .filter(a => Boolean(a.format))
+      .map(({ name, format }) => {
+        const fileName = `${
+          reportOptions.find(a => a.id === name)?.name
+        }.${format}`;
+        return {
+          url: `/prints/${name}.${format}`,
+          options: {
+            fileType: format,
+            fileName,
+            onError: () => notifyError(`Error accessing ${fileName}`)
+          }
+        };
+      });
   };
 
-  const values = getValues({ nest: true });
-
-  function onPreview(values: any) {
-    previewPdfs(constructDataFromForm(values));
+  async function handlePreview(values: ReportFormValues) {
+    notifyInfo("Preparing file to preview");
+    setPreviewing(true);
+    await previewPdfs(constructDataFromForm(values));
+    setPreviewing(false);
   }
 
-  function onDownload() {
-    downloadPdfs(constructDataFromForm(values));
-    console.log("values", values);
+  async function handleDownload(values: ReportFormValues) {
+    notifyInfo("Preparing file to download");
+    setDownloading(true);
+    await downloadPdfs(constructDataFromForm(values));
+    setDownloading(false);
   }
 
   return (
-    <Container fluid className="p-0 pt-5 px-2">
+    <Container fluid className="p-0 pt-3 px-4">
       <h4>Reports</h4>
-      <Form onSubmit={handleSubmit(onDownload)}>
+      <Form>
         <Table>
           <thead>
             <tr>
@@ -109,7 +122,7 @@ const Report = () => {
             </tr>
           </thead>
           <tbody>
-            {options.map((option, index) => {
+            {reportOptions.map((option, index) => {
               return (
                 <tr key={option.id}>
                   <td>{index + 1}</td>
@@ -124,7 +137,7 @@ const Report = () => {
                           <Label check>
                             <Input
                               type="radio"
-                              name={`${option.id}.format`}
+                              name={option.id}
                               value={format.id}
                               innerRef={register}
                             />{" "}
@@ -140,16 +153,21 @@ const Report = () => {
           </tbody>
         </Table>
 
-        <div className="text-center mt-5">
+        <div className="text-center mt-3 mb-5">
           <Button
-            onClick={handleSubmit(onPreview)}
+            onClick={handleSubmit(handlePreview)}
             type="button"
             color="transparent"
             className="mr-3"
+            loading={previewing}
           >
             <FaFile /> Preview
           </Button>
-          <Button color="secondary">
+          <Button
+            color="secondary"
+            onClick={handleSubmit(handleDownload)}
+            loading={downloading}
+          >
             <FaDownload /> Download
           </Button>
         </div>
@@ -159,13 +177,15 @@ const Report = () => {
       </Helmet>
     </Container>
   );
-};
+}
 
-export default Report;
+type Key = keyof ReportFormValues;
 
 interface ReportFormValues {
-  report_risk?: {
-    print: boolean;
-    format: string;
-  };
+  report_risk?: string;
+  report_risk_policy?: string;
+  report_control_policy?: string;
+  report_resource_rating?: string;
+  unmapped_risk?: string;
+  unmapped_control?: string;
 }
