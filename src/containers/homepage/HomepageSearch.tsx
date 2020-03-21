@@ -34,19 +34,13 @@ const Option = (props: any) => {
   const description = props?.data?.description;
   const risks = props?.data?.risks || [];
   const controls = props?.data?.controls || [];
+  const resources = props?.data?.resources || [];
   const references = props?.data?.references || [];
   return (
     <StyledLink to={`/policy/${id}`}>
       <components.Option {...props}>
         <h5>{title}</h5>
         <PreviewSpan>{previewHtml(description, 200)}</PreviewSpan>
-        <div>
-          {references?.map((reference: any) => (
-            <Badge key={reference.id} className="mx-1">
-              {reference.name}
-            </Badge>
-          ))}
-        </div>
         <div>
           {risks.length ? (
             <div>
@@ -67,6 +61,24 @@ const Option = (props: any) => {
               </SmallerPreviewSpan>
             </div>
           ) : null}
+        </div>
+        <div>
+          {resources.length ? (
+            <div>
+              <CompressedText>Resources:</CompressedText>
+              <SmallerPreviewSpan>
+                {" "}
+                {resources.map((resource: any) => resource.name).join(", ")}
+              </SmallerPreviewSpan>
+            </div>
+          ) : null}
+        </div>
+        <div>
+          {references?.map((reference: any) => (
+            <Badge key={reference.id} className="mx-1">
+              {reference.name}
+            </Badge>
+          ))}
         </div>
       </components.Option>
     </StyledLink>
@@ -116,7 +128,7 @@ function useLoadPolicies() {
     try {
       const { data } = await query({
         filter: {
-          references_name_or_risks_name_or_controls_description_or_title_or_description_cont: keyword
+          references_name_or_risks_name_or_controls_description_or_resources_name_or_title_or_description_cont: keyword
         },
         withDetail: true
       });
