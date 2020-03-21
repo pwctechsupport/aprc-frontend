@@ -5,29 +5,26 @@ import {
   CreateResourceInput,
   useCreateResourceMutation,
   useResourcesQuery
-} from "../../../generated/graphql";
-import Button from "../../../shared/components/Button";
-import EmptyAttribute from "../../../shared/components/EmptyAttribute";
-import Modal from "../../../shared/components/Modal";
-import Pagination from "../../../shared/components/Pagination";
-import ResourceBar from "../../../shared/components/ResourceBar";
-import SearchInput from "../../../shared/components/SearchInput";
-import Tooltip from "../../../shared/components/Tooltip";
-import useListState from "../../../shared/hooks/useList";
-import {
-  notifyGraphQLErrors,
-  notifySuccess
-} from "../../../shared/utils/notif";
+} from "../../generated/graphql";
+import Button from "./Button";
+import EmptyAttribute from "./EmptyAttribute";
+import Modal from "./Modal";
+import Pagination from "./Pagination";
+import ResourceBar from "./ResourceBar";
+import SearchInput from "./SearchInput";
+import Tooltip from "./Tooltip";
+import useListState from "../hooks/useList";
+import { notifyGraphQLErrors, notifySuccess } from "../utils/notif";
 import ResourceForm, {
   ResourceFormValues
-} from "../../resources/components/ResourceForm";
+} from "../../containers/resources/components/ResourceForm";
 
 export default function ResourcesTab({
-  policyId,
-  policyName
+  queryFilters,
+  formDefaultValues
 }: {
-  policyId: string;
-  policyName: string;
+  queryFilters: any;
+  formDefaultValues: ResourceFormValues;
 }) {
   // Pagination state handlers
   const { limit, page, handlePageChange } = useListState({
@@ -43,7 +40,8 @@ export default function ResourcesTab({
     variables: {
       filter: {
         name_cont: debouncedSearch,
-        policies_id_in: policyId
+        // policies_id_in: policyId,
+        ...queryFilters
       },
       limit,
       page
@@ -121,14 +119,13 @@ export default function ResourcesTab({
         title="Create Resource"
       >
         <ResourceForm
-          defaultValues={{
-            policyIds: [
-              {
-                value: policyId,
-                label: policyName
-              }
-            ]
-          }}
+          defaultValues={formDefaultValues}
+          // policyIds: [
+          //     {
+          //       value: policyId,
+          //       label: policyName
+          //     }
+          //   ]
           onSubmit={handleCreateResource}
           submitting={createResourceM.loading}
         />

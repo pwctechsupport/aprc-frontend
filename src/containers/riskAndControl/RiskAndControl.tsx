@@ -24,7 +24,6 @@ import {
   TypeOfRisk,
   useBusinessProcessQuery,
   useCreateBookmarkBusinessProcessMutation,
-  useCreateResourceMutation,
   useUpdateControlMutation,
   useUpdateRiskMutation
 } from "../../generated/graphql";
@@ -36,8 +35,7 @@ import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import Modal from "../../shared/components/Modal";
-import OpacityButton from "../../shared/components/OpacityButton";
-import ResourceBar from "../../shared/components/ResourceBar";
+import ResourcesTab from "../../shared/components/ResourcesTab";
 import { toLabelValue } from "../../shared/formatter";
 import {
   downloadPdf,
@@ -54,9 +52,6 @@ import ControlForm, {
   ControlFormValues,
   CreateControlFormValues
 } from "../control/components/ControlForm";
-import ResourceForm, {
-  ResourceFormValues
-} from "../resources/components/ResourceForm";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
 
@@ -126,33 +121,6 @@ const RiskAndControls = ({ match }: RouteComponentProps) => {
       variables: { input: { id: control?.id || "", ...values } }
     });
   };
-
-  // Add Resource Mutation and Modal State
-  const [addResourceModal, setAddResourceModal] = useState(false);
-  const toggleAddResourceModal = () => setAddResourceModal(prev => !prev);
-  const [createResource, createResourceM] = useCreateResourceMutation({
-    onCompleted: _ => {
-      notifySuccess("Resource Added");
-      toggleAddResourceModal();
-    },
-    onError: notifyGraphQLErrors,
-    awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"]
-  });
-  function handleCreateResource(values: ResourceFormValues) {
-    createResource({
-      variables: {
-        input: {
-          name: values.name || "",
-          category: values.category?.value || "",
-          resuploadBase64: values.resuploadBase64,
-          policyIds: values.policyIds?.map(a => a.value),
-          controlIds: values.controlIds?.map(a => a.value),
-          businessProcessId: values.businessProcessId?.value
-        }
-      }
-    });
-  }
 
   const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
     onCompleted: () => notifySuccess("Added to Bookmark"),
@@ -420,18 +388,15 @@ const RiskAndControls = ({ match }: RouteComponentProps) => {
             </Collapsible>
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
-            <div className="mt-3">
-              {resources.length ? (
-                resources.map(resource => (
-                  <ResourceBar key={resource.id} {...resource} />
-                ))
-              ) : (
-                <EmptyAttribute />
-              )}
-              <OpacityButton onClick={toggleAddResourceModal}>
-                + Add Resource
-              </OpacityButton>
-            </div>
+            <ResourcesTab
+              formDefaultValues={{
+                category: { label: "Flowchart", value: "Flowchart" },
+                businessProcessId: { label: name, value: id }
+              }}
+              queryFilters={{
+                business_process_id_in: id
+              }}
+            />
           </Route>
         </TabPane>
       </TabContent>
@@ -453,21 +418,6 @@ const RiskAndControls = ({ match }: RouteComponentProps) => {
           defaultValues={control}
           onSubmit={handleUpdateControl}
           submitting={updateControlM.loading}
-        />
-      </Modal>
-
-      <Modal
-        isOpen={addResourceModal}
-        toggle={toggleAddResourceModal}
-        title="Add Resource"
-      >
-        <ResourceForm
-          defaultValues={{
-            category: { label: "Flowchart", value: "Flowchart" },
-            businessProcessId: { label: name, value: id }
-          }}
-          onSubmit={handleCreateResource}
-          submitting={createResourceM.loading}
         />
       </Modal>
     </div>
