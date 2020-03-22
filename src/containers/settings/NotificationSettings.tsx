@@ -3,11 +3,19 @@ import Helmet from "react-helmet";
 import Switch from "react-switch";
 import { Col, Row } from "reactstrap";
 import { useDebouncedCallback } from "use-debounce/lib";
-import { useNotifBadgesMutation } from "../../generated/graphql";
+import {
+  useNotifBadgesMutation,
+  useNotificationsCountQuery
+} from "../../generated/graphql";
 
-const NotificationSettings = () => {
-  const settings = [{ name: "iconBadges", label: "Notifications Icon Badges" }];
+const settings = [{ name: "iconBadges", label: "Notifications Icon Badges" }];
+
+export default function NotificationSettings() {
   const [show, setShow] = useState(false);
+  useNotificationsCountQuery({
+    fetchPolicy: "network-only",
+    onCompleted: data => setShow(Boolean(data.me?.notifShow))
+  });
 
   const [notifBadgesMutation] = useNotifBadgesMutation({
     awaitRefetchQueries: true,
@@ -49,6 +57,4 @@ const NotificationSettings = () => {
       </div>
     </div>
   );
-};
-
-export default NotificationSettings;
+}
