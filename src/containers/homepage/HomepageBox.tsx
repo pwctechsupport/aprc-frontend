@@ -3,6 +3,7 @@ import { FaCaretRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Card, Collapse } from "reactstrap";
 import styled, { css } from "styled-components";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import { Suggestions } from "../../shared/formatter";
 
 interface HomepageBoxProps {
@@ -28,18 +29,22 @@ export default function HomepageBox({
         </div>
         <Collapse isOpen={open}>
           <div>
-            {list.map(item => (
-              <StyledLink
-                key={item.value}
-                to={`/${basePath}/${item.value}`}
-                className="d-flex align-items-center my-2"
-              >
-                <div className="mr-3">
-                  <Circle>{item.label.charAt(0).toUpperCase()}</Circle>
-                </div>
-                {item.label}
-              </StyledLink>
-            ))}
+            {list.length ? (
+              list.map(item => (
+                <StyledLink
+                  key={item.value}
+                  to={`/${basePath}/${item.value}`}
+                  className="d-flex align-items-center my-2"
+                >
+                  <div className="mr-3">
+                    <Circle>{item.label.charAt(0).toUpperCase()}</Circle>
+                  </div>
+                  {item.label}
+                </StyledLink>
+              ))
+            ) : (
+              <EmptyAttribute>No {title}</EmptyAttribute>
+            )}
           </div>
         </Collapse>
       </Card>
