@@ -1,12 +1,18 @@
 import classnames from "classnames";
 import React, { useState } from "react";
-import { FaCaretRight } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
-import styled, { css } from "styled-components";
 import { useDebounce } from "use-debounce/lib";
 import { useBusinessProcessTreeQuery } from "../../generated/graphql";
-import { SideBoxSearch } from "../../shared/components/SideBox";
+import {
+  SideBox,
+  SideBoxBranch,
+  SideBoxBranchIcon,
+  SideBoxBranchIconContainer,
+  SideBoxBranchTitle,
+  SideBoxSearch,
+  SideBoxTitle
+} from "../../shared/components/SideBox";
 import { getPathnameParams } from "../../shared/formatter";
 
 export default function RiskAndControlSideBox({
@@ -32,10 +38,8 @@ export default function RiskAndControlSideBox({
   const businessProcesses = data?.businessProcesses?.collection || [];
 
   return (
-    <div className="side-box">
-      <div className="d-flex justify-content-between mx-3 mt-4 mb-3">
-        <h4 className="text-orange">{"Risk & Control"}</h4>
-      </div>
+    <SideBox>
+      <SideBoxTitle>Risk & Control</SideBoxTitle>
 
       <SideBoxSearch
         search={search}
@@ -44,25 +48,33 @@ export default function RiskAndControlSideBox({
         placeholder="Search Risk & Control..."
       />
 
-      <div className="pb-3">
-        <div>
-          {businessProcesses.map(businessProcess => {
-            return (
-              <BusinessProcessBranch
-                key={businessProcess.id}
-                id={businessProcess.id}
-                activeId={activeId}
-                activeMode={activeMode}
-                name={businessProcess.name}
-                children={businessProcess.children}
-                level={0}
-              />
-            );
-          })}
-        </div>
-      </div>
-    </div>
+      {businessProcesses.map(businessProcess => {
+        return (
+          <BusinessProcessBranch
+            key={businessProcess.id}
+            id={businessProcess.id}
+            activeId={activeId}
+            activeMode={activeMode}
+            name={businessProcess.name}
+            children={businessProcess.children}
+            level={0}
+          />
+        );
+      })}
+    </SideBox>
   );
+}
+
+// ================================================
+// BusinessProcessBranch Component
+// ================================================
+interface BusinessBranchProps {
+  id: string | number;
+  activeId?: string | number | undefined;
+  activeMode?: string;
+  name?: string | null | undefined;
+  children?: Array<BusinessBranchProps> | null | undefined;
+  level?: number;
 }
 
 const BusinessProcessBranch = ({
@@ -80,23 +92,24 @@ const BusinessProcessBranch = ({
 
   return (
     <div>
-      <div
-        className={classnames("d-flex align-items-center side-box__item", {
+      <SideBoxBranch
+        className={classnames("d-flex align-items-center", {
           active: isActive
         })}
       >
         {hasChild ? (
-          <div className="side-box__item__icon clickable" onClick={toggle}>
-            <Icon
+          <SideBoxBranchIconContainer onClick={toggle}>
+            <SideBoxBranchIcon
               open={isOpen}
               className={isActive ? "text-white" : "text-orange"}
               size={14}
             />
-          </div>
+          </SideBoxBranchIconContainer>
         ) : (
           <div style={{ width: 34 }} />
         )}
-        <Link
+        <SideBoxBranchTitle
+          as={Link}
           className={classnames("side-box__item__title", { active: isActive })}
           to={
             activeMode
@@ -106,8 +119,8 @@ const BusinessProcessBranch = ({
           style={{ marginLeft: Number(level) * 10 }}
         >
           {name}
-        </Link>
-      </div>
+        </SideBoxBranchTitle>
+      </SideBoxBranch>
       {hasChild && (
         <Collapse isOpen={isOpen}>
           {Array.isArray(children) &&
@@ -125,21 +138,3 @@ const BusinessProcessBranch = ({
     </div>
   );
 };
-
-const Icon = styled(FaCaretRight)<{ open: boolean }>`
-  transition: 0.15s ease-in-out;
-  ${(p: { open: boolean }) =>
-    p.open &&
-    css`
-      transform: rotate(90deg);
-    `};
-`;
-
-interface BusinessBranchProps {
-  id: string | number;
-  activeId?: string | number | undefined;
-  activeMode?: string;
-  name?: string | null | undefined;
-  children?: Array<BusinessBranchProps> | null | undefined;
-  level?: number;
-}

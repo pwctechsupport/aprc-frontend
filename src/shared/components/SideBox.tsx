@@ -1,11 +1,14 @@
 import React from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaTimes, FaCaretRight } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { Input } from "reactstrap";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import LoadingSpinner from "./LoadingSpinner";
 
-export const SideBox = styled.div`
+// SideBox is the main wrapper to use side box.
+export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
+  --primary-color: #f56409;
+  --pale-primary-color: #fccfb8;
   background: #fff4ed;
   color: white;
   width: 25vw;
@@ -29,6 +32,7 @@ export const SideBox = styled.div`
   }
 `;
 
+// SideBoxTitle, the wrapper for the header. Better name should be SideBoxHeader.
 export const SideBoxTitle = styled.h4.attrs(() => ({
   className: "text-orange"
 }))`
@@ -38,6 +42,14 @@ export const SideBoxTitle = styled.h4.attrs(() => ({
   overflow: hidden;
   white-space: nowrap;
 `;
+
+// SideBoxSearch, handle the layout and input for search.
+interface SideBoxSearchProps {
+  search: string;
+  setSearch: Function;
+  loading?: boolean;
+  placeholder?: string;
+}
 
 export const SideBoxSearch = ({
   search,
@@ -61,13 +73,6 @@ export const SideBoxSearch = ({
   </SideBoxSearchWrapper>
 );
 
-interface SideBoxSearchProps {
-  search: string;
-  setSearch: Function;
-  loading?: boolean;
-  placeholder?: string;
-}
-
 const SideBoxSearchWrapper = styled.div`
   padding: 0px 1rem 20px 1rem;
   position: relative;
@@ -80,26 +85,30 @@ const SideBoxSearchLoadingIndicator = styled.div`
   top: 8px;
 `;
 
+// SideBoxItem, the wrapper for rendering item in list, usually inside a map.
 export const SideBoxItem = styled(NavLink)`
   display: flex;
   justify-content: space-between;
   padding: 10px 1rem;
   text-decoration: none;
-  color: #f56409;
+  color: var(--primary-color);
   &:hover {
-    background: #f56409;
-    opacity: 0.8;
-    color: white;
+    background: var(--pale-primary-color);
+    color: var(--primary-color);
     text-decoration: none;
-    &.active {
-      opacity: 1;
-    }
   }
   &.active {
-    background: #f56409;
+    background: var(--primary-color);
     color: white;
   }
 `;
+
+// SideBoxItemText, the actual component to render the text.
+interface SideBoxItemTextProps {
+  flex?: number;
+  bold?: boolean;
+  right?: boolean;
+}
 
 export const SideBoxItemText = styled.div<SideBoxItemTextProps>`
   flex: ${p => p.flex || 1};
@@ -111,8 +120,64 @@ export const SideBoxItemText = styled.div<SideBoxItemTextProps>`
   text-align: ${p => (p.right ? "right" : null)};
 `;
 
-interface SideBoxItemTextProps {
-  flex?: number;
-  bold?: boolean;
-  right?: boolean;
-}
+// NOTE: Components named with 'branch' are for nested side box case.
+//       For non nesting, use the above components instead.
+
+// SideBoxBranch, the wrapper for rendering nested item in a list.
+export const SideBoxBranch = styled.div`
+  position: relative;
+  &.active {
+    background: var(--primary-color);
+  }
+  &:hover {
+    background: var(--pale-primary-color);
+    &.active {
+      background: var(--primary-color);
+    }
+  }
+`;
+
+// SideBoxBranchTitle, the actual component that renders the text.
+export const SideBoxBranchTitle = styled.div`
+  padding: 10px 10px 10px 0px;
+  text-decoration: none;
+  width: 260px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--primary-color);
+  font-weight: bold;
+  &.active {
+    color: white;
+  }
+  &:hover {
+    text-decoration: none;
+    color: var(--primary-color);
+    &.active {
+      color: white;
+    }
+  }
+`;
+
+// SideBoxBranchIconContainer, the container for the icon.
+export const SideBoxBranchIconContainer = styled.div`
+  color: white;
+  padding: 10px;
+  margin: 0;
+  cursor: pointer;
+  &:hover {
+    background: rgba(245, 100, 9, 0.2);
+  }
+`;
+
+// SideBoxBranchIcon, the actual animated icon.
+export const SideBoxBranchIcon = styled(FaCaretRight)<{
+  open: boolean;
+}>`
+  transition: 0.15s ease-in-out;
+  ${(p: { open: boolean }) =>
+    p.open &&
+    css`
+      transform: rotate(90deg);
+    `};
+`;
