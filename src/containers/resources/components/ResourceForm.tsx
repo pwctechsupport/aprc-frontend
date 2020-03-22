@@ -186,7 +186,7 @@ export default function ResourceForm({
         )}
       </div>
 
-      {preview && (
+      {preview && selectedCategory?.value === "Flowchart" && (
         <div>
           <ImageTagger
             src={preview}
