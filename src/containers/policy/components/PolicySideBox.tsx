@@ -1,18 +1,24 @@
 import classnames from "classnames";
 import React, { useState } from "react";
-import { FaCaretRight, FaPlus } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
-import styled, { css } from "styled-components";
-import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { usePolicyTreeQuery } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
-import { SideBoxSearch } from "../../../shared/components/SideBox";
+import {
+  SideBox,
+  SideBoxBranch,
+  SideBoxBranchIcon,
+  SideBoxBranchIconContainer,
+  SideBoxBranchTitle,
+  SideBoxSearch,
+  SideBoxTitle
+} from "../../../shared/components/SideBox";
 import Tooltip from "../../../shared/components/Tooltip";
 import { getPathnameParams } from "../../../shared/formatter";
 
-const PolicySideBox = ({ location }: RouteComponentProps) => {
+export default function PolicySideBox({ location }: RouteComponentProps) {
   const [activeId, activeMode] = getPathnameParams(location.pathname, "policy");
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
@@ -31,33 +37,32 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
       isTree: !searchQuery
     }
   });
-  const policies = oc(data).policies.collection([]);
+  const policies = data?.policies?.collection || [];
 
   return (
-    <div className="side-box d-none d-md-block">
-      <div className="d-flex justify-content-between mx-3 mt-4 mb-3">
-        <h4 className="text-orange">
+    <SideBox>
+      <SideBoxTitle>
+        <div className="d-flex justify-content-between">
           {isAdmin ? "Policies Admin" : "Policies"}
-        </h4>
-        <Tooltip description="Create Policy">
-          <Button
-            tag={Link}
-            to={isAdmin ? "/policy-admin/create" : "/policy/create"}
-            color=""
-            className="soft red"
-          >
-            <FaPlus />
-          </Button>
-        </Tooltip>
-      </div>
+          <Tooltip description="Create Policy">
+            <Button
+              tag={Link}
+              to={isAdmin ? "/policy-admin/create" : "/policy/create"}
+              className="soft red"
+              color=""
+            >
+              <FaPlus />
+            </Button>
+          </Tooltip>
+        </div>
+      </SideBoxTitle>
       <SideBoxSearch
         search={search}
         setSearch={setSearch}
         loading={loading}
         placeholder="Search Policies..."
       />
-
-      <div className="side-box__list">
+      <div>
         {policies.length ? (
           policies.map(policy => (
             <PolicyBranch
@@ -75,11 +80,22 @@ const PolicySideBox = ({ location }: RouteComponentProps) => {
           <div className="text-center p-2 text-orange">Policy not found</div>
         )}
       </div>
-    </div>
+    </SideBox>
   );
-};
+}
 
-export default PolicySideBox;
+// ================================================
+// PolicyBranch Component
+// ================================================
+interface PolicyBranchProps {
+  id: string | number;
+  activeId?: string | number | undefined;
+  activeMode?: string;
+  title?: string | null | undefined;
+  children?: Array<PolicyBranchProps> | null | undefined;
+  level?: number;
+  isAdmin?: boolean;
+}
 
 const PolicyBranch = ({
   id,
@@ -97,25 +113,26 @@ const PolicyBranch = ({
 
   return (
     <div>
-      <div
-        className={classnames("d-flex align-items-center side-box__item", {
+      <SideBoxBranch
+        className={classnames("d-flex align-items-center", {
           active: isActive
         })}
         style={{ paddingLeft: Number(level) * 10 }}
       >
         {hasChild ? (
-          <div className="side-box__item__icon clickable" onClick={toggle}>
-            <Icon
+          <SideBoxBranchIconContainer onClick={toggle}>
+            <SideBoxBranchIcon
               open={isOpen}
               className={isActive ? "text-white" : "text-orange"}
               size={14}
             />
-          </div>
+          </SideBoxBranchIconContainer>
         ) : (
           <div style={{ width: 34 }} />
         )}
-        <Link
-          className={classnames("side-box__item__title", { active: isActive })}
+        <SideBoxBranchTitle
+          as={Link}
+          className={classnames({ active: isActive })}
           to={
             isAdmin
               ? `/policy-admin/${id}/details`
@@ -125,42 +142,22 @@ const PolicyBranch = ({
           }
         >
           {title}
-        </Link>
-      </div>
+        </SideBoxBranchTitle>
+      </SideBoxBranch>
       {hasChild && (
         <Collapse isOpen={isOpen}>
-          {Array.isArray(children) &&
-            children.map((child: PolicyBranchProps) => (
-              <PolicyBranch
-                key={child.id}
-                {...child}
-                activeId={activeId}
-                activeMode={activeMode}
-                level={Number(level) + 1}
-                isAdmin={isAdmin}
-              />
-            ))}
+          {children?.map((child: PolicyBranchProps) => (
+            <PolicyBranch
+              key={child.id}
+              {...child}
+              activeId={activeId}
+              activeMode={activeMode}
+              level={Number(level) + 1}
+              isAdmin={isAdmin}
+            />
+          ))}
         </Collapse>
       )}
     </div>
   );
 };
-
-const Icon = styled(FaCaretRight)<{ open: boolean }>`
-  transition: 0.15s ease-in-out;
-  ${(p: { open: boolean }) =>
-    p.open &&
-    css`
-      transform: rotate(90deg);
-    `};
-`;
-
-interface PolicyBranchProps {
-  id: string | number;
-  activeId?: string | number | undefined;
-  activeMode?: string;
-  title?: string | null | undefined;
-  children?: Array<PolicyBranchProps> | null | undefined;
-  level?: number;
-  isAdmin?: boolean;
-}
