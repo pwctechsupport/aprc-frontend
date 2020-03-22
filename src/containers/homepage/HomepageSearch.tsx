@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { components } from "react-select";
 import Select from "react-select/async";
-import { Badge, Container } from "reactstrap";
+import { Badge } from "reactstrap";
 import styled from "styled-components";
 import {
   PoliciesDocument,
@@ -15,16 +15,12 @@ import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnProm
 export default function HomepageSearch() {
   const loadPolicies = useLoadPolicies();
   return (
-    <Centerer>
-      <Container>
-        <Select
-          placeholder="Search Policy..."
-          components={{ Option }}
-          loadOptions={loadPolicies}
-          defaultOptions
-        />
-      </Container>
-    </Centerer>
+    <Select
+      placeholder="Search Policy..."
+      components={{ Option }}
+      loadOptions={loadPolicies}
+      defaultOptions
+    />
   );
 }
 
@@ -88,13 +84,6 @@ const Option = (props: any) => {
 // =============================================
 // Styled Components
 // =============================================
-
-const Centerer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-`;
 
 const PreviewSpan = styled.span`
   color: rgba(0, 0, 0, 0.5);
