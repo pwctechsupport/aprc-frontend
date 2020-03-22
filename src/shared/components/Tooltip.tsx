@@ -1,14 +1,22 @@
-import React, { useState, useMemo } from "react";
+import uniqueId from "lodash/uniqueId";
+import React, { useMemo, useState } from "react";
 import { Tooltip as BsTooltip } from "reactstrap";
 import styled from "styled-components";
 
-const Tooltip = ({ description, children, subtitle }: TooltipProps) => {
+interface TooltipProps {
+  description?: string;
+  subtitle?: string;
+  children: React.ReactChild;
+}
+
+export default function Tooltip({
+  description,
+  children,
+  subtitle
+}: TooltipProps) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
-  const tooltipId = useMemo(
-    () => "tooltip" + Math.floor(Math.random() * 1000),
-    []
-  );
+  const tooltipId = useMemo(() => "tooltip" + uniqueId(), []);
 
   return (
     <>
@@ -25,16 +33,8 @@ const Tooltip = ({ description, children, subtitle }: TooltipProps) => {
       <div id={tooltipId}>{children}</div>
     </>
   );
-};
-
-export default Tooltip;
+}
 
 const Subtitle = styled.div`
   font-size: smaller;
 `;
-
-interface TooltipProps {
-  description?: string;
-  subtitle?: string;
-  children: React.ReactChild;
-}
