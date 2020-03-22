@@ -23,12 +23,14 @@ import {
   notifyGraphQLErrors,
   notifySuccess
 } from "../../../shared/utils/notif";
+import Header from "../../../shared/components/Header";
 
 interface FlowchartProps {
   bpId: string;
   resourceId: string;
   img: string;
   editable: boolean;
+  title?: string | null;
   className?: string;
 }
 
@@ -56,6 +58,7 @@ export default function Flowchart({
   resourceId,
   img,
   editable,
+  title,
   className
 }: FlowchartProps) {
   const [show, setShow] = useState(true);
@@ -201,25 +204,22 @@ export default function Flowchart({
 
   return (
     <div className={className}>
-      <div className="d-flex align-items-center justify-content-start">
-        <h5>Show Tag</h5>
-        &nbsp;
-        <Switch
-          checked={show}
-          width={50}
-          height={25}
-          onChange={setShow}
-          className="mb-2"
-        />
+      <div className="d-flex align-items-center justify-content-between">
+        <Header>{title}</Header>
+        <div className="d-flex align-items-center justify-content-start">
+          <span>Show Tag</span>
+          &nbsp;&nbsp;
+          <Switch checked={show} width={50} height={25} onChange={setShow} />
+        </div>
       </div>
       <FlowchartWrapper onClick={editable ? handleClick : undefined}>
         <Image src={img} editable={editable} />
-        {tags.map((tag, index) => {
+        {tags.map(tag => {
           if (editable) {
             return (
               <PreviewTag
                 key={tag.id}
-                show={show}
+                show={show ? 1 : 0}
                 onClick={handlePreviewTagClick(tag)}
                 x={tag.xCoordinates || 0}
                 y={tag.yCoordinates || 0}
@@ -234,7 +234,7 @@ export default function Flowchart({
           return (
             <PreviewTag
               key={tag.id}
-              show={show}
+              show={show ? 1 : 0}
               x={tag.xCoordinates || 0}
               y={tag.yCoordinates || 0}
               as={Link}
@@ -318,15 +318,16 @@ export default function Flowchart({
   );
 }
 
+// ==========================================
+// Styled Components
+// ==========================================
+
 const FlowchartWrapper = styled.div`
   position: relative;
 `;
 
 const Image = styled.img<{ editable: boolean }>`
   cursor: ${p => (p.editable ? "crosshair" : "")};
-  /* position: absolute;
-  width: 800px;
-  height: 500px; */
   width: 100%;
 `;
 
@@ -339,7 +340,14 @@ const fadeOut = keyframes`
   from { opacity: 1; }
   to { opacity: 0; }
 `;
-const PreviewTag = styled.div<{ x: number; y: number; show: boolean }>`
+
+interface PreviewTagProps {
+  x: number;
+  y: number;
+  show: number; // A bit of hack, because boolean emits warning
+}
+
+const PreviewTag = styled.div<PreviewTagProps>`
   position: absolute;
   top: ${p => p.y + 10}px;
   left: ${p => p.x - 50}px;
@@ -352,9 +360,9 @@ const PreviewTag = styled.div<{ x: number; y: number; show: boolean }>`
   cursor: pointer;
   padding: 5px 8px;
   /* in and out transition */
-  visibility: ${props => (!props.show ? "hidden" : "visible")};
+  visibility: ${p => (!p.show ? "hidden" : "visible")};
   transition: visibility 1s linear;
-  animation: ${props => (!props.show ? fadeOut : fadeIn)} 1s linear;
+  animation: ${p => (!p.show ? fadeOut : fadeIn)} 1s linear;
   /* hover transition */
   transition: 1s cubic-bezier(0.075, 0.82, 0.165, 1);
   white-space: nowrap;
@@ -439,6 +447,10 @@ const TaggerBoxCloseButton = styled(FaTimes)`
   top: 4px;
   right: 4px;
 `;
+
+// ==========================================
+// Custom Hooks
+// ==========================================
 
 function useLoadRiskAndControls({
   bpId,
