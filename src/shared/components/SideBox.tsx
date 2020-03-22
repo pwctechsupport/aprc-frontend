@@ -7,8 +7,6 @@ import LoadingSpinner from "./LoadingSpinner";
 
 // SideBox is the main wrapper to use side box.
 export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
-  --primary-color: #f56409;
-  --pale-primary-color: #fccfb8;
   background: #fff4ed;
   color: white;
   width: 25vw;
