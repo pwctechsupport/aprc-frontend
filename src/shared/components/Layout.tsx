@@ -1,11 +1,11 @@
 import React from "react";
-import NewNavbar from "./NewNavbar";
+import Navbar from "./Navbar";
 import styled from "styled-components";
 
 const Layout: React.FC = ({ children }) => {
   return (
     <div>
-      <NewNavbar />
+      <Navbar />
       <DivWithPaddingTop>{children}</DivWithPaddingTop>
     </div>
   );
