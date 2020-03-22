@@ -3,18 +3,16 @@ import { Resource } from "../../../generated/graphql";
 import Flowchart from "./Flowchart";
 import styled, { css } from "styled-components";
 
+type MyResource = Omit<Resource, "createdAt" | "updatedAt">;
+
 interface FlowchartsProps {
   bpId: string;
-  resources: Partial<Resource>[];
+  resources: MyResource[];
 }
 
 export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
-  const [activeResourceid, setActiveResourceId] = useState(
-    () => resources[0]?.id
-  );
-  const currentResource: undefined | Partial<Resource> = resources.find(
-    a => a.id === activeResourceid
-  );
+  const [activeId, setActiveId] = useState(() => resources[0]?.id);
+  const currentResource = resources.find(a => a.id === activeId);
   return (
     <div className="mt-3">
       <Flowchart
@@ -22,63 +20,62 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
           "http://mandalorian.rubyh.co" + currentResource?.resuploadUrl || ""
         }
         resourceId={currentResource?.id || ""}
+        title={currentResource?.name}
         bpId={bpId}
         editable={false}
       />
-      <div>
-        {resources.map(resource => (
-          <ButtonImage
-            key={resource.id}
-            onClick={() => setActiveResourceId(resource.id)}
-            isActive={resource.id === activeResourceid}
+      {resources.map(resource => (
+        <ResourceItem key={resource.id}>
+          <ResourceBox
+            onClick={() => setActiveId(resource.id)}
+            isActive={resource.id === activeId}
           >
-            <ButtonImage2>
-              <Image
-                src={
-                  "http://mandalorian.rubyh.co" + resource.resuploadUrl || ""
-                }
-                alt={resource.name || ""}
-              />
-            </ButtonImage2>
-          </ButtonImage>
-        ))}
-      </div>
+            <ResourceImage
+              src={"http://mandalorian.rubyh.co" + resource.resuploadUrl || ""}
+              alt={resource.name || ""}
+            />
+          </ResourceBox>
+          <ResourceName>{resource.name}</ResourceName>
+        </ResourceItem>
+      ))}
     </div>
   );
 }
 
-const ButtonImage = styled.div<{ isActive: boolean }>`
+// ==========================================
+// Styled Components
+// ==========================================
+
+const ResourceItem = styled.div`
+  float: left;
+  width: 90px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+`;
+
+const ResourceBox = styled.div<{ isActive: boolean }>`
   width: 72px;
   height: 72px;
-  border-radius: 8px;
   margin: 8.5px;
-  float: left;
-  overflow: hidden;
   cursor: pointer;
   margin-top: 20px;
-  border: 0px solid black;
-  border-width: ${p => (p.isActive ? 1 : 0)}px;
+  border-radius: 8px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
   &:hover {
     box-shadow: 0 3px 6px 0 rgba(49, 53, 59, 0.5);
   }
   ${p =>
     p.isActive &&
     css`
+      border-color: var(--primary-color);
       box-shadow: 0 3px 6px 0 rgba(49, 53, 59, 0.5);
     `};
 `;
 
-const ButtonImage2 = styled.div`
-  background-color: transparent;
-  display: inline-block;
-  height: 100%;
-  margin: 0 auto;
-  position: relative;
-  text-align: center;
-  width: 100%;
-`;
-
-const Image = styled.img`
+const ResourceImage = styled.img`
   object-fit: contain;
   background-color: transparent;
   display: inline-block;
@@ -87,4 +84,9 @@ const Image = styled.img`
   position: relative;
   text-align: center;
   width: 100%;
+`;
+
+const ResourceName = styled.span`
+  color: grey;
+  margin: 0px 8.5px;
 `;
