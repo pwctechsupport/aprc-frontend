@@ -18,7 +18,7 @@ const Avatar = ({ data }: AvatarProps) => {
       <DropdownToggle tag="div">
         <AvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
       </DropdownToggle>
-      <DropdownMenu right className="dropdown__user mr-3 mt-3">
+      <DropdownMenu right className="mr-3 mt-3">
         {data.map((item, index) => (
           <div
             key={index}

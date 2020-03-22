@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaBell, FaBookmark } from "react-icons/fa";
 import { useDispatch } from "react-redux";
-import { Link, NavLink as RrNavLink } from "react-router-dom";
+import { Link, NavLink as RrNavLink, useLocation } from "react-router-dom";
 import {
   Collapse,
   DropdownItem,
@@ -11,6 +11,7 @@ import {
   Navbar,
   NavbarBrand,
   NavbarToggler,
+  NavbarText,
   NavItem,
   NavLink,
   UncontrolledDropdown
@@ -25,6 +26,7 @@ import NotificationBadge from "./NotificationBadge";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
+  const location = useLocation();
   const rolesArray = useAccessRights([
     "admin",
     "admin_preparer",
@@ -38,6 +40,10 @@ export default function NewNavbar() {
     dispatch(unauthorize());
   }
 
+  useEffect(() => {
+    setIsOpen(p => (p ? !p : p));
+  }, [setIsOpen, location.pathname]);
+
   const { data } = useNotificationsCountQuery({
     fetchPolicy: "network-only"
   });
@@ -46,89 +52,75 @@ export default function NewNavbar() {
   const showNotif = data?.me?.notifShow || false;
 
   return (
-    <div>
-      <Navbar fixed="top" expand="md">
-        <LogoContainer className="pl-5">
-          <NavbarBrand href="/">
-            <Image src={pwcLogo} alt="PwC" className="img-fluid" />
-          </NavbarBrand>
-        </LogoContainer>
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="mr-auto" navbar>
-            {userMenus
-              // If the current user role is a 'mere' user,
-              // don't let him access 'Administrative' menu.
-              .filter(userMenu => {
-                if (isMereUser) {
-                  return userMenu.label !== "Administrative";
-                }
-                return true;
-              })
-              .map(userMenu => {
-                const { label, path, children } = userMenu;
-                if (label === "Administrative") {
-                  return (
-                    <UncontrolledDropdown key={label} nav inNavbar>
-                      <DropdownToggle
-                        nav
-                        caret
-                        className="nav_item_dropdown text-bold"
-                      >
-                        {label}
-                      </DropdownToggle>
-                      <DropdownMenu right className="p-0 dropdown__menu">
-                        {Array.isArray(children) &&
-                          children.map(childMenu => (
-                            <DropdownItem key={childMenu.label} className="p-0">
-                              <NavItem key={childMenu.label}>
-                                <NavLink
-                                  tag={RrNavLink}
-                                  to={childMenu.path}
-                                  className="p-3 dropdown__nav"
-                                  activeClassName="dropdown__active text-white"
-                                >
-                                  {childMenu.label}
-                                </NavLink>
-                              </NavItem>
-                            </DropdownItem>
-                          ))}
-                      </DropdownMenu>
-                    </UncontrolledDropdown>
-                  );
-                }
+    <Navbar fixed="top" color="light" light expand="md">
+      <StyledNavbarBrand tag={Link} to="/">
+        <Image src={pwcLogo} alt="PwC" />
+      </StyledNavbarBrand>
+      <NavbarToggler onClick={toggle} />
+      <Collapse isOpen={isOpen} navbar>
+        <Nav className="mr-auto" navbar>
+          {userMenus
+            // If the current user role is a 'mere' user,
+            // don't let him access 'Administrative' menu.
+            .filter(menu =>
+              isMereUser ? menu.label !== "Administrative" : true
+            )
+            .map(({ label, path, children }) => {
+              if (label === "Administrative") {
                 return (
-                  <NavItem key={label} className="px-2 py-0 text-bold">
-                    <NavLink
-                      tag={RrNavLink}
-                      to={path}
-                      exact={path === "/"}
-                      className="nav_item"
-                      activeClassName="active"
-                    >
+                  <UncontrolledDropdown key={label} nav inNavbar>
+                    <StyledDropdownToggle nav caret>
                       {label}
-                    </NavLink>
-                  </NavItem>
+                    </StyledDropdownToggle>
+                    <StyledDropdownMenu right className="p-0">
+                      {children?.map(childMenu => (
+                        <DropdownItem key={childMenu.label} className="p-0">
+                          <NavItem key={childMenu.label}>
+                            <StyledDropdownNavLink
+                              tag={RrNavLink}
+                              to={childMenu.path}
+                              className="p-3"
+                              activeClassName="active"
+                            >
+                              {childMenu.label}
+                            </StyledDropdownNavLink>
+                          </NavItem>
+                        </DropdownItem>
+                      ))}
+                    </StyledDropdownMenu>
+                  </UncontrolledDropdown>
                 );
-              })}
-          </Nav>
-        </Collapse>
-        <div className="d-flex align-items-center pr-2">
-          <div className="mr-3">
+              }
+              return (
+                <NavItem key={label}>
+                  <StyledNavLink
+                    tag={RrNavLink}
+                    to={path}
+                    exact={path === "/"}
+                    activeClassName="active"
+                  >
+                    {label}
+                  </StyledNavLink>
+                </NavItem>
+              );
+            })}
+        </Nav>
+        <NavbarText>
+          <div className="d-flex align-items-center">
             <Link to="/bookmark" className="text-dark">
               <FaBookmark className="clickable" size={22} />
             </Link>
+            <div className="ml-4 mr-4">
+              <Link to="/notifications" className="text-dark">
+                {showNotif && <NotificationBadge count={unreadCount} />}
+                <FaBell size={22} />
+              </Link>
+            </div>
+            <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
           </div>
-          <div className="mr-4">
-            <Link to="/notifications" className="text-dark">
-              {showNotif && <NotificationBadge count={unreadCount} />}
-              <FaBell size={22} />
-            </Link>
-          </div>
-          <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
-        </div>
-      </Navbar>
-    </div>
+        </NavbarText>
+      </Collapse>
+    </Navbar>
   );
 }
 
@@ -167,6 +159,66 @@ const Image = styled.img`
   height: auto;
 `;
 
-const LogoContainer = styled.div`
-  width: 330px;
+const StyledNavbarBrand = styled(NavbarBrand)`
+  width: calc(25vw - 20px);
+  @media only screen and (max-width: 977px) {
+    width: unset;
+  }
+`;
+
+const StyledNavLink = styled(NavLink)`
+  color: rgba(0, 0, 0, 0.8) !important;
+  font-weight: bold;
+  letter-spacing: 1px;
+  transition: 0.15s ease-in-out;
+  &:hover {
+    color: var(--primary-color) !important;
+  }
+  &::after {
+    content: "";
+    display: block;
+    margin-top: 5px;
+    height: 2px;
+    width: 100%;
+  }
+  &.active {
+    &::after {
+      background: var(--primary-color);
+    }
+  }
+  @media only screen and (min-width: 1027px) {
+    margin: 0px 0.5rem;
+  }
+`;
+
+const StyledDropdownMenu = styled(DropdownMenu)`
+  background: var(--soft-orange) !important;
+`;
+
+const StyledDropdownToggle = styled(DropdownToggle)`
+  color: rgba(0, 0, 0, 0.8) !important;
+  letter-spacing: 1px;
+  transition: 0.15s ease-in-out;
+  font-weight: bold;
+  &:hover {
+    color: var(--primary-color) !important;
+  }
+`;
+
+const StyledDropdownNavLink = styled(NavLink)`
+  color: var(--primary-color) !important;
+  &:hover {
+    background: var(--pale-primary-color) !important;
+  }
+  &:active {
+    background: unset;
+    color: unset;
+  }
+  &.active {
+    background: var(--primary-color) !important;
+    color: white !important;
+    &:hover {
+      background: var(--primary-color) !important;
+    }
+  }
 `;

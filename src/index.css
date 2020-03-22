@@ -7,6 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   --primary-color: #f56409;
   --pale-primary-color: #fccfb8;
+  --soft-orange: #fff4ed;
 }
 
 code {
