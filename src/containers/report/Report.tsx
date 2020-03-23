@@ -109,7 +109,7 @@ export default function Report() {
 
   return (
     <Container fluid className="p-0 pt-3 px-4">
-      <h4>Reports</h4>
+      <h4>Exception Report</h4>
       <Form>
         <Table>
           <thead>
