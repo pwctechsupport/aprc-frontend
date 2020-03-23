@@ -56,7 +56,7 @@ export default function Homepage() {
           <Col xs={12} md={6} lg={4}>
             <HomepageBox
               list={popularResources.map(toLabelValue)}
-              basePath="policy"
+              basePath="resources"
               title="Popular Resources"
             />
           </Col>
