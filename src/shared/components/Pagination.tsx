@@ -84,63 +84,65 @@ const Pagination = ({
   if (!pageCount) return null;
 
   return (
-    <div className={className}>
-      {totalCount ? (
-        <div className="text-secondary">
-          {startRecord}-{endRecord} of {totalCount}
-        </div>
-      ) : null}
-      <BsPagination className="">
-        <PaginationItem>
-          <PaginationLink
-            previous
-            onClick={_currentPage === 0 ? undefined : goToPrev}
-            disabled={_currentPage === 0}
-            className={_currentPage === 0 ? "disabled" : ""}
-          />
-        </PaginationItem>
+    <div className={"d-flex justify-content-end".concat(className || "")}>
+      <div className="text-right">
+        {totalCount ? (
+          <span className="text-secondary mb-2">
+            Showing {startRecord}-{endRecord} of {totalCount}
+          </span>
+        ) : null}
+        <BsPagination className="">
+          <PaginationItem>
+            <PaginationLink
+              previous
+              onClick={_currentPage === 0 ? undefined : goToPrev}
+              disabled={_currentPage === 0}
+              className={_currentPage === 0 ? "disabled" : ""}
+            />
+          </PaginationItem>
 
-        {startPage > 0 && (
-          <Fragment>
-            <PaginationItem>
-              <PaginationLink onClick={goToFirst}>1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink next>...</PaginationLink>
-            </PaginationItem>
-          </Fragment>
-        )}
+          {startPage > 0 && (
+            <Fragment>
+              <PaginationItem>
+                <PaginationLink onClick={goToFirst}>1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink next>...</PaginationLink>
+              </PaginationItem>
+            </Fragment>
+          )}
 
-        {pages.map(page => {
-          return (
-            <PaginationItem key={page} active={page === _currentPage}>
-              <PaginationLink onClick={_ => handlePageChange(page)}>
-                {page + 1}
-              </PaginationLink>
-            </PaginationItem>
-          );
-        })}
+          {pages.map(page => {
+            return (
+              <PaginationItem key={page} active={page === _currentPage}>
+                <PaginationLink onClick={_ => handlePageChange(page)}>
+                  {page + 1}
+                </PaginationLink>
+              </PaginationItem>
+            );
+          })}
 
-        {endPage < pageCount && (
-          <Fragment>
-            <PaginationItem>
-              <PaginationLink next>...</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink onClick={goToLast}>{pageCount}</PaginationLink>
-            </PaginationItem>
-          </Fragment>
-        )}
+          {endPage < pageCount && (
+            <Fragment>
+              <PaginationItem>
+                <PaginationLink next>...</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink onClick={goToLast}>{pageCount}</PaginationLink>
+              </PaginationItem>
+            </Fragment>
+          )}
 
-        <PaginationItem>
-          <PaginationLink
-            next
-            onClick={_currentPage + 1 === pageCount ? undefined : goToNext}
-            disabled={_currentPage + 1 === pageCount}
-            className={_currentPage + 1 === pageCount ? "disabled" : ""}
-          />
-        </PaginationItem>
-      </BsPagination>
+          <PaginationItem>
+            <PaginationLink
+              next
+              onClick={_currentPage + 1 === pageCount ? undefined : goToNext}
+              disabled={_currentPage + 1 === pageCount}
+              className={_currentPage + 1 === pageCount ? "disabled" : ""}
+            />
+          </PaginationItem>
+        </BsPagination>
+      </div>
     </div>
   );
 };
