@@ -26,7 +26,7 @@ query policies($filter: BaseScalar = {}, $withDetail: Boolean = false) {
 query policyTree(
   $filter: BaseScalar = {}
   $isTree: Boolean!
-  $limit: Int = 1000
+  $limit: Int
   $page: Int
 ) {
   policies(filter: $filter, limit: $limit, page: $page) {
@@ -115,6 +115,7 @@ fragment policyFragment on Policy {
   id
   title
   status
+  updatedAt
   policyCategory {
     id
     name

@@ -1,19 +1,21 @@
-import { capitalCase } from "capital-case";
+import startCase from "lodash/startCase";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { RouteComponentProps } from "react-router-dom";
-import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
   BusinessProcess,
   Risk,
   useBusinessProcessTreeQuery
 } from "../../generated/graphql";
+import BreadCrumb from "../../shared/components/BreadCrumb";
+import Pagination from "../../shared/components/Pagination";
 import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
-import BreadCrumb from "../../shared/components/BreadCrumb";
+import useListState from "../../shared/hooks/useList";
 
 const RiskAndControls = ({ history }: RouteComponentProps) => {
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
   const isTree = !searchQuery;
@@ -23,15 +25,13 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
         name_cont: searchQuery,
         ...(isTree && { ancestry_null: true })
       },
+      limit,
+      page,
       isTree
     }
   });
-
-  const handleChange = (e: any) => {
-    setSearch(e.target.value);
-  };
-
-  const bps = oc(data).businessProcesses.collection([]);
+  const bps = data?.businessProcesses?.collection || [];
+  const totalCount = data?.businessProcesses?.metadata.totalCount || 0;
 
   return (
     <div>
@@ -39,13 +39,12 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
         <title>Risk and Controls - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb crumbs={[["/risk-and-control", "Risk and Controls"]]} />
-      <div className="d-flex justify-content-between align-items-center">
-        <h4>Risk and Controls</h4>
-      </div>
+      <div className="d-flex justify-content-end align-items-center"></div>
       <SearchBar
-        value={search}
-        onChange={handleChange}
+        search={search}
+        setSearch={setSearch}
         placeholder="Search Business Processes"
+        loading={loading}
       />
       <Table reloading={loading}>
         <thead>
@@ -74,6 +73,11 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
           )}
         </tbody>
       </Table>
+      <Pagination
+        totalCount={totalCount}
+        perPage={limit}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
@@ -85,7 +89,7 @@ const RiskAndControlTableRow = ({
   onClick,
   level = 0
 }: RiskAndControlTableRowProps) => {
-  const childs = oc(businessProcess).children([]);
+  const childs = businessProcess?.children || [];
   return (
     <>
       <tr key={businessProcess.id} onClick={() => onClick(businessProcess.id)}>
@@ -94,12 +98,10 @@ const RiskAndControlTableRow = ({
           {businessProcess.name}
         </td>
         <td>
-          {oc(businessProcess)
-            .risks([])
-            .map(({ name }) => capitalCase(name || ""))
+          {businessProcess?.risks
+            ?.map(({ name }) => startCase(name || ""))
             .join(", ")}
         </td>
-        <td></td>
       </tr>
       {childs.length
         ? childs.map(childBp => (
