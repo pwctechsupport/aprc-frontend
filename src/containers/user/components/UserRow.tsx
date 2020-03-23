@@ -1,34 +1,43 @@
-import React, { useState, Fragment } from "react";
+import get from "lodash/get";
+import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   AiFillEdit,
-  AiOutlineEdit,
-  AiOutlineClockCircle
+  AiOutlineClockCircle,
+  AiOutlineEdit
 } from "react-icons/ai";
-import { FaTrash, FaCheck, FaTimes, FaExclamationCircle } from "react-icons/fa";
+import { FaCheck, FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { oc } from "ts-optchain";
-import get from "lodash/get";
 import * as yup from "yup";
 import {
-  RolesDocument,
-  UserRowFragmentFragment,
-  PolicyCategoriesDocument,
   useAdminUpdateUserMutation,
+  useApproveRequestEditMutation,
+  useCreateRequestEditMutation,
   useDestroyUserMutation,
   useReviewUserDraftMutation,
-  useCreateRequestEditMutation,
-  useApproveRequestEditMutation
+  UserRowFragmentFragment
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
-import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import { toLabelValue, Suggestions } from "../../../shared/formatter";
-import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
+import { Suggestions, toLabelValue } from "../../../shared/formatter";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
+import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
 
-const UserRow = ({ user, ...props }: UserRowProps) => {
+interface UserRowProps {
+  isEdit?: boolean;
+  user?: UserRowFragmentFragment;
+}
+
+interface UserRowValues {
+  name?: string;
+  roleIds?: Suggestions;
+  policyCategoryIds?: Suggestions;
+}
+
+export default function UserRow({ user, ...props }: UserRowProps) {
   const [isEdit, setIsEdit] = useState(props.isEdit);
   const { register, setValue, handleSubmit, errors } = useForm<UserRowValues>({
     defaultValues: {
@@ -41,11 +50,6 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     },
     validationSchema
   });
-
-  const getRoles = useLazyQueryReturnPromise(RolesDocument);
-  const getPolicyCategories = useLazyQueryReturnPromise(
-    PolicyCategoriesDocument
-  );
 
   const [update, updateM] = useAdminUpdateUserMutation({
     refetchQueries: ["users"],
@@ -94,33 +98,8 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
     name = draftData.name;
   }
 
-  async function handleGetRoles(input: string) {
-    try {
-      return oc(
-        await getRoles({
-          filter: { name_cont: input }
-        })
-      )
-        .data.roles.collection([])
-        .map(toLabelValue);
-    } catch (error) {
-      return [];
-    }
-  }
-
-  async function handleGetPolicyCategories(input: string) {
-    try {
-      return oc(
-        await getPolicyCategories({
-          filter: { name_cont: input }
-        })
-      )
-        .data.policyCategories.collection([])
-        .map(toLabelValue);
-    } catch (error) {
-      return [];
-    }
-  }
+  const handleGetRoles = useLoadRoles();
+  const handleGetPolicyCategories = useLoadPolicyCategories();
 
   function toggleEdit() {
     setIsEdit(!isEdit);
@@ -327,21 +306,8 @@ const UserRow = ({ user, ...props }: UserRowProps) => {
       </tr>
     );
   }
-};
-
-interface UserRowProps {
-  isEdit?: boolean;
-  user?: UserRowFragmentFragment;
-}
-
-interface UserRowValues {
-  name?: string;
-  roleIds?: Suggestions;
-  policyCategoryIds?: Suggestions;
 }
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Required")
 });
-
-export default UserRow;
