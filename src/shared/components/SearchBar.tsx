@@ -1,15 +1,41 @@
 import React from "react";
 import styled from "styled-components";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTimes } from "react-icons/fa";
+import LoadingSpinner from "./LoadingSpinner";
 
-const SearchBar = ({ value, onChange, placeholder }: SearchBarProps) => {
+interface SearchBarProps {
+  search: string;
+  setSearch: Function;
+  placeholder?: string;
+  loading?: boolean;
+}
+
+export default function SearchBar({
+  search,
+  placeholder,
+  loading,
+  setSearch
+}: SearchBarProps) {
   return (
     <SearchBarContainer>
       <SearchIcon />
-      <Input value={value} onChange={onChange} placeholder={placeholder} />
+      <Input
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+        placeholder={placeholder}
+      />
+      <SearchInputLoadingIndicator>
+        {loading && <LoadingSpinner />}
+        {search && (
+          <FaTimes
+            className="clickable text-red"
+            onClick={() => setSearch("")}
+          />
+        )}
+      </SearchInputLoadingIndicator>
     </SearchBarContainer>
   );
-};
+}
 
 const SearchBarContainer = styled.div`
   position: relative;
@@ -37,10 +63,9 @@ const SearchIcon = styled(FaSearch)`
   color: grey;
 `;
 
-interface SearchBarProps {
-  value: string;
-  onChange: (event: any) => void;
-  placeholder?: string;
-}
-
-export default SearchBar;
+const SearchInputLoadingIndicator = styled.div`
+  position: absolute;
+  color: black;
+  right: 14px;
+  top: 16px;
+`;
