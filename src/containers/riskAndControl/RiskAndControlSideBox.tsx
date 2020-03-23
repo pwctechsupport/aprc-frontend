@@ -31,6 +31,7 @@ export default function RiskAndControlSideBox({
         ...(!search && { ancestry_null: true }),
         name_cont: searchQuery
       },
+      limit: 1000,
       isTree: !search
     }
   });

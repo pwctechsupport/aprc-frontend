@@ -30,7 +30,7 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
   return (
     <div>
       <PolicyChart data={data} />
-      <Table className="mt-5">
+      <Table className="mt-5" responsive>
         <thead>
           <tr>
             <th>Task Manager</th>

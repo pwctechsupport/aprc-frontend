@@ -2,8 +2,8 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { Col, Container, Row } from "reactstrap";
 import RiskAndControl from "./RiskAndControl";
+import RiskAndControls from "./RiskAndControls";
 import RiskAndControlSideBox from "./RiskAndControlSideBox";
-import EmptyScreen from "../../shared/components/EmptyScreen";
 
 const RiskAndControlRoute = () => {
   return (
@@ -15,7 +15,7 @@ const RiskAndControlRoute = () => {
         <Col md={9} className="p-4">
           <Switch>
             <Route path="/risk-and-control/:id" component={RiskAndControl} />
-            <Route path="/risk-and-control/" component={EmptyScreen} />
+            <Route path="/risk-and-control" component={RiskAndControls} />
           </Switch>
         </Col>
       </Row>
