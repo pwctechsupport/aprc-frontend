@@ -18,8 +18,15 @@ import Table from "../../shared/components/Table";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import useListState from "../../shared/hooks/useList";
 import Pagination from "../../shared/components/Pagination";
+import OpacityButton from "../../shared/components/OpacityButton";
+import { Collapse } from "reactstrap";
+import AllPolicyDashboard from "./components/AllPolicyDashboard";
 
-const Policies = ({ history }: RouteComponentProps) => {
+export default function Policies({ history }: RouteComponentProps) {
+  const [showDashboard, setShowDashboard] = useState(false);
+  function toggleShowDashboard() {
+    setShowDashboard(p => !p);
+  }
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
@@ -56,10 +63,18 @@ const Policies = ({ history }: RouteComponentProps) => {
         <title>Policies - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb crumbs={[["/policy", "Policies"]]} />
-      <div className="d-flex justify-content-end align-items-center">
-        <Link to="/policy/create">
-          <Button className="pwc">+ Add Policy</Button>
-        </Link>
+      <Collapse isOpen={showDashboard}>
+        <div>
+          <AllPolicyDashboard />
+        </div>
+      </Collapse>
+      <div className="d-flex justify-content-between align-items-center">
+        <OpacityButton onClick={toggleShowDashboard}>
+          {showDashboard ? " Hide" : "Show"} Dashboard
+        </OpacityButton>
+        <Button to="/policy/create" tag={Link} className="pwc">
+          + Add Policy
+        </Button>
       </div>
       <SearchBar
         search={search}
@@ -103,9 +118,7 @@ const Policies = ({ history }: RouteComponentProps) => {
       />
     </div>
   );
-};
-
-export default Policies;
+}
 
 const PolicyTableRow = ({
   policy,
@@ -139,6 +152,8 @@ const PolicyTableRow = ({
           <DialogButton
             message={`Are you sure to delete ${policy.title}`}
             onConfirm={() => onDelete(policy.id)}
+            className="soft red"
+            color=""
           >
             <FaTrash />
           </DialogButton>
