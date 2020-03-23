@@ -80,7 +80,7 @@ export default function NewNavbar() {
                             <StyledDropdownNavLink
                               tag={RrNavLink}
                               to={childMenu.path}
-                              className="p-3"
+                              className="px-2 py-1 py-md-2"
                               activeClassName="active"
                             >
                               {childMenu.label}
