@@ -23,6 +23,7 @@ import { unauthorize } from "../../redux/auth";
 import useAccessRights from "../hooks/useAccessRights";
 import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
+import HomepageSearch from "../../containers/homepage/HomepageSearch";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
@@ -107,6 +108,9 @@ export default function NewNavbar() {
         </Nav>
         <NavbarText>
           <div className="d-flex align-items-center">
+          <SearchBar className="mr-4">
+            <HomepageSearch />
+          </SearchBar>
             <Link to="/bookmark" className="text-dark">
               <FaBookmark className="clickable" size={22} />
             </Link>
@@ -157,6 +161,13 @@ const userMenus = [
 const Image = styled.img`
   width: 50px;
   height: auto;
+`;
+
+const SearchBar = styled.div`
+  width: 15em;
+  @media only screen and (max-width: 977px) {
+    display: none
+  }
 `;
 
 const StyledNavbarBrand = styled(NavbarBrand)`
