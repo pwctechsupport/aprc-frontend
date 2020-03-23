@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Resource } from "../../../generated/graphql";
 import Flowchart from "./Flowchart";
 import styled, { css } from "styled-components";
+import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 
 type MyResource = Omit<Resource, "createdAt" | "updatedAt">;
 
@@ -13,6 +14,11 @@ interface FlowchartsProps {
 export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
   const [activeId, setActiveId] = useState(() => resources[0]?.id);
   const currentResource = resources.find(a => a.id === activeId);
+
+  if (!resources.length) {
+    return <EmptyAttribute>No Flowchart</EmptyAttribute>;
+  }
+
   return (
     <div className="mt-3">
       <Flowchart
