@@ -128,6 +128,15 @@ mutation destroyResource($id: ID!) {
   }
 }
 
+mutation destroyResourceAttachment($id: ID!) {
+  destroyResourceAttachment(input: { id: $id }) {
+    success
+    resource {
+      resuploadUrl
+    }
+  }
+}
+
 mutation createResourceRating($input: CreateResourceRatingInput!) {
   createResourceRating(input: $input) {
     success
