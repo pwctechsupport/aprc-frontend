@@ -136,7 +136,7 @@ const userMenus = [
   { label: "Home", path: "/" },
   { label: "Policy", path: "/policy" },
   { label: "Risk & Control", path: "/risk-and-control" },
-  { label: "Reports", path: "/report" },
+  { label: "Exception Report", path: "/report" },
   {
     label: "Administrative",
     path: "/",
