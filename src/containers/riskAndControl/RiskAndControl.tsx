@@ -25,7 +25,8 @@ import {
   useBusinessProcessQuery,
   useCreateBookmarkBusinessProcessMutation,
   useUpdateControlMutation,
-  useUpdateRiskMutation
+  useUpdateRiskMutation,
+  Control
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -55,8 +56,8 @@ import ControlForm, {
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
 
-const RiskAndControls = ({ match }: RouteComponentProps) => {
-  const initialCollapse = ["Risks"];
+export default function RiskAndControl({ match }: RouteComponentProps) {
+  const initialCollapse = ["Risks", "Controls"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse(p => {
@@ -134,6 +135,7 @@ const RiskAndControls = ({ match }: RouteComponentProps) => {
   });
   const name = data?.businessProcess?.name || "";
   const risks = data?.businessProcess?.risks || [];
+  const controls = data?.businessProcess?.controls || [];
   const resources = data?.businessProcess?.resources || [];
   const ancestors = data?.businessProcess?.ancestors || [];
   const breadcrumb = ancestors.map(a => [
@@ -142,8 +144,8 @@ const RiskAndControls = ({ match }: RouteComponentProps) => {
   ]) as CrumbItem[];
 
   const tabs = [
+    { to: `/risk-and-control/${id}`, title: "Detail" },
     { to: `/risk-and-control/${id}/flowchart`, title: "Flowchart" },
-    { to: `/risk-and-control/${id}`, title: "List" },
     { to: `/risk-and-control/${id}/resources`, title: "Resources" }
   ];
 
@@ -300,91 +302,28 @@ const RiskAndControls = ({ match }: RouteComponentProps) => {
                         </Button>
                       </div>
 
-                      <div className="table-responsive">
-                        <Table>
-                          <thead>
-                            <tr>
-                              <th>Description</th>
-                              <th>Freq</th>
-                              <th>Type of Control</th>
-                              <th>Nature</th>
-                              <th>IPO</th>
-                              <th>Assertion</th>
-                              <th>Control Owner</th>
-                              <th />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {risk?.controls?.length ? (
-                              risk?.controls?.map(control => (
-                                <tr key={control.id}>
-                                  <td>{control.description}</td>
-                                  <td>{startCase(control.frequency || "")}</td>
-                                  <td>
-                                    {startCase(control.typeOfControl || "")}
-                                  </td>
-                                  <td>{startCase(control.nature || "")}</td>
-                                  <td>
-                                    {control.ipo?.map(startCase).join(", ")}
-                                  </td>
-                                  <td>
-                                    {control.assertion
-                                      ?.map(startCase)
-                                      .join(", ")}
-                                  </td>
-                                  <td>{control.controlOwner}</td>
-                                  <td>
-                                    <Button
-                                      onClick={() =>
-                                        editControl({
-                                          id: control.id,
-                                          assertion: control.assertion as Assertion[],
-                                          controlOwner:
-                                            control.controlOwner || "",
-                                          description:
-                                            control.description || "",
-                                          status: control.status as Status,
-                                          typeOfControl: control.typeOfControl as TypeOfControl,
-                                          nature: control.nature as Nature,
-                                          ipo: control.ipo as Ipo[],
-                                          businessProcessIds:
-                                            control?.businessProcesses?.map(
-                                              ({ id }) => id
-                                            ) || [],
-                                          frequency: control.frequency as Frequency,
-                                          keyControl:
-                                            control.keyControl || false,
-                                          riskIds:
-                                            control?.risks?.map(
-                                              ({ id }) => id
-                                            ) || [],
-                                          activityControls:
-                                            control.activityControls
-                                        })
-                                      }
-                                      color=""
-                                    >
-                                      <FaPencilAlt />
-                                    </Button>
-                                  </td>
-                                </tr>
-                              ))
-                            ) : (
-                              <tr>
-                                <td colSpan={7}>
-                                  <EmptyAttribute />
-                                </td>
-                              </tr>
-                            )}
-                          </tbody>
-                        </Table>
-                      </div>
+                      {risk.controls?.length ? (
+                        <>
+                          <h6>Control</h6>
+                          <ControlsTable
+                            controls={risk.controls}
+                            editControl={editControl}
+                          />
+                        </>
+                      ) : null}
                     </li>
                   ))}
                 </ul>
               ) : (
                 <EmptyAttribute />
               )}
+            </Collapsible>
+            <Collapsible
+              title="Controls"
+              show={collapse.includes("Controls")}
+              onClick={toggleCollapse}
+            >
+              <ControlsTable controls={controls} editControl={editControl} />
             </Collapsible>
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
@@ -422,9 +361,7 @@ const RiskAndControls = ({ match }: RouteComponentProps) => {
       </Modal>
     </div>
   );
-};
-
-export default RiskAndControls;
+}
 
 interface RiskState extends RiskFormValues {
   id: string;
@@ -433,3 +370,76 @@ interface RiskState extends RiskFormValues {
 interface ControlState extends ControlFormValues {
   id: string;
 }
+
+const ControlsTable = ({
+  controls,
+  editControl
+}: {
+  controls: Control[];
+  editControl: Function;
+}) => {
+  return (
+    <div className="table-responsive">
+      <Table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Freq</th>
+            <th>Type of Control</th>
+            <th>Nature</th>
+            <th>Assertion</th>
+            <th>IPO</th>
+            <th>Control Owner</th>
+            <th />
+          </tr>
+        </thead>
+        <tbody>
+          {controls?.length ? (
+            controls?.map(control => (
+              <tr key={control.id}>
+                <td>{control.description}</td>
+                <td>{startCase(control.frequency || "")}</td>
+                <td>{startCase(control.typeOfControl || "")}</td>
+                <td>{startCase(control.nature || "")}</td>
+                <td>{control.assertion?.map(startCase).join(", ")}</td>
+                <td>{control.ipo?.map(startCase).join(", ")}</td>
+                <td>{control.controlOwner}</td>
+                <td>
+                  <Button
+                    onClick={() =>
+                      editControl({
+                        id: control.id,
+                        assertion: control.assertion as Assertion[],
+                        controlOwner: control.controlOwner || "",
+                        description: control.description || "",
+                        status: control.status as Status,
+                        typeOfControl: control.typeOfControl as TypeOfControl,
+                        nature: control.nature as Nature,
+                        ipo: control.ipo as Ipo[],
+                        businessProcessIds:
+                          control?.businessProcesses?.map(({ id }) => id) || [],
+                        frequency: control.frequency as Frequency,
+                        keyControl: control.keyControl || false,
+                        riskIds: control?.risks?.map(({ id }) => id) || [],
+                        activityControls: control.activityControls
+                      })
+                    }
+                    color=""
+                  >
+                    <FaPencilAlt />
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={7}>
+                <EmptyAttribute />
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+    </div>
+  );
+};
