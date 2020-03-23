@@ -1,6 +1,7 @@
 import { capitalCase } from "capital-case";
 import React, { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { AiFillEdit } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import { Col, Form, FormGroup, Input as BsInput, Label, Row } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -10,7 +11,6 @@ import {
   Frequency,
   Ipo,
   Nature,
-  Status,
   TypeOfControl,
   useBusinessProcessesQuery,
   useRisksQuery
@@ -21,9 +21,7 @@ import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
-import { toLabelValue } from "../../../shared/formatter";
-import { AiFillEdit } from "react-icons/ai";
-import { toBase64 } from "../../../shared/formatter";
+import { toBase64, toLabelValue } from "../../../shared/formatter";
 
 const ControlForm = ({
   onSubmit,
@@ -61,7 +59,6 @@ const ControlForm = ({
     register({ name: "nature" });
     register({ name: "assertion" });
     register({ name: "ipo" });
-    register({ name: "status" });
     register({ name: "activityTitle" });
     register({ name: "activity" });
   }, [register]);
@@ -78,7 +75,6 @@ const ControlForm = ({
   const typeOfControl = oc(defaultValues).typeOfControl();
   const frequency = oc(defaultValues).frequency();
   const nature = oc(defaultValues).nature();
-  const status = oc(defaultValues).status();
   const activityControls = oc(defaultValues).activityControls() || [];
 
   const [cool, setCool] = useState<MyCoolControlActivity[]>(() =>
@@ -87,26 +83,19 @@ const ControlForm = ({
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
-    console.log("mau dikirim", prepare);
-
-    onSubmit &&
-      onSubmit({
-        ...values,
-        activityControlsAttributes: prepare
-      });
+    onSubmit?.({
+      ...values,
+      activityControlsAttributes: prepare
+    });
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
     // update
-    console.log("test", values);
     const id = cool.filter(c => String(c.id) === selectActivity);
-    console.log(id);
     if (id.length > 0) {
-      console.log("update");
       setCool(cool =>
         cool.map(c => {
           if (String(c.id) === selectActivity) {
-            console.log("Aa");
             return {
               ...values,
               id: c.id
@@ -133,7 +122,6 @@ const ControlForm = ({
   };
 
   const handleDelete = (id?: string | number) => {
-    console.log("huh", id);
     const deleted = cool.find(c => String(c.id) === String(id));
     if (String(deleted?.id).includes("temp")) {
     } else {
@@ -170,7 +158,6 @@ const ControlForm = ({
       );
     }
   };
-  console.log("testes", cool);
 
   return (
     <Fragment>
@@ -275,12 +262,6 @@ const ControlForm = ({
           </Col>
         </Row>
         <Input name="controlOwner" label="Control Owner" innerRef={register} />
-        <Select
-          options={statuses}
-          onChange={handleSelectChange("status")}
-          label="Status"
-          defaultValue={pDefVal(status, statuses)}
-        />
         <span>Control Activites</span>
         <div className="mt-2">
           <Button
@@ -395,7 +376,6 @@ const ActivityModalForm = ({
   }, [register]);
 
   const handleSaveActivity = (values: MyCoolControlActivity) => {
-    console.log("apa si", values);
     onSubmit(values);
   };
 
@@ -455,13 +435,7 @@ const ActivityModalForm = ({
         ) : (
           <Input
             type="file"
-            onChange={
-              activityType === "attachment"
-                ? handleSetFile
-                : () => {
-                    console.log("test");
-                  }
-            }
+            onChange={activityType === "attachment" ? handleSetFile : () => {}}
           />
         )}
       </div>
@@ -506,11 +480,6 @@ const assertions = Object.entries(Assertion).map(([label, value]) => ({
   value
 }));
 
-const statuses = Object.entries(Status).map(([label, value]) => ({
-  label: capitalCase(value),
-  value
-}));
-
 // -------------------------------------------------------------------------
 // Type Definitions
 // -------------------------------------------------------------------------
@@ -530,7 +499,6 @@ export interface CreateControlFormValues {
   ipo: Ipo[];
   assertion: Assertion[];
   description?: string | null;
-  status: Status;
   riskIds: string[];
   businessProcessIds: string[];
   keyControl: boolean;

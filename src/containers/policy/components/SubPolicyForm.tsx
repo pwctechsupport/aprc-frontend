@@ -1,10 +1,8 @@
-import { capitalCase } from "capital-case";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
-  Status,
   useBusinessProcessesQuery,
   useControlsQuery,
   useReferencesQuery,
@@ -17,8 +15,8 @@ import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import TextEditor from "../../../shared/components/forms/TextEditor";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
 import Modal from "../../../shared/components/Modal";
+import { toLabelValue } from "../../../shared/formatter";
 
 const SubPolicyForm = ({
   onSubmit,
@@ -55,7 +53,6 @@ const SubPolicyForm = ({
     register({ name: "parentId" });
     register({ name: "referenceIds" });
     register({ name: "description", required: true });
-    register({ name: "status", required: true });
   }, [register]);
 
   function handleReferenceChange(multiSelect: any) {
@@ -65,14 +62,6 @@ const SubPolicyForm = ({
         multiSelect.map((a: any) => a.value)
       );
     }
-  }
-
-  function handleChange(name: keyof SubPolicyFormValues) {
-    return function(value: any) {
-      if (value) {
-        setValue(name, value.value);
-      }
-    };
   }
 
   function handleEditorChange(data: string) {
@@ -97,7 +86,6 @@ const SubPolicyForm = ({
       .referenceIds([])
       .includes(reference.value);
   });
-  const status = oc(defaultValues).status();
 
   return (
     <div>
@@ -122,15 +110,6 @@ const SubPolicyForm = ({
           options={references}
           isMulti
           defaultValue={defaultReference}
-        />
-        <Select
-          name="status"
-          label="Status"
-          options={statuses}
-          onChange={handleChange("status")}
-          error={errors.status && errors.status.message}
-          defaultValue={prepDefaultValue(status, statuses) || Status.Draft}
-          isDisabled={!isAdmin}
         />
 
         <div className="d-flex justify-content-end mt-3">
@@ -306,15 +285,6 @@ const SubPolicyAttributeForm = ({
 };
 
 // -------------------------------------------------------------------------
-// Construct Options
-// -------------------------------------------------------------------------
-
-const statuses = Object.entries(Status).map(([label, value]) => ({
-  label: capitalCase(value),
-  value
-}));
-
-// -------------------------------------------------------------------------
 // Type Definitions
 // -------------------------------------------------------------------------
 
@@ -334,7 +304,6 @@ export interface SubPolicyFormValues {
   businessProcessIds?: string[];
   controlIds?: string[];
   riskIds?: string[];
-  status: Status;
 }
 
 type SubPolicyModalFormValues = Pick<
