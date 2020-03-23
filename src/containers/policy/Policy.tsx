@@ -25,7 +25,6 @@ import { Link, NavLink } from "react-router-dom";
 import { Badge, Nav, NavItem, TabContent, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
-  Status,
   useApproveRequestEditMutation,
   useCreateBookmarkPolicyMutation,
   useCreateRequestEditMutation,
@@ -42,8 +41,10 @@ import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
+import ResourcesTab from "../../shared/components/ResourcesTab";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
+import { date, previewHtml } from "../../shared/formatter";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import {
   downloadPdf,
@@ -59,9 +60,7 @@ import {
 } from "../../shared/utils/notif";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
-import ResourcesTab from "../../shared/components/ResourcesTab";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import { previewHtml } from "../../shared/formatter";
 
 const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subPolicyRef = useRef<HTMLInputElement>(null);
@@ -173,34 +172,11 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
           businessProcessIds: values.businessProcessIds,
           referenceIds: values.referenceIds,
           controlIds: values.controlIds,
-          riskIds: values.riskIds,
-          status: values.status
+          riskIds: values.riskIds
         }
       }
     });
   }
-
-  // Add Resource for current policy
-  // const [createResource, createResourceM] = useCreateResourceMutation({
-  //   onCompleted: _ => {
-  //     notifySuccess("Resource Added");
-  //     toggleAddResourceModal();
-  //   },
-  //   onError: notifyGraphQLErrors,
-  //   awaitRefetchQueries: true,
-  //   refetchQueries: ["policy"]
-  // });
-  // function handleCreateResource(values: ResourceFormValues) {
-  //   const input: CreateResourceInput = {
-  //     name: values.name || "",
-  //     category: values.category?.value || "",
-  //     resuploadBase64: values.resuploadBase64,
-  //     policyIds: values.policyIds?.map(a => a.value),
-  //     controlIds: values.controlIds?.map(a => a.value),
-  //     businessProcessId: values.businessProcessId?.value
-  //   };
-  //   createResource({ variables: { input } });
-  // }
 
   const [
     requestEditMutation,
@@ -260,8 +236,6 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const ancestry = oc(data).policy.ancestry("");
   const references = data?.policy?.references || [];
   const referenceIds = references.map(item => item.id);
-  const status = oc(data).policy.status("");
-  // const resources = oc(data).policy.resources([]);
   const controls = oc(data).policy.controls([]);
   const risks = oc(data).policy.risks([]);
   const controlCount = oc(data).policy.controlCount({});
@@ -269,6 +243,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const subCount = oc(data).policy.subCount({});
   const isMaximumLevel = ancestry.split("/").length === 5;
   const ancestors = data?.policy?.ancestors || [];
+  const updatedAt = data?.policy?.updatedAt;
   const breadcrumb = ancestors.map((a: any) => [
     "/policy/" + a.id,
     a.title
@@ -355,6 +330,12 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                   : "/policy/:id/details"
               }
             >
+              <div className="text-right my-2 text-secondary">
+                <span>
+                  <AiOutlineClockCircle className="mr-1" />
+                  {date(updatedAt)}
+                </span>
+              </div>
               <div className="d-flex justify-content-end">
                 {renderPolicyAction()}
               </div>
@@ -406,7 +387,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                   show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
-                  <Table>
+                  <Table responsive>
                     <thead>
                       <tr>
                         <th>Desc</th>
@@ -468,7 +449,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                   onClick={toggleCollapse}
                 >
                   {children.length ? (
-                    <Table>
+                    <Table responsive>
                       <thead>
                         <tr>
                           <th>Title</th>
@@ -566,8 +547,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                 .map(r => r.id),
               riskIds: oc(data)
                 .policy.risks([])
-                .map(r => r.id),
-              status: status as Status
+                .map(r => r.id)
             }}
             onSubmit={handleUpdateSubPolicy}
             submitting={updateState.loading}
