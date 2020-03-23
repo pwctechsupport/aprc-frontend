@@ -15,6 +15,7 @@ import { NavLink, Route, RouteComponentProps } from "react-router-dom";
 import { Badge, Nav, NavItem, TabContent, Table, TabPane } from "reactstrap";
 import {
   Assertion,
+  Control,
   Frequency,
   Ipo,
   LevelOfRisk,
@@ -25,8 +26,7 @@ import {
   useBusinessProcessQuery,
   useCreateBookmarkBusinessProcessMutation,
   useUpdateControlMutation,
-  useUpdateRiskMutation,
-  Control
+  useUpdateRiskMutation
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -43,6 +43,7 @@ import {
   emailPdf,
   previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
+import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyError,
   notifyGraphQLErrors,
@@ -278,10 +279,12 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
                       <div className="mb-3 d-flex justify-content-between">
                         <h5>
                           {risk.name}
-                          <Badge color="danger mx-3">
+                          <Badge
+                            color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
+                          >
                             {startCase(risk.levelOfRisk || "")}
                           </Badge>
-                          <Badge color="danger">
+                          <Badge color="secondary">
                             {startCase(risk.typeOfRisk || "")}
                           </Badge>
                         </h5>

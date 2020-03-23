@@ -1,5 +1,5 @@
-import { capitalCase } from "capital-case";
-import React, { Fragment, useState, useEffect } from "react";
+import startCase from "lodash/startCase";
+import React, { Fragment, useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import {
   AiFillEdit,
@@ -8,6 +8,7 @@ import {
 } from "react-icons/ai";
 import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
+import { Badge } from "reactstrap";
 import {
   LevelOfRisk,
   TypeOfRisk,
@@ -26,6 +27,7 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Tooltip from "../../shared/components/Tooltip";
 import { toLabelValue } from "../../shared/formatter";
 import useEditState from "../../shared/hooks/useEditState";
+import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyGraphQLErrors,
   notifyInfo,
@@ -50,6 +52,10 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     variables: { id },
     fetchPolicy: "network-only"
   });
+  const name = data?.risk?.name || "";
+  const levelOfRisk = data?.risk?.levelOfRisk || "";
+  const typeOfRisk = data?.risk?.typeOfRisk || "";
+  const bps = data?.risk?.businessProcesses;
 
   const draft = data?.risk?.draft?.objectResult;
   const hasEditAccess = data?.risk?.hasEditAccess || false;
@@ -62,13 +68,11 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     requestEditState
   });
 
-  const name = data?.risk?.name || "";
-
   const defaultValues: RiskFormValues = {
     name,
     businessProcessIds: data?.risk?.businessProcesses?.map(toLabelValue) || [],
-    levelOfRisk: data?.risk?.levelOfRisk as LevelOfRisk,
-    typeOfRisk: data?.risk?.typeOfRisk as TypeOfRisk
+    levelOfRisk: levelOfRisk as LevelOfRisk,
+    typeOfRisk: typeOfRisk as TypeOfRisk
   };
 
   // Update handlers
@@ -257,18 +261,22 @@ const Risk = ({ match, history }: RouteComponentProps) => {
 
   const renderRisk = () => {
     const details = [
-      { label: "Name", value: data?.risk?.name },
+      { label: "Name", value: name },
       {
         label: "Business Process",
-        value: data?.risk?.businessProcesses?.map(a => a.name).join(", ")
+        value: bps?.map(a => a.name).join(", ")
       },
       {
         label: "Level of Risk",
-        value: capitalCase(data?.risk?.levelOfRisk || "")
+        value: (
+          <Badge color={getRiskColor(levelOfRisk)}>
+            {startCase(levelOfRisk)}
+          </Badge>
+        )
       },
       {
         label: "Type of Risk",
-        value: capitalCase(data?.risk?.typeOfRisk || "")
+        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>
       }
     ];
     return (
