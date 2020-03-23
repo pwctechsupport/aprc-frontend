@@ -22,6 +22,8 @@ const CreateUser = ({ history }: RouteComponentProps) => {
           password: values.password || "",
           passwordConfirmation: values.passwordConfirmation || "",
           phone: values.phone || ""
+          // roleIds: values.roleIds?.map(a => a.value), TODO ! ! !
+          // policyCategoryIds: values.policyCategoryIds?.map(a => a.value),
         }
       }
     });
