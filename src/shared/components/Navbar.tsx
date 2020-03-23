@@ -200,6 +200,11 @@ const StyledNavLink = styled(NavLink)`
   @media only screen and (min-width: 1027px) {
     margin: 0px 0.5rem;
   }
+  @media only screen and (max-width: 767px) {
+    &.active {
+      color: var(--primary-color) !important;
+    }
+  }
 `;
 
 const StyledDropdownMenu = styled(DropdownMenu)`
