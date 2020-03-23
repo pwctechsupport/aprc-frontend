@@ -1,6 +1,11 @@
 import { date as formatDate } from "../formatter";
 
-export default function humanizeDate(date: Date | string): string {
+export default function humanizeDate(
+  date: Date | string | undefined | null
+): string {
+  if (!date) {
+    return "";
+  }
   date = new Date(date);
   const delta = Math.round((+new Date() - +date) / 1000);
 
