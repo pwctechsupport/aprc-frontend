@@ -1,17 +1,16 @@
 import styled from "styled-components";
 
 const OpacityButton = styled.button`
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.01);
-  text-align: center;
-  cursor: pointer;
-  padding: 7px 0;
-  border-radius: 3px;
-  transition: 0.15s ease-in-out;
-  color: grey;
+  border: none;
+  display: unset;
+  margin-bottom: unset;
+  padding: 5px;
+  margin: 0px 4px;
+  border-radius: 2px;
+  transition: background 0.1s ease-out 0s;
+  background: none rgb(244, 245, 247);
   &:hover {
-    background: lightgrey;
-    color: black;
+    background-color: rgb(235, 236, 240);
   }
 `;
 

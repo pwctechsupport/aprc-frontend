@@ -4,9 +4,8 @@ import { Col, Container, Row } from "reactstrap";
 import PolicySideBox from "./components/PolicySideBox";
 import CreatePolicy from "./CreatePolicy";
 import CreateSubPolicy from "./CreateSubPolicy";
-import Policy from "./Policy";
 import Policies from "./Policies";
-import AllPolicyDashboard from "./components/AllPolicyDashboard";
+import Policy from "./Policy";
 
 const PolicyRoute = () => {
   return (
