@@ -4,7 +4,8 @@ import { IoMdRemoveCircleOutline } from "react-icons/io";
 import styled from "styled-components";
 import {
   useCreateResourceRatingMutation,
-  useDestroyResourceAttachmentMutation
+  useDestroyResourceAttachmentMutation,
+  useUpdateResourceVisitMutation
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -54,7 +55,7 @@ export default function ResourceBox({
       notifySuccess(`You gave ${rating} star rating`);
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["resource", "resources"],
+    refetchQueries: ["resource"],
     awaitRefetchQueries: true
   });
   function handleStarClick(nextValue: number) {
@@ -68,12 +69,17 @@ export default function ResourceBox({
     });
   }
 
+  const [updateResourceVisit] = useUpdateResourceVisitMutation({
+    refetchQueries: ["resource"]
+  });
+
   // Handle download attachment
-  const handleDownload = (url: string, fileName: string) => {
+  const handleDownload = () => {
+    updateResourceVisit({ variables: { id } });
     const link = document.createElement("a");
     link.target = "_blank";
-    link.href = url;
-    link.setAttribute("download", fileName || "PwC-Generated");
+    link.href = `http://mandalorian.rubyh.co${resuploadUrl}`;
+    link.setAttribute("download", name || "PwC-Generated");
     document.body.appendChild(link);
     link.click();
     link.parentNode && link.parentNode.removeChild(link);
@@ -83,10 +89,8 @@ export default function ResourceBox({
     <ResourceBoxContainer>
       <ResourceBoxImagePreview
         src={`http://mandalorian.rubyh.co${resuploadUrl}`}
-        onClick={() =>
-          handleDownload(`http://mandalorian.rubyh.co${resuploadUrl}`, name)
-        }
         onError={() => setPreivewAvailable(false)}
+        alt={name}
       />
       <ResourceBoxMeta>
         <div>{name}</div>
@@ -114,12 +118,10 @@ export default function ResourceBox({
           </Tooltip>
           <Tooltip description="Download resource attachment">
             <Button
-              href={`http://mandalorian.rubyh.co${resuploadUrl}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              download={name}
               className="soft red"
               disabled={!previewAvailable}
+              onClick={handleDownload}
+              color=""
             >
               <FaDownload size={18} />
             </Button>
@@ -152,7 +154,6 @@ const ResourceBoxMeta = styled.div`
 const ResourceBoxImagePreview = styled.img`
   width: 100%;
   border-image-repeat: stretch;
-  cursor: pointer;
 `;
 
 const ResourceBoxMetaWrapper = styled.div`

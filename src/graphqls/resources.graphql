@@ -157,3 +157,9 @@ mutation reviewResourceDraft($id: ID!, $publish: Boolean!) {
     errors
   }
 }
+
+mutation updateResourceVisit($id: ID!) {
+  isVisit(input: { originatorId: $id, originatorType: "Resource" }) {
+    success
+  }
+}

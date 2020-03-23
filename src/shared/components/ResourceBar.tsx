@@ -5,6 +5,7 @@ import { Button } from "reactstrap";
 import styled from "styled-components";
 import StarRating from "./StarRating";
 import Tooltip from "./Tooltip";
+import { useUpdateResourceVisitMutation } from "../../generated/graphql";
 
 interface ResourceBarProps {
   id: string;
@@ -23,6 +24,10 @@ export default function ResourceBar({
   visit = 0,
   totalRating = 0
 }: ResourceBarProps) {
+  const [updateResourceVisit] = useUpdateResourceVisitMutation({
+    refetchQueries: ["resources"]
+  });
+
   return (
     <ResourceBarContainer>
       <ResourceBarDivider width="40">
@@ -42,6 +47,7 @@ export default function ResourceBar({
               target="_blank"
               rel="noopener noreferrer"
               download={`Pwc-Resource ${name}`}
+              onClick={() => updateResourceVisit({ variables: { id } })}
             >
               <FaFile />
             </a>
