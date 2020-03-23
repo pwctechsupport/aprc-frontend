@@ -46,7 +46,7 @@ export default function RiskAndControlSideBox({
         search={search}
         setSearch={setSearch}
         loading={loading}
-        placeholder="Search Risk & Control..."
+        placeholder="Search Business Process..."
       />
 
       {businessProcesses.map(businessProcess => {
