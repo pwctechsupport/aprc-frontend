@@ -3,40 +3,39 @@ import get from "lodash/get";
 import React, { Fragment, useState } from "react";
 import {
   AiFillEdit,
-  AiOutlineEdit,
-  AiOutlineClockCircle
+  AiOutlineClockCircle,
+  AiOutlineEdit
 } from "react-icons/ai";
-import { FaTimes, FaTrash, FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
+import { IoMdOpen } from "react-icons/io";
 import { RouteComponentProps } from "react-router";
 import { Col, Row } from "reactstrap";
 import {
   Frequency,
   Nature,
-  Status,
   TypeOfControl,
+  useApproveRequestEditMutation,
   useControlQuery,
-  useReviewControlDraftMutation,
-  useUpdateControlMutation,
-  useDestroyControlMutation,
   useCreateRequestEditMutation,
-  useApproveRequestEditMutation
+  useDestroyControlMutation,
+  useReviewControlDraftMutation,
+  useUpdateControlMutation
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/Header";
-import Tooltip from "../../shared/components/Tooltip";
-import {
-  notifyGraphQLErrors,
-  notifySuccess,
-  notifyInfo
-} from "../../shared/utils/notif";
-import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
-import useEditState from "../../shared/hooks/useEditState";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Table from "../../shared/components/Table";
-import { IoMdOpen } from "react-icons/io";
+import Tooltip from "../../shared/components/Tooltip";
+import useEditState from "../../shared/hooks/useEditState";
+import {
+  notifyGraphQLErrors,
+  notifyInfo,
+  notifySuccess
+} from "../../shared/utils/notif";
+import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 
 const Control = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -376,7 +375,6 @@ const Control = ({ match, history }: RouteComponentProps) => {
           nature: (nature as Nature) || Nature.Corrective,
           typeOfControl:
             (typeOfControl as TypeOfControl) || TypeOfControl.Automatic,
-          status: (status as Status) || Status.Draft,
           riskIds,
           businessProcessIds,
           keyControl,
