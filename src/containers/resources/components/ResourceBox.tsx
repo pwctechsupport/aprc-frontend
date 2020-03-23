@@ -1,37 +1,64 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaDownload } from "react-icons/fa";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
-import { toast } from "react-toastify";
 import styled from "styled-components";
-import { oc } from "ts-optchain";
-import { useCreateResourceRatingMutation } from "../../../generated/graphql";
+import {
+  useCreateResourceRatingMutation,
+  useDestroyResourceAttachmentMutation
+} from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import StarRating from "../../../shared/components/StarRating";
 import Tooltip from "../../../shared/components/Tooltip";
-// import { useSelector } from "../../../shared/hooks/useSelector";
+import {
+  notifyGraphQLErrors,
+  notifySuccess
+} from "../../../shared/utils/notif";
 
-const ResourceBox = ({
+interface ResourceBoxProps {
+  id: string;
+  name: string;
+  views: number;
+  rating: number;
+  resuploadUrl: string | null | undefined;
+  totalRating: number;
+}
+
+export default function ResourceBox({
   id,
   name,
   views,
   rating,
   totalRating,
-  resuploadUrl,
-  handleErase
-}: ResourceBoxProps) => {
-  // const user = useSelector(state => state.auth.user);
-  const [mutate] = useCreateResourceRatingMutation({
-    onCompleted: res => {
-      const ratingGiven = oc(res).createResourceRating.resourceRating.rating(0);
-      toast.success(`You gave ${ratingGiven} star rating`);
-    },
-    onError: () => toast.error("Update Rating Failed"),
-    awaitRefetchQueries: true,
-    refetchQueries: ["resource", "resources"]
+  resuploadUrl
+}: ResourceBoxProps) {
+  const [previewAvailable, setPreivewAvailable] = useState(true);
+  // Hanlde delete attachment
+  const [
+    deleteAttachmentMutation,
+    deleteAttachmentMutationInfo
+  ] = useDestroyResourceAttachmentMutation({
+    onCompleted: () => notifySuccess("Attachment Removed"),
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["resource"],
+    awaitRefetchQueries: true
   });
-  const handleStarClick = (nextValue: number) => {
-    mutate({
+  function handleErase() {
+    deleteAttachmentMutation({ variables: { id } });
+  }
+
+  // Handle give rating
+  const [createResourceRatingMutation] = useCreateResourceRatingMutation({
+    onCompleted: ({ createResourceRating }) => {
+      const rating = createResourceRating?.resourceRating?.rating || 0;
+      notifySuccess(`You gave ${rating} star rating`);
+    },
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["resource", "resources"],
+    awaitRefetchQueries: true
+  });
+  function handleStarClick(nextValue: number) {
+    createResourceRatingMutation({
       variables: {
         input: {
           resourceId: id,
@@ -39,20 +66,19 @@ const ResourceBox = ({
         }
       }
     });
-  };
+  }
+
+  // Handle download attachment
   const handleDownload = (url: string, fileName: string) => {
-    try {
-      const link = document.createElement("a");
-      link.target = "_blank";
-      link.href = url;
-      link.setAttribute("download", fileName || "PwC-Generated");
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode && link.parentNode.removeChild(link);
-    } catch (error) {
-      console.log(error);
-    }
+    const link = document.createElement("a");
+    link.target = "_blank";
+    link.href = url;
+    link.setAttribute("download", fileName || "PwC-Generated");
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode && link.parentNode.removeChild(link);
   };
+
   return (
     <ResourceBoxContainer>
       <ResourceBoxImagePreview
@@ -60,6 +86,7 @@ const ResourceBox = ({
         onClick={() =>
           handleDownload(`http://mandalorian.rubyh.co${resuploadUrl}`, name)
         }
+        onError={() => setPreivewAvailable(false)}
       />
       <ResourceBoxMeta>
         <div>{name}</div>
@@ -79,6 +106,8 @@ const ResourceBox = ({
               color="soft red"
               message={`Delete attached file in "${name}"?`}
               className="soft red"
+              loading={deleteAttachmentMutationInfo.loading}
+              disabled={!previewAvailable}
             >
               <IoMdRemoveCircleOutline />
             </DialogButton>
@@ -88,8 +117,9 @@ const ResourceBox = ({
               href={`http://mandalorian.rubyh.co${resuploadUrl}`}
               target="_blank"
               rel="noopener noreferrer"
-              download={`Pwc-Resource ${name}`}
+              download={name}
               className="soft red"
+              disabled={!previewAvailable}
             >
               <FaDownload size={18} />
             </Button>
@@ -98,7 +128,7 @@ const ResourceBox = ({
       </ResourceBoxMeta>
     </ResourceBoxContainer>
   );
-};
+}
 
 const ResourceBoxContainer = styled.div`
   width: 300px;
@@ -115,11 +145,8 @@ const ResourceBoxMeta = styled.div`
   left: 0;
   width: 100%;
   height: 25%;
-  border: grey solid;
-  border-width: 0;
-  border-top-width: 1px;
   padding: 5px;
-  background: white;
+  background: rgba(0, 0, 0, 0.1);
 `;
 
 const ResourceBoxImagePreview = styled.img`
@@ -137,24 +164,3 @@ const ResourceBoxMetaWrapper = styled.div`
 const RevenueBoxViews = styled.div`
   font-size: 12px;
 `;
-
-export default ResourceBox;
-
-interface ResourceBoxProps {
-  id: string;
-  name: string;
-  views: number;
-  rating: number;
-  resuploadUrl: string | null | undefined;
-  totalRating: number;
-  handleErase: () => void;
-}
-// interface onEraseValues {
-//   id: string;
-//   name: string;
-//   views: number;
-//   rating: number;
-//   resuploadUrl: string | null | undefined;
-//   totalRating: number;
-//   onErase: () => void;
-// }

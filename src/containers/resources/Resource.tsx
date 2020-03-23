@@ -5,35 +5,35 @@ import {
   AiOutlineClockCircle,
   AiOutlineEdit
 } from "react-icons/ai";
-import { FaTimes, FaTrash, FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { oc } from "ts-optchain";
 import {
   UpdateResourceInput,
-  useDestroyResourceMutation,
-  useCreateRequestEditMutation,
   useApproveRequestEditMutation,
+  useCreateRequestEditMutation,
+  useDestroyResourceMutation,
   useResourceQuery,
-  useUpdateResourceMutation,
-  useReviewResourceDraftMutation
+  useReviewResourceDraftMutation,
+  useUpdateResourceMutation
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import Tooltip from "../../shared/components/Tooltip";
+import { toLabelValue } from "../../shared/formatter";
+import useEditState from "../../shared/hooks/useEditState";
 import {
   notifyGraphQLErrors,
-  notifySuccess,
-  notifyInfo
+  notifyInfo,
+  notifySuccess
 } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
-import { toLabelValue } from "../../shared/formatter";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import useEditState from "../../shared/hooks/useEditState";
-import Tooltip from "../../shared/components/Tooltip";
 
 const Resource = ({ match, history }: RouteComponentProps) => {
   // Delete handlers
@@ -161,19 +161,6 @@ const Resource = ({ match, history }: RouteComponentProps) => {
     resuploadUrl: data?.resource?.resuploadUrl || ""
   };
 
-  async function handleErase() {
-    const input = {
-      id: id,
-      resuploadBase64: ""
-    };
-    try {
-      await updateResource({ variables: { input } });
-      notifySuccess("File Removed");
-    } catch (error) {
-      notifyGraphQLErrors(error);
-    }
-  }
-
   if (loading) {
     return <LoadingSpinner centered size={30} />;
   }
@@ -202,7 +189,6 @@ const Resource = ({ match, history }: RouteComponentProps) => {
           totalRating={oc(data).resource.totalRating(0)}
           views={oc(data).resource.visit(0)}
           resuploadUrl={oc(data).resource.resuploadUrl("")}
-          handleErase={handleErase}
         />
         <div className="ml-3">
           <h5>
