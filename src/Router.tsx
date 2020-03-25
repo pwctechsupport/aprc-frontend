@@ -21,6 +21,7 @@ import AuthRoute from "./shared/components/AuthRoute";
 import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import PolicyCategoryRoute from "./containers/policyCategory/PolicyCategoryRoute";
+import SearchPolicy from "./containers/policy/SearchPolicy";
 
 export default function() {
   return (
@@ -53,6 +54,7 @@ export default function() {
             <AuthRoute path="/user" component={UserRoute} />
             <AuthRoute path="/bookmark" component={Bookmark} />
             <AuthRoute path="/notifications" component={Notification} />
+            <AuthRoute path="/search_policy" component={SearchPolicy} />
             <AuthRoute path="/settings" component={SettingsRoute} />
             <AuthRoute path="/references" component={ReferenceRoute} />
             <AuthRoute component={ComingSoonPage} />

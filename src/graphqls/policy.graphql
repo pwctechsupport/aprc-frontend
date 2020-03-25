@@ -22,6 +22,30 @@ query policies($filter: BaseScalar = {}, $withDetail: Boolean = false) {
     }
   }
 }
+query searchPolicies($filter: BaseScalar = {}, $limit: Int, $page: Int) {
+  policies(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      id
+      title
+      status
+      policyCategoryId
+      parentId
+      policyCategory {
+        id
+        name
+      }
+      ancestry
+      description
+      ...policyFragment
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
+  }
+}
 
 query policyTree(
   $filter: BaseScalar = {}
