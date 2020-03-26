@@ -86,7 +86,7 @@ export default function UserForm(props: UserFormProps) {
         error={oc(errors).phone.message("")}
       />
       <AsyncSelect
-        label="Roles"
+        label="User Group"
         isMulti
         cacheOptions
         defaultOptions
