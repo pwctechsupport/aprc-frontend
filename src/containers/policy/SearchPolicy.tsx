@@ -16,6 +16,7 @@ import {
 import Tooltip from "../../shared/components/Tooltip";
 import { previewHtml } from "../../shared/formatter";
 import useListState from "../../shared/hooks/useList";
+import { Link } from "react-router-dom";
 
 const SearchPolicy = ({ history }: RouteComponentProps) => {
   const [title, setTitle] = useState("");
@@ -130,41 +131,58 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
           <BreadCrumb crumbs={[["/policy", "Search Policies"]]} />
           {policies.length ? (
             policies.map(policy => (
-              <ResourceBarContainer
-                onClick={() => {
-                  history.push(`policy/${policy.id}`);
-                }}
-              >
+              <ResourceBarContainer key={policy.id}>
                 <Col md={3} style={{ borderRight: "5px solid #d85604" }}>
                   <StyledUl>
                     <StyledLi>
                       <Names>Risks:</Names>
-                      {previewHtml(
-                        policy.risks?.map(a => a.name).toString() || "",
-                        45
-                      )}
+                      <ul>
+                        {policy.risks?.map(risk => (
+                          <StyledTd key={risk.id}>
+                            <Link to={`/policy/${policy.id}/details/#risk`}>
+                              {risk.name}
+                            </Link>
+                          </StyledTd>
+                        ))}
+                      </ul>
                     </StyledLi>
                     <StyledLi>
                       <Names>Controls:</Names>
-                      {previewHtml(
-                        policy.controls?.map(a => a.description).toString() ||
-                          "",
-                        45
-                      )}
+                      <ul>
+                        {policy.controls?.map(control => (
+                          <StyledTd key={control.id}>
+                            <Link to={`/policy/${policy.id}/details/#control`}>
+                              {control.description}
+                            </Link>
+                          </StyledTd>
+                        ))}
+                      </ul>
                     </StyledLi>
                     <StyledLi>
                       <Names>Resources:</Names>
-                      {previewHtml(
-                        policy.resources?.map(a => a.name).toString() || "",
-                        45
-                      )}
+                      <ul>
+                        {policy.resources?.map(resource => (
+                          <StyledTd key={resource.id}>
+                            <Link to={`/policy/${policy.id}/resources`}>
+                              {resource.name}
+                            </Link>
+                          </StyledTd>
+                        ))}
+                      </ul>
                     </StyledLi>
                     <StyledLi>
                       <Names>References:</Names>
-                      {previewHtml(
-                        policy.references?.map(a => a.name).toString() || "",
-                        45
-                      )}
+                      <ul>
+                        {policy.references?.map(reference => (
+                          <StyledTd key={reference.id}>
+                            <Link
+                              to={`/policy/${policy.id}/details/#reference`}
+                            >
+                              {reference.name}
+                            </Link>
+                          </StyledTd>
+                        ))}
+                      </ul>
                     </StyledLi>
                   </StyledUl>
                 </Col>
@@ -175,11 +193,23 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
                 >
                   <StyledUl>
                     <StyledLi>
-                      <h4>
-                        <strong>{previewHtml(policy.title || "", 45)}</strong>
-                      </h4>
+                      <StyledTitle>
+                        <strong
+                          onClick={() => {
+                            history.push(`policy/${policy.id}`);
+                          }}
+                        >
+                          {previewHtml(policy.title || "", 45)}
+                        </strong>
+                      </StyledTitle>
                     </StyledLi>
-                    <StyledLi>{previewHtml(policy.description || "")}</StyledLi>
+                    <StyledLi
+                      onClick={() => {
+                        history.push(`policy/${policy.id}`);
+                      }}
+                    >
+                      {previewHtml(policy.description || "")}
+                    </StyledLi>
                   </StyledUl>
                 </Col>
               </ResourceBarContainer>
@@ -209,7 +239,7 @@ export default SearchPolicy;
 
 const Names = styled.div`
   font-weight: bold;
-  font-size: 18px;
+  font-size: 15px;
   line-height: 20px;
   color: #d85604;
 `;
@@ -240,4 +270,17 @@ const ResourceBarContainer = styled.div`
 
 const StyledUl = styled.ul`
   list-style-type: none;
+`;
+
+const StyledTitle = styled.h4`
+  & :hover {
+    color: #d85604;
+  }
+`;
+
+const StyledTd = styled.li`
+  &:hover {
+    color: #d85604;
+  }
+  font-size: 13px;
 `;

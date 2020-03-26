@@ -112,7 +112,7 @@ export default function NewNavbar() {
               <HomepageSearch />
             </SearchBar>
             <div className="ml-4 mr-4">
-              <Link to="/search_policy" className="text-dark">
+              <Link to="/search-policy" className="text-dark">
                 <FaSearch className="clickable" size={22} />
               </Link>
             </div>
