@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUndo, FaSpinner } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
-import { Col, Container, Row } from "reactstrap";
+import { Col, Container, Row, Label } from "reactstrap";
 import styled from "styled-components";
 import { useDebounce } from "use-debounce/lib";
 import { useSearchPoliciesQuery } from "../../generated/graphql";
@@ -18,8 +18,10 @@ import { previewHtml } from "../../shared/formatter";
 import useListState from "../../shared/hooks/useList";
 import { Link } from "react-router-dom";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import Input from "../../shared/components/forms/Input";
 
 const SearchPolicy = ({ history }: RouteComponentProps) => {
+  // Search Bar
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [reference, setReference] = useState("");
@@ -34,6 +36,19 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
   const [controlQuery] = useDebounce(control, 700);
   const [riskQuery] = useDebounce(risk, 700);
 
+  // Radio Buttons
+  const date = new Date();
+
+  const [today, setToday] = useState(false);
+  const [todayQuery] = useDebounce(
+    today
+      ? `${date.getFullYear()}-${
+          date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth()
+        }-${date.getDate()}`
+      : "",
+    700
+  );
+
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const { data, loading, networkStatus, refetch } = useSearchPoliciesQuery({
     notifyOnNetworkStatusChange: true,
@@ -44,7 +59,8 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
         resources_name_cont: resourceQuery,
         references_name_cont: referenceQuery,
         controls_name_cont: controlQuery,
-        risks_name_cont: riskQuery
+        risks_name_cont: riskQuery,
+        updated_at_cont: todayQuery
       },
       limit,
       page
@@ -60,6 +76,8 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
     setRisk("");
     setControl("");
   };
+
+  // console.log("cek:", new Date().getTime());
   return (
     <Container fluid className="p-0">
       <Row noGutters>
@@ -111,6 +129,19 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
               loading={control !== "" ? loading : false}
               placeholder="Search Policy Control..."
             />
+            <Label
+              check
+              style={{ color: "black", left: "50%", position: "relative" }}
+            >
+              <Input
+                type="radio"
+                name="controlActivity_type"
+                value="text"
+                onChange={() => setToday(!today)}
+                defaultChecked={false}
+              />
+              Today
+            </Label>
             <Button
               style={{ position: "absolute", right: "5%" }}
               onClick={() => {
@@ -134,6 +165,8 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
             policies.map(policy => (
               <ResourceBarContainer key={policy.id}>
                 <Col md={3} style={{ borderRight: "1px solid #d85604" }}>
+                  {console.log("policy.updatedAt", new Date(policy.updatedAt))}
+
                   {policy.risks?.length === 0 &&
                   policy.controls?.length === 0 &&
                   policy.resources?.length === 0 &&
@@ -205,6 +238,7 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
                   )}
                 </Col>
                 <Col
+                  md={9}
                   style={{
                     marginLeft: "15px"
                   }}
