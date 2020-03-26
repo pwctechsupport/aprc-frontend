@@ -54,7 +54,7 @@ export default function() {
             <AuthRoute path="/user" component={UserRoute} />
             <AuthRoute path="/bookmark" component={Bookmark} />
             <AuthRoute path="/notifications" component={Notification} />
-            <AuthRoute path="/search_policy" component={SearchPolicy} />
+            <AuthRoute path="/search-policy" component={SearchPolicy} />
             <AuthRoute path="/settings" component={SettingsRoute} />
             <AuthRoute path="/references" component={ReferenceRoute} />
             <AuthRoute component={ComingSoonPage} />
