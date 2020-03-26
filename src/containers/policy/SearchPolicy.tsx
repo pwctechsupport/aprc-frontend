@@ -17,6 +17,7 @@ import Tooltip from "../../shared/components/Tooltip";
 import { previewHtml } from "../../shared/formatter";
 import useListState from "../../shared/hooks/useList";
 import { Link } from "react-router-dom";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
 
 const SearchPolicy = ({ history }: RouteComponentProps) => {
   const [title, setTitle] = useState("");
@@ -26,7 +27,7 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
   const [risk, setRisk] = useState("");
   const [control, setControl] = useState("");
 
-  const [searchQuery] = useDebounce(title, 700);
+  const [titleQuery] = useDebounce(title, 700);
   const [detailsQuery] = useDebounce(details, 700);
   const [resourceQuery] = useDebounce(resource, 700);
   const [referenceQuery] = useDebounce(reference, 700);
@@ -34,10 +35,11 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
   const [riskQuery] = useDebounce(risk, 700);
 
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
-  const { data, loading } = useSearchPoliciesQuery({
+  const { data, loading, networkStatus, refetch } = useSearchPoliciesQuery({
+    notifyOnNetworkStatusChange: true,
     variables: {
       filter: {
-        title_cont: searchQuery,
+        title_cont: titleQuery,
         description_cont: detailsQuery,
         resources_name_cont: resourceQuery,
         references_name_cont: referenceQuery,
@@ -48,7 +50,6 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
       page
     }
   });
-
   const policies = data?.policies?.collection || [];
   const totalCount = data?.policies?.metadata.totalCount || 0;
   const handleReset = () => {
@@ -113,12 +114,7 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
             <Button
               style={{ position: "absolute", right: "5%" }}
               onClick={() => {
-                setTitle(title);
-                setDetails(details);
-                setReference(reference);
-                setResource(resource);
-                setRisk(risk);
-                setControl(control);
+                refetch();
               }}
               className="soft red"
               color=""
@@ -129,92 +125,115 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
         </Col>
         <Col md={9} className="p-4">
           <BreadCrumb crumbs={[["/policy", "Search Policies"]]} />
+          <Pagination
+            totalCount={totalCount}
+            perPage={limit}
+            onPageChange={handlePageChange}
+          />
           {policies.length ? (
             policies.map(policy => (
               <ResourceBarContainer key={policy.id}>
-                <Col md={3} style={{ borderRight: "5px solid #d85604" }}>
-                  <StyledUl>
-                    <StyledLi>
-                      <Names>Risks:</Names>
-                      <ul>
-                        {policy.risks?.map(risk => (
-                          <StyledTd key={risk.id}>
-                            <Link to={`/policy/${policy.id}/details/#risk`}>
-                              {risk.name}
-                            </Link>
-                          </StyledTd>
-                        ))}
-                      </ul>
-                    </StyledLi>
-                    <StyledLi>
-                      <Names>Controls:</Names>
-                      <ul>
-                        {policy.controls?.map(control => (
-                          <StyledTd key={control.id}>
-                            <Link to={`/policy/${policy.id}/details/#control`}>
-                              {control.description}
-                            </Link>
-                          </StyledTd>
-                        ))}
-                      </ul>
-                    </StyledLi>
-                    <StyledLi>
-                      <Names>Resources:</Names>
-                      <ul>
-                        {policy.resources?.map(resource => (
-                          <StyledTd key={resource.id}>
-                            <Link to={`/policy/${policy.id}/resources`}>
-                              {resource.name}
-                            </Link>
-                          </StyledTd>
-                        ))}
-                      </ul>
-                    </StyledLi>
-                    <StyledLi>
-                      <Names>References:</Names>
-                      <ul>
-                        {policy.references?.map(reference => (
-                          <StyledTd key={reference.id}>
-                            <Link
-                              to={`/policy/${policy.id}/details/#reference`}
-                            >
-                              {reference.name}
-                            </Link>
-                          </StyledTd>
-                        ))}
-                      </ul>
-                    </StyledLi>
-                  </StyledUl>
+                <Col md={3} style={{ borderRight: "1px solid #d85604" }}>
+                  {policy.risks?.length === 0 &&
+                  policy.controls?.length === 0 &&
+                  policy.resources?.length === 0 &&
+                  policy.references?.length === 0 ? (
+                    <EmptyAttribute>No Attribute</EmptyAttribute>
+                  ) : (
+                    <StyledUl>
+                      {policy.risks?.length ? (
+                        <StyledLi>
+                          <Names> Risks</Names>
+                          <ul>
+                            {policy.risks?.map(risk => (
+                              <StyledTd key={risk.id}>
+                                <Link to={`/policy/${policy.id}/details/#risk`}>
+                                  {risk.name}
+                                </Link>
+                              </StyledTd>
+                            ))}
+                          </ul>
+                        </StyledLi>
+                      ) : null}
+                      {policy.controls?.length ? (
+                        <StyledLi>
+                          <Names>Controls:</Names>
+                          <ul>
+                            {policy.controls?.map(control => (
+                              <StyledTd key={control.id}>
+                                <Link
+                                  to={`/policy/${policy.id}/details/#control`}
+                                >
+                                  {control.description}
+                                </Link>
+                              </StyledTd>
+                            ))}
+                          </ul>
+                        </StyledLi>
+                      ) : null}
+                      {policy.resources?.length ? (
+                        <StyledLi>
+                          <Names>Resources:</Names>
+                          <ul>
+                            {policy.resources?.map(resource => (
+                              <StyledTd key={resource.id}>
+                                <Link to={`/policy/${policy.id}/resources`}>
+                                  {resource.name}
+                                </Link>
+                              </StyledTd>
+                            ))}
+                          </ul>
+                        </StyledLi>
+                      ) : null}
+                      {policy.references?.length ? (
+                        <StyledLi>
+                          <Names>References:</Names>
+                          <ul>
+                            {policy.references?.map(reference => (
+                              <StyledTd key={reference.id}>
+                                <Link
+                                  to={`/policy/${policy.id}/details/#reference`}
+                                >
+                                  {reference.name}
+                                </Link>
+                              </StyledTd>
+                            ))}
+                          </ul>
+                        </StyledLi>
+                      ) : null}
+                    </StyledUl>
+                  )}
                 </Col>
                 <Col
                   style={{
                     marginLeft: "15px"
                   }}
                 >
-                  <StyledUl>
-                    <StyledLi>
+                  <div>
+                    <div>
                       <StyledTitle>
                         <strong
                           onClick={() => {
                             history.push(`policy/${policy.id}`);
                           }}
                         >
-                          {previewHtml(policy.title || "", 45)}
+                          {policy.title}
                         </strong>
                       </StyledTitle>
-                    </StyledLi>
-                    <StyledLi
+                    </div>
+                    <div
+                      className="text-secondary"
                       onClick={() => {
                         history.push(`policy/${policy.id}`);
                       }}
                     >
                       {previewHtml(policy.description || "")}
-                    </StyledLi>
-                  </StyledUl>
+                    </div>
+                  </div>
                 </Col>
               </ResourceBarContainer>
             ))
-          ) : loading ? (
+          ) : loading || networkStatus === 2 ? (
             <div
               className={"text-center"}
               style={{ display: "block", position: "relative", top: "150%" }}
@@ -224,11 +243,6 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
           ) : (
             <div className="text-center p-2 text-orange">Policy not found</div>
           )}
-          <Pagination
-            totalCount={totalCount}
-            perPage={limit}
-            onPageChange={handlePageChange}
-          />
         </Col>
       </Row>
     </Container>
@@ -263,9 +277,11 @@ const ResourceBarContainer = styled.div`
   padding: 10px 15px;
   margin-bottom: 10px;
   margin-top: 20px;
-  & :last-child {
+  &:last-child {
     margin-bottom: 0px;
   }
+  border-radius: 5px;
+  overflow: hidden;
 `;
 
 const StyledUl = styled.ul`
