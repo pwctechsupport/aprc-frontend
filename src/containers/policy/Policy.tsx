@@ -1,6 +1,12 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useLayoutEffect
+} from "react";
 import Helmet from "react-helmet";
 import {
   AiFillEdit,
@@ -104,6 +110,43 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     if (inEditMode) setInEditMode(false);
     // eslint-disable-next-line
   }, [location.pathname]);
+
+  const scrollToRisk = useCallback(
+    () =>
+      window.scrollTo({
+        top: riskRef.current ? riskRef.current.offsetTop : 0,
+        behavior: "smooth"
+      }),
+    []
+  );
+  const scrollToSubPolicy = useCallback(
+    () =>
+      window.scrollTo({
+        top: subPolicyRef.current ? subPolicyRef.current.offsetTop : 0,
+        behavior: "smooth"
+      }),
+    []
+  );
+  const scrollToControl = useCallback(
+    () =>
+      window.scrollTo({
+        top: controlRef.current ? controlRef.current.offsetTop : 0,
+        behavior: "smooth"
+      }),
+    []
+  );
+
+  useLayoutEffect(() => {
+    if (location.hash.includes("risks")) {
+      scrollToRisk();
+    }
+    if (location.hash.includes("controls")) {
+      scrollToControl();
+    }
+    if (location.hash.includes("sub-policies")) {
+      scrollToSubPolicy();
+    }
+  });
 
   // Delete current policy
   const [destroyMain] = useDestroyPolicyMutation({
@@ -249,31 +292,6 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     a.title
   ]) as CrumbItem[];
 
-  const scrollToRisk = useCallback(
-    () =>
-      window.scrollTo({
-        top: riskRef.current ? riskRef.current.offsetTop : 0,
-        behavior: "smooth"
-      }),
-    []
-  );
-  const scrollToSubPolicy = useCallback(
-    () =>
-      window.scrollTo({
-        top: subPolicyRef.current ? subPolicyRef.current.offsetTop : 0,
-        behavior: "smooth"
-      }),
-    []
-  );
-  const scrollToControl = useCallback(
-    () =>
-      window.scrollTo({
-        top: controlRef.current ? controlRef.current.offsetTop : 0,
-        behavior: "smooth"
-      }),
-    []
-  );
-
   if (loading) return <LoadingSpinner centered size={30} />;
 
   const policyChartData = formatPolicyChart({
@@ -283,10 +301,10 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   }).map(item => ({
     ...item,
     onClick: item.label.includes("Risk")
-      ? scrollToRisk
+      ? () => history.push(`${location.pathname}/details/#risks`)
       : item.label.includes("Control")
-      ? scrollToControl
-      : scrollToSubPolicy
+      ? () => history.push(`${location.pathname}/details/#controls`)
+      : () => history.push(`${location.pathname}/details/#sub-policies`)
   }));
 
   const renderPolicy = () => {
