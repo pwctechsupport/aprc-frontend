@@ -21,7 +21,7 @@ import AuthRoute from "./shared/components/AuthRoute";
 import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import PolicyCategoryRoute from "./containers/policyCategory/PolicyCategoryRoute";
-import SearchPolicy from "./containers/policy/SearchPolicy";
+import SearchPolicy from "./containers/policy/PolicySearch";
 
 export default function() {
   return (
