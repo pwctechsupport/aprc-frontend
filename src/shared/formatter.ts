@@ -37,7 +37,7 @@ export const toLabelValue = ({
   code,
   name,
   title
-}: ToLabelValueInput): ToLabelValueOutput => {
+}: ToLabelValueInput): Suggestion => {
   return {
     label: code || name || title || "",
     value: id || code || ""
@@ -113,4 +113,43 @@ export function previewHtml(html: string, length: number = 300): string {
   return (
     text?.substring(0, length).concat(text.length > length ? "..." : "") || ""
   );
+}
+
+export function takeValue(input: Suggestion): string {
+  return input.value;
+}
+
+export function removeEmpty<T>(obj: T): Partial<T> {
+  return Object.fromEntries(
+    Object.entries(obj)
+      .filter(([k, v]) => v != null)
+      .map(([k, v]) =>
+        typeof v === "object" && !Array.isArray(v)
+          ? [k, removeEmpty(v)]
+          : [k, v]
+      )
+  );
+}
+
+export function setParams(obj: any) {
+  const searchParams = new URLSearchParams();
+  Object.keys(obj).forEach(key => {
+    if (obj[key]) {
+      if (obj[key].hasOwnProperty("value")) {
+        searchParams.set(key, obj[key]["value"]);
+      } else {
+        searchParams.set(key, obj[key]);
+      }
+    }
+  });
+  return searchParams.toString();
+}
+
+export function getParams(location: Location) {
+  const searchParams = new URLSearchParams(location.search);
+  let x = {};
+  searchParams.forEach((value, key) => {
+    x = Object.assign({}, x, { [key]: value });
+  });
+  return x;
 }
