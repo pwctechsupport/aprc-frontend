@@ -28,27 +28,93 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
   const [resource, setResource] = useState("");
   const [risk, setRisk] = useState("");
   const [control, setControl] = useState("");
-
+  const [date, setDate] = useState("");
   const [titleQuery] = useDebounce(title, 700);
   const [detailsQuery] = useDebounce(details, 700);
   const [resourceQuery] = useDebounce(resource, 700);
   const [referenceQuery] = useDebounce(reference, 700);
   const [controlQuery] = useDebounce(control, 700);
   const [riskQuery] = useDebounce(risk, 700);
+  const [dateQuery] = useDebounce(date, 700);
 
-  // Radio Buttons
-  const date = new Date();
-
+  // Date Radio Button
+  const [allTime, setAllTime] = useState(true);
   const [today, setToday] = useState(false);
-  const [todayQuery] = useDebounce(
-    today
-      ? `${date.getFullYear()}-${
-          date.getMonth() < 10 ? "0" + (date.getMonth() + 1) : date.getMonth()
-        }-${date.getDate()}`
-      : "",
-    700
-  );
+  const [sevenDays, setSevendays] = useState(false);
+  const [month, setMonth] = useState(false);
+  const [threeMonths, setThreeMonths] = useState(false);
+  const [year, setYear] = useState(false);
 
+  const handleClick = () => {
+    const presentDate = new Date().getTime();
+    if (allTime) {
+      setAllTime(false);
+      setSevendays(false);
+      setMonth(false);
+      setThreeMonths(false);
+      setYear(false);
+      return setDate("");
+    }
+    if (today) {
+      const date = new Date(presentDate - 86400000);
+      setAllTime(false);
+      setSevendays(false);
+      setMonth(false);
+      setThreeMonths(false);
+      setYear(false);
+      return setDate(
+        `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+      );
+    }
+    if (sevenDays) {
+      const date = new Date(presentDate - 604800000);
+      setAllTime(false);
+      setToday(false);
+      setMonth(false);
+      setThreeMonths(false);
+      setYear(false);
+      return setDate(
+        `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+      );
+    }
+    if (month) {
+      const date = new Date(presentDate - 2592000000);
+      setAllTime(false);
+      setToday(false);
+      setSevendays(false);
+      setThreeMonths(false);
+      setYear(false);
+      return setDate(
+        `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+      );
+    }
+    if (threeMonths) {
+      const date = new Date(presentDate - 7776000000);
+      setAllTime(false);
+      setToday(false);
+      setSevendays(false);
+      setMonth(false);
+      setYear(false);
+      return setDate(
+        `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+      );
+    }
+    if (year) {
+      const date = new Date(presentDate - 31536000000);
+      setAllTime(false);
+      setToday(false);
+      setSevendays(false);
+      setMonth(false);
+      setThreeMonths(false);
+      return setDate(
+        `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
+      );
+    }
+  };
+  // console.log(
+  //   "testing date",
+  //   new Date(new Date().getTime() - 86400000).getDate()
+  // );
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const { data, loading, networkStatus, refetch } = useSearchPoliciesQuery({
     notifyOnNetworkStatusChange: true,
@@ -58,9 +124,9 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
         description_cont: detailsQuery,
         resources_name_cont: resourceQuery,
         references_name_cont: referenceQuery,
-        controls_name_cont: controlQuery,
+        controls_description_cont: controlQuery,
         risks_name_cont: riskQuery,
-        updated_at_cont: todayQuery
+        updated_at_gteq: dateQuery
       },
       limit,
       page
@@ -68,6 +134,36 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
   });
   const policies = data?.policies?.collection || [];
   const totalCount = data?.policies?.metadata.totalCount || 0;
+
+  // const handleClick = () => {
+  //   if (today) {
+  //     policies.filter(
+  //       a => new Date().getTime() - 86400000 < new Date(a.updatedAt).getTime()
+  //     );
+  //   }
+  //   if (sevenDays) {
+  //     policies.filter(
+  //       a => new Date().getTime() - 604800000 < new Date(a.updatedAt).getTime()
+  //     );
+  //   }
+  //   if (month) {
+  //     policies.filter(
+  //       a => new Date().getTime() - 2592000000 < new Date(a.updatedAt).getTime()
+  //     );
+  //   }
+  //   if (threeMonths) {
+  //     policies.filter(
+  //       a => new Date().getTime() - 7776000000 < new Date(a.updatedAt).getTime()
+  //     );
+  //   }
+  //   if (year) {
+  //     policies.filter(
+  //       a =>
+  //         new Date().getTime() - 31536000000 < new Date(a.updatedAt).getTime()
+  //     );
+  //   }
+  // };
+
   const handleReset = () => {
     setTitle("");
     setDetails("");
@@ -77,7 +173,6 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
     setControl("");
   };
 
-  // console.log("cek:", new Date().getTime());
   return (
     <Container fluid className="p-0">
       <Row noGutters>
@@ -137,7 +232,7 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
                 type="radio"
                 name="controlActivity_type"
                 value="text"
-                onChange={() => setToday(!today)}
+                onChange={() => handleClick}
                 defaultChecked={false}
               />
               Today
@@ -165,8 +260,6 @@ const SearchPolicy = ({ history }: RouteComponentProps) => {
             policies.map(policy => (
               <ResourceBarContainer key={policy.id}>
                 <Col md={3} style={{ borderRight: "1px solid #d85604" }}>
-                  {console.log("policy.updatedAt", new Date(policy.updatedAt))}
-
                   {policy.risks?.length === 0 &&
                   policy.controls?.length === 0 &&
                   policy.resources?.length === 0 &&
@@ -297,8 +390,6 @@ const StyledLi = styled.li`
   padding-top: 10px;
   position: relative;
   left: -40px;
-  /* background-color: white;
-  border-radius: 5px; */
 `;
 
 const ResourceBarContainer = styled.div`
