@@ -21,7 +21,7 @@ interface ResourceBoxProps {
   name: string;
   views: number;
   rating: number;
-  resuploadUrl: string | null | undefined;
+  imagePreviewUrl: string | undefined;
   totalRating: number;
 }
 
@@ -31,7 +31,7 @@ export default function ResourceBox({
   views,
   rating,
   totalRating,
-  resuploadUrl
+  imagePreviewUrl
 }: ResourceBoxProps) {
   const [previewAvailable, setPreivewAvailable] = useState(true);
   // Hanlde delete attachment
@@ -78,7 +78,7 @@ export default function ResourceBox({
     updateResourceVisit({ variables: { id } });
     const link = document.createElement("a");
     link.target = "_blank";
-    link.href = `http://mandalorian.rubyh.co${resuploadUrl}`;
+    link.href = imagePreviewUrl || "";
     link.setAttribute("download", name || "PwC-Generated");
     document.body.appendChild(link);
     link.click();
@@ -88,9 +88,10 @@ export default function ResourceBox({
   return (
     <ResourceBoxContainer>
       <ResourceBoxImagePreview
-        src={`http://mandalorian.rubyh.co${resuploadUrl}`}
+        src={imagePreviewUrl}
         onError={() => setPreivewAvailable(false)}
         alt={name}
+        onClick={handleDownload}
       />
       <ResourceBoxMeta>
         <div>{name}</div>
@@ -107,23 +108,29 @@ export default function ResourceBox({
           <Tooltip description="Delete resource attachment">
             <DialogButton
               onConfirm={handleErase}
-              color="soft red"
+              color=""
               message={`Delete attached file in "${name}"?`}
-              className="soft red"
+              className=""
               loading={deleteAttachmentMutationInfo.loading}
               disabled={!previewAvailable}
             >
-              <IoMdRemoveCircleOutline />
+              <SmallText>
+                <IoMdRemoveCircleOutline />
+                &nbsp;Remove File
+              </SmallText>
             </DialogButton>
           </Tooltip>
           <Tooltip description="Download resource attachment">
             <Button
-              className="soft red"
+              className=""
               disabled={!previewAvailable}
               onClick={handleDownload}
               color=""
             >
-              <FaDownload size={18} />
+              <SmallText>
+                <FaDownload />
+                &nbsp;Download
+              </SmallText>
             </Button>
           </Tooltip>
         </ResourceBoxMetaWrapper>
@@ -133,8 +140,7 @@ export default function ResourceBox({
 }
 
 const ResourceBoxContainer = styled.div`
-  width: 300px;
-  height: 300px;
+  width: 100%;
   background: white;
   border: grey 2px solid;
   border-radius: 5px;
@@ -142,13 +148,9 @@ const ResourceBoxContainer = styled.div`
 `;
 
 const ResourceBoxMeta = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
   width: 100%;
-  height: 25%;
   padding: 5px;
-  background: rgba(0, 0, 0, 0.1);
+  background: #efefef;
 `;
 
 const ResourceBoxImagePreview = styled.img`
@@ -160,8 +162,15 @@ const ResourceBoxMetaWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @media screen and (max-width: 767px) {
+    display: inline-block;
+  }
 `;
 
 const RevenueBoxViews = styled.div`
   font-size: 12px;
+`;
+
+const SmallText = styled.span`
+  font-size: 0.8rem;
 `;
