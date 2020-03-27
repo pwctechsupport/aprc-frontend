@@ -8,7 +8,7 @@ import {
 import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import { oc } from "ts-optchain";
+import { Col, Row } from "reactstrap";
 import {
   UpdateResourceInput,
   useApproveRequestEditMutation,
@@ -35,7 +35,37 @@ import {
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 
-const Resource = ({ match, history }: RouteComponentProps) => {
+export default function Resource({ match, history }: RouteComponentProps) {
+  const id = match.params && (match.params as any).id;
+  const [inEditMode, setInEditMode] = useState(false);
+  const toggleEditMode = () => setInEditMode(prev => !prev);
+
+  const { data, loading } = useResourceQuery({
+    variables: { id },
+    fetchPolicy: "network-only"
+  });
+  const name = data?.resource?.name || "";
+  const rating = data?.resource?.rating || 0;
+  const totalRating = data?.resource?.totalRating || 0;
+  const visit = data?.resource?.visit || 0;
+  const resuploadUrl = data?.resource?.resuploadUrl;
+  const resuploadLink = data?.resource?.resuploadLink;
+  const policies = data?.resource?.policies || [];
+  const controls = data?.resource?.controls || [];
+  const draft = data?.resource?.draft?.objectResult;
+  const hasEditAccess = data?.resource?.hasEditAccess || false;
+  const requestStatus = data?.resource?.requestStatus;
+  const requestEditState = data?.resource?.requestEdit?.state;
+  const premise = useEditState({
+    draft,
+    hasEditAccess,
+    requestStatus,
+    requestEditState
+  });
+  const imagePreviewUrl = resuploadLink
+    ? resuploadLink
+    : `http://mandalorian.rubyh.co${resuploadUrl}`;
+
   // Delete handlers
   const [deleteMutation, deleteInfo] = useDestroyResourceMutation({
     onCompleted: () => {
@@ -64,8 +94,6 @@ const Resource = ({ match, history }: RouteComponentProps) => {
   }
 
   // Request Edit handlers
-  const id = match.params && (match.params as any).id;
-
   const [
     requestEditMutation,
     requestEditMutationInfo
@@ -85,9 +113,6 @@ const Resource = ({ match, history }: RouteComponentProps) => {
     onError: notifyGraphQLErrors
   });
 
-  const [inEditMode, setInEditMode] = useState(false);
-  const toggleEditMode = () => setInEditMode(prev => !prev);
-
   async function handleApproveRequest(id: string) {
     try {
       await approveEditMutation({ variables: { id, approve: true } });
@@ -104,26 +129,11 @@ const Resource = ({ match, history }: RouteComponentProps) => {
       notifyGraphQLErrors(error);
     }
   }
-  const { data, loading } = useResourceQuery({
-    variables: { id },
-    fetchPolicy: "network-only"
-  });
-  const draft = data?.resource?.draft?.objectResult;
-  const hasEditAccess = data?.resource?.hasEditAccess || false;
-  const requestStatus = data?.resource?.requestStatus;
-  const requestEditState = data?.resource?.requestEdit?.state;
-  const premise = useEditState({
-    draft,
-    hasEditAccess,
-    requestStatus,
-    requestEditState
-  });
+
   const [updateResource, updateResourceM] = useUpdateResourceMutation({
     refetchQueries: ["resources", "resource"],
     awaitRefetchQueries: true
   });
-
-  const name = data?.resource?.name || "";
 
   async function handleSubmit(data: ResourceFormValues) {
     const input: UpdateResourceInput = {
@@ -165,9 +175,6 @@ const Resource = ({ match, history }: RouteComponentProps) => {
     return <LoadingSpinner centered size={30} />;
   }
 
-  const policies = data?.resource?.policies || [];
-  const controls = data?.resource?.controls || [];
-
   const renderResourceInEditMode = () => {
     return (
       <ResourceForm
@@ -181,61 +188,69 @@ const Resource = ({ match, history }: RouteComponentProps) => {
 
   const renderResource = () => {
     return (
-      <div className="d-flex">
-        <ResourceBox
-          id={id}
-          name={name}
-          rating={oc(data).resource.rating(0)}
-          totalRating={oc(data).resource.totalRating(0)}
-          views={oc(data).resource.visit(0)}
-          resuploadUrl={oc(data).resource.resuploadUrl("")}
-        />
-        <div className="ml-3">
-          <h5>
-            Category:&nbsp;
-            <span className="text-orange">{data?.resource?.category}</span>
-          </h5>
+      <div>
+        <Row>
+          <Col xs={12} lg={6}>
+            <ResourceBox
+              id={id}
+              name={name}
+              rating={rating}
+              totalRating={totalRating}
+              views={visit}
+              imagePreviewUrl={imagePreviewUrl}
+            />
+          </Col>
+          <Col xs={12} lg={6}>
+            <div className="mt-5 mt-lg-0">
+              <h5>
+                Category:&nbsp;
+                <span className="text-orange">{data?.resource?.category}</span>
+              </h5>
 
-          {data?.resource?.category === "Flowchart" ? (
-            <>
-              <h5 className="mt-5">Business Process:</h5>
-              {data.resource.businessProcess?.name}
-            </>
-          ) : (
-            <>
-              <div>
-                <h5 className="mt-5">Related Controls:</h5>
-                {controls.length ? (
-                  <ul>
-                    {controls.map(control => (
-                      <li key={control.id}>
-                        <Link to={`/control/${control.id}`}>
-                          {control.description}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <EmptyAttribute centered={false} />
-                )}
-              </div>
-              <div>
-                <h5 className="mt-5">Related Policies:</h5>
-                {policies.length ? (
-                  <ul>
-                    {policies.map(policy => (
-                      <li key={policy.id}>
-                        <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <EmptyAttribute centered={false} />
-                )}
-              </div>
-            </>
-          )}
-        </div>
+              {data?.resource?.category === "Flowchart" ? (
+                <>
+                  <h5 className="mt-5">Business Process:</h5>
+                  {data.resource.businessProcess?.name}
+                </>
+              ) : (
+                <>
+                  <div>
+                    <h5 className="mt-5">Related Controls:</h5>
+                    {controls.length ? (
+                      <ul>
+                        {controls.map(control => (
+                          <li key={control.id}>
+                            <Link to={`/control/${control.id}`}>
+                              {control.description}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <EmptyAttribute centered={false} />
+                    )}
+                  </div>
+                  <div>
+                    <h5 className="mt-5">Related Policies:</h5>
+                    {policies.length ? (
+                      <ul>
+                        {policies.map(policy => (
+                          <li key={policy.id}>
+                            <Link to={`/policy/${policy.id}`}>
+                              {policy.title}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <EmptyAttribute centered={false} />
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </Col>
+        </Row>
       </div>
     );
   };
@@ -356,6 +371,4 @@ const Resource = ({ match, history }: RouteComponentProps) => {
       {inEditMode ? renderResourceInEditMode() : renderResource()}
     </div>
   );
-};
-
-export default Resource;
+}

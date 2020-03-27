@@ -16,7 +16,7 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
         id
         name
       }
-
+      resuploadLink
       resuploadUrl
       resourceFileType
       createdAt
@@ -104,6 +104,7 @@ query resource($id: ID!) {
         }
       }
     }
+    resuploadLink
     resuploadUrl
     resourceFileType
     resourceFileName
