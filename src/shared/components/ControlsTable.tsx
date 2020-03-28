@@ -1,18 +1,19 @@
+import startCase from "lodash/startCase";
 import React from "react";
+import { FaPencilAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import {
+  Assertion,
   Control,
   Frequency,
   Ipo,
   Nature,
-  TypeOfControl,
   Status,
-  Assertion
+  TypeOfControl
 } from "../../generated/graphql";
-import Table from "./Table";
-import startCase from "lodash/startCase";
 import Button from "./Button";
-import { FaPencilAlt } from "react-icons/fa";
 import EmptyAttribute from "./EmptyAttribute";
+import Table from "./Table";
 
 interface ControlsTableProps {
   controls: Control[];
@@ -41,7 +42,9 @@ export default function ControlsTable({
         {controls?.length ? (
           controls?.map(control => (
             <tr key={control.id}>
-              <td>{control.description}</td>
+              <td>
+                <Link to={`/control/${control.id}`}>{control.description}</Link>
+              </td>
               <td>{startCase(control.frequency || "")}</td>
               <td>{startCase(control.typeOfControl || "")}</td>
               <td>{startCase(control.nature || "")}</td>
