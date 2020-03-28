@@ -1,11 +1,10 @@
-import { capitalCase } from "capital-case";
 import get from "lodash/get";
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
-  useState,
-  useLayoutEffect
+  useState
 } from "react";
 import Helmet from "react-helmet";
 import {
@@ -42,16 +41,19 @@ import {
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
+import ControlsTable from "../../shared/components/ControlsTable";
 import DialogButton from "../../shared/components/DialogButton";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import Menu from "../../shared/components/Menu";
+import Menu, { MenuData } from "../../shared/components/Menu";
+import PoliciesTable from "../../shared/components/PoliciesTable";
 import ResourcesTab from "../../shared/components/ResourcesTab";
-import Table from "../../shared/components/Table";
+import RisksList from "../../shared/components/RisksList";
 import Tooltip from "../../shared/components/Tooltip";
-import { date, previewHtml } from "../../shared/formatter";
+import { date } from "../../shared/formatter";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import useDialogBox from "../../shared/hooks/useDialogBox";
+import useWindowSize from "../../shared/hooks/useWindowSize";
 import {
   downloadPdf,
   emailPdf,
@@ -69,6 +71,9 @@ import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 
 const Policy = ({ match, history, location }: RouteComponentProps) => {
+  const dialogBox = useDialogBox();
+  const size = useWindowSize();
+  const isSmallDevice = size.width <= 992;
   const subPolicyRef = useRef<HTMLInputElement>(null);
   const riskRef = useRef<HTMLInputElement>(null);
   const controlRef = useRef<HTMLInputElement>(null);
@@ -86,9 +91,6 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
 
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode(prev => !prev);
-
-  // const [addResourceModal, setAddResourceModal] = useState(false);
-  // const toggleAddResourceModal = () => setAddResourceModal(prev => !prev);
 
   const id = get(match, "params.id", "");
 
@@ -160,7 +162,10 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     awaitRefetchQueries: true
   });
   function handleDeleteMain() {
-    destroyMain({ variables: { id } });
+    dialogBox({
+      text: "Delete this policy?",
+      callback: () => destroyMain({ variables: { id } })
+    });
   }
 
   // Delete child policy
@@ -170,8 +175,11 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     refetchQueries: ["policy"],
     awaitRefetchQueries: true
   });
-  function handleDelete(id: string) {
-    destroy({ variables: { id } });
+  function handleDelete(id: string, title?: string) {
+    dialogBox({
+      text: `Delete policy "${title}"?`,
+      callback: () => destroy({ variables: { id } })
+    });
   }
 
   // Bookmark policy
@@ -193,32 +201,10 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     awaitRefetchQueries: true
   });
   function handleUpdate(values: PolicyFormValues) {
-    update({
-      variables: {
-        input: {
-          id,
-          title: values.title,
-          description: values.description,
-          policyCategoryId: values.policyCategoryId
-        }
-      }
-    });
+    update({ variables: { input: { id, ...values } } });
   }
   function handleUpdateSubPolicy(values: SubPolicyFormValues) {
-    update({
-      variables: {
-        input: {
-          id,
-          title: values.title,
-          description: values.description,
-          resourceIds: values.resourceIds,
-          businessProcessIds: values.businessProcessIds,
-          referenceIds: values.referenceIds,
-          controlIds: values.controlIds,
-          riskIds: values.riskIds
-        }
-      }
-    });
+    update({ variables: { input: { id, ...values } } });
   }
 
   const [
@@ -266,12 +252,11 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     }
   }
 
-  const draft = oc(data).policy.draft.objectResult();
-  const title: string = oc(data).policy.title("");
-
+  const draft = data?.policy?.draft?.objectResult;
+  const title = data?.policy?.title || "";
   const description = draft
     ? get(data, "policy.draft.objectResult.description", "")
-    : oc(data).policy.description("");
+    : data?.policy?.description || "";
   const policyCategoryId = oc(data).policy.policyCategory.id("");
   const parentId = oc(data).policy.parentId("");
   const children = oc(data).policy.children([]);
@@ -381,21 +366,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                   show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
                 >
-                  {risks.length ? (
-                    <div>
-                      <ul>
-                        {risks.map(risk => {
-                          return (
-                            <li key={risk.id}>
-                              <Link to={`/risk/${risk.id}`}>{risk.name}</Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  ) : (
-                    <EmptyAttribute />
-                  )}
+                  <RisksList risks={risks} withRelatedControls={false} />
                 </Collapsible>
               </div>
 
@@ -405,58 +376,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                   show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
-                  <Table responsive>
-                    <thead>
-                      <tr>
-                        <th>Desc</th>
-                        <th>Freq</th>
-                        <th>Type of Control</th>
-                        <th>Nature</th>
-                        <th>IPO</th>
-                        <th>Assertion</th>
-                        <th>Control Owner</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {controls.length ? (
-                        controls.map(control => {
-                          return (
-                            <tr key={control.id}>
-                              <td>
-                                <Link to={`/control/${control.id}`}>
-                                  {control.description}
-                                </Link>
-                              </td>
-                              <td>{capitalCase(control.frequency || "")}</td>
-                              <td>
-                                {capitalCase(control.typeOfControl || "")}
-                              </td>
-                              <td>{capitalCase(control.nature || "")}</td>
-                              <td>
-                                {oc(control)
-                                  .ipo([])
-                                  .map(a => capitalCase(a))
-                                  .join(", ")}
-                              </td>
-                              <td>
-                                {oc(control)
-                                  .assertion([])
-                                  .map(a => capitalCase(a))
-                                  .join(", ")}
-                              </td>
-                              <td>{control.controlOwner}</td>
-                            </tr>
-                          );
-                        })
-                      ) : (
-                        <tr>
-                          <td colSpan={7}>
-                            <EmptyAttribute />
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </Table>
+                  <ControlsTable controls={controls} />
                 </Collapsible>
               </div>
 
@@ -466,59 +386,11 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                   show={collapse.includes("Sub-Policies")}
                   onClick={toggleCollapse}
                 >
-                  {children.length ? (
-                    <Table responsive>
-                      <thead>
-                        <tr>
-                          <th>Title</th>
-                          <th>Description</th>
-                          <th>References</th>
-                          <th />
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {children.map(item => (
-                          <tr key={item.id}>
-                            <td>
-                              <Link
-                                to={
-                                  isAdminView
-                                    ? `/policy-admin/${item.id}/details`
-                                    : `/policy/${item.id}`
-                                }
-                              >
-                                {item.title}
-                              </Link>
-                            </td>
-                            <td>
-                              <div
-                                dangerouslySetInnerHTML={{
-                                  __html: item.description
-                                    ? previewHtml(item.description)
-                                    : ""
-                                }}
-                              />
-                            </td>
-                            <td>
-                              {oc(item)
-                                .references([])
-                                .map(ref => ref.name)
-                                .join(", ")}
-                            </td>
-                            <td>
-                              <DialogButton
-                                onConfirm={() => handleDelete(item.id)}
-                              >
-                                <FaTrash />
-                              </DialogButton>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                  ) : (
-                    <EmptyAttribute />
-                  )}
+                  <PoliciesTable
+                    policies={children}
+                    isAdminView={isAdminView}
+                    onDelete={handleDelete}
+                  />
                 </Collapsible>
               </div>
             </Route>
@@ -586,100 +458,131 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   };
 
   const renderGeneralAction = () => {
+    const mainMenu: MenuData[] = [
+      {
+        label: (
+          <div>
+            <FaPlus /> Create Sub-Policy
+          </div>
+        ),
+        onClick: () =>
+          history.push(
+            isAdminView
+              ? `/policy-admin/${id}/create-sub-policy`
+              : `/policy/${id}/create-sub-policy`
+          )
+      },
+      {
+        label: (
+          <div>
+            <FaTrash /> Delete
+          </div>
+        ),
+        onClick: handleDeleteMain
+      },
+      { label: "divider" }
+    ];
+    const basicMenu: MenuData[] = [
+      {
+        label: (
+          <div>
+            <FaFilePdf /> Preview
+          </div>
+        ),
+        onClick: () =>
+          previewPdf(`prints/${id}.pdf`, {
+            onStart: () =>
+              notifySuccess("Downloading file for preview", {
+                autoClose: 10000
+              })
+          })
+      },
+      {
+        label: (
+          <div>
+            <IoMdDownload /> Download
+          </div>
+        ),
+        onClick: () =>
+          downloadPdf(`prints/${id}.pdf`, {
+            fileName: title,
+            onStart: () => notifyInfo("Download Started"),
+            onError: () => notifyError("Download Failed"),
+            onCompleted: () => notifySuccess("Download Success")
+          })
+      },
+      {
+        label: (
+          <div>
+            <MdEmail /> Mail
+          </div>
+        ),
+        onClick: () => emailPdf(title)
+      },
+      {
+        label: (
+          <div>
+            <FaBookmark /> Bookmark
+          </div>
+        ),
+        onClick: () => addBookmark({ variables: { input: { policyId: id } } })
+      }
+    ];
+    let theMenu = [...basicMenu];
+    if (isSmallDevice) {
+      theMenu = [...mainMenu, ...basicMenu];
+    }
     return (
       <div className="d-flex align-items-center">
-        {!isMaximumLevel && (
-          <Button
-            tag={Link}
-            to={
-              isAdminView
-                ? `/policy-admin/${id}/create-sub-policy`
-                : `/policy/${id}/create-sub-policy`
-            }
-            className="pwc"
-          >
-            <FaPlus /> Sub-Policy
-          </Button>
-        )}
-        <Tooltip
-          description={
-            collapse.length === initialCollapse.length
-              ? "Hide All Attribute"
-              : "Show All Attribute"
-          }
-        >
-          <Button
-            className="ml-3"
-            color="transparent"
-            onClick={() => {
+        <div className="d-none d-lg-flex align-items-center">
+          {!isMaximumLevel && (
+            <Button
+              tag={Link}
+              to={
+                isAdminView
+                  ? `/policy-admin/${id}/create-sub-policy`
+                  : `/policy/${id}/create-sub-policy`
+              }
+              className="pwc"
+            >
+              <FaPlus /> Sub-Policy
+            </Button>
+          )}
+          <Tooltip
+            description={
               collapse.length === initialCollapse.length
-                ? closeAllCollapse()
-                : openAllCollapse();
-            }}
-          >
-            {collapse.length === initialCollapse.length ? (
-              <FaEyeSlash size={20} />
-            ) : (
-              <FaEye size={20} />
-            )}
-          </Button>
-        </Tooltip>
-
-        <Tooltip description="Delete Policy">
-          <DialogButton onConfirm={handleDeleteMain} className="mr-3">
-            <FaTrash className="clickable text-red" />
-          </DialogButton>
-        </Tooltip>
-
-        <Menu
-          data={[
-            {
-              label: (
-                <div>
-                  <FaFilePdf /> Preview
-                </div>
-              ),
-              onClick: () =>
-                previewPdf(`prints/${id}.pdf`, {
-                  onStart: () =>
-                    notifySuccess("Downloading file for preview", {
-                      autoClose: 10000
-                    })
-                })
-            },
-            {
-              label: (
-                <div>
-                  <IoMdDownload /> Download
-                </div>
-              ),
-              onClick: () =>
-                downloadPdf(`prints/${id}.pdf`, {
-                  fileName: title,
-                  onStart: () => notifyInfo("Download Started"),
-                  onError: () => notifyError("Download Failed"),
-                  onCompleted: () => notifySuccess("Download Success")
-                })
-            },
-            {
-              label: (
-                <div>
-                  <MdEmail /> Mail
-                </div>
-              ),
-              onClick: () => emailPdf(title)
-            },
-            {
-              label: (
-                <div>
-                  <FaBookmark /> Bookmark
-                </div>
-              ),
-              onClick: () =>
-                addBookmark({ variables: { input: { policyId: id } } })
+                ? "Hide All Attribute"
+                : "Show All Attribute"
             }
-          ]}
-        >
+          >
+            <Button
+              className="ml-3"
+              color="transparent"
+              onClick={() => {
+                collapse.length === initialCollapse.length
+                  ? closeAllCollapse()
+                  : openAllCollapse();
+              }}
+            >
+              {collapse.length === initialCollapse.length ? (
+                <FaEyeSlash size={20} />
+              ) : (
+                <FaEye size={20} />
+              )}
+            </Button>
+          </Tooltip>
+
+          <Tooltip description="Delete Policy">
+            <Button
+              onClick={handleDeleteMain}
+              className="mr-3"
+              color="transparent"
+            >
+              <FaTrash className="text-red" />
+            </Button>
+          </Tooltip>
+        </div>
+        <Menu data={theMenu}>
           <FaEllipsisV />
         </Menu>
       </div>
@@ -714,22 +617,32 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     if (prem2) {
       actions = (
         <div>
-          <DialogButton
+          <Button
             color="danger"
             className="mr-2"
-            onConfirm={() => review({ publish: false })}
+            onClick={() =>
+              dialogBox({
+                callback: () => review({ publish: false }),
+                title: "Reject changes?"
+              })
+            }
             loading={reviewPolicyM.loading}
           >
             Reject
-          </DialogButton>
-          <DialogButton
+          </Button>
+          <Button
             color="primary"
             className="pwc"
-            onConfirm={() => review({ publish: true })}
+            onClick={() =>
+              dialogBox({
+                callback: () => review({ publish: true }),
+                title: "Accept changes?"
+              })
+            }
             loading={reviewPolicyM.loading}
           >
             Approve
-          </DialogButton>
+          </Button>
         </div>
       );
     }
@@ -755,16 +668,20 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     if (prem4) {
       actions = (
         <Tooltip description="Request edit access">
-          <DialogButton
-            title="Request access to edit?"
-            onConfirm={() => requestEditMutation()}
-            onClick={requested ? () => {} : undefined}
+          <Button
+            onClick={() =>
+              dialogBox({
+                title: "Request access to edit?",
+                callback: () => requestEditMutation()
+              })
+            }
             loading={requestEditMutationInfo.loading}
             className="soft red mr-2"
-            disabled={requestStatus === "requested"}
+            color=""
+            disabled={requested}
           >
             <AiOutlineEdit />
-          </DialogButton>
+          </Button>
         </Tooltip>
       );
     }
