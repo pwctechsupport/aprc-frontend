@@ -22,10 +22,12 @@ import ComingSoonPage from "./shared/components/ComingSoonPage";
 import Layout from "./shared/components/Layout";
 import PolicyCategoryRoute from "./containers/policyCategory/PolicyCategoryRoute";
 import SearchPolicy from "./containers/policy/PolicySearch";
+import { DialogBoxModal } from "./shared/components/Modal";
 
 export default function() {
   return (
     <BrowserRouter>
+      <DialogBoxModal />
       <Switch>
         <Route exact path="/auth" component={Login} />
         <Route exact path="/forgot-password" component={ForgotPassword} />
