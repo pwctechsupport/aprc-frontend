@@ -1,12 +1,13 @@
 import React from "react";
-import { Route, Switch, Redirect } from "react-router";
-import { Row, Col, Container } from "reactstrap";
-import History from "./History";
-import UpdateProfile from "./UpdateProfile";
-import NotificationSettings from "./NotificationSettings";
+import { Redirect, Route, Switch } from "react-router";
+import { Col, Container, Row } from "reactstrap";
 import SettingsSideBox from "./components/SettingsSideBox";
+import History from "./History";
+import NotificationSettings from "./NotificationSettings";
+import UpdateProfile from "./UpdateProfile";
+import UserManual from "./UserManual";
 
-const SettingsRoute = () => {
+export default function SettingsRoute() {
   return (
     <Container fluid className="p-0">
       <Row noGutters>
@@ -26,12 +27,11 @@ const SettingsRoute = () => {
               path="/settings/notifications"
               component={NotificationSettings}
             />
+            <Route exact path="/settings/user-manual" component={UserManual} />
             <Redirect exact from="/settings" to="/settings/update-profile" />
           </Switch>
         </Col>
       </Row>
     </Container>
   );
-};
-
-export default SettingsRoute;
+}
