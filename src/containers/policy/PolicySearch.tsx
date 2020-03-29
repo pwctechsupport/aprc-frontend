@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FaSpinner } from "react-icons/fa";
-import { Col, Container, Row } from "reactstrap";
+import { Col, Container, Row, Collapse } from "reactstrap";
 import { useSearchPoliciesQuery } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Pagination from "../../shared/components/Pagination";
@@ -12,6 +12,7 @@ import PolicySearchForm, {
   PolicySearchFormValues
 } from "./policySearch/PolicySearchForm";
 import PolicySearchItem from "./policySearch/PolicySearchItem";
+import OpacityButton from "../../shared/components/OpacityButton";
 
 interface PolicySearchFilter {
   title_cont?: string;
@@ -26,6 +27,11 @@ interface PolicySearchFilter {
 
 export default function PolicySearch() {
   const [filter, setFilter] = useState<PolicySearchFilter>({});
+
+  const [showDashboard, setShowDashboard] = useState(false);
+  function toggleShowDashboard() {
+    setShowDashboard(p => !p);
+  }
 
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const { data, loading } = useSearchPoliciesQuery({
@@ -52,7 +58,6 @@ export default function PolicySearch() {
       })
     );
   }
-  console.log("filter:", filter);
   return (
     <Container fluid className="p-0">
       <Row noGutters>
@@ -71,6 +76,19 @@ export default function PolicySearch() {
         </Col>
         <Col md={9} className="p-4">
           <BreadCrumb crumbs={[["/policy", "Search Policies"]]} />
+          <div className="d-block d-md-none">
+            <OpacityButton className="mb-1" onClick={toggleShowDashboard}>
+              {showDashboard ? " Hide" : "Show"} Filter
+            </OpacityButton>
+            <Collapse isOpen={showDashboard}>
+              <div className="py-3 bg-light rounded">
+                <PolicySearchForm
+                  onSubmit={handleFormSubmit}
+                  submitting={loading}
+                />
+              </div>
+            </Collapse>
+          </div>
           <Pagination
             totalCount={totalCount}
             perPage={limit}
