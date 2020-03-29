@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Col } from "reactstrap";
 import styled from "styled-components";
 import { Policy } from "../../../generated/graphql";
 import EmptyAttribute from "../../../shared/components/EmptyAttribute";
@@ -19,13 +18,17 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
     resources,
     references
   } = policy;
+
+  const noAttribute =
+    risks?.length === 0 &&
+    controls?.length === 0 &&
+    resources?.length === 0 &&
+    references?.length === 0;
+
   return (
     <PolicySearchItemContainer>
-      <Col md={3} style={{ borderRight: "1px solid #d85604" }}>
-        {risks?.length === 0 &&
-        controls?.length === 0 &&
-        resources?.length === 0 &&
-        references?.length === 0 ? (
+      <AttributeSection>
+        {noAttribute ? (
           <EmptyAttribute>No Attribute</EmptyAttribute>
         ) : (
           <StyledUl>
@@ -87,8 +90,8 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
             ) : null}
           </StyledUl>
         )}
-      </Col>
-      <Col md={9} className="ml-3">
+      </AttributeSection>
+      <TitleAndDescriptionSection>
         <StyledLink to={`/policy/${id}/details`}>
           <div>
             <StyledTitle>
@@ -97,11 +100,58 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
           </div>
           <div className="text-secondary">{previewHtml(description || "")}</div>
         </StyledLink>
-      </Col>
+      </TitleAndDescriptionSection>
     </PolicySearchItemContainer>
   );
 }
 
+// =========================================================
+// Three Important Part
+// =========================================================
+const PolicySearchItemContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  background: #f7f7f7;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  &:last-child {
+    margin-bottom: 0px;
+  }
+  border-radius: 5px;
+  overflow: hidden;
+  /* for small screen */
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+`;
+
+const TitleAndDescriptionSection = styled.div`
+  width: 60%;
+  margin-left: 1.5rem;
+  /* for small screen */
+  @media screen and (max-width: 767px) {
+    order: 1;
+    width: 100%;
+    margin: unset;
+  }
+`;
+const AttributeSection = styled.div`
+  width: 40%;
+  border-right: 1px solid #d85604;
+  /* for small screen */
+  @media screen and (max-width: 767px) {
+    order: 2;
+    width: 100%;
+    border-right: unset;
+  }
+`;
+
+// =========================================================
+// Aditional Component
+// =========================================================
 const Names = styled.div`
   font-weight: bold;
   font-size: 15px;
@@ -114,22 +164,6 @@ const StyledLi = styled.li`
   padding-top: 10px;
   position: relative;
   left: -40px;
-`;
-
-const PolicySearchItemContainer = styled.div`
-  background: #f7f7f7;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 15px;
-  margin-bottom: 10px;
-  margin-top: 20px;
-  &:last-child {
-    margin-bottom: 0px;
-  }
-  border-radius: 5px;
-  overflow: hidden;
 `;
 
 const StyledUl = styled.ul`
