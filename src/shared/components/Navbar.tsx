@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaBell, FaBookmark, FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, NavLink as RrNavLink, useLocation } from "react-router-dom";
@@ -10,20 +10,21 @@ import {
   Nav,
   Navbar,
   NavbarBrand,
-  NavbarToggler,
   NavbarText,
+  NavbarToggler,
   NavItem,
   NavLink,
   UncontrolledDropdown
 } from "reactstrap";
 import styled from "styled-components";
 import pwcLogo from "../../assets/images/pwc-logo.png";
+import HomepageSearch from "../../containers/homepage/HomepageSearch";
 import { useNotificationsCountQuery } from "../../generated/graphql";
 import { unauthorize } from "../../redux/auth";
 import useAccessRights from "../hooks/useAccessRights";
+import useWindowSize from "../hooks/useWindowSize";
 import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
-import HomepageSearch from "../../containers/homepage/HomepageSearch";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
@@ -34,6 +35,8 @@ export default function NewNavbar() {
     "admin_reviewer"
   ]);
   const isMereUser = rolesArray.every(a => !a);
+  const size = useWindowSize();
+  const isBigScreen = size.width > 767;
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(p => !p);
 
@@ -66,8 +69,11 @@ export default function NewNavbar() {
             .filter(menu =>
               isMereUser ? menu.label !== "Administrative" : true
             )
-            .map(({ label, path, children }) => {
-              if (label === "Administrative") {
+            // If the screen is big, remove 'Settings', as it is
+            // redundant; already available through side-navigator.
+            .filter(menu => (isBigScreen ? menu.label !== "Settings" : true))
+            .map(({ label, path, children, dropdown }) => {
+              if (dropdown) {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
                     <StyledDropdownToggle nav caret>
@@ -144,6 +150,7 @@ const userMenus = [
   { label: "Exception Report", path: "/report" },
   {
     label: "Administrative",
+    dropdown: true,
     path: "/",
     children: [
       { label: "Policy", path: "/policy-admin" },
@@ -154,6 +161,17 @@ const userMenus = [
       { label: "Business Process", path: "/business-process" },
       { label: "Resources", path: "/resources" },
       { label: "Risks", path: "/risk" }
+    ]
+  },
+  {
+    label: "Settings",
+    dropdown: true,
+    path: "/",
+    children: [
+      { label: "Profile", path: "/settings/update-profile" },
+      { label: "Notifications", path: "/settings/notifications" },
+      { label: "History", path: "/settings/history" },
+      { label: "User Manual", path: "/settings/user-manual" }
     ]
   }
 ];
