@@ -1,0 +1,30 @@
+query manuals($filter: BaseScalar = {}, $limit: Int, $page: Int) {
+  manuals(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      id
+      name
+      createdAt
+      updatedAt
+      resuploadUrl
+      fileName
+      fileSize
+      fileType
+    }
+  }
+}
+
+mutation createManual($input: CreateManualInput!) {
+  createManual(input: $input) {
+    manual {
+      id
+    }
+  }
+}
+
+mutation updateManual($input: UpdateManualInput!) {
+  updateManual(input: $input) {
+    manual {
+      id
+    }
+  }
+}
