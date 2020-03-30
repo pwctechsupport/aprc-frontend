@@ -138,7 +138,7 @@ const PolicyBranch = ({
               ? `/policy-admin/${id}/details`
               : activeMode
               ? `/policy/${id}/${activeMode}`
-              : `/policy/${id}`
+              : `/policy/${id}/details`
           }
         >
           {title}
