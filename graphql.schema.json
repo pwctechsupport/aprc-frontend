@@ -3339,12 +3339,12 @@
             "deprecationReason": null
           },
           {
-            "name": "version",
+            "name": "versionsCount",
             "description": "",
             "args": [],
             "type": {
-              "kind": "OBJECT",
-              "name": "Version",
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,
