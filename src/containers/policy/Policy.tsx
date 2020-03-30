@@ -69,7 +69,6 @@ import {
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import { relative } from "path";
 
 const Policy = ({ match, history, location }: RouteComponentProps) => {
   const dialogBox = useDialogBox();
