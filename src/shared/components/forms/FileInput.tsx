@@ -11,7 +11,7 @@ interface FileInputProps {
   onFileSelect?: (data: string) => void;
 }
 
-const defaultSupportedFileTypes = ["image/jpeg", "image/png"];
+const defaultSupportedFileTypes = ["application/pdf"];
 
 export default function FileInput({
   name,
@@ -20,10 +20,9 @@ export default function FileInput({
   supportedFileTypes = defaultSupportedFileTypes,
   onFileSelect
 }: FileInputProps) {
-  const fileTypeErrorMsg =
-    "File type not supported. Supported types are PNG and JPG/JPEG.";
+  const fileTypeErrorMsg = "File type not supported. Only supported pdf file";
   const [dragging, setDragging] = useState(false);
-  const [preview, setPreview] = useState<string>();
+  const [preview, setPreview] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -37,8 +36,9 @@ export default function FileInput({
     if (e.target.files && e.target.files[0]) {
       if (supportedFileTypes.includes(e.target.files[0].type)) {
         const reader = new FileReader();
+        const hjcodisa = e.target.files[0].name ? e.target.files[0].name : "";
         reader.onload = () => {
-          setPreview(reader.result as string);
+          setPreview(hjcodisa);
           onFileSelect?.(reader.result as string);
         };
         reader.readAsDataURL(e.target.files[0]);
@@ -58,9 +58,13 @@ export default function FileInput({
     setDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       if (supportedFileTypes.includes(e.dataTransfer.files[0].type)) {
+        const hjcodisa = e.dataTransfer.files[0].name
+          ? e.dataTransfer.files[0].name
+          : "";
+
         const reader = new FileReader();
         reader.onload = () => {
-          setPreview(reader.result as string);
+          setPreview(hjcodisa);
           onFileSelect?.(reader.result as string);
         };
         reader.readAsDataURL(e.dataTransfer.files[0]);
@@ -98,13 +102,18 @@ export default function FileInput({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {preview ? <PreviewImg src={preview} alt="preview-img" /> : null}
-        {dragging ? "Release File" : "Drag File Here"}
-        {!dragging && <span className="mx-2">Or</span>}
-        <UploadButton hidden={dragging} className="custom-file-upload">
-          <HiddenInput type="file" onChange={handleFileSelect} />
-          Select File
-        </UploadButton>
+        {preview ? preview : null}
+
+        {preview === "" ? (dragging ? "Release File" : "Drag File Here") : ""}
+        {preview === "" ? !dragging && <span className="mx-2">Or</span> : ""}
+        {preview === "" ? (
+          <UploadButton hidden={dragging} className="custom-file-upload">
+            <HiddenInput type="file" onChange={handleFileSelect} />
+            Select File
+          </UploadButton>
+        ) : (
+          ""
+        )}
       </Wrapper>
       {error && (
         <span className="text-danger">
@@ -150,7 +159,7 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
     `}
 `;
 
-const PreviewImg = styled.img`
-  height: 70px;
-  margin-right: 10px;
-`;
+// const PreviewImg = styled.img`
+//   height: 70px;
+//   margin-right: 10px;
+// `;
