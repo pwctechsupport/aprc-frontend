@@ -31,7 +31,7 @@ export default function AsyncSelect({
   const Select = (
     <AsyncReactSelect
       {...rest}
-      closeMenuOnSelect={!rest.isMulti}
+      closeMenuOnSelect={rest.closeMenuOnSelect ?? !rest.isMulti}
       className={classnames(error ? "invalid" : undefined)}
       onChange={handleChange}
     />

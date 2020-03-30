@@ -139,6 +139,7 @@ fragment policyFragment on Policy {
   id
   title
   status
+  createdAt
   updatedAt
   policyCategory {
     id
@@ -168,6 +169,8 @@ fragment policyFragment on Policy {
     }
     description
     parentId
+    createdAt
+    updatedAt
   }
   resources {
     id
@@ -182,6 +185,8 @@ fragment policyFragment on Policy {
     id
     name
     status
+    levelOfRisk
+    typeOfRisk
   }
   controls {
     id

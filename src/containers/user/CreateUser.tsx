@@ -8,9 +8,10 @@ import { RouteComponentProps } from "react-router-dom";
 
 const CreateUser = ({ history }: RouteComponentProps) => {
   const [create, createM] = useCreateUserMutation({
-    refetchQueries: ["users"],
     onCompleted: onCompleted,
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["users"],
+    awaitRefetchQueries: true
   });
 
   function handleSubmit(values: UserFormValues) {
@@ -21,9 +22,9 @@ const CreateUser = ({ history }: RouteComponentProps) => {
           email: values.email || "",
           password: values.password || "",
           passwordConfirmation: values.passwordConfirmation || "",
-          phone: values.phone || ""
-          // roleIds: values.roleIds?.map(a => a.value), TODO ! ! !
-          // policyCategoryIds: values.policyCategoryIds?.map(a => a.value),
+          phone: values.phone || "",
+          roleIds: values.roleIds?.map(a => a.value),
+          policyCategoryIds: values.policyCategoryIds?.map(a => a.value)
         }
       }
     });

@@ -155,8 +155,7 @@ const userMenus = [
       { label: "Resources", path: "/resources" },
       { label: "Risks", path: "/risk" }
     ]
-  },
-  { label: "Settings", path: "/settings" }
+  }
 ];
 
 // =============================================

@@ -1,15 +1,24 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import styled from "styled-components";
 import { useSelector } from "../hooks/useSelector";
 import Button from "./Button";
-import { Link } from "react-router-dom";
-import { oc } from "ts-optchain";
 
-const Avatar = ({ data }: AvatarProps) => {
+interface DataType {
+  onClick?: () => void;
+  label: string | undefined;
+  header?: boolean;
+}
+
+interface AvatarProps {
+  data: DataType[];
+}
+
+export default function Avatar({ data }: AvatarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const user = useSelector(state => state.auth.user);
-  const name = oc(user).name("");
+  const name = user?.name || "";
 
   const toggle = () => setDropdownOpen(prevState => !prevState);
 
@@ -47,12 +56,13 @@ const Avatar = ({ data }: AvatarProps) => {
             </div>
             <Button
               tag={Link}
-              to="/settings/update-profile"
+              to="/settings"
               outline
               color=""
               className="soft orange mt-4"
+              onClick={toggle}
             >
-              Profile
+              Settings
             </Button>
             <Button onClick={item.onClick} color="primary" className="pwc mt-2">
               Log out
@@ -62,9 +72,7 @@ const Avatar = ({ data }: AvatarProps) => {
       </DropdownMenu>
     </Dropdown>
   );
-};
-
-export default Avatar;
+}
 
 const AvatarIcon = styled.img`
   display: inline-block;
@@ -93,17 +101,3 @@ const UserDetailTitle = styled.div`
 const UserDetail = styled.div`
   font-size: 14px;
 `;
-
-// -------------------------------------------------
-// Type Definition
-// -------------------------------------------------
-
-interface DataType {
-  onClick?: () => void;
-  label: string | undefined;
-  header?: boolean;
-}
-
-export interface AvatarProps {
-  data: DataType[];
-}

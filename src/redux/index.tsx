@@ -1,11 +1,11 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import auth from "./auth";
-import modal from "./modal";
+import dialogBoxReducer from "./dialogBox";
 
 const rootReducer = combineReducers({
   auth,
-  modal
+  dialogBox: dialogBoxReducer
 });
 
 const store = createStore(rootReducer, applyMiddleware(logger));
