@@ -25,12 +25,17 @@ import {
   toLabelValue
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import Flowchart from "../../riskAndControl/components/Flowchart";
 
 interface ResourceFormProps {
   defaultValues?: ResourceFormValues;
   onSubmit?: (data: ResourceFormValues) => void;
   submitting?: boolean;
   isDraft?: boolean;
+  imagePreviewUrl?: string;
+  resourceId?: string;
+  bpId?: string;
+  resourceTitle?: string;
 }
 
 export interface ResourceFormValues {
@@ -49,7 +54,11 @@ export default function ResourceForm({
   defaultValues,
   onSubmit,
   submitting,
-  isDraft
+  isDraft,
+  imagePreviewUrl,
+  resourceId,
+  bpId,
+  resourceTitle
 }: ResourceFormProps) {
   const { register, setValue, handleSubmit, errors, watch } = useForm<
     ResourceFormValues
@@ -185,6 +194,15 @@ export default function ResourceForm({
           />
         )}
       </div>
+      {!preview ? (
+        <Flowchart
+          img={imagePreviewUrl || ""}
+          resourceId={resourceId || ""}
+          title={resourceTitle}
+          bpId={bpId || ""}
+          editable={true}
+        />
+      ) : null}
 
       {preview && selectedCategory?.value === "Flowchart" && (
         <div>

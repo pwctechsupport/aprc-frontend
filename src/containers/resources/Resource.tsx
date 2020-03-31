@@ -44,6 +44,9 @@ export default function Resource({ match, history }: RouteComponentProps) {
     variables: { id },
     fetchPolicy: "network-only"
   });
+  const resourceId = data?.resource?.id || "";
+  const bpId = data?.resource?.businessProcess?.id || "";
+  const resourceTitle = data?.resource?.name || "";
   const name = data?.resource?.name || "";
   const rating = data?.resource?.rating || 0;
   const totalRating = data?.resource?.totalRating || 0;
@@ -146,6 +149,17 @@ export default function Resource({ match, history }: RouteComponentProps) {
       resuploadLink: data.resuploadLink,
       ...(data.resuploadBase64 && {
         resuploadBase64: data.resuploadBase64
+      }),
+      tagsAttributes: data.tagsAttributes?.map(tag => {
+        const { id, risk, control, yCoordinates, xCoordinates, ...rest } = tag;
+        return {
+          ...rest,
+          risk_id: risk?.id,
+          control_id: control?.id,
+          business_process_id: data.businessProcessId?.value,
+          x_coordinates: xCoordinates,
+          y_coordinates: yCoordinates
+        };
       })
     };
     try {
@@ -182,6 +196,10 @@ export default function Resource({ match, history }: RouteComponentProps) {
         defaultValues={defaultValues}
         onSubmit={handleSubmit}
         submitting={updateResourceM.loading}
+        imagePreviewUrl={imagePreviewUrl}
+        resourceId={resourceId}
+        bpId={bpId}
+        resourceTitle={resourceTitle}
       />
     );
   };
