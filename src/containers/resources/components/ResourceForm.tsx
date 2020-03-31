@@ -18,7 +18,7 @@ import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatabl
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import FileInput from "../../../shared/components/forms/FileInput";
 import Input from "../../../shared/components/forms/Input";
-import ImageTagger from "../../../shared/components/ImageTagger";
+// import ImageTagger from "../../../shared/components/ImageTagger";
 import {
   Suggestion,
   Suggestions,
@@ -64,7 +64,10 @@ export default function ResourceForm({
     ResourceFormValues
   >({ defaultValues, validationSchema });
   const [activityType, setActivityType] = useState("text");
-  const [tags, setTags] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
+  const [
+    tags
+    //  setTags
+  ] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
 
   function submit(data: ResourceFormValues) {
@@ -77,7 +80,7 @@ export default function ResourceForm({
   const handleGetBps = useLoadBps();
 
   const selectedCategory = watch("category");
-  const selectedBusinessProcess = watch("businessProcessId");
+  // const selectedBusinessProcess = watch("businessProcessId");
 
   const renderSubmit = () => {
     if (!isDraft) {
@@ -194,6 +197,7 @@ export default function ResourceForm({
           />
         )}
       </div>
+      {console.log("preview", preview)}
       {!preview ? (
         <Flowchart
           img={imagePreviewUrl || ""}
@@ -201,16 +205,25 @@ export default function ResourceForm({
           title={resourceTitle}
           bpId={bpId || ""}
           editable={true}
+          enableShowTag={false}
         />
       ) : null}
 
       {preview && selectedCategory?.value === "Flowchart" && (
         <div>
-          <ImageTagger
+          {/* <ImageTagger
             src={preview}
             bpId={selectedBusinessProcess?.value || ""}
             editable
             onTagsChanged={setTags}
+          /> */}
+          <Flowchart
+            img={preview || ""}
+            resourceId={resourceId || ""}
+            title={resourceTitle}
+            bpId={bpId || ""}
+            editable={true}
+            enableShowTag={false}
           />
         </div>
       )}
