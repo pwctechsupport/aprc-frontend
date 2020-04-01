@@ -15,6 +15,9 @@ const PolicyForm = ({
   onSubmit,
   defaultValues,
   submitting,
+  onSubmitDraft,
+  premise,
+  submittingDraft,
   isAdmin = true
 }: PolicyFormProps) => {
   const policyCategoriesState = usePolicyCategoriesQuery();
@@ -46,6 +49,9 @@ const PolicyForm = ({
 
   function submit(values: PolicyFormValues) {
     onSubmit && onSubmit(values);
+  }
+  function submitDraft(values: PolicyFormValues) {
+    onSubmitDraft && onSubmitDraft(values);
   }
 
   const options = oc(policyCategoriesState)
@@ -85,14 +91,25 @@ const PolicyForm = ({
           error={errors.policyCategoryId && errors.policyCategoryId.message}
         />
         <div className="d-flex justify-content-end mt-3">
-          <DialogButton
-            color="primary"
-            loading={submitting}
-            className="pwc px-5"
-            onConfirm={handleSubmit(submit)}
-          >
-            {defaultValues ? "Save" : "Submit"}
-          </DialogButton>
+          {premise ? (
+            <DialogButton
+              color="primary"
+              loading={submittingDraft}
+              className="pwc px-5"
+              onConfirm={handleSubmit(submitDraft)}
+            >
+              Save As Draft
+            </DialogButton>
+          ) : (
+            <DialogButton
+              color="primary"
+              loading={submitting}
+              className="pwc px-5"
+              onConfirm={handleSubmit(submit)}
+            >
+              {defaultValues ? "Save" : "Submit"}
+            </DialogButton>
+          )}
         </div>
       </Form>
     </div>
@@ -128,4 +145,7 @@ export interface PolicyFormProps {
   submitting?: boolean;
   defaultValues?: PolicyFormValues;
   isAdmin?: boolean;
+  onSubmitDraft?: any;
+  premise?: boolean;
+  submittingDraft?: any;
 }
