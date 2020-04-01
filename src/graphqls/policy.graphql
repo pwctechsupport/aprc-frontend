@@ -122,6 +122,7 @@ query policy($id: ID!) {
       }
       objectChanges
     }
+    isSubmitted
     hasEditAccess
     requestStatus
     requestEdit {
@@ -213,7 +214,28 @@ mutation createPolicy($input: CreatePolicyInput!) {
     }
   }
 }
-
+mutation updateDraftPolicy($input: UpdateDraftPolicyInput!) {
+  updateDraftPolicy(input: $input) {
+    clientMutationId
+  }
+}
+mutation submitPolicy($input: SubmitDraftPolicyInput!) {
+  submitDraftPolicy(input: $input) {
+    policy {
+      id
+      draft {
+        objectResult {
+          ... on Policy {
+            title
+          }
+        }
+      }
+      currentDraft {
+        title
+      }
+    }
+  }
+}
 mutation updatePolicy($input: UpdatePolicyInput!) {
   updatePolicy(input: $input) {
     clientMutationId
