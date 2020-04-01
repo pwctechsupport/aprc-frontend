@@ -9,7 +9,7 @@ import {
   useUpdateManualMutation
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
-import FileInput from "../../shared/components/forms/FileInput";
+import FileInputPdf from "../../shared/components/forms/FileInputPdf";
 import Input from "../../shared/components/forms/Input";
 import Modal from "../../shared/components/Modal";
 import Tooltip from "../../shared/components/Tooltip";
@@ -152,7 +152,7 @@ function UserManualForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input innerRef={register} name="name" label="Name" />
-      <FileInput
+      <FileInputPdf
         name="resuploadBase64"
         register={register}
         setValue={setValue}

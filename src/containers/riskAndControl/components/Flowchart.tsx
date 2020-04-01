@@ -32,6 +32,7 @@ interface FlowchartProps {
   editable: boolean;
   title?: string | null;
   className?: string;
+  enableShowTag?: boolean;
 }
 
 interface FlowchartSuggestion {
@@ -59,7 +60,8 @@ export default function Flowchart({
   img,
   editable,
   title,
-  className
+  className,
+  enableShowTag
 }: FlowchartProps) {
   const [show, setShow] = useState(true);
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
@@ -73,7 +75,7 @@ export default function Flowchart({
       }
     }
   });
-  const tags = data?.tags?.collection || [];
+  const tags = resourceId ? data?.tags?.collection || [] : [];
 
   const restrictedControlIds = tags
     .map(a => a.control?.id)
@@ -204,14 +206,17 @@ export default function Flowchart({
 
   return (
     <div className={className}>
-      <div className="d-flex align-items-center justify-content-between">
-        <Header>{title}</Header>
-        <div className="d-flex align-items-center justify-content-start">
-          <span>Show Tag</span>
-          &nbsp;&nbsp;
-          <Switch checked={show} width={50} height={25} onChange={setShow} />
+      {enableShowTag ? (
+        <div className="d-flex align-items-center justify-content-between">
+          <Header>{title}</Header>
+          <div className="d-flex align-items-center justify-content-start">
+            <span>Show Tag</span>
+            &nbsp;&nbsp;
+            <Switch checked={show} width={50} height={25} onChange={setShow} />
+          </div>
         </div>
-      </div>
+      ) : null}
+
       <FlowchartWrapper onClick={editable ? handleClick : undefined}>
         <Image src={img} editable={editable} />
         {tags.map(tag => {

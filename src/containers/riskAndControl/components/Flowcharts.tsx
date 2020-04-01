@@ -29,6 +29,7 @@ export default function Flowcharts({ resources, bpId }: FlowchartsProps) {
         title={currentResource?.name}
         bpId={bpId}
         editable={false}
+        enableShowTag={true}
       />
       {resources.map(resource => (
         <ResourceItem key={resource.id}>
