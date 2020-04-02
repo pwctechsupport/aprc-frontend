@@ -221,19 +221,7 @@ mutation updateDraftPolicy($input: UpdateDraftPolicyInput!) {
 }
 mutation submitPolicy($input: SubmitDraftPolicyInput!) {
   submitDraftPolicy(input: $input) {
-    policy {
-      id
-      draft {
-        objectResult {
-          ... on Policy {
-            title
-          }
-        }
-      }
-      currentDraft {
-        title
-      }
-    }
+    clientMutationId
   }
 }
 mutation updatePolicy($input: UpdatePolicyInput!) {

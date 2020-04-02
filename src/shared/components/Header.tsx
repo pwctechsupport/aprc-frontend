@@ -11,7 +11,7 @@ function Header({ heading = "", children, draft, review }: Header) {
           <Badge>Draft</Badge>
           {review ? (
             <Badge style={{ position: "relative", marginLeft: "5px" }}>
-              Not Reviewed
+              Waiting For Review
             </Badge>
           ) : null}
         </span>
