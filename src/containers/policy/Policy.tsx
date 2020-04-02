@@ -226,19 +226,16 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
 
   // Submit to reviewer
   const [submit] = useSubmitPolicyMutation({
-    // onError: notifyGraphQLErrors,
     onCompleted: () => {
-      // notifySuccess("Submitted");
-      toggleEditMode();
+      notifySuccess("Submitted");
     },
-    // onError: notifyGraphQLErrors,
+    onError: notifyGraphQLErrors,
     refetchQueries: ["policy"]
-    // awaitRefetchQueries: true
   });
-  function handleSubmit(values: string) {
+  function handleSubmit() {
     dialogBox({
       text: `Submit policy "${title}"?`,
-      callback: () => submit({ variables: { input: { id: values } } })
+      callback: () => submit({ variables: { input: { id } } })
     });
   }
 
@@ -713,7 +710,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             <div className="d-flex">
               <Tooltip description="Submit Policy">
                 <Button
-                  onClick={() => handleSubmit(id)}
+                  onClick={() => handleSubmit()}
                   color=""
                   className="soft orange mr-2"
                 >
