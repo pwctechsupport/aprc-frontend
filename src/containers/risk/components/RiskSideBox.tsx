@@ -13,8 +13,14 @@ import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const RiskSideBox = () => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
   const { data, loading } = useRisksQuery({
@@ -33,7 +39,9 @@ const RiskSideBox = () => {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          Risk
+          {isAdmin || isAdminReviewer || isAdminPreparer
+            ? "Risk Admin"
+            : "Risk"}
           <Tooltip description="Create Risk">
             <Button tag={Link} to="/risk/create" color="" className="soft red">
               <FaPlus />

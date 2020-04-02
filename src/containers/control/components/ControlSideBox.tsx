@@ -13,8 +13,14 @@ import {
 } from "../../../shared/components/SideBox";
 import Tooltip from "../../../shared/components/Tooltip";
 import humanizeDate from "../../../shared/utils/humanizeDate";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const ControlSideBox = () => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   const [search, setSearch] = useState("");
   const { data, loading } = useControlsQuery({
     fetchPolicy: "network-only",
@@ -33,7 +39,9 @@ const ControlSideBox = () => {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          Control
+          {isAdmin || isAdminPreparer || isAdminReviewer
+            ? "Control Admin"
+            : "Control"}
           <Tooltip description="Create Control">
             <Button
               tag={Link}
