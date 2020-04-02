@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import Helmet from "react-helmet";
 import {
   AiFillEdit,
@@ -45,7 +45,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     },
     fetchPolicy: "network-only"
   });
-
+  const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const draft = data?.policyCategory?.draft?.objectResult;
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
@@ -256,14 +256,25 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   const renderPolicyCategory = () => {
     return (
       <div>
-        <h6 className="mt-4">Related Policies</h6>
-        <ul>
-          {policies.map(policy => (
-            <li key={policy.id}>
-              <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
-            </li>
-          ))}
-        </ul>
+        <Fragment>
+          <dt>Created At</dt>
+          <dd>{createdAt}</dd>
+        </Fragment>
+        <Fragment>
+          <dt>Created By</dt>
+          <dd>minta backend</dd>
+        </Fragment>
+        {/* <h6 className="mt-4"> </h6> */}
+        <Fragment>
+          <dt>Related Policies</dt>
+          <ul>
+            {policies.map(policy => (
+              <li key={policy.id}>
+                <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
+              </li>
+            ))}
+          </ul>
+        </Fragment>
       </div>
     );
   };

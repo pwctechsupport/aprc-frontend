@@ -169,9 +169,10 @@ export default function UserRow({ user, ...props }: UserRowProps) {
             .map(p => p.name)
             .join(",")}
         </td>
-        <td>{updatedAt.split(" ")[0]}</td>
-        <td>{createdAt.split(" ")[0]}</td>
         <td>{status}</td>
+        <td>{createdAt.split(" ")[0]}</td>
+        <td>{updatedAt.split(" ")[0]}</td>
+
         <td>
           {/* premis 1 None */}
           {(draft && isAdminPreparer) || (!draft && isAdminReviewer && null)}

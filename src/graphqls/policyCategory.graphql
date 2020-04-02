@@ -8,6 +8,7 @@ query policyCategories(
       id
       name
       updatedAt
+      createdAt
       policies {
         id
         title
@@ -45,6 +46,7 @@ fragment policyCategoryFragment on PolicyCategory {
   id
   name
   updatedAt
+  createdAt
   policies {
     id
     title

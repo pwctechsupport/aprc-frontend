@@ -12,6 +12,7 @@ import Button from "../../../shared/components/Button";
 import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Tooltip from "../../../shared/components/Tooltip";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const PolicyCategorySideBox = () => {
   const [search, setSearch] = useState("");
@@ -22,22 +23,29 @@ const PolicyCategorySideBox = () => {
     fetchPolicy: "network-only"
   });
   const policyCategories = oc(data).policyCategories.collection([]);
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
+  const admins = isAdmin || isAdminReviewer || isAdminPreparer;
   return (
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           Policy Category
-          <Tooltip description="Create Policy Category">
-            <Button
-              tag={Link}
-              to="/policy-category/create"
-              className="soft red"
-              color=""
-            >
-              <FaPlus />
-            </Button>
-          </Tooltip>
+          {admins ? (
+            <Tooltip description="Create Policy Category">
+              <Button
+                tag={Link}
+                to="/policy-category/create"
+                className="soft red"
+                color=""
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch search={search} setSearch={setSearch} loading={loading} />

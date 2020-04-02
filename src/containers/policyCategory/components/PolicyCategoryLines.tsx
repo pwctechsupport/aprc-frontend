@@ -22,6 +22,12 @@ import DialogButton from "../../../shared/components/DialogButton";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
+  const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [selected, setSelected] = useState<string[]>([]);
   const { loading, data } = usePolicyCategoriesQuery({
     fetchPolicy: "network-only"
@@ -72,7 +78,6 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
   return (
     <div>
       <Helmet>
@@ -123,15 +128,20 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th>
+            <th style={{ width: "5%" }}>
               <input
                 type="checkbox"
                 checked={selected.length === policyCategories.length}
                 onChange={toggleCheckAll}
               />
             </th>
-            <th>Category Name</th>
-            <th>Related Policies</th>
+            <th style={{ width: "10%" }}>Policy Category Id</th>
+            <th style={{ width: "10%" }}>Category Name</th>
+            <th style={{ width: "20%" }}>Related Policies</th>
+            <th style={{ width: "20%" }}>Status</th>
+            <th style={{ width: "20%" }}>Updated At</th>
+            <th style={{ width: "20%" }}>Updated By</th>
+
             <th></th>
           </tr>
         </thead>
@@ -152,6 +162,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                     onChange={() => toggleCheck(policyCategory.id)}
                   />
                 </td>
+                <td>{policyCategory.id}</td>
                 <td>{policyCategory.name}</td>
                 <td>
                   {oc(policyCategory)
@@ -159,16 +170,23 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                     .map(policy => policy.title)
                     .join(", ")}
                 </td>
-                <td className="action">
-                  <DialogButton
-                    onConfirm={() => handleDelete(policyCategory.id)}
-                    loading={destroyM.loading}
-                    message={`Delete "${policyCategory.name}"?`}
-                    className="soft red"
-                  >
-                    <FaTrash className="clickable" />
-                  </DialogButton>
-                </td>
+                <td>minta backend</td>
+                <td>{policyCategory.updatedAt}</td>
+                <td>minta backend</td>
+                {admins ? (
+                  <td className="action">
+                    <DialogButton
+                      onConfirm={() => handleDelete(policyCategory.id)}
+                      loading={destroyM.loading}
+                      message={`Delete "${policyCategory.name}"?`}
+                      className="soft red"
+                    >
+                      <FaTrash className="clickable" />
+                    </DialogButton>
+                  </td>
+                ) : (
+                  <td></td>
+                )}
               </tr>
             );
           })}

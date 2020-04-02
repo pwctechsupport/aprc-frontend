@@ -78,13 +78,13 @@ const Users = () => {
                   Policy Category
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
-                  Last Update (date)
-                </th>
-                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
-                  Creation date
-                </th>
-                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
                   Status
+                </th>
+                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                  Created At
+                </th>
+                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                  Updated At
                 </th>
 
                 {admins ? (

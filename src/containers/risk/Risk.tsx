@@ -8,7 +8,7 @@ import {
 } from "react-icons/ai";
 import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
-import { Badge } from "reactstrap";
+import { Badge, Col, Container, Row } from "reactstrap";
 import {
   LevelOfRisk,
   TypeOfRisk,
@@ -34,6 +34,7 @@ import {
   notifySuccess
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
+import styled from "styled-components";
 
 const Risk = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -57,6 +58,8 @@ const Risk = ({ match, history }: RouteComponentProps) => {
   const typeOfRisk = data?.risk?.typeOfRisk || "";
   const bps = data?.risk?.businessProcesses;
   const updatedAt = data?.risk?.updatedAt;
+  const status = data?.risk?.status;
+  const createdAt = data?.risk?.createdAt;
   const draft = data?.risk?.draft?.objectResult;
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
@@ -67,7 +70,7 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     requestStatus,
     requestEditState
   });
-
+  console.log("data", data);
   const defaultValues: RiskFormValues = {
     name,
     businessProcessIds: data?.risk?.businessProcesses?.map(toLabelValue) || [],
@@ -260,9 +263,8 @@ const Risk = ({ match, history }: RouteComponentProps) => {
   };
 
   const renderRisk = () => {
-    const details = [
+    const details1 = [
       { label: "Risk Id", value: id },
-
       { label: "Name", value: name },
       {
         label: "Business Process",
@@ -279,21 +281,51 @@ const Risk = ({ match, history }: RouteComponentProps) => {
       {
         label: "Type of Risk",
         value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>
-      },
+      }
+    ];
+    const details2 = [
       {
         label: "Last Updated",
         value: updatedAt?.split(" ")[0]
+      },
+      {
+        label: "Updated By",
+        value: "minta backend"
+      },
+      {
+        label: "Created At",
+        value: createdAt?.split(" ")[0]
+      },
+      {
+        label: "Created By",
+        value: "minta backend"
+      },
+      {
+        label: "Status",
+        value: status
       }
     ];
     return (
-      <dl>
-        {details.map(item => (
-          <Fragment key={item.label}>
-            <dt>{item.label}</dt>
-            <dd>{item.value || "-"}</dd>
-          </Fragment>
-        ))}
-      </dl>
+      <Container>
+        <Row>
+          <StyledDiv className="col-md-3">
+            {details1.map(item => (
+              <Fragment key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.value || "-"}</dd>
+              </Fragment>
+            ))}
+          </StyledDiv>
+          <Col>
+            {details2.map(item => (
+              <Fragment key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.value || "-"}</dd>
+              </Fragment>
+            ))}
+          </Col>
+        </Row>
+      </Container>
     );
   };
 
@@ -326,3 +358,11 @@ const Risk = ({ match, history }: RouteComponentProps) => {
 };
 
 export default Risk;
+
+export const StyledDiv = styled.div`
+  position: relative;
+  right: 10%;
+  @media screen and (max-width: 1440px) {
+    right: 0%;
+  }
+`;

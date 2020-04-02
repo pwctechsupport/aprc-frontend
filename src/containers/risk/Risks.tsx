@@ -138,8 +138,8 @@ const Risks = ({ history }: RouteComponentProps) => {
             <th style={{ width: "13%" }}>Risk Level</th>
             <th style={{ width: "13%" }}>Type of Risk</th>
             <th style={{ width: "13%" }}>Business Process</th>
-            <th style={{ width: "13%" }}>Last Updated At</th>
-            <th style={{ width: "13%" }}>Last Update By</th>
+            <th style={{ width: "13%" }}>Updated At</th>
+            <th style={{ width: "13%" }}>Updated By</th>
 
             <th style={{ width: "13%" }}>Status</th>
 
@@ -148,8 +148,8 @@ const Risks = ({ history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {risks.map(risk => {
-            const bPs = risk.businessProcesses?.map(a => `, ${a.name}`) || [];
-            bPs[0] = risk.businessProcesses?.map(a => `${a.name}`)[0] || "";
+            const bps = risk.businessProcesses?.map(a => `, ${a.name}`) || [];
+            bps[0] = risk.businessProcesses?.map(a => `${a.name}`)[0] || "-";
             console.log(risk);
             return (
               <tr
@@ -168,7 +168,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                 <td>{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                 <td>{risk.typeOfRisk}</td>
-                <td>{bPs}</td>
+                <td>{bps}</td>
                 <td>{risk.updatedAt?.split(" ")[0]}</td>
                 <td>Last update by</td>
 

@@ -21,7 +21,7 @@ import pwcLogo from "../../assets/images/pwc-logo.png";
 import HomepageSearch from "../../containers/homepage/HomepageSearch";
 import { useNotificationsCountQuery } from "../../generated/graphql";
 import { unauthorize } from "../../redux/auth";
-import useAccessRights from "../hooks/useAccessRights";
+// import useAccessRights from "../hooks/useAccessRights";
 import useWindowSize from "../hooks/useWindowSize";
 import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
@@ -29,12 +29,12 @@ import NotificationBadge from "./NotificationBadge";
 export default function NewNavbar() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const rolesArray = useAccessRights([
-    "admin",
-    "admin_preparer",
-    "admin_reviewer"
-  ]);
-  const isMereUser = rolesArray.every(a => !a);
+  // const rolesArray = useAccessRights([
+  //   "admin",
+  //   "admin_preparer",
+  //   "admin_reviewer"
+  // ]);
+  // const isMereUser = rolesArray.every(a => !a);
   const size = useWindowSize();
   const isBigScreen = size.width > 767;
   const [isOpen, setIsOpen] = useState(false);
