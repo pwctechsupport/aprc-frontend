@@ -19,6 +19,7 @@ import {
 import { toast } from "react-toastify";
 import downloadXls from "../../../shared/utils/downloadXls";
 import DialogButton from "../../../shared/components/DialogButton";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [selected, setSelected] = useState<string[]>([]);
@@ -71,7 +72,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       }
     );
   }
-
+  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
   return (
     <div>
       <Helmet>
@@ -81,40 +82,42 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
         <BreadCrumb crumbs={[["/policyCategory", "Policy Category"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h4>Policy Category</h4>
-          <div className="d-flex">
-            <Tooltip
-              description="Export Policy Categories"
-              subtitle={
-                selected.length
-                  ? "Export selected policy categories"
-                  : "Select policy categories first"
-              }
-            >
-              <Button
-                color=""
-                className="soft red mr-2"
-                onClick={handleExport}
-                disabled={!selected.length}
+          {isAdminReviewer ? (
+            <div className="d-flex">
+              <Tooltip
+                description="Export Policy Categories"
+                subtitle={
+                  selected.length
+                    ? "Export selected policy categories"
+                    : "Select policy categories first"
+                }
               >
-                <FaFileExport />
-              </Button>
-            </Tooltip>
-            <Tooltip description="Import Policy Categories">
-              <Button
-                color=""
-                className="soft orange mr-2"
-                onClick={toggleImportModal}
-              >
-                <FaFileImport />
-              </Button>
-            </Tooltip>
-            <ImportModal
-              title="Import Policy Categories"
-              endpoint="/policy_categories/import"
-              isOpen={modal}
-              toggle={toggleImportModal}
-            />
-          </div>
+                <Button
+                  color=""
+                  className="soft red mr-2"
+                  onClick={handleExport}
+                  disabled={!selected.length}
+                >
+                  <FaFileExport />
+                </Button>
+              </Tooltip>
+              <Tooltip description="Import Policy Categories">
+                <Button
+                  color=""
+                  className="soft orange mr-2"
+                  onClick={toggleImportModal}
+                >
+                  <FaFileImport />
+                </Button>
+              </Tooltip>
+              <ImportModal
+                title="Import Policy Categories"
+                endpoint="/policy_categories/import"
+                isOpen={modal}
+                toggle={toggleImportModal}
+              />
+            </div>
+          ) : null}
         </div>
       </div>
       <Table reloading={loading}>
