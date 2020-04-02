@@ -226,9 +226,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
 
   // Submit to reviewer
   const [submit] = useSubmitPolicyMutation({
-    onError: notifyGraphQLErrors,
+    // onError: notifyGraphQLErrors,
     onCompleted: () => {
-      notifySuccess("Submitted");
+      // notifySuccess("Submitted");
       toggleEditMode();
     },
     // onError: notifyGraphQLErrors,
