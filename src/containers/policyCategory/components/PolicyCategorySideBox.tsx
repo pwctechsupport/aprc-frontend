@@ -12,8 +12,14 @@ import Button from "../../../shared/components/Button";
 import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Tooltip from "../../../shared/components/Tooltip";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const PolicyCategorySideBox = () => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   const [search, setSearch] = useState("");
   const { data, loading } = usePolicyCategoriesQuery({
     variables: {
@@ -27,7 +33,9 @@ const PolicyCategorySideBox = () => {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          Policy Category
+          {isAdmin || isAdminReviewer || isAdminPreparer
+            ? "Policy Category Admin"
+            : "Policy Category"}
           <Tooltip description="Create Policy Category">
             <Button
               tag={Link}
