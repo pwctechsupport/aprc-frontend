@@ -33,7 +33,7 @@ const Option = (props: any) => {
   const resources = props?.data?.resources || [];
   const references = props?.data?.references || [];
   return (
-    <StyledLink to={`/policy/${id}`}>
+    <StyledLink to={`/policy/${id}/details`}>
       <components.Option {...props}>
         <h5>{title}</h5>
         <PreviewSpan>{previewHtml(description, 200)}</PreviewSpan>
@@ -95,6 +95,7 @@ const SmallerPreviewSpan = styled(PreviewSpan)`
 
 const StyledLink = styled(Link)`
   color: unset;
+  backgroundColor: "white";
   &:hover {
     text-decoration: none;
   }
