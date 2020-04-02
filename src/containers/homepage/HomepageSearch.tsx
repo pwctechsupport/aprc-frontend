@@ -95,7 +95,6 @@ const SmallerPreviewSpan = styled(PreviewSpan)`
 
 const StyledLink = styled(Link)`
   color: unset;
-  backgroundColor: "white";
   &:hover {
     text-decoration: none;
   }
