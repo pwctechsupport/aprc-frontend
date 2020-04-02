@@ -84,7 +84,10 @@ export default function UserRow({ user, ...props }: UserRowProps) {
     "admin_preparer",
     "admin_reviewer"
   ]);
-
+  const admins = isAdmin || isAdminPreparer || isAdminReviewer;
+  const createdAt = oc(user).createdAt() || "";
+  const updatedAt = oc(user).updatedAt() || "";
+  const status = oc(user).requestEdit.state() || "";
   const draft = oc(user).draft.objectResult();
   const requestStatus = oc(user).requestStatus();
   const notRequested = !requestStatus;
@@ -166,7 +169,9 @@ export default function UserRow({ user, ...props }: UserRowProps) {
             .map(p => p.name)
             .join(",")}
         </td>
-
+        <td>{updatedAt.split(" ")[0]}</td>
+        <td>{createdAt.split(" ")[0]}</td>
+        <td>{status}</td>
         <td>
           {/* premis 1 None */}
           {(draft && isAdminPreparer) || (!draft && isAdminReviewer && null)}
@@ -243,7 +248,7 @@ export default function UserRow({ user, ...props }: UserRowProps) {
               </DialogButton>
             )}
 
-          {!draft && (
+          {!draft && admins && (
             <DialogButton
               title="Delete"
               data={oc(user).id()}

@@ -24,7 +24,6 @@ const Risks = ({ history }: RouteComponentProps) => {
   const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
   const [selected, setSelected] = useState<string[]>([]);
   const [modal, setModal] = useState(false);
-
   const toggleImportModal = () => setModal(p => !p);
 
   const [destroy, destroyM] = useDestroyRiskMutation({
@@ -74,7 +73,11 @@ const Risks = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
 
   return (
     <div>
@@ -122,21 +125,32 @@ const Risks = ({ history }: RouteComponentProps) => {
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th>
+            <th style={{ width: "5%" }}>
               <input
                 type="checkbox"
                 checked={selected.length === risks.length}
                 onChange={toggleCheckAll}
               />
             </th>
-            <th>Risk ID</th>
-            <th>Risk</th>
-            <th>Risk Level</th>
+            <th style={{ width: "8%" }}>Risk ID</th>
+            <th style={{ width: "13%" }}>Risk</th>
+
+            <th style={{ width: "13%" }}>Risk Level</th>
+            <th style={{ width: "13%" }}>Type of Risk</th>
+            <th style={{ width: "13%" }}>Business Process</th>
+            <th style={{ width: "13%" }}>Last Updated At</th>
+            <th style={{ width: "13%" }}>Last Update By</th>
+
+            <th style={{ width: "13%" }}>Status</th>
+
             <th></th>
           </tr>
         </thead>
         <tbody>
           {risks.map(risk => {
+            const bPs = risk.businessProcesses?.map(a => `, ${a.name}`) || [];
+            bPs[0] = risk.businessProcesses?.map(a => `${a.name}`)[0] || "";
+            console.log(risk);
             return (
               <tr
                 key={risk.id}
@@ -153,16 +167,26 @@ const Risks = ({ history }: RouteComponentProps) => {
                 <td>{risk.id}</td>
                 <td>{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
-                <td className="action">
-                  <DialogButton
-                    onConfirm={() => handleDelete(risk.id)}
-                    loading={destroyM.loading}
-                    message={`Delete risk "${risk.name}"?`}
-                    className="soft red"
-                  >
-                    <FaTrash />
-                  </DialogButton>
-                </td>
+                <td>{risk.typeOfRisk}</td>
+                <td>{bPs}</td>
+                <td>{risk.updatedAt?.split(" ")[0]}</td>
+                <td>Last update by</td>
+
+                <td>{risk.status}</td>
+                {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                  <td className="action">
+                    <DialogButton
+                      onConfirm={() => handleDelete(risk.id)}
+                      loading={destroyM.loading}
+                      message={`Delete risk "${risk.name}"?`}
+                      className="soft red"
+                    >
+                      <FaTrash />
+                    </DialogButton>
+                  </td>
+                ) : (
+                  <td></td>
+                )}
               </tr>
             );
           })}

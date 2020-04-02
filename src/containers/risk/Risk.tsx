@@ -56,7 +56,7 @@ const Risk = ({ match, history }: RouteComponentProps) => {
   const levelOfRisk = data?.risk?.levelOfRisk || "";
   const typeOfRisk = data?.risk?.typeOfRisk || "";
   const bps = data?.risk?.businessProcesses;
-
+  const updatedAt = data?.risk?.updatedAt;
   const draft = data?.risk?.draft?.objectResult;
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
@@ -261,6 +261,8 @@ const Risk = ({ match, history }: RouteComponentProps) => {
 
   const renderRisk = () => {
     const details = [
+      { label: "Risk Id", value: id },
+
       { label: "Name", value: name },
       {
         label: "Business Process",
@@ -277,6 +279,10 @@ const Risk = ({ match, history }: RouteComponentProps) => {
       {
         label: "Type of Risk",
         value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>
+      },
+      {
+        label: "Last Updated",
+        value: updatedAt?.split(" ")[0]
       }
     ];
     return (

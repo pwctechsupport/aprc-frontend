@@ -66,9 +66,9 @@ export default function NewNavbar() {
           {userMenus
             // If the current user role is a 'mere' user,
             // don't let him access 'Administrative' menu.
-            .filter(menu =>
-              isMereUser ? menu.label !== "Administrative" : true
-            )
+            // .filter(menu =>
+            //   isMereUser ? menu.label !== "Administrative" : true
+            // )
             // If the screen is big, remove 'Settings', as it is
             // redundant; already available through side-navigator.
             .filter(menu => (isBigScreen ? menu.label !== "Settings" : true))
