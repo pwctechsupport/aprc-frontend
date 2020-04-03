@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import Helmet from "react-helmet";
 import {
+  AiFillFolderAdd,
   AiFillEdit,
   AiOutlineClockCircle,
   AiOutlineEdit
@@ -31,12 +32,14 @@ import { Badge, Nav, NavItem, TabContent, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useApproveRequestEditMutation,
+  useUpdateDraftPolicyMutation,
   useCreateBookmarkPolicyMutation,
   useCreateRequestEditMutation,
   useDestroyPolicyMutation,
   usePolicyQuery,
   useReviewPolicyDraftMutation,
-  useUpdatePolicyMutation
+  useUpdatePolicyMutation,
+  useSubmitPolicyMutation
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -99,14 +102,12 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     fetchPolicy: "network-only",
     pollInterval: 30000
   });
-
   const isAdminView = location.pathname.split("/")[1] === "policy-admin";
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer"
   ]);
-
   // Close edit mode when changing screen
   useEffect(() => {
     if (inEditMode) setInEditMode(false);
@@ -206,6 +207,37 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   function handleUpdateSubPolicy(values: SubPolicyFormValues) {
     update({ variables: { input: { id, ...values } } });
   }
+  // Update Policy As Draft
+  const [updateDraft, updateDraftState] = useUpdateDraftPolicyMutation({
+    onCompleted: () => {
+      notifySuccess("Update Success");
+      toggleEditMode();
+    },
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["policies", "policyTree", "policy"],
+    awaitRefetchQueries: true
+  });
+  function handleUpdateDraft(values: PolicyFormValues) {
+    updateDraft({ variables: { input: { id, ...values } } });
+  }
+  function handleUpdateDraftSubPolicy(values: SubPolicyFormValues) {
+    updateDraft({ variables: { input: { id, ...values } } });
+  }
+
+  // Submit to reviewer
+  const [submit] = useSubmitPolicyMutation({
+    onCompleted: () => {
+      notifySuccess("Submitted");
+    },
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["policy"]
+  });
+  function handleSubmit() {
+    dialogBox({
+      text: `Submit policy "${title}"?`,
+      callback: () => submit({ variables: { input: { id } } })
+    });
+  }
 
   const [
     requestEditMutation,
@@ -251,11 +283,15 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       notifyGraphQLErrors(error);
     }
   }
+  const isSubmitted = data?.policy?.isSubmitted;
   const draft = data?.policy?.draft?.objectResult;
   const title = data?.policy?.title || "";
   const description = draft
     ? get(data, "policy.draft.objectResult.description", "")
     : data?.policy?.description || "";
+  const hasEditAccess = oc(data).policy.hasEditAccess();
+  // const requested = oc(data).policy.requestStatus() === "requested";
+
   const policyCategoryId = oc(data).policy.policyCategory.id("");
   const parentId = oc(data).policy.parentId("");
   const children = oc(data).policy.children([]);
@@ -446,6 +482,16 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             }}
             onSubmit={handleUpdateSubPolicy}
             submitting={updateState.loading}
+            submittingDraft={updateDraftState.loading}
+            onSubmitDraft={handleUpdateDraftSubPolicy}
+            premise={
+              ((isAdminPreparer && !isSubmitted) ||
+                (isAdminReviewer && !isSubmitted)) &&
+              !(
+                (hasEditAccess && !draft && isAdminPreparer) ||
+                (!draft && isSubmitted && isAdmin)
+              )
+            }
           />
         ) : (
           <PolicyForm
@@ -456,6 +502,16 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               description
             }}
             submitting={updateState.loading}
+            submittingDraft={updateDraftState.loading}
+            onSubmitDraft={handleUpdateDraft}
+            premise={
+              ((isAdminPreparer && !isSubmitted) ||
+                (isAdminReviewer && !isSubmitted)) &&
+              !(
+                (hasEditAccess && !draft && isAdminPreparer) ||
+                (!draft && isSubmitted && isAdmin)
+              )
+            }
           />
         )}
       </div>
@@ -602,22 +658,25 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     const rejected = requestStatus === "rejected";
     const requestEdit = oc(data).policy.requestEdit.state();
     let actions: React.ReactNode = null;
-
     // PREMISES
     // 1: None
-    const prem1 = (draft && isAdminPreparer) || (!draft && isAdminReviewer);
+    const prem1 =
+      (draft && isAdminPreparer && isSubmitted) || (!draft && isAdminReviewer);
     // 2: Approve or reject
-    const prem2 = draft && (isAdminReviewer || isAdmin);
-    // 3: Edit
+    const prem2 = draft && isSubmitted && (isAdminReviewer || isAdmin);
+    // 3: User Create as draft for admin preparer
     const prem3 =
-      (hasEditAccess && !draft && isAdminPreparer) || (!draft && isAdmin);
-    // 4: Request for edit
-    const prem4 = !draft && (notRequested || rejected) && isAdminPreparer;
-    // 5: Waiting approval
-    const prem5 = requested && isAdminPreparer;
-    // 6: Accept Request to edit
-    const prem6 = requestEdit === "requested" && (isAdminReviewer || isAdmin);
-
+      (isAdminPreparer && !isSubmitted) || (isAdminReviewer && !isSubmitted);
+    // 4: Edit
+    const prem4 =
+      (hasEditAccess && !draft && isAdminPreparer) ||
+      (!draft && isSubmitted && isAdmin);
+    // 5: Request for edit
+    const prem5 = !draft && (notRequested || rejected) && isAdminPreparer;
+    // 6: Waiting approval
+    const prem6 = requested && isAdminPreparer;
+    // 7: Accept Request to edit
+    const prem7 = requestEdit === "requested" && (isAdminReviewer || isAdmin);
     if (prem1) actions = null;
     if (prem2) {
       actions = (
@@ -651,17 +710,44 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
         </div>
       );
     }
-
     if (prem3) {
-      if (inEditMode) {
-        actions = (
-          <Button onClick={toggleEditMode} color="">
-            <FaTimes size={22} className="mr-2" />
-            Cancel Edit
-          </Button>
-        );
-      }
-      actions = (
+      isAdminPreparer
+        ? (actions = !inEditMode ? (
+            <div className="d-flex">
+              <Tooltip description="Submit Policy">
+                <Button
+                  onClick={() => handleSubmit()}
+                  color=""
+                  className="soft orange mr-2"
+                >
+                  <AiFillFolderAdd />
+                </Button>
+              </Tooltip>
+              <Tooltip description="Edit Policy">
+                <Button
+                  onClick={toggleEditMode}
+                  color=""
+                  className="soft orange mr-2"
+                >
+                  <AiFillEdit />
+                </Button>
+              </Tooltip>
+            </div>
+          ) : (
+            <Button onClick={toggleEditMode} color="">
+              <FaTimes size={22} className="mr-2" />
+              Cancel Edit
+            </Button>
+          ))
+        : (actions = null);
+    }
+    if (prem4) {
+      actions = inEditMode ? (
+        <Button onClick={toggleEditMode} color="">
+          <FaTimes size={22} className="mr-2" />
+          Cancel Edit
+        </Button>
+      ) : (
         <Tooltip description="Edit Policy">
           <Button onClick={toggleEditMode} color="" className="soft orange">
             <AiFillEdit />
@@ -670,7 +756,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       );
     }
 
-    if (prem4) {
+    if (prem5) {
       actions = (
         <Tooltip description="Request edit access">
           <Button
@@ -691,7 +777,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       );
     }
 
-    if (prem5) {
+    if (prem6) {
       actions = (
         <Tooltip
           description="Waiting approval"
@@ -704,7 +790,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       );
     }
 
-    if (prem6) {
+    if (prem7) {
       actions = (
         <Tooltip description="Accept edit request">
           <DialogButton
@@ -740,7 +826,16 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
         ]}
       />
       <div className="d-flex justify-content-between">
-        <HeaderWithBackButton draft={!!draft}>{title}</HeaderWithBackButton>
+        <HeaderWithBackButton
+          draft={!!draft}
+          review={
+            isSubmitted ||
+            (draft && isSubmitted && (isAdminReviewer || isAdmin)) ||
+            false
+          }
+        >
+          {title}
+        </HeaderWithBackButton>
         {renderGeneralAction()}
       </div>
 

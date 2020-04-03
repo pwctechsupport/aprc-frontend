@@ -22,6 +22,9 @@ const SubPolicyForm = ({
   onSubmit,
   defaultValues,
   submitting,
+  onSubmitDraft,
+  premise,
+  submittingDraft,
   isAdmin = true
 }: SubPolicyFormProps) => {
   const {
@@ -70,6 +73,9 @@ const SubPolicyForm = ({
 
   function submit(values: SubPolicyFormValues) {
     onSubmit && onSubmit({ ...values, ...attr });
+  }
+  function submitDraft(values: SubPolicyFormValues) {
+    onSubmitDraft && onSubmitDraft({ ...values, ...attr });
   }
 
   function onSubmitModal(values: SubPolicyModalFormValues) {
@@ -120,19 +126,35 @@ const SubPolicyForm = ({
           >
             Insert Attributes
           </Button>
-          <DialogButton
-            color="primary"
-            loading={submitting}
-            className="pwc px-5"
-            onConfirm={handleSubmit(submit)}
-            message={
-              defaultValues.title
-                ? `Save your change on "${defaultValues.title}"?`
-                : "Create Sub-Policy?"
-            }
-          >
-            Save
-          </DialogButton>
+          {premise ? (
+            <DialogButton
+              color="primary"
+              loading={submittingDraft}
+              className="pwc px-5"
+              onConfirm={handleSubmit(submitDraft)}
+              message={
+                defaultValues.title
+                  ? `Save your change on "${defaultValues.title}"?`
+                  : "Create Sub-Policy?"
+              }
+            >
+              Save As Draft
+            </DialogButton>
+          ) : (
+            <DialogButton
+              color="primary"
+              loading={submitting}
+              className="pwc px-5"
+              onConfirm={handleSubmit(submit)}
+              message={
+                defaultValues.title
+                  ? `Save your change on "${defaultValues.title}"?`
+                  : "Create Sub-Policy?"
+              }
+            >
+              Save
+            </DialogButton>
+          )}
         </div>
       </Form>
 
@@ -293,6 +315,9 @@ export interface SubPolicyFormProps {
   defaultValues: SubPolicyFormValues;
   submitting?: boolean;
   isAdmin?: boolean;
+  onSubmitDraft?: any;
+  premise?: boolean;
+  submittingDraft?: any;
 }
 
 export interface SubPolicyFormValues {
