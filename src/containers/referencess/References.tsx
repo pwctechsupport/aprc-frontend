@@ -138,13 +138,16 @@ const References = () => {
         <Table reloading={loading}>
           <thead>
             <tr>
-              <th style={{ width: "5%" }}>
-                <input
-                  type="checkbox"
-                  checked={selected.length === references.length}
-                  onChange={toggleCheckAll}
-                />
-              </th>
+              {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                <th style={{ width: "5%" }}>
+                  <input
+                    type="checkbox"
+                    checked={selected.length === references.length}
+                    onChange={toggleCheckAll}
+                  />
+                </th>
+              ) : null}
+
               <th style={{ width: "5%" }}>ID</th>
               <th style={{ width: "5%" }}>Name</th>
               <th style={{ width: "30%" }}>Policy</th>
@@ -236,14 +239,17 @@ const ReferenceRow = ({
   ]);
   return (
     <tr>
-      <td>
-        <input
-          type="checkbox"
-          checked={selected}
-          onClick={e => e.stopPropagation()}
-          onChange={toggleCheck}
-        />
-      </td>
+      {isAdmin || isAdminReviewer || isAdminPreparer ? (
+        <td>
+          <input
+            type="checkbox"
+            checked={selected}
+            onClick={e => e.stopPropagation()}
+            onChange={toggleCheck}
+          />
+        </td>
+      ) : null}
+
       <td>{reference.id}</td>
 
       <td
