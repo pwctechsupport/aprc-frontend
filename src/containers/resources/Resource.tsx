@@ -59,6 +59,7 @@ export default function Resource({ match, history }: RouteComponentProps) {
   const hasEditAccess = data?.resource?.hasEditAccess || false;
   const requestStatus = data?.resource?.requestStatus;
   const requestEditState = data?.resource?.requestEdit?.state;
+  const status = data?.resource?.status;
   const premise = useEditState({
     draft,
     hasEditAccess,
@@ -218,13 +219,23 @@ export default function Resource({ match, history }: RouteComponentProps) {
               imagePreviewUrl={imagePreviewUrl}
             />
           </Col>
+          {console.log("status", status)}
           <Col xs={12} lg={6}>
             <div className="mt-5 mt-lg-0">
               <h5>
                 Category:&nbsp;
                 <span className="text-orange">{data?.resource?.category}</span>
               </h5>
-
+              <div>
+                <h5 className="mt-5">Status:</h5>
+                {status ? (
+                  <ul>
+                    <li>{status}</li>
+                  </ul>
+                ) : (
+                  <EmptyAttribute centered={false} />
+                )}
+              </div>
               {data?.resource?.category === "Flowchart" ? (
                 <>
                   <h5 className="mt-5">Business Process:</h5>

@@ -14,6 +14,7 @@ import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const ResourceSideBox = () => {
   const [search, setSearch] = useState("");
@@ -27,22 +28,28 @@ const ResourceSideBox = () => {
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   return (
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           Resources
-          <Tooltip description="Create Resource">
-            <Button
-              tag={Link}
-              to="/resources/create"
-              className="soft red"
-              color=""
-            >
-              <FaPlus />
-            </Button>
-          </Tooltip>
+          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+            <Tooltip description="Create Resource">
+              <Button
+                tag={Link}
+                to="/resources/create"
+                className="soft red"
+                color=""
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch

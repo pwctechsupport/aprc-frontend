@@ -59,7 +59,11 @@ const Resources = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
 
   return (
     <div>
@@ -109,19 +113,28 @@ const Resources = ({ history }: RouteComponentProps) => {
       <Table loading={loading} responsive>
         <thead>
           <tr>
-            <th>
-              <input
-                type="checkbox"
-                checked={selected.length === resources.length}
-                onChange={toggleCheckAll}
-              />
-            </th>
+            {isAdminReviewer ? (
+              <th>
+                <input
+                  type="checkbox"
+                  checked={selected.length === resources.length}
+                  onChange={toggleCheckAll}
+                />
+              </th>
+            ) : null}
+            <th>ID</th>
+
             <th>Name</th>
             <th>File Type</th>
             <th>Category</th>
             <th>Related Resource</th>
             <th>Related Policy</th>
-            <th />
+
+            <th>Related Business Process</th>
+            <th>Updated At</th>
+            <th>Created By</th>
+
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -133,14 +146,18 @@ const Resources = ({ history }: RouteComponentProps) => {
                   key={resource.id}
                   onClick={() => history.push(`/resources/${resource.id}`)}
                 >
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selected.includes(resource.id)}
-                      onClick={e => e.stopPropagation()}
-                      onChange={() => toggleCheck(resource.id)}
-                    />
-                  </td>
+                  {isAdminReviewer ? (
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(resource.id)}
+                        onClick={e => e.stopPropagation()}
+                        onChange={() => toggleCheck(resource.id)}
+                      />
+                    </td>
+                  ) : null}
+                  <td>{resource.id}</td>
+
                   <td>{resource.name}</td>
                   <td>{resource.resourceFileType}</td>
                   <td>{capitalCase(resource.category || "")}</td>
@@ -157,44 +174,51 @@ const Resources = ({ history }: RouteComponentProps) => {
                       .map(p => p.title)
                       .join(", ")}
                   </td>
-                  <td className="action">
-                    <div className="d-flex align-items-center">
-                      <Button className="soft orange mr-1" color="">
-                        <Tooltip
-                          description="Open File"
-                          subtitle="Will be download if file type not supported"
-                        >
-                          <a
-                            href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(
-                              event: React.MouseEvent<
-                                HTMLAnchorElement,
-                                MouseEvent
-                              >
-                            ) => {
-                              event.stopPropagation();
-                            }}
+                  <td>{resource.businessProcess?.name}</td>
+                  <td>{resource.updatedAt.split(" ")[0]}</td>
+                  <td>Created By</td>
+                  {isAdminReviewer || isAdmin || isAdminPreparer ? (
+                    <td className="action">
+                      <div className="d-flex align-items-center">
+                        <Button className="soft orange mr-1" color="">
+                          <Tooltip
+                            description="Open File"
+                            subtitle="Will be download if file type not supported"
                           >
-                            <FaFile size={16} />
-                          </a>
-                        </Tooltip>
-                      </Button>
-                      <DialogButton
-                        onConfirm={() =>
-                          destroyResource({ variables: { id: resource.id } })
-                        }
-                        loading={destroyM.loading}
-                        message={`Delete resource "${resource.name}"?`}
-                        className="soft red"
-                      >
-                        <Tooltip description="Delete Resource">
-                          <FaTrash className="clickable text-red" />
-                        </Tooltip>
-                      </DialogButton>
-                    </div>
-                  </td>
+                            <a
+                              href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(
+                                event: React.MouseEvent<
+                                  HTMLAnchorElement,
+                                  MouseEvent
+                                >
+                              ) => {
+                                event.stopPropagation();
+                              }}
+                            >
+                              <FaFile size={16} />
+                            </a>
+                          </Tooltip>
+                        </Button>
+                        <DialogButton
+                          onConfirm={() =>
+                            destroyResource({ variables: { id: resource.id } })
+                          }
+                          loading={destroyM.loading}
+                          message={`Delete resource "${resource.name}"?`}
+                          className="soft red"
+                        >
+                          <Tooltip description="Delete Resource">
+                            <FaTrash className="clickable text-red" />
+                          </Tooltip>
+                        </DialogButton>
+                      </div>
+                    </td>
+                  ) : (
+                    <td></td>
+                  )}
                 </tr>
               );
             })}
