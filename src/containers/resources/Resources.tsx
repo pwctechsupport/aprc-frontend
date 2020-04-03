@@ -17,6 +17,7 @@ import Tooltip from "../../shared/components/Tooltip";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
 import ImportModal from "../../shared/components/ImportModal";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const { data, loading } = useResourcesQuery({ fetchPolicy: "network-only" });
@@ -58,6 +59,8 @@ const Resources = ({ history }: RouteComponentProps) => {
       }
     );
   }
+  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+
   return (
     <div>
       <Helmet>
@@ -65,40 +68,42 @@ const Resources = ({ history }: RouteComponentProps) => {
       </Helmet>
       <BreadCrumb crumbs={[["/resources", "Resources"]]} />
       <div className="d-flex justify-content-end align-items-center mb-3">
-        <div className="d-flex">
-          <Tooltip
-            description="Export Resource"
-            subtitle={
-              selected.length
-                ? "Export selected resource"
-                : "Select resources first"
-            }
-          >
-            <Button
-              color=""
-              className="soft red mr-2"
-              onClick={handleExport}
-              disabled={!selected.length}
+        {isAdminReviewer ? (
+          <div className="d-flex">
+            <Tooltip
+              description="Export Resource"
+              subtitle={
+                selected.length
+                  ? "Export selected resource"
+                  : "Select resources first"
+              }
             >
-              <FaFileExport />
-            </Button>
-          </Tooltip>
-          <Tooltip description="Import Resource">
-            <Button
-              color=""
-              className="soft orange mr-2"
-              onClick={toggleImportModal}
-            >
-              <FaFileImport />
-            </Button>
-          </Tooltip>
-          <ImportModal
-            title="Import Resources"
-            endpoint="/resources/import"
-            isOpen={modal}
-            toggle={toggleImportModal}
-          />
-        </div>
+              <Button
+                color=""
+                className="soft red mr-2"
+                onClick={handleExport}
+                disabled={!selected.length}
+              >
+                <FaFileExport />
+              </Button>
+            </Tooltip>
+            <Tooltip description="Import Resource">
+              <Button
+                color=""
+                className="soft orange mr-2"
+                onClick={toggleImportModal}
+              >
+                <FaFileImport />
+              </Button>
+            </Tooltip>
+            <ImportModal
+              title="Import Resources"
+              endpoint="/resources/import"
+              isOpen={modal}
+              toggle={toggleImportModal}
+            />
+          </div>
+        ) : null}
       </div>
 
       <Table loading={loading} responsive>

@@ -19,6 +19,7 @@ import Tooltip from "../../shared/components/Tooltip";
 import MyApi from "../../shared/utils/api";
 import downloadXls from "../../shared/utils/downloadXls";
 import CreateBusinessProcess from "./CreateBusinessProcess";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -82,6 +83,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       }
     );
   }
+  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
 
   return (
     <div>
@@ -98,7 +100,6 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           >
             <CreateBusinessProcess />
           </Modal>
-
           <div className="mb-3 d-flex justify-content-end">
             <Tooltip description="Create Business Process">
               <Button
@@ -109,36 +110,42 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                 <FaPlus />
               </Button>
             </Tooltip>
-            <Tooltip
-              description="Export Business Process"
-              subtitle={
-                selected.length
-                  ? "Export selected business processes"
-                  : "Select BPs first"
-              }
-            >
-              <Button
-                color=""
-                className="soft red mr-2"
-                onClick={handleExport}
-                disabled={!selected.length}
+            {isAdminReviewer ? (
+              <Tooltip
+                description="Export Business Process"
+                subtitle={
+                  selected.length
+                    ? "Export selected business processes"
+                    : "Select BPs first"
+                }
               >
-                <FaFileExport />
-              </Button>
-            </Tooltip>
-            <Tooltip description="Import Business Process">
-              <Button
-                color=""
-                className="soft orange mr-2"
-                onClick={toggleImportModal}
-              >
-                <FaFileImport />
-              </Button>
-            </Tooltip>
-            <ImportBusinessProcessModal
-              isOpen={modal}
-              toggle={toggleImportModal}
-            />
+                <Button
+                  color=""
+                  className="soft red mr-2"
+                  onClick={handleExport}
+                  disabled={!selected.length}
+                >
+                  <FaFileExport />
+                </Button>
+              </Tooltip>
+            ) : null}
+            {isAdminReviewer ? (
+              <Tooltip description="Import Business Process">
+                <Button
+                  color=""
+                  className="soft orange mr-2"
+                  onClick={toggleImportModal}
+                >
+                  <FaFileImport />
+                </Button>
+              </Tooltip>
+            ) : null}
+            {isAdminReviewer ? (
+              <ImportBusinessProcessModal
+                isOpen={modal}
+                toggle={toggleImportModal}
+              />
+            ) : null}
           </div>
 
           <Table reloading={businessQuery.loading}>
@@ -219,6 +226,7 @@ const ImportBusinessProcessModal = ({
 
   async function handleImport() {
     const formData = new FormData();
+
     formData.append("file", file);
     try {
       setLoading(true);

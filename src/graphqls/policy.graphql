@@ -123,6 +123,7 @@ query policy($id: ID!) {
       objectChanges
     }
     isSubmitted
+    versionsCount
     hasEditAccess
     requestStatus
     requestEdit {

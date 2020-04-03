@@ -33,6 +33,7 @@ import {
   notifySuccess
 } from "../../shared/utils/notif";
 import CreateReference from "./CreateReference";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const References = () => {
   const [modal, setModal] = useState(false);
@@ -76,6 +77,8 @@ const References = () => {
       }
     );
   }
+  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+
   return (
     <div>
       <Helmet>
@@ -89,41 +92,42 @@ const References = () => {
         <div>
           <CreateReference />
         </div>
-
-        <div className="mb-3 d-flex justify-content-end">
-          <Tooltip
-            description="Export Policy Reference"
-            subtitle={
-              selected.length
-                ? "Export selected Policy References"
-                : "Select References first"
-            }
-          >
-            <Button
-              color=""
-              className="soft red mr-2"
-              onClick={handleExport}
-              disabled={!selected.length}
+        {isAdminReviewer ? (
+          <div className="mb-3 d-flex justify-content-end">
+            <Tooltip
+              description="Export Policy Reference"
+              subtitle={
+                selected.length
+                  ? "Export selected Policy References"
+                  : "Select References first"
+              }
             >
-              <FaFileExport />
-            </Button>
-          </Tooltip>
-          <Tooltip description="Import Policy Reference">
-            <Button
-              color=""
-              className="soft orange mr-2"
-              onClick={toggleImportModal}
-            >
-              <FaFileImport />
-            </Button>
-          </Tooltip>
-          <ImportModal
-            title="Import Policy Reference"
-            endpoint="/references/import"
-            isOpen={modal}
-            toggle={toggleImportModal}
-          />
-        </div>
+              <Button
+                color=""
+                className="soft red mr-2"
+                onClick={handleExport}
+                disabled={!selected.length}
+              >
+                <FaFileExport />
+              </Button>
+            </Tooltip>
+            <Tooltip description="Import Policy Reference">
+              <Button
+                color=""
+                className="soft orange mr-2"
+                onClick={toggleImportModal}
+              >
+                <FaFileImport />
+              </Button>
+            </Tooltip>
+            <ImportModal
+              title="Import Policy Reference"
+              endpoint="/references/import"
+              isOpen={modal}
+              toggle={toggleImportModal}
+            />
+          </div>
+        ) : null}
 
         <Table reloading={loading}>
           <thead>

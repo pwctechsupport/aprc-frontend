@@ -372,6 +372,12 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                 <span>
                   <AiOutlineClockCircle className="mr-1" />
                   {date(updatedAt)}
+                  <div
+                    className=" py-3"
+                    style={{ position: "relative", right: "92%" }}
+                  >
+                    Version: {data?.policy?.versionsCount}
+                  </div>
                 </span>
               </div>
               <div className="d-flex justify-content-end">

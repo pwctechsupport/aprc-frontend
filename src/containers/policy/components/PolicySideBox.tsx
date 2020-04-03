@@ -17,12 +17,18 @@ import {
 } from "../../../shared/components/SideBox";
 import Tooltip from "../../../shared/components/Tooltip";
 import { getPathnameParams } from "../../../shared/formatter";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 export default function PolicySideBox({ location }: RouteComponentProps) {
   const [activeId, activeMode] = getPathnameParams(location.pathname, "policy");
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
-  const isAdmin = location.pathname.split("/")[1] === "policy-admin";
+  // const isAdmin = location.pathname.split("/")[1] === "policy-admin";
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
 
   // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
   // When isTree = false, it just query all the policies, to be rendered as search result.
@@ -43,7 +49,9 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          {isAdmin ? "Policies Admin" : "Policies"}
+          {isAdmin || isAdminReviewer || isAdminPreparer
+            ? "Policies Admin"
+            : "Policies"}
           <Tooltip description="Create Policy">
             <Button
               tag={Link}
@@ -138,7 +146,7 @@ const PolicyBranch = ({
               ? `/policy-admin/${id}/details`
               : activeMode
               ? `/policy/${id}/${activeMode}`
-              : `/policy/${id}`
+              : `/policy/${id}/details`
           }
         >
           {title}

@@ -14,8 +14,14 @@ import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const ResourceSideBox = () => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
   const { data, loading } = useResourcesQuery({
@@ -32,7 +38,9 @@ const ResourceSideBox = () => {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          Resources
+          {isAdmin || isAdminReviewer || isAdminPreparer
+            ? "Resources Admin"
+            : "Resources"}
           <Tooltip description="Create Resource">
             <Button
               tag={Link}

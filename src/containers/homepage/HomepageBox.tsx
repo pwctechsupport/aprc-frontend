@@ -33,7 +33,11 @@ export default function HomepageBox({
               list.map(item => (
                 <StyledLink
                   key={item.value}
-                  to={`/${basePath}/${item.value}`}
+                  to={
+                    basePath === "policy"
+                      ? `/${basePath}/${item.value}/details`
+                      : `/${basePath}/${item.value}`
+                  }
                   className="d-flex align-items-center my-2"
                 >
                   <div className="mr-3">
