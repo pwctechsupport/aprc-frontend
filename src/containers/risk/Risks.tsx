@@ -125,14 +125,17 @@ const Risks = ({ history }: RouteComponentProps) => {
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th style={{ width: "5%" }}>
-              <input
-                type="checkbox"
-                checked={selected.length === risks.length}
-                onChange={toggleCheckAll}
-              />
-            </th>
-            <th style={{ width: "8%" }}>Risk ID</th>
+            {isAdminReviewer ? (
+              <th style={{ width: "5%" }}>
+                <input
+                  type="checkbox"
+                  checked={selected.length === risks.length}
+                  onChange={toggleCheckAll}
+                />
+              </th>
+            ) : null}
+
+            <th style={{ width: "5%" }}>ID</th>
             <th style={{ width: "13%" }}>Risk</th>
 
             <th style={{ width: "13%" }}>Risk Level</th>
@@ -150,20 +153,22 @@ const Risks = ({ history }: RouteComponentProps) => {
           {risks.map(risk => {
             const bps = risk.businessProcesses?.map(a => `, ${a.name}`) || [];
             bps[0] = risk.businessProcesses?.map(a => `${a.name}`)[0] || "-";
-            console.log(risk);
             return (
               <tr
                 key={risk.id}
                 onClick={() => history.push(`/risk/${risk.id}`)}
               >
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(risk.id)}
-                    onClick={e => e.stopPropagation()}
-                    onChange={() => toggleCheck(risk.id)}
-                  />
-                </td>
+                {isAdminReviewer ? (
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(risk.id)}
+                      onClick={e => e.stopPropagation()}
+                      onChange={() => toggleCheck(risk.id)}
+                    />
+                  </td>
+                ) : null}
+
                 <td>{risk.id}</td>
                 <td>{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>

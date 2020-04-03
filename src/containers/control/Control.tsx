@@ -141,6 +141,9 @@ const Control = ({ match, history }: RouteComponentProps) => {
   if (loading) return <LoadingSpinner centered size={30} />;
 
   const description = data?.control?.description || "";
+  const updatedAt = data?.control?.updatedAt
+    ? data?.control?.updatedAt.split(" ")[0]
+    : "";
   // description = draft ? `[Draft] ${description}` : description;
   const controlOwner = data?.control?.controlOwner || "";
   const assertion = data?.control?.assertion || [];
@@ -155,6 +158,7 @@ const Control = ({ match, history }: RouteComponentProps) => {
   const businessProcesses = data?.control?.businessProcesses || [];
   const businessProcessIds = businessProcesses.map(bp => bp.id);
   const activityControls = data?.control?.activityControls || [];
+  const createdAt = data?.control?.createdAt || "";
 
   const renderControlAction = () => {
     if (premise === 6) {
@@ -256,6 +260,9 @@ const Control = ({ match, history }: RouteComponentProps) => {
 
   const renderControlNonEditable = () => {
     const details = [
+      { label: "Control ID", value: id },
+      { label: "Description", value: description },
+
       { label: "Control Owner", value: controlOwner },
       {
         label: "Key Control",
@@ -273,7 +280,11 @@ const Control = ({ match, history }: RouteComponentProps) => {
         value: ipo.map(x => capitalCase(x)).join(", ")
       },
       { label: "Frequency", value: capitalCase(frequency) },
-      { label: "Status", value: capitalCase(status) }
+      { label: "Status", value: capitalCase(status) },
+      { label: "Updated At", value: updatedAt },
+      { label: "Updated By", value: "updated by" },
+      { label: "Created At", value: createdAt.split(" ")[0] },
+      { label: "Created By", value: "created by" }
     ];
     return (
       <Row>

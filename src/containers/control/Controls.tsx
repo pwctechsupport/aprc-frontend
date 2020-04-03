@@ -67,7 +67,11 @@ const Controls = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
 
   return (
     <div>
@@ -119,19 +123,27 @@ const Controls = ({ history }: RouteComponentProps) => {
           <Table reloading={loading}>
             <thead>
               <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={selected.length === controls.length}
-                    onChange={toggleCheckAll}
-                  />
-                </th>
+                {isAdminReviewer ? (
+                  <th>
+                    <input
+                      type="checkbox"
+                      checked={selected.length === controls.length}
+                      onChange={toggleCheckAll}
+                    />
+                  </th>
+                ) : null}
+
+                <th>ID</th>
                 <th>Description</th>
                 <th>Freq</th>
-                <th>Type</th>
-                <th>Ass. Risk</th>
-                <th>Nature</th>
-                <th>Owner</th>
+                <th style={{ width: "10%" }}>Type</th>
+                <th style={{ width: "15%" }}>Ass. Risk</th>
+                <th style={{ width: "9%" }}>Nature</th>
+                <th style={{ width: "9%" }}>Owner</th>
+                <th style={{ width: "9%" }}>status</th>
+                <th style={{ width: "10%" }}>Updated At</th>
+                <th style={{ width: "10%" }}>Updated By</th>
+
                 <th></th>
               </tr>
             </thead>
@@ -142,14 +154,18 @@ const Controls = ({ history }: RouteComponentProps) => {
                     key={control.id}
                     onClick={() => history.push(`/control/${control.id}`)}
                   >
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selected.includes(control.id)}
-                        onClick={e => e.stopPropagation()}
-                        onChange={() => toggleCheck(control.id)}
-                      />
-                    </td>
+                    {isAdminReviewer ? (
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selected.includes(control.id)}
+                          onClick={e => e.stopPropagation()}
+                          onChange={() => toggleCheck(control.id)}
+                        />
+                      </td>
+                    ) : null}
+
+                    <td>{control.id}</td>
                     <td style={{ width: 200 }}>{control.description}</td>
                     <td>{capitalCase(control.frequency || "")}</td>
                     <td>{capitalCase(control.typeOfControl || "")}</td>
@@ -161,16 +177,34 @@ const Controls = ({ history }: RouteComponentProps) => {
                     </td>
                     <td>{capitalCase(control.nature || "")}</td>
                     <td>{control.controlOwner}</td>
-                    <td className="action">
-                      <DialogButton
-                        onConfirm={() => handleDelete(control.id)}
-                        loading={destroyM.loading}
-                        message={`Delete "${control.description}"?`}
-                        className="soft red"
-                      >
-                        <FaTrash className="clickable" />
-                      </DialogButton>
+                    <td>
+                      {control.status
+                        ?.split("_")
+                        .map(
+                          a =>
+                            a.charAt(0).toUpperCase() +
+                            a.substr(1).toLowerCase()
+                        )
+                        .join(" ")}
                     </td>
+                    <td>
+                      {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}
+                    </td>
+                    <td>Updated By</td>
+                    {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                      <td className="action">
+                        <DialogButton
+                          onConfirm={() => handleDelete(control.id)}
+                          loading={destroyM.loading}
+                          message={`Delete "${control.description}"?`}
+                          className="soft red"
+                        >
+                          <FaTrash className="clickable" />
+                        </DialogButton>
+                      </td>
+                    ) : (
+                      <td></td>
+                    )}
                   </tr>
                 );
               })}

@@ -128,19 +128,22 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th style={{ width: "5%" }}>
-              <input
-                type="checkbox"
-                checked={selected.length === policyCategories.length}
-                onChange={toggleCheckAll}
-              />
-            </th>
-            <th style={{ width: "10%" }}>Policy Category Id</th>
+            {isAdminReviewer ? (
+              <th style={{ width: "5%" }}>
+                <input
+                  type="checkbox"
+                  checked={selected.length === policyCategories.length}
+                  onChange={toggleCheckAll}
+                />
+              </th>
+            ) : null}
+
+            <th style={{ width: "5%" }}>ID</th>
             <th style={{ width: "10%" }}>Category Name</th>
-            <th style={{ width: "20%" }}>Related Policies</th>
-            <th style={{ width: "20%" }}>Status</th>
-            <th style={{ width: "20%" }}>Updated At</th>
-            <th style={{ width: "20%" }}>Updated By</th>
+            <th style={{ width: "40%" }}>Related Policies</th>
+            <th style={{ width: "15%" }}>Status</th>
+            <th style={{ width: "12%" }}>Updated At</th>
+            <th style={{ width: "12%" }}>Updated By</th>
 
             <th></th>
           </tr>
@@ -154,14 +157,17 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                   history.push(`/policy-category/${policyCategory.id}`)
                 }
               >
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(policyCategory.id)}
-                    onClick={e => e.stopPropagation()}
-                    onChange={() => toggleCheck(policyCategory.id)}
-                  />
-                </td>
+                {isAdminReviewer ? (
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(policyCategory.id)}
+                      onClick={e => e.stopPropagation()}
+                      onChange={() => toggleCheck(policyCategory.id)}
+                    />
+                  </td>
+                ) : null}
+
                 <td>{policyCategory.id}</td>
                 <td>{policyCategory.name}</td>
                 <td>
@@ -171,7 +177,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                     .join(", ")}
                 </td>
                 <td>minta backend</td>
-                <td>{policyCategory.updatedAt}</td>
+                <td>{policyCategory.updatedAt.split(" ")[0]}</td>
                 <td>minta backend</td>
                 {admins ? (
                   <td className="action">

@@ -77,8 +77,11 @@ const References = () => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   return (
     <div>
       <Helmet>
@@ -89,9 +92,12 @@ const References = () => {
         <div className="d-flex justify-content-between align-items-center">
           <h4>References</h4>
         </div>
-        <div>
-          <CreateReference />
-        </div>
+        {isAdmin || isAdminReviewer || isAdminPreparer ? (
+          <div>
+            <CreateReference />
+          </div>
+        ) : null}
+
         {isAdminReviewer ? (
           <div className="mb-3 d-flex justify-content-end">
             <Tooltip
@@ -132,15 +138,21 @@ const References = () => {
         <Table reloading={loading}>
           <thead>
             <tr>
-              <th>
+              <th style={{ width: "5%" }}>
                 <input
                   type="checkbox"
                   checked={selected.length === references.length}
                   onChange={toggleCheckAll}
                 />
               </th>
-              <th>Name</th>
-              <th>Policy</th>
+              <th style={{ width: "5%" }}>ID</th>
+              <th style={{ width: "5%" }}>Name</th>
+              <th style={{ width: "30%" }}>Policy</th>
+              <th style={{ width: "10%" }}>Updated At</th>
+              <th style={{ width: "10%" }}>Updated By</th>
+              <th style={{ width: "10%" }}>Created At</th>
+              <th style={{ width: "10%" }}>Created By</th>
+
               <th></th>
             </tr>
           </thead>
@@ -217,7 +229,11 @@ const ReferenceRow = ({
       }
     });
   }
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   return (
     <tr>
       <td>
@@ -228,7 +244,12 @@ const ReferenceRow = ({
           onChange={toggleCheck}
         />
       </td>
-      <td className="align-middle" style={{ width: "20%" }}>
+      <td>{reference.id}</td>
+
+      <td
+        className="align-middle"
+        // style={{ width: "20%" }}
+      >
         {edit ? (
           <Input
             className="p-0 m-0"
@@ -240,7 +261,11 @@ const ReferenceRow = ({
           reference.name
         )}
       </td>
-      <td className="align-middle" style={{ width: "50%" }}>
+
+      <td
+        className="align-middle"
+        // style={{ width: "50%" }}
+      >
         {edit ? (
           <AsyncSelect
             row
@@ -259,49 +284,60 @@ const ReferenceRow = ({
           reference.policies?.map(a => a.title).join(", ")
         )}
       </td>
-      <td className="align-middle text-right action" style={{ width: "30%" }}>
-        <div className="d-flex align-items-center justify-content-end">
-          {edit ? (
-            <div>
-              <Button
-                color=""
-                onClick={toggleEdit}
-                type="button"
-                className="mr-2"
-              >
-                <FaTimes /> Cancel
-              </Button>
-              <DialogButton
-                onConfirm={handleSubmit(updateReference)}
-                className="pwc"
-                loading={updateM.loading}
-                color="primary"
-                message="Save reference?"
-              >
-                Save
-              </DialogButton>
-            </div>
-          ) : (
-            <div>
-              <Button
-                color=""
-                onClick={toggleEdit}
-                className="soft orange mr-2"
-              >
-                <FaPencilAlt />
-              </Button>
-              <DialogButton
-                onConfirm={onDelete}
-                loading={deleteLoading}
-                message={`Delete ${reference.name}?`}
-                className="soft red"
-              >
-                <FaTrash />
-              </DialogButton>
-            </div>
-          )}
-        </div>
-      </td>
+      <td>{reference.updatedAt.split("T")[0]}</td>
+      <td>Updated By</td>
+      <td>{reference.createdAt.split("T")[0]}</td>
+      <td>Created By</td>
+      {isAdmin || isAdminReviewer || isAdminPreparer ? (
+        <td
+          className="align-middle text-right action"
+          // style={{ width: "30%" }}
+        >
+          <div className="d-flex align-items-center justify-content-end">
+            {edit ? (
+              <div>
+                <Button
+                  color=""
+                  onClick={toggleEdit}
+                  type="button"
+                  className="mr-2"
+                >
+                  <FaTimes /> Cancel
+                </Button>
+                <DialogButton
+                  onConfirm={handleSubmit(updateReference)}
+                  className="pwc"
+                  loading={updateM.loading}
+                  color="primary"
+                  message="Save reference?"
+                >
+                  Save
+                </DialogButton>
+              </div>
+            ) : (
+              <div>
+                <Button
+                  color=""
+                  onClick={toggleEdit}
+                  className="soft orange mr-2"
+                >
+                  <FaPencilAlt />
+                </Button>
+                <DialogButton
+                  onConfirm={onDelete}
+                  loading={deleteLoading}
+                  message={`Delete ${reference.name}?`}
+                  className="soft red"
+                >
+                  <FaTrash />
+                </DialogButton>
+              </div>
+            )}
+          </div>
+        </td>
+      ) : (
+        <td></td>
+      )}
     </tr>
   );
 };

@@ -69,6 +69,7 @@ query resource($id: ID!) {
   resource(id: $id) {
     id
     name
+    status
     category
     policies {
       id

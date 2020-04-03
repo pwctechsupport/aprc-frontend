@@ -55,6 +55,7 @@ fragment control on Control {
   ipo
   status
   updatedAt
+  createdAt
 }
 
 mutation createControl($input: CreateControlInput!) {
