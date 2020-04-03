@@ -172,7 +172,9 @@ const Risks = ({ history }: RouteComponentProps) => {
                 <td>{risk.id}</td>
                 <td>{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
-                <td>{risk.typeOfRisk}</td>
+                <td>
+                  {capitalCase(risk.typeOfRisk?.split("_").join(" ") || "")}
+                </td>
                 <td>{bps}</td>
                 <td>{risk.updatedAt?.split(" ")[0]}</td>
                 <td>Last update by</td>

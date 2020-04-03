@@ -83,7 +83,11 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
 
   return (
     <div>
@@ -100,16 +104,19 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           >
             <CreateBusinessProcess />
           </Modal>
+
           <div className="mb-3 d-flex justify-content-end">
-            <Tooltip description="Create Business Process">
-              <Button
-                onClick={toggleCreateBpModal}
-                className="soft orange mr-2"
-                color=""
-              >
-                <FaPlus />
-              </Button>
-            </Tooltip>
+            {isAdmin || isAdminReviewer || isAdminPreparer ? (
+              <Tooltip description="Create Business Process">
+                <Button
+                  onClick={toggleCreateBpModal}
+                  className="soft orange mr-2"
+                  color=""
+                >
+                  <FaPlus />
+                </Button>
+              </Tooltip>
+            ) : null}
             {isAdminReviewer ? (
               <Tooltip
                 description="Export Business Process"
@@ -151,15 +158,24 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           <Table reloading={businessQuery.loading}>
             <thead>
               <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={selected.length === bps.length}
-                    onChange={toggleCheckAll}
-                  />
-                </th>
+                {isAdminReviewer ? (
+                  <th>
+                    <input
+                      type="checkbox"
+                      checked={selected.length === bps.length}
+                      onChange={toggleCheckAll}
+                    />
+                  </th>
+                ) : null}
+
                 <th>Business Process</th>
                 <th>Business Process ID</th>
+
+                <th>Updated At</th>
+                <th>Updated By</th>
+                <th>Created At</th>
+                <th>Created By</th>
+
                 <th></th>
               </tr>
             </thead>
@@ -169,26 +185,37 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                   key={item.id}
                   onClick={() => history.push(`/business-process/${item.id}`)}
                 >
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selected.includes(item.id)}
-                      onClick={e => e.stopPropagation()}
-                      onChange={() => toggleCheck(item.id)}
-                    />
-                  </td>
+                  {isAdminReviewer ? (
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(item.id)}
+                        onClick={e => e.stopPropagation()}
+                        onChange={() => toggleCheck(item.id)}
+                      />
+                    </td>
+                  ) : null}
+
                   <td>{item.name}</td>
                   <td>{item.id}</td>
-                  <td className="action">
-                    <DialogButton
-                      onConfirm={() => handleDelete(item.id)}
-                      loading={destroyM.loading}
-                      message={`Delete Business Process "${item.name}"?`}
-                      className="soft red"
-                    >
-                      <FaTrash className="clickable" />
-                    </DialogButton>
-                  </td>
+                  <td>{item.updatedAt.split("T")[0]}</td>
+                  <td>Updated By</td>
+                  <td>{item.createdAt.split("T")[0]}</td>
+                  <td>Created By</td>
+                  {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                    <td className="action">
+                      <DialogButton
+                        onConfirm={() => handleDelete(item.id)}
+                        loading={destroyM.loading}
+                        message={`Delete Business Process "${item.name}"?`}
+                        className="soft red"
+                      >
+                        <FaTrash className="clickable" />
+                      </DialogButton>
+                    </td>
+                  ) : (
+                    <td></td>
+                  )}
                 </tr>
               ))}
             </tbody>

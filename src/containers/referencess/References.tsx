@@ -138,7 +138,7 @@ const References = () => {
         <Table reloading={loading}>
           <thead>
             <tr>
-              {isAdmin || isAdminReviewer || isAdminPreparer ? (
+              {isAdminReviewer ? (
                 <th style={{ width: "5%" }}>
                   <input
                     type="checkbox"
@@ -239,7 +239,7 @@ const ReferenceRow = ({
   ]);
   return (
     <tr>
-      {isAdmin || isAdminReviewer || isAdminPreparer ? (
+      {isAdminReviewer ? (
         <td>
           <input
             type="checkbox"
