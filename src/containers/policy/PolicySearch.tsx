@@ -9,7 +9,7 @@ import { takeValue, removeEmpty } from "../../shared/formatter";
 import useListState from "../../shared/hooks/useList";
 import PolicySearchForm, {
   DateFilter,
-  PolicySearchFormValues
+  PolicySearchFormValues,
 } from "./policySearch/PolicySearchForm";
 import PolicySearchItem from "./policySearch/PolicySearchItem";
 import OpacityButton from "../../shared/components/OpacityButton";
@@ -30,7 +30,7 @@ export default function PolicySearch() {
 
   const [showDashboard, setShowDashboard] = useState(false);
   function toggleShowDashboard() {
-    setShowDashboard(p => !p);
+    setShowDashboard((p) => !p);
   }
 
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
@@ -38,12 +38,11 @@ export default function PolicySearch() {
     variables: {
       filter,
       limit,
-      page
-    }
+      page,
+    },
   });
   const policies = data?.policies?.collection || [];
   const totalCount = data?.policies?.metadata.totalCount || 0;
-
   function handleFormSubmit(values: PolicySearchFormValues) {
     setFilter(
       removeEmpty({
@@ -54,7 +53,7 @@ export default function PolicySearch() {
         resources_id_in: values.resources?.map(takeValue),
         references_id_in: values.policyReferences?.map(takeValue),
         categories_id_in: values.policyCategories?.map(takeValue),
-        updated_at_gteq: constructDateFilter(values.dateFrom)
+        updated_at_gteq: constructDateFilter(values.dateFrom),
       })
     );
   }
@@ -95,7 +94,7 @@ export default function PolicySearch() {
             onPageChange={handlePageChange}
           />
           {policies.length ? (
-            policies.map(policy => (
+            policies.map((policy) => (
               <PolicySearchItem key={policy.id} policy={policy} />
             ))
           ) : loading ? (
