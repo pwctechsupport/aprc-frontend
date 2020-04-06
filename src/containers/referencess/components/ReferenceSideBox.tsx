@@ -9,8 +9,14 @@ import {
   SideBox,
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const ReferenceSideBox = () => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   const [search, setSearch] = useState("");
   const { data, loading } = useReferencesQuery({
     fetchPolicy: "network-only",
@@ -26,7 +32,11 @@ const ReferenceSideBox = () => {
 
   return (
     <SideBox>
-      <SideBoxTitle>Policy Reference</SideBoxTitle>
+      <SideBoxTitle>
+        {isAdmin || isAdminReviewer || isAdminPreparer
+          ? "Policy Reference Admin"
+          : "Policy Reference"}
+      </SideBoxTitle>
       <SideBoxSearch
         search={search}
         setSearch={setSearch}

@@ -48,7 +48,9 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          {isAdmin ? "Policies Admin" : "Policies"}
+          {isAdmin || isAdminReviewer || isAdminPreparer
+            ? "Policies Admin"
+            : "Policies"}
           {(isAdmin || isAdminReviewer || isAdminPreparer) && (
             <Tooltip description="Create Policy">
               <Button

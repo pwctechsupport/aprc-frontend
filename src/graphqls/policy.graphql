@@ -122,6 +122,7 @@ query policy($id: ID!) {
       }
       objectChanges
     }
+    isSubmitted
     versionsCount
     hasEditAccess
     requestStatus
@@ -217,7 +218,16 @@ mutation createPolicy($input: CreatePolicyInput!) {
     }
   }
 }
-
+mutation updateDraftPolicy($input: UpdateDraftPolicyInput!) {
+  updateDraftPolicy(input: $input) {
+    clientMutationId
+  }
+}
+mutation submitPolicy($input: SubmitDraftPolicyInput!) {
+  submitDraftPolicy(input: $input) {
+    clientMutationId
+  }
+}
 mutation updatePolicy($input: UpdatePolicyInput!) {
   updatePolicy(input: $input) {
     clientMutationId

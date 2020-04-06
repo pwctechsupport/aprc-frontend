@@ -37,7 +37,9 @@ const ResourceSideBox = () => {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          Resources
+          {isAdmin || isAdminReviewer || isAdminPreparer
+            ? "Resources Admin"
+            : "Resources"}
           {isAdmin || isAdminReviewer || isAdminPreparer ? (
             <Tooltip description="Create Resource">
               <Button

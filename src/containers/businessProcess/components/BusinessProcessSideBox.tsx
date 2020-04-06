@@ -10,8 +10,14 @@ import {
   SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const BusinessProcessSideBox = () => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   const [searchValue, setSearchValue] = useState("");
   const [searchQuery] = useDebounce(searchValue, 400);
 
@@ -26,7 +32,11 @@ const BusinessProcessSideBox = () => {
     );
   return (
     <SideBox>
-      <SideBoxTitle>Recently Added</SideBoxTitle>
+      <SideBoxTitle>
+        {isAdmin || isAdminReviewer || isAdminPreparer
+          ? "Business Process Admin"
+          : "Business Process"}
+      </SideBoxTitle>
       <SideBoxSearch
         search={searchValue}
         setSearch={setSearchValue}

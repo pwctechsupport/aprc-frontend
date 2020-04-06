@@ -39,7 +39,9 @@ const ControlSideBox = () => {
     <SideBox>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          Control
+          {isAdmin || isAdminPreparer || isAdminReviewer
+            ? "Control Admin"
+            : "Control"}
           {isAdmin || isAdminReviewer || isAdminPreparer ? (
             <Tooltip description="Create Control">
               <Button
