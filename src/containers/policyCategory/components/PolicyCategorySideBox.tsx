@@ -6,7 +6,7 @@ import {
   SideBoxItem,
   SideBoxItemText,
   SideBoxSearch,
-  SideBoxTitle
+  SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import Button from "../../../shared/components/Button";
 import { FaPlus } from "react-icons/fa";
@@ -15,20 +15,20 @@ import Tooltip from "../../../shared/components/Tooltip";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const PolicyCategorySideBox = () => {
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer"
-  ]);
   const [search, setSearch] = useState("");
   const { data, loading } = usePolicyCategoriesQuery({
     variables: {
-      filter: { name_cont: search }
+      filter: { name_cont: search },
     },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const policyCategories = oc(data).policyCategories.collection([]);
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const admins = isAdmin || isAdminReviewer || isAdminPreparer;
   return (
     <SideBox>
       <SideBoxTitle>
@@ -36,25 +36,27 @@ const PolicyCategorySideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policy Category Admin"
             : "Policy Category"}
-          <Tooltip description="Create Policy Category">
-            <Button
-              tag={Link}
-              to="/policy-category/create"
-              className="soft red"
-              color=""
-            >
-              <FaPlus />
-            </Button>
-          </Tooltip>
+          {admins ? (
+            <Tooltip description="Create Policy Category">
+              <Button
+                tag={Link}
+                to="/policy-category/create"
+                className="soft red"
+                color=""
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch search={search} setSearch={setSearch} loading={loading} />
-      {policyCategories.map(policyCateg => (
+      {policyCategories.map((policyCateg) => (
         <SideBoxItem
           key={policyCateg.id}
           to={`/policy-category/${policyCateg.id}`}
         >
-          <SideBoxItemText>{policyCateg.name}</SideBoxItemText>
+          <SideBoxItemText bold>{policyCateg.name}</SideBoxItemText>
         </SideBoxItem>
       ))}
     </SideBox>

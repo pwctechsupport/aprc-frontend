@@ -102,6 +102,10 @@ fragment businessProcessBranch on BusinessProcess {
   name
   status
   parentId
+  createdAt
+  createdBy
+  lastUpdatedBy
+  updatedAt
   risks {
     id
     name

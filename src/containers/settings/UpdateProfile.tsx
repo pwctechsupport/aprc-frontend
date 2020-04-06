@@ -1,29 +1,28 @@
 import React from "react";
+import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
-  UpdateUserInput,
   User,
   useUpdateProfileMutation,
-  useUpdateUserPasswordMutation
+  useUpdateUserPasswordMutation,
 } from "../../generated/graphql";
 import { updateUser } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import Input from "../../shared/components/forms/Input";
 import { useSelector } from "../../shared/hooks/useSelector";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
-import Helmet from "react-helmet";
 
-const UpdateProfile = () => {
-  const user = useSelector(state => state.auth.user);
+export default function UpdateProfile() {
+  const user = useSelector((state) => state.auth.user);
   const defaultValues = user || {};
   const dispatch = useDispatch();
 
   // Handler for update user information
   const [updateProfileM, { loading }] = useUpdateProfileMutation({
-    onCompleted: res => {
+    onCompleted: (res) => {
       notifySuccess("Update Success");
       const newUser = {
         id: oc(res).updateUser.user.id(""),
@@ -33,23 +32,23 @@ const UpdateProfile = () => {
         name: oc(res).updateUser.user.name(""),
         phone: oc(res).updateUser.user.phone(""),
         jobPosition: oc(res).updateUser.user.jobPosition(""),
-        department: oc(res).updateUser.user.department("")
+        department: oc(res).updateUser.user.department(""),
       };
       if (user) dispatch(updateUser(newUser));
     },
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
-  function updateProfile(values: UpdateUserInput) {
+  function updateProfile(values: UpdateProfileFormValues) {
     updateProfileM({ variables: { input: values } });
   }
 
   // Handler for update user password
   const [
     updateUserPasswordM,
-    updateUserPasswordMutInfo
+    updateUserPasswordMutInfo,
   ] = useUpdateUserPasswordMutation({
     onCompleted: () => notifySuccess("Password Updated"),
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
   function updateUserPassword(values: UpdatePasswordFormValues) {
     updateUserPasswordM({ variables: { input: values } });
@@ -75,21 +74,31 @@ const UpdateProfile = () => {
       />
     </div>
   );
-};
-
-export default UpdateProfile;
+}
 
 // ============================================
 // Building Blocks => Update profile form
 // ============================================
+interface UpdateProfileFormValues {
+  name?: string | null;
+  jobPosition?: string | null;
+  email?: string | null;
+  phone?: string | null;
+}
+
+interface UpdateProfileFormProps {
+  onSubmit: (values: UpdateProfileFormValues) => void;
+  submitting?: boolean;
+  defaultValues?: User | {};
+}
 
 const UpdateProfileForm = ({
   onSubmit,
   submitting,
-  defaultValues
+  defaultValues,
 }: UpdateProfileFormProps) => {
-  const { register, handleSubmit, errors } = useForm<UpdateUserInput>({
-    defaultValues
+  const { register, handleSubmit, errors } = useForm<UpdateProfileFormValues>({
+    defaultValues,
   });
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
@@ -132,19 +141,22 @@ const UpdateProfileForm = ({
   );
 };
 
-interface UpdateProfileFormProps {
-  onSubmit: (values: UpdateUserInput) => void;
-  submitting?: boolean;
-  defaultValues?: User | {};
-}
-
 // ============================================
 // Building Blocks => Update password form
 // ============================================
+interface UpdatePasswordFormValues {
+  password: string;
+  passwordConfirmation: string;
+}
+
+interface UpdatePasswordFormProps {
+  onSubmit: (values: UpdatePasswordFormValues) => void;
+  submitting?: boolean;
+}
 
 const UpdatePasswordForm = ({
   onSubmit,
-  submitting
+  submitting,
 }: UpdatePasswordFormProps) => {
   const { register, handleSubmit, errors, reset } = useForm<
     UpdatePasswordFormValues
@@ -153,7 +165,7 @@ const UpdatePasswordForm = ({
     onSubmit(data);
     reset({
       password: "",
-      passwordConfirmation: ""
+      passwordConfirmation: "",
     });
   };
   return (
@@ -188,13 +200,3 @@ const UpdatePasswordForm = ({
     </Form>
   );
 };
-
-interface UpdatePasswordFormProps {
-  onSubmit: (values: UpdatePasswordFormValues) => void;
-  submitting?: boolean;
-}
-
-interface UpdatePasswordFormValues {
-  password: string;
-  passwordConfirmation: string;
-}

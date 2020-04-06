@@ -13,7 +13,7 @@ import {
   SideBoxBranchIconContainer,
   SideBoxBranchTitle,
   SideBoxSearch,
-  SideBoxTitle
+  SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import Tooltip from "../../../shared/components/Tooltip";
 import { getPathnameParams } from "../../../shared/formatter";
@@ -24,11 +24,6 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
   // const isAdmin = location.pathname.split("/")[1] === "policy-admin";
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer"
-  ]);
 
   // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
   // When isTree = false, it just query all the policies, to be rendered as search result.
@@ -36,15 +31,19 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
     variables: {
       filter: {
         ...(!searchQuery && {
-          ancestry_null: true
+          ancestry_null: true,
         }),
-        title_cont: searchQuery
+        title_cont: searchQuery,
       },
-      isTree: !searchQuery
-    }
+      isTree: !searchQuery,
+    },
   });
   const policies = data?.policies?.collection || [];
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
   return (
     <SideBox>
       <SideBoxTitle>
@@ -52,16 +51,18 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policies Admin"
             : "Policies"}
-          <Tooltip description="Create Policy">
-            <Button
-              tag={Link}
-              to={isAdmin ? "/policy-admin/create" : "/policy/create"}
-              className="soft red"
-              color=""
-            >
-              <FaPlus />
-            </Button>
-          </Tooltip>
+          {(isAdmin || isAdminReviewer || isAdminPreparer) && (
+            <Tooltip description="Create Policy">
+              <Button
+                tag={Link}
+                to={isAdmin ? "/policy-admin/create" : "/policy/create"}
+                className="soft red"
+                color=""
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+          )}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
@@ -72,7 +73,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       />
       <div>
         {policies.length ? (
-          policies.map(policy => (
+          policies.map((policy) => (
             <PolicyBranch
               key={policy.id}
               id={policy.id}
@@ -112,7 +113,7 @@ const PolicyBranch = ({
   title,
   children = [],
   level,
-  isAdmin
+  isAdmin,
 }: PolicyBranchProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
@@ -123,9 +124,13 @@ const PolicyBranch = ({
     <div>
       <SideBoxBranch
         className={classnames("d-flex align-items-center", {
-          active: isActive
+          active: isActive,
         })}
-        style={{ paddingLeft: Number(level) * 10 }}
+        style={{
+          paddingLeft: Number(level) * 10,
+          marginBottom: "10px",
+          borderBottom: " 1px solid #d85604",
+        }}
       >
         {hasChild ? (
           <SideBoxBranchIconContainer onClick={toggle}>

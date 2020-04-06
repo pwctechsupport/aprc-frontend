@@ -20,8 +20,14 @@ import BusinessProcessForm, {
 import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Helmet from "react-helmet";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const BusinessProcess = ({ match, history }: RouteComponentProps) => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   const id = get(match, "params.id", "");
   const [editMode, setEditMode] = useState(false);
   const { data, loading } = useBusinessProcessQuery({ variables: { id } });
@@ -109,25 +115,34 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
       ) : (
         <div className="d-flex justify-content-between align-items-center mt-3">
           <h4>{name}</h4>
-          <div>
-            <Button onClick={toggleEdit} className="soft orange mr-3" color="">
-              <FaPencilAlt />
-            </Button>
-            <DialogButton
-              onConfirm={() => handleDeleteMain(id)}
-              loading={destroyMainM.loading}
-              message={`Delete Business Process "${name}"?`}
-              className="soft red"
-            >
-              <FaTrash />
-            </DialogButton>
-          </div>
+          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+            <div>
+              <Button
+                onClick={toggleEdit}
+                className="soft orange mr-3"
+                color=""
+              >
+                <FaPencilAlt />
+              </Button>
+              <DialogButton
+                onConfirm={() => handleDeleteMain(id)}
+                loading={destroyMainM.loading}
+                message={`Delete Business Process "${name}"?`}
+                className="soft red"
+              >
+                <FaTrash />
+              </DialogButton>
+            </div>
+          ) : null}
         </div>
       )}
       <h6>ID: {id}</h6>
-      <div className="mt-5">
-        {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}
-      </div>
+      {isAdmin || isAdminReviewer || isAdminPreparer ? (
+        <div className="mt-5">
+          {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}
+        </div>
+      ) : null}
+
       <Table reloading={loading}>
         <thead>
           <tr>
@@ -146,17 +161,21 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
                 >
                   <td>{child.name}</td>
                   <td>{child.id}</td>
-                  <td className="action">
-                    <DialogButton
-                      onConfirm={() => handleDelete(child.id)}
-                      loading={destroyM.loading}
-                      message={`Delete Business Process "${child.name}"?`}
-                      className="soft orange"
-                      color=""
-                    >
-                      <FaTrash />
-                    </DialogButton>
-                  </td>
+                  {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                    <td className="action">
+                      <DialogButton
+                        onConfirm={() => handleDelete(child.id)}
+                        loading={destroyM.loading}
+                        message={`Delete Business Process "${child.name}"?`}
+                        className="soft orange"
+                        color=""
+                      >
+                        <FaTrash />
+                      </DialogButton>
+                    </td>
+                  ) : (
+                    <td></td>
+                  )}
                 </tr>
               );
             })

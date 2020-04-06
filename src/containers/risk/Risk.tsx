@@ -4,11 +4,11 @@ import Helmet from "react-helmet";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
-  AiOutlineEdit
+  AiOutlineEdit,
 } from "react-icons/ai";
 import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
-import { Badge } from "reactstrap";
+import { Badge, Col, Container, Row } from "reactstrap";
 import {
   LevelOfRisk,
   TypeOfRisk,
@@ -17,7 +17,7 @@ import {
   useDestroyRiskMutation,
   useReviewRiskDraftMutation,
   useRiskQuery,
-  useUpdateRiskMutation
+  useUpdateRiskMutation,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -31,14 +31,15 @@ import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess
+  notifySuccess,
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
+import styled from "styled-components";
 
 const Risk = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
   function toggleEditMode() {
-    setInEditMode(p => !p);
+    setInEditMode((p) => !p);
   }
 
   // Close edit mode when changing screen
@@ -50,13 +51,17 @@ const Risk = ({ match, history }: RouteComponentProps) => {
   const id = match.params && (match.params as any).id;
   const { data, loading } = useRiskQuery({
     variables: { id },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const name = data?.risk?.name || "";
   const levelOfRisk = data?.risk?.levelOfRisk || "";
   const typeOfRisk = data?.risk?.typeOfRisk || "";
   const bps = data?.risk?.businessProcesses;
-
+  const updatedAt = data?.risk?.updatedAt;
+  const updatedBy = data?.risk?.lastUpdatedBy;
+  const createdBy = data?.risk?.createdBy;
+  const status = data?.risk?.status;
+  const createdAt = data?.risk?.createdAt;
   const draft = data?.risk?.draft?.objectResult;
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
@@ -65,14 +70,14 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     draft,
     hasEditAccess,
     requestStatus,
-    requestEditState
+    requestEditState,
   });
-
+  console.log("data", data);
   const defaultValues: RiskFormValues = {
     name,
     businessProcessIds: data?.risk?.businessProcesses?.map(toLabelValue) || [],
     levelOfRisk: levelOfRisk as LevelOfRisk,
-    typeOfRisk: typeOfRisk as TypeOfRisk
+    typeOfRisk: typeOfRisk as TypeOfRisk,
   };
 
   // Update handlers
@@ -83,7 +88,7 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["risks", "risk"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleUpdate(values: RiskFormValues) {
     update({
@@ -91,11 +96,11 @@ const Risk = ({ match, history }: RouteComponentProps) => {
         input: {
           id,
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map(a => a.value),
+          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
           levelOfRisk: values.levelOfRisk,
-          typeOfRisk: values.typeOfRisk
-        }
-      }
+          typeOfRisk: values.typeOfRisk,
+        },
+      },
     });
   }
 
@@ -107,12 +112,12 @@ const Risk = ({ match, history }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["risks"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   // Review handlers
   const [reviewMutation, reviewMutationInfo] = useReviewRiskDraftMutation({
-    refetchQueries: ["risk"]
+    refetchQueries: ["risk"],
   });
   async function review({ publish }: { publish: boolean }) {
     try {
@@ -126,21 +131,21 @@ const Risk = ({ match, history }: RouteComponentProps) => {
   // Request Edit handlers
   const [
     requestEditMutation,
-    requestEditMutationInfo
+    requestEditMutationInfo,
   ] = useCreateRequestEditMutation({
     variables: { id, type: "Risk" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["risk"]
+    refetchQueries: ["risk"],
   });
 
   // Approve and Reject handlers
   const [
     approveEditMutation,
-    approveEditMutationResult
+    approveEditMutationResult,
   ] = useApproveRequestEditMutation({
     refetchQueries: ["risk"],
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
   async function handleApproveRequest(id: string) {
     try {
@@ -260,11 +265,12 @@ const Risk = ({ match, history }: RouteComponentProps) => {
   };
 
   const renderRisk = () => {
-    const details = [
+    const details1 = [
+      { label: "Risk Id", value: id },
       { label: "Name", value: name },
       {
         label: "Business Process",
-        value: bps?.map(a => a.name).join(", ")
+        value: bps?.map((a) => a.name).join(", "),
       },
       {
         label: "Level of Risk",
@@ -272,22 +278,56 @@ const Risk = ({ match, history }: RouteComponentProps) => {
           <Badge color={getRiskColor(levelOfRisk)}>
             {startCase(levelOfRisk)}
           </Badge>
-        )
+        ),
       },
       {
         label: "Type of Risk",
-        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>
-      }
+        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
+      },
+    ];
+    const details2 = [
+      {
+        label: "Last Updated",
+        value: updatedAt?.split(" ")[0],
+      },
+      {
+        label: "Updated By",
+        value: updatedBy,
+      },
+      {
+        label: "Created At",
+        value: createdAt?.split(" ")[0],
+      },
+      {
+        label: "Created By",
+        value: createdBy,
+      },
+      {
+        label: "Status",
+        value: status,
+      },
     ];
     return (
-      <dl>
-        {details.map(item => (
-          <Fragment key={item.label}>
-            <dt>{item.label}</dt>
-            <dd>{item.value || "-"}</dd>
-          </Fragment>
-        ))}
-      </dl>
+      <Container>
+        <Row>
+          <StyledDiv className="col-md-3">
+            {details1.map((item) => (
+              <Fragment key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.value || "-"}</dd>
+              </Fragment>
+            ))}
+          </StyledDiv>
+          <Col>
+            {details2.map((item) => (
+              <Fragment key={item.label}>
+                <dt>{item.label}</dt>
+                <dd>{item.value || "-"}</dd>
+              </Fragment>
+            ))}
+          </Col>
+        </Row>
+      </Container>
     );
   };
 
@@ -299,7 +339,7 @@ const Risk = ({ match, history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/risk", "Risks"],
-          ["/risk/" + id, name]
+          ["/risk/" + id, name],
         ]}
       />
       <div className="d-flex justify-content-between align-items-center">
@@ -320,3 +360,11 @@ const Risk = ({ match, history }: RouteComponentProps) => {
 };
 
 export default Risk;
+
+export const StyledDiv = styled.div`
+  position: relative;
+  right: 10%;
+  @media screen and (max-width: 1440px) {
+    right: 0%;
+  }
+`;

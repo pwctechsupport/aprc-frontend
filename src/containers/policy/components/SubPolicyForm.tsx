@@ -7,7 +7,7 @@ import {
   useControlsQuery,
   useReferencesQuery,
   useResourcesQuery,
-  useRisksQuery
+  useRisksQuery,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -25,26 +25,26 @@ const SubPolicyForm = ({
   onSubmitDraft,
   premise,
   submittingDraft,
-  isAdmin = true
+  isAdmin = true,
 }: SubPolicyFormProps) => {
   const {
     resourceIds,
     businessProcessIds,
     controlIds,
-    riskIds
+    riskIds,
   } = defaultValues;
   const [showAttrs, setShowAttrs] = useState(false);
   const [attr, setAttr] = useState<SubPolicyModalFormValues>({
     resourceIds,
     businessProcessIds,
     controlIds,
-    riskIds
+    riskIds,
   });
 
   const { register, handleSubmit, setValue, errors, watch } = useForm<
     SubPolicyFormValues
   >({
-    defaultValues
+    defaultValues,
   });
 
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
@@ -87,12 +87,9 @@ const SubPolicyForm = ({
     return <LoadingSpinner centered size={30} />;
   }
 
-  const defaultReference = references.filter(reference => {
-    return oc(defaultValues)
-      .referenceIds([])
-      .includes(reference.value);
+  const defaultReference = references.filter((reference) => {
+    return oc(defaultValues).referenceIds([]).includes(reference.value);
   });
-
   return (
     <div>
       <Form>
@@ -184,14 +181,14 @@ export default SubPolicyForm;
 const SubPolicyAttributeForm = ({
   defaultValues,
   onSubmit,
-  onCancel
+  onCancel,
 }: {
   defaultValues: SubPolicyModalFormValues;
   onCancel: () => void;
   onSubmit: (v: SubPolicyModalFormValues) => void;
 }) => {
   const formModal = useForm<SubPolicyModalFormValues>({
-    defaultValues
+    defaultValues,
   });
 
   const resourceQ = useResourcesQuery();
@@ -210,10 +207,8 @@ const SubPolicyAttributeForm = ({
     .map(({ id, description }) => ({ label: description || "", value: id }));
 
   const risksQ = useRisksQuery();
-  const risksOptions = oc(risksQ.data)
-    .risks.collection([])
-    .map(toLabelValue);
-
+  const risksOptions = oc(risksQ.data).risks.collection([]).map(toLabelValue);
+  const checkBp = formModal.watch("businessProcessIds");
   if (
     resourceQ.loading ||
     businessProcessesQ.loading ||
@@ -233,10 +228,8 @@ const SubPolicyAttributeForm = ({
         setValue={formModal.setValue}
         label="Resources"
         options={resourceOptions}
-        defaultValue={resourceOptions.filter(res =>
-          oc(defaultValues)
-            .resourceIds([])
-            .includes(res.value)
+        defaultValue={resourceOptions.filter((res) =>
+          oc(defaultValues).resourceIds([]).includes(res.value)
         )}
       />
 
@@ -248,13 +241,10 @@ const SubPolicyAttributeForm = ({
         setValue={formModal.setValue}
         label="Business Processes"
         options={businessProcessesOptions}
-        defaultValue={businessProcessesOptions.filter(res =>
-          oc(defaultValues)
-            .businessProcessIds([])
-            .includes(res.value)
+        defaultValue={businessProcessesOptions.filter((res) =>
+          oc(defaultValues).businessProcessIds([]).includes(res.value)
         )}
       />
-
       <FormSelect
         isMulti
         isLoading={controlsQ.loading}
@@ -262,11 +252,10 @@ const SubPolicyAttributeForm = ({
         register={formModal.register}
         setValue={formModal.setValue}
         label="Control"
+        isDisabled={checkBp?.length ? false : true}
         options={controlsOptions}
-        defaultValue={controlsOptions.filter(res =>
-          oc(defaultValues)
-            .controlIds([])
-            .includes(res.value)
+        defaultValue={controlsOptions.filter((res) =>
+          oc(defaultValues).controlIds([]).includes(res.value)
         )}
       />
 
@@ -277,11 +266,10 @@ const SubPolicyAttributeForm = ({
         register={formModal.register}
         setValue={formModal.setValue}
         label="Risk"
+        isDisabled={checkBp?.length ? false : true}
         options={risksOptions}
-        defaultValue={risksOptions.filter(res =>
-          oc(defaultValues)
-            .riskIds([])
-            .includes(res.value)
+        defaultValue={risksOptions.filter((res) =>
+          oc(defaultValues).riskIds([]).includes(res.value)
         )}
       />
 

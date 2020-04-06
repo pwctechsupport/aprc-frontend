@@ -126,6 +126,9 @@ query policy($id: ID!) {
     versionsCount
     hasEditAccess
     requestStatus
+    status
+    updatedAt
+    createdAt
     requestEdit {
       id
       state

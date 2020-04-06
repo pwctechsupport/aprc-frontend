@@ -5,7 +5,7 @@ import {
   SideBoxItemText,
   SideBoxSearch,
   SideBoxTitle,
-  SideBox
+  SideBox,
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
 import { useDebounce } from "use-debounce/lib";
@@ -19,13 +19,13 @@ const RiskSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
   const { data, loading } = useRisksQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { name_cont: debouncedSearch } }
+    variables: { filter: { name_cont: debouncedSearch } },
   });
 
   const risks =
@@ -42,11 +42,18 @@ const RiskSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Risk Admin"
             : "Risk"}
-          <Tooltip description="Create Risk">
-            <Button tag={Link} to="/risk/create" color="" className="soft red">
-              <FaPlus />
-            </Button>
-          </Tooltip>
+          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+            <Tooltip description="Create Risk">
+              <Button
+                tag={Link}
+                to="/risk/create"
+                color=""
+                className="soft red"
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
@@ -55,7 +62,7 @@ const RiskSideBox = () => {
         placeholder="Search Risk..."
         loading={loading}
       />
-      {risks.map(risk => {
+      {risks.map((risk) => {
         return (
           <SideBoxItem
             key={risk.id}

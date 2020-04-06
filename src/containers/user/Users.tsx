@@ -10,17 +10,24 @@ import { useUsersQuery } from "../../generated/graphql";
 import { NetworkStatus } from "apollo-boost";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Users = () => {
+  const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
+    "admin",
+    "admin_preparer",
+    "admin_reviewer",
+  ]);
+  const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
   const { data, networkStatus } = useUsersQuery({
     variables: {
       filter: {
-        name_or_draft_object_cont: debouncedSearch
-      }
+        name_or_draft_object_cont: debouncedSearch,
+      },
     },
-    fetchPolicy: "no-cache"
+    fetchPolicy: "no-cache",
   });
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
@@ -40,13 +47,15 @@ const Users = () => {
           <Col lg={4}>
             <Input placeholder="Search Users..." onChange={handleSearch} />
           </Col>
-          <Col className="text-right">
-            <NavLink to="/user/create">
-              <Button outline color="pwc" className="pwc mb-5">
-                Add User
-              </Button>
-            </NavLink>
-          </Col>
+          {admins ? (
+            <Col className="text-right">
+              <NavLink to="/user/create">
+                <Button outline color="pwc" className="pwc mb-5">
+                  Add User
+                </Button>
+              </NavLink>
+            </Col>
+          ) : null}
         </Row>
 
         <div className="table-responsive">
@@ -56,17 +65,35 @@ const Users = () => {
           >
             <thead>
               <tr>
-                <th style={{ width: "20%" }}>Username</th>
-                <th style={{ width: "20%" }}>User ID</th>
-                <th style={{ width: "20%" }}>User Group</th>
-                <th style={{ width: "20%" }}>Policy Category</th>
-                <th style={{ width: "20%" }}>Action</th>
+                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                  Username
+                </th>
+                <th style={admins ? { width: "10%" } : { width: "10%" }}>
+                  User ID
+                </th>
+                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                  User Group
+                </th>
+                <th style={admins ? { width: "17%" } : { width: "17%" }}>
+                  Policy Category
+                </th>
+                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                  Status
+                </th>
+                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                  Created At
+                </th>
+                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                  Updated At
+                </th>
+
+                {admins ? <th>Action</th> : <th></th>}
               </tr>
             </thead>
             <tbody>
               {oc(data)
                 .users.collection([])
-                .map(user => {
+                .map((user) => {
                   return <UserRow key={user.id} user={user} />;
                 })}
             </tbody>

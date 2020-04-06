@@ -1,13 +1,18 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFile, FaTrash, FaFileExport, FaFileImport } from "react-icons/fa";
+import {
+  FaTrash,
+  FaFileExport,
+  FaFileImport,
+  FaDownload,
+} from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
   useDestroyResourceMutation,
-  useResourcesQuery
+  useResourcesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -24,15 +29,15 @@ const Resources = ({ history }: RouteComponentProps) => {
   const [destroyResource, destroyM] = useDestroyResourceMutation({
     refetchQueries: ["resources"],
     onCompleted: () => toast.success("Delete Success"),
-    onError: () => toast.error("Delete Failed")
+    onError: () => toast.error("Delete Failed"),
   });
   const [selected, setSelected] = useState<string[]>([]);
   const resources = oc(data).resources.collection([]);
   const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal(p => !p);
+  const toggleImportModal = () => setModal((p) => !p);
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -40,7 +45,7 @@ const Resources = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(resources.map(n => n.id));
+      setSelected(resources.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -49,17 +54,21 @@ const Resources = ({ history }: RouteComponentProps) => {
     downloadXls(
       "/prints/resource_excel.xlsx",
       {
-        resource_ids: selected.map(Number)
+        resource_ids: selected.map(Number),
       },
       {
         fileName: "resources.xlsx",
         onStart: () => toast.info("Download Start"),
         onCompleted: () => notifySuccess("Download Success"),
-        onError: () => toast.error("Download Failed")
+        onError: () => toast.error("Download Failed"),
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
 
   return (
     <div>
@@ -109,92 +118,111 @@ const Resources = ({ history }: RouteComponentProps) => {
       <Table loading={loading} responsive>
         <thead>
           <tr>
-            <th>
-              <input
-                type="checkbox"
-                checked={selected.length === resources.length}
-                onChange={toggleCheckAll}
-              />
-            </th>
-            <th>Name</th>
-            <th>File Type</th>
-            <th>Category</th>
-            <th>Related Resource</th>
-            <th>Related Policy</th>
-            <th />
+            {isAdminReviewer ? (
+              <th>
+                <input
+                  type="checkbox"
+                  checked={selected.length === resources.length}
+                  onChange={toggleCheckAll}
+                />
+              </th>
+            ) : null}
+            <th>ID</th>
+
+            <th style={{ width: "10%" }}>Name</th>
+            <th style={{ width: "8%" }}>File Type</th>
+            <th style={{ width: "8%" }}>Category</th>
+            <th style={{ width: "14%" }}>Related Resource</th>
+            <th style={{ width: "14%" }}>Related Policy</th>
+            <th style={{ width: "14%" }}>Related Business Process</th>
+            <th style={{ width: "8%" }}>Updated At</th>
+            <th style={{ width: "8%" }}>Created By</th>
+
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {oc(data)
             .resources.collection([])
-            .map(resource => {
+            .map((resource) => {
               return (
                 <tr
                   key={resource.id}
                   onClick={() => history.push(`/resources/${resource.id}`)}
                 >
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selected.includes(resource.id)}
-                      onClick={e => e.stopPropagation()}
-                      onChange={() => toggleCheck(resource.id)}
-                    />
-                  </td>
+                  {isAdminReviewer ? (
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selected.includes(resource.id)}
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={() => toggleCheck(resource.id)}
+                      />
+                    </td>
+                  ) : null}
+                  <td>{resource.id}</td>
+
                   <td>{resource.name}</td>
                   <td>{resource.resourceFileType}</td>
                   <td>{capitalCase(resource.category || "")}</td>
                   <td>
                     {oc(resource)
                       .controls([])
-                      .map(c => c.typeOfControl)
-                      .map(c => capitalCase(c || ""))
+                      .map((c) => c.typeOfControl)
+                      .map((c) => capitalCase(c || ""))
                       .join(", ")}
                   </td>
                   <td>
                     {oc(resource)
                       .policies([])
-                      .map(p => p.title)
+                      .map((p) => p.title)
                       .join(", ")}
                   </td>
-                  <td className="action">
-                    <div className="d-flex align-items-center">
-                      <Button className="soft orange mr-1" color="">
-                        <Tooltip
-                          description="Open File"
-                          subtitle="Will be download if file type not supported"
-                        >
-                          <a
-                            href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(
-                              event: React.MouseEvent<
-                                HTMLAnchorElement,
-                                MouseEvent
-                              >
-                            ) => {
-                              event.stopPropagation();
-                            }}
+                  <td>{resource.businessProcess?.name}</td>
+                  <td>{resource.updatedAt.split(" ")[0]}</td>
+                  <td>{resource.createdBy}</td>
+                  {isAdminReviewer || isAdmin || isAdminPreparer ? (
+                    <td className="action">
+                      <div className="d-flex align-items-center">
+                        <Button className="soft orange mr-1" color="">
+                          <Tooltip
+                            description="Open File"
+                            subtitle="Will be download if file type not supported"
                           >
-                            <FaFile size={16} />
-                          </a>
-                        </Tooltip>
-                      </Button>
-                      <DialogButton
-                        onConfirm={() =>
-                          destroyResource({ variables: { id: resource.id } })
-                        }
-                        loading={destroyM.loading}
-                        message={`Delete resource "${resource.name}"?`}
-                        className="soft red"
-                      >
-                        <Tooltip description="Delete Resource">
-                          <FaTrash className="clickable text-red" />
-                        </Tooltip>
-                      </DialogButton>
-                    </div>
-                  </td>
+                            <a
+                              href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(
+                                event: React.MouseEvent<
+                                  HTMLAnchorElement,
+                                  MouseEvent
+                                >
+                              ) => {
+                                event.stopPropagation();
+                              }}
+                            >
+                              <FaDownload />
+                            </a>
+                          </Tooltip>
+                        </Button>
+                        <DialogButton
+                          onConfirm={() =>
+                            destroyResource({ variables: { id: resource.id } })
+                          }
+                          loading={destroyM.loading}
+                          message={`Delete resource "${resource.name}"?`}
+                          className="soft red"
+                        >
+                          <Tooltip description="Delete Resource">
+                            <FaTrash />
+                          </Tooltip>
+                        </DialogButton>
+                      </div>
+                    </td>
+                  ) : (
+                    <td></td>
+                  )}
                 </tr>
               );
             })}

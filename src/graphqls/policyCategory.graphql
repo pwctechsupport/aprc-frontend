@@ -8,6 +8,10 @@ query policyCategories(
       id
       name
       updatedAt
+      createdAt
+      lastUpdatedBy
+      createdBy
+      status
       policies {
         id
         title
@@ -21,6 +25,7 @@ query policyCategory($id: ID!) {
     ...policyCategoryFragment
     hasEditAccess
     requestStatus
+    createdBy
     requestEdit {
       id
       state
@@ -45,6 +50,7 @@ fragment policyCategoryFragment on PolicyCategory {
   id
   name
   updatedAt
+  createdAt
   policies {
     id
     title

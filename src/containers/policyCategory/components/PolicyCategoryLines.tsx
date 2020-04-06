@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Helmet from "react-helmet";
 import {
   usePolicyCategoriesQuery,
-  useDestroyPolicyCategoriesMutation
+  useDestroyPolicyCategoriesMutation,
 } from "../../../generated/graphql";
 import Table from "../../../shared/components/Table";
 import { RouteComponentProps } from "react-router-dom";
@@ -14,7 +14,7 @@ import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import ImportModal from "../../../shared/components/ImportModal";
 import {
   notifySuccess,
-  notifyGraphQLErrors
+  notifyGraphQLErrors,
 } from "../../../shared/utils/notif";
 import { toast } from "react-toastify";
 import downloadXls from "../../../shared/utils/downloadXls";
@@ -22,13 +22,19 @@ import DialogButton from "../../../shared/components/DialogButton";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [selected, setSelected] = useState<string[]>([]);
   const { loading, data } = usePolicyCategoriesQuery({
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const policyCategories = oc(data).policyCategories.collection([]);
   const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal(p => !p);
+  const toggleImportModal = () => setModal((p) => !p);
   const [destroy, destroyM] = useDestroyPolicyCategoriesMutation({
     onCompleted: () => {
       history.push("/policy-category");
@@ -36,7 +42,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["policyCategories"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   const handleDelete = (id: string) => {
     destroy({ variables: { input: { id } } });
@@ -44,7 +50,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
 
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -52,7 +58,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(policyCategories.map(n => n.id));
+      setSelected(policyCategories.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -62,17 +68,16 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     downloadXls(
       "/prints/policy_category_excel.xlsx",
       {
-        policy_category_ids: selected.map(Number)
+        policy_category_ids: selected.map(Number),
       },
       {
         fileName: "Policy Categories.xlsx",
         onStart: () => toast.info("Download Start"),
         onCompleted: () => notifySuccess("Download Success"),
-        onError: () => toast.error("Download Failed")
+        onError: () => toast.error("Download Failed"),
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
   return (
     <div>
       <Helmet>
@@ -123,20 +128,28 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th>
-              <input
-                type="checkbox"
-                checked={selected.length === policyCategories.length}
-                onChange={toggleCheckAll}
-              />
-            </th>
-            <th>Category Name</th>
-            <th>Related Policies</th>
+            {isAdminReviewer ? (
+              <th style={{ width: "5%" }}>
+                <input
+                  type="checkbox"
+                  checked={selected.length === policyCategories.length}
+                  onChange={toggleCheckAll}
+                />
+              </th>
+            ) : null}
+
+            <th style={{ width: "5%" }}>ID</th>
+            <th style={{ width: "10%" }}>Category Name</th>
+            <th style={{ width: "40%" }}>Related Policies</th>
+            <th style={{ width: "15%" }}>Status</th>
+            <th style={{ width: "12%" }}>Updated At</th>
+            <th style={{ width: "12%" }}>Updated By</th>
+
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {policyCategories.map(policyCategory => {
+          {policyCategories.map((policyCategory) => {
             return (
               <tr
                 key={policyCategory.id}
@@ -144,31 +157,44 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                   history.push(`/policy-category/${policyCategory.id}`)
                 }
               >
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(policyCategory.id)}
-                    onClick={e => e.stopPropagation()}
-                    onChange={() => toggleCheck(policyCategory.id)}
-                  />
-                </td>
+                {isAdminReviewer ? (
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(policyCategory.id)}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={() => toggleCheck(policyCategory.id)}
+                    />
+                  </td>
+                ) : null}
+
+                <td>{policyCategory.id}</td>
                 <td>{policyCategory.name}</td>
                 <td>
                   {oc(policyCategory)
                     .policies([])
-                    .map(policy => policy.title)
+                    .map((policy) => policy.title)
                     .join(", ")}
                 </td>
-                <td className="action">
-                  <DialogButton
-                    onConfirm={() => handleDelete(policyCategory.id)}
-                    loading={destroyM.loading}
-                    message={`Delete "${policyCategory.name}"?`}
-                    className="soft red"
-                  >
-                    <FaTrash className="clickable" />
-                  </DialogButton>
-                </td>
+                <td>{policyCategory.status}</td>
+                <td>{policyCategory.updatedAt.split(" ")[0]}</td>
+                <td>{policyCategory.lastUpdatedBy}</td>
+                {admins ? (
+                  <td className="action">
+                    <Tooltip description="Delete Policy Category">
+                      <DialogButton
+                        onConfirm={() => handleDelete(policyCategory.id)}
+                        loading={destroyM.loading}
+                        message={`Delete "${policyCategory.name}"?`}
+                        className="soft red"
+                      >
+                        <FaTrash className="clickable" />
+                      </DialogButton>
+                    </Tooltip>
+                  </td>
+                ) : (
+                  <td></td>
+                )}
               </tr>
             );
           })}

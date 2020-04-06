@@ -7,7 +7,7 @@ import {
   SideBoxItem,
   SideBoxItemText,
   SideBoxSearch,
-  SideBoxTitle
+  SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
 import Tooltip from "../../../shared/components/Tooltip";
@@ -17,15 +17,10 @@ import { FaPlus } from "react-icons/fa";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const ResourceSideBox = () => {
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer"
-  ]);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
   const { data, loading } = useResourcesQuery({
-    variables: { filter: { name_cont: searchQuery } }
+    variables: { filter: { name_cont: searchQuery } },
   });
   const resources = oc(data)
     .resources.collection([])
@@ -33,7 +28,11 @@ const ResourceSideBox = () => {
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
   return (
     <SideBox>
       <SideBoxTitle>
@@ -41,16 +40,18 @@ const ResourceSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Resources Admin"
             : "Resources"}
-          <Tooltip description="Create Resource">
-            <Button
-              tag={Link}
-              to="/resources/create"
-              className="soft red"
-              color=""
-            >
-              <FaPlus />
-            </Button>
-          </Tooltip>
+          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+            <Tooltip description="Create Resource">
+              <Button
+                tag={Link}
+                to="/resources/create"
+                className="soft red"
+                color=""
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
@@ -59,12 +60,12 @@ const ResourceSideBox = () => {
         placeholder="Search Resources..."
         loading={loading}
       />
-      {resources.map(resource => (
+      {resources.map((resource) => (
         <SideBoxItem key={resource.id} to={`/resources/${resource.id}`}>
           <SideBoxItemText flex={2} bold>
             {resource.name}
           </SideBoxItemText>
-          <SideBoxItemText flex={1} right>
+          <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
             {humanizeDate(new Date(resource.updatedAt))}
           </SideBoxItemText>
         </SideBoxItem>

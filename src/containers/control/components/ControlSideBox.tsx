@@ -9,7 +9,7 @@ import {
   SideBoxItem,
   SideBoxItemText,
   SideBoxSearch,
-  SideBoxTitle
+  SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import Tooltip from "../../../shared/components/Tooltip";
 import humanizeDate from "../../../shared/utils/humanizeDate";
@@ -19,12 +19,12 @@ const ControlSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
   const [search, setSearch] = useState("");
   const { data, loading } = useControlsQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { description_cont: search } }
+    variables: { filter: { description_cont: search } },
   });
 
   const controls = oc(data)
@@ -42,16 +42,18 @@ const ControlSideBox = () => {
           {isAdmin || isAdminPreparer || isAdminReviewer
             ? "Control Admin"
             : "Control"}
-          <Tooltip description="Create Control">
-            <Button
-              tag={Link}
-              to="/control/create"
-              color=""
-              className="soft red"
-            >
-              <FaPlus />
-            </Button>
-          </Tooltip>
+          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+            <Tooltip description="Create Control">
+              <Button
+                tag={Link}
+                to="/control/create"
+                color=""
+                className="soft red"
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
@@ -60,7 +62,7 @@ const ControlSideBox = () => {
         placeholder="Search Controls..."
         loading={loading}
       />
-      {controls.map(control => {
+      {controls.map((control) => {
         return (
           <SideBoxItem
             key={control.id}
@@ -70,7 +72,7 @@ const ControlSideBox = () => {
             <SideBoxItemText flex={2} bold>
               {oc(control).description("")}
             </SideBoxItemText>
-            <SideBoxItemText flex={1} right>
+            <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(oc(control).updatedAt(""))}
             </SideBoxItemText>
           </SideBoxItem>

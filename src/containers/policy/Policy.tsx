@@ -4,14 +4,14 @@ import React, {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import Helmet from "react-helmet";
 import {
   AiFillFolderAdd,
   AiFillEdit,
   AiOutlineClockCircle,
-  AiOutlineEdit
+  AiOutlineEdit,
 } from "react-icons/ai";
 import {
   FaBookmark,
@@ -22,7 +22,7 @@ import {
   FaFilePdf,
   FaPlus,
   FaTimes,
-  FaTrash
+  FaTrash,
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -39,7 +39,7 @@ import {
   usePolicyQuery,
   useReviewPolicyDraftMutation,
   useUpdatePolicyMutation,
-  useSubmitPolicyMutation
+  useSubmitPolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -60,14 +60,14 @@ import useWindowSize from "../../shared/hooks/useWindowSize";
 import {
   downloadPdf,
   emailPdf,
-  previewPdf
+  previewPdf,
 } from "../../shared/utils/accessGeneratedPdf";
 import { formatPolicyChart } from "../../shared/utils/formatPolicy";
 import {
   notifyError,
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess
+  notifySuccess,
 } from "../../shared/utils/notif";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
@@ -83,9 +83,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
-    setCollapse(p => {
+    setCollapse((p) => {
       if (p.includes(name)) {
-        return p.filter(item => item !== name);
+        return p.filter((item) => item !== name);
       }
       return p.concat(name);
     });
@@ -93,20 +93,20 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const closeAllCollapse = () => setCollapse([]);
 
   const [inEditMode, setInEditMode] = useState(false);
-  const toggleEditMode = () => setInEditMode(prev => !prev);
+  const toggleEditMode = () => setInEditMode((prev) => !prev);
 
   const id = get(match, "params.id", "");
 
   const { loading, data } = usePolicyQuery({
     variables: { id },
     fetchPolicy: "network-only",
-    pollInterval: 30000
+    pollInterval: 30000,
   });
   const isAdminView = location.pathname.split("/")[1] === "policy-admin";
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
   // Close edit mode when changing screen
   useEffect(() => {
@@ -118,7 +118,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     () =>
       window.scrollTo({
         top: riskRef.current ? riskRef.current.offsetTop : 0,
-        behavior: "smooth"
+        behavior: "smooth",
       }),
     []
   );
@@ -126,7 +126,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     () =>
       window.scrollTo({
         top: subPolicyRef.current ? subPolicyRef.current.offsetTop : 0,
-        behavior: "smooth"
+        behavior: "smooth",
       }),
     []
   );
@@ -134,7 +134,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     () =>
       window.scrollTo({
         top: controlRef.current ? controlRef.current.offsetTop : 0,
-        behavior: "smooth"
+        behavior: "smooth",
       }),
     []
   );
@@ -160,12 +160,12 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["policies", "policyTree"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleDeleteMain() {
     dialogBox({
       text: "Delete this policy?",
-      callback: () => destroyMain({ variables: { id } })
+      callback: () => destroyMain({ variables: { id } }),
     });
   }
 
@@ -174,21 +174,21 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
     refetchQueries: ["policy"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleDelete(id: string, title?: string) {
     dialogBox({
       text: `Delete policy "${title}"?`,
-      callback: () => destroy({ variables: { id } })
+      callback: () => destroy({ variables: { id } }),
     });
   }
 
   // Bookmark policy
   const [addBookmark] = useCreateBookmarkPolicyMutation({
-    onCompleted: _ => notifySuccess("Added to bookmark"),
+    onCompleted: (_) => notifySuccess("Added to bookmark"),
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["bookmarkPolicies"]
+    refetchQueries: ["bookmarkPolicies"],
   });
 
   // Update Policy / Sub-Policy
@@ -199,7 +199,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["policies", "policyTree", "policy"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleUpdate(values: PolicyFormValues) {
     update({ variables: { input: { id, ...values } } });
@@ -215,7 +215,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["policies", "policyTree", "policy"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleUpdateDraft(values: PolicyFormValues) {
     updateDraft({ variables: { input: { id, ...values } } });
@@ -230,31 +230,31 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       notifySuccess("Submitted");
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policy"]
+    refetchQueries: ["policy"],
   });
   function handleSubmit() {
     dialogBox({
       text: `Submit policy "${title}"?`,
-      callback: () => submit({ variables: { input: { id } } })
+      callback: () => submit({ variables: { input: { id } } }),
     });
   }
 
   const [
     requestEditMutation,
-    requestEditMutationInfo
+    requestEditMutationInfo,
   ] = useCreateRequestEditMutation({
     variables: { id: oc(data).policy.id(""), type: "Policy" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["policy"]
+    refetchQueries: ["policy"],
   });
 
   const [
     approveEditMutation,
-    approveEditMutationResult
+    approveEditMutationResult,
   ] = useApproveRequestEditMutation({
     refetchQueries: ["policy", "policyTree"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   async function handleApproveRequest(id: string) {
     try {
@@ -273,7 +273,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   }
 
   const [reviewPolicy, reviewPolicyM] = useReviewPolicyDraftMutation({
-    refetchQueries: ["policy", "policyTree"]
+    refetchQueries: ["policy", "policyTree"],
   });
   async function review({ publish }: { publish: boolean }) {
     try {
@@ -298,7 +298,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
   const ancestry = oc(data).policy.ancestry("");
   const references = data?.policy?.references || [];
-  const referenceIds = references.map(item => item.id);
+  const referenceIds = references.map((item) => item.id);
   const controls = oc(data).policy.controls([]);
   const risks = oc(data).policy.risks([]);
   const controlCount = oc(data).policy.controlCount({});
@@ -309,7 +309,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const updatedAt = data?.policy?.updatedAt;
   const breadcrumb = ancestors.map((a: any) => [
     "/policy/" + a.id,
-    a.title
+    a.title,
   ]) as CrumbItem[];
 
   if (loading) return <LoadingSpinner centered size={30} />;
@@ -317,14 +317,14 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const policyChartData = formatPolicyChart({
     controlCount,
     riskCount,
-    subCount
-  }).map(item => ({
+    subCount,
+  }).map((item) => ({
     ...item,
     onClick: item.label.includes("Risk")
       ? () => history.push(`${location.pathname}/details/#risks`)
       : item.label.includes("Control")
       ? () => history.push(`${location.pathname}/details/#controls`)
-      : () => history.push(`${location.pathname}/details/#sub-policies`)
+      : () => history.push(`${location.pathname}/details/#sub-policies`),
   }));
 
   const renderPolicy = () => {
@@ -333,7 +333,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       : [
           { to: `/policy/${id}`, title: "Dashboard" },
           { to: `/policy/${id}/details`, title: "Details" },
-          { to: `/policy/${id}/resources`, title: "Resources" }
+          { to: `/policy/${id}/resources`, title: "Resources" },
         ];
 
     return (
@@ -387,13 +387,16 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               <div
                 className="mb-3 py-3"
                 dangerouslySetInnerHTML={{
-                  __html: description
+                  __html: description,
                 }}
               />
 
-              <div className="d-flex">
+              <div
+                className="d-flex"
+                style={{ borderBottom: " 1px solid #d85604" }}
+              >
                 <h6>
-                  {references.map(reference => (
+                  {references.map((reference) => (
                     <Badge key={reference.id} className="mx-1">
                       {reference.name}
                     </Badge>
@@ -401,7 +404,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                 </h6>
               </div>
 
-              <div ref={riskRef}>
+              <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
                 <Collapsible
                   title="Risks"
                   show={collapse.includes("Risks")}
@@ -411,7 +414,10 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                 </Collapsible>
               </div>
 
-              <div ref={controlRef}>
+              <div
+                ref={controlRef}
+                style={{ borderBottom: " 1px solid #d85604" }}
+              >
                 <Collapsible
                   title="Controls"
                   show={collapse.includes("Controls")}
@@ -441,12 +447,12 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
                   policyIds: [
                     {
                       value: id,
-                      label: title
-                    }
-                  ]
+                      label: title,
+                    },
+                  ],
                 }}
                 queryFilters={{
-                  policies_id_in: id
+                  policies_id_in: id,
                 }}
               />
             </Route>
@@ -469,16 +475,16 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               referenceIds,
               resourceIds: oc(data)
                 .policy.resources([])
-                .map(r => r.id),
+                .map((r) => r.id),
               businessProcessIds: oc(data)
                 .policy.businessProcesses([])
-                .map(r => r.id),
+                .map((r) => r.id),
               controlIds: oc(data)
                 .policy.controls([])
-                .map(r => r.id),
+                .map((r) => r.id),
               riskIds: oc(data)
                 .policy.risks([])
-                .map(r => r.id)
+                .map((r) => r.id),
             }}
             onSubmit={handleUpdateSubPolicy}
             submitting={updateState.loading}
@@ -499,7 +505,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             defaultValues={{
               title,
               policyCategoryId,
-              description
+              description,
             }}
             submitting={updateState.loading}
             submittingDraft={updateDraftState.loading}
@@ -531,7 +537,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             isAdminView
               ? `/policy-admin/${id}/create-sub-policy`
               : `/policy/${id}/create-sub-policy`
-          )
+          ),
       },
       {
         label: (
@@ -539,9 +545,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             <FaTrash /> Delete
           </div>
         ),
-        onClick: handleDeleteMain
+        onClick: handleDeleteMain,
       },
-      { label: "divider" }
+      { label: "divider" },
     ];
     const basicMenu: MenuData[] = [
       {
@@ -554,9 +560,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
           previewPdf(`prints/${id}.pdf`, {
             onStart: () =>
               notifySuccess("Downloading file for preview", {
-                autoClose: 10000
-              })
-          })
+                autoClose: 10000,
+              }),
+          }),
       },
       {
         label: (
@@ -569,8 +575,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             fileName: title,
             onStart: () => notifyInfo("Download Started"),
             onError: () => notifyError("Download Failed"),
-            onCompleted: () => notifySuccess("Download Success")
-          })
+            onCompleted: () => notifySuccess("Download Success"),
+          }),
       },
       {
         label: (
@@ -578,7 +584,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             <MdEmail /> Mail
           </div>
         ),
-        onClick: () => emailPdf(title)
+        onClick: () => emailPdf(title),
       },
       {
         label: (
@@ -586,8 +592,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             <FaBookmark /> Bookmark
           </div>
         ),
-        onClick: () => addBookmark({ variables: { input: { policyId: id } } })
-      }
+        onClick: () => addBookmark({ variables: { input: { policyId: id } } }),
+      },
     ];
     let theMenu = [...basicMenu];
     if (isSmallDevice) {
@@ -596,7 +602,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     return (
       <div className="d-flex align-items-center">
         <div className="d-none d-lg-flex align-items-center">
-          {!isMaximumLevel && (
+          {!isMaximumLevel && (isAdmin || isAdminPreparer || isAdminReviewer) && (
             <Button
               tag={Link}
               to={
@@ -632,16 +638,19 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               )}
             </Button>
           </Tooltip>
-
-          <Tooltip description="Delete Policy">
-            <Button
-              onClick={handleDeleteMain}
-              className="mr-3"
-              color="transparent"
-            >
-              <FaTrash className="text-red" />
-            </Button>
-          </Tooltip>
+          {isAdmin ||
+            isAdminPreparer ||
+            (isAdminReviewer && (
+              <Tooltip description="Delete Policy">
+                <Button
+                  onClick={handleDeleteMain}
+                  className="mr-3"
+                  color="transparent"
+                >
+                  <FaTrash className="text-red" />
+                </Button>
+              </Tooltip>
+            ))}
         </div>
         <Menu data={theMenu}>
           <FaEllipsisV />
@@ -687,7 +696,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             onClick={() =>
               dialogBox({
                 callback: () => review({ publish: false }),
-                title: "Reject changes?"
+                title: "Reject changes?",
               })
             }
             loading={reviewPolicyM.loading}
@@ -700,7 +709,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             onClick={() =>
               dialogBox({
                 callback: () => review({ publish: true }),
-                title: "Accept changes?"
+                title: "Accept changes?",
               })
             }
             loading={reviewPolicyM.loading}
@@ -763,7 +772,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
             onClick={() =>
               dialogBox({
                 title: "Request access to edit?",
-                callback: () => requestEditMutation()
+                callback: () => requestEditMutation(),
               })
             }
             loading={requestEditMutationInfo.loading}
@@ -822,7 +831,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
         crumbs={[
           ["/policy", "Policies"],
           ...breadcrumb,
-          ["/policy/" + id, title]
+          ["/policy/" + id, title],
         ]}
       />
       <div className="d-flex justify-content-between">

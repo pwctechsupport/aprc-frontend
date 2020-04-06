@@ -1,5 +1,5 @@
 import React from "react";
-import { FaFile } from "react-icons/fa";
+import { FaDownload } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
 import styled from "styled-components";
@@ -22,10 +22,10 @@ export default function ResourceBar({
   resuploadUrl,
   rating = 0,
   visit = 0,
-  totalRating = 0
+  totalRating = 0,
 }: ResourceBarProps) {
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
-    refetchQueries: ["resources"]
+    refetchQueries: ["resources"],
   });
 
   return (
@@ -49,7 +49,7 @@ export default function ResourceBar({
               download={`Pwc-Resource ${name}`}
               onClick={() => updateResourceVisit({ variables: { id } })}
             >
-              <FaFile />
+              <FaDownload />
             </a>
           </Tooltip>
         </Button>
@@ -86,8 +86,8 @@ const ResourceBarContainer = styled.div`
 `;
 
 const ResourceBarDivider = styled.div<{ width?: string; align?: string }>`
-  width: ${p => p.width + "%"};
-  text-align: ${p => p.align};
+  width: ${(p) => p.width + "%"};
+  text-align: ${(p) => p.align};
   margin: 0px 5px;
 `;
 
