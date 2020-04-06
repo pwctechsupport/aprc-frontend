@@ -7,7 +7,7 @@ import {
   SideBoxItem,
   SideBoxItemText,
   SideBoxSearch,
-  SideBoxTitle
+  SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
 
@@ -16,7 +16,7 @@ const BusinessProcessSideBox = () => {
   const [searchQuery] = useDebounce(searchValue, 400);
 
   const { data, loading } = useBusinessProcessesQuery({
-    variables: { filter: { name_cont: searchQuery } }
+    variables: { filter: { name_cont: searchQuery } },
   });
   const bps = oc(data)
     .businessProcesses.collection([])
@@ -34,12 +34,12 @@ const BusinessProcessSideBox = () => {
         loading={loading}
       />
       <div>
-        {bps.map(bp => (
+        {bps.map((bp) => (
           <SideBoxItem key={bp.id} to={`/business-process/${bp.id}`}>
             <SideBoxItemText flex={2} bold>
               {bp.name}
             </SideBoxItemText>
-            <SideBoxItemText flex={1} right>
+            <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(bp.updatedAt)}
             </SideBoxItemText>
           </SideBoxItem>

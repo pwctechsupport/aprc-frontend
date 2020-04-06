@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
   useControlsQuery,
-  useDestroyControlMutation
+  useDestroyControlMutation,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -21,7 +21,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Controls = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal(p => !p);
+  const toggleImportModal = () => setModal((p) => !p);
 
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -31,7 +31,7 @@ const Controls = ({ history }: RouteComponentProps) => {
   const [destroy, destroyM] = useDestroyControlMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["controls"]
+    refetchQueries: ["controls"],
   });
   const handleDelete = (id: string) => {
     destroy({ variables: { id } });
@@ -39,7 +39,7 @@ const Controls = ({ history }: RouteComponentProps) => {
 
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -47,7 +47,7 @@ const Controls = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(controls.map(n => n.id));
+      setSelected(controls.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -57,20 +57,20 @@ const Controls = ({ history }: RouteComponentProps) => {
     downloadXls(
       "/prints/control_excel.xlsx",
       {
-        control_ids: selected.map(Number)
+        control_ids: selected.map(Number),
       },
       {
         fileName: "Controls.xlsx",
         onStart: () => toast.info("Download Start"),
         onCompleted: () => notifySuccess("Download Success"),
-        onError: () => toast.error("Download Failed")
+        onError: () => toast.error("Download Failed"),
       }
     );
   }
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
 
   return (
@@ -148,7 +148,7 @@ const Controls = ({ history }: RouteComponentProps) => {
               </tr>
             </thead>
             <tbody>
-              {controls.map(control => {
+              {controls.map((control) => {
                 return (
                   <tr
                     key={control.id}
@@ -159,7 +159,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                         <input
                           type="checkbox"
                           checked={selected.includes(control.id)}
-                          onClick={e => e.stopPropagation()}
+                          onClick={(e) => e.stopPropagation()}
                           onChange={() => toggleCheck(control.id)}
                         />
                       </td>
@@ -172,7 +172,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                     <td>
                       {oc(control)
                         .risks([])
-                        .map(risk => risk.name)
+                        .map((risk) => risk.name)
                         .join(", ")}
                     </td>
                     <td>{capitalCase(control.nature || "")}</td>
@@ -181,7 +181,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                       {control.status
                         ?.split("_")
                         .map(
-                          a =>
+                          (a) =>
                             a.charAt(0).toUpperCase() +
                             a.substr(1).toLowerCase()
                         )
@@ -193,14 +193,16 @@ const Controls = ({ history }: RouteComponentProps) => {
                     <td>Updated By</td>
                     {isAdmin || isAdminReviewer || isAdminPreparer ? (
                       <td className="action">
-                        <DialogButton
-                          onConfirm={() => handleDelete(control.id)}
-                          loading={destroyM.loading}
-                          message={`Delete "${control.description}"?`}
-                          className="soft red"
-                        >
-                          <FaTrash className="clickable" />
-                        </DialogButton>
+                        <Tooltip description="Delete Control">
+                          <DialogButton
+                            onConfirm={() => handleDelete(control.id)}
+                            loading={destroyM.loading}
+                            message={`Delete "${control.description}"?`}
+                            className="soft red"
+                          >
+                            <FaTrash className="clickable" />
+                          </DialogButton>
+                        </Tooltip>
                       </td>
                     ) : (
                       <td></td>

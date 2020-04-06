@@ -32,7 +32,7 @@ export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
 
 // SideBoxTitle, the wrapper for the header. Better name should be SideBoxHeader.
 export const SideBoxTitle = styled.h4.attrs(() => ({
-  className: "text-orange"
+  className: "text-orange",
 }))`
   padding: 1.5rem 1rem 0.5rem 1rem;
   text-overflow: ellipsis;
@@ -53,13 +53,13 @@ export const SideBoxSearch = ({
   search,
   setSearch,
   loading,
-  placeholder
+  placeholder,
 }: SideBoxSearchProps) => (
   <SideBoxSearchWrapper>
     <Input
       value={search}
       placeholder={placeholder || "Search..."}
-      onChange={e => setSearch(e.target.value)}
+      onChange={(e) => setSearch(e.target.value)}
       className="orange"
     />
     <SideBoxSearchLoadingIndicator>
@@ -88,6 +88,9 @@ export const SideBoxItem = styled(NavLink)`
   display: flex;
   justify-content: space-between;
   padding: 10px 1rem;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #d85604;
+  font-size: 18px;
   text-decoration: none;
   color: var(--primary-color);
   &:hover {
@@ -109,13 +112,14 @@ interface SideBoxItemTextProps {
 }
 
 export const SideBoxItemText = styled.div<SideBoxItemTextProps>`
-  flex: ${p => p.flex || 1};
+  flex: ${(p) => p.flex || 1};
   white-space: nowrap;
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-weight: ${p => (p.bold ? "bold" : "normal")};
-  text-align: ${p => (p.right ? "right" : null)};
+
+  font-weight: ${(p) => (p.bold ? "bold" : "normal")};
+  text-align: ${(p) => (p.right ? "right" : null)};
 `;
 
 // NOTE: Components named with 'branch' are for nested side box case.
@@ -139,12 +143,13 @@ export const SideBoxBranch = styled.div`
 export const SideBoxBranchTitle = styled.div`
   padding: 10px 10px 10px 0px;
   text-decoration: none;
-  width: 260px;
+  width: 75%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--primary-color);
   font-weight: bold;
+  font-size: 18px;
   &.active {
     color: white;
   }

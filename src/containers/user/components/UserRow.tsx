@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
-  AiOutlineEdit
+  AiOutlineEdit,
 } from "react-icons/ai";
 import { FaCheck, FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { oc } from "ts-optchain";
@@ -15,7 +15,7 @@ import {
   useCreateRequestEditMutation,
   useDestroyUserMutation,
   useReviewUserDraftMutation,
-  UserRowFragmentFragment
+  UserRowFragmentFragment,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -25,6 +25,7 @@ import { Suggestions, toLabelValue } from "../../../shared/formatter";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
+import Tooltip from "../../../shared/components/Tooltip";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -41,48 +42,44 @@ export default function UserRow({ user, ...props }: UserRowProps) {
   const [isEdit, setIsEdit] = useState(props.isEdit);
   const { register, setValue, handleSubmit, errors } = useForm<UserRowValues>({
     defaultValues: {
-      roleIds: oc(user)
-        .roles([])
-        .map(toLabelValue),
-      policyCategoryIds: oc(user)
-        .policyCategories([])
-        .map(toLabelValue)
+      roleIds: oc(user).roles([]).map(toLabelValue),
+      policyCategoryIds: oc(user).policyCategories([]).map(toLabelValue),
     },
-    validationSchema
+    validationSchema,
   });
 
   const [update, updateM] = useAdminUpdateUserMutation({
     refetchQueries: ["users"],
     onCompleted,
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
 
   const [destroy, destroyM] = useDestroyUserMutation({
     refetchQueries: ["users"],
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
 
   const [requestEdit, requestEditM] = useCreateRequestEditMutation({
     variables: { id: oc(user).id(""), type: "User" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["users"]
+    refetchQueries: ["users"],
   });
 
   const [approveEdit, approveEditM] = useApproveRequestEditMutation({
     refetchQueries: ["users"],
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
 
   const [reviewUser, reviewM] = useReviewUserDraftMutation({
     refetchQueries: ["users"],
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
 
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
     "admin",
     "admin_preparer",
-    "admin_reviewer"
+    "admin_reviewer",
   ]);
   const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const createdAt = oc(user).createdAt() || "";
@@ -118,10 +115,10 @@ export default function UserRow({ user, ...props }: UserRowProps) {
         input: {
           name: data.name || "",
           userId: oc(user).id(""),
-          policyCategoryIds: data.policyCategoryIds?.map(a => a.value),
-          roleIds: data.roleIds?.map(a => a.value)
-        }
-      }
+          policyCategoryIds: data.policyCategoryIds?.map((a) => a.value),
+          roleIds: data.roleIds?.map((a) => a.value),
+        },
+      },
     });
   }
 
@@ -160,13 +157,13 @@ export default function UserRow({ user, ...props }: UserRowProps) {
         <td>
           {oc(user)
             .roles([])
-            .map(r => r.name)
+            .map((r) => r.name)
             .join(",")}
         </td>
         <td>
           {oc(user)
             .policyCategories([])
-            .map(p => p.name)
+            .map((p) => p.name)
             .join(",")}
         </td>
         <td>{status}</td>
@@ -187,7 +184,9 @@ export default function UserRow({ user, ...props }: UserRowProps) {
                 className="soft orange mr-2"
                 loading={reviewM.loading}
               >
-                <FaCheck />
+                <Tooltip description="Approve User">
+                  <FaCheck />
+                </Tooltip>
               </DialogButton>
               <DialogButton
                 title="Reject"
@@ -196,7 +195,9 @@ export default function UserRow({ user, ...props }: UserRowProps) {
                 className="soft orange"
                 loading={reviewM.loading}
               >
-                <FaTimes />
+                <Tooltip description="Reject User">
+                  <FaTimes />
+                </Tooltip>
               </DialogButton>
             </Fragment>
           )}
@@ -206,7 +207,9 @@ export default function UserRow({ user, ...props }: UserRowProps) {
             (!draft && isAdmin)) && (
             <Fragment>
               <Button onClick={toggleEdit} className="soft orange mr-2">
-                <AiFillEdit />
+                <Tooltip description="Edit User">
+                  <AiFillEdit />
+                </Tooltip>
               </Button>
             </Fragment>
           )}
@@ -221,7 +224,9 @@ export default function UserRow({ user, ...props }: UserRowProps) {
               className="soft red mr-2"
               disabled={requestStatus === "requested"}
             >
-              <AiOutlineEdit />
+              <Tooltip description="Request To Edit">
+                <AiOutlineEdit />
+              </Tooltip>
             </DialogButton>
           )}
 
@@ -245,7 +250,9 @@ export default function UserRow({ user, ...props }: UserRowProps) {
                 actions={{ no: "Reject", yes: "Approve" }}
                 loading={approveEditM.loading}
               >
-                <FaExclamationCircle />
+                <Tooltip description="Accept Request To Edit">
+                  <FaExclamationCircle />
+                </Tooltip>
               </DialogButton>
             )}
 
@@ -257,7 +264,9 @@ export default function UserRow({ user, ...props }: UserRowProps) {
               className="soft red"
               onConfirm={handleDestroy}
             >
-              <FaTrash />
+              <Tooltip description="Delete User">
+                <FaTrash />
+              </Tooltip>
             </DialogButton>
           )}
         </td>
@@ -315,5 +324,5 @@ export default function UserRow({ user, ...props }: UserRowProps) {
 }
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required("Required")
+  name: yup.string().required("Required"),
 });

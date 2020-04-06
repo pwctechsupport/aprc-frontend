@@ -8,7 +8,7 @@ import { useDebounce } from "use-debounce/lib";
 import {
   Policy,
   useDestroyPolicyMutation,
-  usePolicyTreeQuery
+  usePolicyTreeQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -21,11 +21,18 @@ import Pagination from "../../shared/components/Pagination";
 import OpacityButton from "../../shared/components/OpacityButton";
 import { Collapse } from "reactstrap";
 import AllPolicyDashboard from "./components/AllPolicyDashboard";
+import useAccessRights from "../../shared/hooks/useAccessRights";
+import Tooltip from "../../shared/components/Tooltip";
 
 export default function Policies({ history }: RouteComponentProps) {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
   const [showDashboard, setShowDashboard] = useState(false);
   function toggleShowDashboard() {
-    setShowDashboard(p => !p);
+    setShowDashboard((p) => !p);
   }
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const [search, setSearch] = useState("");
@@ -38,11 +45,11 @@ export default function Policies({ history }: RouteComponentProps) {
       isTree,
       filter: {
         ...(isTree && { ancestry_null: true }),
-        title_cont: searchQuery
+        title_cont: searchQuery,
       },
       limit,
-      page
-    }
+      page,
+    },
   });
   const policies = data?.policies?.collection || [];
   const totalCount = data?.policies?.metadata.totalCount || 0;
@@ -51,7 +58,7 @@ export default function Policies({ history }: RouteComponentProps) {
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
     refetchQueries: ["policies"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleDelete(id: string) {
     destroy({ variables: { id } });
@@ -72,9 +79,11 @@ export default function Policies({ history }: RouteComponentProps) {
         <OpacityButton onClick={toggleShowDashboard}>
           {showDashboard ? " Hide" : "Show"} Dashboard
         </OpacityButton>
-        <Button to="/policy/create" tag={Link} className="pwc">
-          + Add Policy
-        </Button>
+        {(isAdmin || isAdminReviewer || isAdminPreparer) && (
+          <Button to="/policy/create" tag={Link} className="pwc">
+            + Add Policy
+          </Button>
+        )}
       </div>
       <SearchBar
         search={search}
@@ -93,11 +102,11 @@ export default function Policies({ history }: RouteComponentProps) {
         </thead>
         <tbody>
           {policies.length ? (
-            policies.map(policy => (
+            policies.map((policy) => (
               <PolicyTableRow
                 key={policy.id}
                 policy={policy}
-                onClick={id => history.push(`/policy/${id}`)}
+                onClick={(id) => history.push(`/policy/${id}`)}
                 onDelete={handleDelete}
                 level={0}
               />
@@ -124,7 +133,7 @@ const PolicyTableRow = ({
   policy,
   onClick,
   onDelete,
-  level = 0
+  level = 0,
 }: {
   policy: Omit<Policy, "createdAt" | "updatedAt" | "visit">;
   onClick: (value: any) => void;
@@ -149,18 +158,20 @@ const PolicyTableRow = ({
         <td>{policy.policyCategory?.name || ""}</td>
         <td>{capitalCase(policy.status || "")}</td>
         <td className="action">
-          <DialogButton
-            message={`Are you sure to delete ${policy.title}`}
-            onConfirm={() => onDelete(policy.id)}
-            className="soft red"
-            color=""
-          >
-            <FaTrash />
-          </DialogButton>
+          <Tooltip description="Delete Policy">
+            <DialogButton
+              message={`Are you sure to delete ${policy.title}`}
+              onConfirm={() => onDelete(policy.id)}
+              className="soft red"
+              color=""
+            >
+              <FaTrash />
+            </DialogButton>
+          </Tooltip>
         </td>
       </tr>
       {childs.length
-        ? childs.map(childPol => (
+        ? childs.map((childPol) => (
             <PolicyTableRow
               key={childPol.id}
               policy={childPol}

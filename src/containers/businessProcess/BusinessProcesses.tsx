@@ -8,7 +8,7 @@ import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
   useBusinessProcessTreeQuery,
-  useDestroyBusinessProcessMutation
+  useDestroyBusinessProcessMutation,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -23,10 +23,10 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal(p => !p);
+  const toggleImportModal = () => setModal((p) => !p);
 
   const [createBpModal, setCreateBpModal] = useState(false);
-  const toggleCreateBpModal = () => setCreateBpModal(p => !p);
+  const toggleCreateBpModal = () => setCreateBpModal((p) => !p);
 
   const [selected, setSelected] = useState<string[]>([]);
   const [searchValue] = useState("");
@@ -37,16 +37,16 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
     variables: {
       filter: {
         name_cont: searchQuery,
-        ...(isTree && { ancestry_null: true })
+        ...(isTree && { ancestry_null: true }),
       },
-      isTree
-    }
+      isTree,
+    },
   });
   const bps = oc(businessQuery).data.businessProcesses.collection([]);
   const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["businessProcesses"]
+    refetchQueries: ["businessProcesses"],
   });
 
   const handleDelete = (id: string) => {
@@ -55,7 +55,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -63,7 +63,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(bps.map(n => n.id));
+      setSelected(bps.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -73,20 +73,20 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
     downloadXls(
       "/prints/business_process_excel.xlsx",
       {
-        business_process_ids: selected.map(Number)
+        business_process_ids: selected.map(Number),
       },
       {
         fileName: "Business Process.xlsx",
         onStart: () => toast.info("Download Dimulai"),
         onCompleted: () => toast.success("Download Berhasil"),
-        onError: () => toast.error("Download Gagal")
+        onError: () => toast.error("Download Gagal"),
       }
     );
   }
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
 
   return (
@@ -180,7 +180,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
               </tr>
             </thead>
             <tbody>
-              {bps.map(item => (
+              {bps.map((item) => (
                 <tr
                   key={item.id}
                   onClick={() => history.push(`/business-process/${item.id}`)}
@@ -190,7 +190,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                       <input
                         type="checkbox"
                         checked={selected.includes(item.id)}
-                        onClick={e => e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={() => toggleCheck(item.id)}
                       />
                     </td>
@@ -210,7 +210,9 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                         message={`Delete Business Process "${item.name}"?`}
                         className="soft red"
                       >
-                        <FaTrash className="clickable" />
+                        <Tooltip description="Delete Business Process">
+                          <FaTrash className="clickable" />
+                        </Tooltip>
                       </DialogButton>
                     </td>
                   ) : (
@@ -230,7 +232,7 @@ export default BusinessProcesses;
 
 const ImportBusinessProcessModal = ({
   isOpen,
-  toggle
+  toggle,
 }: ImportBusinessProcessModalProps) => {
   const [file, setFile] = useState();
   const [error, setError] = useState<null | string>(null);

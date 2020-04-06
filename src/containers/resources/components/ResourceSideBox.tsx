@@ -7,7 +7,7 @@ import {
   SideBoxItem,
   SideBoxItemText,
   SideBoxSearch,
-  SideBoxTitle
+  SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
 import Tooltip from "../../../shared/components/Tooltip";
@@ -20,7 +20,7 @@ const ResourceSideBox = () => {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
   const { data, loading } = useResourcesQuery({
-    variables: { filter: { name_cont: searchQuery } }
+    variables: { filter: { name_cont: searchQuery } },
   });
   const resources = oc(data)
     .resources.collection([])
@@ -31,7 +31,7 @@ const ResourceSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
   return (
     <SideBox>
@@ -58,12 +58,12 @@ const ResourceSideBox = () => {
         placeholder="Search Resources..."
         loading={loading}
       />
-      {resources.map(resource => (
+      {resources.map((resource) => (
         <SideBoxItem key={resource.id} to={`/resources/${resource.id}`}>
           <SideBoxItemText flex={2} bold>
             {resource.name}
           </SideBoxItemText>
-          <SideBoxItemText flex={1} right>
+          <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
             {humanizeDate(new Date(resource.updatedAt))}
           </SideBoxItemText>
         </SideBoxItem>

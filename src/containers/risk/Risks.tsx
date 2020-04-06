@@ -8,7 +8,7 @@ import { oc } from "ts-optchain";
 import {
   RisksDocument,
   useDestroyRiskMutation,
-  useRisksQuery
+  useRisksQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -24,7 +24,7 @@ const Risks = ({ history }: RouteComponentProps) => {
   const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
   const [selected, setSelected] = useState<string[]>([]);
   const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal(p => !p);
+  const toggleImportModal = () => setModal((p) => !p);
 
   const [destroy, destroyM] = useDestroyRiskMutation({
     onCompleted: () => toast.success("Delete Success"),
@@ -32,9 +32,9 @@ const Risks = ({ history }: RouteComponentProps) => {
     refetchQueries: [
       {
         query: RisksDocument,
-        variables: { filter: {} }
-      }
-    ]
+        variables: { filter: {} },
+      },
+    ],
   });
 
   const risks = oc(data).risks.collection([]);
@@ -45,7 +45,7 @@ const Risks = ({ history }: RouteComponentProps) => {
 
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -53,7 +53,7 @@ const Risks = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(risks.map(r => r.id));
+      setSelected(risks.map((r) => r.id));
     } else {
       setSelected([]);
     }
@@ -63,20 +63,20 @@ const Risks = ({ history }: RouteComponentProps) => {
     downloadXls(
       "/prints/risk_excel.xlsx",
       {
-        risk_ids: selected.map(Number)
+        risk_ids: selected.map(Number),
       },
       {
         fileName: "Risks.xlsx",
         onStart: () => toast.info("Download Start"),
         onCompleted: () => notifySuccess("Download Success"),
-        onError: () => toast.error("Download Failed")
+        onError: () => toast.error("Download Failed"),
       }
     );
   }
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
 
   return (
@@ -150,9 +150,9 @@ const Risks = ({ history }: RouteComponentProps) => {
           </tr>
         </thead>
         <tbody>
-          {risks.map(risk => {
-            const bps = risk.businessProcesses?.map(a => `, ${a.name}`) || [];
-            bps[0] = risk.businessProcesses?.map(a => `${a.name}`)[0] || "-";
+          {risks.map((risk) => {
+            const bps = risk.businessProcesses?.map((a) => `, ${a.name}`) || [];
+            bps[0] = risk.businessProcesses?.map((a) => `${a.name}`)[0] || "-";
             return (
               <tr
                 key={risk.id}
@@ -163,7 +163,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                     <input
                       type="checkbox"
                       checked={selected.includes(risk.id)}
-                      onClick={e => e.stopPropagation()}
+                      onClick={(e) => e.stopPropagation()}
                       onChange={() => toggleCheck(risk.id)}
                     />
                   </td>
@@ -188,7 +188,9 @@ const Risks = ({ history }: RouteComponentProps) => {
                       message={`Delete risk "${risk.name}"?`}
                       className="soft red"
                     >
-                      <FaTrash />
+                      <Tooltip description="Delete Risk">
+                        <FaTrash />
+                      </Tooltip>
                     </DialogButton>
                   </td>
                 ) : (

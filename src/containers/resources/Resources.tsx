@@ -1,13 +1,18 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFile, FaTrash, FaFileExport, FaFileImport } from "react-icons/fa";
+import {
+  FaTrash,
+  FaFileExport,
+  FaFileImport,
+  FaDownload,
+} from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
   useDestroyResourceMutation,
-  useResourcesQuery
+  useResourcesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -24,15 +29,15 @@ const Resources = ({ history }: RouteComponentProps) => {
   const [destroyResource, destroyM] = useDestroyResourceMutation({
     refetchQueries: ["resources"],
     onCompleted: () => toast.success("Delete Success"),
-    onError: () => toast.error("Delete Failed")
+    onError: () => toast.error("Delete Failed"),
   });
   const [selected, setSelected] = useState<string[]>([]);
   const resources = oc(data).resources.collection([]);
   const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal(p => !p);
+  const toggleImportModal = () => setModal((p) => !p);
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -40,7 +45,7 @@ const Resources = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(resources.map(n => n.id));
+      setSelected(resources.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -49,20 +54,20 @@ const Resources = ({ history }: RouteComponentProps) => {
     downloadXls(
       "/prints/resource_excel.xlsx",
       {
-        resource_ids: selected.map(Number)
+        resource_ids: selected.map(Number),
       },
       {
         fileName: "resources.xlsx",
         onStart: () => toast.info("Download Start"),
         onCompleted: () => notifySuccess("Download Success"),
-        onError: () => toast.error("Download Failed")
+        onError: () => toast.error("Download Failed"),
       }
     );
   }
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
 
   return (
@@ -140,7 +145,7 @@ const Resources = ({ history }: RouteComponentProps) => {
         <tbody>
           {oc(data)
             .resources.collection([])
-            .map(resource => {
+            .map((resource) => {
               return (
                 <tr
                   key={resource.id}
@@ -151,7 +156,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                       <input
                         type="checkbox"
                         checked={selected.includes(resource.id)}
-                        onClick={e => e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={() => toggleCheck(resource.id)}
                       />
                     </td>
@@ -164,14 +169,14 @@ const Resources = ({ history }: RouteComponentProps) => {
                   <td>
                     {oc(resource)
                       .controls([])
-                      .map(c => c.typeOfControl)
-                      .map(c => capitalCase(c || ""))
+                      .map((c) => c.typeOfControl)
+                      .map((c) => capitalCase(c || ""))
                       .join(", ")}
                   </td>
                   <td>
                     {oc(resource)
                       .policies([])
-                      .map(p => p.title)
+                      .map((p) => p.title)
                       .join(", ")}
                   </td>
                   <td>{resource.businessProcess?.name}</td>
@@ -198,7 +203,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                                 event.stopPropagation();
                               }}
                             >
-                              <FaFile size={16} />
+                              <FaDownload />
                             </a>
                           </Tooltip>
                         </Button>
@@ -211,7 +216,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                           className="soft red"
                         >
                           <Tooltip description="Delete Resource">
-                            <FaTrash className="clickable text-red" />
+                            <FaTrash />
                           </Tooltip>
                         </DialogButton>
                       </div>
