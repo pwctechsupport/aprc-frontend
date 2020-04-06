@@ -5,6 +5,8 @@ query references($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
       name
       updatedAt
       createdAt
+      createdBy
+      lastUpdatedBy
       policies {
         id
         title

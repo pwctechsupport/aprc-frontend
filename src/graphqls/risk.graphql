@@ -3,7 +3,9 @@ fragment risk on Risk {
   name
   levelOfRisk
   typeOfRisk
+  createdBy
   createdAt
+  lastUpdatedBy
   updatedAt
   status
   businessProcesses {

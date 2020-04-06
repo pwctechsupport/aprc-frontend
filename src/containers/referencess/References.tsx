@@ -287,9 +287,9 @@ const ReferenceRow = ({
         )}
       </td>
       <td>{reference.updatedAt.split("T")[0]}</td>
-      <td>Updated By</td>
+      <td>{reference.lastUpdatedBy}</td>
       <td>{reference.createdAt.split("T")[0]}</td>
-      <td>Created By</td>
+      <td>{reference.createdBy}</td>
       {isAdmin || isAdminReviewer || isAdminPreparer ? (
         <td
           className="align-middle text-right action"

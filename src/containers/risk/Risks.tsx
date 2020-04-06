@@ -78,7 +78,6 @@ const Risks = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
-
   return (
     <div>
       <Helmet>
@@ -177,8 +176,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                 </td>
                 <td>{bps}</td>
                 <td>{risk.updatedAt?.split(" ")[0]}</td>
-                <td>Last update by</td>
-
+                <td>{risk.lastUpdatedBy}</td>
                 <td>{risk.status}</td>
                 {isAdmin || isAdminReviewer || isAdminPreparer ? (
                   <td className="action">

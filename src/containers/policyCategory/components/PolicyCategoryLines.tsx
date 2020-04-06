@@ -176,9 +176,9 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                     .map((policy) => policy.title)
                     .join(", ")}
                 </td>
-                <td>minta backend</td>
+                <td>{policyCategory.status}</td>
                 <td>{policyCategory.updatedAt.split(" ")[0]}</td>
-                <td>minta backend</td>
+                <td>{policyCategory.lastUpdatedBy}</td>
                 {admins ? (
                   <td className="action">
                     <Tooltip description="Delete Policy Category">

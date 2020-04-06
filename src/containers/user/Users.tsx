@@ -16,7 +16,7 @@ const Users = () => {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
     "admin",
     "admin_preparer",
-    "admin_reviewer"
+    "admin_reviewer",
   ]);
   const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [search, setSearch] = useState("");
@@ -24,10 +24,10 @@ const Users = () => {
   const { data, networkStatus } = useUsersQuery({
     variables: {
       filter: {
-        name_or_draft_object_cont: debouncedSearch
-      }
+        name_or_draft_object_cont: debouncedSearch,
+      },
     },
-    fetchPolicy: "no-cache"
+    fetchPolicy: "no-cache",
   });
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
@@ -68,13 +68,13 @@ const Users = () => {
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
                   Username
                 </th>
-                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                <th style={admins ? { width: "10%" } : { width: "10%" }}>
                   User ID
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
                   User Group
                 </th>
-                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                <th style={admins ? { width: "17%" } : { width: "17%" }}>
                   Policy Category
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
@@ -87,17 +87,13 @@ const Users = () => {
                   Updated At
                 </th>
 
-                {admins ? (
-                  <th style={{ width: "12.5%" }}>Action</th>
-                ) : (
-                  <th></th>
-                )}
+                {admins ? <th>Action</th> : <th></th>}
               </tr>
             </thead>
             <tbody>
               {oc(data)
                 .users.collection([])
-                .map(user => {
+                .map((user) => {
                   return <UserRow key={user.id} user={user} />;
                 })}
             </tbody>

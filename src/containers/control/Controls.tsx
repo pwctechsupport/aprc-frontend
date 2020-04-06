@@ -190,7 +190,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                     <td>
                       {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}
                     </td>
-                    <td>Updated By</td>
+                    <td>{control.lastUpdatedBy}</td>
                     {isAdmin || isAdminReviewer || isAdminPreparer ? (
                       <td className="action">
                         <Tooltip description="Delete Control">

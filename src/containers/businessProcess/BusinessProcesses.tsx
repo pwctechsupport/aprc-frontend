@@ -199,9 +199,9 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                   <td>{item.name}</td>
                   <td>{item.id}</td>
                   <td>{item.updatedAt.split("T")[0]}</td>
-                  <td>Updated By</td>
+                  <td>{item.lastUpdatedBy}</td>
                   <td>{item.createdAt.split("T")[0]}</td>
-                  <td>Created By</td>
+                  <td>{item.createdBy}</td>
                   {isAdmin || isAdminReviewer || isAdminPreparer ? (
                     <td className="action">
                       <DialogButton

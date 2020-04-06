@@ -129,15 +129,14 @@ const Resources = ({ history }: RouteComponentProps) => {
             ) : null}
             <th>ID</th>
 
-            <th>Name</th>
-            <th>File Type</th>
-            <th>Category</th>
-            <th>Related Resource</th>
-            <th>Related Policy</th>
-
-            <th>Related Business Process</th>
-            <th>Updated At</th>
-            <th>Created By</th>
+            <th style={{ width: "10%" }}>Name</th>
+            <th style={{ width: "8%" }}>File Type</th>
+            <th style={{ width: "8%" }}>Category</th>
+            <th style={{ width: "14%" }}>Related Resource</th>
+            <th style={{ width: "14%" }}>Related Policy</th>
+            <th style={{ width: "14%" }}>Related Business Process</th>
+            <th style={{ width: "8%" }}>Updated At</th>
+            <th style={{ width: "8%" }}>Created By</th>
 
             <th></th>
           </tr>
@@ -181,7 +180,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                   </td>
                   <td>{resource.businessProcess?.name}</td>
                   <td>{resource.updatedAt.split(" ")[0]}</td>
-                  <td>Created By</td>
+                  <td>{resource.createdBy}</td>
                   {isAdminReviewer || isAdmin || isAdminPreparer ? (
                     <td className="action">
                       <div className="d-flex align-items-center">

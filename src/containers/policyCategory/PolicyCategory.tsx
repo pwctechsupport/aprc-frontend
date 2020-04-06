@@ -4,7 +4,7 @@ import Helmet from "react-helmet";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
-  AiOutlineEdit
+  AiOutlineEdit,
 } from "react-icons/ai";
 import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { RouteComponentProps, Link } from "react-router-dom";
@@ -14,7 +14,7 @@ import {
   useDestroyPolicyCategoryMutation,
   usePolicyCategoryQuery,
   useReviewPolicyCategoryDraftMutation,
-  useUpdatePolicyCategoryMutation
+  useUpdatePolicyCategoryMutation,
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
@@ -25,10 +25,10 @@ import useEditState from "../../shared/hooks/useEditState";
 import {
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess
+  notifySuccess,
 } from "../../shared/utils/notif";
 import PolicyCategoryForm, {
-  PolicyCategoryFormValues
+  PolicyCategoryFormValues,
 } from "./components/PolicyCategoryForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import HeaderWithBackButton from "../../shared/components/Header";
@@ -36,16 +36,17 @@ import HeaderWithBackButton from "../../shared/components/Header";
 const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
   function toggleEditMode() {
-    setInEditMode(p => !p);
+    setInEditMode((p) => !p);
   }
   const id = get(match, "params.id", "");
   const { data, loading } = usePolicyCategoryQuery({
     variables: {
-      id
+      id,
     },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
+  const createdBy = data?.policyCategory?.createdBy;
   const draft = data?.policyCategory?.draft?.objectResult;
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
@@ -54,7 +55,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     draft,
     hasEditAccess,
     requestStatus,
-    requestEditState
+    requestEditState,
   });
 
   // Update handlers
@@ -62,7 +63,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     onCompleted: () => notifySuccess("Policy Category Updated"),
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["policyCategory"]
+    refetchQueries: ["policyCategory"],
   });
   function handleUpdate(values: PolicyCategoryFormValues) {
     updateMutation({
@@ -70,9 +71,9 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
         input: {
           id,
           name: values.name || "",
-          policyIds: values.policyIds?.map(a => a.value)
-        }
-      }
+          policyIds: values.policyIds?.map((a) => a.value),
+        },
+      },
     });
   }
 
@@ -84,7 +85,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["policyCategory"]
+    refetchQueries: ["policyCategory"],
   });
   function handleDelete() {
     deleteMutation({ variables: { id } });
@@ -93,9 +94,9 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   // Review handlers
   const [
     reviewPolicyCategory,
-    reviewPolicyCategoryM
+    reviewPolicyCategoryM,
   ] = useReviewPolicyCategoryDraftMutation({
-    refetchQueries: ["policyCategory"]
+    refetchQueries: ["policyCategory"],
   });
   async function review({ publish }: { publish: boolean }) {
     try {
@@ -109,23 +110,23 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
   // Request Edit handlers
   const [
     requestEditMutation,
-    requestEditMutationInfo
+    requestEditMutationInfo,
   ] = useCreateRequestEditMutation({
     variables: { id, type: "PolicyCategory" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
     awaitRefetchQueries: true,
-    refetchQueries: ["policyCategory"]
+    refetchQueries: ["policyCategory"],
   });
 
   // Approve and Reject handlers
   const [
     approveEditMutation,
-    approveEditMutationResult
+    approveEditMutationResult,
   ] = useApproveRequestEditMutation({
     awaitRefetchQueries: true,
     refetchQueries: ["policyCategory"],
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
   async function handleApproveRequest(id: string) {
     try {
@@ -152,7 +153,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
 
   const defaultValues = {
     name,
-    policies: policies.map(toLabelValue)
+    policies: policies.map(toLabelValue),
   };
 
   const renderPolicyCategoryAction = () => {
@@ -262,13 +263,13 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
         </Fragment>
         <Fragment>
           <dt>Created By</dt>
-          <dd>minta backend</dd>
+          <dd> {createdBy ? createdBy : "-"}</dd>
         </Fragment>
         {/* <h6 className="mt-4"> </h6> */}
         <Fragment>
           <dt>Related Policies</dt>
           <ul>
-            {policies.map(policy => (
+            {policies.map((policy) => (
               <li key={policy.id}>
                 <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
               </li>
@@ -287,7 +288,7 @@ const PolicyCategory = ({ match, history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/policy-category", "Policy Category"],
-          ["/policy-category/" + id, name]
+          ["/policy-category/" + id, name],
         ]}
       />
       <div className="d-flex justify-content-between align-items-center">

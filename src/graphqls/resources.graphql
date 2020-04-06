@@ -20,7 +20,9 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
       resuploadUrl
       resourceFileType
       createdAt
+      createdBy
       updatedAt
+      lastUpdatedBy
     }
     metadata {
       currentPage
