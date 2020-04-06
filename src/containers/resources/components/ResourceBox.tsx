@@ -5,7 +5,7 @@ import styled from "styled-components";
 import {
   useCreateResourceRatingMutation,
   useDestroyResourceAttachmentMutation,
-  useUpdateResourceVisitMutation
+  useUpdateResourceVisitMutation,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -13,7 +13,7 @@ import StarRating from "../../../shared/components/StarRating";
 import Tooltip from "../../../shared/components/Tooltip";
 import {
   notifyGraphQLErrors,
-  notifySuccess
+  notifySuccess,
 } from "../../../shared/utils/notif";
 
 interface ResourceBoxProps {
@@ -31,18 +31,18 @@ export default function ResourceBox({
   views,
   rating,
   totalRating,
-  imagePreviewUrl
+  imagePreviewUrl,
 }: ResourceBoxProps) {
   const [previewAvailable, setPreivewAvailable] = useState(true);
   // Hanlde delete attachment
   const [
     deleteAttachmentMutation,
-    deleteAttachmentMutationInfo
+    deleteAttachmentMutationInfo,
   ] = useDestroyResourceAttachmentMutation({
     onCompleted: () => notifySuccess("Attachment Removed"),
     onError: notifyGraphQLErrors,
     refetchQueries: ["resource"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleErase() {
     deleteAttachmentMutation({ variables: { id } });
@@ -56,21 +56,21 @@ export default function ResourceBox({
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["resource"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleStarClick(nextValue: number) {
     createResourceRatingMutation({
       variables: {
         input: {
           resourceId: id,
-          rating: nextValue
-        }
-      }
+          rating: nextValue,
+        },
+      },
     });
   }
 
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
-    refetchQueries: ["resource"]
+    refetchQueries: ["resource"],
   });
 
   // Handle download attachment
@@ -114,10 +114,9 @@ export default function ResourceBox({
               loading={deleteAttachmentMutationInfo.loading}
               disabled={!previewAvailable}
             >
-              <SmallText>
-                <IoMdRemoveCircleOutline />
-                &nbsp;Remove File
-              </SmallText>
+              <Button>
+                <SmallText>&nbsp;Remove File</SmallText>
+              </Button>
             </DialogButton>
           </Tooltip>
           <Tooltip description="Download resource attachment">
@@ -127,10 +126,9 @@ export default function ResourceBox({
               onClick={handleDownload}
               color=""
             >
-              <SmallText>
-                <FaDownload />
-                &nbsp;Download
-              </SmallText>
+              <Button className="pwc">
+                <SmallText>&nbsp;Download File</SmallText>
+              </Button>
             </Button>
           </Tooltip>
         </ResourceBoxMetaWrapper>
