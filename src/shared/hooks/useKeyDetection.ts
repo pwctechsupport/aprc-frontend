@@ -2,7 +2,8 @@ import { useEffect } from "react";
 
 export default function useKeyDetection(
   key: "Enter" | "Escape",
-  callback: Function
+  callback: Function,
+  deps?: React.DependencyList | undefined
 ) {
   useEffect(() => {
     function escFunction(event: KeyboardEvent): void {
@@ -14,5 +15,5 @@ export default function useKeyDetection(
     return () => {
       document.removeEventListener("keydown", escFunction, false);
     };
-  });
+  }, [callback, deps, key]);
 }

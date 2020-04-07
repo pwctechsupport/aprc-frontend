@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaBell, FaBookmark, FaSearch } from "react-icons/fa";
+import { FaBell, FaBookmark } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, NavLink as RrNavLink, useLocation } from "react-router-dom";
 import {
@@ -115,13 +115,11 @@ export default function NewNavbar() {
         <NavbarText>
           <div className="d-flex align-items-center">
             <SearchBar className="mr-4">
-              <HomepageSearch />
+              <HomepageSearch
+                placeholder="Search policies..."
+                maxMenuWidth={500}
+              />
             </SearchBar>
-            <div className="ml-4 mr-4">
-              <Link to="/search-policy" className="text-dark">
-                <FaSearch className="clickable" size={22} />
-              </Link>
-            </div>
             <Link to="/bookmark" className="text-dark">
               <FaBookmark className="clickable" size={22} />
             </Link>

@@ -10,7 +10,7 @@ import {
   useLoadControls,
   useLoadResources,
   useLoadRisks,
-  useLoadPolicyReferences
+  useLoadPolicyReferences,
 } from "../../../shared/hooks/suggestions";
 import { useLoadPolicyCategories } from "../../user/components/UserForm";
 import { Suggestions } from "../../../shared/formatter";
@@ -29,6 +29,7 @@ export interface PolicySearchFormValues {
 interface PolicySearchFormProps {
   onSubmit: (data: PolicySearchFormValues) => void;
   submitting?: boolean;
+  defaultValues?: PolicySearchFormValues;
 }
 
 const dateFilters = [
@@ -37,17 +38,18 @@ const dateFilters = [
   "In 7 days",
   "In a month",
   "In 90 days",
-  "In a year"
+  "In a year",
 ] as const;
 
 export type DateFilter = typeof dateFilters[number];
 
 export default function PolicySearchForm({
   onSubmit,
-  submitting
+  submitting,
+  defaultValues,
 }: PolicySearchFormProps) {
   const { register, setValue, handleSubmit } = useForm<PolicySearchFormValues>({
-    defaultValues: { dateFrom: "All Time" }
+    defaultValues: defaultValues || { dateFrom: "All Time" },
   });
   const loadRisks = useLoadRisks();
   const loadControls = useLoadControls();
@@ -114,7 +116,7 @@ export default function PolicySearchForm({
       />
       <Label>Last updated in:</Label>
       <FormGroup tag="fieldset">
-        {dateFilters.map(item => (
+        {dateFilters.map((item) => (
           <FormGroup key={item} check>
             <Label check>
               <ReactstrapInput

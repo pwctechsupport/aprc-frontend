@@ -7,7 +7,7 @@ export const money = (input: number | string | null | undefined) => {
     style: "currency",
     currency: "IDR",
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0
+    maximumFractionDigits: 0,
   }).format(inputMoney);
 };
 
@@ -24,7 +24,7 @@ export const date = (
     month: "long",
     day: "numeric",
     hour: "numeric",
-    minute: "numeric"
+    minute: "numeric",
   };
   return new Intl.DateTimeFormat(
     ["ban", "id"],
@@ -36,16 +36,16 @@ export const toLabelValue = ({
   id,
   code,
   name,
-  title
+  title,
 }: ToLabelValueInput): Suggestion => {
   return {
     label: code || name || title || "",
-    value: id || code || ""
+    value: id || code || "",
   };
 };
 
 export const prepDefaultValue = (value: any, options: Suggestions) => {
-  return options.find(opt => opt.value === value);
+  return options.find((opt) => opt.value === value);
 };
 
 export const toBase64 = (file: File) =>
@@ -54,7 +54,7 @@ export const toBase64 = (file: File) =>
     reader.readAsDataURL(file);
 
     reader.onload = () => resolve(reader.result);
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 
 // ==========================================
@@ -88,7 +88,7 @@ export function getActiveIdFromPathname(
     return pathname
       .split("/")
       .filter(Boolean)
-      .filter(a => !isNaN(Number(a)))[0];
+      .filter((a) => !isNaN(Number(a)))[0];
   return "";
 }
 
@@ -101,7 +101,7 @@ export function getPathnameParams(
     const params = pathname
       .split("/")
       .filter(Boolean)
-      .filter(a => a !== basePathname);
+      .filter((a) => a !== basePathname);
     return params;
   }
   return [];
@@ -131,9 +131,9 @@ export function removeEmpty<T>(obj: T): Partial<T> {
   );
 }
 
-export function setParams(obj: any) {
+export function constructUrlParams(obj: any) {
   const searchParams = new URLSearchParams();
-  Object.keys(obj).forEach(key => {
+  Object.keys(obj).forEach((key) => {
     if (obj[key]) {
       if (obj[key].hasOwnProperty("value")) {
         searchParams.set(key, obj[key]["value"]);
@@ -145,7 +145,7 @@ export function setParams(obj: any) {
   return searchParams.toString();
 }
 
-export function getParams(location: Location) {
+export function getParams(location: any) {
   const searchParams = new URLSearchParams(location.search);
   let x = {};
   searchParams.forEach((value, key) => {

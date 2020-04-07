@@ -5,7 +5,12 @@ import { useSearchPoliciesQuery } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Pagination from "../../shared/components/Pagination";
 import { SideBox, SideBoxTitle } from "../../shared/components/SideBox";
-import { takeValue, removeEmpty } from "../../shared/formatter";
+import {
+  takeValue,
+  removeEmpty,
+  getParams,
+  constructUrlParams,
+} from "../../shared/formatter";
 import useListState from "../../shared/hooks/useList";
 import PolicySearchForm, {
   DateFilter,
@@ -13,6 +18,7 @@ import PolicySearchForm, {
 } from "./policySearch/PolicySearchForm";
 import PolicySearchItem from "./policySearch/PolicySearchItem";
 import OpacityButton from "../../shared/components/OpacityButton";
+import { RouteComponentProps } from "react-router-dom";
 
 interface PolicySearchFilter {
   title_cont?: string;
@@ -25,8 +31,12 @@ interface PolicySearchFilter {
   updated_at_gteq?: string | null;
 }
 
-export default function PolicySearch() {
-  const [filter, setFilter] = useState<PolicySearchFilter>({});
+export default function PolicySearch({
+  location,
+  history,
+}: RouteComponentProps) {
+  const defaultParams: PolicySearchFilter = getParams(location);
+  const [filter, setFilter] = useState<PolicySearchFilter>(defaultParams);
 
   const [showDashboard, setShowDashboard] = useState(false);
   function toggleShowDashboard() {
@@ -44,19 +54,24 @@ export default function PolicySearch() {
   const policies = data?.policies?.collection || [];
   const totalCount = data?.policies?.metadata.totalCount || 0;
   function handleFormSubmit(values: PolicySearchFormValues) {
-    setFilter(
-      removeEmpty({
-        title_cont: values.title,
-        description_cont: values.description,
-        risks_id_in: values.risks?.map(takeValue),
-        controls_id_in: values.controls?.map(takeValue),
-        resources_id_in: values.resources?.map(takeValue),
-        references_id_in: values.policyReferences?.map(takeValue),
-        categories_id_in: values.policyCategories?.map(takeValue),
-        updated_at_gteq: constructDateFilter(values.dateFrom),
-      })
-    );
+    const filter = removeEmpty({
+      title_cont: values.title,
+      description_cont: values.description,
+      risks_id_in: values.risks?.map(takeValue),
+      controls_id_in: values.controls?.map(takeValue),
+      resources_id_in: values.resources?.map(takeValue),
+      references_id_in: values.policyReferences?.map(takeValue),
+      categories_id_in: values.policyCategories?.map(takeValue),
+      updated_at_gteq: constructDateFilter(values.dateFrom),
+    });
+    setFilter(filter);
+    history.replace(`?${constructUrlParams(filter)}`);
   }
+
+  const defaultValues: PolicySearchFormValues = {
+    title: filter.title_cont,
+    description: filter.description_cont,
+  };
   return (
     <Container fluid className="p-0">
       <Row noGutters>
@@ -70,6 +85,7 @@ export default function PolicySearch() {
             <PolicySearchForm
               onSubmit={handleFormSubmit}
               submitting={loading}
+              defaultValues={defaultValues}
             />
           </SideBox>
         </Col>
@@ -84,6 +100,7 @@ export default function PolicySearch() {
                 <PolicySearchForm
                   onSubmit={handleFormSubmit}
                   submitting={loading}
+                  defaultValues={defaultValues}
                 />
               </div>
             </Collapse>

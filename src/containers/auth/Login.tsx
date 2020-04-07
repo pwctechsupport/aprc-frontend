@@ -35,7 +35,7 @@ const Login = ({ history }: RouteComponentProps) => {
             phone: oc(res).data.login.phone(""),
             jobPosition: oc(res).data.login.jobPosition(""),
             department: oc(res).data.login.department(""),
-            roles: oc(res).data.login.roles([])
+            roles: oc(res).data.login.roles([]),
           },
           oc(res).data.login.token("")
         )
@@ -130,8 +130,8 @@ export const Label = styled.label`
 export const Input = styled.input`
   border: 1px solid #c4c4c4;
   box-sizing: border-box;
-  border-radius: 10px;
-  height: 35px;
+  border-radius: 4px;
+  height: 38px;
   width: 100%;
   padding: 5px 10px 5px 10px;
   ::placeholder {
@@ -140,7 +140,7 @@ export const Input = styled.input`
     font-weight: normal;
     font-size: 14px;
     line-height: 25px;
-    color: #bfbfbf;
+    color: var(--darker-grey);
   }
 `;
 
