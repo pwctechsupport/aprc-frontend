@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { FaDownload } from "react-icons/fa";
-import { IoMdRemoveCircleOutline } from "react-icons/io";
 import styled from "styled-components";
 import {
   useCreateResourceRatingMutation,
