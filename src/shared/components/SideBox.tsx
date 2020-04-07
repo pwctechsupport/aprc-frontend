@@ -126,8 +126,18 @@ export const SideBoxItemText = styled.div<SideBoxItemTextProps>`
 //       For non nesting, use the above components instead.
 
 // SideBoxBranch, the wrapper for rendering nested item in a list.
-export const SideBoxBranch = styled.div`
+interface SideBoxBranchProps {
+  padLeft?: number | null;
+  isLastChild?: boolean;
+}
+export const SideBoxBranch = styled.div<SideBoxBranchProps>`
   position: relative;
+  border-bottom: 1px solid var(--pale-primary-color);
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: ${(p) => (p.padLeft ? p.padLeft : 0)}px;
+  padding-right: 0px;
+  font-size: 18px;
   &.active {
     background: var(--primary-color);
   }
@@ -137,6 +147,12 @@ export const SideBoxBranch = styled.div`
       background: var(--primary-color);
     }
   }
+  ${(p) =>
+    p.isLastChild &&
+    css`
+      font-style: italic;
+      font-size: 15px;
+    `}
 `;
 
 // SideBoxBranchTitle, the actual component that renders the text.
@@ -149,7 +165,7 @@ export const SideBoxBranchTitle = styled.div`
   text-overflow: ellipsis;
   color: var(--primary-color);
   font-weight: bold;
-  font-size: 18px;
+  /* font-size: 18px; */
   &.active {
     color: white;
   }

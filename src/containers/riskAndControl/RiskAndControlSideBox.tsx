@@ -11,12 +11,12 @@ import {
   SideBoxBranchIconContainer,
   SideBoxBranchTitle,
   SideBoxSearch,
-  SideBoxTitle
+  SideBoxTitle,
 } from "../../shared/components/SideBox";
 import { getPathnameParams } from "../../shared/formatter";
 
 export default function RiskAndControlSideBox({
-  location
+  location,
 }: RouteComponentProps) {
   const [activeId, activeMode] = getPathnameParams(
     location.pathname,
@@ -29,11 +29,11 @@ export default function RiskAndControlSideBox({
     variables: {
       filter: {
         ...(!search && { ancestry_null: true }),
-        name_cont: searchQuery
+        name_cont: searchQuery,
       },
       limit: 1000,
-      isTree: !search
-    }
+      isTree: !search,
+    },
   });
 
   const businessProcesses = data?.businessProcesses?.collection || [];
@@ -49,7 +49,7 @@ export default function RiskAndControlSideBox({
         placeholder="Search Business Process..."
       />
 
-      {businessProcesses.map(businessProcess => {
+      {businessProcesses.map((businessProcess) => {
         return (
           <BusinessProcessBranch
             key={businessProcess.id}
@@ -84,7 +84,7 @@ const BusinessProcessBranch = ({
   activeMode,
   name,
   children = [],
-  level
+  level,
 }: BusinessBranchProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
@@ -95,8 +95,10 @@ const BusinessProcessBranch = ({
     <div>
       <SideBoxBranch
         className={classnames("d-flex align-items-center", {
-          active: isActive
+          active: isActive,
         })}
+        padLeft={level ? level * 10 : 0}
+        isLastChild={!hasChild}
       >
         {hasChild ? (
           <SideBoxBranchIconContainer onClick={toggle}>
@@ -117,7 +119,6 @@ const BusinessProcessBranch = ({
               ? `/risk-and-control/${id}/${activeMode}`
               : `/risk-and-control/${id}`
           }
-          style={{ marginLeft: Number(level) * 10 }}
         >
           {name}
         </SideBoxBranchTitle>

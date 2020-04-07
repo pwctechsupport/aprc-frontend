@@ -126,11 +126,8 @@ const PolicyBranch = ({
         className={classnames("d-flex align-items-center", {
           active: isActive,
         })}
-        style={{
-          paddingLeft: Number(level) * 10,
-          marginBottom: "10px",
-          borderBottom: " 1px solid #d85604",
-        }}
+        padLeft={level ? level * 10 : 0}
+        isLastChild={!hasChild}
       >
         {hasChild ? (
           <SideBoxBranchIconContainer onClick={toggle}>
