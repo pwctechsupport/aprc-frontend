@@ -73,6 +73,9 @@
           },
           {
             "name": "Resource"
+          },
+          {
+            "name": "Department"
           }
         ]
       },
@@ -100,6 +103,9 @@
           },
           {
             "name": "Resource"
+          },
+          {
+            "name": "Department"
           }
         ]
       }

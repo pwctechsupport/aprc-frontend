@@ -13,19 +13,28 @@ fragment BasicUser on User {
   email
   phone
   jobPosition
-  department
-  roles { id name }
-  policyCategories { id name }
+  department {
+    id
+    name
+  }
+  roles {
+    id
+    name
+  }
+  policyCategories {
+    id
+    name
+  }
 }
 
-mutation forgotPassword($email: String){
-  forgotPassword(input: {email: $email}) {
+mutation forgotPassword($email: String) {
+  forgotPassword(input: { email: $email }) {
     success
     errors
   }
 }
 
-mutation updatePassword($input: UpdatePasswordInput!){
+mutation updatePassword($input: UpdatePasswordInput!) {
   updatePassword(input: $input) {
     success
     errors
