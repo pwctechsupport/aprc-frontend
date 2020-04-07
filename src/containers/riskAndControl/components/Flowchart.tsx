@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { GroupType } from "react-select";
@@ -14,16 +14,17 @@ import {
   useCreateTagMutation,
   useDeleteTagMutation,
   useTagsQuery,
-  useUpdateTagMutation
+  useUpdateTagMutation,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
+import Header from "../../../shared/components/Header";
 import { Suggestion, toLabelValue } from "../../../shared/formatter";
+import useKeyDetection from "../../../shared/hooks/useKeyDetection";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import {
   notifyGraphQLErrors,
-  notifySuccess
+  notifySuccess,
 } from "../../../shared/utils/notif";
-import Header from "../../../shared/components/Header";
 
 interface FlowchartProps {
   bpId: string;
@@ -61,7 +62,7 @@ export default function Flowchart({
   editable,
   title,
   className,
-  enableShowTag
+  enableShowTag,
 }: FlowchartProps) {
   const [show, setShow] = useState(true);
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
@@ -71,17 +72,17 @@ export default function Flowchart({
     variables: {
       filter: {
         resource_id_eq: resourceId,
-        business_process_id_eq: bpId
-      }
-    }
+        business_process_id_eq: bpId,
+      },
+    },
   });
   const tags = resourceId ? data?.tags?.collection || [] : [];
 
   const restrictedControlIds = tags
-    .map(a => a.control?.id)
+    .map((a) => a.control?.id)
     .filter(Boolean) as string[];
   const restrictedRiskIds = tags
-    .map(a => a.risk?.id)
+    .map((a) => a.risk?.id)
     .filter(Boolean) as string[];
 
   const [createTagMutation, createTagMutationInfo] = useCreateTagMutation({
@@ -91,7 +92,7 @@ export default function Flowchart({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["tags"]
+    refetchQueries: ["tags"],
   });
   function handleCreate(x: number, y: number) {
     createTagMutation({
@@ -102,9 +103,9 @@ export default function Flowchart({
           xCoordinates: x,
           yCoordinates: y,
           riskId: currentTag.risk?.id,
-          controlId: currentTag.control?.id
-        }
-      }
+          controlId: currentTag.control?.id,
+        },
+      },
     });
   }
 
@@ -115,7 +116,7 @@ export default function Flowchart({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["tags"]
+    refetchQueries: ["tags"],
   });
   function handleUpdate(id: string) {
     updateMutation({
@@ -123,9 +124,9 @@ export default function Flowchart({
         input: {
           id,
           riskId: currentTag.risk?.id,
-          controlId: currentTag.control?.id
-        }
-      }
+          controlId: currentTag.control?.id,
+        },
+      },
     });
   }
 
@@ -136,41 +137,42 @@ export default function Flowchart({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["tags"]
+    refetchQueries: ["tags"],
   });
   function handleDelete(id: string) {
     deleteTagMutation({
       variables: {
         input: {
-          id: id
-        }
-      }
+          id: id,
+        },
+      },
     });
   }
 
-  useEscapeDetection(() => {
-    if (currentTag.active) setCurrentTag(init);
+  useKeyDetection("Escape", () => {
+    setCurrentTag((currentTag) => (currentTag.active ? init : currentTag));
   });
 
   const handleLoadOptions = useLoadRiskAndControls({
     bpId,
     restrictedControlIds: restrictedControlIds,
-    restrictedRiskIds: restrictedRiskIds
+    restrictedRiskIds: restrictedRiskIds,
   });
 
   function handleClick(e: React.MouseEvent<HTMLImageElement, MouseEvent>) {
     e.persist();
     e.stopPropagation();
-    if (currentTag.active) {
-      setCurrentTag(init);
-    } else {
-      setCurrentTag({
+    setCurrentTag((currentTag) => {
+      if (currentTag.active) {
+        return init;
+      }
+      return {
         id: "",
         active: true,
         x: e.nativeEvent.offsetX,
-        y: e.nativeEvent.offsetY
-      });
-    }
+        y: e.nativeEvent.offsetY,
+      };
+    });
   }
 
   function handleClose() {
@@ -186,7 +188,7 @@ export default function Flowchart({
         x: tag.xCoordinates || 0,
         y: tag.yCoordinates || 0,
         risk: tag.risk,
-        control: tag.control
+        control: tag.control,
       });
     };
   }
@@ -194,12 +196,12 @@ export default function Flowchart({
   function handleSelectChange(e: any) {
     if (e) {
       const { label, value } = e;
-      setCurrentTag(prevTag => ({
+      setCurrentTag((prevTag) => ({
         ...prevTag,
         ...(value.riskId && { risk: { id: value.riskId, name: label } }),
         ...(value.controlId && {
-          control: { id: value.controlId, description: label }
-        })
+          control: { id: value.controlId, description: label },
+        }),
       }));
     }
   }
@@ -219,7 +221,7 @@ export default function Flowchart({
 
       <FlowchartWrapper onClick={editable ? handleClick : undefined}>
         <Image src={img} editable={editable} />
-        {tags.map(tag => {
+        {tags.map((tag) => {
           if (editable) {
             return (
               <PreviewTag
@@ -258,7 +260,7 @@ export default function Flowchart({
         })}
         {currentTag.active && (
           <TaggerBox
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             x={currentTag.x}
             y={currentTag.y}
           >
@@ -271,19 +273,19 @@ export default function Flowchart({
               <Async
                 loadOptions={handleLoadOptions}
                 defaultOptions
-                onFocus={e => e.stopPropagation()}
+                onFocus={(e) => e.stopPropagation()}
                 placeholder="Select..."
                 onChange={handleSelectChange}
                 value={
                   currentTag.risk
                     ? {
                         label: currentTag.risk?.name,
-                        value: { riskId: currentTag.risk?.id }
+                        value: { riskId: currentTag.risk?.id },
                       }
                     : currentTag.control
                     ? {
                         label: currentTag.control?.description,
-                        value: { controlId: currentTag.control?.id }
+                        value: { controlId: currentTag.control?.id },
                       }
                     : undefined
                 }
@@ -332,7 +334,7 @@ const FlowchartWrapper = styled.div`
 `;
 
 const Image = styled.img<{ editable: boolean }>`
-  cursor: ${p => (p.editable ? "crosshair" : "")};
+  cursor: ${(p) => (p.editable ? "crosshair" : "")};
   width: 100%;
 `;
 
@@ -354,8 +356,8 @@ interface PreviewTagProps {
 
 const PreviewTag = styled.div<PreviewTagProps>`
   position: absolute;
-  top: ${p => p.y + 10}px;
-  left: ${p => p.x - 50}px;
+  top: ${(p) => p.y + 10}px;
+  left: ${(p) => p.x - 50}px;
   background-color: rgba(0, 0, 0, 0.85);
   width: 100px;
   border-radius: 4px;
@@ -365,9 +367,9 @@ const PreviewTag = styled.div<PreviewTagProps>`
   cursor: pointer;
   padding: 5px 8px;
   /* in and out transition */
-  visibility: ${p => (!p.show ? "hidden" : "visible")};
+  visibility: ${(p) => (!p.show ? "hidden" : "visible")};
   transition: visibility 1s linear;
-  animation: ${p => (!p.show ? fadeOut : fadeIn)} 1s linear;
+  animation: ${(p) => (!p.show ? fadeOut : fadeIn)} 1s linear;
   /* hover transition */
   transition: 1s cubic-bezier(0.075, 0.82, 0.165, 1);
   white-space: nowrap;
@@ -414,8 +416,8 @@ const PreviewTagText = styled.div`
 
 const TaggerBox = styled.div<{ x: number; y: number }>`
   position: absolute;
-  top: ${p => p.y + 10}px;
-  left: ${p => p.x - 50}px;
+  top: ${(p) => p.y + 10}px;
+  left: ${(p) => p.x - 50}px;
   background-color: rgba(0, 0, 0, 1);
   width: 300px;
   height: 120px;
@@ -460,7 +462,7 @@ const TaggerBoxCloseButton = styled(FaTimes)`
 function useLoadRiskAndControls({
   bpId,
   restrictedRiskIds,
-  restrictedControlIds
+  restrictedControlIds,
 }: {
   bpId: string;
   restrictedRiskIds: string[];
@@ -473,7 +475,7 @@ function useLoadRiskAndControls({
   // Higher Order Function adalah fungsi yang return fungsi.
   const constructValue = (key: string) => (f: Suggestion) => ({
     label: f.label,
-    value: { [key]: f.value }
+    value: { [key]: f.value },
   });
 
   async function getSuggestions(
@@ -484,8 +486,8 @@ function useLoadRiskAndControls({
         filter: {
           name_cont: name,
           description_cont: name,
-          business_processes_id_eq: bpId
-        }
+          business_processes_id_eq: bpId,
+        },
       });
       const options = [
         {
@@ -496,7 +498,7 @@ function useLoadRiskAndControls({
                 return !restrictedRiskIds.includes(id);
               })
               .map(toLabelValue)
-              .map(constructValue("riskId")) || []
+              .map(constructValue("riskId")) || [],
         },
         {
           label: "Controls",
@@ -505,8 +507,8 @@ function useLoadRiskAndControls({
               .filter(({ id }) => !restrictedControlIds.includes(id))
               .map(({ id, description }) => ({ id, name: description }))
               .map(toLabelValue)
-              .map(constructValue("controlId")) || []
-        }
+              .map(constructValue("controlId")) || [],
+        },
       ];
       return options;
     } catch (error) {
@@ -514,18 +516,4 @@ function useLoadRiskAndControls({
     }
   }
   return getSuggestions;
-}
-
-function useEscapeDetection(callback: Function) {
-  useEffect(() => {
-    function escFunction(event: KeyboardEvent): any {
-      if (event.keyCode === 27) {
-        callback();
-      }
-    }
-    document.addEventListener("keydown", escFunction, false);
-    return () => {
-      document.removeEventListener("keydown", escFunction, false);
-    };
-  });
 }
