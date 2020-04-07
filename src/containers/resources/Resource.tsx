@@ -40,16 +40,13 @@ export default function Resource({
   history,
   location,
 }: RouteComponentProps) {
-  const id = match.params && (match.params as any).id;
-
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode((prev) => !prev);
-
-  // Close edit mode when changing screen
   useEffect(() => {
     setInEditMode((prevState) => (prevState ? false : prevState));
   }, [location.pathname]);
 
+  const id = match.params && (match.params as any).id;
   const { data, loading } = useResourceQuery({
     variables: { id },
     fetchPolicy: "network-only",
@@ -194,6 +191,7 @@ export default function Resource({
         .map(toLabelValue) || [],
     policyIds: data?.resource?.policies?.map(toLabelValue) || [],
     resuploadUrl: data?.resource?.resuploadUrl || "",
+    resuploadLink: data?.resource?.resuploadLink || "",
   };
 
   if (loading) {
@@ -229,7 +227,6 @@ export default function Resource({
               imagePreviewUrl={imagePreviewUrl}
             />
           </Col>
-          {console.log("status", status)}
           <Col xs={12} lg={6}>
             <div className="mt-5 mt-lg-0">
               <h5>

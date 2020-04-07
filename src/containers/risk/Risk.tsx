@@ -36,16 +36,17 @@ import {
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import styled from "styled-components";
 
-const Risk = ({ match, history }: RouteComponentProps) => {
+export default function Risk({
+  match,
+  history,
+  location,
+}: RouteComponentProps) {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
   function toggleEditMode() {
     setInEditMode((p) => !p);
   }
-
-  // Close edit mode when changing screen
   useEffect(() => {
-    if (inEditMode) setInEditMode(false);
-    // eslint-disable-next-line
+    setInEditMode((p) => (p ? false : p));
   }, [location.pathname]);
 
   const id = match.params && (match.params as any).id;
@@ -357,9 +358,7 @@ const Risk = ({ match, history }: RouteComponentProps) => {
       )}
     </div>
   );
-};
-
-export default Risk;
+}
 
 export const StyledDiv = styled.div`
   position: relative;

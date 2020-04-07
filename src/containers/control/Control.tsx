@@ -1,6 +1,6 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
@@ -37,11 +37,14 @@ import {
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 
-const Control = ({ match, history }: RouteComponentProps) => {
+const Control = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
   function toggleEditMode() {
     setInEditMode((p) => !p);
   }
+  useEffect(() => {
+    setInEditMode((p) => (p ? false : p));
+  }, [location.pathname]);
 
   const id = get(match, "params.id", "");
   const { loading, data } = useControlQuery({ variables: { id } });

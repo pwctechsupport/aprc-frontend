@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import Helmet from "react-helmet";
 import {
   AiFillEdit,
@@ -33,11 +33,15 @@ import PolicyCategoryForm, {
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import HeaderWithBackButton from "../../shared/components/Header";
 
-const PolicyCategory = ({ match, history }: RouteComponentProps) => {
+const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
   function toggleEditMode() {
     setInEditMode((p) => !p);
   }
+  useEffect(() => {
+    setInEditMode((p) => (p ? false : p));
+  }, [location.pathname]);
+
   const id = get(match, "params.id", "");
   const { data, loading } = usePolicyCategoryQuery({
     variables: {

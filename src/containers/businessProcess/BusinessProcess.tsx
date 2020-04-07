@@ -1,5 +1,6 @@
 import get from "lodash/get";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import Helmet from "react-helmet";
 import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Route, RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
@@ -8,28 +9,36 @@ import {
   BusinessProcessDocument,
   useBusinessProcessQuery,
   useDestroyBusinessProcessMutation,
-  useUpdateBusinessProcessMutation
+  useUpdateBusinessProcessMutation,
 } from "../../generated/graphql";
+import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import HeaderWithBackButton from "../../shared/components/Header";
 import Table from "../../shared/components/Table";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 import BusinessProcessForm, {
-  BusinessProcessFormValues
+  BusinessProcessFormValues,
 } from "./components/BusinessProcessForm";
 import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
-import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
-import Helmet from "react-helmet";
-import useAccessRights from "../../shared/hooks/useAccessRights";
 
-const BusinessProcess = ({ match, history }: RouteComponentProps) => {
+export default function BusinessProcess({
+  match,
+  history,
+  location,
+}: RouteComponentProps) {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
+
+  const [inEditMode, setInEditMode] = useState(false);
+  useEffect(() => {
+    setInEditMode((p) => (p ? false : p));
+  }, [location.pathname]);
+
   const id = get(match, "params.id", "");
-  const [editMode, setEditMode] = useState(false);
   const { data, loading } = useBusinessProcessQuery({ variables: { id } });
   const childs = oc(data).businessProcess.children([]);
   const parentId = oc(data).businessProcess.parentId("");
@@ -37,7 +46,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
 
   const breadcrumb = ancestors.map((a: any) => [
     "/business-process/" + a.id,
-    a.name
+    a.name,
   ]) as CrumbItem[];
   const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => {
@@ -45,7 +54,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
     },
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["businessProcess"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   const [destroyMain, destroyMainM] = useDestroyBusinessProcessMutation({
     onCompleted: () => {
@@ -54,9 +63,9 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
     },
     onError: () => toast.error("Delete Failed"),
     refetchQueries: [
-      { query: BusinessProcessDocument, variables: { id: parentId } }
+      { query: BusinessProcessDocument, variables: { id: parentId } },
     ],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   const [update] = useUpdateBusinessProcessMutation({
     onCompleted: () => {
@@ -65,11 +74,11 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
     },
     onError: () => toast.error("Update Failed"),
     refetchQueries: ["businessProcess"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   const toggleEdit = () => {
-    setEditMode(!editMode);
+    setInEditMode(!inEditMode);
   };
 
   const handleDelete = (id: string) => {
@@ -99,11 +108,11 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
         crumbs={[
           ["/business-process", "Business Processes"],
           ...breadcrumb,
-          ["/business-process/" + id, name]
+          ["/business-process/" + id, name],
         ]}
       />
       <HeaderWithBackButton heading="" />
-      {editMode ? (
+      {inEditMode ? (
         <div className="mt-3">
           <BusinessProcessForm
             onSubmit={handleUpdate}
@@ -153,7 +162,7 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {childs.length ? (
-            childs.map(child => {
+            childs.map((child) => {
               return (
                 <tr
                   key={child.id}
@@ -190,56 +199,4 @@ const BusinessProcess = ({ match, history }: RouteComponentProps) => {
       </Table>
     </div>
   );
-};
-
-export default BusinessProcess;
-
-// import React from "react";
-// import {
-//   useCreateSubBusinessProcessMutation,
-//   BusinessProcessesDocument
-// } from "../../generated/graphql";
-// import { toast } from "react-toastify";
-// import { Form, Input } from "reactstrap";
-// import Button from "../../shared/components/Button";
-// import useForm from "react-hook-form";
-
-// const CreateSubBusinessProcess = () => {
-//   const { register, handleSubmit, reset } = useForm<CreateSBPFormValues>();
-//   const [createSBP] = useCreateSubBusinessProcessMutation({
-//     onCompleted: () => {
-//       toast.success("Create Success");
-//       reset();
-//     },
-//     onError: () => toast.error("Create Failed"),
-//     refetchQueries: [
-//       { query: BusinessProcessesDocument, variables: { filter: {} } }
-//     ]
-//   });
-//   const submit = (values: CreateSBPFormValues) => {
-//     createSBP({ variables: { input: { parentId: values.parentId,  }});
-//   };
-//   return (
-//     <Form
-//       onSubmit={handleSubmit(submit)}
-//       className="d-flex align-items-center mb-4"
-//     >
-//       <Input
-//         name="name"
-//         placeholder="Sub Business Process Name"
-//         innerRef={register}
-//         required
-//       />
-//       <Button type="submit" className="pwc ml-3">
-//         Add
-//       </Button>
-//     </Form>
-//   );
-// };
-
-// export default CreateSubBusinessProcess;
-
-// interface CreateSBPFormValues {
-//   name: string;
-//   parentId: string;
-// }
+}

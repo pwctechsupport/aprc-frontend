@@ -94,6 +94,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
 
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode((prev) => !prev);
+  useEffect(() => {
+    setInEditMode((p) => (p ? false : p));
+  }, [location.pathname]);
 
   const id = get(match, "params.id", "");
 
@@ -108,11 +111,6 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
-  // Close edit mode when changing screen
-  useEffect(() => {
-    if (inEditMode) setInEditMode(false);
-    // eslint-disable-next-line
-  }, [location.pathname]);
 
   const scrollToRisk = useCallback(
     () =>
