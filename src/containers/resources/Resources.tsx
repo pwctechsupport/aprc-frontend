@@ -2,10 +2,10 @@ import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import {
-  FaTrash,
+  FaDownload,
   FaFileExport,
   FaFileImport,
-  FaDownload,
+  FaTrash,
 } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -16,13 +16,14 @@ import {
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
+import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
+import ImportModal from "../../shared/components/ImportModal";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
-import ImportModal from "../../shared/components/ImportModal";
-import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const { data, loading } = useResourcesQuery({ fetchPolicy: "network-only" });
@@ -179,7 +180,9 @@ const Resources = ({ history }: RouteComponentProps) => {
                       .join(", ")}
                   </td>
                   <td>{resource.businessProcess?.name}</td>
-                  <td>{resource.updatedAt.split(" ")[0]}</td>
+                  <td>
+                    <DateHover>{resource.updatedAt}</DateHover>
+                  </td>
                   <td>{resource.createdBy}</td>
                   {isAdminReviewer || isAdmin || isAdminPreparer ? (
                     <td className="action">

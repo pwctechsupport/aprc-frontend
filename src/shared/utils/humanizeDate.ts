@@ -1,7 +1,7 @@
 import { date as formatDate } from "../formatter";
 
 export default function humanizeDate(
-  date: Date | string | undefined | null
+  date: Date | string | number | undefined | null
 ): string {
   if (!date) {
     return "";
@@ -39,7 +39,7 @@ export default function humanizeDate(
     fuzzy = formatDate(new Date(date), {
       year: "numeric",
       month: "short",
-      day: "numeric"
+      day: "numeric",
     });
   }
 
