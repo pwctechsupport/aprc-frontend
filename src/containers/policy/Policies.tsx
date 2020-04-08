@@ -37,8 +37,7 @@ export default function Policies({ history }: RouteComponentProps) {
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
-  // policy.status
-  // policy.policyCategory?.name
+
   const isTree = !searchQuery;
   const { data, loading } = usePolicyTreeQuery({
     fetchPolicy: "network-only",
