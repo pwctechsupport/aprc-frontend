@@ -37,7 +37,8 @@ export default function Policies({ history }: RouteComponentProps) {
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
-
+  // policy.status
+  // policy.policyCategory?.name
   const isTree = !searchQuery;
   const { data, loading } = usePolicyTreeQuery({
     fetchPolicy: "network-only",
@@ -45,7 +46,7 @@ export default function Policies({ history }: RouteComponentProps) {
       isTree,
       filter: {
         ...(isTree && { ancestry_null: true }),
-        title_cont: searchQuery,
+        title_or_status_or_policy_category_name_cont: searchQuery,
       },
       limit,
       page,
@@ -155,6 +156,7 @@ const PolicyTableRow = ({
             {policy.title}
           </div>
         </td>
+
         <td>{policy.policyCategory?.name || ""}</td>
         <td>{capitalCase(policy.status || "")}</td>
         <td className="action">
