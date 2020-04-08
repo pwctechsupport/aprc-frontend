@@ -8,33 +8,37 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
 import pwcLogo from "../../assets/images/pwc-logo.png";
-import { useLoginMutation } from "../../generated/graphql";
+import {
+  useLoginMutation,
+  LoginMutationVariables,
+} from "../../generated/graphql";
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
 
-const Login = ({ history }: RouteComponentProps) => {
+export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
   const [login, { loading }] = useLoginMutation();
-  const onSubmit = async (data: any) => {
+  const { register, handleSubmit } = useForm<LoginMutationVariables>();
+
+  async function onSubmit(values: LoginMutationVariables) {
     try {
-      const res = await login({ variables: data });
-      if (!oc(res).data.login()) {
+      const res = await login({ variables: values });
+      if (!res.data?.login) {
         throw new Error("Error");
       }
       notifySuccess("Welcome");
       dispatch(
         authorize(
           {
-            id: oc(res).data.login.id(""),
+            id: res.data.login.id,
             email: oc(res).data.login.email(""),
             firstName: oc(res).data.login.firstName(""),
             lastName: oc(res).data.login.lastName(""),
             name: oc(res).data.login.name(""),
             phone: oc(res).data.login.phone(""),
             jobPosition: oc(res).data.login.jobPosition(""),
-            department: oc(res).data.login.department(""),
+            department: oc(res).data.login.department.name(""),
             roles: oc(res).data.login.roles([]),
           },
           oc(res).data.login.token("")
@@ -49,7 +53,8 @@ const Login = ({ history }: RouteComponentProps) => {
         </div>
       );
     }
-  };
+  }
+
   return (
     <Container>
       <Helmet>
@@ -96,7 +101,7 @@ const Login = ({ history }: RouteComponentProps) => {
       </Form>
     </Container>
   );
-};
+}
 
 export const Container = styled.div`
   display: flex;
@@ -143,5 +148,3 @@ export const Input = styled.input`
     color: var(--darker-grey);
   }
 `;
-
-export default Login;

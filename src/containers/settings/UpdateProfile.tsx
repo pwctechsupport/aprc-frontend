@@ -32,7 +32,7 @@ export default function UpdateProfile() {
         name: oc(res).updateUser.user.name(""),
         phone: oc(res).updateUser.user.phone(""),
         jobPosition: oc(res).updateUser.user.jobPosition(""),
-        department: oc(res).updateUser.user.department(""),
+        department: oc(res).updateUser.user.department.name(""),
       };
       if (user) dispatch(updateUser(newUser));
     },

@@ -47,6 +47,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "hard-start": "yarn && yarn generate && yarn start",
     "build": "npm run generate && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

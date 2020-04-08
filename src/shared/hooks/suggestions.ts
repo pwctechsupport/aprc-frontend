@@ -11,7 +11,7 @@ import {
   ResourcesQuery,
   ResourcesDocument,
   ReferencesDocument,
-  ReferencesQuery
+  ReferencesQuery,
 } from "../../generated/graphql";
 import { Suggestions, toLabelValue } from "../formatter";
 
@@ -20,7 +20,7 @@ export function useLoadPolicies() {
   async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { title_cont }
+        filter: { title_cont },
       });
       return data.policies?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -37,7 +37,7 @@ export function useLoadControls() {
   ): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { description_cont }
+        filter: { description_cont },
       });
       return (
         data.controls?.collection
@@ -56,7 +56,7 @@ export function useLoadRisks() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont }
+        filter: { name_cont },
       });
       return data.risks?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -71,7 +71,7 @@ export function useLoadResources() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont }
+        filter: { name_cont },
       });
       return data.resources?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -86,7 +86,7 @@ export function useLoadPolicyReferences() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont }
+        filter: { name_cont },
       });
       return data.references?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -96,13 +96,13 @@ export function useLoadPolicyReferences() {
   return getSuggestions;
 }
 
-// **********WARNING: THIS IS NOT POLICY CATEGORY
+// ********** WARNING: THIS IS NOT POLICY CATEGORY
 export function useLoadCategories() {
   const query = useLazyQueryReturnPromise<EnumListsQuery>(EnumListsDocument);
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont, category_type_eq: "Category" }
+        filter: { name_cont, category_type_eq: "Category" },
       });
       return data.enumLists?.collection.map(toLabelValue) || [];
     } catch (error) {
@@ -110,4 +110,19 @@ export function useLoadCategories() {
     }
   }
   return getSuggestions;
+}
+
+export function useLoadDepartments() {
+  // const query = useLazyQueryReturnPromise<PoliciesQuery>(PoliciesDocument);
+  // async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
+  //   try {
+  //     const { data } = await query({
+  //       filter: { title_cont }
+  //     });
+  //     return data.policies?.collection?.map(toLabelValue) || [];
+  //   } catch (error) {
+  //     return [];
+  //   }
+  // }
+  // return getSuggestions;
 }

@@ -36,6 +36,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
+import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -63,6 +64,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   // Review handlers
   const [reviewMutation, reviewMutationInfo] = useReviewControlDraftMutation({
     refetchQueries: ["control"],
+    awaitRefetchQueries: true,
   });
   async function review({ publish }: { publish: boolean }) {
     try {
@@ -88,6 +90,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       variables: {
         input: {
           id,
+          descriptionIds: values.departments?.map(takeValue) || [],
           ...values,
         },
       },
@@ -149,9 +152,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     : "";
   const lastUpdatedBy = data?.control?.lastUpdatedBy || "";
   const createdBy = data?.control?.createdBy || "";
-
-  // description = draft ? `[Draft] ${description}` : description;
-  const controlOwner = data?.control?.controlOwner || "";
+  const controlOwner = data?.control?.controlOwner || [];
   const assertion = data?.control?.assertion || [];
   const frequency = data?.control?.frequency || "";
   const ipo = data?.control?.ipo || [];
@@ -165,6 +166,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   const businessProcessIds = businessProcesses.map((bp) => bp.id);
   const activityControls = data?.control?.activityControls || [];
   const createdAt = data?.control?.createdAt || "";
+  const departments = data?.control?.departments || [];
 
   const renderControlAction = () => {
     if (premise === 6) {
@@ -269,7 +271,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       { label: "Control ID", value: id },
       { label: "Description", value: description },
 
-      { label: "Control Owner", value: controlOwner },
+      { label: "Control Owner", value: departments.join(", ") },
       {
         label: "Key Control",
         value: (
@@ -384,7 +386,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
         onSubmit={handleUpdate}
         isDraft={draft ? true : false}
         defaultValues={{
-          controlOwner,
+          controlOwner: controlOwner,
           description,
           assertion: assertion as CreateControlFormValues["assertion"],
           frequency: (frequency as Frequency) || Frequency.Annually,

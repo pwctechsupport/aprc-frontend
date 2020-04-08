@@ -50,6 +50,10 @@ fragment control on Control {
   frequency
   nature
   controlOwner
+  departments {
+    id
+    name
+  }
   assertion
   typeOfControl
   ipo
