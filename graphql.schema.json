@@ -321,7 +321,7 @@
             "deprecationReason": null
           },
           {
-            "name": "departmentsResolver",
+            "name": "departments",
             "description": "",
             "args": [
               {
