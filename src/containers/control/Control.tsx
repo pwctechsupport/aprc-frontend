@@ -90,7 +90,6 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       variables: {
         input: {
           id,
-          descriptionIds: values.departments?.map(takeValue) || [],
           ...values,
         },
       },

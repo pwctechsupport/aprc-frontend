@@ -497,7 +497,6 @@ export interface ControlFormProps {
 
 export interface CreateControlFormValues {
   controlOwner?: string[];
-  departments: Suggestions;
   typeOfControl: TypeOfControl;
   frequency: Frequency;
   nature: Nature;
