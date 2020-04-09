@@ -228,7 +228,6 @@ const ControlForm = ({
           label="Nature"
           defaultValue={pDefVal(nature, natures)}
         />
-
         <Row form>
           <Col md={6}>
             <FormSelect
@@ -406,11 +405,11 @@ const ActivityModalForm = ({
     <Form onSubmit={handleSubmit(handleSaveActivity)}>
       <Input
         name="activity"
-        label="Activity Control Title"
+        label="Control Activity Title"
         required
         innerRef={register}
       />
-      <span className="mt-2 mb-3">Activity Control Guidance</span>
+      <span className="mt-2 mb-3">Control Activity Guidance</span>
       <div className="d-flex ml-3">
         <Label check className="d-flex align-items-center pr-4">
           <Input
@@ -475,14 +474,26 @@ const natures = Object.entries(Nature).map(([label, value]) => ({
 }));
 
 const ipos = Object.entries(Ipo).map(([label, value]) => ({
-  label: capitalCase(value),
+  label: value.split("")[0].toUpperCase(),
   value,
 }));
 
-const assertions = Object.entries(Assertion).map(([label, value]) => ({
-  label: capitalCase(value),
-  value,
-}));
+const assertions = Object.entries(Assertion).map(([label, value]) => {
+  if (value === "cut_over") {
+    return { label: "CO", value };
+  }
+  if (value === "rights_and_obligation") {
+    return { label: "R&O", value };
+  }
+  if (value === "presentation_and_disclosure") {
+    return { label: "P&D", value };
+  }
+  if (value === "existence_and_occurence") {
+    return { label: "E/O", value };
+  } else {
+    return { label: value.split("")[0].toUpperCase(), value };
+  }
+});
 
 // -------------------------------------------------------------------------
 // Type Definitions
