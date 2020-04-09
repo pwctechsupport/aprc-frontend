@@ -45,7 +45,7 @@ export default function Policies({ history }: RouteComponentProps) {
       isTree,
       filter: {
         ...(isTree && { ancestry_null: true }),
-        title_cont: searchQuery,
+        title_or_status_or_policy_category_name_cont: searchQuery,
       },
       limit,
       page,
@@ -155,6 +155,7 @@ const PolicyTableRow = ({
             {policy.title}
           </div>
         </td>
+
         <td>{policy.policyCategory?.name || ""}</td>
         <td>{capitalCase(policy.status || "")}</td>
         <td className="action">
