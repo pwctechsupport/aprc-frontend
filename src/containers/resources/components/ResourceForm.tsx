@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Form, Label } from "reactstrap";
 import * as yup from "yup";
@@ -11,7 +11,7 @@ import {
   EnumListsQuery,
   PoliciesDocument,
   PoliciesQuery,
-  Tag
+  Tag,
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatableSelect";
@@ -22,7 +22,7 @@ import Input from "../../../shared/components/forms/Input";
 import {
   Suggestion,
   Suggestions,
-  toLabelValue
+  toLabelValue,
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import Flowchart from "../../riskAndControl/components/Flowchart";
@@ -58,14 +58,14 @@ export default function ResourceForm({
   imagePreviewUrl,
   resourceId,
   bpId,
-  resourceTitle
+  resourceTitle,
 }: ResourceFormProps) {
   const { register, setValue, handleSubmit, errors, watch } = useForm<
     ResourceFormValues
   >({ defaultValues, validationSchema });
   const [activityType, setActivityType] = useState("text");
   const [
-    tags
+    tags,
     //  setTags
   ] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
@@ -80,7 +80,6 @@ export default function ResourceForm({
   const handleGetBps = useLoadBps();
 
   const selectedCategory = watch("category");
-  // const selectedBusinessProcess = watch("businessProcessId");
 
   const renderSubmit = () => {
     if (!isDraft) {
@@ -132,7 +131,7 @@ export default function ResourceForm({
         <Fragment>
           <AsyncSelect
             name="policyIds"
-            label="Related Policies"
+            label="Related Policies*"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -143,7 +142,7 @@ export default function ResourceForm({
           />
           <AsyncSelect
             name="controlIds"
-            label="Related Control"
+            label="Related Control*"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -197,7 +196,6 @@ export default function ResourceForm({
           />
         )}
       </div>
-      {console.log("preview", preview)}
       {!preview ? (
         <Flowchart
           img={imagePreviewUrl || ""}
@@ -238,16 +236,27 @@ export default function ResourceForm({
 // ==========================================
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required(),
+  name: yup.string(),
   category: yup
     .object()
     .shape({
       label: yup.string(),
-      value: yup.string()
+      value: yup.string(),
     })
-    .required()
+    .required(),
+  // policyIds: yup.array().when("controlIds", {
+  //   is: [],
+  //   then: yup.array().required(),
+  //   otherwise: yup.array(),
+  // }),
+  // controlIds: yup.array(),
+  // resuploadLink: yup.string().when("resuploadBase64", {
+  //   is: "",
+  //   then: yup.string().required(),
+  //   otherwise: yup.string(),
+  // }),
+  // resuploadBase64: yup.string(),
 });
-
 // ==========================================
 // Custom Hooks
 // ==========================================
@@ -257,7 +266,7 @@ function useLoadCategories() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont, category_type_eq: "Category" }
+        filter: { name_cont, category_type_eq: "Category" },
       });
       return data.enumLists?.collection.map(toLabelValue) || [];
     } catch (error) {
@@ -272,7 +281,7 @@ function useLoadPolicies() {
   async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { title_cont }
+        filter: { title_cont },
       });
       return data.policies?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -289,7 +298,7 @@ function useLoadControls() {
   ): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { description_cont }
+        filter: { description_cont },
       });
       return (
         data.controls?.collection
@@ -310,7 +319,7 @@ function useLoadBps() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont }
+        filter: { name_cont },
       });
       return data.businessProcesses?.collection.map(toLabelValue) || [];
     } catch (error) {
