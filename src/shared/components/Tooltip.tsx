@@ -12,7 +12,7 @@ interface TooltipProps {
 export default function Tooltip({
   description,
   children,
-  subtitle
+  subtitle,
 }: TooltipProps) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
@@ -30,7 +30,9 @@ export default function Tooltip({
         {description}
         <Subtitle>{subtitle}</Subtitle>
       </BsTooltip>
-      <div id={tooltipId}>{children}</div>
+      <div id={tooltipId} className="d-inline-block">
+        {children}
+      </div>
     </>
   );
 }
