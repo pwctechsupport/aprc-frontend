@@ -335,11 +335,11 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
         {activityControls.length > 0 ? (
           <Col xs={7} className="mt-2">
-            <h5>Activity Controls</h5>
+            <h5>Control Activities</h5>
             <Table>
               <thead>
                 <tr>
-                  <th>Activity</th>
+                  <th>Control Activity</th>
                   <th>Guidance</th>
                 </tr>
               </thead>
