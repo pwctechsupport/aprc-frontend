@@ -11,31 +11,33 @@ import {
   EnumListsQuery,
   PoliciesDocument,
   PoliciesQuery,
-  Tag
+  Tag,
 } from "../../../generated/graphql";
-import DialogButton from "../../../shared/components/DialogButton";
+import { APP_ROOT_URL } from "../../../settings";
+import Button from "../../../shared/components/Button";
 import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatableSelect";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import FileInput from "../../../shared/components/forms/FileInput";
 import Input from "../../../shared/components/forms/Input";
-// import ImageTagger from "../../../shared/components/ImageTagger";
+import ImageTagger from "../../../shared/components/ImageTagger";
 import {
   Suggestion,
   Suggestions,
-  toLabelValue
+  toLabelValue,
 } from "../../../shared/formatter";
+import useDialogBox from "../../../shared/hooks/useDialogBox";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import Flowchart from "../../riskAndControl/components/Flowchart";
+// import Flowchart from "../../riskAndControl/components/Flowchart";
 
 interface ResourceFormProps {
   defaultValues?: ResourceFormValues;
   onSubmit?: (data: ResourceFormValues) => void;
   submitting?: boolean;
-  isDraft?: boolean;
-  imagePreviewUrl?: string;
-  resourceId?: string;
-  bpId?: string;
-  resourceTitle?: string;
+  // isDraft?: boolean;
+  // imagePreviewUrl?: string;
+  // resourceId?: string;
+  // bpId?: string;
+  // resourceTitle?: string;
 }
 
 export interface ResourceFormValues {
@@ -54,24 +56,24 @@ export default function ResourceForm({
   defaultValues,
   onSubmit,
   submitting,
-  isDraft,
-  imagePreviewUrl,
-  resourceId,
-  bpId,
-  resourceTitle
-}: ResourceFormProps) {
+}: // isDraft,
+ResourceFormProps) {
+  const dialogBox = useDialogBox();
+  const name = defaultValues?.name;
   const { register, setValue, handleSubmit, errors, watch } = useForm<
     ResourceFormValues
   >({ defaultValues, validationSchema });
   const [activityType, setActivityType] = useState("text");
-  const [
-    tags
-    //  setTags
-  ] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
-  const [preview, setPreview] = useState<string | null>(null);
+  const [tags, setTags] = useState(defaultValues?.tagsAttributes || []);
+  const [preview, setPreview] = useState<string | null>(
+    defaultValues ? `${APP_ROOT_URL}${defaultValues.resuploadUrl}` : ""
+  );
 
   function submit(data: ResourceFormValues) {
-    onSubmit && onSubmit({ ...data, tagsAttributes: tags });
+    dialogBox({
+      text: name ? `Update Resource "${name}"?` : "Create Resource?",
+      callback: () => onSubmit?.({ ...data, tagsAttributes: tags }),
+    });
   }
 
   const handleGetCategories = useLoadCategories();
@@ -80,27 +82,10 @@ export default function ResourceForm({
   const handleGetBps = useLoadBps();
 
   const selectedCategory = watch("category");
-  // const selectedBusinessProcess = watch("businessProcessId");
+  const selectedBusinessProcess = watch("businessProcessId");
 
-  const renderSubmit = () => {
-    if (!isDraft) {
-      return (
-        <div className="d-flex justify-content-end mt-3">
-          <DialogButton
-            className="soft red"
-            color=""
-            loading={submitting}
-            onConfirm={handleSubmit(submit)}
-            message="Create New Resource?"
-          >
-            {defaultValues?.name ? "Save" : "Submit"}
-          </DialogButton>
-        </div>
-      );
-    }
-  };
   return (
-    <Form>
+    <Form onSubmit={handleSubmit(submit)}>
       <Input
         name="name"
         label="Name"
@@ -197,38 +182,29 @@ export default function ResourceForm({
           />
         )}
       </div>
-      {console.log("preview", preview)}
-      {!preview ? (
-        <Flowchart
-          img={imagePreviewUrl || ""}
-          resourceId={resourceId || ""}
-          title={resourceTitle}
-          bpId={bpId || ""}
-          editable={true}
-          enableShowTag={false}
-        />
-      ) : null}
 
       {preview && selectedCategory?.value === "Flowchart" && (
         <div>
-          {/* <ImageTagger
+          <ImageTagger
             src={preview}
             bpId={selectedBusinessProcess?.value || ""}
             editable
             onTagsChanged={setTags}
-          /> */}
-          <Flowchart
-            img={preview || ""}
-            resourceId={resourceId || ""}
-            title={resourceTitle}
-            bpId={bpId || ""}
-            editable={true}
-            enableShowTag={false}
+            defaultTags={defaultValues?.tagsAttributes}
           />
         </div>
       )}
 
-      {renderSubmit()}
+      <div className="d-flex justify-content-end mt-3">
+        <Button
+          className="soft red px-5"
+          color=""
+          loading={submitting}
+          message="Create New Resource?"
+        >
+          {defaultValues?.name ? "Save" : "Submit"}
+        </Button>
+      </div>
     </Form>
   );
 }
@@ -243,9 +219,9 @@ const validationSchema = yup.object().shape({
     .object()
     .shape({
       label: yup.string(),
-      value: yup.string()
+      value: yup.string(),
     })
-    .required()
+    .required(),
 });
 
 // ==========================================
@@ -257,7 +233,7 @@ function useLoadCategories() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont, category_type_eq: "Category" }
+        filter: { name_cont, category_type_eq: "Category" },
       });
       return data.enumLists?.collection.map(toLabelValue) || [];
     } catch (error) {
@@ -272,7 +248,7 @@ function useLoadPolicies() {
   async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { title_cont }
+        filter: { title_cont },
       });
       return data.policies?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -289,7 +265,7 @@ function useLoadControls() {
   ): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { description_cont }
+        filter: { description_cont },
       });
       return (
         data.controls?.collection
@@ -310,7 +286,7 @@ function useLoadBps() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont }
+        filter: { name_cont },
       });
       return data.businessProcesses?.collection.map(toLabelValue) || [];
     } catch (error) {

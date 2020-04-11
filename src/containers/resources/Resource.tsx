@@ -35,25 +35,27 @@ import {
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 
+type TParams = { id: string };
+
 export default function Resource({
   match,
   history,
   location,
-}: RouteComponentProps) {
+}: RouteComponentProps<TParams>) {
   const [inEditMode, setInEditMode] = useState(false);
   const toggleEditMode = () => setInEditMode((prev) => !prev);
   useEffect(() => {
     setInEditMode((prevState) => (prevState ? false : prevState));
   }, [location.pathname]);
 
-  const id = match.params && (match.params as any).id;
+  const { id } = match.params;
   const { data, loading } = useResourceQuery({
     variables: { id },
     fetchPolicy: "network-only",
   });
-  const resourceId = data?.resource?.id || "";
-  const bpId = data?.resource?.businessProcess?.id || "";
-  const resourceTitle = data?.resource?.name || "";
+  // const resourceId = data?.resource?.id || "";
+  // const bpId = data?.resource?.businessProcess?.id || "";
+  // const resourceTitle = data?.resource?.name || "";
   const name = data?.resource?.name || "";
   const rating = data?.resource?.rating || 0;
   const totalRating = data?.resource?.totalRating || 0;
@@ -192,6 +194,7 @@ export default function Resource({
     policyIds: data?.resource?.policies?.map(toLabelValue) || [],
     resuploadUrl: data?.resource?.resuploadUrl || "",
     resuploadLink: data?.resource?.resuploadLink || "",
+    tagsAttributes: data?.resource?.tags || [],
   };
 
   if (loading) {
@@ -201,14 +204,9 @@ export default function Resource({
   const renderResourceInEditMode = () => {
     return (
       <ResourceForm
-        isDraft={draft ? true : false}
         defaultValues={defaultValues}
         onSubmit={handleSubmit}
         submitting={updateResourceM.loading}
-        imagePreviewUrl={imagePreviewUrl}
-        resourceId={resourceId}
-        bpId={bpId}
-        resourceTitle={resourceTitle}
       />
     );
   };

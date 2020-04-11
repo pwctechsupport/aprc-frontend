@@ -107,6 +107,19 @@ query resource($id: ID!) {
         }
       }
     }
+    tags {
+      id
+      xCoordinates
+      yCoordinates
+      risk {
+        id
+        name
+      }
+      control {
+        id
+        description
+      }
+    }
     resuploadLink
     resuploadUrl
     resourceFileType
@@ -115,6 +128,9 @@ query resource($id: ID!) {
     rating
     totalRating
     visit
+    createdAt
+    createdBy
+    updatedAt
   }
 }
 
