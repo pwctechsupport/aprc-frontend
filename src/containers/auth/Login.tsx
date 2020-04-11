@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -15,9 +15,11 @@ import {
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
+import Captcha from "react-numeric-captcha";
 
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
+  const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
   const { register, handleSubmit } = useForm<LoginMutationVariables>();
 
@@ -84,20 +86,27 @@ export default function Login({ history }: RouteComponentProps) {
         />
         <br />
         <br />
-        <div className="text-center my-4">
-          <Link to="/forgot-password" className="link-pwc">
-            Forgot Password?
-          </Link>
-        </div>
+
+        <Captcha onChange={setCaptcha} placeholder="Insert captcha" />
+
+        <br />
+        <br />
+
         <Button
           className="pwc"
           color="primary"
           type="submit"
           block
           loading={loading}
+          disabled={!captcha}
         >
           Login
         </Button>
+        <div className="text-center my-4">
+          <Link to="/forgot-password" className="link-pwc">
+            Forgot Password?
+          </Link>
+        </div>
       </Form>
     </Container>
   );
