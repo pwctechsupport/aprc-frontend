@@ -3,34 +3,34 @@ import { get } from "lodash";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaUndo } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import Select from "react-select";
-import { Button, Col, Container, Form, Input, Row } from "reactstrap";
+import { Col, Container, Form, Input, Row } from "reactstrap";
 import { oc } from "ts-optchain";
-import { useDebounce } from "use-debounce/lib";
+import Button from "../../shared/components/Button";
 import {
   useBookmarksQuery,
   useDestroyBookmarkMutation
 } from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
-import { date, removeEmpty } from "../../shared/formatter";
+import { date } from "../../shared/formatter";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
-  const formAnjing = useForm();
-  const [search, setSearch] = useState("");
-
+  const bookmarkForm = useForm();
+  const [labelTime, setLabelTime] = useState("");
   const [checked, setChecked] = useState<string[]>([]);
-  const [debounceSearch] = useDebounce(search, 800);
 
   const time = [
     { label: "All Time", value: 1 },
-    { label: "In 7 days", value: 2 },
-    { label: "In a month", value: 1 },
-    { label: "In 90 days", value: 1 },
-    { label: "In a year", value: 1 }
+    { label: "Today", value: 2 },
+    { label: "In 7 days", value: 3 },
+    { label: "In a month", value: 4 },
+    { label: "In 90 days", value: 5 },
+    { label: "In a year", value: 6 }
   ];
   const aDay = 86400000;
   const aWeek = 604800000;
@@ -58,22 +58,15 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const [filter, setFilter] = useState({});
   const { data, networkStatus, loading } = useBookmarksQuery({
     variables: {
-      filter: {
-        title_cont: "Lorem"
-      }
+      filter
     },
     fetchPolicy: "network-only"
   });
-  console.log("data", data);
   const [deleteBookmarks, deleteBookmarksM] = useDestroyBookmarkMutation({
     refetchQueries: ["bookmarks"],
     onError: notifyGraphQLErrors,
     onCompleted: onDeleteComplete
   });
-
-  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearch(e.target.value);
-  }
 
   function toggleCheck(id: string) {
     if (checked.includes(id)) {
@@ -130,9 +123,16 @@ const Bookmark = ({ history }: RouteComponentProps) => {
     }
   }
   const onSubmit = (values: any) => {
-    console.log("values", values);
-    setFilter({ title_cont: "Lorem" });
+    setFilter({
+      originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_cont:
+        values.title,
+      created_at_gteq: constructDateFilter(labelTime)
+    });
   };
+  const handleChange = (props: any) => {
+    setLabelTime(props.label);
+  };
+  const isDataExist = data?.bookmarks?.collection.length;
   return (
     <div>
       <Helmet>
@@ -143,25 +143,52 @@ const Bookmark = ({ history }: RouteComponentProps) => {
         <h2>Bookmarks Manager</h2>
 
         <Row>
-          <Col lg={4}>
-            <Form onSubmit={formAnjing.handleSubmit(onSubmit)}>
-              <Input
-                placeholder="Search Title..."
-                name="title"
-                innerRef={formAnjing.register}
-              />
-              <Select options={[{ label: 1 }, { label: 2 }]} name="date" />
-              <Button
-                loading={loading}
-                type="submit"
-                className="pwc ml-2"
-                color="primary"
+          <Col lg={8}>
+            <Form onSubmit={bookmarkForm.handleSubmit(onSubmit)}>
+              <div style={{ display: "inline-block", width: "60%" }}>
+                <Input
+                  placeholder="Search Title..."
+                  name="title"
+                  innerRef={bookmarkForm.register}
+                />
+              </div>
+              <div
+                style={{
+                  marginLeft: "10px",
+                  display: "inline-block",
+                  width: "20%"
+                }}
               >
-                Search
-              </Button>
+                <Select
+                  options={time}
+                  name="date"
+                  onChange={handleChange}
+                  placeholder={"Date Added..."}
+                />
+              </div>
+              <div style={{ display: "inline-block", marginLeft: "10px" }}>
+                <Button
+                  loading={loading}
+                  type="submit"
+                  className="pwc ml-2"
+                  color="primary"
+                >
+                  Search
+                </Button>
+                <Tooltip description="Reset Search">
+                  <Button
+                    type="reset"
+                    className="soft red"
+                    color=""
+                    style={{ marginLeft: "10px" }}
+                  >
+                    <FaUndo />
+                  </Button>
+                </Tooltip>
+              </div>
             </Form>
           </Col>
-          <Col lg={8}>
+          <Col lg={4}>
             <div className="text-right">
               <DialogButton
                 className="soft red"
@@ -201,38 +228,46 @@ const Bookmark = ({ history }: RouteComponentProps) => {
               </tr>
             </thead>
             <tbody>
-              {oc(data)
-                .bookmarks.collection([])
-                .map(bookmark => {
-                  return (
-                    <tr
-                      key={bookmark.id}
-                      onClick={() =>
-                        handleClickRow({
-                          id: bookmark.originatorId,
-                          type: bookmark.originatorType as OriginatorType
-                        })
-                      }
-                    >
-                      <td>
-                        <input
-                          type="checkbox"
-                          checked={checked.includes(bookmark.id)}
-                          onChange={e => toggleCheck(bookmark.id)}
-                          onClick={e => e.stopPropagation()}
-                        />
-                      </td>
-                      <td>{bookmark.originatorType}</td>
-                      <td>
-                        {get(bookmark, "originator.name") ||
-                          get(bookmark, "originator.processName") ||
-                          get(bookmark, "originator.riskName") ||
-                          get(bookmark, "originator.title")}
-                      </td>
-                      <td>{date(bookmark.createdAt)}</td>
-                    </tr>
-                  );
-                })}
+              {isDataExist ? (
+                oc(data)
+                  .bookmarks.collection([])
+                  .map(bookmark => {
+                    return (
+                      <tr
+                        key={bookmark.id}
+                        onClick={() =>
+                          handleClickRow({
+                            id: bookmark.originatorId,
+                            type: bookmark.originatorType as OriginatorType
+                          })
+                        }
+                      >
+                        <td>
+                          <input
+                            type="checkbox"
+                            checked={checked.includes(bookmark.id)}
+                            onChange={e => toggleCheck(bookmark.id)}
+                            onClick={e => e.stopPropagation()}
+                          />
+                        </td>
+                        <td>{bookmark.originatorType}</td>
+                        <td>
+                          {get(bookmark, "originator.name") ||
+                            get(bookmark, "originator.processName") ||
+                            get(bookmark, "originator.riskName") ||
+                            get(bookmark, "originator.title")}
+                        </td>
+                        <td>{date(bookmark.createdAt)}</td>
+                      </tr>
+                    );
+                  })
+              ) : (
+                <tr>
+                  <td className="empty" colSpan={4}>
+                    No item
+                  </td>
+                </tr>
+              )}
             </tbody>
           </Table>
         </div>
