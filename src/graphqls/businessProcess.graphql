@@ -122,10 +122,6 @@ fragment businessProcessControl on Control {
   frequency
   typeOfControl
   controlOwner
-  departments {
-    id
-    name
-  }
   status
   keyControl
   businessProcesses {

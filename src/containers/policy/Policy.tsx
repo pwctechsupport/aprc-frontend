@@ -8,18 +8,18 @@ import React, {
 } from "react";
 import Helmet from "react-helmet";
 import {
-  AiFillFolderAdd,
   AiFillEdit,
+  AiFillFolderAdd,
   AiOutlineClockCircle,
   AiOutlineEdit,
 } from "react-icons/ai";
 import {
+  FaBars,
   FaBookmark,
   FaEllipsisV,
   FaExclamationCircle,
-  FaEye,
-  FaEyeSlash,
   FaFilePdf,
+  FaMinus,
   FaPlus,
   FaTimes,
   FaTrash,
@@ -32,19 +32,20 @@ import { Badge, Nav, NavItem, TabContent, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useApproveRequestEditMutation,
-  useUpdateDraftPolicyMutation,
   useCreateBookmarkPolicyMutation,
   useCreateRequestEditMutation,
   useDestroyPolicyMutation,
   usePolicyQuery,
   useReviewPolicyDraftMutation,
-  useUpdatePolicyMutation,
   useSubmitPolicyMutation,
+  useUpdateDraftPolicyMutation,
+  useUpdatePolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import ControlsTable from "../../shared/components/ControlsTable";
+import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
@@ -53,7 +54,6 @@ import PoliciesTable from "../../shared/components/PoliciesTable";
 import ResourcesTab from "../../shared/components/ResourcesTab";
 import RisksList from "../../shared/components/RisksList";
 import Tooltip from "../../shared/components/Tooltip";
-import { date } from "../../shared/formatter";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useDialogBox from "../../shared/hooks/useDialogBox";
 import useWindowSize from "../../shared/hooks/useWindowSize";
@@ -73,7 +73,13 @@ import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 
-const Policy = ({ match, history, location }: RouteComponentProps) => {
+type TParams = { id: string };
+
+export default function Policy({
+  match,
+  history,
+  location,
+}: RouteComponentProps<TParams>) {
   const dialogBox = useDialogBox();
   const size = useWindowSize();
   const isSmallDevice = size.width <= 992;
@@ -98,7 +104,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
     setInEditMode((p) => (p ? false : p));
   }, [location.pathname]);
 
-  const id = get(match, "params.id", "");
+  const { id } = match.params;
 
   const { loading, data } = usePolicyQuery({
     variables: { id },
@@ -305,6 +311,7 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
   const isMaximumLevel = ancestry.split("/").length === 5;
   const ancestors = data?.policy?.ancestors || [];
   const updatedAt = data?.policy?.updatedAt;
+  const versionsCount = data?.policy?.versionsCount;
   const breadcrumb = ancestors.map((a: any) => [
     "/policy/" + a.id,
     a.title,
@@ -367,16 +374,8 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               }
             >
               <div className="text-right my-2 text-secondary">
-                <span>
-                  <AiOutlineClockCircle className="mr-1" />
-                  {date(updatedAt)}
-                  <div
-                    className=" py-3"
-                    style={{ position: "relative", right: "92%" }}
-                  >
-                    Version: {data?.policy?.versionsCount}
-                  </div>
-                </span>
+                <DateHover withIcon>{updatedAt}</DateHover>
+                <div>Version: {versionsCount}</div>
               </div>
               <div className="d-flex justify-content-end">
                 {renderPolicyAction()}
@@ -630,9 +629,9 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
               }}
             >
               {collapse.length === initialCollapse.length ? (
-                <FaEyeSlash size={20} />
+                <FaMinus size={20} />
               ) : (
-                <FaEye size={20} />
+                <FaBars size={20} />
               )}
             </Button>
           </Tooltip>
@@ -849,6 +848,4 @@ const Policy = ({ match, history, location }: RouteComponentProps) => {
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
     </div>
   );
-};
-
-export default Policy;
+}

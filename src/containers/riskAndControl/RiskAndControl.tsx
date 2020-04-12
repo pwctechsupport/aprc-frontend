@@ -1,13 +1,12 @@
-import get from "lodash/get";
 import startCase from "lodash/startCase";
 import React, { useState } from "react";
 import {
+  FaBars,
   FaBookmark,
   FaEllipsisV,
-  FaEye,
-  FaEyeSlash,
   FaFilePdf,
-  FaPencilAlt
+  FaMinus,
+  FaPencilAlt,
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -26,7 +25,7 @@ import {
   useBusinessProcessQuery,
   useCreateBookmarkBusinessProcessMutation,
   useUpdateControlMutation,
-  useUpdateRiskMutation
+  useUpdateRiskMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -37,33 +36,38 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import Modal from "../../shared/components/Modal";
 import ResourcesTab from "../../shared/components/ResourcesTab";
+import Tooltip from "../../shared/components/Tooltip";
 import { toLabelValue } from "../../shared/formatter";
 import {
   downloadPdf,
   emailPdf,
-  previewPdf
+  previewPdf,
 } from "../../shared/utils/accessGeneratedPdf";
 import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyError,
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess
+  notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, {
   ControlFormValues,
-  CreateControlFormValues
+  CreateControlFormValues,
 } from "../control/components/ControlForm";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
 
-export default function RiskAndControl({ match }: RouteComponentProps) {
-  const initialCollapse = ["Risks", "Controls"];
+type TParams = { id: string };
+
+export default function RiskAndControl({
+  match,
+}: RouteComponentProps<TParams>) {
+  const initialCollapse = ["Risks"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
-    setCollapse(p => {
+    setCollapse((p) => {
       if (p.includes(name)) {
-        return p.filter(item => item !== name);
+        return p.filter((item) => item !== name);
       }
       return p.concat(name);
     });
@@ -73,7 +77,7 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
   // Edit Risk Mutation and Modal state
   const [riskModal, setRiskModal] = useState(false);
   const [risk, setRisk] = useState<RiskState>();
-  const toggleRiskModal = () => setRiskModal(p => !p);
+  const toggleRiskModal = () => setRiskModal((p) => !p);
   const editRisk = (risk: RiskState) => {
     setRiskModal(true);
     setRisk(risk);
@@ -85,7 +89,7 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"]
+    refetchQueries: ["businessProcess"],
   });
   const handleUpdateRisk = (values: RiskFormValues) => {
     updateRisk({
@@ -93,18 +97,18 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
         input: {
           id: risk?.id || "",
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map(a => a.value),
+          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
           levelOfRisk: values.levelOfRisk,
-          typeOfRisk: values.typeOfRisk
-        }
-      }
+          typeOfRisk: values.typeOfRisk,
+        },
+      },
     });
   };
 
   // Edit Control Mutation and Modal State
   const [controlModal, setControlModal] = useState(false);
   const [control, setControl] = useState<ControlState>();
-  const toggleControlModal = () => setControlModal(p => !p);
+  const toggleControlModal = () => setControlModal((p) => !p);
   const editControl = (control: ControlState) => {
     setControlModal(true);
     setControl(control);
@@ -116,38 +120,37 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"]
+    refetchQueries: ["businessProcess"],
   });
   const handleUpdateControl = (values: CreateControlFormValues) => {
     updateControl({
-      variables: { input: { id: control?.id || "", ...values } }
+      variables: { input: { id: control?.id || "", ...values } },
     });
   };
 
   const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
     onCompleted: () => notifySuccess("Added to Bookmark"),
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
 
-  const id = get(match, "params.id", "");
+  const { id } = match.params;
   const { data, loading } = useBusinessProcessQuery({
     variables: { id },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const name = data?.businessProcess?.name || "";
   const risks = data?.businessProcess?.risks || [];
-  const controls = data?.businessProcess?.controls || [];
   const resources = data?.businessProcess?.resources || [];
   const ancestors = data?.businessProcess?.ancestors || [];
-  const breadcrumb = ancestors.map(a => [
+  const breadcrumb = ancestors.map((a) => [
     "/risk-and-control/" + a.id,
-    a.name
+    a.name,
   ]) as CrumbItem[];
 
   const tabs = [
     { to: `/risk-and-control/${id}`, title: "Detail" },
     { to: `/risk-and-control/${id}/flowchart`, title: "Flowchart" },
-    { to: `/risk-and-control/${id}/resources`, title: "Resources" }
+    { to: `/risk-and-control/${id}/resources`, title: "Resources" },
   ];
 
   if (loading) return <LoadingSpinner size={30} centered />;
@@ -155,21 +158,29 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
   const renderActions = () => {
     return (
       <div className="d-flex align-items-center">
-        <Button
-          className="ml-3"
-          color="transparent"
-          onClick={() => {
+        <Tooltip
+          description={
             collapse.length === initialCollapse.length
-              ? closeAllCollapse()
-              : openAllCollapse();
-          }}
+              ? "Hide All Attribute"
+              : "Show All Attribute"
+          }
         >
-          {collapse.length === initialCollapse.length ? (
-            <FaEyeSlash size={20} />
-          ) : (
-            <FaEye size={20} />
-          )}
-        </Button>
+          <Button
+            className="ml-3"
+            color="transparent"
+            onClick={() => {
+              collapse.length === initialCollapse.length
+                ? closeAllCollapse()
+                : openAllCollapse();
+            }}
+          >
+            {collapse.length === initialCollapse.length ? (
+              <FaMinus size={20} />
+            ) : (
+              <FaBars size={20} />
+            )}
+          </Button>
+        </Tooltip>
         <Menu
           data={[
             {
@@ -182,9 +193,9 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
                 previewPdf(`prints/${id}/business_process.pdf`, {
                   onStart: () =>
                     notifyInfo("Downloading file for preview", {
-                      autoClose: 10000
-                    })
-                })
+                      autoClose: 10000,
+                    }),
+                }),
             },
             {
               label: (
@@ -197,8 +208,8 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
                   fileName: name,
                   onStart: () => notifyInfo("Download Started"),
                   onError: () => notifyError("Download Failed"),
-                  onCompleted: () => notifySuccess("Download Success")
-                })
+                  onCompleted: () => notifySuccess("Download Success"),
+                }),
             },
             {
               label: (
@@ -206,7 +217,7 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
                   <FaBookmark /> Bookmark
                 </div>
               ),
-              onClick: () => addBookmark({ variables: { id } })
+              onClick: () => addBookmark({ variables: { id } }),
             },
             {
               label: (
@@ -214,8 +225,8 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
                   <MdEmail /> Mail
                 </div>
               ),
-              onClick: () => emailPdf(name)
-            }
+              onClick: () => emailPdf(name),
+            },
           ]}
         >
           <FaEllipsisV />
@@ -230,7 +241,7 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
         crumbs={[
           ["/risk-and-control", "Risk and Controls"],
           ...breadcrumb,
-          ["/risk-and-control/" + id, name]
+          ["/risk-and-control/" + id, name],
         ]}
       />
       <div className="d-flex justify-content-between">
@@ -260,7 +271,7 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
             render={() => (
               <Flowcharts
                 bpId={id}
-                resources={resources.filter(resource =>
+                resources={resources.filter((resource) =>
                   resource.category?.match(/flowchart/gi)
                 )}
               />
@@ -274,7 +285,7 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
             >
               {risks.length ? (
                 <ul>
-                  {risks.map(risk => (
+                  {risks.map((risk) => (
                     <li key={risk.id}>
                       <div className="mb-3 d-flex justify-content-between">
                         <h5>
@@ -296,7 +307,7 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
                               businessProcessIds:
                                 risk.businessProcesses?.map(toLabelValue) || [],
                               levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                              typeOfRisk: risk.typeOfRisk as TypeOfRisk
+                              typeOfRisk: risk.typeOfRisk as TypeOfRisk,
                             })
                           }
                           color=""
@@ -321,22 +332,15 @@ export default function RiskAndControl({ match }: RouteComponentProps) {
                 <EmptyAttribute />
               )}
             </Collapsible>
-            <Collapsible
-              title="Controls"
-              show={collapse.includes("Controls")}
-              onClick={toggleCollapse}
-            >
-              <ControlsTable controls={controls} editControl={editControl} />
-            </Collapsible>
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
             <ResourcesTab
               formDefaultValues={{
                 category: { label: "Flowchart", value: "Flowchart" },
-                businessProcessId: { label: name, value: id }
+                businessProcessId: { label: name, value: id },
               }}
               queryFilters={{
-                business_process_id_in: id
+                business_process_id_in: id,
               }}
             />
           </Route>
@@ -376,7 +380,7 @@ interface ControlState extends ControlFormValues {
 
 const ControlsTable = ({
   controls,
-  editControl
+  editControl,
 }: {
   controls: Control[];
   editControl: Function;
@@ -398,7 +402,7 @@ const ControlsTable = ({
         </thead>
         <tbody>
           {controls?.length ? (
-            controls?.map(control => (
+            controls?.map((control) => (
               <tr key={control.id}>
                 <td>{control.description}</td>
                 <td>{startCase(control.frequency || "")}</td>
@@ -424,7 +428,7 @@ const ControlsTable = ({
                         frequency: control.frequency as Frequency,
                         keyControl: control.keyControl || false,
                         riskIds: control?.risks?.map(({ id }) => id) || [],
-                        activityControls: control.activityControls
+                        activityControls: control.activityControls,
                       })
                     }
                     color=""

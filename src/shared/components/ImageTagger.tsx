@@ -24,6 +24,7 @@ interface ImageTaggerProps {
   editable: boolean;
   className?: string;
   onTagsChanged?: (tags: Omit<Tag, "createdAt" | "updatedAt">[]) => void;
+  defaultTags?: Omit<Tag, "createdAt" | "updatedAt">[];
 }
 
 interface FlowchartSuggestion {
@@ -51,9 +52,10 @@ export default function ImageTagger({
   editable,
   className,
   onTagsChanged,
+  defaultTags,
 }: ImageTaggerProps) {
   const [show, setShow] = useState(true);
-  const [tags, setTags] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
+  const [tags, setTags] = useState(defaultTags || []);
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
   const [currentTag, setCurrentTag] = useState(init);
 
@@ -168,9 +170,21 @@ export default function ImageTagger({
           className="mb-2"
         />
       </div>
-      <FlowchartWrapper onClick={editable ? handleClick : undefined}>
-        <Image src={src} editable={editable} />
+      <ImageTaggerWrapper onClick={editable ? handleClick : undefined}>
+        <TargetImage src={src} editable={editable} />
         {tags.map((tag) => {
+          const id = tag.risk?.id || tag.control?.id;
+          const type = tag.risk?.id ? "Risk" : "Control";
+          const name = tag.risk?.name || tag.control?.description;
+          const background = tag.risk?.id
+            ? "red"
+            : tag.control?.id
+            ? "orange"
+            : undefined;
+          const to = tag.risk?.id
+            ? `/risk/${tag.risk?.id}`
+            : `/control/${tag.control?.id}`;
+
           if (editable) {
             return (
               <PreviewTag
@@ -179,11 +193,9 @@ export default function ImageTagger({
                 onClick={handlePreviewTagClick(tag)}
                 x={tag.xCoordinates || 0}
                 y={tag.yCoordinates || 0}
+                background={background}
               >
-                <PreviewTagText>
-                  {tag.risk ? "Risk: " : "Control: "}
-                  {tag.risk?.name || tag.control?.description}
-                </PreviewTagText>
+                <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
               </PreviewTag>
             );
           }
@@ -194,16 +206,10 @@ export default function ImageTagger({
               x={tag.xCoordinates || 0}
               y={tag.yCoordinates || 0}
               as={Link}
-              to={
-                tag.risk?.id
-                  ? `/risk/${tag.risk?.id}`
-                  : `/control/${tag.control?.id}`
-              }
+              to={to}
+              background={background}
             >
-              <PreviewTagText>
-                {tag.risk ? "Risk: " : "Control: "}
-                {tag.risk?.name || tag.control?.description}
-              </PreviewTagText>
+              <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
             </PreviewTag>
           );
         })}
@@ -265,16 +271,16 @@ export default function ImageTagger({
             </TaggerBoxInner>
           </TaggerBox>
         )}
-      </FlowchartWrapper>
+      </ImageTaggerWrapper>
     </div>
   );
 }
 
-const FlowchartWrapper = styled.div`
+export const ImageTaggerWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img<{ editable: boolean }>`
+export const TargetImage = styled.img<{ editable: boolean }>`
   cursor: ${(p) => (p.editable ? "crosshair" : "")};
   width: 100%;
 `;
@@ -288,11 +294,17 @@ const fadeOut = keyframes`
   from { opacity: 1; }
   to { opacity: 0; }
 `;
-const PreviewTag = styled.div<{ x: number; y: number; show: boolean }>`
+interface PreviewTagProps {
+  x: number;
+  y: number;
+  show: boolean | number;
+  background?: string;
+}
+export const PreviewTag = styled.div<PreviewTagProps>`
   position: absolute;
   top: ${(p) => p.y + 10}px;
   left: ${(p) => p.x - 50}px;
-  background-color: rgba(0, 0, 0, 0.85);
+  background-color: ${(p) => p.background || "rgba(0, 0, 0, 0.85)"};
   width: 100px;
   border-radius: 4px;
   text-align: center;
@@ -310,7 +322,7 @@ const PreviewTag = styled.div<{ x: number; y: number; show: boolean }>`
   &:hover {
     white-space: unset;
     z-index: 100;
-    background-color: black;
+    background-color: ${(p) => p.background || "black"};
   }
   /* remove default Link style */
   text-decoration: none;
@@ -329,14 +341,14 @@ const PreviewTag = styled.div<{ x: number; y: number; show: boolean }>`
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-bottom: 8px solid rgba(0, 0, 0, 0.85);
+    border-bottom: 8px solid ${(p) => p.background || "rgba(0, 0, 0, 0.85)"};
     position: absolute;
     top: -8px;
     left: 40px;
   }
 `;
 
-const PreviewTagText = styled.div`
+export const PreviewTagText = styled.div`
   color: white;
   font-size: smaller;
   font-weight: bold;

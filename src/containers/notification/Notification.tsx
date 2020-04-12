@@ -10,7 +10,7 @@ import {
   DestroyBulkNotificationInput,
   useDestroyBulkNotificationMutation,
   useIsReadMutation,
-  useNotificationsQuery
+  useNotificationsQuery,
 } from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
@@ -27,18 +27,18 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   const { limit, page, handlePageChange } = useListState({
     limit: 10,
-    page: 1
+    page: 1,
   });
 
   const { data, networkStatus } = useNotificationsQuery({
     fetchPolicy: "network-only",
     variables: {
       filter: {
-        title_or_originator_type_cont: debounceSearch
+        title_or_originator_type_cont: debounceSearch,
       },
       limit,
-      page
-    }
+      page,
+    },
   });
   const notifications = data?.notifications?.collection || [];
   const totalCount = data?.notifications?.metadata?.totalCount || 0;
@@ -50,17 +50,17 @@ const Notification = ({ history }: RouteComponentProps) => {
     },
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["notifications", "notificationsCount"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   const [isRead] = useIsReadMutation({
     refetchQueries: ["notifications", "notificationsCount"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   async function redirect(type: string, id: number | string, notifId: string) {
     try {
       await isRead({
-        variables: { input: { id: String(notifId) } }
+        variables: { input: { id: String(notifId) } },
       });
 
       if (type === "Policy") history.push(`/policy/${id}`);
@@ -80,7 +80,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   const handleDelete = () => {
     const notifIds: DestroyBulkNotificationInput = { ids: selected };
     destroyNotifs({
-      variables: { input: notifIds }
+      variables: { input: notifIds },
     });
   };
 
@@ -90,7 +90,7 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -98,7 +98,7 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(notifications.map(n => String(n.id)));
+      setSelected(notifications.map((n) => String(n.id)));
     } else {
       setSelected([]);
     }
@@ -117,7 +117,7 @@ const Notification = ({ history }: RouteComponentProps) => {
           <Input
             value={search}
             placeholder="Search Notifications..."
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
             className="w-50"
           />
           <Tooltip description="Delete Selected Notification(s)">
@@ -153,7 +153,7 @@ const Notification = ({ history }: RouteComponentProps) => {
               </tr>
             </thead>
             <tbody>
-              {notifications.map(data => {
+              {notifications.map((data) => {
                 let dataType: string = "";
 
                 switch (data.dataType) {
@@ -184,7 +184,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       <input
                         type="checkbox"
                         checked={selected.includes(String(data.id))}
-                        onClick={e => e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={() => toggleCheck(String(data.id))}
                       />
                     </td>
@@ -192,7 +192,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {data.senderUserName}
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {`Request to ${dataType} ${data.originatorType} : ${data.title}`}
+                      {data.title}
                     </td>
                     <td className={data.isRead ? "" : "text-orang text-bold"}>
                       {formatDate(data.createdAt)}

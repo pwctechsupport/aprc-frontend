@@ -267,8 +267,9 @@ const ControlForm = ({
             type="button"
             className="soft orange mb-2"
             onClick={toogleModal}
+            color=""
           >
-            Add
+            Add Control Activity
           </Button>
         </div>
         {cool.length === 0 ? null : (
@@ -407,6 +408,7 @@ const ActivityModalForm = ({
         name="activity"
         label="Control Activity Title"
         required
+        placeholder="Title..."
         innerRef={register}
       />
       <span className="mt-2 mb-3">Control Activity Guidance</span>
@@ -434,7 +436,12 @@ const ActivityModalForm = ({
       </div>
       <div className="mt-1">
         {activityType === "text" ? (
-          <Input type="text" name="guidance" innerRef={register} />
+          <Input
+            type="text"
+            name="guidance"
+            innerRef={register}
+            placeholder="Description..."
+          />
         ) : (
           <Input
             type="file"
@@ -443,7 +450,7 @@ const ActivityModalForm = ({
         )}
       </div>
       {error && <h6 className="text-red mt-2">{error}</h6>}
-      <div>
+      <div className="d-flex justify-content-end">
         <Button className="pwc" type="submit">
           {activityDefaultValue?.id ? "Update Activity" : "Add Activity"}
         </Button>
@@ -508,7 +515,6 @@ export interface ControlFormProps {
 
 export interface CreateControlFormValues {
   controlOwner?: string[];
-  departments: Suggestions;
   typeOfControl: TypeOfControl;
   frequency: Frequency;
   nature: Nature;

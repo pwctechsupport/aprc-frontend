@@ -6,9 +6,9 @@ import {
   useUpdateResourceVisitMutation,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
-import DialogButton from "../../../shared/components/DialogButton";
 import StarRating from "../../../shared/components/StarRating";
 import Tooltip from "../../../shared/components/Tooltip";
+import useDialogBox from "../../../shared/hooks/useDialogBox";
 import {
   notifyGraphQLErrors,
   notifySuccess,
@@ -31,7 +31,9 @@ export default function ResourceBox({
   totalRating,
   imagePreviewUrl,
 }: ResourceBoxProps) {
+  const dialogBox = useDialogBox();
   const [previewAvailable, setPreivewAvailable] = useState(true);
+
   // Hanlde delete attachment
   const [
     deleteAttachmentMutation,
@@ -43,7 +45,10 @@ export default function ResourceBox({
     awaitRefetchQueries: true,
   });
   function handleErase() {
-    deleteAttachmentMutation({ variables: { id } });
+    dialogBox({
+      text: `Delete attached file in "${name}"?`,
+      callback: () => deleteAttachmentMutation({ variables: { id } }),
+    });
   }
 
   // Handle give rating
@@ -104,29 +109,24 @@ export default function ResourceBox({
           </div>
           <RevenueBoxViews>{views} Views</RevenueBoxViews>
           <Tooltip description="Delete resource attachment">
-            <DialogButton
-              onConfirm={handleErase}
-              color=""
-              message={`Delete attached file in "${name}"?`}
-              className=""
+            <Button
+              onClick={handleErase}
               loading={deleteAttachmentMutationInfo.loading}
               disabled={!previewAvailable}
+              className="cancel"
+              color="primary"
             >
-              <Button>
-                <SmallText>&nbsp;Remove File</SmallText>
-              </Button>
-            </DialogButton>
+              <SmallText>&nbsp;Remove File</SmallText>
+            </Button>
           </Tooltip>
           <Tooltip description="Download resource attachment">
             <Button
-              className=""
-              disabled={!previewAvailable}
               onClick={handleDownload}
-              color=""
+              disabled={!previewAvailable}
+              className="pwc"
+              color="primary"
             >
-              <Button className="pwc">
-                <SmallText>&nbsp;Download File</SmallText>
-              </Button>
+              <SmallText>&nbsp;Download File</SmallText>
             </Button>
           </Tooltip>
         </ResourceBoxMetaWrapper>

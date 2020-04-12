@@ -151,7 +151,7 @@ const StyledUl = styled.ul<{ width?: number }>`
   list-style-type: none;
   border-radius: 10px;
   z-index: 100;
-  overflow: scroll;
+  overflow-y: scroll;
   width: ${(p) => (p.width ? p.width + "px" : "100%")};
   right: ${(p) => (p.width ? "-100px" : "unset")};
   max-height: calc(100vh - 150px);
