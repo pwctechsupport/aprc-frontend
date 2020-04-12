@@ -62,16 +62,20 @@ export default function ResourceForm({
 }: ResourceFormProps) {
   const { register, setValue, handleSubmit, errors, watch } = useForm<
     ResourceFormValues
-  >({ defaultValues, validationSchema });
+  >({
+    defaultValues,
+    validationSchema,
+  });
   const [activityType, setActivityType] = useState("text");
   const [
     tags,
     //  setTags
   ] = useState<Omit<Tag, "createdAt" | "updatedAt">[]>([]);
   const [preview, setPreview] = useState<string | null>(null);
-
+  const [click, setClick] = useState(false);
   function submit(data: ResourceFormValues) {
-    onSubmit && onSubmit({ ...data, tagsAttributes: tags });
+    console.log("masuk", data);
+    // onSubmit && onSubmit({ ...data, tagsAttributes: tags });
   }
 
   const handleGetCategories = useLoadCategories();
@@ -240,22 +244,29 @@ const validationSchema = yup.object().shape({
   category: yup
     .object()
     .shape({
-      label: yup.string(),
-      value: yup.string(),
+      label: yup.string().required(),
+      value: yup.string().required(),
     })
     .required(),
-  // policyIds: yup.array().when("controlIds", {
-  //   is: [],
-  //   then: yup.array().required(),
-  //   otherwise: yup.array(),
-  // }),
-  // controlIds: yup.array(),
-  // resuploadLink: yup.string().when("resuploadBase64", {
-  //   is: "",
-  //   then: yup.string().required(),
-  //   otherwise: yup.string(),
-  // }),
-  // resuploadBase64: yup.string(),
+  policyIds: yup.array(),
+  controlIds: yup.array(),
+  resuploadLink: yup.string(),
+  resuploadBase64: yup.string().when("resuploadLink", {
+    is: "",
+    then: yup.string().required(),
+    otherwise: yup.string(),
+  }),
+  businessProcessId: yup.object().when(["policyIds", "controlIds"], {
+    is: undefined,
+    then: yup.object().shape({
+      label: yup.string().required(),
+      value: yup.string().required(),
+    }),
+    otherwise: yup.object().shape({
+      label: yup.string(),
+      value: yup.string(),
+    }),
+  }),
 });
 // ==========================================
 // Custom Hooks

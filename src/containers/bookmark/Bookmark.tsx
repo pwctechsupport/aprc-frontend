@@ -11,7 +11,7 @@ import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
   useBookmarksQuery,
-  useDestroyBookmarkMutation,
+  useDestroyBookmarkMutation
 } from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
@@ -19,7 +19,7 @@ import { date, removeEmpty } from "../../shared/formatter";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
-  const { register, setValue, handleSubmit } = useForm();
+  const formAnjing = useForm();
   const [search, setSearch] = useState("");
 
   const [checked, setChecked] = useState<string[]>([]);
@@ -30,7 +30,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
     { label: "In 7 days", value: 2 },
     { label: "In a month", value: 1 },
     { label: "In 90 days", value: 1 },
-    { label: "In a year", value: 1 },
+    { label: "In a year", value: 1 }
   ];
   const aDay = 86400000;
   const aWeek = 604800000;
@@ -58,15 +58,17 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const [filter, setFilter] = useState({});
   const { data, networkStatus, loading } = useBookmarksQuery({
     variables: {
-      filter,
+      filter: {
+        title_cont: "Lorem"
+      }
     },
-    fetchPolicy: "network-only",
+    fetchPolicy: "network-only"
   });
-
+  console.log("data", data);
   const [deleteBookmarks, deleteBookmarksM] = useDestroyBookmarkMutation({
     refetchQueries: ["bookmarks"],
     onError: notifyGraphQLErrors,
-    onCompleted: onDeleteComplete,
+    onCompleted: onDeleteComplete
   });
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
@@ -75,7 +77,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
 
   function toggleCheck(id: string) {
     if (checked.includes(id)) {
-      setChecked(checked.filter((i) => i !== id));
+      setChecked(checked.filter(i => i !== id));
     } else {
       setChecked(checked.concat(id));
     }
@@ -86,7 +88,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
       setChecked(
         oc(data)
           .bookmarks.collection([])
-          .map((b) => b.id)
+          .map(b => b.id)
       );
     } else {
       setChecked([]);
@@ -104,7 +106,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
 
   function handleClickRow({
     id,
-    type,
+    type
   }: {
     id?: string | null;
     type: OriginatorType;
@@ -127,8 +129,9 @@ const Bookmark = ({ history }: RouteComponentProps) => {
       history.push(link);
     }
   }
-  const handleFormSubmit = (values: any) => {
-    setFilter(removeEmpty({ title_cont: values.title, date_gteq: 9 }));
+  const onSubmit = (values: any) => {
+    console.log("values", values);
+    setFilter({ title_cont: "Lorem" });
   };
   return (
     <div>
@@ -141,9 +144,13 @@ const Bookmark = ({ history }: RouteComponentProps) => {
 
         <Row>
           <Col lg={4}>
-            <Form onSubmit={handleSubmit(handleFormSubmit)}>
-              <Input placeholder="Search Title..." name="title" />
-              <Select options={time} name="date" />
+            <Form onSubmit={formAnjing.handleSubmit(onSubmit)}>
+              <Input
+                placeholder="Search Title..."
+                name="title"
+                innerRef={formAnjing.register}
+              />
+              <Select options={[{ label: 1 }, { label: 2 }]} name="date" />
               <Button
                 loading={loading}
                 type="submit"
@@ -196,14 +203,14 @@ const Bookmark = ({ history }: RouteComponentProps) => {
             <tbody>
               {oc(data)
                 .bookmarks.collection([])
-                .map((bookmark) => {
+                .map(bookmark => {
                   return (
                     <tr
                       key={bookmark.id}
                       onClick={() =>
                         handleClickRow({
                           id: bookmark.originatorId,
-                          type: bookmark.originatorType as OriginatorType,
+                          type: bookmark.originatorType as OriginatorType
                         })
                       }
                     >
@@ -211,8 +218,8 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                         <input
                           type="checkbox"
                           checked={checked.includes(bookmark.id)}
-                          onChange={(e) => toggleCheck(bookmark.id)}
-                          onClick={(e) => e.stopPropagation()}
+                          onChange={e => toggleCheck(bookmark.id)}
+                          onClick={e => e.stopPropagation()}
                         />
                       </td>
                       <td>{bookmark.originatorType}</td>
