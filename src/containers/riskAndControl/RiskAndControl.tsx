@@ -6,7 +6,7 @@ import {
   FaEllipsisV,
   FaFilePdf,
   FaMinus,
-  FaPencilAlt,
+  FaPencilAlt
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -25,7 +25,7 @@ import {
   useBusinessProcessQuery,
   useCreateBookmarkBusinessProcessMutation,
   useUpdateControlMutation,
-  useUpdateRiskMutation,
+  useUpdateRiskMutation
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -41,18 +41,18 @@ import { toLabelValue } from "../../shared/formatter";
 import {
   downloadPdf,
   emailPdf,
-  previewPdf,
+  previewPdf
 } from "../../shared/utils/accessGeneratedPdf";
 import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyError,
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess,
+  notifySuccess
 } from "../../shared/utils/notif";
 import ControlForm, {
   ControlFormValues,
-  CreateControlFormValues,
+  CreateControlFormValues
 } from "../control/components/ControlForm";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
@@ -60,14 +60,14 @@ import Flowcharts from "./components/Flowcharts";
 type TParams = { id: string };
 
 export default function RiskAndControl({
-  match,
+  match
 }: RouteComponentProps<TParams>) {
   const initialCollapse = ["Risks"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
-    setCollapse((p) => {
+    setCollapse(p => {
       if (p.includes(name)) {
-        return p.filter((item) => item !== name);
+        return p.filter(item => item !== name);
       }
       return p.concat(name);
     });
@@ -77,7 +77,7 @@ export default function RiskAndControl({
   // Edit Risk Mutation and Modal state
   const [riskModal, setRiskModal] = useState(false);
   const [risk, setRisk] = useState<RiskState>();
-  const toggleRiskModal = () => setRiskModal((p) => !p);
+  const toggleRiskModal = () => setRiskModal(p => !p);
   const editRisk = (risk: RiskState) => {
     setRiskModal(true);
     setRisk(risk);
@@ -89,7 +89,7 @@ export default function RiskAndControl({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"],
+    refetchQueries: ["businessProcess"]
   });
   const handleUpdateRisk = (values: RiskFormValues) => {
     updateRisk({
@@ -97,18 +97,18 @@ export default function RiskAndControl({
         input: {
           id: risk?.id || "",
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
+          businessProcessIds: values.businessProcessIds?.map(a => a.value),
           levelOfRisk: values.levelOfRisk,
-          typeOfRisk: values.typeOfRisk,
-        },
-      },
+          typeOfRisk: values.typeOfRisk
+        }
+      }
     });
   };
 
   // Edit Control Mutation and Modal State
   const [controlModal, setControlModal] = useState(false);
   const [control, setControl] = useState<ControlState>();
-  const toggleControlModal = () => setControlModal((p) => !p);
+  const toggleControlModal = () => setControlModal(p => !p);
   const editControl = (control: ControlState) => {
     setControlModal(true);
     setControl(control);
@@ -120,37 +120,37 @@ export default function RiskAndControl({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"],
+    refetchQueries: ["businessProcess"]
   });
   const handleUpdateControl = (values: CreateControlFormValues) => {
     updateControl({
-      variables: { input: { id: control?.id || "", ...values } },
+      variables: { input: { id: control?.id || "", ...values } }
     });
   };
 
   const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
     onCompleted: () => notifySuccess("Added to Bookmark"),
-    onError: notifyGraphQLErrors,
+    onError: notifyGraphQLErrors
   });
 
   const { id } = match.params;
   const { data, loading } = useBusinessProcessQuery({
     variables: { id },
-    fetchPolicy: "network-only",
+    fetchPolicy: "network-only"
   });
   const name = data?.businessProcess?.name || "";
   const risks = data?.businessProcess?.risks || [];
   const resources = data?.businessProcess?.resources || [];
   const ancestors = data?.businessProcess?.ancestors || [];
-  const breadcrumb = ancestors.map((a) => [
+  const breadcrumb = ancestors.map(a => [
     "/risk-and-control/" + a.id,
-    a.name,
+    a.name
   ]) as CrumbItem[];
 
   const tabs = [
     { to: `/risk-and-control/${id}`, title: "Detail" },
     { to: `/risk-and-control/${id}/flowchart`, title: "Flowchart" },
-    { to: `/risk-and-control/${id}/resources`, title: "Resources" },
+    { to: `/risk-and-control/${id}/resources`, title: "Resources" }
   ];
 
   if (loading) return <LoadingSpinner size={30} centered />;
@@ -193,9 +193,9 @@ export default function RiskAndControl({
                 previewPdf(`prints/${id}/business_process.pdf`, {
                   onStart: () =>
                     notifyInfo("Downloading file for preview", {
-                      autoClose: 10000,
-                    }),
-                }),
+                      autoClose: 10000
+                    })
+                })
             },
             {
               label: (
@@ -208,8 +208,8 @@ export default function RiskAndControl({
                   fileName: name,
                   onStart: () => notifyInfo("Download Started"),
                   onError: () => notifyError("Download Failed"),
-                  onCompleted: () => notifySuccess("Download Success"),
-                }),
+                  onCompleted: () => notifySuccess("Download Success")
+                })
             },
             {
               label: (
@@ -217,7 +217,7 @@ export default function RiskAndControl({
                   <FaBookmark /> Bookmark
                 </div>
               ),
-              onClick: () => addBookmark({ variables: { id } }),
+              onClick: () => addBookmark({ variables: { id } })
             },
             {
               label: (
@@ -225,8 +225,8 @@ export default function RiskAndControl({
                   <MdEmail /> Mail
                 </div>
               ),
-              onClick: () => emailPdf(name),
-            },
+              onClick: () => emailPdf(name)
+            }
           ]}
         >
           <FaEllipsisV />
@@ -241,7 +241,7 @@ export default function RiskAndControl({
         crumbs={[
           ["/risk-and-control", "Risk and Controls"],
           ...breadcrumb,
-          ["/risk-and-control/" + id, name],
+          ["/risk-and-control/" + id, name]
         ]}
       />
       <div className="d-flex justify-content-between">
@@ -271,7 +271,7 @@ export default function RiskAndControl({
             render={() => (
               <Flowcharts
                 bpId={id}
-                resources={resources.filter((resource) =>
+                resources={resources.filter(resource =>
                   resource.category?.match(/flowchart/gi)
                 )}
               />
@@ -285,7 +285,7 @@ export default function RiskAndControl({
             >
               {risks.length ? (
                 <ul>
-                  {risks.map((risk) => (
+                  {risks.map(risk => (
                     <li key={risk.id}>
                       <div className="mb-3 d-flex justify-content-between">
                         <h5>
@@ -307,7 +307,7 @@ export default function RiskAndControl({
                               businessProcessIds:
                                 risk.businessProcesses?.map(toLabelValue) || [],
                               levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                              typeOfRisk: risk.typeOfRisk as TypeOfRisk,
+                              typeOfRisk: risk.typeOfRisk as TypeOfRisk
                             })
                           }
                           color=""
@@ -337,10 +337,10 @@ export default function RiskAndControl({
             <ResourcesTab
               formDefaultValues={{
                 category: { label: "Flowchart", value: "Flowchart" },
-                businessProcessId: { label: name, value: id },
+                businessProcessId: { label: name, value: id }
               }}
               queryFilters={{
-                business_process_id_in: id,
+                business_process_id_in: id
               }}
             />
           </Route>
@@ -380,11 +380,54 @@ interface ControlState extends ControlFormValues {
 
 const ControlsTable = ({
   controls,
-  editControl,
+  editControl
 }: {
   controls: Control[];
   editControl: Function;
 }) => {
+  const assertionAndIpoModifier = (data: any) => {
+    let finalData: any = data;
+    const existence_and_occurence = finalData.findIndex(
+      (a: any) => a === "existence_and_occurence"
+    );
+    const cut_over = finalData.findIndex((a: any) => a === "cut_over");
+    const rights_and_obligation = finalData.findIndex(
+      (a: any) => a === "rights_and_obligation"
+    );
+    const presentation_and_disclosure = finalData.findIndex(
+      (a: any) => a === "presentation_and_disclosure"
+    );
+    const accuracy = finalData.findIndex((a: any) => a === "accuracy");
+    const completeness = finalData.findIndex((a: any) => a === "completeness");
+    const validation = finalData.findIndex((a: any) => a === "validation");
+    const restriction = finalData.findIndex((a: any) => a === "restriction");
+
+    if (existence_and_occurence !== -1) {
+      finalData[existence_and_occurence] = "E/O ";
+    }
+    if (cut_over !== -1) {
+      finalData[cut_over] = "CO";
+    }
+    if (rights_and_obligation !== -1) {
+      finalData[rights_and_obligation] = "R&O";
+    }
+    if (presentation_and_disclosure !== -1) {
+      finalData[presentation_and_disclosure] = "P&D";
+    }
+    if (accuracy !== -1) {
+      finalData[accuracy] = "A";
+    }
+    if (completeness !== -1) {
+      finalData[completeness] = "C";
+    }
+    if (validation !== -1) {
+      finalData[validation] = "V";
+    }
+    if (restriction !== -1) {
+      finalData[restriction] = "R";
+    }
+    return finalData.join(", ");
+  };
   return (
     <div className="table-responsive">
       <Table>
@@ -402,14 +445,14 @@ const ControlsTable = ({
         </thead>
         <tbody>
           {controls?.length ? (
-            controls?.map((control) => (
+            controls?.map(control => (
               <tr key={control.id}>
                 <td>{control.description}</td>
                 <td>{startCase(control.frequency || "")}</td>
                 <td>{startCase(control.typeOfControl || "")}</td>
                 <td>{startCase(control.nature || "")}</td>
-                <td>{control.assertion?.map(startCase).join(", ")}</td>
-                <td>{control.ipo?.map(startCase).join(", ")}</td>
+                <td>{assertionAndIpoModifier(control.assertion)}</td>
+                <td>{assertionAndIpoModifier(control.ipo)}</td>
                 <td>{control.controlOwner}</td>
                 <td>
                   <Button
@@ -428,7 +471,7 @@ const ControlsTable = ({
                         frequency: control.frequency as Frequency,
                         keyControl: control.keyControl || false,
                         riskIds: control?.risks?.map(({ id }) => id) || [],
-                        activityControls: control.activityControls,
+                        activityControls: control.activityControls
                       })
                     }
                     color=""
