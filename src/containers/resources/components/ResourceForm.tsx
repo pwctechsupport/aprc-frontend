@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form, Label } from "reactstrap";
 import * as yup from "yup";
@@ -33,11 +33,11 @@ interface ResourceFormProps {
   defaultValues?: ResourceFormValues;
   onSubmit?: (data: ResourceFormValues) => void;
   submitting?: boolean;
-  // isDraft?: boolean;
-  // imagePreviewUrl?: string;
-  // resourceId?: string;
-  // bpId?: string;
-  // resourceTitle?: string;
+  isDraft?: boolean;
+  imagePreviewUrl?: string;
+  resourceId?: string;
+  bpId?: string;
+  resourceTitle?: string;
 }
 
 export interface ResourceFormValues {
@@ -66,6 +66,7 @@ ResourceFormProps) {
     defaultValues,
     validationSchema
   });
+  console.log(validationSchema ? "ada" : "tiada");
   const [activityType, setActivityType] = useState("text");
   const [tags, setTags] = useState(defaultValues?.tagsAttributes || []);
   const [preview, setPreview] = useState<string | null>(
@@ -91,13 +92,14 @@ ResourceFormProps) {
     <Form onSubmit={handleSubmit(submit)}>
       <Input
         name="name"
-        label="Name"
+        label="Name*"
+        placeholder="Name"
         innerRef={register({ required: true })}
         error={errors.name && errors.name.message}
       />
       <AsyncCreatableSelect
         name="category"
-        label="Category"
+        label="Category*"
         register={register}
         setValue={setValue}
         cacheOptions
@@ -108,7 +110,7 @@ ResourceFormProps) {
       {selectedCategory?.value === "Flowchart" ? (
         <AsyncSelect
           name="businessProcessId"
-          label="Related Sub-business Process"
+          label="Related Sub-business Process*"
           register={register}
           setValue={setValue}
           cacheOptions
@@ -120,7 +122,7 @@ ResourceFormProps) {
         <Fragment>
           <AsyncSelect
             name="policyIds"
-            label="Related Policies*"
+            label="Related Policies**"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -131,7 +133,7 @@ ResourceFormProps) {
           />
           <AsyncSelect
             name="controlIds"
-            label="Related Control*"
+            label="Related Control**"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -142,7 +144,7 @@ ResourceFormProps) {
           />
         </Fragment>
       )}
-      <span className="mt-2 mb-3">Upload</span>
+      <span className="mt-2 mb-3">Upload*</span>
       {selectedCategory?.value === "Flowchart" ? null : (
         <div className="d-flex ml-4">
           <Label check className="d-flex align-items-center pr-4">
@@ -217,14 +219,27 @@ ResourceFormProps) {
 // ==========================================
 
 const validationSchema = yup.object().shape({
-  name: yup.string(),
-  category: yup
-    .object()
-    .shape({
-      label: yup.string(),
-      value: yup.string()
-    })
-    .required()
+  name: yup.string().required(),
+  category: yup.object().shape({
+    label: yup.string().required(),
+    value: yup.string().required()
+  }),
+  controlIds: yup.array(),
+  businessProcessId: yup.object().shape({
+    label: yup.string().required(),
+    value: yup.string().required()
+  }),
+  policyIds: yup.array().when(["controlIds", "businessProcessId"], {
+    is: undefined,
+    then: yup.array().required(),
+    otherwise: yup.array()
+  }),
+  resuploadBase64: yup.string(),
+  resuploadLink: yup.string().when("resuploadBase64", {
+    is: undefined,
+    then: yup.string().required(),
+    otherwise: yup.string()
+  })
 });
 // ==========================================
 // Custom Hooks

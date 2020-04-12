@@ -4,7 +4,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
-  AiOutlineEdit,
+  AiOutlineEdit
 } from "react-icons/ai";
 import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
 import { IoMdOpen } from "react-icons/io";
@@ -19,7 +19,7 @@ import {
   useCreateRequestEditMutation,
   useDestroyControlMutation,
   useReviewControlDraftMutation,
-  useUpdateControlMutation,
+  useUpdateControlMutation
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -33,18 +33,18 @@ import useEditState from "../../shared/hooks/useEditState";
 import {
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess,
+  notifySuccess
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
-import { takeValue } from "../../shared/formatter";
+// import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
   function toggleEditMode() {
-    setInEditMode((p) => !p);
+    setInEditMode(p => !p);
   }
   useEffect(() => {
-    setInEditMode((p) => (p ? false : p));
+    setInEditMode(p => (p ? false : p));
   }, [location.pathname]);
 
   const id = get(match, "params.id", "");
@@ -58,13 +58,13 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     draft,
     hasEditAccess,
     requestStatus,
-    requestEditState,
+    requestEditState
   });
 
   // Review handlers
   const [reviewMutation, reviewMutationInfo] = useReviewControlDraftMutation({
     refetchQueries: ["control"],
-    awaitRefetchQueries: true,
+    awaitRefetchQueries: true
   });
   async function review({ publish }: { publish: boolean }) {
     try {
@@ -83,16 +83,16 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["control"],
-    awaitRefetchQueries: true,
+    awaitRefetchQueries: true
   });
   function handleUpdate(values: CreateControlFormValues) {
     update({
       variables: {
         input: {
           id,
-          ...values,
-        },
-      },
+          ...values
+        }
+      }
     });
   }
 
@@ -104,27 +104,27 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["controls"],
-    awaitRefetchQueries: true,
+    awaitRefetchQueries: true
   });
 
   // Request Edit handlers
   const [
     requestEditMutation,
-    requestEditMutationInfo,
+    requestEditMutationInfo
   ] = useCreateRequestEditMutation({
     variables: { id, type: "Control" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["control"],
+    refetchQueries: ["control"]
   });
 
   // Approve and Reject Request Edit handlers
   const [
     approveEditMutation,
-    approveEditMutationResult,
+    approveEditMutationResult
   ] = useApproveRequestEditMutation({
     refetchQueries: ["control"],
-    onError: notifyGraphQLErrors,
+    onError: notifyGraphQLErrors
   });
   async function handleApproveRequest(id: string) {
     try {
@@ -160,9 +160,9 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   const status = data?.control?.status || "";
   const keyControl = data?.control?.keyControl || false;
   const risks = data?.control?.risks || [];
-  const riskIds = risks.map((a) => a.id);
+  const riskIds = risks.map(a => a.id);
   const businessProcesses = data?.control?.businessProcesses || [];
-  const businessProcessIds = businessProcesses.map((bp) => bp.id);
+  const businessProcessIds = businessProcesses.map(bp => bp.id);
   const activityControls = data?.control?.activityControls || [];
   const createdAt = data?.control?.createdAt || "";
   const departments = data?.control?.departments || [];
@@ -275,29 +275,29 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
         label: "Key Control",
         value: (
           <input type="checkbox" checked={keyControl} onChange={() => {}} />
-        ),
+        )
       },
       { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
-        value: assertion.map((x) => capitalCase(x)).join(", "),
+        value: assertion.map(x => capitalCase(x)).join(", ")
       },
       {
         label: "IPO",
-        value: ipo.map((x) => capitalCase(x)).join(", "),
+        value: ipo.map(x => capitalCase(x)).join(", ")
       },
       { label: "Frequency", value: capitalCase(frequency) },
       { label: "Status", value: capitalCase(status) },
       { label: "Updated At", value: updatedAt },
       { label: "Updated By", value: lastUpdatedBy },
       { label: "Created At", value: createdAt.split(" ")[0] },
-      { label: "Created By", value: createdBy },
+      { label: "Created By", value: createdBy }
     ];
     return (
       <Row>
         <Col xs={6}>
           <dl>
-            {details.slice(0, Math.ceil(details.length / 2)).map((item) => (
+            {details.slice(0, Math.ceil(details.length / 2)).map(item => (
               <Fragment key={item.label}>
                 <dt>{item.label}</dt>
                 <dd>{item.value || "-"}</dd>
@@ -309,7 +309,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
           <dl>
             {details
               .slice(Math.ceil(details.length / 2), details.length)
-              .map((item) => (
+              .map(item => (
                 <Fragment key={item.label}>
                   <dt>{item.label}</dt>
                   <dd>{item.value || "-"}</dd>
@@ -321,13 +321,13 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
         <Col xs={12} className="mt-3">
           <h5>Risks</h5>
           {risks.length ? (
-            risks.map((risk) => <p key={risk.id}>{risk.name}</p>)
+            risks.map(risk => <p key={risk.id}>{risk.name}</p>)
           ) : (
             <EmptyAttribute />
           )}
           <h5 className="mt-2">Business Processes</h5>
           {businessProcesses.length ? (
-            businessProcesses.map((bp) => <p key={bp.id}>{bp.name}</p>)
+            businessProcesses.map(bp => <p key={bp.id}>{bp.name}</p>)
           ) : (
             <EmptyAttribute />
           )}
@@ -344,7 +344,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                 </tr>
               </thead>
               <tbody>
-                {activityControls.map((activity) => (
+                {activityControls.map(activity => (
                   <tr key={"Row" + activity.id}>
                     <td>{activity.activity}</td>
                     <td>
@@ -396,7 +396,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
           riskIds,
           businessProcessIds,
           keyControl,
-          activityControls,
+          activityControls
         }}
         submitting={updateState.loading}
       />
@@ -408,7 +408,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/control", "Controls"],
-          ["/control/" + id, description],
+          ["/control/" + id, description]
         ]}
       />
       <div className="d-flex justify-content-between align-items-center">
