@@ -173,7 +173,6 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                       type="reset"
                       className="soft red"
                       color=""
-                      style={{ marginLeft: "10px" }}
                       onClick={handleReset}
                     >
                       <FaUndo />
