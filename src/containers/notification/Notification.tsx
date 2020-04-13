@@ -13,14 +13,15 @@ import {
   useNotificationsQuery,
 } from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
-import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
+import humanizeDate from "../../shared/utils/humanizeDate";
 import { notifyError } from "../../shared/utils/notif";
 
-const Notification = ({ history }: RouteComponentProps) => {
+export default function Notification({ history }: RouteComponentProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [debounceSearch] = useDebounce(search, 800);
@@ -154,19 +155,6 @@ const Notification = ({ history }: RouteComponentProps) => {
             </thead>
             <tbody>
               {notifications.map((data) => {
-                let dataType: string = "";
-
-                switch (data.dataType) {
-                  case "request_edit":
-                    dataType = "edit";
-                    break;
-                  case "request_draft":
-                    dataType = "approve";
-                    break;
-                  default:
-                    break;
-                }
-
                 return data ? (
                   <tr
                     key={String(data.id)}
@@ -195,7 +183,10 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {data.title}
                     </td>
                     <td className={data.isRead ? "" : "text-orang text-bold"}>
-                      {formatDate(data.createdAt)}
+                      <div>{humanizeDate(data.createdAt)}</div>
+                      <span className="text-secondary">
+                        {formatDate(data.createdAt)}
+                      </span>
                     </td>
                   </tr>
                 ) : null;
@@ -212,6 +203,4 @@ const Notification = ({ history }: RouteComponentProps) => {
       </Container>
     </div>
   );
-};
-
-export default Notification;
+}
