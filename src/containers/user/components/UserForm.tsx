@@ -43,7 +43,6 @@ export default function UserForm(props: UserFormProps) {
 
   const handleGetRoles = useLoadRoles();
   const handleGetPolicyCategories = useLoadPolicyCategories();
-
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Input
@@ -87,7 +86,6 @@ export default function UserForm(props: UserFormProps) {
       />
       <AsyncSelect
         label="User Group"
-        isMulti
         cacheOptions
         defaultOptions
         name="roleIds"
