@@ -24,6 +24,49 @@ export default function ControlsTable({
   controls,
   editControl
 }: ControlsTableProps) {
+  const assertionAndIpoModifier = (data: any) => {
+    let finalData: any = data;
+    const existence_and_occurence = finalData.findIndex(
+      (a: any) => a === "existence_and_occurence"
+    );
+    const cut_over = finalData.findIndex((a: any) => a === "cut_over");
+    const rights_and_obligation = finalData.findIndex(
+      (a: any) => a === "rights_and_obligation"
+    );
+    const presentation_and_disclosure = finalData.findIndex(
+      (a: any) => a === "presentation_and_disclosure"
+    );
+    const accuracy = finalData.findIndex((a: any) => a === "accuracy");
+    const completeness = finalData.findIndex((a: any) => a === "completeness");
+    const validation = finalData.findIndex((a: any) => a === "validation");
+    const restriction = finalData.findIndex((a: any) => a === "restriction");
+
+    if (existence_and_occurence !== -1) {
+      finalData[existence_and_occurence] = "E/O ";
+    }
+    if (cut_over !== -1) {
+      finalData[cut_over] = "CO";
+    }
+    if (rights_and_obligation !== -1) {
+      finalData[rights_and_obligation] = "R&O";
+    }
+    if (presentation_and_disclosure !== -1) {
+      finalData[presentation_and_disclosure] = "P&D";
+    }
+    if (accuracy !== -1) {
+      finalData[accuracy] = "A";
+    }
+    if (completeness !== -1) {
+      finalData[completeness] = "C";
+    }
+    if (validation !== -1) {
+      finalData[validation] = "V";
+    }
+    if (restriction !== -1) {
+      finalData[restriction] = "R";
+    }
+    return finalData.join(", ");
+  };
   return (
     <Table responsive>
       <thead>
@@ -48,8 +91,8 @@ export default function ControlsTable({
               <td>{startCase(control.frequency || "")}</td>
               <td>{startCase(control.typeOfControl || "")}</td>
               <td>{startCase(control.nature || "")}</td>
-              <td>{control.assertion?.map(startCase).join(", ")}</td>
-              <td>{control.ipo?.map(startCase).join(", ")}</td>
+              <td>{assertionAndIpoModifier(control.assertion)}</td>
+              <td>{assertionAndIpoModifier(control.ipo)}</td>
               <td>{control.controlOwner}</td>
               {editControl && (
                 <td>
