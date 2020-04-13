@@ -61,9 +61,9 @@ export default function Flowchart({
           const type = tag.risk?.id ? "Risk" : "Control";
           const name = tag.risk?.name || tag.control?.description;
           const background = tag.risk?.id
-            ? "red"
-            : tag.control?.id
             ? "orange"
+            : tag.control?.id
+            ? "#810001"
             : undefined;
           const to = tag.risk?.id
             ? `/risk/${tag.risk?.id}`
