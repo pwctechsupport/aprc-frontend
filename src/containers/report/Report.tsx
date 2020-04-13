@@ -9,59 +9,59 @@ import Table from "../../shared/components/Table";
 import {
   DownloadPdfInput,
   downloadPdfs,
-  previewPdfs
+  previewPdfs,
 } from "../../shared/utils/accessGeneratedPdf";
 import { notifyError, notifyInfo } from "../../shared/utils/notif";
 
 const reportOptions = [
   {
-    name: "Risk",
+    name: "Risk Without Policy",
     id: "report_risk",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Risk Without Control",
     id: "report_risk_policy",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Control Without Risk",
     id: "report_control_policy",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Resources with rating",
     id: "report_resource_rating",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Unmapped Risk",
     id: "unmapped_risk",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Unmapped Control",
     id: "unmapped_control",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
-  }
+      { id: "xlsx", name: "Excel" },
+    ],
+  },
 ];
 
 export default function Report() {
@@ -77,18 +77,18 @@ export default function Report() {
         const bro = values[key];
         return { name: key, format: bro };
       })
-      .filter(a => Boolean(a.format))
+      .filter((a) => Boolean(a.format))
       .map(({ name, format }) => {
         const fileName = `${
-          reportOptions.find(a => a.id === name)?.name
+          reportOptions.find((a) => a.id === name)?.name
         }.${format}`;
         return {
           url: `/prints/${name}.${format}`,
           options: {
             fileType: format,
             fileName,
-            onError: () => notifyError(`Error accessing ${fileName}`)
-          }
+            onError: () => notifyError(`Error accessing ${fileName}`),
+          },
         };
       });
   };
@@ -132,7 +132,7 @@ export default function Report() {
 
                   <td>
                     <FormGroup tag="fieldset">
-                      {option.formats.map(format => (
+                      {option.formats.map((format) => (
                         <FormGroup key={format.id} check>
                           <Label check>
                             <Input
