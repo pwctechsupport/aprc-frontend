@@ -8,9 +8,10 @@ import { toLabelValue } from "../../shared/formatter";
 import { useSelector } from "../../shared/hooks/useSelector";
 import HomepageBox from "./HomepageBox";
 import HomepageSearch from "./HomepageSearch";
+import Helmet from "react-helmet";
 
 export default function Homepage() {
-  const username = useSelector(state => state.auth.user?.name);
+  const username = useSelector((state) => state.auth.user?.name);
   const { data } = useHomepageQuery({ fetchPolicy: "network-only" });
   const popularPolicies = data?.popularPolicies?.collection || [];
   const recentlyAddedPolicies = data?.recentlyAddedPolicies?.collection || [];
@@ -20,6 +21,9 @@ export default function Homepage() {
   const savedPolicies = data?.bookmarks?.collection || [];
   return (
     <Background>
+      <Helmet>
+        <title>Home - PricewaterhouseCoopers</title>
+      </Helmet>
       <BackgroundImage>
         <Centerer>
           <Container>
@@ -62,10 +66,10 @@ export default function Homepage() {
           </Col>
           <Col xs={12} md={6} lg={4}>
             <HomepageBox
-              list={savedPolicies.map(a => {
+              list={savedPolicies.map((a) => {
                 return {
                   label: get(a, "originator.title"),
-                  value: get(a, "originator.id")
+                  value: get(a, "originator.id"),
                 };
               })}
               basePath="policy"
