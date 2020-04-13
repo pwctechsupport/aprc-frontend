@@ -14,14 +14,14 @@ export default function SearchBar({
   search,
   placeholder,
   loading,
-  setSearch
+  setSearch,
 }: SearchBarProps) {
   return (
     <SearchBarContainer>
       <SearchIcon />
       <Input
         value={search}
-        onChange={e => setSearch(e.target.value)}
+        onChange={(e) => setSearch(e.target.value)}
         placeholder={placeholder}
       />
       <SearchInputLoadingIndicator>
@@ -50,10 +50,16 @@ const Input = styled.input`
   padding: 16px 16px 16px 60px;
   border: none;
   background: rgba(0, 0, 0, 0.003);
-  box-shadow: inset 0 -2px 1px rgba(0, 0, 0, 0.03);
-  font-style: italic;
+  box-shadow: inset 0 -2px 0px rgba(0, 0, 0, 0.03);
+  /* font-style: italic; */
   font-weight: 300;
   font-size: 15px;
+  &:focus,
+  &:active {
+    outline: none;
+    border: none;
+    box-shadow: inset 0 -2px 0px var(--primary-color);
+  }
 `;
 
 const SearchIcon = styled(FaSearch)`
