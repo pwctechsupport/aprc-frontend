@@ -12,6 +12,11 @@ const OpacityButton = styled.button`
   &:hover {
     background-color: rgb(235, 236, 240);
   }
+  &:focus,
+  &:active {
+    outline: none;
+    border: none;
+  }
 `;
 
 export default OpacityButton;

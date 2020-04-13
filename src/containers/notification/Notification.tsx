@@ -13,11 +13,12 @@ import {
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
-import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
+import humanizeDate from "../../shared/utils/humanizeDate";
 import { notifyError } from "../../shared/utils/notif";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
@@ -283,7 +284,10 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {data.title}
                     </td>
                     <td className={data.isRead ? "" : "text-orang text-bold"}>
-                      {formatDate(data.createdAt)}
+                      <div>{humanizeDate(data.createdAt)}</div>
+                      <span className="text-secondary">
+                        {formatDate(data.createdAt)}
+                      </span>
                     </td>
                   </tr>
                 ) : null;
@@ -301,5 +305,4 @@ const Notification = ({ history }: RouteComponentProps) => {
     </div>
   );
 };
-
 export default Notification;
