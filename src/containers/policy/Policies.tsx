@@ -70,11 +70,6 @@ export default function Policies({ history }: RouteComponentProps) {
         <title>Policies - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb crumbs={[["/policy", "Policies"]]} />
-      <Collapse isOpen={showDashboard}>
-        <div>
-          <AllPolicyDashboard />
-        </div>
-      </Collapse>
       <div className="d-flex justify-content-between align-items-center">
         <OpacityButton onClick={toggleShowDashboard}>
           {showDashboard ? " Hide" : "Show"} Dashboard
@@ -85,6 +80,11 @@ export default function Policies({ history }: RouteComponentProps) {
           </Button>
         )}
       </div>
+      <Collapse isOpen={showDashboard}>
+        <div>
+          <AllPolicyDashboard />
+        </div>
+      </Collapse>
       <SearchBar
         search={search}
         setSearch={setSearch}
