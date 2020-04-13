@@ -21,11 +21,11 @@ import Tooltip from "../../shared/components/Tooltip";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
-  const [labelTime, setLabelTime] = useState("");
+  const [labelTime, setLabelTime] = useState("Date Added...");
   const [checked, setChecked] = useState<string[]>([]);
 
   const time = [
-    { label: "All Time", value: 1 },
+    { label: "All Time" || "Date Added...", value: 1 },
     { label: "Today", value: 2 },
     { label: "In 7 days", value: 3 },
     { label: "In a month", value: 4 },
@@ -39,7 +39,8 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const aYear = 31536000000;
 
   function constructDateFilter(input: any) {
-    if (!input || input === "All Time") return null;
+    if (!input || input === "All Time" || input === "Date Added...")
+      return null;
     const presentDate = new Date().getTime();
     const subtractor =
       input === "Today"
@@ -133,62 +134,66 @@ const Bookmark = ({ history }: RouteComponentProps) => {
     setLabelTime(props.label);
   };
   const isDataExist = data?.bookmarks?.collection.length;
+  const handleReset = () => {
+    setLabelTime("Date Added...");
+  };
   return (
     <div>
       <Helmet>
         <title>Bookmarks - PricewaterhouseCoopers</title>
       </Helmet>
 
-      <Container fluid className="p-5">
+      <Container fluid className="p-md-5">
         <h2>Bookmarks Manager</h2>
 
         <Row>
-          <Col lg={8}>
+          <Col>
             <Form onSubmit={bookmarkForm.handleSubmit(onSubmit)}>
-              <div style={{ display: "inline-block", width: "60%" }}>
-                <Input
-                  placeholder="Search Title..."
-                  name="title"
-                  innerRef={bookmarkForm.register}
-                />
-              </div>
-              <div
-                style={{
-                  marginLeft: "10px",
-                  display: "inline-block",
-                  width: "20%"
-                }}
-              >
-                <Select
-                  options={time}
-                  name="date"
-                  onChange={handleChange}
-                  placeholder={"Date Added..."}
-                />
-              </div>
-              <div style={{ display: "inline-block", marginLeft: "10px" }}>
-                <Button
-                  loading={loading}
-                  type="submit"
-                  className="pwc ml-2"
-                  color="primary"
-                >
-                  Search
-                </Button>
-                <Tooltip description="Reset Search">
+              <Row>
+                <Col xs={12} md={4} className="mb-1">
+                  {" "}
+                  <Input
+                    placeholder="Search Title..."
+                    name="title"
+                    innerRef={bookmarkForm.register}
+                  />
+                </Col>
+                <Col xs={12} md={4} className="mb-1">
+                  <Select
+                    options={time}
+                    name="date"
+                    onChange={handleChange}
+                    placeholder={"Date Added..."}
+                    value={[{ label: labelTime, value: 1 }]}
+                  />
+                </Col>
+                <Col xs={12} md={4} className="text-right text-md-left">
+                  <Tooltip description="Reset Search">
+                    <Button
+                      type="reset"
+                      className="soft red"
+                      color=""
+                      style={{ marginLeft: "10px" }}
+                      onClick={handleReset}
+                    >
+                      <FaUndo />
+                    </Button>
+                  </Tooltip>
                   <Button
-                    type="reset"
-                    className="soft red"
-                    color=""
-                    style={{ marginLeft: "10px" }}
+                    loading={loading}
+                    type="submit"
+                    className="pwc ml-1"
+                    color="primary"
                   >
-                    <FaUndo />
+                    Search
                   </Button>
-                </Tooltip>
-              </div>
+                </Col>
+              </Row>
             </Form>
           </Col>
-          <Col lg={4}>
+        </Row>
+        <Row className="mt-4 mt-md-1">
+          <Col>
             <div className="text-right">
               <DialogButton
                 className="soft red"
@@ -201,8 +206,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
             </div>
           </Col>
         </Row>
-
-        <div className="table-responsive mt-5">
+        <div className="table-responsive mt-1">
           <Table
             loading={networkStatus === NetworkStatus.loading}
             reloading={networkStatus === NetworkStatus.setVariables}
