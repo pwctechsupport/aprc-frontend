@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import { FaFolder, FaFolderOpen, FaTrash } from "react-icons/fa";
+import { MdSubdirectoryArrowRight } from "react-icons/md";
+import { Link, useHistory } from "react-router-dom";
 import { Policy } from "../../generated/graphql";
-import Table from "./Table";
-import { Link } from "react-router-dom";
 import { previewHtml } from "../formatter";
 import Button from "./Button";
-import { FaTrash } from "react-icons/fa";
+import DateHover from "./DateHover";
+import DisplayStatus from "./DisplayStatus";
 import EmptyAttribute from "./EmptyAttribute";
+import Table from "./Table";
+import Tooltip from "./Tooltip";
 
 interface PoliciesTableProps {
   policies: Policy[];
@@ -16,54 +20,42 @@ interface PoliciesTableProps {
 export default function PoliciesTable({
   policies,
   onDelete,
-  isAdminView
+  isAdminView,
 }: PoliciesTableProps) {
+  const history = useHistory();
   return (
     <Table responsive>
       <thead>
         <tr>
+          <th />
           <th>Title</th>
           <th>Description</th>
+          <th>Categories</th>
           <th>References</th>
+          <th>Status</th>
+          <th>Updated</th>
           <th />
         </tr>
       </thead>
       <tbody>
         {policies.length ? (
-          policies.map(item => (
-            <tr key={item.id}>
-              <td>
-                <Link
-                  to={
-                    isAdminView
-                      ? `/policy-admin/${item.id}/details`
-                      : `/policy/${item.id}`
-                  }
-                >
-                  {item.title}
-                </Link>
-              </td>
-              <td>
-                <div
-                  dangerouslySetInnerHTML={{
-                    __html: previewHtml(item.description || "")
-                  }}
-                />
-              </td>
-              <td>{item?.references?.map(ref => ref.name).join(", ")}</td>
-              <td>
-                <Button
-                  color=""
-                  onClick={() => onDelete?.(item.id, item.title || "")}
-                >
-                  <FaTrash />
-                </Button>
-              </td>
-            </tr>
+          policies.map((policy) => (
+            <PolicyTableRow
+              key={policy.id}
+              policy={policy}
+              isAdminView={isAdminView}
+              onClick={(id) =>
+                history.push(
+                  isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
+                )
+              }
+              onDelete={() => onDelete?.(policy.id, policy.title || "")}
+              level={0}
+            />
           ))
         ) : (
           <tr>
-            <td colSpan={4}>
+            <td colSpan={8}>
               <EmptyAttribute />
             </td>
           </tr>
@@ -72,3 +64,92 @@ export default function PoliciesTable({
     </Table>
   );
 }
+
+const PolicyTableRow = ({
+  policy,
+  onClick,
+  onDelete,
+  isAdminView,
+  level = 0,
+}: {
+  policy: Omit<Policy, "createdAt" | "visit">;
+  onClick: (id: string) => void;
+  onDelete: () => void;
+  level?: number;
+  isAdminView?: boolean;
+}) => {
+  const [showChild, setShowChild] = useState(false);
+  const toggleChild = () => setShowChild((s) => !s);
+  const id = policy.id || "";
+  const childs = policy.children || [];
+  const hasChild = Array.isArray(childs) && !!childs.length;
+
+  function handleDelete(event: React.MouseEvent<any, MouseEvent>) {
+    event.stopPropagation();
+    onDelete();
+  }
+
+  return (
+    <>
+      <tr key={id}>
+        <td>
+          {hasChild && (
+            <Button onClick={toggleChild} color="" className="text-secondary">
+              {showChild ? <FaFolderOpen /> : <FaFolder />}
+            </Button>
+          )}
+        </td>
+        <td>
+          <div
+            style={level ? { marginLeft: level * 10 } : {}}
+            className="d-flex align-items-center"
+          >
+            {level > 0 && (
+              <MdSubdirectoryArrowRight color="grey" className="mr-1" />
+            )}
+            <Link
+              to={isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`}
+            >
+              {policy.title}
+            </Link>
+          </div>
+        </td>
+
+        <td>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: previewHtml(policy.description || "", 200),
+            }}
+          />
+        </td>
+        <td>{policy.policyCategory?.name || ""}</td>
+        <td>{policy.references?.map((item) => item.name).join(", ")}</td>
+        <td>
+          <DisplayStatus>{policy.status}</DisplayStatus>
+        </td>
+        <td>
+          <DateHover withIcon>{policy.updatedAt}</DateHover>
+        </td>
+        <td className="action">
+          <Tooltip description="Delete Policy">
+            <Button onClick={handleDelete} className="soft red" color="">
+              <FaTrash />
+            </Button>
+          </Tooltip>
+        </td>
+      </tr>
+      {childs.length && showChild
+        ? childs.map((childPol) => (
+            <PolicyTableRow
+              key={childPol.id}
+              policy={childPol}
+              onClick={onClick}
+              onDelete={onDelete}
+              level={level + 1}
+              isAdminView={isAdminView}
+            />
+          ))
+        : null}
+    </>
+  );
+};

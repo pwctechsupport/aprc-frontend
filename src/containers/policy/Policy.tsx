@@ -107,7 +107,7 @@ export default function Policy({
   const { id } = match.params;
 
   const { loading, data } = usePolicyQuery({
-    variables: { id },
+    variables: { id, withChild: true },
     fetchPolicy: "network-only",
     pollInterval: 30000,
   });

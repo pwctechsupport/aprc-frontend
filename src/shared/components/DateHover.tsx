@@ -12,10 +12,10 @@ interface DateHoverProps {
 export default function DateHover({ children, withIcon }: DateHoverProps) {
   return (
     <Tooltip description={date(children)}>
-      <div>
+      <span className="text-secondary">
         {withIcon && <AiOutlineClockCircle className="mr-1" />}
         {humanizeDate(children)}
-      </div>
+      </span>
     </Tooltip>
   );
 }
