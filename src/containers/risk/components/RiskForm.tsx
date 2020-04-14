@@ -63,7 +63,8 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
       <Form onSubmit={handleSubmit(submit)}>
         <Input
           name="name"
-          label="Name"
+          label="Name*"
+          placeholder="Name"
           innerRef={register({ required: true })}
           error={errors.name && errors.name.message}
         />
@@ -80,7 +81,8 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
         />
         <Select
           name="levelOfRisk"
-          label="Level of Risk"
+          placeholder="Level of Risk"
+          label="Level of Risk*"
           options={levelOfRisks}
           onChange={handleChange("levelOfRisk")}
           error={errors.levelOfRisk && errors.levelOfRisk.message}
@@ -90,7 +92,8 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
         />
         <Select
           name="typeOfRisk"
-          label={capitalCase("typeOfRisk")}
+          placeholder="Type Of Risk"
+          label={capitalCase("typeOfRisk") + "*"}
           options={typeOfRisks}
           onChange={handleChange("typeOfRisk")}
           error={errors?.typeOfRisk?.message || ""}

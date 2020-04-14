@@ -68,12 +68,13 @@ const PolicyForm = ({
       <Form>
         <Input
           name="title"
-          label="Title"
+          label="Title*"
+          placeholder="Title"
           innerRef={register({ required: true })}
           error={errors.title && errors.title.message}
         />
         <div className="mb-3">
-          <label>Policy Description</label>
+          <label>Policy Description*</label>
           <TextEditor
             data={watch("description")}
             onChange={onChangeEditor}
@@ -82,7 +83,8 @@ const PolicyForm = ({
         </div>
         <Select
           name="policyCategoryId"
-          label="Policy Category"
+          label="Policy Category*"
+          placeholder="Policy Category"
           options={options}
           onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(

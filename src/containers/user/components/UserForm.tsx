@@ -95,7 +95,8 @@ export default function UserForm(props: UserFormProps) {
       />
 
       <AsyncSelect
-        label="Policy Categories"
+        label="Policy Categories*"
+        placeholder="Policy Categories"
         isMulti
         cacheOptions
         defaultOptions

@@ -13,7 +13,7 @@ import {
   Nature,
   TypeOfControl,
   useBusinessProcessesQuery,
-  useRisksQuery,
+  useRisksQuery
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -27,13 +27,13 @@ const ControlForm = ({
   onSubmit,
   defaultValues,
   submitting,
-  isDraft,
+  isDraft
 }: ControlFormProps) => {
   const { register, handleSubmit, setValue } = useForm<CreateControlFormValues>(
     { defaultValues }
   );
   const [isOpen, setIsOpen] = useState(false);
-  const toogleModal = () => setIsOpen((p) => !p);
+  const toogleModal = () => setIsOpen(p => !p);
   const closeModal = () => {
     setIsOpen(false);
     setSelectActivity("");
@@ -51,7 +51,7 @@ const ControlForm = ({
   const risksQ = useRisksQuery();
   const riskOptions = oc(risksQ)
     .data.risks.collection([])
-    .map((risk) => ({ label: risk.name || "", value: risk.id }));
+    .map(risk => ({ label: risk.name || "", value: risk.id }));
 
   useEffect(() => {
     register({ name: "frequency" });
@@ -64,11 +64,11 @@ const ControlForm = ({
   }, [register]);
 
   const handleSelectChange = (name: keyof CreateControlFormValues) => ({
-    value,
+    value
   }: any) => setValue(name, value);
 
   const pDefVal = (value: any, options: Options) => {
-    return options.find((opt) => opt.value === value);
+    return options.find(opt => opt.value === value);
   };
 
   const description = oc(defaultValues).description("");
@@ -85,30 +85,30 @@ const ControlForm = ({
     const prepare = beforeSubmit(cool).concat(deleteActivity);
     onSubmit?.({
       ...values,
-      activityControlsAttributes: prepare,
+      activityControlsAttributes: prepare
     });
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
     // update
-    const id = cool.filter((c) => String(c.id) === selectActivity);
+    const id = cool.filter(c => String(c.id) === selectActivity);
     if (id.length > 0) {
-      setCool((cool) =>
-        cool.map((c) => {
+      setCool(cool =>
+        cool.map(c => {
           if (String(c.id) === selectActivity) {
             return {
               ...values,
-              id: c.id,
+              id: c.id
             };
           }
           return c;
         })
       );
     } else {
-      setCool((cool) =>
+      setCool(cool =>
         cool.concat({
           ...values,
-          id: "temp" + randomId(1000),
+          id: "temp" + randomId(1000)
         })
       );
     }
@@ -122,18 +122,18 @@ const ControlForm = ({
   };
 
   const handleDelete = (id?: string | number) => {
-    const deleted = cool.find((c) => String(c.id) === String(id));
+    const deleted = cool.find(c => String(c.id) === String(id));
     if (String(deleted?.id).includes("temp")) {
     } else {
       const temp = {
         id: deleted?.id,
         activity: deleted?.activity,
         guidance: deleted?.guidance,
-        _destroy: 1,
+        _destroy: 1
       };
       setDeleteActivity(deleteActivity.concat(temp));
     }
-    setCool(cool.filter((c) => c.id !== id));
+    setCool(cool.filter(c => c.id !== id));
   };
 
   const renderSubmit = () => {
@@ -162,18 +162,24 @@ const ControlForm = ({
   return (
     <Fragment>
       <Form onSubmit={handleSubmit(submit)}>
-        <Input name="description" label="Description" innerRef={register} />
+        <Input
+          name="description"
+          label="Description*"
+          placeholder="Description"
+          innerRef={register}
+        />
 
         <FormSelect
           isMulti
           name="riskIds"
-          label="Risks"
+          label="Risks*"
+          placeholder="Risks"
           isLoading={risksQ.loading}
           register={register}
           setValue={setValue}
           options={riskOptions}
           loading={risksQ.loading}
-          defaultValue={riskOptions.filter((res) =>
+          defaultValue={riskOptions.filter(res =>
             oc(defaultValues)
               .riskIds([])
               .includes(res.value)
@@ -195,7 +201,8 @@ const ControlForm = ({
         <Select
           options={typeOfControls}
           onChange={handleSelectChange("typeOfControl")}
-          label="Type of Controls"
+          label="Type of Controls*"
+          placeholder="Type of Controls"
           defaultValue={pDefVal(typeOfControl, typeOfControls)}
         />
 
@@ -208,7 +215,7 @@ const ControlForm = ({
           setValue={setValue}
           options={bpOptions}
           loading={risksQ.loading}
-          defaultValue={bpOptions.filter((res) =>
+          defaultValue={bpOptions.filter(res =>
             oc(defaultValues)
               .businessProcessIds([])
               .includes(res.value)
@@ -218,14 +225,16 @@ const ControlForm = ({
         <Select
           options={frequencies}
           onChange={handleSelectChange("frequency")}
-          label="Frequency"
+          placeholder="Frequency"
+          label="Frequency*"
           defaultValue={pDefVal(frequency, frequencies)}
         />
 
         <Select
           options={natures}
+          placeholder="Nature"
           onChange={handleSelectChange("nature")}
-          label="Nature"
+          label="Nature*"
           defaultValue={pDefVal(nature, natures)}
         />
 
@@ -234,11 +243,12 @@ const ControlForm = ({
             <FormSelect
               isMulti
               name="assertion"
-              label="Assertions"
+              label="Assertions*"
+              placeholder="Assertions"
               register={register}
               setValue={setValue}
               options={assertions}
-              defaultValue={assertions.filter((res) =>
+              defaultValue={assertions.filter(res =>
                 oc(defaultValues)
                   .assertion([])
                   .includes(res.value)
@@ -249,11 +259,12 @@ const ControlForm = ({
             <FormSelect
               isMulti
               name="ipo"
-              label="IPOs"
+              label="IPOs*"
+              placeholder="IPOs"
               register={register}
               setValue={setValue}
               options={ipos}
-              defaultValue={ipos.filter((res) =>
+              defaultValue={ipos.filter(res =>
                 oc(defaultValues)
                   .ipo([])
                   .includes(res.value)
@@ -261,7 +272,12 @@ const ControlForm = ({
             />
           </Col>
         </Row>
-        <Input name="controlOwner" label="Control Owner" innerRef={register} />
+        <Input
+          name="controlOwner"
+          label="Control Owner*"
+          placeholder="Control Owner"
+          innerRef={register}
+        />
         <span>Control Activites</span>
         <div className="mt-2">
           <Button
@@ -283,7 +299,7 @@ const ControlForm = ({
               </tr>
             </thead>
             <tbody>
-              {cool.map((activity) => (
+              {cool.map(activity => (
                 <tr key={"Row" + activity.id}>
                   <td>{activity.activity}</td>
                   <td>
@@ -315,9 +331,7 @@ const ControlForm = ({
       </Form>
       <Modal isOpen={isOpen} toggle={closeModal} title="Add Control Activity">
         <ActivityModalForm
-          activityDefaultValue={cool.find(
-            (c) => String(c.id) === selectActivity
-          )}
+          activityDefaultValue={cool.find(c => String(c.id) === selectActivity)}
           onSubmit={handleActivitySubmit}
         />
       </Modal>
@@ -332,13 +346,13 @@ const transformActivityControl = (
     activity: input.activity,
     guidance: input.guidance,
     id: Number(input.id),
-    resuploadFileName: input.guidanceFileName,
+    resuploadFileName: input.guidanceFileName
   };
   return output;
 };
 
 const beforeSubmit = (input: MyCoolControlActivity[]) => {
-  const output: MyCoolControlActivity[] = input.map((data) => {
+  const output: MyCoolControlActivity[] = input.map(data => {
     const { resuploadFileName, resupload, ...theRest } = data;
     if (String(theRest.id).includes("temp")) {
       const { id, ...rest } = theRest;
@@ -350,7 +364,7 @@ const beforeSubmit = (input: MyCoolControlActivity[]) => {
         return {
           ...theRest,
           resupload,
-          resupload_file_name: resuploadFileName,
+          resupload_file_name: resuploadFileName
         };
       else return theRest;
     }
@@ -365,14 +379,14 @@ const randomId = (max: number) => {
 
 const ActivityModalForm = ({
   activityDefaultValue,
-  onSubmit,
+  onSubmit
 }: ActivityControlModalProps) => {
   const [error, setError] = useState<string | null>(null);
   const [activityType, setActivityType] = useState(
     activityDefaultValue?.resupload ? "attachment" : "text"
   );
   const { register, handleSubmit, setValue } = useForm<MyCoolControlActivity>({
-    defaultValues: activityDefaultValue,
+    defaultValues: activityDefaultValue
   });
 
   useEffect(() => {
@@ -391,7 +405,7 @@ const ActivityModalForm = ({
         ![
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "application/pdf",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         ].includes(file.type)
       ) {
         setError("File type not supported. Allowed type are: PDF, Excel, Word");
@@ -468,27 +482,27 @@ export default ControlForm;
 
 const frequencies = Object.entries(Frequency).map(([label, value]) => ({
   label: capitalCase(value),
-  value,
+  value
 }));
 
 const typeOfControls = Object.entries(TypeOfControl).map(([label, value]) => ({
   label: capitalCase(value),
-  value,
+  value
 }));
 
 const natures = Object.entries(Nature).map(([label, value]) => ({
   label: capitalCase(value),
-  value,
+  value
 }));
 
 const ipos = Object.entries(Ipo).map(([label, value]) => ({
   label: capitalCase(value),
-  value,
+  value
 }));
 
 const assertions = Object.entries(Assertion).map(([label, value]) => ({
   label: capitalCase(value),
-  value,
+  value
 }));
 
 // -------------------------------------------------------------------------

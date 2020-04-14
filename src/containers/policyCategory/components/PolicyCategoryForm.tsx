@@ -42,7 +42,7 @@ const PolicyCategoryForm = ({
   };
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <Input name="name" innerRef={register} label="Name" />
+      <Input name="name" innerRef={register} placeholder="Name" label="Name*" />
       <AsyncSelect
         name="policyIds"
         label="Related Policies"

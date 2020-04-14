@@ -25,7 +25,7 @@ const BusinessProcessForm = ({
     >
       <Input
         name="name"
-        placeholder="Business Process Name"
+        placeholder="Business Process Name*"
         innerRef={register}
         required
       />
