@@ -21,7 +21,7 @@ import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
-import { toBase64, toLabelValue, Suggestions } from "../../../shared/formatter";
+import { toBase64, toLabelValue } from "../../../shared/formatter";
 
 const ControlForm = ({
   onSubmit,
