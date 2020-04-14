@@ -24,6 +24,7 @@ const CreateUser = ({ history }: RouteComponentProps) => {
           passwordConfirmation: values.passwordConfirmation || "",
           phone: values.phone || "",
           roleIds: values.roleIds?.map(a => a.value),
+          departmentId: values.departmentIds?.value,
           policyCategoryIds: values.policyCategoryIds?.map(a => a.value)
         }
       }
