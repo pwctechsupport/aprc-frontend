@@ -256,7 +256,6 @@ const SubPolicyAttributeForm = ({
             .includes(res.value)
         )}
       />
-
       <FormSelect
         isMulti
         isLoading={businessProcessesQ.loading}
@@ -274,6 +273,22 @@ const SubPolicyAttributeForm = ({
       />
       <FormSelect
         isMulti
+        isLoading={risksQ.loading}
+        name="riskIds"
+        register={formModal.register}
+        setValue={formModal.setValue}
+        placeholder="Risk"
+        label="Risk*"
+        isDisabled={checkBp?.length ? false : true}
+        options={risksOptions}
+        defaultValue={risksOptions.filter(res =>
+          oc(defaultValues)
+            .riskIds([])
+            .includes(res.value)
+        )}
+      />{" "}
+      <FormSelect
+        isMulti
         isLoading={controlsQ.loading}
         name="controlIds"
         register={formModal.register}
@@ -288,24 +303,6 @@ const SubPolicyAttributeForm = ({
             .includes(res.value)
         )}
       />
-
-      <FormSelect
-        isMulti
-        isLoading={risksQ.loading}
-        name="riskIds"
-        register={formModal.register}
-        setValue={formModal.setValue}
-        placeholder="Risk"
-        label="Risk*"
-        isDisabled={checkBp?.length ? false : true}
-        options={risksOptions}
-        defaultValue={risksOptions.filter(res =>
-          oc(defaultValues)
-            .riskIds([])
-            .includes(res.value)
-        )}
-      />
-
       <div className=" d-flex justify-content-end">
         <Button
           type="button"
