@@ -270,7 +270,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       { label: "Control ID", value: id },
       { label: "Description", value: description },
 
-      { label: "Control Owner", value: departments.join(", ") },
+      {
+        label: "Control Owner",
+        value: departments.map((a: any) => a.name).join(", ")
+      },
       {
         label: "Key Control",
         value: (

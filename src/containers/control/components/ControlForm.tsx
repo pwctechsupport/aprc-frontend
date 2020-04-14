@@ -22,6 +22,8 @@ import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
+import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
+import { useLoadDepartments } from "../../user/components/UserForm";
 
 const ControlForm = ({
   onSubmit,
@@ -83,9 +85,11 @@ const ControlForm = ({
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
+    const owner = values.controlOwner?.map((a: any) => a.value);
     onSubmit?.({
       ...values,
-      activityControlsAttributes: prepare
+      activityControlsAttributes: prepare,
+      controlOwner: owner
     });
   };
 
@@ -158,6 +162,7 @@ const ControlForm = ({
       );
     }
   };
+  const handleGetDepartments = useLoadDepartments();
 
   return (
     <Fragment>
@@ -271,11 +276,15 @@ const ControlForm = ({
             />
           </Col>
         </Row>
-        <Input
-          name="controlOwner"
+        <AsyncSelect
           label="Control Owner*"
-          placeholder="Control Owner"
-          innerRef={register}
+          cacheOptions
+          defaultOptions
+          name="controlOwner"
+          isMulti
+          register={register}
+          setValue={setValue}
+          loadOptions={handleGetDepartments}
         />
         <span>Control Activites</span>
         <div className="mt-2">
@@ -528,7 +537,7 @@ export interface ControlFormProps {
 }
 
 export interface CreateControlFormValues {
-  controlOwner?: string[];
+  controlOwner?: any;
   typeOfControl: TypeOfControl;
   frequency: Frequency;
   nature: Nature;
