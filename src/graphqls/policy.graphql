@@ -93,13 +93,28 @@ fragment policyBranch on Policy {
   }
 }
 
-query policy($id: ID!) {
+query policy($id: ID!, $withChild: Boolean = false) {
   policy(id: $id) {
+    ...policyFragment
+    children @include(if: $withChild) {
+      ...policyFragment
+      children {
+        ...policyFragment
+        children {
+          ...policyFragment
+          children {
+            ...policyFragment
+            children {
+              ...policyFragment
+            }
+          }
+        }
+      }
+    }
     ancestors {
       id
       title
     }
-    ...policyFragment
     draft {
       id
       objectResult {
@@ -160,23 +175,6 @@ fragment policyFragment on Policy {
   controlCount
   riskCount
   subCount
-  children {
-    id
-    title
-    policyCategory {
-      id
-      name
-    }
-    policyCategoryId
-    references {
-      id
-      name
-    }
-    description
-    parentId
-    createdAt
-    updatedAt
-  }
   resources {
     id
     name

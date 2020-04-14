@@ -204,25 +204,41 @@ const SubPolicyAttributeForm = ({
   const businessProcessesOptions = oc(businessProcessesQ.data)
     .businessProcesses.collection([])
     .map(toLabelValue);
+  const checkBp = formModal.watch("businessProcessIds");
 
-  const controlsQ = useControlsQuery();
+  const [filter, setFilter] = useState({});
+
+  useEffect(() => {
+    setFilter({ business_processes_id_in: checkBp });
+  }, [checkBp]);
+
+  const controlsQ = useControlsQuery({
+    variables: {
+      filter
+    },
+    fetchPolicy: "network-only"
+  });
   const controlsOptions = oc(controlsQ.data)
     .controls.collection([])
     .map(({ id, description }) => ({ label: description || "", value: id }));
-
-  const risksQ = useRisksQuery();
+  const risksQ = useRisksQuery({
+    variables: {
+      filter
+    },
+    fetchPolicy: "network-only"
+  });
   const risksOptions = oc(risksQ.data)
     .risks.collection([])
     .map(toLabelValue);
-  const checkBp = formModal.watch("businessProcessIds");
-  if (
-    resourceQ.loading ||
-    businessProcessesQ.loading ||
-    controlsQ.loading ||
-    risksQ.loading
-  ) {
-    return <LoadingSpinner centered size={30} />;
-  }
+
+  // if (
+  //   resourceQ.loading ||
+  //   businessProcessesQ.loading ||
+  //   controlsQ.loading ||
+  //   risksQ.loading
+  // ) {
+  //   return <LoadingSpinner centered size={30} />;
+  // }
 
   return (
     <Form>

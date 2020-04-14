@@ -6,10 +6,14 @@ import {
   SideBoxItemText,
   SideBoxSearch,
   SideBoxTitle,
-  SideBox,
+  SideBox
 } from "../../../shared/components/SideBox";
 import humanizeDate from "../../../shared/utils/humanizeDate";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import Tooltip from "../../../shared/components/Tooltip";
+import Button from "../../../shared/components/Button";
+import { Link } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
 
 const ReferenceSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -20,7 +24,7 @@ const ReferenceSideBox = () => {
   const [search, setSearch] = useState("");
   const { data, loading } = useReferencesQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { name_cont: search } },
+    variables: { filter: { name_cont: search } }
   });
 
   const references = oc(data)
@@ -33,9 +37,23 @@ const ReferenceSideBox = () => {
   return (
     <SideBox>
       <SideBoxTitle>
-        {isAdmin || isAdminReviewer || isAdminPreparer
-          ? "Policy Reference Admin"
-          : "Policy Reference"}
+        <div className="d-flex justify-content-between">
+          {isAdmin || isAdminReviewer || isAdminPreparer
+            ? "Policy Reference Admin"
+            : "Policy Reference"}
+          {(isAdmin || isAdminReviewer || isAdminPreparer) && (
+            <Tooltip description="Create Policy">
+              <Button
+                tag={Link}
+                to="/references/create"
+                className="soft red"
+                color=""
+              >
+                <FaPlus />
+              </Button>
+            </Tooltip>
+          )}
+        </div>
       </SideBoxTitle>
       <SideBoxSearch
         search={search}
@@ -43,7 +61,7 @@ const ReferenceSideBox = () => {
         placeholder="Search Policy Reference..."
         loading={loading}
       />
-      {references.map((reference) => {
+      {references.map(reference => {
         return (
           <SideBoxItem
             key={reference.id}

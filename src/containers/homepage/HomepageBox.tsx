@@ -15,7 +15,7 @@ interface HomepageBoxProps {
 export default function HomepageBox({
   list,
   title,
-  basePath
+  basePath,
 }: HomepageBoxProps) {
   const [open, setOpen] = useState(true);
   return (
@@ -23,14 +23,14 @@ export default function HomepageBox({
       <Card className="p-3 box-shadow">
         <div className="d-flex justify-content-between align-items-center">
           <h5>{title}</h5>
-          <BoxHeader onClick={() => setOpen(p => !p)}>
+          <BoxHeader onClick={() => setOpen((p) => !p)}>
             <Icon open={open} />
           </BoxHeader>
         </div>
         <Collapse isOpen={open}>
           <div>
             {list.length ? (
-              list.map(item => (
+              list.map((item) => (
                 <StyledLink
                   key={item.value}
                   to={
@@ -43,7 +43,7 @@ export default function HomepageBox({
                   <div className="mr-3">
                     <Circle>{item.label.charAt(0).toUpperCase()}</Circle>
                   </div>
-                  {item.label}
+                  <StyledSpan>{item.label}</StyledSpan>
                 </StyledLink>
               ))
             ) : (
@@ -55,6 +55,12 @@ export default function HomepageBox({
     </div>
   );
 }
+
+const StyledSpan = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
 
 const StyledLink = styled(Link)`
   color: rgba(0, 0, 0, 0.5);

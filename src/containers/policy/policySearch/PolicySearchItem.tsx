@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Policy } from "../../../generated/graphql";
 import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import { previewHtml } from "../../../shared/formatter";
+import DateHover from "../../../shared/components/DateHover";
 
 interface PolicySearchItemProps {
   policy: Omit<Policy, "createdAt">;
@@ -16,7 +17,8 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
     risks,
     controls,
     resources,
-    references
+    references,
+    updatedAt,
   } = policy;
 
   const noAttribute =
@@ -36,7 +38,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
               <StyledLi>
                 <Names> Risks</Names>
                 <ul>
-                  {risks?.map(risk => (
+                  {risks?.map((risk) => (
                     <StyledTd key={risk.id}>
                       <Link to={`/policy/${id}/details/#risks`}>
                         {risk.name}
@@ -50,7 +52,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
               <StyledLi>
                 <Names>Controls:</Names>
                 <ul>
-                  {controls?.map(control => (
+                  {controls?.map((control) => (
                     <StyledTd key={control.id}>
                       <Link to={`/policy/${id}/details/#controls`}>
                         {control.description}
@@ -64,7 +66,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
               <StyledLi>
                 <Names>Resources:</Names>
                 <ul>
-                  {resources?.map(resource => (
+                  {resources?.map((resource) => (
                     <StyledTd key={resource.id}>
                       <Link to={`/policy/${id}/resources`}>
                         {resource.name}
@@ -78,7 +80,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
               <StyledLi>
                 <Names>References:</Names>
                 <ul>
-                  {references?.map(reference => (
+                  {references?.map((reference) => (
                     <StyledTd key={reference.id}>
                       <Link to={`/policy/${id}/details/#references`}>
                         {reference.name}
@@ -93,6 +95,9 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
       </AttributeSection>
       <TitleAndDescriptionSection>
         <StyledLink to={`/policy/${id}/details`}>
+          <div className="text-right">
+            <DateHover withIcon>{updatedAt}</DateHover>
+          </div>
           <div>
             <StyledTitle>
               <strong>{title}</strong>

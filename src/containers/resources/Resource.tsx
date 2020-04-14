@@ -34,6 +34,8 @@ import {
 } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
+import { APP_ROOT_URL } from "../../settings";
+import DisplayStatus from "../../shared/components/DisplayStatus";
 
 type TParams = { id: string };
 
@@ -53,14 +55,14 @@ export default function Resource({
     variables: { id },
     fetchPolicy: "network-only",
   });
-  // const resourceId = data?.resource?.id || "";
-  // const bpId = data?.resource?.businessProcess?.id || "";
-  // const resourceTitle = data?.resource?.name || "";
   const name = data?.resource?.name || "";
   const rating = data?.resource?.rating || 0;
   const totalRating = data?.resource?.totalRating || 0;
   const visit = data?.resource?.visit || 0;
+  const resourceFileType = data?.resource?.resourceFileType;
+  const businessProcess = data?.resource?.businessProcess;
   const resuploadUrl = data?.resource?.resuploadUrl;
+  const category = data?.resource?.category;
   const resuploadLink = data?.resource?.resuploadLink;
   const policies = data?.resource?.policies || [];
   const controls = data?.resource?.controls || [];
@@ -77,7 +79,9 @@ export default function Resource({
   });
   const imagePreviewUrl = resuploadLink
     ? resuploadLink
-    : `http://mandalorian.rubyh.co${resuploadUrl}`;
+    : resuploadUrl && !resuploadLink?.includes("original/missing.png")
+    ? `${APP_ROOT_URL}${resuploadUrl}`
+    : undefined;
 
   // Delete handlers
   const [deleteMutation, deleteInfo] = useDestroyResourceMutation({
@@ -183,8 +187,8 @@ export default function Resource({
   const defaultValues: ResourceFormValues = {
     name,
     category: {
-      label: data?.resource?.category || "",
-      value: data?.resource?.category || "",
+      label: category || "",
+      value: category || "",
     },
     businessProcessId: toLabelValue(data?.resource?.businessProcess || {}),
     controlIds:
@@ -223,28 +227,24 @@ export default function Resource({
               totalRating={totalRating}
               views={visit}
               imagePreviewUrl={imagePreviewUrl}
+              resourceFileType={resourceFileType}
             />
           </Col>
           <Col xs={12} lg={6}>
             <div className="mt-5 mt-lg-0">
               <h5>
-                Category:&nbsp;
-                <span className="text-orange">{data?.resource?.category}</span>
+                Status: <DisplayStatus>{status}</DisplayStatus>
               </h5>
-              <div>
-                <h5 className="mt-5">Status:</h5>
-                {status ? (
-                  <ul>
-                    <li>{status}</li>
-                  </ul>
-                ) : (
-                  <EmptyAttribute centered={false} />
-                )}
-              </div>
-              {data?.resource?.category === "Flowchart" ? (
+              <h5 className="mt-5">
+                Category:&nbsp;
+                <span className="text-orange">{category}</span>
+              </h5>
+              {category === "Flowchart" ? (
                 <>
                   <h5 className="mt-5">Business Process:</h5>
-                  {data.resource.businessProcess?.name}
+                  <Link to={`/business-process/${businessProcess?.id}`}>
+                    {businessProcess?.name}
+                  </Link>
                 </>
               ) : (
                 <>

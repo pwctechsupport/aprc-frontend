@@ -1,8 +1,9 @@
 import React from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import ReferenceSideBox from "./components/ReferenceSideBox";
 import References from "./References";
+import CreateReference from "./CreateReference";
 
 const ReferenceRoute = () => {
   return (
@@ -12,7 +13,14 @@ const ReferenceRoute = () => {
           <Route path="/references" component={ReferenceSideBox} />
         </Col>
         <Col md={9} className="p-4">
-          <Route path="/references" component={References} />
+          <Route exact path="/references" component={References} />
+          <Switch>
+            <Route
+              exact
+              path="/references/create"
+              component={CreateReference}
+            />
+          </Switch>
         </Col>
       </Row>
     </Container>

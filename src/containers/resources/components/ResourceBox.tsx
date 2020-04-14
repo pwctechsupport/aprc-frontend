@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
+import PlaceholderLink from "../../../assets/images/placeholder-link.png";
+import PlaceholderPdf from "../../../assets/images/placeholder-pdf.png";
+import PlaceholderXls from "../../../assets/images/placeholder-xls.png";
 import {
   useCreateResourceRatingMutation,
   useDestroyResourceAttachmentMutation,
   useUpdateResourceVisitMutation,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
+import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import StarRating from "../../../shared/components/StarRating";
 import Tooltip from "../../../shared/components/Tooltip";
 import useDialogBox from "../../../shared/hooks/useDialogBox";
@@ -21,6 +25,7 @@ interface ResourceBoxProps {
   rating: number;
   imagePreviewUrl: string | undefined;
   totalRating: number;
+  resourceFileType: string | null | undefined;
 }
 
 export default function ResourceBox({
@@ -30,9 +35,9 @@ export default function ResourceBox({
   rating,
   totalRating,
   imagePreviewUrl,
+  resourceFileType,
 }: ResourceBoxProps) {
   const dialogBox = useDialogBox();
-  const [previewAvailable, setPreivewAvailable] = useState(true);
 
   // Hanlde delete attachment
   const [
@@ -88,14 +93,40 @@ export default function ResourceBox({
     link.parentNode && link.parentNode.removeChild(link);
   };
 
+  function renderImage() {
+    if (!imagePreviewUrl) {
+      return (
+        <div className="d-flex justify-content-center align-items-center py-5 my-5">
+          <EmptyAttribute />
+        </div>
+      );
+    }
+    if (
+      resourceFileType?.includes("png") ||
+      resourceFileType?.includes("jpg")
+    ) {
+      return (
+        <ResourceBoxImagePreview
+          src={imagePreviewUrl}
+          alt={name}
+          onClick={handleDownload}
+        />
+      );
+    }
+    if (resourceFileType?.includes("xls")) {
+      return <ResourceBoxImagePreview src={PlaceholderXls} />;
+    }
+    if (resourceFileType?.includes("pdf")) {
+      return <ResourceBoxImagePreview src={PlaceholderPdf} />;
+    }
+    return <ResourceBoxImagePreview src={PlaceholderLink} />;
+  }
+
   return (
     <ResourceBoxContainer>
-      <ResourceBoxImagePreview
-        src={imagePreviewUrl}
-        onError={() => setPreivewAvailable(false)}
-        alt={name}
-        onClick={handleDownload}
-      />
+      <div className="d-flex justify-content-center align-items-center py-1">
+        {renderImage()}
+      </div>
       <ResourceBoxMeta>
         <div>{name}</div>
         <ResourceBoxMetaWrapper>
@@ -112,7 +143,7 @@ export default function ResourceBox({
             <Button
               onClick={handleErase}
               loading={deleteAttachmentMutationInfo.loading}
-              disabled={!previewAvailable}
+              disabled={!imagePreviewUrl}
               className="cancel"
               color="primary"
             >
@@ -122,7 +153,7 @@ export default function ResourceBox({
           <Tooltip description="Download resource attachment">
             <Button
               onClick={handleDownload}
-              disabled={!previewAvailable}
+              disabled={!imagePreviewUrl}
               className="pwc"
               color="primary"
             >
@@ -150,7 +181,8 @@ const ResourceBoxMeta = styled.div`
 `;
 
 const ResourceBoxImagePreview = styled.img`
-  width: 100%;
+  max-width: 100%;
+  max-height: 50vh;
   border-image-repeat: stretch;
 `;
 

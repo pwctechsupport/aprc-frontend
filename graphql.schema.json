@@ -3160,6 +3160,18 @@
             "deprecationReason": null
           },
           {
+            "name": "lastUpdatedAt",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "lastUpdatedBy",
             "description": "",
             "args": [],
@@ -6147,6 +6159,18 @@
                 "name": "ID",
                 "ofType": null
               }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "lastUpdatedAt",
+            "description": "",
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
@@ -20644,6 +20668,16 @@
             "defaultValue": null
           },
           {
+            "name": "lastUpdatedAt",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "clientMutationId",
             "description": "",
             "type": {
@@ -21576,6 +21610,16 @@
             "defaultValue": null
           },
           {
+            "name": "lastUpdatedAt",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "clientMutationId",
             "description": "",
             "type": {
@@ -22309,6 +22353,16 @@
           },
           {
             "name": "lastUpdatedBy",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "lastUpdatedAt",
             "description": "",
             "type": {
               "kind": "SCALAR",
