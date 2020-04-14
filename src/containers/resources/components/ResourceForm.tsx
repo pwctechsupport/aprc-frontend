@@ -122,7 +122,7 @@ ResourceFormProps) {
         <Fragment>
           <AsyncSelect
             name="policyIds"
-            label="Related Policies**"
+            label="Related Policies*"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -133,7 +133,7 @@ ResourceFormProps) {
           />
           <AsyncSelect
             name="controlIds"
-            label="Related Control**"
+            label="Related Control*"
             register={register}
             setValue={setValue}
             cacheOptions

@@ -92,8 +92,8 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
         />
         <Select
           name="typeOfRisk"
-          placeholder="Type Of Risk"
-          label={capitalCase("typeOfRisk") + "*"}
+          placeholder="Type of Risk"
+          label={"Type of Risk*"}
           options={typeOfRisks}
           onChange={handleChange("typeOfRisk")}
           error={errors?.typeOfRisk?.message || ""}

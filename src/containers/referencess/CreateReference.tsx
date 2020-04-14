@@ -72,7 +72,12 @@ const CreateReference = ({ history }: RouteComponentProps) => {
       <Form onSubmit={handleSubmit(submit)} className="mb-4">
         <Row>
           <Col className="mt-3">
-            <Input name="name" label="Name" innerRef={register} />
+            <Input
+              name="name"
+              label="Name*"
+              innerRef={register}
+              placeholder="Name"
+            />
             <FormFeedback>{errors.name && errors.name.message}</FormFeedback>
           </Col>
         </Row>
@@ -80,7 +85,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
           <Col>
             <AsyncSelect
               name="policyIds"
-              label="Related Policies"
+              label="Related Policies*"
               placeholder="Select"
               register={register}
               setValue={setValue}
