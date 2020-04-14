@@ -63,6 +63,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
     },
     fetchPolicy: "network-only"
   });
+  console.log("data", data);
   const [deleteBookmarks, deleteBookmarksM] = useDestroyBookmarkMutation({
     refetchQueries: ["bookmarks"],
     onError: notifyGraphQLErrors,
@@ -125,7 +126,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   }
   const onSubmit = (values: any) => {
     setFilter({
-      originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_cont:
+      originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_or_originator_type_cont:
         values.title,
       created_at_gteq: constructDateFilter(labelTime)
     });
