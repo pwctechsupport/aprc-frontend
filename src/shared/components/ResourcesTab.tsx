@@ -4,7 +4,7 @@ import { useDebounce } from "use-debounce/lib";
 import {
   CreateResourceInput,
   useCreateResourceMutation,
-  useResourcesQuery,
+  useResourcesQuery
 } from "../../generated/graphql";
 import Button from "./Button";
 import EmptyAttribute from "./EmptyAttribute";
@@ -16,12 +16,12 @@ import Tooltip from "./Tooltip";
 import useListState from "../hooks/useList";
 import { notifyGraphQLErrors, notifySuccess } from "../utils/notif";
 import ResourceForm, {
-  ResourceFormValues,
+  ResourceFormValues
 } from "../../containers/resources/components/ResourceForm";
 
 export default function ResourcesTab({
   queryFilters,
-  formDefaultValues,
+  formDefaultValues
 }: {
   queryFilters: any;
   formDefaultValues: ResourceFormValues;
@@ -29,7 +29,7 @@ export default function ResourcesTab({
   // Pagination state handlers
   const { limit, page, handlePageChange } = useListState({
     limit: 10,
-    page: 1,
+    page: 1
   });
 
   // Query Resources for current policy
@@ -41,18 +41,17 @@ export default function ResourcesTab({
       filter: {
         name_cont: debouncedSearch,
         // policies_id_in: policyId,
-        ...queryFilters,
+        ...queryFilters
       },
       limit,
-      page,
-    },
+      page
+    }
   });
   const resources = data?.resources?.collection || [];
   const totalCount = data?.resources?.metadata?.totalCount || 0;
-
   // Modal state handlers
   const [addResourceModal, setAddResourceModal] = useState(false);
-  const toggleAddResourceModal = () => setAddResourceModal((prev) => !prev);
+  const toggleAddResourceModal = () => setAddResourceModal(prev => !prev);
 
   // Create Resource handlers
   const [createResource, createResourceM] = useCreateResourceMutation({
@@ -62,22 +61,22 @@ export default function ResourcesTab({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resources"],
+    refetchQueries: ["resources"]
   });
   function handleCreateResource(values: ResourceFormValues) {
     const input: CreateResourceInput = {
       name: values.name || "",
       category: values.category?.value || "",
       resuploadBase64: values.resuploadBase64,
-      policyIds: values.policyIds?.map((a) => a.value),
-      controlIds: values.controlIds?.map((a) => a.value),
+      policyIds: values.policyIds?.map(a => a.value),
+      controlIds: values.controlIds?.map(a => a.value),
       businessProcessId: values.businessProcessId?.value,
-      resuploadLink: values.resuploadLink,
+      resuploadLink: values.resuploadLink
     };
     createResource({
       variables: {
-        input,
-      },
+        input
+      }
     });
   }
 
@@ -101,8 +100,8 @@ export default function ResourcesTab({
         </Tooltip>
       </div>
       {resources.length ? (
-        resources.map((resource) => (
-          <ResourceBar key={resource.id} {...resource} />
+        resources.map(resource => (
+          <ResourceBar visit={resource.visit} key={resource.id} {...resource} />
         ))
       ) : (
         <EmptyAttribute centered>No Resource</EmptyAttribute>
