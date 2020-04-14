@@ -66,7 +66,6 @@ ResourceFormProps) {
     defaultValues,
     validationSchema
   });
-  console.log(validationSchema ? "ada" : "tiada");
   const [activityType, setActivityType] = useState("text");
   const [tags, setTags] = useState(defaultValues?.tagsAttributes || []);
   const [preview, setPreview] = useState<string | null>(
@@ -87,7 +86,6 @@ ResourceFormProps) {
 
   const selectedCategory = watch("category");
   const selectedBusinessProcess = watch("businessProcessId");
-
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <Input
@@ -106,7 +104,9 @@ ResourceFormProps) {
         loadOptions={handleGetCategories}
         defaultOptions
         defaultValue={defaultValues?.category}
+        error={errors.category && (errors.category as any)?.label.message}
       />
+
       {selectedCategory?.value === "Flowchart" ? (
         <AsyncSelect
           name="businessProcessId"
@@ -117,6 +117,10 @@ ResourceFormProps) {
           loadOptions={handleGetBps}
           defaultOptions
           defaultValue={defaultValues?.businessProcessId}
+          error={
+            errors.policyIds &&
+            "Related sub-business process is a required field"
+          }
         />
       ) : (
         <Fragment>
@@ -130,6 +134,7 @@ ResourceFormProps) {
             defaultOptions
             defaultValue={defaultValues?.policyIds || []}
             isMulti
+            error={errors.policyIds && errors.policyIds.message}
           />
           <AsyncSelect
             name="controlIds"
@@ -141,6 +146,7 @@ ResourceFormProps) {
             defaultOptions
             defaultValue={defaultValues?.controlIds || []}
             isMulti
+            error={errors.policyIds && errors.policyIds.message}
           />
         </Fragment>
       )}
@@ -177,6 +183,7 @@ ResourceFormProps) {
             name="resuploadLink"
             placeholder="Type image URL..."
             innerRef={register}
+            error={errors.resuploadLink && errors.resuploadLink.message}
           />
         ) : (
           <FileInput
@@ -184,6 +191,7 @@ ResourceFormProps) {
             register={register}
             setValue={setValue}
             onFileSelect={setPreview}
+            errorForm={errors.resuploadLink && errors.resuploadLink.message}
           />
         )}
       </div>
@@ -219,25 +227,24 @@ ResourceFormProps) {
 // ==========================================
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required(),
+  name: yup.string().required("Name is a required field"),
   category: yup.object().shape({
-    label: yup.string().required(),
+    label: yup.string().required("Category is a required field"),
     value: yup.string().required()
   }),
   controlIds: yup.array(),
-  businessProcessId: yup.object().shape({
-    label: yup.string().required(),
-    value: yup.string().required()
-  }),
+  businessProcessId: yup.object(),
   policyIds: yup.array().when(["controlIds", "businessProcessId"], {
     is: undefined,
-    then: yup.array().required(),
+    then: yup
+      .array()
+      .required("Please select related policies or related control"),
     otherwise: yup.array()
   }),
   resuploadBase64: yup.string(),
   resuploadLink: yup.string().when("resuploadBase64", {
     is: undefined,
-    then: yup.string().required(),
+    then: yup.string().required("Please insert URL or attachment"),
     otherwise: yup.string()
   })
 });

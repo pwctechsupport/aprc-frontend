@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toBase64 } from "../../formatter";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import styled, { css } from "styled-components";
+import { FormText } from "reactstrap";
 
 interface FileInputProps {
   name: string;
@@ -9,6 +10,7 @@ interface FileInputProps {
   setValue: Function;
   supportedFileTypes?: string[];
   onFileSelect?: (data: string) => void;
+  errorForm?: string;
 }
 
 const defaultSupportedFileTypes = ["image/jpeg", "image/png"];
@@ -16,6 +18,7 @@ const defaultSupportedFileTypes = ["image/jpeg", "image/png"];
 export default function FileInput({
   name,
   register,
+  errorForm,
   setValue,
   supportedFileTypes = defaultSupportedFileTypes,
   onFileSelect
@@ -111,6 +114,11 @@ export default function FileInput({
           <AiOutlineExclamationCircle />
           &nbsp;{error}
         </span>
+      )}
+      {errorForm && (
+        <FormText className="text-danger pl-3" color="red">
+          {errorForm}
+        </FormText>
       )}
     </div>
   );

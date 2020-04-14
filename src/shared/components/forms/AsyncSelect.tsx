@@ -1,7 +1,7 @@
 import classnames from "classnames";
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import AsyncReactSelect, { Props } from "react-select/async";
-import { Col, FormGroup, Label } from "reactstrap";
+import { Col, FormGroup, Label, FormText } from "reactstrap";
 import { Suggestions } from "../../formatter";
 
 export default function AsyncSelect({
@@ -12,6 +12,7 @@ export default function AsyncSelect({
   row,
   label,
   required,
+  defaultValue,
   ...rest
 }: AsyncSelectProps) {
   useEffect(() => {
@@ -27,14 +28,21 @@ export default function AsyncSelect({
     //   setValue(name, e && e.value);
     // }
   }
-
   const Select = (
-    <AsyncReactSelect
-      {...rest}
-      closeMenuOnSelect={rest.closeMenuOnSelect ?? !rest.isMulti}
-      className={classnames(error ? "invalid" : undefined)}
-      onChange={handleChange}
-    />
+    <Fragment>
+      <AsyncReactSelect
+        {...rest}
+        closeMenuOnSelect={rest.closeMenuOnSelect ?? !rest.isMulti}
+        className={classnames(error ? "invalid" : undefined)}
+        onChange={handleChange}
+        defaultValue={defaultValue}
+      />
+      {error && (
+        <FormText className="text-danger pl-3" color="red">
+          {error}
+        </FormText>
+      )}
+    </Fragment>
   );
   return (
     <FormGroup row={row}>
