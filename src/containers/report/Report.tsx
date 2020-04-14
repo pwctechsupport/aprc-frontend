@@ -1,17 +1,18 @@
 import capitalize from "lodash/startCase";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaDownload, FaFile } from "react-icons/fa";
+import { FaDownload, FaFile, FaUndo } from "react-icons/fa";
 import { Container, Form, FormGroup, Input, Label } from "reactstrap";
 import Button from "../../shared/components/Button";
 import Table from "../../shared/components/Table";
 import {
   DownloadPdfInput,
   downloadPdfs,
-  previewPdfs,
+  previewPdfs
 } from "../../shared/utils/accessGeneratedPdf";
 import { notifyError, notifyInfo } from "../../shared/utils/notif";
+import Tooltip from "../../shared/components/Tooltip";
 
 const reportOptions = [
   {
@@ -19,49 +20,49 @@ const reportOptions = [
     id: "report_risk",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" },
-    ],
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Risk Without Control",
     id: "report_risk_policy",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" },
-    ],
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Control Without Risk",
     id: "report_control_policy",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" },
-    ],
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Resources with rating",
     id: "report_resource_rating",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" },
-    ],
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Unmapped Risk",
     id: "unmapped_risk",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" },
-    ],
+      { id: "xlsx", name: "Excel" }
+    ]
   },
   {
     name: "Unmapped Control",
     id: "unmapped_control",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" },
-    ],
-  },
+      { id: "xlsx", name: "Excel" }
+    ]
+  }
 ];
 
 export default function Report() {
@@ -77,18 +78,18 @@ export default function Report() {
         const bro = values[key];
         return { name: key, format: bro };
       })
-      .filter((a) => Boolean(a.format))
+      .filter(a => Boolean(a.format))
       .map(({ name, format }) => {
         const fileName = `${
-          reportOptions.find((a) => a.id === name)?.name
+          reportOptions.find(a => a.id === name)?.name
         }.${format}`;
         return {
           url: `/prints/${name}.${format}`,
           options: {
             fileType: format,
             fileName,
-            onError: () => notifyError(`Error accessing ${fileName}`),
-          },
+            onError: () => notifyError(`Error accessing ${fileName}`)
+          }
         };
       });
   };
@@ -110,6 +111,7 @@ export default function Report() {
   return (
     <Container fluid className="p-0 pt-3 px-4">
       <h4>Exception Report</h4>
+
       <Form>
         <Table>
           <thead>
@@ -132,7 +134,7 @@ export default function Report() {
 
                   <td>
                     <FormGroup tag="fieldset">
-                      {option.formats.map((format) => (
+                      {option.formats.map(format => (
                         <FormGroup key={format.id} check>
                           <Label check>
                             <Input
@@ -170,6 +172,11 @@ export default function Report() {
           >
             <FaDownload /> Download
           </Button>
+          <Tooltip description="Reset Selected Format">
+            <Button type="reset" className="black ml-5">
+              <FaUndo />
+            </Button>
+          </Tooltip>
         </div>
       </Form>
       <Helmet>
