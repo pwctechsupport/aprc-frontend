@@ -6,7 +6,7 @@ import {
   AiOutlineClockCircle,
   AiOutlineEdit
 } from "react-icons/ai";
-import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
+import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Badge, Col, Container, Row } from "reactstrap";
 import {

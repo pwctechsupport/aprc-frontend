@@ -6,7 +6,7 @@ import {
   AiOutlineClockCircle,
   AiOutlineEdit
 } from "react-icons/ai";
-import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
+import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import { RouteComponentProps, Link } from "react-router-dom";
 import {
   useApproveRequestEditMutation,

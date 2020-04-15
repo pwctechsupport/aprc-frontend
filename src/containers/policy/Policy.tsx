@@ -21,7 +21,6 @@ import {
   FaFilePdf,
   FaMinus,
   FaPlus,
-  FaTimes,
   FaTrash
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
