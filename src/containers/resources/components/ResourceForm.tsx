@@ -135,6 +135,7 @@ ResourceFormProps) {
             defaultValue={defaultValues?.policyIds || []}
             isMulti
             error={errors.policyIds && errors.policyIds.message}
+            isResourcePolicy
           />
           <AsyncSelect
             name="controlIds"
