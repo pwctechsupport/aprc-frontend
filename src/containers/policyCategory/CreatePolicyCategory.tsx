@@ -35,7 +35,12 @@ const CreatePolicyCategory = ({ history }: RouteComponentProps) => {
         <title>Create - Policy Category - PricewaterhouseCoopers</title>
       </Helmet>
       <h4>Create Policy Category</h4>
-      <PolicyCategoryForm onSubmit={handleCreate} submitting={loading} />
+      <PolicyCategoryForm
+        onSubmit={handleCreate}
+        submitting={loading}
+        history={history}
+        isCreate={history.location.pathname === "/policy-category/create"}
+      />
     </div>
   );
 };

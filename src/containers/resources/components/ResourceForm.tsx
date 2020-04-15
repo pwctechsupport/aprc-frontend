@@ -27,6 +27,7 @@ import {
 } from "../../../shared/formatter";
 import useDialogBox from "../../../shared/hooks/useDialogBox";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import DialogButton from "../../../shared/components/DialogButton";
 // import Flowchart from "../../riskAndControl/components/Flowchart";
 
 interface ResourceFormProps {
@@ -38,6 +39,9 @@ interface ResourceFormProps {
   resourceId?: string;
   bpId?: string;
   resourceTitle?: string;
+  toggleEditMode?: any;
+  isCreate?: boolean;
+  history?: any;
 }
 
 export interface ResourceFormValues {
@@ -55,7 +59,10 @@ export interface ResourceFormValues {
 export default function ResourceForm({
   defaultValues,
   onSubmit,
-  submitting
+  submitting,
+  toggleEditMode,
+  history,
+  isCreate
 }: // isDraft,
 ResourceFormProps) {
   const dialogBox = useDialogBox();
@@ -218,6 +225,25 @@ ResourceFormProps) {
         >
           {defaultValues?.name ? "Save" : "Submit"}
         </Button>
+        {isCreate ? (
+          <DialogButton
+            className="black px-5 ml-2"
+            style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
+            onConfirm={() => history.replace(`/resources`)}
+            isCreate
+          >
+            Cancel
+          </DialogButton>
+        ) : (
+          <DialogButton
+            className="black px-5 ml-2"
+            style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
+            onConfirm={toggleEditMode}
+            isEdit
+          >
+            Cancel
+          </DialogButton>
+        )}
       </div>
     </Form>
   );

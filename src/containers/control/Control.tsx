@@ -215,12 +215,11 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     }
     if (premise === 3) {
       if (inEditMode) {
-        return (
-          <Button onClick={toggleEditMode} color="">
-            <FaTimes size={22} className="mr-2" />
-            Cancel Edit
-          </Button>
-        );
+        return null;
+        // <Button onClick={toggleEditMode} color="">
+        //   <FaTimes size={22} className="mr-2" />
+        //   Cancel Edit
+        // </Button>
       }
       return (
         <div className="d-flex">
@@ -401,6 +400,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
           keyControl,
           activityControls
         }}
+        toggleEditMode={toggleEditMode}
         submitting={updateState.loading}
       />
     );

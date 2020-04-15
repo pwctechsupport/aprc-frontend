@@ -18,6 +18,9 @@ const PolicyForm = ({
   onSubmitDraft,
   premise,
   submittingDraft,
+  isCreate,
+  history,
+  toggleEditMode,
   isAdmin = true
 }: PolicyFormProps) => {
   const policyCategoriesState = usePolicyCategoriesQuery();
@@ -112,6 +115,25 @@ const PolicyForm = ({
               {defaultValues ? "Save" : "Submit"}
             </DialogButton>
           )}
+          {isCreate ? (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/policy`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
+          ) : (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={toggleEditMode}
+              isEdit
+            >
+              Cancel
+            </DialogButton>
+          )}
         </div>
       </Form>
     </div>
@@ -150,4 +172,7 @@ export interface PolicyFormProps {
   onSubmitDraft?: any;
   premise?: boolean;
   submittingDraft?: any;
+  isCreate?: boolean;
+  history?: any;
+  toggleEditMode?: any;
 }

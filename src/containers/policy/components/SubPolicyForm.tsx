@@ -25,6 +25,9 @@ const SubPolicyForm = ({
   onSubmitDraft,
   premise,
   submittingDraft,
+  isCreate,
+  history,
+  toggleEditMode,
   isAdmin = true
 }: SubPolicyFormProps) => {
   const {
@@ -154,6 +157,25 @@ const SubPolicyForm = ({
               }
             >
               Save
+            </DialogButton>
+          )}{" "}
+          {isCreate ? (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/policy`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
+          ) : (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={toggleEditMode}
+              isEdit
+            >
+              Cancel
             </DialogButton>
           )}
         </div>
@@ -336,6 +358,9 @@ export interface SubPolicyFormProps {
   onSubmitDraft?: any;
   premise?: boolean;
   submittingDraft?: any;
+  isCreate?: boolean;
+  history?: any;
+  toggleEditMode?: any;
 }
 
 export interface SubPolicyFormValues {

@@ -16,6 +16,7 @@ import Helmet from "react-helmet";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import { RouteComponentProps } from "react-router-dom";
+import DialogButton from "../../shared/components/DialogButton";
 
 function useLoadPolicies() {
   const query = useLazyQueryReturnPromise<PoliciesQuery>(PoliciesDocument);
@@ -99,14 +100,24 @@ const CreateReference = ({ history }: RouteComponentProps) => {
         </Row>
         <Row>
           <Col className="text-right mt-2">
-            <Button
-              type="submit"
-              className="soft red"
-              color=""
+            <DialogButton
+              onConfirm={handleSubmit(submit)}
+              className="pwc px-5"
+              type="button"
+              color="primary"
               loading={createReferenceM.loading}
+              message={"Create new reference?"}
             >
-              Submit{" "}
-            </Button>
+              Submit
+            </DialogButton>
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/references`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
           </Col>
         </Row>
       </Form>

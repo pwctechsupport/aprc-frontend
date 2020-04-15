@@ -20,7 +20,14 @@ import {
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 
-const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
+const RiskForm = ({
+  onSubmit,
+  defaultValues,
+  submitting,
+  toggleEditMode,
+  history,
+  isCreate
+}: RiskFormProps) => {
   const { register, setValue, errors, handleSubmit } = useForm<RiskFormValues>({
     validationSchema,
     defaultValues
@@ -110,6 +117,25 @@ const RiskForm = ({ onSubmit, defaultValues, submitting }: RiskFormProps) => {
           >
             Submit
           </DialogButton>
+          {isCreate ? (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/risk`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
+          ) : (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={toggleEditMode}
+              isEdit
+            >
+              Cancel
+            </DialogButton>
+          )}
         </div>
       </Form>
     </div>
@@ -171,4 +197,7 @@ export interface RiskFormProps {
   onSubmit?: (data: RiskFormValues) => void;
   submitting?: boolean;
   defaultValues?: RiskFormValues;
+  isCreate?: boolean;
+  history?: any;
+  toggleEditMode?: any;
 }

@@ -45,7 +45,12 @@ const CreateUser = ({ history }: RouteComponentProps) => {
             ["/create", "Create"]
           ]}
         />
-        <UserForm onSubmit={handleSubmit} submitting={createM.loading} />
+        <UserForm
+          onSubmit={handleSubmit}
+          submitting={createM.loading}
+          history={history}
+          isCreate={history.location.pathname === "/user/create"}
+        />
       </Container>
     </div>
   );

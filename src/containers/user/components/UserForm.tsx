@@ -16,11 +16,14 @@ import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import { Suggestions, toLabelValue } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import DialogButton from "../../../shared/components/DialogButton";
 
 export interface UserFormProps {
   onSubmit?: (values: UserFormValues) => void;
   defaultValues?: UserFormValues;
   submitting?: boolean;
+  history?: any;
+  isCreate?: boolean;
 }
 
 export interface UserFormValues {
@@ -122,6 +125,16 @@ export default function UserForm(props: UserFormProps) {
         <Button type="submit" className="pwc px-5" loading={props.submitting}>
           Submit
         </Button>
+        {props.isCreate && (
+          <DialogButton
+            className="black px-5 ml-2"
+            style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+            onConfirm={() => props.history.replace(`/user`)}
+            isCreate
+          >
+            Cancel
+          </DialogButton>
+        )}
       </div>
     </Form>
   );

@@ -29,7 +29,10 @@ const ControlForm = ({
   onSubmit,
   defaultValues,
   submitting,
-  isDraft
+  toggleEditMode,
+  history,
+  isDraft,
+  isCreate
 }: ControlFormProps) => {
   const { register, handleSubmit, setValue } = useForm<CreateControlFormValues>(
     { defaultValues }
@@ -158,6 +161,25 @@ const ControlForm = ({
           >
             Submit
           </DialogButton>
+          {isCreate ? (
+            <DialogButton
+              className="black px-5 ml-2 mb-3"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/control`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
+          ) : (
+            <DialogButton
+              className="black px-5 ml-2 mb-3"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={toggleEditMode}
+              isEdit
+            >
+              Cancel
+            </DialogButton>
+          )}
         </div>
       );
     }
@@ -534,6 +556,9 @@ export interface ControlFormProps {
   onSubmit?: (val: CreateControlFormValues) => void;
   submitting?: boolean;
   isDraft?: boolean;
+  toggleEditMode?: any;
+  isCreate?: boolean;
+  history?: any;
 }
 
 export interface CreateControlFormValues {
