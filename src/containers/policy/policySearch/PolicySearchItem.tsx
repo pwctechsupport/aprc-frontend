@@ -18,7 +18,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
     controls,
     resources,
     references,
-    updatedAt,
+    updatedAt
   } = policy;
 
   const noAttribute =
@@ -38,7 +38,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
               <StyledLi>
                 <Names> Risks</Names>
                 <ul>
-                  {risks?.map((risk) => (
+                  {risks?.map(risk => (
                     <StyledTd key={risk.id}>
                       <Link to={`/policy/${id}/details/#risks`}>
                         {risk.name}
@@ -52,7 +52,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
               <StyledLi>
                 <Names>Controls:</Names>
                 <ul>
-                  {controls?.map((control) => (
+                  {controls?.map(control => (
                     <StyledTd key={control.id}>
                       <Link to={`/policy/${id}/details/#controls`}>
                         {control.description}
@@ -66,7 +66,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
               <StyledLi>
                 <Names>Resources:</Names>
                 <ul>
-                  {resources?.map((resource) => (
+                  {resources?.map(resource => (
                     <StyledTd key={resource.id}>
                       <Link to={`/policy/${id}/resources`}>
                         {resource.name}
@@ -80,7 +80,7 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
               <StyledLi>
                 <Names>References:</Names>
                 <ul>
-                  {references?.map((reference) => (
+                  {references?.map(reference => (
                     <StyledTd key={reference.id}>
                       <Link to={`/policy/${id}/details/#references`}>
                         {reference.name}
@@ -186,6 +186,8 @@ const StyledTd = styled.li`
     color: #d85604;
   }
   font-size: 13px;
+  word-break: break-all;
+  width: 140%;
 `;
 
 const StyledLink = styled(Link)`

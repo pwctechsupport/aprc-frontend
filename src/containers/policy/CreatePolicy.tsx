@@ -46,7 +46,12 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
         }
       />
       <HeaderWithBackButton heading="Create Policy" />
-      <PolicyForm onSubmit={handleSubmit} submitting={loading} />
+      <PolicyForm
+        onSubmit={handleSubmit}
+        submitting={loading}
+        history={history}
+        isCreate
+      />
     </div>
   );
 };

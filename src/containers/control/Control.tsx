@@ -6,7 +6,7 @@ import {
   AiOutlineClockCircle,
   AiOutlineEdit
 } from "react-icons/ai";
-import { FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
+import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import { IoMdOpen } from "react-icons/io";
 import { RouteComponentProps } from "react-router";
 import { Col, Row } from "reactstrap";
@@ -215,12 +215,11 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     }
     if (premise === 3) {
       if (inEditMode) {
-        return (
-          <Button onClick={toggleEditMode} color="">
-            <FaTimes size={22} className="mr-2" />
-            Cancel Edit
-          </Button>
-        );
+        return null;
+        // <Button onClick={toggleEditMode} color="">
+        //   <FaTimes size={22} className="mr-2" />
+        //   Cancel Edit
+        // </Button>
       }
       return (
         <div className="d-flex">
@@ -270,7 +269,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       { label: "Control ID", value: id },
       { label: "Description", value: description },
 
-      { label: "Control Owner", value: departments.join(", ") },
+      {
+        label: "Control Owner",
+        value: departments.map((a: any) => a.name).join(", ")
+      },
       {
         label: "Key Control",
         value: (
@@ -398,6 +400,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
           keyControl,
           activityControls
         }}
+        toggleEditMode={toggleEditMode}
         submitting={updateState.loading}
       />
     );

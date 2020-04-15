@@ -8,12 +8,16 @@ import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import { Suggestions, toLabelValue } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import DialogButton from "../../../shared/components/DialogButton";
 
 const PolicyCategoryForm = ({
   defaultValues,
   onSubmit,
+  isCreate,
   submitting,
-  isDraft
+  isDraft,
+  toggleEditMode,
+  history
 }: PolicyCategoryFormProps) => {
   const { register, setValue, handleSubmit } = useForm<
     PolicyCategoryFormValues
@@ -36,13 +40,32 @@ const PolicyCategoryForm = ({
           >
             {oc(defaultValues).name("") ? "Save" : "Submit"}
           </Button>
+          {isCreate ? (
+            <DialogButton
+              className="black ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/policy-category`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
+          ) : (
+            <DialogButton
+              className="black ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={toggleEditMode}
+              isEdit
+            >
+              Cancel
+            </DialogButton>
+          )}
         </div>
       );
     }
   };
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <Input name="name" innerRef={register} label="Name" />
+      <Input name="name" innerRef={register} placeholder="Name" label="Name*" />
       <AsyncSelect
         name="policyIds"
         label="Related Policies"
@@ -71,6 +94,9 @@ interface PolicyCategoryFormProps {
   submitting: boolean;
   defaultValues?: PolicyCategoryFormValues;
   isDraft?: boolean;
+  isCreate?: boolean;
+  history?: any;
+  toggleEditMode?: any;
 }
 
 function useLoadPolicies() {

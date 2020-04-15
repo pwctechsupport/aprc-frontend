@@ -44,7 +44,12 @@ export interface ModalDialogProps extends ModalProps {
 
 const ModalDialog = ({
   message,
-  actions = { yes: "Continue", no: "Cancel" },
+  isCreate,
+  isEdit,
+  actions = {
+    yes: isCreate ? "Discard" : isEdit ? "Discard" : "Continue",
+    no: isCreate ? "Continue Creating" : isEdit ? "Continue Editing" : "Cancel"
+  },
   functions = {},
   disabled,
   ...props

@@ -18,6 +18,9 @@ const PolicyForm = ({
   onSubmitDraft,
   premise,
   submittingDraft,
+  isCreate,
+  history,
+  toggleEditMode,
   isAdmin = true
 }: PolicyFormProps) => {
   const policyCategoriesState = usePolicyCategoriesQuery();
@@ -68,12 +71,13 @@ const PolicyForm = ({
       <Form>
         <Input
           name="title"
-          label="Title"
+          label="Title*"
+          placeholder="Title"
           innerRef={register({ required: true })}
           error={errors.title && errors.title.message}
         />
         <div className="mb-3">
-          <label>Policy Description</label>
+          <label>Policy Description*</label>
           <TextEditor
             data={watch("description")}
             onChange={onChangeEditor}
@@ -82,7 +86,8 @@ const PolicyForm = ({
         </div>
         <Select
           name="policyCategoryId"
-          label="Policy Category"
+          label="Policy Category*"
+          placeholder="Policy Category"
           options={options}
           onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(
@@ -108,6 +113,25 @@ const PolicyForm = ({
               onConfirm={handleSubmit(submit)}
             >
               {defaultValues ? "Save" : "Submit"}
+            </DialogButton>
+          )}
+          {isCreate ? (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/policy`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
+          ) : (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={toggleEditMode}
+              isEdit
+            >
+              Cancel
             </DialogButton>
           )}
         </div>
@@ -148,4 +172,7 @@ export interface PolicyFormProps {
   onSubmitDraft?: any;
   premise?: boolean;
   submittingDraft?: any;
+  isCreate?: boolean;
+  history?: any;
+  toggleEditMode?: any;
 }

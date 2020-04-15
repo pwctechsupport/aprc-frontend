@@ -14,8 +14,9 @@ import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnProm
 import { Suggestions, toLabelValue } from "../../shared/formatter";
 import Helmet from "react-helmet";
 import BreadCrumb from "../../shared/components/BreadCrumb";
-import Button from "../../shared/components/Button";
+// import Button from "../../shared/components/Button";
 import { RouteComponentProps } from "react-router-dom";
+import DialogButton from "../../shared/components/DialogButton";
 
 function useLoadPolicies() {
   const query = useLazyQueryReturnPromise<PoliciesQuery>(PoliciesDocument);
@@ -72,7 +73,12 @@ const CreateReference = ({ history }: RouteComponentProps) => {
       <Form onSubmit={handleSubmit(submit)} className="mb-4">
         <Row>
           <Col className="mt-3">
-            <Input name="name" label="Name" innerRef={register} />
+            <Input
+              name="name"
+              label="Name*"
+              innerRef={register}
+              placeholder="Name"
+            />
             <FormFeedback>{errors.name && errors.name.message}</FormFeedback>
           </Col>
         </Row>
@@ -80,7 +86,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
           <Col>
             <AsyncSelect
               name="policyIds"
-              label="Related Policies"
+              label="Related Policies*"
               placeholder="Select"
               register={register}
               setValue={setValue}
@@ -94,14 +100,24 @@ const CreateReference = ({ history }: RouteComponentProps) => {
         </Row>
         <Row>
           <Col className="text-right mt-2">
-            <Button
-              type="submit"
-              className="soft red"
-              color=""
+            <DialogButton
+              onConfirm={handleSubmit(submit)}
+              className="pwc px-5"
+              type="button"
+              color="primary"
               loading={createReferenceM.loading}
+              message={"Create new reference?"}
             >
-              Submit{" "}
-            </Button>
+              Submit
+            </DialogButton>
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/references`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
           </Col>
         </Row>
       </Form>

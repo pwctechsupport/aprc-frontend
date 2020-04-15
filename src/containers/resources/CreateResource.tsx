@@ -43,7 +43,6 @@ const CreateResource = ({ history }: RouteComponentProps) => {
 
     createResource({ variables: { input } });
   }
-
   return (
     <div>
       <Helmet>
@@ -59,6 +58,8 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       <ResourceForm
         onSubmit={handleSubmit}
         submitting={createResourceM.loading}
+        isCreate={history.location.pathname === "/resources/create"}
+        history={history}
       />
     </div>
   );

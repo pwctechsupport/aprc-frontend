@@ -9,7 +9,7 @@ import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const CreateControl = ({ history }: RouteComponentProps) => {
   const [create, { loading }] = useCreateControlMutation({
-    onCompleted: (res) => {
+    onCompleted: res => {
       toast.success("Create Success");
       history.push("/control");
       const id = oc(res).createControl.control.id("");
@@ -17,7 +17,7 @@ const CreateControl = ({ history }: RouteComponentProps) => {
     },
     onError: () => toast.error("Create Failed"),
     refetchQueries: ["controls"],
-    awaitRefetchQueries: true,
+    awaitRefetchQueries: true
   });
   const submit = (values: CreateControlFormValues) => {
     create({
@@ -31,9 +31,9 @@ const CreateControl = ({ history }: RouteComponentProps) => {
           frequency: values.frequency || "",
           nature: values.nature || "",
           assertion: values.assertion || [],
-          ipo: values.ipo || [],
-        },
-      },
+          ipo: values.ipo || []
+        }
+      }
     });
   };
 
@@ -42,11 +42,16 @@ const CreateControl = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/control", "Controls"],
-          ["/control/create", "Create Control"],
+          ["/control/create", "Create Control"]
         ]}
       />
       <HeaderWithBackButton heading="Create Control" />
-      <ControlForm onSubmit={submit} submitting={loading} />
+      <ControlForm
+        onSubmit={submit}
+        submitting={loading}
+        history={history}
+        isCreate={history.location.pathname === "/control/create"}
+      />
     </div>
   );
 };

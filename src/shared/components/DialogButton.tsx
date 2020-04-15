@@ -25,6 +25,8 @@ const DialogButton = ({
   onReject,
   actions,
   loading,
+  isCreate,
+  isEdit,
   ...btnProps
 }: DialogButtonProps) => {
   const [isOpen, setIsOpen] = useState<boolean>();
@@ -54,6 +56,8 @@ const DialogButton = ({
         {children}
       </Button>
       <ModalDialog
+        isCreate={isCreate}
+        isEdit={isEdit}
         isOpen={isOpen}
         title={title}
         message={message}

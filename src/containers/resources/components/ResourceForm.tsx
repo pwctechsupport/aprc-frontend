@@ -27,6 +27,7 @@ import {
 } from "../../../shared/formatter";
 import useDialogBox from "../../../shared/hooks/useDialogBox";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import DialogButton from "../../../shared/components/DialogButton";
 // import Flowchart from "../../riskAndControl/components/Flowchart";
 
 interface ResourceFormProps {
@@ -38,6 +39,9 @@ interface ResourceFormProps {
   resourceId?: string;
   bpId?: string;
   resourceTitle?: string;
+  toggleEditMode?: any;
+  isCreate?: boolean;
+  history?: any;
 }
 
 export interface ResourceFormValues {
@@ -55,7 +59,10 @@ export interface ResourceFormValues {
 export default function ResourceForm({
   defaultValues,
   onSubmit,
-  submitting
+  submitting,
+  toggleEditMode,
+  history,
+  isCreate
 }: // isDraft,
 ResourceFormProps) {
   const dialogBox = useDialogBox();
@@ -66,7 +73,6 @@ ResourceFormProps) {
     defaultValues,
     validationSchema
   });
-  console.log(validationSchema ? "ada" : "tiada");
   const [activityType, setActivityType] = useState("text");
   const [tags, setTags] = useState(defaultValues?.tagsAttributes || []);
   const [preview, setPreview] = useState<string | null>(
@@ -87,7 +93,6 @@ ResourceFormProps) {
 
   const selectedCategory = watch("category");
   const selectedBusinessProcess = watch("businessProcessId");
-
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <Input
@@ -106,7 +111,9 @@ ResourceFormProps) {
         loadOptions={handleGetCategories}
         defaultOptions
         defaultValue={defaultValues?.category}
+        error={errors.category && (errors.category as any)?.label.message}
       />
+
       {selectedCategory?.value === "Flowchart" ? (
         <AsyncSelect
           name="businessProcessId"
@@ -117,12 +124,16 @@ ResourceFormProps) {
           loadOptions={handleGetBps}
           defaultOptions
           defaultValue={defaultValues?.businessProcessId}
+          error={
+            errors.policyIds &&
+            "Related sub-business process is a required field"
+          }
         />
       ) : (
         <Fragment>
           <AsyncSelect
             name="policyIds"
-            label="Related Policies**"
+            label="Related Policies*"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -130,10 +141,12 @@ ResourceFormProps) {
             defaultOptions
             defaultValue={defaultValues?.policyIds || []}
             isMulti
+            error={errors.policyIds && errors.policyIds.message}
+            isResourcePolicy
           />
           <AsyncSelect
             name="controlIds"
-            label="Related Control**"
+            label="Related Control*"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -141,6 +154,7 @@ ResourceFormProps) {
             defaultOptions
             defaultValue={defaultValues?.controlIds || []}
             isMulti
+            error={errors.policyIds && errors.policyIds.message}
           />
         </Fragment>
       )}
@@ -177,6 +191,7 @@ ResourceFormProps) {
             name="resuploadLink"
             placeholder="Type image URL..."
             innerRef={register}
+            error={errors.resuploadLink && errors.resuploadLink.message}
           />
         ) : (
           <FileInput
@@ -184,6 +199,7 @@ ResourceFormProps) {
             register={register}
             setValue={setValue}
             onFileSelect={setPreview}
+            errorForm={errors.resuploadLink && errors.resuploadLink.message}
           />
         )}
       </div>
@@ -209,6 +225,25 @@ ResourceFormProps) {
         >
           {defaultValues?.name ? "Save" : "Submit"}
         </Button>
+        {isCreate ? (
+          <DialogButton
+            className="black px-5 ml-2"
+            style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
+            onConfirm={() => history.replace(`/resources`)}
+            isCreate
+          >
+            Cancel
+          </DialogButton>
+        ) : (
+          <DialogButton
+            className="black px-5 ml-2"
+            style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
+            onConfirm={toggleEditMode}
+            isEdit
+          >
+            Cancel
+          </DialogButton>
+        )}
       </div>
     </Form>
   );
@@ -219,25 +254,24 @@ ResourceFormProps) {
 // ==========================================
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required(),
+  name: yup.string().required("Name is a required field"),
   category: yup.object().shape({
-    label: yup.string().required(),
+    label: yup.string().required("Category is a required field"),
     value: yup.string().required()
   }),
   controlIds: yup.array(),
-  businessProcessId: yup.object().shape({
-    label: yup.string().required(),
-    value: yup.string().required()
-  }),
+  businessProcessId: yup.object(),
   policyIds: yup.array().when(["controlIds", "businessProcessId"], {
     is: undefined,
-    then: yup.array().required(),
+    then: yup
+      .array()
+      .required("Please select related policies or related control"),
     otherwise: yup.array()
   }),
   resuploadBase64: yup.string(),
   resuploadLink: yup.string().when("resuploadBase64", {
     is: undefined,
-    then: yup.string().required(),
+    then: yup.string().required("Please insert URL or attachment"),
     otherwise: yup.string()
   })
 });

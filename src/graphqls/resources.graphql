@@ -21,6 +21,7 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
       resourceFileType
       createdAt
       createdBy
+      visit
       updatedAt
       lastUpdatedBy
     }

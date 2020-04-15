@@ -21,11 +21,11 @@ export default function ResourceBar({
   id,
   resuploadUrl,
   rating = 0,
-  visit = 0,
-  totalRating = 0,
+  visit,
+  totalRating = 0
 }: ResourceBarProps) {
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
-    refetchQueries: ["resources"],
+    refetchQueries: ["resources"]
   });
 
   return (
@@ -86,8 +86,8 @@ const ResourceBarContainer = styled.div`
 `;
 
 const ResourceBarDivider = styled.div<{ width?: string; align?: string }>`
-  width: ${(p) => p.width + "%"};
-  text-align: ${(p) => p.align};
+  width: ${p => p.width + "%"};
+  text-align: ${p => p.align};
   margin: 0px 5px;
 `;
 

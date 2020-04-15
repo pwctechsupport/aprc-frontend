@@ -22,12 +22,17 @@ import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
+import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
+import { useLoadDepartments } from "../../user/components/UserForm";
 
 const ControlForm = ({
   onSubmit,
   defaultValues,
   submitting,
-  isDraft
+  toggleEditMode,
+  history,
+  isDraft,
+  isCreate
 }: ControlFormProps) => {
   const { register, handleSubmit, setValue } = useForm<CreateControlFormValues>(
     { defaultValues }
@@ -83,9 +88,11 @@ const ControlForm = ({
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
+    const owner = values.controlOwner?.map((a: any) => a.value);
     onSubmit?.({
       ...values,
-      activityControlsAttributes: prepare
+      activityControlsAttributes: prepare,
+      controlOwner: owner
     });
   };
 
@@ -154,20 +161,46 @@ const ControlForm = ({
           >
             Submit
           </DialogButton>
+          {isCreate ? (
+            <DialogButton
+              className="black px-5 ml-2 mb-3"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/control`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
+          ) : (
+            <DialogButton
+              className="black px-5 ml-2 mb-3"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={toggleEditMode}
+              isEdit
+            >
+              Cancel
+            </DialogButton>
+          )}
         </div>
       );
     }
   };
+  const handleGetDepartments = useLoadDepartments();
 
   return (
     <Fragment>
       <Form onSubmit={handleSubmit(submit)}>
-        <Input name="description" label="Description" innerRef={register} />
+        <Input
+          name="description"
+          label="Description*"
+          placeholder="Description"
+          innerRef={register}
+        />
 
         <FormSelect
           isMulti
           name="riskIds"
-          label="Risks"
+          label="Risks*"
+          placeholder="Risks"
           isLoading={risksQ.loading}
           register={register}
           setValue={setValue}
@@ -195,7 +228,8 @@ const ControlForm = ({
         <Select
           options={typeOfControls}
           onChange={handleSelectChange("typeOfControl")}
-          label="Type of Controls"
+          label="Type of Controls*"
+          placeholder="Type of Controls"
           defaultValue={pDefVal(typeOfControl, typeOfControls)}
         />
 
@@ -218,14 +252,16 @@ const ControlForm = ({
         <Select
           options={frequencies}
           onChange={handleSelectChange("frequency")}
-          label="Frequency"
+          placeholder="Frequency"
+          label="Frequency*"
           defaultValue={pDefVal(frequency, frequencies)}
         />
 
         <Select
           options={natures}
+          placeholder="Nature"
           onChange={handleSelectChange("nature")}
-          label="Nature"
+          label="Nature*"
           defaultValue={pDefVal(nature, natures)}
         />
         <Row form>
@@ -233,7 +269,8 @@ const ControlForm = ({
             <FormSelect
               isMulti
               name="assertion"
-              label="Assertions"
+              label="Assertions*"
+              placeholder="Assertions"
               register={register}
               setValue={setValue}
               options={assertions}
@@ -248,7 +285,8 @@ const ControlForm = ({
             <FormSelect
               isMulti
               name="ipo"
-              label="IPOs"
+              label="IPOs*"
+              placeholder="IPOs"
               register={register}
               setValue={setValue}
               options={ipos}
@@ -260,7 +298,16 @@ const ControlForm = ({
             />
           </Col>
         </Row>
-        <Input name="controlOwner" label="Control Owner" innerRef={register} />
+        <AsyncSelect
+          label="Control Owner*"
+          cacheOptions
+          defaultOptions
+          name="controlOwner"
+          isMulti
+          register={register}
+          setValue={setValue}
+          loadOptions={handleGetDepartments}
+        />
         <span>Control Activites</span>
         <div className="mt-2">
           <Button
@@ -509,10 +556,13 @@ export interface ControlFormProps {
   onSubmit?: (val: CreateControlFormValues) => void;
   submitting?: boolean;
   isDraft?: boolean;
+  toggleEditMode?: any;
+  isCreate?: boolean;
+  history?: any;
 }
 
 export interface CreateControlFormValues {
-  controlOwner?: string[];
+  controlOwner?: any;
   typeOfControl: TypeOfControl;
   frequency: Frequency;
   nature: Nature;

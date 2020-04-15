@@ -25,6 +25,9 @@ const SubPolicyForm = ({
   onSubmitDraft,
   premise,
   submittingDraft,
+  isCreate,
+  history,
+  toggleEditMode,
   isAdmin = true
 }: SubPolicyFormProps) => {
   const {
@@ -97,12 +100,13 @@ const SubPolicyForm = ({
       <Form>
         <Input
           name="title"
-          label="Sub-Policy Title"
+          label="Sub-Policy Title*"
+          placeholder="Sub-Policy Title"
           innerRef={register({ required: true })}
           error={errors.title && errors.title.message}
         />
         <div className="mb-3">
-          <label>Policy Description</label>
+          <label>Policy Description*</label>
           <TextEditor
             data={watch("description")}
             onChange={handleEditorChange}
@@ -110,7 +114,8 @@ const SubPolicyForm = ({
           />
         </div>
         <Select
-          label="Sub-Policy Reference"
+          label="Sub-Policy Reference*"
+          placeholder="Sub-Policy Reference"
           onChange={handleReferenceChange}
           options={references}
           isMulti
@@ -152,6 +157,25 @@ const SubPolicyForm = ({
               }
             >
               Save
+            </DialogButton>
+          )}{" "}
+          {isCreate ? (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={() => history.replace(`/policy`)}
+              isCreate
+            >
+              Cancel
+            </DialogButton>
+          ) : (
+            <DialogButton
+              className="black px-5 ml-2"
+              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
+              onConfirm={toggleEditMode}
+              isEdit
+            >
+              Cancel
             </DialogButton>
           )}
         </div>
@@ -254,14 +278,14 @@ const SubPolicyAttributeForm = ({
             .includes(res.value)
         )}
       />
-
       <FormSelect
         isMulti
         isLoading={businessProcessesQ.loading}
         name="businessProcessIds"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Business Processes"
+        label="Business Processes*"
+        placeholder="Business Processes"
         options={businessProcessesOptions}
         defaultValue={businessProcessesOptions.filter(res =>
           oc(defaultValues)
@@ -271,11 +295,28 @@ const SubPolicyAttributeForm = ({
       />
       <FormSelect
         isMulti
+        isLoading={risksQ.loading}
+        name="riskIds"
+        register={formModal.register}
+        setValue={formModal.setValue}
+        placeholder="Risk"
+        label="Risk*"
+        isDisabled={checkBp?.length ? false : true}
+        options={risksOptions}
+        defaultValue={risksOptions.filter(res =>
+          oc(defaultValues)
+            .riskIds([])
+            .includes(res.value)
+        )}
+      />{" "}
+      <FormSelect
+        isMulti
         isLoading={controlsQ.loading}
         name="controlIds"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Control"
+        placeholder="Control"
+        label="Control*"
         isDisabled={checkBp?.length ? false : true}
         options={controlsOptions}
         defaultValue={controlsOptions.filter(res =>
@@ -284,23 +325,6 @@ const SubPolicyAttributeForm = ({
             .includes(res.value)
         )}
       />
-
-      <FormSelect
-        isMulti
-        isLoading={risksQ.loading}
-        name="riskIds"
-        register={formModal.register}
-        setValue={formModal.setValue}
-        label="Risk"
-        isDisabled={checkBp?.length ? false : true}
-        options={risksOptions}
-        defaultValue={risksOptions.filter(res =>
-          oc(defaultValues)
-            .riskIds([])
-            .includes(res.value)
-        )}
-      />
-
       <div className=" d-flex justify-content-end">
         <Button
           type="button"
@@ -334,6 +358,9 @@ export interface SubPolicyFormProps {
   onSubmitDraft?: any;
   premise?: boolean;
   submittingDraft?: any;
+  isCreate?: boolean;
+  history?: any;
+  toggleEditMode?: any;
 }
 
 export interface SubPolicyFormValues {
