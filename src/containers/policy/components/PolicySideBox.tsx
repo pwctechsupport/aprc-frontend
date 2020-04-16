@@ -151,7 +151,11 @@ const PolicyBranch = ({
               : `/policy/${id}/details`
           }
         >
-          {title}
+          {title
+            ? title?.length > 80
+              ? title?.substring(0, 80) + "..."
+              : title
+            : null}
         </SideBoxBranchTitle>
       </SideBoxBranch>
       {hasChild && (

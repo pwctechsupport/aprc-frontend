@@ -16,7 +16,7 @@ const BusinessProcessSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
   const [searchValue, setSearchValue] = useState("");
   const [searchQuery] = useDebounce(searchValue, 400);
@@ -47,7 +47,11 @@ const BusinessProcessSideBox = () => {
         {bps.map((bp) => (
           <SideBoxItem key={bp.id} to={`/business-process/${bp.id}`}>
             <SideBoxItemText flex={2} bold>
-              {bp.name}
+              {bp.name
+                ? bp.name?.length > 60
+                  ? bp.name?.substring(0, 60) + "..."
+                  : bp.name
+                : null}
             </SideBoxItemText>
             <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(bp.updatedAt)}

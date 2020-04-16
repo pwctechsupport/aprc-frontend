@@ -112,7 +112,7 @@ interface SideBoxItemTextProps {
 
 export const SideBoxItemText = styled.div<SideBoxItemTextProps>`
   flex: ${(p) => p.flex || 1};
-  white-space: nowrap;
+  /* white-space: nowrap; */
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -160,7 +160,7 @@ export const SideBoxBranchTitle = styled.div`
   text-decoration: none;
   width: 75%;
   overflow: hidden;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   text-overflow: ellipsis;
   color: var(--primary-color);
   font-weight: bold;

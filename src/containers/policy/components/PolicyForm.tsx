@@ -21,14 +21,14 @@ const PolicyForm = ({
   isCreate,
   history,
   toggleEditMode,
-  isAdmin = true
+  isAdmin = true,
 }: PolicyFormProps) => {
   const policyCategoriesState = usePolicyCategoriesQuery();
   const { register, setValue, watch, errors, handleSubmit } = useForm<
     PolicyFormValues
   >({
     validationSchema,
-    defaultValues
+    defaultValues,
   });
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const PolicyForm = ({
           options={options}
           onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(
-            option => option.value === policyCategoryId
+            (option) => option.value === policyCategoryId
           )}
           error={errors.policyCategoryId && errors.policyCategoryId.message}
         />
@@ -149,7 +149,7 @@ export default PolicyForm;
 const validationSchema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string().required(),
-  policyCategoryId: yup.string().required()
+  policyCategoryId: yup.string().required(),
 });
 
 // ---------------------------------------------------

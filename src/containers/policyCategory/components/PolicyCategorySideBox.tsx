@@ -56,7 +56,13 @@ const PolicyCategorySideBox = () => {
           key={policyCateg.id}
           to={`/policy-category/${policyCateg.id}`}
         >
-          <SideBoxItemText bold>{policyCateg.name}</SideBoxItemText>
+          <SideBoxItemText bold>
+            {policyCateg.name
+              ? policyCateg.name?.length > 80
+                ? policyCateg.name?.substring(0, 80) + "..."
+                : policyCateg.name
+              : null}
+          </SideBoxItemText>
         </SideBoxItem>
       ))}
     </SideBox>
