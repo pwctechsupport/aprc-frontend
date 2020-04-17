@@ -2,7 +2,7 @@ import uniqueId from "lodash/uniqueId";
 import React, { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { GroupType } from "react-select";
+// import { GroupType } from "react-select";
 import Async from "react-select/async";
 import Switch from "react-switch";
 import styled, { keyframes } from "styled-components";
@@ -420,9 +420,7 @@ function useLoadRiskAndControls({
     value: { [key]: f.value },
   });
 
-  async function getSuggestions(
-    name: string = ""
-  ): Promise<GroupType<FlowchartSuggestion>[]> {
+  async function getSuggestions(name: string = "") {
     try {
       const { data } = await query({
         filter: {
@@ -431,6 +429,7 @@ function useLoadRiskAndControls({
           business_processes_id_eq: bpId,
         },
       });
+
       const options = [
         {
           label: "Risks",
@@ -444,12 +443,17 @@ function useLoadRiskAndControls({
         },
         {
           label: "Controls",
-          options:
-            data.controls?.collection
-              .filter(({ id }) => !restrictedControlIds.includes(id))
-              .map(({ id, description }) => ({ id, name: description }))
-              .map(toLabelValue)
-              .map(constructValue("controlId")) || [],
+          options: data.risks?.collection
+            .map((a) =>
+              a.controls
+                ? a.controls
+                    .filter(({ id }) => !restrictedControlIds.includes(id))
+                    .map(({ id, description }) => ({ id, name: description }))
+                    .map(toLabelValue)
+                    .map(constructValue("controlId")) || []
+                : null
+            )
+            .flat(),
         },
       ];
       return options;

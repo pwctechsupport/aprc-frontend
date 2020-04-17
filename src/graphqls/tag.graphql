@@ -22,16 +22,13 @@ query risksOrControls($filter: BaseScalar = {}) {
     collection {
       id
       name
-    }
-  }
-  controls(filter: $filter) {
-    collection {
-      id
-      description
+      controls {
+        id
+        description
+      }
     }
   }
 }
-
 mutation createTag($input: CreateTagInput!) {
   createTag(input: $input) {
     success
