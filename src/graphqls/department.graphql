@@ -3,6 +3,8 @@ query departments($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
     collection {
       name
       id
+      createdAt
+      updatedAt
       users {
         name
         id
@@ -15,5 +17,22 @@ query departments($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
         }
       }
     }
+  }
+}
+mutation createDepartment($input: CreateDepartmentInput!) {
+  createDepartment(input: $input) {
+    success
+    errors
+  }
+}
+mutation destroyDepartment($id: ID!) {
+  destroyDepartment(input: { id: $id }) {
+    clientMutationId
+  }
+}
+mutation updateDepartment($input: UpdateDepartmentInput!) {
+  updateDepartment(input: $input) {
+    success
+    errors
   }
 }

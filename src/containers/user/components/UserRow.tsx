@@ -42,8 +42,12 @@ export default function UserRow({ user, ...props }: UserRowProps) {
   const [isEdit, setIsEdit] = useState(props.isEdit);
   const { register, setValue, handleSubmit, errors } = useForm<UserRowValues>({
     defaultValues: {
-      roleIds: oc(user).roles([]).map(toLabelValue),
-      policyCategoryIds: oc(user).policyCategories([]).map(toLabelValue),
+      roleIds: oc(user)
+        .roles([])
+        .map(toLabelValue),
+      policyCategoryIds: oc(user)
+        .policyCategories([])
+        .map(toLabelValue),
     },
     validationSchema,
   });
@@ -287,7 +291,7 @@ export default function UserRow({ user, ...props }: UserRowProps) {
         <td>{oc(user).id("")}</td>
         <td>
           <AsyncSelect
-            isMulti
+            // isMulti
             cacheOptions
             defaultOptions
             name="roleIds"
