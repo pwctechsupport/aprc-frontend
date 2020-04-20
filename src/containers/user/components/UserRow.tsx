@@ -321,6 +321,17 @@ export default function UserRow({ user, ...props }: UserRowProps) {
           >
             Save
           </Button>
+          <Button
+            // loading={updateM.loading}
+            className="ml-1 black"
+            style={{
+              backgroundColor: "rgba(233, 236, 239, 1)",
+              color: "black",
+            }}
+            onClick={toggleEdit}
+          >
+            Cancel
+          </Button>
         </td>
       </tr>
     );
