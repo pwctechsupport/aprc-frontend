@@ -1,20 +1,23 @@
-import React from 'react'
-import classnames from 'classnames'
-import ReactQuill, { Quill } from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-
+import React from "react";
+import classnames from "classnames";
+import ReactQuill, { Quill } from "react-quill";
+import "react-quill/dist/quill.snow.css";
+// import QuillBetterTable from 'quill-better-table'
 export interface TextEditorProps {
-  wrapperClassName?: string
-  data?: string
-  onChange?: (content: string) => void
-  invalid?: boolean
+  wrapperClassName?: string;
+  data?: string;
+  onChange?: (content: string) => void;
+  invalid?: boolean;
 }
 
-const fontSize = Quill.import('attributors/style/size')
-const defaultFontSize = 13
-const fontSizes = [16, 18, 20, 24, 30]
-fontSize.whitelist = [`${defaultFontSize}px`, ...fontSizes.map(s => `${s}px`)]
-Quill.register(fontSize, true)
+const fontSize = Quill.import("attributors/style/size");
+const defaultFontSize = 13;
+const fontSizes = [16, 18, 20, 24, 30];
+fontSize.whitelist = [
+  `${defaultFontSize}px`,
+  ...fontSizes.map((s) => `${s}px`),
+];
+Quill.register(fontSize, true);
 
 const QuillCustomToolbar = () => (
   <div id="toolbar">
@@ -22,7 +25,11 @@ const QuillCustomToolbar = () => (
       <select className="ql-font"></select>
     </span>
     <span className="ql-formats">
-      <select className="ql-header" defaultValue={""} onChange={e => e.persist()}>
+      <select
+        className="ql-header"
+        defaultValue={""}
+        onChange={(e) => e.persist()}
+      >
         <option value="1"></option>
         <option value="2"></option>
         <option selected></option>
@@ -31,10 +38,12 @@ const QuillCustomToolbar = () => (
     <span className="ql-formats">
       <select className="ql-size">
         <option selected>{defaultFontSize}</option>
-        {fontSizes.map(size => {
+        {fontSizes.map((size) => {
           return (
-            <option key={size} value={`${size}px`}>{size}</option>
-          )
+            <option key={size} value={`${size}px`}>
+              {size}
+            </option>
+          );
         })}
       </select>
     </span>
@@ -64,7 +73,7 @@ const QuillCustomToolbar = () => (
       <button className="ql-clean"></button>
     </span>
   </div>
-)
+);
 
 const TextEditor = ({
   data,
@@ -75,41 +84,41 @@ const TextEditor = ({
   return (
     <div
       className={classnames([
-        'editor-wrapper',
+        "editor-wrapper",
         wrapperClassName,
-        invalid && 'invalid',
+        invalid && "invalid",
       ])}
     >
-      <QuillCustomToolbar/>
+      <QuillCustomToolbar />
       <ReactQuill
-        value={data || ''}
+        value={data || ""}
         onChange={onChange}
         modules={{
           toolbar: {
-            container: '#toolbar'
+            container: "#toolbar",
           },
         }}
         formats={[
-          'header',
-          'size',
-          'bold',
-          'italic',
-          'underline',
-          'color',
-          'background',
-          'font',
-          'align',
-          'strike',
-          'blockquote',
-          'list',
-          'bullet',
-          'indent',
-          'link',
-          'image',
+          "header",
+          "size",
+          "bold",
+          "italic",
+          "underline",
+          "color",
+          "background",
+          "font",
+          "align",
+          "strike",
+          "blockquote",
+          "list",
+          "bullet",
+          "indent",
+          "link",
+          "image",
         ]}
       />
     </div>
-  )
-}
+  );
+};
 
-export default TextEditor
+export default TextEditor;
