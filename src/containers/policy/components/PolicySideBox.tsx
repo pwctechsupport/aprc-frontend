@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
-import { usePolicyTreeQuery } from "../../../generated/graphql";
+import { useSideboxPolicyQuery } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import {
   SideBox,
@@ -27,7 +27,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
 
   // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
   // When isTree = false, it just query all the policies, to be rendered as search result.
-  const { data, loading } = usePolicyTreeQuery({
+  const { data, loading } = useSideboxPolicyQuery({
     variables: {
       filter: {
         ...(!searchQuery && {
@@ -35,10 +35,11 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
         }),
         title_cont: searchQuery,
       },
+      limit: 10,
       isTree: !searchQuery,
     },
   });
-  const policies = data?.policies?.collection || [];
+  const policies = data?.sidebarPolicies?.collection || [];
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
