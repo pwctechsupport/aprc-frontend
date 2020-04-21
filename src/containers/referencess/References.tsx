@@ -6,7 +6,7 @@ import {
   FaFileImport,
   FaPencilAlt,
   FaTimes,
-  FaTrash
+  FaTrash,
 } from "react-icons/fa";
 import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -15,7 +15,7 @@ import {
   Reference,
   useDestroyReferenceMutation,
   useReferencesQuery,
-  useUpdateReferenceMutation
+  useUpdateReferenceMutation,
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
@@ -30,13 +30,13 @@ import {
   notifyError,
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess
+  notifySuccess,
 } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const References = () => {
   const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal(p => !p);
+  const toggleImportModal = () => setModal((p) => !p);
 
   const { data, loading } = useReferencesQuery();
   const references = data?.references?.collection || [];
@@ -45,11 +45,11 @@ const References = () => {
   const [destroyReference, destroyM] = useDestroyReferenceMutation({
     refetchQueries: ["references"],
     onCompleted: () => notifySuccess("Delete Success"),
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -57,7 +57,7 @@ const References = () => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(references.map(n => n.id));
+      setSelected(references.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -66,13 +66,13 @@ const References = () => {
     downloadXls(
       "/prints/reference_excel.xlsx",
       {
-        reference_ids: selected.map(Number)
+        reference_ids: selected.map(Number),
       },
       {
         fileName: "Policy Reference.xlsx",
         onStart: () => notifyInfo("Download Dimulai"),
         onCompleted: () => notifySuccess("Download Berhasil"),
-        onError: () => notifyError("Download Gagal")
+        onError: () => notifyError("Download Gagal"),
       }
     );
   }
@@ -149,7 +149,7 @@ const References = () => {
             </tr>
           </thead>
           <tbody>
-            {references.map(reference => {
+            {references.map((reference) => {
               return (
                 <ReferenceRow
                   toggleCheck={() => toggleCheck(reference.id)}
@@ -166,7 +166,6 @@ const References = () => {
           </tbody>
         </Table>
       </div>
-      )
     </div>
   );
 };
@@ -178,15 +177,15 @@ const ReferenceRow = ({
   onDelete,
   deleteLoading,
   selected,
-  toggleCheck
+  toggleCheck,
 }: ReferenceRowProps) => {
   const { register, handleSubmit, setValue } = useForm<ReferenceRowFormValues>({
     defaultValues: {
       name: reference.name || "",
       policyIds: oc(reference)
         .policies([])
-        .map(toLabelValue)
-    }
+        .map(toLabelValue),
+    },
   });
   const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
   async function handleGetPolicies(input: string) {
@@ -199,7 +198,7 @@ const ReferenceRow = ({
     }
   }
   const [edit, setEdit] = useState(false);
-  const toggleEdit = () => setEdit(p => !p);
+  const toggleEdit = () => setEdit((p) => !p);
   const [update, updateM] = useUpdateReferenceMutation({
     awaitRefetchQueries: true,
     refetchQueries: ["references"],
@@ -207,7 +206,7 @@ const ReferenceRow = ({
       notifySuccess("Update Success");
       toggleEdit();
     },
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
 
   function updateReference(values: ReferenceRowFormValues) {
@@ -217,15 +216,15 @@ const ReferenceRow = ({
         input: {
           id: reference.id || "",
           name: values.name,
-          policyIds: values.policyIds.map(a => a.value)
-        }
-      }
+          policyIds: values.policyIds.map((a) => a.value),
+        },
+      },
     });
   }
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
   return (
     <tr>
@@ -234,7 +233,7 @@ const ReferenceRow = ({
           <input
             type="checkbox"
             checked={selected}
-            onClick={e => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
             onChange={toggleCheck}
           />
         </td>
@@ -277,7 +276,7 @@ const ReferenceRow = ({
               .map(toLabelValue)}
           />
         ) : (
-          reference.policies?.map(a => a.title).join(", ")
+          reference.policies?.map((a) => a.title).join(", ")
         )}
       </td>
       <td>{reference.updatedAt.split("T")[0]}</td>
