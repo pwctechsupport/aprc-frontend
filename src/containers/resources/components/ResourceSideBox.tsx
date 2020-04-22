@@ -21,13 +21,9 @@ const ResourceSideBox = () => {
   const [searchQuery] = useDebounce(search, 400);
   const [limit, setLimit] = useState(25);
   const onScroll = (e: any) => {
-    const scroll = e.target.scrollHeight - e.target.scrollTop - 881;
-    if (
-      scroll === 0 ||
-      scroll === 64 ||
-      (scroll > 0 && scroll < 10) ||
-      (scroll < 0 && scroll > -10)
-    ) {
+    const scroll =
+      e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
+    if (scroll === 0) {
       setLimit(limit + 25);
     }
   };
