@@ -112,7 +112,7 @@ const PolicyForm = ({
               className="pwc px-5"
               onConfirm={handleSubmit(submit)}
             >
-              {defaultValues ? "Save" : "Submit"}
+              Save As Draft
             </DialogButton>
           )}
           {isCreate ? (
