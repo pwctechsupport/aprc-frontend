@@ -26,9 +26,13 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   // const isAdmin = location.pathname.split("/")[1] === "policy-admin";
   const [limit, setLimit] = useState(25);
   const onScroll = (e: any) => {
-    const test = e.target.scrollHeight - e.target.scrollTop - 881;
-    console.log("test", test);
-    if (test === 0 || test === 64) {
+    const scroll = e.target.scrollHeight - e.target.scrollTop - 881;
+    if (
+      scroll === 0 ||
+      scroll === 64 ||
+      (scroll > 0 && scroll < 10) ||
+      (scroll < 0 && scroll > -10)
+    ) {
       setLimit(limit + 25);
     }
   };
