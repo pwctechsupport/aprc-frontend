@@ -20,9 +20,15 @@ const BusinessProcessSideBox = () => {
   ]);
   const [searchValue, setSearchValue] = useState("");
   const [searchQuery] = useDebounce(searchValue, 400);
-
+  const [limit, setLimit] = useState(25);
+  const onScroll = (e: any) => {
+    const test = e.target.scrollHeight - e.target.scrollTop - 881;
+    if (test === 0 || test === 64) {
+      setLimit(limit + 25);
+    }
+  };
   const { data, loading } = useBusinessProcessesQuery({
-    variables: { filter: { name_cont: searchQuery } },
+    variables: { filter: { name_cont: searchQuery }, limit },
   });
   const bps = oc(data)
     .businessProcesses.collection([])
@@ -31,7 +37,7 @@ const BusinessProcessSideBox = () => {
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         {isAdmin || isAdminReviewer || isAdminPreparer
           ? "Business Process Admin"

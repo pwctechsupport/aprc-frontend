@@ -1,5 +1,5 @@
-query businessProcesses($filter: BaseScalar = {}) {
-  businessProcesses(filter: $filter) {
+query businessProcesses($filter: BaseScalar = {}, $limit: Int = 1000) {
+  businessProcesses(filter: $filter, limit: $limit) {
     collection {
       ancestry
       id

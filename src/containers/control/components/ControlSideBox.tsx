@@ -22,9 +22,16 @@ const ControlSideBox = () => {
     "admin_preparer",
   ]);
   const [search, setSearch] = useState("");
+  const [limit, setLimit] = useState(25);
+  const onScroll = (e: any) => {
+    const test = e.target.scrollHeight - e.target.scrollTop - 881;
+    if (test === 0 || test === 64) {
+      setLimit(limit + 25);
+    }
+  };
   const { data, loading } = useControlsQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { description_cont: search } },
+    variables: { filter: { description_cont: search }, limit },
   });
 
   const controls = oc(data)
@@ -36,7 +43,7 @@ const ControlSideBox = () => {
     );
 
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminPreparer || isAdminReviewer

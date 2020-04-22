@@ -19,8 +19,15 @@ import useAccessRights from "../../../shared/hooks/useAccessRights";
 const ResourceSideBox = () => {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
+  const [limit, setLimit] = useState(25);
+  const onScroll = (e: any) => {
+    const test = e.target.scrollHeight - e.target.scrollTop - 881;
+    if (test === 0 || test === 64) {
+      setLimit(limit + 25);
+    }
+  };
   const { data, loading } = useResourcesQuery({
-    variables: { filter: { name_cont: searchQuery } },
+    variables: { filter: { name_cont: searchQuery }, limit },
   });
   const resources = oc(data)
     .resources.collection([])
@@ -34,7 +41,7 @@ const ResourceSideBox = () => {
     "admin_preparer",
   ]);
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
