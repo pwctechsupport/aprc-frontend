@@ -70,11 +70,7 @@ const ResourceSideBox = () => {
       {resources.map((resource) => (
         <SideBoxItem key={resource.id} to={`/resources/${resource.id}`}>
           <SideBoxItemText flex={2} bold>
-            {resource.name
-              ? resource.name?.length > 60
-                ? resource.name?.substring(0, 60) + "..."
-                : resource.name
-              : null}
+            {resource.name}
           </SideBoxItemText>
           <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
             {humanizeDate(new Date(resource.updatedAt))}

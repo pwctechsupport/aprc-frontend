@@ -24,7 +24,14 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
   // const isAdmin = location.pathname.split("/")[1] === "policy-admin";
-
+  const [limit, setLimit] = useState(25);
+  const onScroll = (e: any) => {
+    const test = e.target.scrollHeight - e.target.scrollTop - 881;
+    console.log("test", test);
+    if (test === 0 || test === 64) {
+      setLimit(limit + 25);
+    }
+  };
   // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
   // When isTree = false, it just query all the policies, to be rendered as search result.
   const { data, loading } = useSideboxPolicyQuery({
@@ -35,7 +42,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
         }),
         title_cont: searchQuery,
       },
-      limit: 10,
+      limit,
       isTree: !searchQuery,
     },
   });
@@ -46,7 +53,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
     "admin_preparer",
   ]);
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
@@ -152,11 +159,7 @@ const PolicyBranch = ({
               : `/policy/${id}/details`
           }
         >
-          {title
-            ? title?.length > 80
-              ? title?.substring(0, 80) + "..."
-              : title
-            : null}
+          {title}
         </SideBoxBranchTitle>
       </SideBoxBranch>
       {hasChild && (

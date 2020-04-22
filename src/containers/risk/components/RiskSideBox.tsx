@@ -77,11 +77,7 @@ const RiskSideBox = () => {
             activeClassName="active"
           >
             <SideBoxItemText flex={2} bold>
-              {risk.name
-                ? risk.name?.length > 60
-                  ? risk.name?.substring(0, 60) + "..."
-                  : risk.name
-                : null}
+              {risk.name}
             </SideBoxItemText>
             <SideBoxItemText flex={1} right>
               {humanizeDate(risk.updatedAt || "")}

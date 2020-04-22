@@ -77,13 +77,7 @@ const ControlSideBox = () => {
             activeClassName="active"
           >
             <SideBoxItemText flex={2} bold>
-              {oc(control).description("")
-                ? oc(control).description("")?.length > 60
-                  ? oc(control)
-                      .description("")
-                      ?.substring(0, 60) + "..."
-                  : oc(control).description("")
-                : null}
+              {oc(control).description}
             </SideBoxItemText>
             <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(oc(control).updatedAt(""))}
