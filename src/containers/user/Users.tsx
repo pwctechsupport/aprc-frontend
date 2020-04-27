@@ -11,6 +11,7 @@ import { NetworkStatus } from "apollo-boost";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import Tooltip from "../../shared/components/Tooltip";
 
 const Users = () => {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
@@ -49,6 +50,13 @@ const Users = () => {
           </Col>
           {admins ? (
             <Col className="text-right">
+              <NavLink to="/user/department">
+                <Button outline color="pwc" className="pwc mb-5 mr-2">
+                  <Tooltip description="Go to departments page">
+                    Departments
+                  </Tooltip>
+                </Button>
+              </NavLink>
               <NavLink to="/user/create">
                 <Button outline color="pwc" className="pwc mb-5">
                   Add User

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { oc } from "ts-optchain";
 import { usePolicyCategoriesQuery } from "../../../generated/graphql";
 import {
@@ -15,10 +15,12 @@ import Tooltip from "../../../shared/components/Tooltip";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const PolicyCategorySideBox = () => {
+  const [limit, setLimit] = useState(25);
   const [search, setSearch] = useState("");
   const { data, loading } = usePolicyCategoriesQuery({
     variables: {
       filter: { name_cont: search },
+      limit,
     },
     fetchPolicy: "network-only",
   });
@@ -29,8 +31,17 @@ const PolicyCategorySideBox = () => {
     "admin_preparer",
   ]);
   const admins = isAdmin || isAdminReviewer || isAdminPreparer;
+
+  const onScroll = (e: any) => {
+    const scroll =
+      e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
+    if (scroll === 0) {
+      setLimit(limit + 25);
+    }
+  };
+
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
@@ -51,20 +62,16 @@ const PolicyCategorySideBox = () => {
         </div>
       </SideBoxTitle>
       <SideBoxSearch search={search} setSearch={setSearch} loading={loading} />
-      {policyCategories.map((policyCateg) => (
-        <SideBoxItem
-          key={policyCateg.id}
-          to={`/policy-category/${policyCateg.id}`}
-        >
-          <SideBoxItemText bold>
-            {policyCateg.name
-              ? policyCateg.name?.length > 80
-                ? policyCateg.name?.substring(0, 80) + "..."
-                : policyCateg.name
-              : null}
-          </SideBoxItemText>
-        </SideBoxItem>
-      ))}
+      <Fragment>
+        {policyCategories.map((policyCateg) => (
+          <SideBoxItem
+            key={policyCateg.id}
+            to={`/policy-category/${policyCateg.id}`}
+          >
+            <SideBoxItemText bold>{policyCateg.name}</SideBoxItemText>
+          </SideBoxItem>
+        ))}
+      </Fragment>
     </SideBox>
   );
 };

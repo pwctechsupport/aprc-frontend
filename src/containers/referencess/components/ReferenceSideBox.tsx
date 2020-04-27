@@ -22,9 +22,17 @@ const ReferenceSideBox = () => {
     "admin_preparer",
   ]);
   const [search, setSearch] = useState("");
+  const [limit, setLimit] = useState(25);
+  const onScroll = (e: any) => {
+    const scroll =
+      e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
+    if (scroll === 0) {
+      setLimit(limit + 25);
+    }
+  };
   const { data, loading } = useReferencesQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { name_cont: search } },
+    variables: { filter: { name_cont: search }, limit },
   });
 
   const references = oc(data)
@@ -35,7 +43,7 @@ const ReferenceSideBox = () => {
     );
 
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer

@@ -20,9 +20,16 @@ const BusinessProcessSideBox = () => {
   ]);
   const [searchValue, setSearchValue] = useState("");
   const [searchQuery] = useDebounce(searchValue, 400);
-
+  const [limit, setLimit] = useState(25);
+  const onScroll = (e: any) => {
+    const scroll =
+      e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
+    if (scroll === 0) {
+      setLimit(limit + 25);
+    }
+  };
   const { data, loading } = useBusinessProcessesQuery({
-    variables: { filter: { name_cont: searchQuery } },
+    variables: { filter: { name_cont: searchQuery }, limit },
   });
   const bps = oc(data)
     .businessProcesses.collection([])
@@ -31,7 +38,7 @@ const BusinessProcessSideBox = () => {
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         {isAdmin || isAdminReviewer || isAdminPreparer
           ? "Business Process Admin"
@@ -47,11 +54,7 @@ const BusinessProcessSideBox = () => {
         {bps.map((bp) => (
           <SideBoxItem key={bp.id} to={`/business-process/${bp.id}`}>
             <SideBoxItemText flex={2} bold>
-              {bp.name
-                ? bp.name?.length > 60
-                  ? bp.name?.substring(0, 60) + "..."
-                  : bp.name
-                : null}
+              {bp.name}
             </SideBoxItemText>
             <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(bp.updatedAt)}

@@ -4,7 +4,7 @@ import { FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
-import { usePolicyTreeQuery } from "../../../generated/graphql";
+import { useSideboxPolicyQuery } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import {
   SideBox,
@@ -24,10 +24,17 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
   // const isAdmin = location.pathname.split("/")[1] === "policy-admin";
-
+  const [limit, setLimit] = useState(25);
+  const onScroll = (e: any) => {
+    const scroll =
+      e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
+    if (scroll === 0) {
+      setLimit(limit + 25);
+    }
+  };
   // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
   // When isTree = false, it just query all the policies, to be rendered as search result.
-  const { data, loading } = usePolicyTreeQuery({
+  const { data, loading } = useSideboxPolicyQuery({
     variables: {
       filter: {
         ...(!searchQuery && {
@@ -35,17 +42,18 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
         }),
         title_cont: searchQuery,
       },
+      limit,
       isTree: !searchQuery,
     },
   });
-  const policies = data?.policies?.collection || [];
+  const policies = data?.sidebarPolicies?.collection || [];
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
   ]);
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
@@ -151,11 +159,7 @@ const PolicyBranch = ({
               : `/policy/${id}/details`
           }
         >
-          {title
-            ? title?.length > 80
-              ? title?.substring(0, 80) + "..."
-              : title
-            : null}
+          {title}
         </SideBoxBranchTitle>
       </SideBoxBranch>
       {hasChild && (

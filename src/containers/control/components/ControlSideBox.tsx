@@ -22,9 +22,17 @@ const ControlSideBox = () => {
     "admin_preparer",
   ]);
   const [search, setSearch] = useState("");
+  const [limit, setLimit] = useState(25);
+  const onScroll = (e: any) => {
+    const scroll =
+      e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
+    if (scroll === 0) {
+      setLimit(limit + 25);
+    }
+  };
   const { data, loading } = useControlsQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { description_cont: search } },
+    variables: { filter: { description_cont: search }, limit },
   });
 
   const controls = oc(data)
@@ -36,7 +44,7 @@ const ControlSideBox = () => {
     );
 
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminPreparer || isAdminReviewer
@@ -70,13 +78,7 @@ const ControlSideBox = () => {
             activeClassName="active"
           >
             <SideBoxItemText flex={2} bold>
-              {oc(control).description("")
-                ? oc(control).description("")?.length > 60
-                  ? oc(control)
-                      .description("")
-                      ?.substring(0, 60) + "..."
-                  : oc(control).description("")
-                : null}
+              {oc(control).description}
             </SideBoxItemText>
             <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(oc(control).updatedAt(""))}

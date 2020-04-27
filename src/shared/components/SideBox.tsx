@@ -113,10 +113,14 @@ interface SideBoxItemTextProps {
 export const SideBoxItemText = styled.div<SideBoxItemTextProps>`
   flex: ${(p) => p.flex || 1};
   /* white-space: nowrap; */
+  /* line-height: 1.5em;
+  height: 3em; */
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
-
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
   font-weight: ${(p) => (p.bold ? "bold" : "normal")};
   text-align: ${(p) => (p.right ? "right" : null)};
 `;
@@ -159,11 +163,18 @@ export const SideBoxBranchTitle = styled.div`
   padding: 10px 10px 10px 0px;
   text-decoration: none;
   width: 75%;
-  overflow: hidden;
+  /* overflow: hidden; */
   /* white-space: nowrap; */
-  text-overflow: ellipsis;
+  /* text-overflow: ellipsis; */
   color: var(--primary-color);
   font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  /* line-height: 1.2em; */
+  max-height: 3.6em;
   /* font-size: 18px; */
   &.active {
     color: white;

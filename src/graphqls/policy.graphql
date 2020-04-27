@@ -80,7 +80,39 @@ query policyTree(
     }
   }
 }
-
+query sideboxPolicy(
+  $filter: BaseScalar = {}
+  $isTree: Boolean!
+  $limit: Int
+  $page: Int
+) {
+  sidebarPolicies(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      ...policyBranch
+      children @include(if: $isTree) {
+        ...policyBranch
+        children {
+          ...policyBranch
+          children {
+            ...policyBranch
+            children {
+              ...policyBranch
+              children {
+                ...policyBranch
+              }
+            }
+          }
+        }
+      }
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
+  }
+}
 fragment policyBranch on Policy {
   id
   title

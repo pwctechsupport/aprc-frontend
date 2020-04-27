@@ -10,7 +10,6 @@ export interface TextEditorProps {
   onChange?: (content: string) => void;
   invalid?: boolean;
 }
-
 const fontSize = Quill.import("attributors/style/size");
 const defaultFontSize = 13;
 const fontSizes = [16, 18, 20, 24, 30];

@@ -23,9 +23,11 @@ const RiskSideBox = () => {
   ]);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
+  const [limit, setLimit] = useState(25);
+
   const { data, loading } = useRisksQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { name_cont: debouncedSearch } },
+    variables: { filter: { name_cont: debouncedSearch }, limit },
   });
 
   const risks =
@@ -34,9 +36,15 @@ const RiskSideBox = () => {
         new Date(b.updatedAt || "").getTime() -
         new Date(a.updatedAt || "").getTime()
     ) || [];
-
+  const onScroll = (e: any) => {
+    const scroll =
+      e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
+    if (scroll === 0) {
+      setLimit(limit + 25);
+    }
+  };
   return (
-    <SideBox>
+    <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
@@ -70,11 +78,7 @@ const RiskSideBox = () => {
             activeClassName="active"
           >
             <SideBoxItemText flex={2} bold>
-              {risk.name
-                ? risk.name?.length > 60
-                  ? risk.name?.substring(0, 60) + "..."
-                  : risk.name
-                : null}
+              {risk.name}
             </SideBoxItemText>
             <SideBoxItemText flex={1} right>
               {humanizeDate(risk.updatedAt || "")}
