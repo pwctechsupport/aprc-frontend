@@ -37,7 +37,7 @@ import {
   useReviewPolicyDraftMutation,
   useSubmitPolicyMutation,
   useUpdateDraftPolicyMutation,
-  useUpdatePolicyMutation,
+  // useUpdatePolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -193,21 +193,21 @@ console.log('data',data?.policy?.ancestry)
     refetchQueries: ["bookmarkPolicies"]
   });
 
-  const [update, updateState] = useUpdatePolicyMutation({
-    onCompleted: () => {
-      notifySuccess("Update Success");
-      toggleEditMode();
-    },
-    onError: notifyGraphQLErrors,
-    refetchQueries: ["policies", "policyTree", "policy"],
-    awaitRefetchQueries: true
-  });
-  function handleUpdate(values: PolicyFormValues) {
-    update({ variables: { input: { id, ...values } } });
-  }
-  function handleUpdateSubPolicy(values: SubPolicyFormValues) {
-    update({ variables: { input: { id, ...values } } });
-  }
+  // const [update, updateState] = useUpdatePolicyMutation({
+  //   onCompleted: () => {
+  //     notifySuccess("Update Success");
+  //     toggleEditMode();
+  //   },
+  //   onError: notifyGraphQLErrors,
+  //   refetchQueries: ["policies", "policyTree", "policy"],
+  //   awaitRefetchQueries: true
+  // });
+  // function handleUpdate(values: PolicyFormValues) {
+  //   update({ variables: { input: { id, ...values } } });
+  // }
+  // function handleUpdateSubPolicy(values: SubPolicyFormValues) {
+  //   update({ variables: { input: { id, ...values } } });
+  // }
   // Update Policy As Draft
   const [updateDraft, updateDraftState] = useUpdateDraftPolicyMutation({
     onCompleted: () => {
@@ -492,7 +492,7 @@ console.log('data',data?.policy?.ancestry)
             saveAsDraftSecond={handleUpdateDraftSubPolicy}
             secondDraftLoading={loadingSubmit.loading}
             toggleEditMode={toggleEditMode}
-            submitting={updateState.loading}
+            submitting={updateDraftState.loading}
             submittingDraft={updateDraftState.loading}
             premise={
               ((isAdminPreparer && !isSubmitted) ||
@@ -514,7 +514,7 @@ console.log('data',data?.policy?.ancestry)
               policyCategoryId,
               description
             }}
-            submitting={updateState.loading}
+            submitting={updateDraftState.loading}
             submittingAsDraft={updateDraftState.loading}
             onSubmitAsDraft={handleUpdateDraft}
             toggleEditMode={toggleEditMode}
