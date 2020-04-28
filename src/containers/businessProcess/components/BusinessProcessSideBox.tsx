@@ -47,7 +47,7 @@ const BusinessProcessSideBox = () => {
       <SideBoxSearch
         search={searchValue}
         setSearch={setSearchValue}
-        placeholder="Search BPs..."
+        placeholder="Search Business Process..."
         loading={loading}
       />
       <div>
