@@ -5,7 +5,7 @@ query homepage {
       title
     }
   }
-  recentlyAddedPolicies(filter: {}, limit: 5) {
+  recentlyAddedPolicies(filter: {status_eq:"release"}, limit: 5) {
     collection {
       id
       title

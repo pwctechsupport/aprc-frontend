@@ -32,7 +32,7 @@ export interface UserFormValues {
   password?: string;
   passwordConfirmation?: string;
   phone?: string;
-  roleIds?: Suggestions;
+  roleIds?: any;
   departmentIds?: any;
   policyCategoryIds?: Suggestions;
 }
