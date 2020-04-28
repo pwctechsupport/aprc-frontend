@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import React from "react";
+import React, { Fragment } from "react";
 import { Col, Container, Row } from "reactstrap";
 import styled from "styled-components";
 import backgroundImage from "../../assets/images/homepage-background.jpg";
@@ -41,6 +41,9 @@ export default function Homepage() {
               list={popularPolicies.map(toLabelValue)}
               basePath="policy"
               title="Popular Policies"
+              boldColor='rgba(246, 110, 25, 1)'
+              lineColor='rgba(246, 110, 25, 0.2)'
+              softColor='rgb(255, 244, 237)'
             />
           </Col>
           <Col xs={12} md={6} lg={4}>
@@ -48,6 +51,9 @@ export default function Homepage() {
               list={recentlyAddedPolicies.map(toLabelValue)}
               basePath="policy"
               title="Recently Added Policies"
+              boldColor='rgba(252, 93, 93, 1)'
+              lineColor='rgba(252, 93, 93, 0.2)'
+              softColor='rgba(255, 237, 237, 1)'
             />
           </Col>
           <Col xs={12} md={6} lg={4}>
@@ -55,13 +61,22 @@ export default function Homepage() {
               list={recentlyVisitedPolicies.map(toLabelValue)}
               basePath="policy"
               title="Recently Visited Policies"
+              boldColor="rgba(14, 194, 129, 1)"
+              lineColor='rgba(14, 194, 129, 0.2)'
+              softColor='rgba(209, 255, 216, 1)'
             />
           </Col>
-          <Col xs={12} md={6} lg={4}>
+          {/* </Row>
+            <Row style={{marginTop:'10px'}}> */}
+              <Fragment >
+          <Col xs={12} md={6} lg={4} >
             <HomepageBox
               list={popularResources.map(toLabelValue)}
               basePath="resources"
               title="Popular Resources"
+             boldColor='rgba(183, 67, 239, 1)'
+             lineColor='rgba(183, 67, 239, 0.2)'
+             softColor='rgba(240, 209, 255, 1)'
             />
           </Col>
           <Col xs={12} md={6} lg={4}>
@@ -74,8 +89,12 @@ export default function Homepage() {
               })}
               basePath="policy"
               title="Saved Policies"
+              boldColor='rgba(46, 117, 223, 1)'
+              lineColor='rgba(46, 117, 223, 0.2)'
+              softColor='rgba(209, 230, 255, 1)'
             />
           </Col>
+          </Fragment>
         </Row>
       </Container>
     </Background>
