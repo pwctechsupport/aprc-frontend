@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -19,10 +19,13 @@ import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 
 const SubPolicyForm = ({
-  onSubmit,
+  saveAsDraftFirst,
+  submitSecond,
+  secondDraftLoading,
+  submitFirst,
   defaultValues,
   submitting,
-  onSubmitDraft,
+  saveAsDraftSecond,
   premise,
   submittingDraft,
   isCreate,
@@ -74,11 +77,21 @@ const SubPolicyForm = ({
     setValue("description", data);
   }
 
-  function submit(values: SubPolicyFormValues) {
-    onSubmit && onSubmit({ ...values, ...attr });
+  // Functions for changing buttons
+    // Functions when create
+  function saveAsDraftFirstPhase(values: SubPolicyFormValues) {
+    saveAsDraftFirst && saveAsDraftFirst({ ...values, ...attr });
   }
-  function submitDraft(values: SubPolicyFormValues) {
-    onSubmitDraft && onSubmitDraft({ ...values, ...attr });
+  function submitFirstPhase(values: SubPolicyFormValues) {
+    submitFirst && submitFirst({ ...values, ...attr });
+  }
+
+  // Functions when update
+  function saveAsDraftSecondPhase(values: SubPolicyFormValues) {
+    saveAsDraftSecond && saveAsDraftSecond({ ...values, ...attr });
+  }
+  function submitSecondPhase(values: SubPolicyFormValues) {
+    submitSecond && submitSecond({ ...values, ...attr });
   }
 
   function onSubmitModal(values: SubPolicyModalFormValues) {
@@ -131,11 +144,13 @@ const SubPolicyForm = ({
             Insert Attributes
           </Button>
           {premise ? (
+            //ini yang kedua
+            <Fragment>
             <DialogButton
               color="primary"
               loading={submittingDraft}
-              className="pwc px-5"
-              onConfirm={handleSubmit(submitDraft)}
+              className="pwc mr-2 px-5"
+              onConfirm={handleSubmit(saveAsDraftSecondPhase)}
               message={
                 defaultValues.title
                   ? `Save your change on "${defaultValues.title}"?`
@@ -144,20 +159,51 @@ const SubPolicyForm = ({
             >
               Save As Draft
             </DialogButton>
-          ) : (
+            
             <DialogButton
               color="primary"
-              loading={submitting}
+              loading={secondDraftLoading}
               className="pwc px-5"
-              onConfirm={handleSubmit(submit)}
+              onConfirm={handleSubmit(submitSecondPhase)}
               message={
                 defaultValues.title
                   ? `Save your change on "${defaultValues.title}"?`
                   : "Create Sub-Policy?"
               }
             >
-              Save
+              Submit
             </DialogButton>
+            </Fragment>
+          ) : (
+            // ini pertama
+            <Fragment>
+              <DialogButton
+                color="primary"
+                loading={submitting}
+                className="pwc mr-2 px-5"
+                onConfirm={handleSubmit(saveAsDraftFirstPhase)}
+                message={
+                  defaultValues.title
+                    ? `Save your change on "${defaultValues.title}"?`
+                    : "Create Sub-Policy?"
+                }
+              >
+                Save As Draft
+              </DialogButton> 
+              <DialogButton
+                color="primary"
+                loading={submitting}
+                className="pwc px-5"
+                onConfirm={handleSubmit(submitFirstPhase)}
+                message={
+                  defaultValues.title
+                    ? `Save your change on "${defaultValues.title}"?`
+                    : "Create Sub-Policy?"
+                }
+              >
+                Submit
+              </DialogButton>
+            </Fragment>
           )}{" "}
           {isCreate ? (
             <DialogButton
@@ -351,16 +397,19 @@ const SubPolicyAttributeForm = ({
 // -------------------------------------------------------------------------
 
 export interface SubPolicyFormProps {
-  onSubmit?: (values: SubPolicyFormValues) => void;
+  saveAsDraftFirst?: (values: SubPolicyFormValues) => void;
   defaultValues: SubPolicyFormValues;
   submitting?: boolean;
   isAdmin?: boolean;
-  onSubmitDraft?: any;
+  saveAsDraftSecond?: any;
   premise?: boolean;
   submittingDraft?: any;
   isCreate?: boolean;
   history?: any;
   toggleEditMode?: any;
+  submitFirst?:any;
+  submitSecond?:any;
+  secondDraftLoading?:any;
 }
 
 export interface SubPolicyFormValues {

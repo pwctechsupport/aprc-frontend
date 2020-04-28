@@ -44,7 +44,19 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
       }
     });
   }
-
+  function submitSubPolicy(values: SubPolicyFormValues) {
+    create({
+      variables: {
+        input: {
+          ...values,
+          isSubmitted:true,
+          businessProcessIds: values.businessProcessIds || [],
+          controlIds: values.controlIds || [],
+          riskIds: values.riskIds || []
+        }
+      }
+    });
+  }
   // Extract necessary variables for UI
   const title = oc(data).policy.title("");
 
@@ -85,7 +97,8 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
       />
       <HeaderWithBackButton heading="Create Sub-Policy" />
       <SubPolicyForm
-        onSubmit={createSubPolicy}
+        saveAsDraftFirst={createSubPolicy}
+        submitFirst={submitSubPolicy}
         defaultValues={defaultValues}
         history={history}
         isCreate

@@ -9,7 +9,6 @@ import React, {
 import Helmet from "react-helmet";
 import {
   AiFillEdit,
-  AiFillFolderAdd,
   AiOutlineClockCircle,
   AiOutlineEdit
 } from "react-icons/ai";
@@ -38,7 +37,7 @@ import {
   useReviewPolicyDraftMutation,
   useSubmitPolicyMutation,
   useUpdateDraftPolicyMutation,
-  useUpdatePolicyMutation
+  useUpdatePolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -116,7 +115,7 @@ export default function Policy({
     "admin_reviewer",
     "admin_preparer"
   ]);
-
+console.log('data',data?.policy?.ancestry)
   const scrollToRisk = useCallback(
     () =>
       window.scrollTo({
@@ -194,7 +193,6 @@ export default function Policy({
     refetchQueries: ["bookmarkPolicies"]
   });
 
-  // Update Policy / Sub-Policy
   const [update, updateState] = useUpdatePolicyMutation({
     onCompleted: () => {
       notifySuccess("Update Success");
@@ -224,24 +222,29 @@ export default function Policy({
     updateDraft({ variables: { input: { id, ...values } } });
   }
   function handleUpdateDraftSubPolicy(values: SubPolicyFormValues) {
-    updateDraft({ variables: { input: { id, ...values } } });
+    updateDraft({ variables: { input: { id, ...values, parentId:data?.policy?.ancestry } } });
   }
 
   // Submit to reviewer
-  const [submit] = useSubmitPolicyMutation({
+  const [submit,loadingSubmit] = useSubmitPolicyMutation({
     onCompleted: () => {
       notifySuccess("Submitted");
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["policy"]
   });
-  function handleSubmit() {
-    dialogBox({
-      text: `Submit policy "${title}"?`,
-      callback: () => submit({ variables: { input: { id } } })
-    });
+  function handleSubmit(values:PolicyFormValues) {
+    submit({ variables: { input: { id, ...values} } })
+    setInEditMode(!inEditMode)
   }
-
+  function handleSubmitSubPolicy(values:SubPolicyFormValues) {
+    submit({ variables: { input: { id, ...values} } })
+    setInEditMode(!inEditMode)
+  }
+  function handleSubmitSubPolicySecond(values:SubPolicyFormValues) {
+    submit({ variables: { input: { id, ...values, parentId:data?.policy?.ancestry} } })
+    setInEditMode(!inEditMode)
+  }
   const [
     requestEditMutation,
     requestEditMutationInfo
@@ -286,6 +289,7 @@ export default function Policy({
       notifyGraphQLErrors(error);
     }
   }
+ 
   const isSubmitted = data?.policy?.isSubmitted;
   const draft = data?.policy?.draft?.objectResult;
   const title = data?.policy?.title || "";
@@ -315,7 +319,6 @@ export default function Policy({
     "/policy/" + a.id,
     a.title
   ]) as CrumbItem[];
-
   if (loading) return <LoadingSpinner centered size={30} />;
 
   const policyChartData = formatPolicyChart({
@@ -331,6 +334,7 @@ export default function Policy({
       : () => history.push(`${location.pathname}/details/#sub-policies`)
   }));
 
+  
   const renderPolicy = () => {
     const tabs = isAdminView
       ? [{ to: `/policy-admin/${id}/details`, title: "Details" }]
@@ -482,11 +486,14 @@ export default function Policy({
                 .policy.risks([])
                 .map(r => r.id)
             }}
+            saveAsDraftFirst={handleUpdateDraftSubPolicy}
+            submitFirst={handleSubmitSubPolicy}
+            submitSecond={handleSubmitSubPolicySecond}
+            saveAsDraftSecond={handleUpdateDraftSubPolicy}
+            secondDraftLoading={loadingSubmit.loading}
             toggleEditMode={toggleEditMode}
-            onSubmit={handleUpdateSubPolicy}
             submitting={updateState.loading}
             submittingDraft={updateDraftState.loading}
-            onSubmitDraft={handleUpdateDraftSubPolicy}
             premise={
               ((isAdminPreparer && !isSubmitted) ||
                 (isAdminReviewer && !isSubmitted)) &&
@@ -498,15 +505,18 @@ export default function Policy({
           />
         ) : (
           <PolicyForm
-            onSubmit={handleUpdate}
+            handleSubmitToReviewer={handleSubmit}
+            submitFromDraft={handleSubmit}
+            loadingSubmit={loadingSubmit.loading}
+            onSubmit={handleUpdateDraft}
             defaultValues={{
               title,
               policyCategoryId,
               description
             }}
             submitting={updateState.loading}
-            submittingDraft={updateDraftState.loading}
-            onSubmitDraft={handleUpdateDraft}
+            submittingAsDraft={updateDraftState.loading}
+            onSubmitAsDraft={handleUpdateDraft}
             toggleEditMode={toggleEditMode}
             premise={
               ((isAdminPreparer && !isSubmitted) ||
@@ -720,16 +730,7 @@ export default function Policy({
     if (prem3) {
       isAdminPreparer
         ? (actions = !inEditMode ? (
-            <div className="d-flex">
-              <Tooltip description="Submit Policy">
-                <Button
-                  onClick={() => handleSubmit()}
-                  color=""
-                  className="soft orange mr-2"
-                >
-                  <AiFillFolderAdd />
-                </Button>
-              </Tooltip>
+            // <div className="d-flex">
               <Tooltip description="Edit Policy">
                 <Button
                   onClick={toggleEditMode}
@@ -739,20 +740,12 @@ export default function Policy({
                   <AiFillEdit />
                 </Button>
               </Tooltip>
-            </div>
+            // </div>
           ) : null)
-        : // <Button onClick={toggleEditMode} color="">
-          //   <FaTimes size={22} className="mr-2" />
-          //   Cancel Edit
-          // </Button>
-          (actions = null);
+        : (actions = null);
     }
     if (prem4) {
       actions = inEditMode ? null : (
-        // <Button onClick={toggleEditMode} color="">
-        //   <FaTimes size={22} className="mr-2" />
-        //   Cancel Edit
-        // </Button>
         <Tooltip description="Edit Policy">
           <Button onClick={toggleEditMode} color="" className="soft orange">
             <AiFillEdit />

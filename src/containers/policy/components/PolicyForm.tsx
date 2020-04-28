@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Fragment } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -12,12 +12,15 @@ import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue } from "../../../shared/formatter";
 
 const PolicyForm = ({
+  submitFromDraft,
+  handleSubmitToReviewer,
+  loadingSubmit,
   onSubmit,
   defaultValues,
   submitting,
-  onSubmitDraft,
+  onSubmitAsDraft,
   premise,
-  submittingDraft,
+  submittingAsDraft,
   isCreate,
   history,
   toggleEditMode,
@@ -52,16 +55,21 @@ const PolicyForm = ({
 
   function submit(values: PolicyFormValues) {
     onSubmit && onSubmit(values);
+  } 
+  function submitToReviewer(values: PolicyFormValues) {
+    handleSubmitToReviewer && handleSubmitToReviewer(values);
   }
-  function submitDraft(values: PolicyFormValues) {
-    onSubmitDraft && onSubmitDraft(values);
+  function submitFromDrafted(values:SubmitAsliBro){
+    submitFromDraft && submitFromDraft(values)
+  }
+  function submitAsDraft(values: PolicyFormValues) {
+    onSubmitAsDraft && onSubmitAsDraft(values);
   }
 
   const options = oc(policyCategoriesState)
     .data.policyCategories.collection([])
     .map(toLabelValue);
   const policyCategoryId = oc(defaultValues).policyCategoryId("");
-
   if (policyCategoriesState.loading) {
     return <LoadingSpinner centered size={30} />;
   }
@@ -97,23 +105,47 @@ const PolicyForm = ({
         />
         <div className="d-flex justify-content-end mt-3">
           {premise ? (
-            <DialogButton
-              color="primary"
-              loading={submittingDraft}
-              className="pwc px-5"
-              onConfirm={handleSubmit(submitDraft)}
-            >
-              Save As Draft
-            </DialogButton>
+            <Fragment>
+              <DialogButton
+                color="primary"
+                loading={submittingAsDraft}
+                className="pwc mr-2 px-5"
+                message="Save Policy as Draft?"
+                onConfirm={handleSubmit(submitAsDraft)}
+              >
+                Save As Draft
+              </DialogButton>
+              <DialogButton
+                color="primary"
+                loading={loadingSubmit}
+                className="pwc px-5"
+                message="Submit Policy?"
+                onConfirm={handleSubmit(submitFromDrafted)}
+              >
+                Submit 
+              </DialogButton>
+            </Fragment>
           ) : (
+            <Fragment>
             <DialogButton
               color="primary"
               loading={submitting}
-              className="pwc px-5"
+              message="Save Policy as Draft?"
+              className="pwc mr-2 px-5"
               onConfirm={handleSubmit(submit)}
             >
               Save As Draft
             </DialogButton>
+             <DialogButton
+             color="primary"
+            //  loading={}
+             className="pwc px-5"
+             message="Submit Policy?"
+             onConfirm={handleSubmit(submitToReviewer)}
+           >
+             Submit 
+           </DialogButton>
+           </Fragment>
           )}
           {isCreate ? (
             <DialogButton
@@ -169,10 +201,18 @@ export interface PolicyFormProps {
   submitting?: boolean;
   defaultValues?: PolicyFormValues;
   isAdmin?: boolean;
-  onSubmitDraft?: any;
+  onSubmitAsDraft?: any;
   premise?: boolean;
-  submittingDraft?: any;
+  submittingAsDraft?: any;
   isCreate?: boolean;
   history?: any;
   toggleEditMode?: any;
+  submitFromDraft?:any;
+  loadingSubmit?:any;
+  handleSubmitToReviewer?:any;
+}
+export interface SubmitAsliBro{
+  description?:string;
+  policyCategoryId?:string;
+  title?:string;
 }

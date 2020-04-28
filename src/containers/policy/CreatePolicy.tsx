@@ -25,6 +25,11 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
       }
     });
   }
+  function handleSubmitToReviewer(values:PolicyFormValues){
+    createPolicy({
+      variables:{input:{isSubmitted:true,...values}}
+    })
+  }
   const isAdmin = location.pathname.split("/")[1] === "policy-admin";
 
   return (
@@ -48,6 +53,7 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
       <HeaderWithBackButton heading="Create Policy" />
       <PolicyForm
         onSubmit={handleSubmit}
+        handleSubmitToReviewer={handleSubmitToReviewer}
         submitting={loading}
         history={history}
         isCreate
