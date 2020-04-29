@@ -141,8 +141,8 @@ const Controls = ({ history }: RouteComponentProps) => {
                 <th style={{ width: "9%" }}>Nature</th>
                 <th style={{ width: "9%" }}>Owner</th>
                 <th style={{ width: "9%" }}>status</th>
-                <th style={{ width: "10%" }}>Updated At</th>
-                <th style={{ width: "10%" }}>Updated By</th>
+                <th style={{ width: "10%" }}>Last Updated</th>
+                <th style={{ width: "10%" }}>Last Updated By</th>
 
                 <th></th>
               </tr>

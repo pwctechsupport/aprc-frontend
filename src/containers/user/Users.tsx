@@ -92,7 +92,7 @@ const Users = () => {
                   Created At
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
-                  Updated At
+                Last Updated
                 </th>
 
                 {admins ? <th>Action</th> : <th></th>}

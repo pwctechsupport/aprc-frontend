@@ -34,7 +34,7 @@ interface UserRowProps {
 
 interface UserRowValues {
   name?: string;
-  roleIds?: Suggestions;
+  roleIds?: any;
   policyCategoryIds?: Suggestions;
 }
 
@@ -120,7 +120,7 @@ export default function UserRow({ user, ...props }: UserRowProps) {
           name: data.name || "",
           userId: oc(user).id(""),
           policyCategoryIds: data.policyCategoryIds?.map((a) => a.value),
-          roleIds: data.roleIds?.map((a) => a.value),
+          roleIds: data.roleIds?.value||'',
         },
       },
     });

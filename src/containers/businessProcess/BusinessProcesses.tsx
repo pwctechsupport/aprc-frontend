@@ -171,8 +171,8 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                 <th>Business Process</th>
                 <th>Business Process ID</th>
 
-                <th>Updated At</th>
-                <th>Updated By</th>
+                <th>Last Updated</th>
+                <th>Last Updated By</th>
                 <th>Created At</th>
                 <th>Created By</th>
 

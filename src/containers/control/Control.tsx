@@ -290,8 +290,8 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       },
       { label: "Frequency", value: capitalCase(frequency) },
       { label: "Status", value: capitalCase(status) },
-      { label: "Updated At", value: updatedAt },
-      { label: "Updated By", value: lastUpdatedBy },
+      { label: "Last Updated", value: updatedAt },
+      { label: "Last Updated By", value: lastUpdatedBy },
       { label: "Created At", value: createdAt.split(" ")[0] },
       { label: "Created By", value: createdBy }
     ];

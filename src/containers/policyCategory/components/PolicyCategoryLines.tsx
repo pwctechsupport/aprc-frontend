@@ -142,8 +142,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
             <th style={{ width: "10%" }}>Category Name</th>
             <th style={{ width: "40%" }}>Related Policies</th>
             <th style={{ width: "15%" }}>Status</th>
-            <th style={{ width: "12%" }}>Updated At</th>
-            <th style={{ width: "12%" }}>Updated By</th>
+            <th style={{ width: "12%" }}>Last Updated</th>
+            <th style={{ width: "12%" }}>Last Updated By</th>
 
             <th></th>
           </tr>

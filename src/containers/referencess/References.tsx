@@ -140,8 +140,8 @@ const References = () => {
               <th style={{ width: "5%" }}>ID</th>
               <th style={{ width: "5%" }}>Name</th>
               <th style={{ width: "30%" }}>Policy</th>
-              <th style={{ width: "10%" }}>Updated At</th>
-              <th style={{ width: "10%" }}>Updated By</th>
+              <th style={{ width: "10%" }}>Last Updated</th>
+              <th style={{ width: "10%" }}>Last Updated By</th>
               <th style={{ width: "10%" }}>Created At</th>
               <th style={{ width: "10%" }}>Created By</th>
 

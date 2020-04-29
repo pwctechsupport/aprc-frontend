@@ -136,7 +136,7 @@ const Resources = ({ history }: RouteComponentProps) => {
             <th style={{ width: "14%" }}>Related Resource</th>
             <th style={{ width: "14%" }}>Related Policy</th>
             <th style={{ width: "14%" }}>Related Business Process</th>
-            <th style={{ width: "8%" }}>Updated At</th>
+            <th style={{ width: "8%" }}>Last Updated</th>
             <th style={{ width: "8%" }}>Created By</th>
 
             <th></th>
