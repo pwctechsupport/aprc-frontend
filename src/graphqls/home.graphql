@@ -5,10 +5,14 @@ query homepage {
       title
     }
   }
-  recentlyAddedPolicies(filter: {status_eq:"release"}, limit: 5) {
+  recentlyAddedPolicies(filter: {status_eq:"release"}) {
     collection {
       id
       title
+      status
+      draft{
+        id
+      }
     }
   }
   recentlyVisitedPolicies(filter: {}, limit: 5) {

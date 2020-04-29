@@ -15,6 +15,7 @@ export default function Homepage() {
   const { data } = useHomepageQuery({ fetchPolicy: "network-only" });
   const popularPolicies = data?.popularPolicies?.collection || [];
   const recentlyAddedPolicies = data?.recentlyAddedPolicies?.collection || [];
+  const percobaankusayang= recentlyAddedPolicies.filter(a=>a.draft===null).slice(0,5)
   const recentlyVisitedPolicies =
     data?.recentlyVisitedPolicies?.collection || [];
   const popularResources = data?.popularResources?.collection || [];
@@ -48,7 +49,7 @@ export default function Homepage() {
           </Col>
           <Col xs={12} md={6} lg={4}>
             <HomepageBox
-              list={recentlyAddedPolicies.map(toLabelValue)}
+              list={percobaankusayang.map(toLabelValue)}
               basePath="policy"
               title="Recently Added Policies"
               boldColor='rgba(252, 93, 93, 1)'
