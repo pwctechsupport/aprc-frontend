@@ -95,7 +95,7 @@ export default function HomepageSearch({
                 <StyledSpan>Showing {items.length} result(s)</StyledSpan>
                 {items.map((item) => (
                   <li key={item.id}>
-                    <PolicySearchItem policy={item} />
+                    <PolicySearchItem homepageSearch={inputValue||''} policy={item} />
                   </li>
                 ))}
               </div>

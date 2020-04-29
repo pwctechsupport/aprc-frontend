@@ -63,7 +63,6 @@ const Bookmark = ({ history }: RouteComponentProps) => {
     },
     fetchPolicy: "network-only"
   });
-  console.log("data", data);
   const [deleteBookmarks, deleteBookmarksM] = useDestroyBookmarkMutation({
     refetchQueries: ["bookmarks"],
     onError: notifyGraphQLErrors,
@@ -112,7 +111,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
       if (type === "Policy") {
         link = `/policy/${id}`;
       } else if (type === "BusinessProcess") {
-        link = `/business-process/${id}`;
+        link = `/risk-and-control/${id}`;
       } else if (type === "Control") {
         link = `/control/${id}`;
       } else if (type === "Risk") {

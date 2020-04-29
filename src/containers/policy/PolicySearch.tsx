@@ -112,7 +112,7 @@ export default function PolicySearch({
           />
           {policies.length ? (
             policies.map((policy) => (
-              <PolicySearchItem key={policy.id} policy={policy} />
+              <PolicySearchItem key={policy.id} policy={policy} homepageSearch={'thisIsForSearchPolicy'}/>
             ))
           ) : loading ? (
             <div className={"text-center"}>

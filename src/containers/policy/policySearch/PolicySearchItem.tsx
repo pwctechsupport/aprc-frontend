@@ -1,15 +1,17 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Policy } from "../../../generated/graphql";
 import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import { previewHtml } from "../../../shared/formatter";
 import DateHover from "../../../shared/components/DateHover";
+import { Row, Col } from "reactstrap";
 
 interface PolicySearchItemProps {
   policy: Omit<Policy, "createdAt">;
+  homepageSearch:string;
 }
-export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
+export default function PolicySearchItem({ policy, homepageSearch }: PolicySearchItemProps) {
   const {
     id,
     title,
@@ -27,86 +29,191 @@ export default function PolicySearchItem({ policy }: PolicySearchItemProps) {
     resources?.length === 0 &&
     references?.length === 0;
 
+const showResource= resources?.map(a=>a.name?.toLowerCase().includes(homepageSearch.toLowerCase()))
+const showReference= references?.map(a=>a.name?.toLowerCase().includes(homepageSearch.toLowerCase()))
+const showControl= controls?.map(a=>a.description?.toLowerCase().includes(homepageSearch.toLowerCase()))
+const showRisk= risks?.map(a=>a.name?.toLowerCase().includes(homepageSearch.toLowerCase()))
+
   return (
-    <PolicySearchItemContainer>
-      <AttributeSection>
-        {noAttribute ? (
-          <EmptyAttribute>No Attribute</EmptyAttribute>
-        ) : (
-          <StyledUl>
-            {risks?.length ? (
-              <StyledLi>
-                <Names> Risks</Names>
-                <ul>
-                  {risks?.map(risk => (
-                    <StyledTd key={risk.id}>
-                      <Link to={`/policy/${id}/details/#risks`}>
-                        {risk.name}
-                      </Link>
-                    </StyledTd>
-                  ))}
-                </ul>
-              </StyledLi>
-            ) : null}
-            {controls?.length ? (
-              <StyledLi>
-                <Names>Controls:</Names>
-                <ul>
-                  {controls?.map(control => (
-                    <StyledTd key={control.id}>
-                      <Link to={`/policy/${id}/details/#controls`}>
-                        {control.description}
-                      </Link>
-                    </StyledTd>
-                  ))}
-                </ul>
-              </StyledLi>
-            ) : null}
-            {resources?.length ? (
+    <Fragment>
+      {/* homepageSearch  is a string for search */}
+      {homepageSearch!=='thisIsForSearchPolicy'?
+        <PolicySearchItemContainerMini>
+          <Row>
+          <StyledLink to={`/policy/${id}/details`}>
+              <div className='ml-2'>
+                <StyledTitle>
+                  <strong>{title}</strong>
+                </StyledTitle>
+              </div>
+              <div className='mb-2 ml-2'>
+                <DateHover withIcon>{updatedAt}</DateHover>
+              </div>
+              <div className="text-secondary ml-2">{previewHtml(description || "")}</div>
+            </StyledLink>
+            </Row>
+          <Row style={{marginLeft:'1vw',marginRight:'1vw'}}
+          >
+            {!showResource?.every(a=>a===false) && homepageSearch!=="" && (
+            <Col md={3}>
               <StyledLi>
                 <Names>Resources:</Names>
                 <ul>
                   {resources?.map(resource => (
-                    <StyledTd key={resource.id}>
+                    resource?.name?.toLowerCase().includes(homepageSearch.toLowerCase()) &&
+                    <li>
+                    <StyledTdMini key={resource.id}>
                       <Link to={`/policy/${id}/resources`}>
                         {resource.name}
                       </Link>
-                    </StyledTd>
-                  ))}
+                    </StyledTdMini>
+                    </li>
+                ))}
                 </ul>
               </StyledLi>
-            ) : null}
-            {references?.length ? (
-              <StyledLi>
-                <Names>References:</Names>
-                <ul>
-                  {references?.map(reference => (
-                    <StyledTd key={reference.id}>
-                      <Link to={`/policy/${id}/details/#references`}>
-                        {reference.name}
-                      </Link>
-                    </StyledTd>
-                  ))}
-                </ul>
-              </StyledLi>
-            ) : null}
-          </StyledUl>
-        )}
-      </AttributeSection>
-      <TitleAndDescriptionSection>
-        <StyledLink to={`/policy/${id}/details`}>
-          <div className="text-right">
-            <DateHover withIcon>{updatedAt}</DateHover>
-          </div>
-          <div>
-            <StyledTitle>
-              <strong>{title}</strong>
-            </StyledTitle>
-          </div>
-          <div className="text-secondary">{previewHtml(description || "")}</div>
-        </StyledLink>
-      </TitleAndDescriptionSection>
-    </PolicySearchItemContainer>
+              </Col>
+            )}
+              {!showReference?.every(a=>a===false) && homepageSearch!=="" && (
+            <Col md={3}>
+                <StyledLi>
+                  <Names>References:</Names>
+                  <ul>
+                    {references?.map(reference => (
+                      reference?.name?.toLowerCase().includes(homepageSearch.toLowerCase()) &&
+                    <li>
+                      <StyledTdMini key={reference.id}>
+                        <Link to={`/policy/${id}/details/#references`}>
+                          {reference.name}
+                        </Link>
+                      </StyledTdMini>
+                    </li>
+                    ))}
+                  </ul>
+                </StyledLi>
+            </Col>
+              )}
+              {!showRisk?.every(a=>a===false) && homepageSearch!=="" && (
+            <Col md={3}>
+                  <StyledLi>
+                    <Names> Risks</Names>
+                    <ul>
+                      {risks?.map(risk => (
+                      risk?.name?.toLowerCase().includes(homepageSearch.toLowerCase()) &&
+                    <li>
+                        <StyledTdMini key={risk.id}>  
+                          <Link to={`/policy/${id}/details/#risks`}>
+                            {risk.name}
+                          </Link>
+                        </StyledTdMini>
+                    </li>
+                      ))}
+                    </ul>
+                  </StyledLi>
+            </Col>
+                ) }
+                {!showControl?.every(a=>a===false) && homepageSearch!=="" && (
+            <Col md={3}>
+                  <StyledLi>
+                    <Names>Controls:</Names>
+                    <ul>
+                      {controls?.map(control => (
+                      control?.description?.toLowerCase().includes(homepageSearch.toLowerCase()) &&                    
+                      <li>
+                        <StyledTdMini key={control.id}>
+                          <Link to={`/policy/${id}/details/#controls`}>
+                            {control.description}
+                          </Link>
+                        </StyledTdMini>
+                      </li>
+                      ))}
+                    </ul>
+                  </StyledLi>
+            </Col>
+                )}
+          </Row>
+
+        </PolicySearchItemContainerMini>
+      :
+      <PolicySearchItemContainer>
+        <AttributeSection>
+          {noAttribute ? (
+            <EmptyAttribute>No Attribute</EmptyAttribute>
+          ) : (
+            <StyledUl>
+              {risks?.length ? (
+                <StyledLi>
+                  <Names> Risks</Names>
+                  <ul>
+                    {risks?.map(risk => (
+                      <StyledTd key={risk.id}>
+                        <Link to={`/policy/${id}/details/#risks`}>
+                          {risk.name}
+                        </Link>
+                      </StyledTd>
+                    ))}
+                  </ul>
+                </StyledLi>
+              ) : null}
+              {controls?.length ? (
+                <StyledLi>
+                  <Names>Controls:</Names>
+                  <ul>
+                    {controls?.map(control => (
+                      <StyledTd key={control.id}>
+                        <Link to={`/policy/${id}/details/#controls`}>
+                          {control.description}
+                        </Link>
+                      </StyledTd>
+                    ))}
+                  </ul>
+                </StyledLi>
+              ) : null}
+              {resources?.length ? (
+                <StyledLi>
+                  <Names>Resources:</Names>
+                  <ul>
+                    {resources?.map(resource => (
+                      <StyledTd key={resource.id}>
+                        <Link to={`/policy/${id}/resources`}>
+                          {resource.name}
+                        </Link>
+                      </StyledTd>
+                    ))}
+                  </ul>
+                </StyledLi>
+              ) : null}
+              {references?.length ? (
+                <StyledLi>
+                  <Names>References:</Names>
+                  <ul>
+                    {references?.map(reference => (
+                      <StyledTd key={reference.id}>
+                        <Link to={`/policy/${id}/details/#references`}>
+                          {reference.name}
+                        </Link>
+                      </StyledTd>
+                    ))}
+                  </ul>
+                </StyledLi>
+              ) : null}
+            </StyledUl>
+          )}
+        </AttributeSection>
+        <TitleAndDescriptionSection>
+          <StyledLink to={`/policy/${id}/details`}>
+            <div className="text-right">
+              <DateHover withIcon>{updatedAt}</DateHover>
+            </div>
+            <div>
+              <StyledTitle>
+                <strong>{title}</strong>
+              </StyledTitle>
+            </div>
+            <div className="text-secondary">{previewHtml(description || "")}</div>
+          </StyledLink>
+        </TitleAndDescriptionSection>
+      </PolicySearchItemContainer>}
+    </Fragment>
   );
 }
 
@@ -132,7 +239,25 @@ const PolicySearchItemContainer = styled.div`
     flex-direction: column;
   }
 `;
-
+const PolicySearchItemContainerMini = styled.div`
+  /* display: flex;
+  flex-direction: row; */
+  background: #f7f7f7;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  margin-top: 20px;
+  &:last-child {
+    margin-bottom: 0px;
+  }
+  border-radius: 5px;
+  overflow: hidden;
+  /* for small screen */
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+  }
+`;
 const TitleAndDescriptionSection = styled.div`
   width: 60%;
   margin-left: 1.5rem;
@@ -188,8 +313,20 @@ const StyledTd = styled.li`
   font-size: 13px;
   word-break: break-all;
   width: 140%;
+  
 `;
 
+const StyledTdMini = styled.li`
+  &:hover {
+    color: #d85604;
+  }
+  font-size: 13px;
+  word-break: break-all;
+  width: 120%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+`;
 const StyledLink = styled(Link)`
   color: unset;
   text-decoration: none;
