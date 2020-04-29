@@ -26,7 +26,7 @@ import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
-import { Badge, Nav, NavItem, TabContent, TabPane } from "reactstrap";
+import { Badge, Nav, NavItem, TabContent, TabPane, Row, Col } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useApproveRequestEditMutation,
@@ -609,8 +609,8 @@ export default function Policy({
       theMenu = [...mainMenu, ...basicMenu];
     }
     return (
-      <div className="d-flex align-items-center">
-        <div className="d-none d-lg-flex align-items-center">
+      <div className="d-flex align-items-center" >
+        <div className="d-none d-lg-flex align-items-center ">
           {!isMaximumLevel && (isAdmin || isAdminPreparer || isAdminReviewer) && (
             <Button
               tag={Link}
@@ -661,7 +661,7 @@ export default function Policy({
               </Tooltip>
             ))}
         </div>
-        <Menu data={theMenu}>
+        <Menu data={theMenu} >
           <FaEllipsisV />
         </Menu>
       </div>
@@ -824,7 +824,8 @@ export default function Policy({
           ["/policy/" + id, title]
         ]}
       />
-      <div className="d-flex justify-content-between">
+      <Row className="d-flex justify-content-between">
+        <Col lg={9}>
         <HeaderWithBackButton
           draft={!!draft}
           review={
@@ -835,8 +836,9 @@ export default function Policy({
         >
           {title}
         </HeaderWithBackButton>
+        </Col>
         {renderGeneralAction()}
-      </div>
+      </Row>
 
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
     </div>
