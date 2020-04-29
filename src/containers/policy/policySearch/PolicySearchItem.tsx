@@ -323,9 +323,11 @@ const StyledTdMini = styled.li`
   font-size: 13px;
   word-break: break-all;
   width: 120%;
-  white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
 `;
 const StyledLink = styled(Link)`
   color: unset;
