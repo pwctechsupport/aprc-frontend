@@ -23,6 +23,7 @@ import { Collapse } from "reactstrap";
 import AllPolicyDashboard from "./components/AllPolicyDashboard";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Tooltip from "../../shared/components/Tooltip";
+import DateHover from "../../shared/components/DateHover";
 
 export default function Policies({ history }: RouteComponentProps) {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -53,7 +54,7 @@ export default function Policies({ history }: RouteComponentProps) {
   });
   const policies = data?.policies?.collection || [];
   const totalCount = data?.policies?.metadata.totalCount || 0;
-
+console.log('policies',policies)
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
@@ -94,9 +95,12 @@ export default function Policies({ history }: RouteComponentProps) {
       <Table reloading={loading} responsive>
         <thead>
           <tr>
+            <th>ID</th>
             <th className="w-40">Title</th>
             <th>Category</th>
             <th>Status</th>
+            <th>Last Updated</th>
+            <th>Last Updated By</th>
             <th></th>
           </tr>
         </thead>
@@ -144,6 +148,7 @@ const PolicyTableRow = ({
   return (
     <>
       <tr key={policy.id} onClick={() => onClick(policy.id)}>
+        <td>{policy.id}</td>
         <td>
           <div
             style={level ? { marginLeft: level * 10 } : {}}
@@ -155,9 +160,10 @@ const PolicyTableRow = ({
             {policy.title}
           </div>
         </td>
-
         <td>{policy.policyCategory?.name || ""}</td>
         <td>{capitalCase(policy.status || "")}</td>
+        <td>  <DateHover>{policy?.lastUpdatedAt}</DateHover></td>
+        <td>{policy?.lastUpdatedBy}</td>
         <td className="action">
           <Tooltip description="Delete Policy">
             <DialogButton

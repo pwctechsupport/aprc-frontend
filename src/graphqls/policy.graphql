@@ -119,6 +119,8 @@ fragment policyBranch on Policy {
   parentId
   status
   ancestry
+  lastUpdatedAt
+  lastUpdatedBy
   policyCategory {
     id
     name
