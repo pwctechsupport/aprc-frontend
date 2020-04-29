@@ -109,13 +109,13 @@ export default function Policy({
     fetchPolicy: "network-only",
     pollInterval: 30000
   });
+  const isDraft=data?.policy?.draft
   const isAdminView = location.pathname.split("/")[1] === "policy-admin";
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer"
   ]);
-console.log('data',data?.policy?.ancestry)
   const scrollToRisk = useCallback(
     () =>
       window.scrollTo({
@@ -443,6 +443,7 @@ console.log('data',data?.policy?.ancestry)
             </Route>
             <Route exact path="/policy/:id/resources">
               <ResourcesTab
+              isDraft={isDraft}
                 formDefaultValues={{
                   policyIds: [
                     {

@@ -21,10 +21,12 @@ import ResourceForm, {
 
 export default function ResourcesTab({
   queryFilters,
-  formDefaultValues
+  formDefaultValues,
+  isDraft
 }: {
   queryFilters: any;
   formDefaultValues: ResourceFormValues;
+  isDraft:any;
 }) {
   // Pagination state handlers
   const { limit, page, handlePageChange } = useListState({
@@ -89,6 +91,7 @@ export default function ResourcesTab({
           loading={loading}
           placeholder="Search Resources..."
         />
+        {isDraft===null &&
         <Tooltip description="Create Resource">
           <Button
             onClick={toggleAddResourceModal}
@@ -97,7 +100,8 @@ export default function ResourcesTab({
           >
             <FaPlus />
           </Button>
-        </Tooltip>
+        </Tooltip>}
+        
       </div>
       {resources.length ? (
         resources.map(resource => (
