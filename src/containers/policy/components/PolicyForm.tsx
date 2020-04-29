@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -26,6 +26,7 @@ const PolicyForm = ({
   toggleEditMode,
   isAdmin = true,
 }: PolicyFormProps) => {
+  const [createS,setCreateS]=useState(false)
   const policyCategoriesState = usePolicyCategoriesQuery();
   const { register, setValue, watch, errors, handleSubmit } = useForm<
     PolicyFormValues
@@ -55,9 +56,11 @@ const PolicyForm = ({
 
   function submit(values: PolicyFormValues) {
     onSubmit && onSubmit(values);
+    setCreateS(true)
   } 
   function submitToReviewer(values: PolicyFormValues) {
     handleSubmitToReviewer && handleSubmitToReviewer(values);
+    setCreateS(false)
   }
   function submitFromDrafted(values:SubmitAsliBro){
     submitFromDraft && submitFromDraft(values)
@@ -73,7 +76,6 @@ const PolicyForm = ({
   if (policyCategoriesState.loading) {
     return <LoadingSpinner centered size={30} />;
   }
-
   return (
     <div>
       <Form>
@@ -127,24 +129,25 @@ const PolicyForm = ({
             </Fragment>
           ) : (
             <Fragment>
-            <DialogButton
-              color="primary"
-              loading={submitting}
-              message="Save Policy as Draft?"
-              className="pwc mr-2 px-5"
-              onConfirm={handleSubmit(submit)}
-            >
-              Save As Draft
-            </DialogButton>
-             <DialogButton
-             color="primary"
-            //  loading={}
-             className="pwc px-5"
-             message="Submit Policy?"
-             onConfirm={handleSubmit(submitToReviewer)}
-           >
-             Submit 
-           </DialogButton>
+                <DialogButton
+                  color="primary"
+                  loading={createS? submitting : false}
+                  message="Save Policy as Draft?"
+                  className="pwc mr-2 px-5"
+                  onConfirm={handleSubmit(submit)}
+                >
+                  Save As Draft
+                </DialogButton>
+                 
+                <DialogButton
+                  color="primary"
+                  loading={createS? false : loadingSubmit||submitting}
+                  className="pwc px-5"
+                  message="Submit Policy?"
+                  onConfirm={handleSubmit(submitToReviewer)}
+                >
+                  Submit 
+                </DialogButton>
            </Fragment>
           )}
           {isCreate ? (

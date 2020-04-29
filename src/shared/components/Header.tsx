@@ -8,12 +8,12 @@ function Header({ heading = "", children, draft, review }: Header) {
       {heading || children}
       {draft && (
         <span className="ml-2">
-          <Badge>Draft</Badge>
           {review ? (
             <Badge style={{ position: "relative", marginLeft: "5px" }}>
               Waiting For Review
             </Badge>
-          ) : null}
+          ) : <Badge>Draft</Badge>
+        }
         </span>
       )}
     </Heading>

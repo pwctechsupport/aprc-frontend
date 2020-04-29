@@ -104,7 +104,7 @@ const Notification = ({ history }: RouteComponentProps) => {
         variables: { input: { id: String(notifId) } }
       });
 
-      if (type === "Policy") history.push(`/policy/${id}`);
+      if (type === "Policy") history.push(`/policy/${id}/details`);
       else if (type === "BusinessProcess")
         history.push(`/business-process/${id}`);
       else if (type === "Control") history.push(`/control/${id}`);
