@@ -49,7 +49,7 @@ const ReferenceSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policy Reference Admin"
             : "Policy Reference"}
-          {(isAdmin || isAdminReviewer || isAdminPreparer) && (
+          {(isAdmin ||  isAdminPreparer) && (
             <Tooltip description="Create Policy">
               <Button
                 tag={Link}

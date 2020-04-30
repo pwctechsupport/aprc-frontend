@@ -126,13 +126,15 @@ export default function BusinessProcess({
           <h4>{name}</h4>
           {isAdmin || isAdminReviewer || isAdminPreparer ? (
             <div>
-              <Button
+              {isAdmin || isAdminPreparer && 
+                <Button
                 onClick={toggleEdit}
                 className="soft orange mr-3"
                 color=""
-              >
-                <FaPencilAlt />
-              </Button>
+                >
+                  <FaPencilAlt />
+                </Button>
+              }
               <DialogButton
                 onConfirm={() => handleDeleteMain(id)}
                 loading={destroyMainM.loading}
@@ -146,13 +148,13 @@ export default function BusinessProcess({
         </div>
       )}
       <h6>ID: {id}</h6>
-      {isAdmin || isAdminReviewer || isAdminPreparer ? (
+      {isAdmin || isAdminPreparer ? (
         <div className="mt-5">
           {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}
         </div>
       ) : null}
 
-      <Table reloading={loading}>
+      <Table reloading={loading} className='mt-5'>
         <thead>
           <tr>
             <th>Business Process</th>

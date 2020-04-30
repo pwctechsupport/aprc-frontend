@@ -75,7 +75,7 @@ console.log('policies',policies)
         <OpacityButton onClick={toggleShowDashboard}>
           {showDashboard ? " Hide" : "Show"} Dashboard
         </OpacityButton>
-        {(isAdmin || isAdminReviewer || isAdminPreparer) && (
+        {(isAdmin ||  isAdminPreparer) && (
           <Button to="/policy/create" tag={Link} className="pwc">
             + Add Policy
           </Button>

@@ -50,7 +50,7 @@ const RiskSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Risk Admin"
             : "Risk"}
-          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+          {isAdmin || isAdminPreparer ? (
             <Tooltip description="Create Risk">
               <Button
                 tag={Link}
