@@ -77,7 +77,10 @@ const Resources = ({ history }: RouteComponentProps) => {
         <title>Resources - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb crumbs={[["/resources", "Resources"]]} />
-      <div className="d-flex justify-content-end align-items-center mb-3">
+      <div className="d-flex justify-content-between align-items-center mb-3">
+
+      <h4>Resources</h4>
+
         {isAdminReviewer ? (
           <div className="d-flex">
             <Tooltip

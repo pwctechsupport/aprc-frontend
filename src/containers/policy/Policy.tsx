@@ -313,7 +313,9 @@ export default function Policy({
   const subCount = oc(data).policy.subCount({});
   const isMaximumLevel = ancestry.split("/").length === 5;
   const ancestors = data?.policy?.ancestors || [];
-  const updatedAt = data?.policy?.updatedAt;
+  const lastUpdatedAt = data?.policy?.lastUpdatedAt;
+  const createdBy = data?.policy?.createdBy;
+
   const versionsCount = data?.policy?.versionsCount;
   const breadcrumb = ancestors.map((a: any) => [
     "/policy/" + a.id,
@@ -377,8 +379,9 @@ export default function Policy({
               }
             >
               <div className="text-right my-2 text-secondary">
-                <DateHover withIcon>{updatedAt}</DateHover>
-                <div>Version: {versionsCount}</div>
+                <div className='mb-1  '>Created By : {createdBy}</div>
+                <DateHover withIcon>{lastUpdatedAt}</DateHover>
+                <div className='mt-1  '>Version : {versionsCount}</div>
               </div>
               <div className="d-flex justify-content-end">
                 {renderPolicyAction()}
@@ -825,7 +828,7 @@ export default function Policy({
         ]}
       />
       <Row className="d-flex justify-content-between">
-        <Col lg={9}>
+        <Col>
         <HeaderWithBackButton
           draft={!!draft}
           review={

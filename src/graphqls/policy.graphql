@@ -177,7 +177,9 @@ query policy($id: ID!, $withChild: Boolean = false) {
     requestStatus
     status
     updatedAt
+    lastUpdatedAt
     createdAt
+    createdBy
     requestEdit {
       id
       state
