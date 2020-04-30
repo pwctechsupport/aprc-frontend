@@ -611,7 +611,7 @@ export default function Policy({
     return (
       <div className="d-flex align-items-center" >
         <div className="d-none d-lg-flex align-items-center ">
-          {!isMaximumLevel && (isAdmin || isAdminPreparer || isAdminReviewer) && (
+          {!isMaximumLevel && (isAdmin || isAdminPreparer ) && (
             <Button
               tag={Link}
               to={

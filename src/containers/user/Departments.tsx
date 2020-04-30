@@ -21,6 +21,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { FaTrash, FaTimes } from "react-icons/fa";
 import DialogButton from "../../shared/components/DialogButton";
 import * as yup from "yup";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Departments = ({ history }: RouteComponentProps) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -73,6 +74,11 @@ const Departments = ({ history }: RouteComponentProps) => {
     create({ variables: { input: { name: values.name } } });
     creating.reset();
   };
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer"
+  ]);
   return (
     <div>
       <Helmet>
@@ -80,10 +86,13 @@ const Departments = ({ history }: RouteComponentProps) => {
       </Helmet>
       <Container fluid className="p-0 pt-3 px-4">
         <h2>Department</h2>
-        <Row style={{ position: "relative", marginTop: "30px", left: "15px" }}>
-          <h5> Add Department</h5>
-        </Row>
-        <Row>
+        
+        {isAdmin|| isAdminPreparer  && 
+          <Fragment>
+          <Row style={{ position: "relative", left: "15px" }}>
+            <h5> Add Department</h5>
+          </Row>
+          <Row>
           <Col>
             <Form
               onSubmit={creating.handleSubmit(handleCreate)}
@@ -121,8 +130,10 @@ const Departments = ({ history }: RouteComponentProps) => {
               </Row>
             </Form>
           </Col>
-        </Row>
-        <Row style={{ position: "relative", bottom: "20px" }}>
+          </Row>
+        </Fragment>}
+        
+        <Row style={{ position: "relative", marginTop: `${isAdminReviewer? '40px': '0px'}`, bottom: "20px" }}>
           <Col lg={9}>
             <h5> Search Department</h5>
             <Input placeholder="Search Department..." onChange={handleSearch} />
@@ -199,14 +210,18 @@ const Departments = ({ history }: RouteComponentProps) => {
                             <FaTrash />
                           </Tooltip>
                         </DialogButton>
-                        <Button
+                        {isAdmin||isAdminPreparer&&
+                         <Button
                           onClick={() => toggleEdit(department.id)}
                           className="soft orange mr-2"
-                        >
+                        > 
                           <Tooltip description="Edit User">
                             <AiFillEdit />
                           </Tooltip>
                         </Button>
+                        }
+
+                       
                       </Fragment>
                     </Fragment>
                   )}

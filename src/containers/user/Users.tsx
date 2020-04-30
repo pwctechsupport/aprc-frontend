@@ -57,11 +57,13 @@ const Users = () => {
                   </Tooltip>
                 </Button>
               </NavLink>
+              {isAdmin || isAdminPreparer &&  
               <NavLink to="/user/create">
                 <Button outline color="pwc" className="pwc mb-5">
                   Add User
                 </Button>
-              </NavLink>
+              </NavLink>}
+             
             </Col>
           ) : null}
         </Row>

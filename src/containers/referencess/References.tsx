@@ -76,7 +76,9 @@ const References = () => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+  const [isAdminReviewer] = useAccessRights([
+    "admin_reviewer",
+  ]);  
   return (
     <div>
       <Helmet>
@@ -311,7 +313,8 @@ const ReferenceRow = ({
               </div>
             ) : (
               <div>
-                <Button
+              {isAdminPreparer || isAdmin &&
+              <Button
                   color=""
                   onClick={toggleEdit}
                   className="soft orange mr-2"
@@ -320,7 +323,7 @@ const ReferenceRow = ({
                     <FaPencilAlt />
                   </Tooltip>
                 </Button>
-
+                }
                 <DialogButton
                   onConfirm={onDelete}
                   loading={deleteLoading}

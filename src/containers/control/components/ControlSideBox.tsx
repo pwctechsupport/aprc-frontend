@@ -50,7 +50,7 @@ const ControlSideBox = () => {
           {isAdmin || isAdminPreparer || isAdminReviewer
             ? "Control Admin"
             : "Control"}
-          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+          {isAdmin ||  isAdminPreparer ? (
             <Tooltip description="Create Control">
               <Button
                 tag={Link}
@@ -78,7 +78,7 @@ const ControlSideBox = () => {
             activeClassName="active"
           >
             <SideBoxItemText flex={2} bold>
-              {oc(control).description}
+              {control.description}
             </SideBoxItemText>
             <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(oc(control).updatedAt(""))}

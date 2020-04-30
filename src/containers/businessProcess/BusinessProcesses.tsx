@@ -106,7 +106,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           </Modal>
 
           <div className="mb-3 d-flex justify-content-end">
-            {isAdmin || isAdminReviewer || isAdminPreparer ? (
+            {isAdmin ||  isAdminPreparer ? (
               <Tooltip description="Create Business Process">
                 <Button
                   onClick={toggleCreateBpModal}
