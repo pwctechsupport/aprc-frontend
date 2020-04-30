@@ -126,7 +126,7 @@ export default function BusinessProcess({
           <h4>{name}</h4>
           {isAdmin || isAdminReviewer || isAdminPreparer ? (
             <div>
-              {isAdmin || isAdminPreparer && 
+              {(isAdmin || isAdminPreparer )?
                 <Button
                 onClick={toggleEdit}
                 className="soft orange mr-3"
@@ -134,7 +134,7 @@ export default function BusinessProcess({
                 >
                   <FaPencilAlt />
                 </Button>
-              }
+              :null}
               <DialogButton
                 onConfirm={() => handleDeleteMain(id)}
                 loading={destroyMainM.loading}

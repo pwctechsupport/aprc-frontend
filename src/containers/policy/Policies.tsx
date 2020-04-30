@@ -26,9 +26,8 @@ import Tooltip from "../../shared/components/Tooltip";
 import DateHover from "../../shared/components/DateHover";
 
 export default function Policies({ history }: RouteComponentProps) {
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminPreparer] = useAccessRights([
     "admin",
-    "admin_reviewer",
     "admin_preparer",
   ]);
   const [showDashboard, setShowDashboard] = useState(false);

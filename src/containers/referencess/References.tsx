@@ -313,7 +313,7 @@ const ReferenceRow = ({
               </div>
             ) : (
               <div>
-              {isAdminPreparer || isAdmin &&
+              {(isAdminPreparer || isAdmin )&&
               <Button
                   color=""
                   onClick={toggleEdit}

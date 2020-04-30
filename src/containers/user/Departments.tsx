@@ -87,7 +87,7 @@ const Departments = ({ history }: RouteComponentProps) => {
       <Container fluid className="p-0 pt-3 px-4">
         <h2>Department</h2>
         
-        {isAdmin|| isAdminPreparer  && 
+        {(isAdmin|| isAdminPreparer  )&& 
           <Fragment>
           <Row style={{ position: "relative", left: "15px" }}>
             <h5> Add Department</h5>
@@ -210,7 +210,7 @@ const Departments = ({ history }: RouteComponentProps) => {
                             <FaTrash />
                           </Tooltip>
                         </DialogButton>
-                        {isAdmin||isAdminPreparer&&
+                        {(isAdmin||isAdminPreparer)&&
                          <Button
                           onClick={() => toggleEdit(department.id)}
                           className="soft orange mr-2"
