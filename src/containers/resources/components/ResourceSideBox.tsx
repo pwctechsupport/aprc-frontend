@@ -48,7 +48,7 @@ const ResourceSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Resources Admin"
             : "Resources"}
-          {isAdmin || isAdminPreparer ? (
+          {isAdmin || isAdminReviewer || isAdminPreparer ? (
             <Tooltip description="Create Resource">
               <Button
                 tag={Link}

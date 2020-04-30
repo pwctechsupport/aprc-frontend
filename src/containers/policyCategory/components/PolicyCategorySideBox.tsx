@@ -30,6 +30,7 @@ const PolicyCategorySideBox = () => {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const admins = isAdmin || isAdminReviewer || isAdminPreparer;
 
   const onScroll = (e: any) => {
     const scroll =
@@ -46,7 +47,7 @@ const PolicyCategorySideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policy Category Admin"
             : "Policy Category"}
-          {isAdminPreparer || isAdmin ? (
+          {admins ? (
             <Tooltip description="Create Policy Category">
               <Button
                 tag={Link}

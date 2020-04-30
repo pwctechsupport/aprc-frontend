@@ -59,7 +59,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policies Admin"
             : "Policies"}
-          {(isAdmin  || isAdminPreparer) && (
+          {(isAdmin || isAdminReviewer || isAdminPreparer) && (
             <Tooltip description="Create Policy">
               <Button
                 tag={Link}
