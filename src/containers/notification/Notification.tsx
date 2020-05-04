@@ -152,7 +152,6 @@ const Notification = ({ history }: RouteComponentProps) => {
     setLabelTime("Date Added...");
   };
   const [isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
     "admin_reviewer",
     "admin_preparer",
   ]);
@@ -244,7 +243,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                 </th>
                 <th>Name</th>
                 <th>Subject</th>
-                <th>Date Added</th>
+                <th style={{ width: "10%" }}>Date Added</th>
               </tr>
             </thead>
             <tbody>
