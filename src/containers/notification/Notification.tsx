@@ -9,7 +9,7 @@ import {
   DestroyBulkNotificationInput,
   useDestroyBulkNotificationMutation,
   useIsReadMutation,
-  useNotificationsQuery
+  useNotificationsQuery,
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
@@ -22,6 +22,7 @@ import humanizeDate from "../../shared/utils/humanizeDate";
 import { notifyError } from "../../shared/utils/notif";
 import { useForm } from "react-hook-form";
 import Select from "react-select";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [labelTime, setLabelTime] = useState("Date Added...");
@@ -32,7 +33,7 @@ const Notification = ({ history }: RouteComponentProps) => {
     { label: "In 7 days", value: 3 },
     { label: "In a month", value: 4 },
     { label: "In 90 days", value: 5 },
-    { label: "In a year", value: 6 }
+    { label: "In a year", value: 6 },
   ];
   const aDay = 86400000;
   const aWeek = 604800000;
@@ -61,7 +62,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   const notificationForm = useForm();
   const { limit, page, handlePageChange } = useListState({
     limit: 10,
-    page: 1
+    page: 1,
   });
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -69,7 +70,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   const onSubmit = (values: any) => {
     setFilter({
       title_or_originator_type_or_sender_user_name_cont: values.notif,
-      created_at_gteq: constructDateFilter(labelTime)
+      created_at_gteq: constructDateFilter(labelTime),
     });
   };
 
@@ -78,8 +79,8 @@ const Notification = ({ history }: RouteComponentProps) => {
     variables: {
       filter,
       limit,
-      page
-    }
+      page,
+    },
   });
 
   const notifications = data?.notifications?.collection || [];
@@ -91,17 +92,17 @@ const Notification = ({ history }: RouteComponentProps) => {
     },
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["notifications", "notificationsCount"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   const [isRead] = useIsReadMutation({
     refetchQueries: ["notifications", "notificationsCount"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   async function redirect(type: string, id: number | string, notifId: string) {
     try {
       await isRead({
-        variables: { input: { id: String(notifId) } }
+        variables: { input: { id: String(notifId) } },
       });
 
       if (type === "Policy") history.push(`/policy/${id}/details`);
@@ -121,7 +122,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   const handleDelete = () => {
     const notifIds: DestroyBulkNotificationInput = { ids: selected };
     destroyNotifs({
-      variables: { input: notifIds }
+      variables: { input: notifIds },
     });
   };
 
@@ -131,7 +132,7 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
-      setSelected(selected.filter(i => i !== id));
+      setSelected(selected.filter((i) => i !== id));
     } else {
       setSelected(selected.concat(id));
     }
@@ -139,7 +140,7 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.checked) {
-      setSelected(notifications.map(n => String(n.id)));
+      setSelected(notifications.map((n) => String(n.id)));
     } else {
       setSelected([]);
     }
@@ -150,6 +151,11 @@ const Notification = ({ history }: RouteComponentProps) => {
   const handleReset = () => {
     setLabelTime("Date Added...");
   };
+  const [isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
   return (
     <div>
       <Helmet>
@@ -242,7 +248,7 @@ const Notification = ({ history }: RouteComponentProps) => {
               </tr>
             </thead>
             <tbody>
-              {notifications.map(data => {
+              {notifications.map((data) => {
                 let dataType: string = "";
 
                 switch (data.dataType) {
@@ -273,7 +279,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       <input
                         type="checkbox"
                         checked={selected.includes(String(data.id))}
-                        onClick={e => e.stopPropagation()}
+                        onClick={(e) => e.stopPropagation()}
                         onChange={() => toggleCheck(String(data.id))}
                       />
                     </td>
@@ -281,7 +287,44 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {data.senderUserName}
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {data.title}
+                      {isAdminReviewer &&
+                        `Action required: [${
+                          data.senderUserName
+                        }] has requested for ${
+                          data.dataType !== "request_draft"
+                            ? "edit"
+                            : "approval"
+                        } for ${data.title}`}
+                      {isAdminPreparer && data.dataType?.includes("request")
+                        ? `Notification: [${data.title
+                            ?.split(" ")
+                            .filter((c) => c !== "Approved")
+                            .join(" ")}] has been ${
+                            data.title?.includes("Approve")
+                              ? "[Approved]"
+                              : "[Rejected]"
+                          }
+                        `
+                        : isAdminPreparer &&
+                          data.title?.includes("with") &&
+                          data.title?.includes("i.e.: ") &&
+                          `Notification: ${data.title
+                            ?.replace(
+                              `${data.title.split("with")[0]}`,
+                              `[${data.title.split("with")[0]}] `
+                            )
+                            .replace(
+                              `${data.title.split("i.e.: ")[1]}`,
+                              `${data.title
+                                .split("i.e.: ")[1]
+                                .split(", ")
+                                .map((a) => `[${a}]`)
+                                .join(", ")}`
+                            )
+                            .replace(
+                              `${data.title.split("with")[1].split(" ")[1]}`,
+                              `[${data.title.split("with")[1].split(" ")[1]}]`
+                            )}`}
                     </td>
                     <td className={data.isRead ? "" : "text-orang text-bold"}>
                       <div>{humanizeDate(data.createdAt)}</div>
