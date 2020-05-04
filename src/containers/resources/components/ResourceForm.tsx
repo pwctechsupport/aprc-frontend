@@ -11,7 +11,7 @@ import {
   EnumListsQuery,
   PoliciesDocument,
   PoliciesQuery,
-  Tag
+  Tag,
 } from "../../../generated/graphql";
 import { APP_ROOT_URL } from "../../../settings";
 import Button from "../../../shared/components/Button";
@@ -23,7 +23,7 @@ import ImageTagger from "../../../shared/components/ImageTagger";
 import {
   Suggestion,
   Suggestions,
-  toLabelValue
+  toLabelValue,
 } from "../../../shared/formatter";
 import useDialogBox from "../../../shared/hooks/useDialogBox";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
@@ -62,7 +62,7 @@ export default function ResourceForm({
   submitting,
   toggleEditMode,
   history,
-  isCreate
+  isCreate,
 }: // isDraft,
 ResourceFormProps) {
   const dialogBox = useDialogBox();
@@ -71,7 +71,7 @@ ResourceFormProps) {
     ResourceFormValues
   >({
     defaultValues,
-    validationSchema
+    validationSchema,
   });
   const [activityType, setActivityType] = useState("text");
   const [tags, setTags] = useState(defaultValues?.tagsAttributes || []);
@@ -82,7 +82,7 @@ ResourceFormProps) {
   function submit(data: ResourceFormValues) {
     dialogBox({
       text: name ? `Update Resource "${name}"?` : "Create Resource?",
-      callback: () => onSubmit?.({ ...data, tagsAttributes: tags })
+      callback: () => onSubmit?.({ ...data, tagsAttributes: tags }),
     });
   }
 
@@ -193,9 +193,19 @@ ResourceFormProps) {
             innerRef={register}
             error={errors.resuploadLink && errors.resuploadLink.message}
           />
+        ) : selectedCategory?.value !== "Flowchart" &&
+          activityType !== "text" ? (
+          <FileInput
+            name="resuploadBase64"
+            register={register}
+            setValue={setValue}
+            onFileSelect={setPreview}
+            errorForm={errors.resuploadLink && errors.resuploadLink.message}
+          />
         ) : (
           <FileInput
             name="resuploadBase64"
+            flowchart
             register={register}
             setValue={setValue}
             onFileSelect={setPreview}
@@ -257,7 +267,7 @@ const validationSchema = yup.object().shape({
   name: yup.string().required("Name is a required field"),
   category: yup.object().shape({
     label: yup.string().required("Category is a required field"),
-    value: yup.string().required()
+    value: yup.string().required(),
   }),
   controlIds: yup.array(),
   businessProcessId: yup.object(),
@@ -266,14 +276,14 @@ const validationSchema = yup.object().shape({
     then: yup
       .array()
       .required("Please select related policies or related control"),
-    otherwise: yup.array()
+    otherwise: yup.array(),
   }),
   resuploadBase64: yup.string(),
   resuploadLink: yup.string().when("resuploadBase64", {
     is: undefined,
     then: yup.string().required("Please insert URL or attachment"),
-    otherwise: yup.string()
-  })
+    otherwise: yup.string(),
+  }),
 });
 // ==========================================
 // Custom Hooks
@@ -284,7 +294,7 @@ function useLoadCategories() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont, category_type_eq: "Category" }
+        filter: { name_cont, category_type_eq: "Category" },
       });
       return data.enumLists?.collection.map(toLabelValue) || [];
     } catch (error) {
@@ -299,7 +309,7 @@ function useLoadPolicies() {
   async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { title_cont }
+        filter: { title_cont },
       });
       return data.policies?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -316,7 +326,7 @@ function useLoadControls() {
   ): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { description_cont }
+        filter: { description_cont },
       });
       return (
         data.controls?.collection
@@ -337,7 +347,7 @@ function useLoadBps() {
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { name_cont }
+        filter: { name_cont },
       });
       return data.businessProcesses?.collection.map(toLabelValue) || [];
     } catch (error) {
