@@ -34,7 +34,6 @@ const Users = () => {
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
   }
-
   return (
     <div>
       <Helmet>
@@ -57,13 +56,13 @@ const Users = () => {
                   </Tooltip>
                 </Button>
               </NavLink>
-              {(isAdmin || isAdminPreparer )&&  
-              <NavLink to="/user/create">
-                <Button outline color="pwc" className="pwc mb-5">
-                  Add User
-                </Button>
-              </NavLink>}
-             
+              {(isAdmin || isAdminPreparer) && (
+                <NavLink to="/user/create">
+                  <Button outline color="pwc" className="pwc mb-5">
+                    Add User
+                  </Button>
+                </NavLink>
+              )}
             </Col>
           ) : null}
         </Row>
@@ -94,7 +93,7 @@ const Users = () => {
                   Created At
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
-                Last Updated
+                  Last Updated
                 </th>
 
                 {admins ? <th>Action</th> : <th></th>}
@@ -104,7 +103,13 @@ const Users = () => {
               {oc(data)
                 .users.collection([])
                 .map((user) => {
-                  return <UserRow key={user.id} user={user} />;
+                  return (
+                    <UserRow
+                      key={user.id}
+                      user={user}
+                      policyCategories={user.policyCategory}
+                    />
+                  );
                 })}
             </tbody>
           </Table>

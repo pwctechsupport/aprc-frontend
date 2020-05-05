@@ -2,6 +2,7 @@ query users($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   users(filter: $filter, page: $page, limit: $limit) {
     collection {
       ...userRowFragment
+      policyCategory
     }
     metadata {
       currentPage
@@ -31,6 +32,7 @@ fragment userRowFragment on User {
   ...userFragment
   hasEditAccess
   requestStatus
+
   requestEdit {
     id
     state

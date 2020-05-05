@@ -30,6 +30,7 @@ import Tooltip from "../../../shared/components/Tooltip";
 interface UserRowProps {
   isEdit?: boolean;
   user?: UserRowFragmentFragment;
+  policyCategories?: any;
 }
 
 interface UserRowValues {
@@ -38,7 +39,11 @@ interface UserRowValues {
   policyCategoryIds?: Suggestions;
 }
 
-export default function UserRow({ user, ...props }: UserRowProps) {
+export default function UserRow({
+  user,
+  policyCategories,
+  ...props
+}: UserRowProps) {
   const [isEdit, setIsEdit] = useState(props.isEdit);
   const { register, setValue, handleSubmit, errors } = useForm<UserRowValues>({
     defaultValues: {
@@ -120,7 +125,7 @@ export default function UserRow({ user, ...props }: UserRowProps) {
           name: data.name || "",
           userId: oc(user).id(""),
           policyCategoryIds: data.policyCategoryIds?.map((a) => a.value),
-          roleIds: data.roleIds?.value||'',
+          roleIds: data.roleIds?.value || "",
         },
       },
     });
@@ -164,12 +169,7 @@ export default function UserRow({ user, ...props }: UserRowProps) {
             .map((r) => r.name)
             .join(",")}
         </td>
-        <td>
-          {oc(user)
-            .policyCategories([])
-            .map((p) => p.name)
-            .join(",")}
-        </td>
+        <td>{policyCategories.join(",")}</td>
         <td>{status}</td>
         <td>{createdAt.split(" ")[0]}</td>
         <td>{updatedAt.split(" ")[0]}</td>
