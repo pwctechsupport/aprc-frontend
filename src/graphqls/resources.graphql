@@ -24,6 +24,8 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
       visit
       updatedAt
       lastUpdatedBy
+      rating
+      totalRating
     }
     metadata {
       currentPage
