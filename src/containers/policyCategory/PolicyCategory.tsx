@@ -20,7 +20,6 @@ import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Tooltip from "../../shared/components/Tooltip";
-import { toLabelValue } from "../../shared/formatter";
 import useEditState from "../../shared/hooks/useEditState";
 import {
   notifyGraphQLErrors,
