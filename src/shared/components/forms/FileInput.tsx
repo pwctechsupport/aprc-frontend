@@ -9,26 +9,37 @@ interface FileInputProps {
   register: Function;
   setValue: Function;
   supportedFileTypes?: string[];
+  supportedFileTypesFlowchart?: string[];
   onFileSelect?: (data: string) => void;
   errorForm?: string;
+  flowchart?: boolean;
 }
 
-const defaultSupportedFileTypes = ["image/jpeg", "image/png"];
-
+const defaultSupportedFileTypes = [
+  "image/jpeg",
+  "image/png",
+  "application/pdf",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+const flowchartSupportedFileTypes = ["image/jpeg", "image/png"];
 export default function FileInput({
   name,
   register,
   errorForm,
+  flowchart,
   setValue,
+  supportedFileTypesFlowchart = flowchartSupportedFileTypes,
   supportedFileTypes = defaultSupportedFileTypes,
-  onFileSelect
+  onFileSelect,
 }: FileInputProps) {
-  const fileTypeErrorMsg =
-    "File type not supported. Supported types are PNG and JPG/JPEG.";
+  const fileTypeErrorMsg = !flowchart
+    ? "File type not supported. Supported types are PDF, Docs, PNG and JPG/JPEG."
+    : "File type not supported. Supported types are PNG and JPG/JPEG.";
+
   const [dragging, setDragging] = useState(false);
   const [preview, setPreview] = useState<string>();
+  const [targetFile, setTargetFile] = useState();
   const [error, setError] = useState<string | null>(null);
-
   useEffect(() => {
     register({ name: name, type: "custom" });
   }, [register, name]);
@@ -37,6 +48,7 @@ export default function FileInput({
     e.preventDefault();
     e.stopPropagation();
     e.persist();
+    setTargetFile(e.target.files);
     if (e.target.files && e.target.files[0]) {
       if (supportedFileTypes.includes(e.target.files[0].type)) {
         const reader = new FileReader();
@@ -53,14 +65,35 @@ export default function FileInput({
       }
     }
   }
+  async function handleFileSelectFlowchart(
+    e: React.ChangeEvent<HTMLInputElement>
+  ) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.persist();
+    if (e.target.files && e.target.files[0]) {
+      if (supportedFileTypesFlowchart.includes(e.target.files[0].type)) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setPreview(reader.result as string);
+          onFileSelect?.(reader.result as string);
+        };
+        reader.readAsDataURL(e.target.files[0]);
 
+        setError(null);
+        setValue(name, String(await toBase64(e.target.files[0])), true);
+      } else {
+        setError(fileTypeErrorMsg);
+      }
+    }
+  }
   async function handleDrop(e: React.DragEvent<HTMLDivElement>) {
     e.preventDefault();
     e.stopPropagation();
     e.persist();
     setDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      if (supportedFileTypes.includes(e.dataTransfer.files[0].type)) {
+      if (supportedFileTypesFlowchart.includes(e.dataTransfer.files[0].type)) {
         const reader = new FileReader();
         reader.onload = () => {
           setPreview(reader.result as string);
@@ -101,11 +134,23 @@ export default function FileInput({
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
-        {preview ? <PreviewImg src={preview} alt="preview-img" /> : null}
+        {preview?.includes("image/jpeg") || preview?.includes("image/png") ? (
+          <PreviewImg src={preview} alt={"preview-img"} />
+        ) : preview?.includes("application/pdf") ||
+          preview?.includes(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          ) ? (
+          `${targetFile && targetFile[0].name} `
+        ) : flowchart ? (
+          <PreviewImg src={preview} />
+        ) : null}
         {dragging ? "Release File" : "Drag File Here"}
         {!dragging && <span className="mx-2">Or</span>}
         <UploadButton hidden={dragging} className="custom-file-upload">
-          <HiddenInput type="file" onChange={handleFileSelect} />
+          <HiddenInput
+            type="file"
+            onChange={!flowchart ? handleFileSelect : handleFileSelectFlowchart}
+          />
           Select File
         </UploadButton>
       </Wrapper>
@@ -150,7 +195,7 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
   transition: 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
   font-size: big;
   font-weight: bold;
-  ${p =>
+  ${(p) =>
     p.dragging &&
     css`
       background: green;

@@ -4,7 +4,7 @@ import Helmet from "react-helmet";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
-  AiOutlineEdit
+  AiOutlineEdit,
 } from "react-icons/ai";
 import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
@@ -17,7 +17,7 @@ import {
   useDestroyRiskMutation,
   useReviewRiskDraftMutation,
   useRiskQuery,
-  useUpdateRiskMutation
+  useUpdateRiskMutation,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -31,7 +31,7 @@ import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess
+  notifySuccess,
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import styled from "styled-components";
@@ -39,25 +39,26 @@ import styled from "styled-components";
 export default function Risk({
   match,
   history,
-  location
+  location,
 }: RouteComponentProps) {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
   function toggleEditMode() {
-    setInEditMode(p => !p);
+    setInEditMode((p) => !p);
   }
   useEffect(() => {
-    setInEditMode(p => (p ? false : p));
+    setInEditMode((p) => (p ? false : p));
   }, [location.pathname]);
 
   const id = match.params && (match.params as any).id;
   const { data, loading } = useRiskQuery({
     variables: { id },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const name = data?.risk?.name || "";
   const levelOfRisk = data?.risk?.levelOfRisk || "";
   const typeOfRisk = data?.risk?.typeOfRisk || "";
-  const bps = data?.risk?.businessProcesses;
+  const bps = data?.risk?.businessProcess;
+
   const updatedAt = data?.risk?.updatedAt;
   const updatedBy = data?.risk?.lastUpdatedBy;
   const createdBy = data?.risk?.createdBy;
@@ -71,14 +72,13 @@ export default function Risk({
     draft,
     hasEditAccess,
     requestStatus,
-    requestEditState
+    requestEditState,
   });
-  console.log("data", data);
   const defaultValues: RiskFormValues = {
     name,
     businessProcessIds: data?.risk?.businessProcesses?.map(toLabelValue) || [],
     levelOfRisk: levelOfRisk as LevelOfRisk,
-    typeOfRisk: typeOfRisk as TypeOfRisk
+    typeOfRisk: typeOfRisk as TypeOfRisk,
   };
 
   // Update handlers
@@ -89,7 +89,7 @@ export default function Risk({
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["risks", "risk"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleUpdate(values: RiskFormValues) {
     update({
@@ -97,11 +97,11 @@ export default function Risk({
         input: {
           id,
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map(a => a.value),
+          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
           levelOfRisk: values.levelOfRisk,
-          typeOfRisk: values.typeOfRisk
-        }
-      }
+          typeOfRisk: values.typeOfRisk,
+        },
+      },
     });
   }
 
@@ -113,12 +113,12 @@ export default function Risk({
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["risks"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   // Review handlers
   const [reviewMutation, reviewMutationInfo] = useReviewRiskDraftMutation({
-    refetchQueries: ["risk"]
+    refetchQueries: ["risk"],
   });
   async function review({ publish }: { publish: boolean }) {
     try {
@@ -132,21 +132,21 @@ export default function Risk({
   // Request Edit handlers
   const [
     requestEditMutation,
-    requestEditMutationInfo
+    requestEditMutationInfo,
   ] = useCreateRequestEditMutation({
     variables: { id, type: "Risk" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["risk"]
+    refetchQueries: ["risk"],
   });
 
   // Approve and Reject handlers
   const [
     approveEditMutation,
-    approveEditMutationResult
+    approveEditMutationResult,
   ] = useApproveRequestEditMutation({
     refetchQueries: ["risk"],
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
   async function handleApproveRequest(id: string) {
     try {
@@ -270,7 +270,7 @@ export default function Risk({
       { label: "Name", value: name },
       {
         label: "Business Process",
-        value: bps?.map(a => a.name).join(", ")
+        value: bps?.join(", "),
       },
       {
         label: "Level of Risk",
@@ -278,40 +278,40 @@ export default function Risk({
           <Badge color={getRiskColor(levelOfRisk)}>
             {startCase(levelOfRisk)}
           </Badge>
-        )
+        ),
       },
       {
         label: "Type of Risk",
-        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>
-      }
+        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
+      },
     ];
     const details2 = [
       {
         label: "Last Updated",
-        value: updatedAt?.split(" ")[0]
+        value: updatedAt?.split(" ")[0],
       },
       {
         label: "Updated By",
-        value: updatedBy
+        value: updatedBy,
       },
       {
         label: "Created At",
-        value: createdAt?.split(" ")[0]
+        value: createdAt?.split(" ")[0],
       },
       {
         label: "Created By",
-        value: createdBy
+        value: createdBy,
       },
       {
         label: "Status",
-        value: status
-      }
+        value: status,
+      },
     ];
     return (
       <Container>
         <Row>
           <StyledDiv className="col-md-3">
-            {details1.map(item => (
+            {details1.map((item) => (
               <Fragment key={item.label}>
                 <dt>{item.label}</dt>
                 <dd>{item.value || "-"}</dd>
@@ -319,7 +319,7 @@ export default function Risk({
             ))}
           </StyledDiv>
           <Col>
-            {details2.map(item => (
+            {details2.map((item) => (
               <Fragment key={item.label}>
                 <dt>{item.label}</dt>
                 <dd>{item.value || "-"}</dd>
@@ -339,7 +339,7 @@ export default function Risk({
       <BreadCrumb
         crumbs={[
           ["/risk", "Risks"],
-          ["/risk/" + id, name]
+          ["/risk/" + id, name],
         ]}
       />
       <div className="d-flex justify-content-between align-items-center">

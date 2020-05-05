@@ -70,7 +70,6 @@ const Resources = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
-
   return (
     <div>
       <Helmet>
@@ -78,8 +77,7 @@ const Resources = ({ history }: RouteComponentProps) => {
       </Helmet>
       <BreadCrumb crumbs={[["/resources", "Resources"]]} />
       <div className="d-flex justify-content-between align-items-center mb-3">
-
-      <h4>Resources</h4>
+        <h4>Resources</h4>
 
         {isAdminReviewer ? (
           <div className="d-flex">
@@ -165,7 +163,6 @@ const Resources = ({ history }: RouteComponentProps) => {
                     </td>
                   ) : null}
                   <td>{resource.id}</td>
-
                   <td>{resource.name}</td>
                   <td>{resource.resourceFileType}</td>
                   <td>{capitalCase(resource.category || "")}</td>
@@ -187,31 +184,31 @@ const Resources = ({ history }: RouteComponentProps) => {
                     <DateHover>{resource.updatedAt}</DateHover>
                   </td>
                   <td>{resource.createdBy}</td>
-                  {isAdminReviewer || isAdmin || isAdminPreparer ? (
-                    <td className="action">
-                      <div className="d-flex align-items-center">
-                        <Button className="soft orange mr-1" color="">
-                          <Tooltip
-                            description="Open File"
-                            subtitle="Will be download if file type not supported"
+                  <td className="action">
+                    <div className="d-flex align-items-center">
+                      <Button className="soft orange mr-1" color="">
+                        <Tooltip
+                          description="Open File"
+                          subtitle="Will be download if file type not supported"
+                        >
+                          <a
+                            href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(
+                              event: React.MouseEvent<
+                                HTMLAnchorElement,
+                                MouseEvent
+                              >
+                            ) => {
+                              event.stopPropagation();
+                            }}
                           >
-                            <a
-                              href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(
-                                event: React.MouseEvent<
-                                  HTMLAnchorElement,
-                                  MouseEvent
-                                >
-                              ) => {
-                                event.stopPropagation();
-                              }}
-                            >
-                              <FaDownload />
-                            </a>
-                          </Tooltip>
-                        </Button>
+                            <FaDownload />
+                          </a>
+                        </Tooltip>
+                      </Button>
+                      {(isAdminReviewer || isAdmin || isAdminPreparer) && (
                         <DialogButton
                           onConfirm={() =>
                             destroyResource({ variables: { id: resource.id } })
@@ -224,11 +221,9 @@ const Resources = ({ history }: RouteComponentProps) => {
                             <FaTrash />
                           </Tooltip>
                         </DialogButton>
-                      </div>
-                    </td>
-                  ) : (
-                    <td></td>
-                  )}
+                      )}
+                    </div>
+                  </td>
                 </tr>
               );
             })}
