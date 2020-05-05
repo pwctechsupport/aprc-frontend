@@ -167,7 +167,7 @@ export default function ResourceBox({
 }
 
 const ResourceBoxContainer = styled.div`
-  width: 100%;
+  width: 75%;
   background: white;
   border: grey 2px solid;
   border-radius: 5px;
@@ -182,7 +182,7 @@ const ResourceBoxMeta = styled.div`
 
 const ResourceBoxImagePreview = styled.img`
   max-width: 100%;
-  max-height: 50vh;
+  max-height: 30vh;
   border-image-repeat: stretch;
 `;
 

@@ -3,7 +3,7 @@ import Helmet from "react-helmet";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
-  AiOutlineEdit
+  AiOutlineEdit,
 } from "react-icons/ai";
 import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
@@ -16,7 +16,7 @@ import {
   useDestroyResourceMutation,
   useResourceQuery,
   useReviewResourceDraftMutation,
-  useUpdateResourceMutation
+  useUpdateResourceMutation,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -30,7 +30,7 @@ import useEditState from "../../shared/hooks/useEditState";
 import {
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess
+  notifySuccess,
 } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
@@ -42,18 +42,18 @@ type TParams = { id: string };
 export default function Resource({
   match,
   history,
-  location
+  location,
 }: RouteComponentProps<TParams>) {
   const [inEditMode, setInEditMode] = useState(false);
-  const toggleEditMode = () => setInEditMode(prev => !prev);
+  const toggleEditMode = () => setInEditMode((prev) => !prev);
   useEffect(() => {
-    setInEditMode(prevState => (prevState ? false : prevState));
+    setInEditMode((prevState) => (prevState ? false : prevState));
   }, [location.pathname]);
 
   const { id } = match.params;
   const { data, loading } = useResourceQuery({
     variables: { id },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const name = data?.resource?.name || "";
   const rating = data?.resource?.rating || 0;
@@ -75,7 +75,7 @@ export default function Resource({
     draft,
     hasEditAccess,
     requestStatus,
-    requestEditState
+    requestEditState,
   });
   const imagePreviewUrl = resuploadLink
     ? resuploadLink
@@ -91,7 +91,7 @@ export default function Resource({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resource"]
+    refetchQueries: ["resource"],
   });
   function handleDelete() {
     deleteMutation({ variables: { id } });
@@ -99,7 +99,7 @@ export default function Resource({
 
   // Review handlers
   const [reviewResource, reviewResourceM] = useReviewResourceDraftMutation({
-    refetchQueries: ["resource"]
+    refetchQueries: ["resource"],
   });
   async function review({ publish }: { publish: boolean }) {
     try {
@@ -113,21 +113,21 @@ export default function Resource({
   // Request Edit handlers
   const [
     requestEditMutation,
-    requestEditMutationInfo
+    requestEditMutationInfo,
   ] = useCreateRequestEditMutation({
     variables: { id, type: "Resource" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["resource"]
+    refetchQueries: ["resource"],
   });
 
   // Approve and Reject handlers
   const [
     approveEditMutation,
-    approveEditMutationResult
+    approveEditMutationResult,
   ] = useApproveRequestEditMutation({
     refetchQueries: ["resource"],
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
 
   async function handleApproveRequest(id: string) {
@@ -149,7 +149,7 @@ export default function Resource({
 
   const [updateResource, updateResourceM] = useUpdateResourceMutation({
     refetchQueries: ["resources", "resource"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   async function handleSubmit(data: ResourceFormValues) {
@@ -157,14 +157,14 @@ export default function Resource({
       id: id,
       category: data.category?.value,
       name: data.name,
-      policyIds: data.policyIds?.map(a => a.value),
-      controlIds: data.controlIds?.map(a => a.value),
+      policyIds: data.policyIds?.map((a) => a.value),
+      controlIds: data.controlIds?.map((a) => a.value),
       businessProcessId: data.businessProcessId?.value,
       resuploadLink: data.resuploadLink,
       ...(data.resuploadBase64 && {
-        resuploadBase64: data.resuploadBase64
+        resuploadBase64: data.resuploadBase64,
       }),
-      tagsAttributes: data.tagsAttributes?.map(tag => {
+      tagsAttributes: data.tagsAttributes?.map((tag) => {
         const { id, risk, control, yCoordinates, xCoordinates, ...rest } = tag;
         return {
           ...rest,
@@ -172,9 +172,9 @@ export default function Resource({
           control_id: control?.id,
           business_process_id: data.businessProcessId?.value,
           x_coordinates: xCoordinates,
-          y_coordinates: yCoordinates
+          y_coordinates: yCoordinates,
         };
-      })
+      }),
     };
     try {
       await updateResource({ variables: { input } });
@@ -188,7 +188,7 @@ export default function Resource({
     name,
     category: {
       label: category || "",
-      value: category || ""
+      value: category || "",
     },
     businessProcessId: toLabelValue(data?.resource?.businessProcess || {}),
     controlIds:
@@ -198,7 +198,7 @@ export default function Resource({
     policyIds: data?.resource?.policies?.map(toLabelValue) || [],
     resuploadUrl: data?.resource?.resuploadUrl || "",
     resuploadLink: data?.resource?.resuploadLink || "",
-    tagsAttributes: data?.resource?.tags || []
+    tagsAttributes: data?.resource?.tags || [],
   };
 
   if (loading) {
@@ -220,7 +220,7 @@ export default function Resource({
     return (
       <div>
         <Row>
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={5}>
             <ResourceBox
               id={id}
               name={name}
@@ -231,7 +231,7 @@ export default function Resource({
               resourceFileType={resourceFileType}
             />
           </Col>
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={7}>
             <div className="mt-5 mt-lg-0">
               <h5>
                 Status: <DisplayStatus>{status}</DisplayStatus>
@@ -253,7 +253,7 @@ export default function Resource({
                     <h5 className="mt-5">Related Controls:</h5>
                     {controls.length ? (
                       <ul>
-                        {controls.map(control => (
+                        {controls.map((control) => (
                           <li key={control.id}>
                             <Link to={`/control/${control.id}`}>
                               {control.description}
@@ -269,7 +269,7 @@ export default function Resource({
                     <h5 className="mt-5">Related Policies:</h5>
                     {policies.length ? (
                       <ul>
-                        {policies.map(policy => (
+                        {policies.map((policy) => (
                           <li key={policy.id}>
                             <Link to={`/policy/${policy.id}`}>
                               {policy.title}
@@ -395,7 +395,7 @@ export default function Resource({
       <BreadCrumb
         crumbs={[
           ["/resources", "Resources"],
-          ["/resources/" + id, name]
+          ["/resources/" + id, name],
         ]}
       />
       <div className="d-flex justify-content-between align-items-center">
