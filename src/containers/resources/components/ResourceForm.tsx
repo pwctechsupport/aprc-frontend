@@ -80,11 +80,23 @@ ResourceFormProps) {
   );
 
   function submit(data: ResourceFormValues) {
-    if (data.category?.value === "Flowchart") {
-      data.resuploadBase64.includes("application/pdf") ||
-        data.resuploadBase64.includes(
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        );
+    if (data.resuploadBase64) {
+      if (
+        (data.resuploadBase64 &&
+          data.category?.value === "Flowchart" &&
+          data.resuploadBase64.includes("application/pdf")) ||
+        (data.resuploadBase64 &&
+          data.category?.value === "Flowchart" &&
+          data.resuploadBase64.includes(
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          ))
+      ) {
+      } else {
+        dialogBox({
+          text: name ? `Update Resource "${name}"?` : "Create Resource?",
+          callback: () => onSubmit?.({ ...data, tagsAttributes: tags }),
+        });
+      }
     } else {
       dialogBox({
         text: name ? `Update Resource "${name}"?` : "Create Resource?",

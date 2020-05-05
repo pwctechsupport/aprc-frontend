@@ -3,6 +3,8 @@ import styled from "styled-components";
 import PlaceholderLink from "../../../assets/images/placeholder-link.png";
 import PlaceholderPdf from "../../../assets/images/placeholder-pdf.png";
 import PlaceholderXls from "../../../assets/images/placeholder-xls.png";
+import PlaceholderDocx from "../../../assets/images/placeholder-docx.png";
+
 import {
   useCreateResourceRatingMutation,
   useDestroyResourceAttachmentMutation,
@@ -118,6 +120,9 @@ export default function ResourceBox({
     }
     if (resourceFileType?.includes("pdf")) {
       return <ResourceBoxImagePreview src={PlaceholderPdf} />;
+    }
+    if (resourceFileType?.includes("doc")) {
+      return <ResourceBoxImagePreview src={PlaceholderDocx} />;
     }
     return <ResourceBoxImagePreview src={PlaceholderLink} />;
   }
