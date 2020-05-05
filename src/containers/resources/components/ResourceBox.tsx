@@ -40,7 +40,6 @@ export default function ResourceBox({
   resourceFileType,
 }: ResourceBoxProps) {
   const dialogBox = useDialogBox();
-
   // Hanlde delete attachment
   const [
     deleteAttachmentMutation,
@@ -97,6 +96,8 @@ export default function ResourceBox({
 
   function renderImage() {
     if (!imagePreviewUrl) {
+      console.log("imagePreviewUrl", imagePreviewUrl);
+
       return (
         <div className="d-flex justify-content-center align-items-center py-5 my-5">
           <EmptyAttribute />
@@ -105,7 +106,8 @@ export default function ResourceBox({
     }
     if (
       resourceFileType?.includes("png") ||
-      resourceFileType?.includes("jpg")
+      resourceFileType?.includes("jpg") ||
+      resourceFileType?.includes("jpeg")
     ) {
       return (
         <ResourceBoxImagePreview
@@ -123,8 +125,9 @@ export default function ResourceBox({
     }
     if (resourceFileType?.includes("doc")) {
       return <ResourceBoxImagePreview src={PlaceholderDocx} />;
+    } else {
+      return <ResourceBoxImagePreview src={PlaceholderLink} />;
     }
-    return <ResourceBoxImagePreview src={PlaceholderLink} />;
   }
 
   return (
