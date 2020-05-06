@@ -83,13 +83,12 @@ export default function ResourceBox({
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
     refetchQueries: ["resource"],
   });
-
   // Handle download attachment
   const handleDownload = () => {
     updateResourceVisit({ variables: { id } });
     const link = document.createElement("a");
     // link.target = "_blank";
-    link.href = base64File || "";
+    link.href = base64File || imagePreviewUrl || "";
     // link.setAttribute("download", name || "PwC-Generated");
     link.download = name || "PwC-Generated";
     document.body.appendChild(link);
