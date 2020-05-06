@@ -172,7 +172,7 @@ query policy($id: ID!, $withChild: Boolean = false) {
       objectChanges
     }
     isSubmitted
-    versionsCount
+    trueVersion
     hasEditAccess
     requestStatus
     status
