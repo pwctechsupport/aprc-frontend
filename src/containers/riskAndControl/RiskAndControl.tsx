@@ -6,7 +6,7 @@ import {
   FaEllipsisV,
   FaFilePdf,
   FaMinus,
-  FaPencilAlt
+  FaPencilAlt,
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -25,7 +25,7 @@ import {
   useBusinessProcessQuery,
   useCreateBookmarkBusinessProcessMutation,
   useUpdateControlMutation,
-  useUpdateRiskMutation
+  useUpdateRiskMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -41,33 +41,38 @@ import { toLabelValue } from "../../shared/formatter";
 import {
   downloadPdf,
   emailPdf,
-  previewPdf
+  previewPdf,
 } from "../../shared/utils/accessGeneratedPdf";
 import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyError,
   notifyGraphQLErrors,
   notifyInfo,
-  notifySuccess
+  notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, {
   ControlFormValues,
-  CreateControlFormValues
+  CreateControlFormValues,
 } from "../control/components/ControlForm";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 type TParams = { id: string };
 
 export default function RiskAndControl({
-  match
+  match,
 }: RouteComponentProps<TParams>) {
+  const [isAdmin, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_preparer",
+  ]);
   const initialCollapse = ["Risks"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
-    setCollapse(p => {
+    setCollapse((p) => {
       if (p.includes(name)) {
-        return p.filter(item => item !== name);
+        return p.filter((item) => item !== name);
       }
       return p.concat(name);
     });
@@ -77,7 +82,7 @@ export default function RiskAndControl({
   // Edit Risk Mutation and Modal state
   const [riskModal, setRiskModal] = useState(false);
   const [risk, setRisk] = useState<RiskState>();
-  const toggleRiskModal = () => setRiskModal(p => !p);
+  const toggleRiskModal = () => setRiskModal((p) => !p);
   const editRisk = (risk: RiskState) => {
     setRiskModal(true);
     setRisk(risk);
@@ -89,7 +94,7 @@ export default function RiskAndControl({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"]
+    refetchQueries: ["businessProcess"],
   });
   const handleUpdateRisk = (values: RiskFormValues) => {
     updateRisk({
@@ -97,18 +102,18 @@ export default function RiskAndControl({
         input: {
           id: risk?.id || "",
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map(a => a.value),
+          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
           levelOfRisk: values.levelOfRisk,
-          typeOfRisk: values.typeOfRisk
-        }
-      }
+          typeOfRisk: values.typeOfRisk,
+        },
+      },
     });
   };
 
   // Edit Control Mutation and Modal State
   const [controlModal, setControlModal] = useState(false);
   const [control, setControl] = useState<ControlState>();
-  const toggleControlModal = () => setControlModal(p => !p);
+  const toggleControlModal = () => setControlModal((p) => !p);
   const editControl = (control: ControlState) => {
     setControlModal(true);
     setControl(control);
@@ -120,37 +125,37 @@ export default function RiskAndControl({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"]
+    refetchQueries: ["businessProcess"],
   });
   const handleUpdateControl = (values: CreateControlFormValues) => {
     updateControl({
-      variables: { input: { id: control?.id || "", ...values } }
+      variables: { input: { id: control?.id || "", ...values } },
     });
   };
 
   const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
     onCompleted: () => notifySuccess("Added to Bookmark"),
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
 
   const { id } = match.params;
   const { data, loading } = useBusinessProcessQuery({
     variables: { id },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const name = data?.businessProcess?.name || "";
   const risks = data?.businessProcess?.risks || [];
   const resources = data?.businessProcess?.resources || [];
   const ancestors = data?.businessProcess?.ancestors || [];
-  const breadcrumb = ancestors.map(a => [
+  const breadcrumb = ancestors.map((a) => [
     "/risk-and-control/" + a.id,
-    a.name
+    a.name,
   ]) as CrumbItem[];
 
   const tabs = [
     { to: `/risk-and-control/${id}`, title: "Detail" },
     { to: `/risk-and-control/${id}/flowchart`, title: "Flowchart" },
-    { to: `/risk-and-control/${id}/resources`, title: "Resources" }
+    { to: `/risk-and-control/${id}/resources`, title: "Resources" },
   ];
 
   if (loading) return <LoadingSpinner size={30} centered />;
@@ -193,9 +198,9 @@ export default function RiskAndControl({
                 previewPdf(`prints/${id}/business_process.pdf`, {
                   onStart: () =>
                     notifyInfo("Downloading file for preview", {
-                      autoClose: 10000
-                    })
-                })
+                      autoClose: 10000,
+                    }),
+                }),
             },
             {
               label: (
@@ -208,8 +213,8 @@ export default function RiskAndControl({
                   fileName: name,
                   onStart: () => notifyInfo("Download Started"),
                   onError: () => notifyError("Download Failed"),
-                  onCompleted: () => notifySuccess("Download Success")
-                })
+                  onCompleted: () => notifySuccess("Download Success"),
+                }),
             },
             {
               label: (
@@ -217,7 +222,7 @@ export default function RiskAndControl({
                   <FaBookmark /> Bookmark
                 </div>
               ),
-              onClick: () => addBookmark({ variables: { id } })
+              onClick: () => addBookmark({ variables: { id } }),
             },
             {
               label: (
@@ -225,8 +230,8 @@ export default function RiskAndControl({
                   <MdEmail /> Mail
                 </div>
               ),
-              onClick: () => emailPdf(name)
-            }
+              onClick: () => emailPdf(name),
+            },
           ]}
         >
           <FaEllipsisV />
@@ -241,7 +246,7 @@ export default function RiskAndControl({
         crumbs={[
           ["/risk-and-control", "Risk and Controls"],
           ...breadcrumb,
-          ["/risk-and-control/" + id, name]
+          ["/risk-and-control/" + id, name],
         ]}
       />
       <div className="d-flex justify-content-between">
@@ -271,7 +276,7 @@ export default function RiskAndControl({
             render={() => (
               <Flowcharts
                 bpId={id}
-                resources={resources.filter(resource =>
+                resources={resources.filter((resource) =>
                   resource.category?.match(/flowchart/gi)
                 )}
               />
@@ -285,7 +290,7 @@ export default function RiskAndControl({
             >
               {risks.length ? (
                 <ul>
-                  {risks.map(risk => (
+                  {risks.map((risk) => (
                     <li key={risk.id}>
                       <div className="mb-3 d-flex justify-content-between">
                         <h5>
@@ -299,21 +304,24 @@ export default function RiskAndControl({
                             {startCase(risk.typeOfRisk || "")}
                           </Badge>
                         </h5>
-                        <Button
-                          onClick={() =>
-                            editRisk({
-                              id: risk.id,
-                              name: risk.name || "",
-                              businessProcessIds:
-                                risk.businessProcesses?.map(toLabelValue) || [],
-                              levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                              typeOfRisk: risk.typeOfRisk as TypeOfRisk
-                            })
-                          }
-                          color=""
-                        >
-                          <FaPencilAlt />
-                        </Button>
+                        {(isAdmin || isAdminPreparer) && (
+                          <Button
+                            onClick={() =>
+                              editRisk({
+                                id: risk.id,
+                                name: risk.name || "",
+                                businessProcessIds:
+                                  risk.businessProcesses?.map(toLabelValue) ||
+                                  [],
+                                levelOfRisk: risk.levelOfRisk as LevelOfRisk,
+                                typeOfRisk: risk.typeOfRisk as TypeOfRisk,
+                              })
+                            }
+                            color=""
+                          >
+                            <FaPencilAlt />
+                          </Button>
+                        )}
                       </div>
 
                       {risk.controls?.length ? (
@@ -338,10 +346,10 @@ export default function RiskAndControl({
               isDraft={null}
               formDefaultValues={{
                 category: { label: "Flowchart", value: "Flowchart" },
-                businessProcessId: { label: name, value: id }
+                businessProcessId: { label: name, value: id },
               }}
               queryFilters={{
-                business_process_id_in: id
+                business_process_id_in: id,
               }}
             />
           </Route>
@@ -381,7 +389,7 @@ interface ControlState extends ControlFormValues {
 
 const ControlsTable = ({
   controls,
-  editControl
+  editControl,
 }: {
   controls: Control[];
   editControl: Function;
@@ -429,6 +437,10 @@ const ControlsTable = ({
     }
     return finalData.join(", ");
   };
+  const [isAdmin, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_preparer",
+  ]);
   return (
     <div className="table-responsive">
       <Table>
@@ -446,7 +458,7 @@ const ControlsTable = ({
         </thead>
         <tbody>
           {controls?.length ? (
-            controls?.map(control => (
+            controls?.map((control) => (
               <tr key={control.id}>
                 <td>{control.description}</td>
                 <td>{startCase(control.frequency || "")}</td>
@@ -456,29 +468,32 @@ const ControlsTable = ({
                 <td>{assertionAndIpoModifier(control.ipo)}</td>
                 <td>{control.controlOwner}</td>
                 <td>
-                  <Button
-                    onClick={() =>
-                      editControl({
-                        id: control.id,
-                        assertion: control.assertion as Assertion[],
-                        controlOwner: control.controlOwner || "",
-                        description: control.description || "",
-                        status: control.status as Status,
-                        typeOfControl: control.typeOfControl as TypeOfControl,
-                        nature: control.nature as Nature,
-                        ipo: control.ipo as Ipo[],
-                        businessProcessIds:
-                          control?.businessProcesses?.map(({ id }) => id) || [],
-                        frequency: control.frequency as Frequency,
-                        keyControl: control.keyControl || false,
-                        riskIds: control?.risks?.map(({ id }) => id) || [],
-                        activityControls: control.activityControls
-                      })
-                    }
-                    color=""
-                  >
-                    <FaPencilAlt />
-                  </Button>
+                  {(isAdmin || isAdminPreparer) && (
+                    <Button
+                      onClick={() =>
+                        editControl({
+                          id: control.id,
+                          assertion: control.assertion as Assertion[],
+                          controlOwner: control.controlOwner || "",
+                          description: control.description || "",
+                          status: control.status as Status,
+                          typeOfControl: control.typeOfControl as TypeOfControl,
+                          nature: control.nature as Nature,
+                          ipo: control.ipo as Ipo[],
+                          businessProcessIds:
+                            control?.businessProcesses?.map(({ id }) => id) ||
+                            [],
+                          frequency: control.frequency as Frequency,
+                          keyControl: control.keyControl || false,
+                          riskIds: control?.risks?.map(({ id }) => id) || [],
+                          activityControls: control.activityControls,
+                        })
+                      }
+                      color=""
+                    >
+                      <FaPencilAlt />
+                    </Button>
+                  )}
                 </td>
               </tr>
             ))
