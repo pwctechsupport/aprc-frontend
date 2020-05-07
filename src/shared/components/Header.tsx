@@ -12,8 +12,9 @@ function Header({ heading = "", children, draft, review }: Header) {
             <Badge style={{ position: "relative", marginLeft: "5px" }}>
               Waiting For Review
             </Badge>
-          ) : <Badge>Draft</Badge>
-        }
+          ) : (
+            <Badge>Waiting For Review</Badge>
+          )}
         </span>
       )}
     </Heading>
