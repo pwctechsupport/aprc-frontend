@@ -10,8 +10,10 @@ import { Row, Col } from "reactstrap";
 interface PolicySearchItemProps {
   policy: Omit<Policy, "createdAt">;
   homepageSearch: string;
+  filter:any
 }
 export default function PolicySearchItem({
+  filter={},
   policy,
   homepageSearch,
 }: PolicySearchItemProps) {
@@ -26,6 +28,10 @@ export default function PolicySearchItem({
     updatedAt,
   } = policy;
 
+  // console.log('policy', policy);
+
+  // console.log('filter',filter);
+    // console.log('policy', policy);
   // const noAttribute =
   //   risks?.length === 0 &&
   //   controls?.length === 0 &&
@@ -44,7 +50,9 @@ export default function PolicySearchItem({
   const showRisk = risks?.map((a) =>
     a.name?.toLowerCase().includes(homepageSearch.toLowerCase())
   );
-
+  const risksCek = policy.risks
+  const referencesCek = policy.references
+  const resourcesCek = policy.resources
   return (
     <Fragment>
       {/* homepageSearch  is a string for search */}
@@ -62,8 +70,7 @@ export default function PolicySearchItem({
             <div className="text-secondary ml-2">
               {description
                 ?.toLowerCase()
-                .includes(homepageSearch.toLowerCase()) &&
-                previewHtml(description || "")}
+                .includes(homepageSearch.toLowerCase()) && previewHtml(description || "") || description?.toLowerCase().includes(filter.description_cont) && previewHtml(description || "") }
             </div>
           </StyledLink>
         </Row>
@@ -90,7 +97,28 @@ export default function PolicySearchItem({
                 </ul>
               </StyledLi>
             </Col>
-          )}
+          ) || resourcesCek?.filter(res=>filter.resources_id_in?.includes(res.id)) && resourcesCek?.filter(res=>filter.resources_id_in?.includes(res.id)).length !== 0 && (
+            <Col md={3}>
+              <StyledLi>
+                <Names>Resources:</Names>
+                <ul>
+                  {resourcesCek?.map(
+                    (resource) =>
+                      (
+                        <li>
+                          <StyledTdMini key={resource.id}>
+                            <Link to={`/policy/${id}/details/#references`}>
+                              {resource.name}
+                            </Link>
+                          </StyledTdMini>
+                        </li>
+                      )
+                  )}
+                </ul>
+              </StyledLi>
+            </Col>
+          )
+          }
           {!showReference?.every((a) => a === false) && homepageSearch !== "" && (
             <Col md={3}>
               <StyledLi>
@@ -113,11 +141,32 @@ export default function PolicySearchItem({
                 </ul>
               </StyledLi>
             </Col>
-          )}
+          ) || referencesCek?.filter(ref=>filter.references_id_in?.includes(ref.id)) && referencesCek?.filter(ref=>filter.references_id_in?.includes(ref.id)).length !== 0 && (
+            <Col md={3}>
+              <StyledLi>
+                <Names>References:</Names>
+                <ul>
+                  {referencesCek?.map(
+                    (reference) =>
+                      (
+                        <li>
+                          <StyledTdMini key={reference.id}>
+                            <Link to={`/policy/${id}/details/#references`}>
+                              {reference.name}
+                            </Link>
+                          </StyledTdMini>
+                        </li>
+                      )
+                  )}
+                </ul>
+              </StyledLi>
+            </Col>
+          )
+          }
           {!showRisk?.every((a) => a === false) && homepageSearch !== "" && (
             <Col md={3}>
               <StyledLi>
-                <Names> Risks</Names>
+                <Names>Risks</Names>
                 <ul>
                   {risks?.map(
                     (risk) =>
@@ -136,21 +185,18 @@ export default function PolicySearchItem({
                 </ul>
               </StyledLi>
             </Col>
-          )}
-          {!showControl?.every((a) => a === false) && homepageSearch !== "" && (
+          ) || risksCek?.filter(jay=> filter.risks_id_in?.includes(jay.id)) && risksCek?.filter(jay=> filter.risks_id_in?.includes(jay.id)).length !== 0 && (
             <Col md={3}>
               <StyledLi>
-                <Names>Controls:</Names>
+                <Names>Risks</Names>
                 <ul>
-                  {controls?.map(
-                    (control) =>
-                      control?.description
-                        ?.toLowerCase()
-                        .includes(homepageSearch.toLowerCase()) && (
+                  {risksCek?.map(
+                    (jay) =>
+                       (
                         <li>
-                          <StyledTdMini key={control.id}>
-                            <Link to={`/policy/${id}/details/#controls`}>
-                              {control.description}
+                          <StyledTdMini key={jay.id}>
+                            <Link to={`/policy/${id}/details/#risks`}>
+                              {jay.name}
                             </Link>
                           </StyledTdMini>
                         </li>
@@ -159,7 +205,8 @@ export default function PolicySearchItem({
                 </ul>
               </StyledLi>
             </Col>
-          )}
+          )
+          }
         </Row>
       </PolicySearchItemContainerMini>
       {/* <PolicySearchItemContainer>
@@ -325,6 +372,7 @@ const StyledLi = styled.li`
   padding-top: 10px;
   position: relative;
   left: -40px;
+  list-style-type: none;
 `;
 
 // const StyledUl = styled.ul`
