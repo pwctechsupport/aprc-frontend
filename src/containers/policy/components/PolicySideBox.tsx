@@ -88,8 +88,8 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       />
       <div>
         {policies.length ? (
-          policies.map((policy) => (
-            <Fragment>
+          policies.map((policy, index) => (
+            <Fragment key={index}>
               <PolicyBranch
                 key={policy.id}
                 id={policy.id}
