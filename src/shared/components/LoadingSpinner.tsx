@@ -6,11 +6,13 @@ import { IconBaseProps } from "react-icons/lib/cjs";
 interface LoadingSpinnerProps extends IconBaseProps {
   centered?: boolean;
   className?: string;
+  biggerSize?: boolean;
 }
 
 const LoadingSpinner = ({
   centered,
   className,
+  biggerSize,
   ...props
 }: LoadingSpinnerProps) => {
   return (
@@ -18,7 +20,7 @@ const LoadingSpinner = ({
       className={classnames(centered ? "text-center" : "", className)}
       style={{ display: centered ? "block" : "inline-block" }}
     >
-      <FaSpinner className="icon-spin" size={15} {...props} />
+      <FaSpinner className="icon-spin" size={biggerSize ? 30 : 15} {...props} />
     </div>
   );
 };

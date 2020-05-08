@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRisksQuery } from "../../../generated/graphql";
 import {
   SideBoxItem,
@@ -14,6 +14,7 @@ import Button from "../../../shared/components/Button";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const RiskSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -21,6 +22,13 @@ const RiskSideBox = () => {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const [condition, setCondition] = useState(false);
+
+  useEffect(() => {
+    data?.risks?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  });
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
   const [limit, setLimit] = useState(25);
@@ -29,7 +37,6 @@ const RiskSideBox = () => {
     fetchPolicy: "network-only",
     variables: { filter: { name_cont: debouncedSearch }, limit },
   });
-
   const risks =
     data?.risks?.collection?.sort(
       (a, b) =>
@@ -39,7 +46,7 @@ const RiskSideBox = () => {
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0) {
+    if (scroll === 0 && condition) {
       setLimit(limit + 25);
     }
   };
@@ -86,6 +93,11 @@ const RiskSideBox = () => {
           </SideBoxItem>
         );
       })}
+      {loading && (
+        <div>
+          <LoadingSpinner className="mt-2 mb-2" centered biggerSize />
+        </div>
+      )}
     </SideBox>
   );
 };

@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import React, { useState } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
@@ -18,17 +18,24 @@ import {
 import Tooltip from "../../../shared/components/Tooltip";
 import { getPathnameParams } from "../../../shared/formatter";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 export default function PolicySideBox({ location }: RouteComponentProps) {
   const [activeId, activeMode] = getPathnameParams(location.pathname, "policy");
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
-  // const isAdmin = location.pathname.split("/")[1] === "policy-admin";
   const [limit, setLimit] = useState(25);
+  const [condition, setCondition] = useState(false);
+
+  useEffect(() => {
+    data?.sidebarPolicies?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  });
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0) {
+    if (scroll === 0 && condition) {
       setLimit(limit + 25);
     }
   };
@@ -59,7 +66,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policies Admin"
             : "Policies"}
-          {(isAdmin  || isAdminPreparer) && (
+          {(isAdmin || isAdminPreparer) && (
             <Tooltip description="Create Policy">
               <Button
                 tag={Link}
@@ -82,19 +89,26 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       <div>
         {policies.length ? (
           policies.map((policy) => (
-            <PolicyBranch
-              key={policy.id}
-              id={policy.id}
-              activeId={activeId}
-              activeMode={activeMode}
-              title={policy.title}
-              children={policy.children}
-              level={0}
-              isAdmin={isAdmin}
-            />
+            <Fragment>
+              <PolicyBranch
+                key={policy.id}
+                id={policy.id}
+                activeId={activeId}
+                activeMode={activeMode}
+                title={policy.title}
+                children={policy.children}
+                level={0}
+                isAdmin={isAdmin}
+              />
+            </Fragment>
           ))
         ) : (
           <div className="text-center p-2 text-orange">Policy not found</div>
+        )}
+        {loading && (
+          <div>
+            <LoadingSpinner className="mt-2 mb-2" centered biggerSize />
+          </div>
         )}
       </div>
     </SideBox>
@@ -106,6 +120,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
 // ================================================
 interface PolicyBranchProps {
   id: string | number;
+  loading?: boolean;
   activeId?: string | number | undefined;
   activeMode?: string;
   title?: string | null | undefined;

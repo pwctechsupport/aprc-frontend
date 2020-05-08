@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { oc } from "ts-optchain";
 import { usePolicyCategoriesQuery } from "../../../generated/graphql";
 import {
@@ -13,10 +13,18 @@ import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Tooltip from "../../../shared/components/Tooltip";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const PolicyCategorySideBox = () => {
   const [limit, setLimit] = useState(25);
   const [search, setSearch] = useState("");
+  const [condition, setCondition] = useState(false);
+  useEffect(() => {
+    data?.policyCategories?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  });
+
   const { data, loading } = usePolicyCategoriesQuery({
     variables: {
       filter: { name_cont: search },
@@ -34,7 +42,7 @@ const PolicyCategorySideBox = () => {
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0) {
+    if (scroll === 0 && condition) {
       setLimit(limit + 25);
     }
   };
@@ -70,6 +78,11 @@ const PolicyCategorySideBox = () => {
             <SideBoxItemText bold>{policyCateg.name}</SideBoxItemText>
           </SideBoxItem>
         ))}
+        {loading && (
+          <div>
+            <LoadingSpinner className="mt-2 mb-2" centered biggerSize />
+          </div>
+        )}
       </Fragment>
     </SideBox>
   );
