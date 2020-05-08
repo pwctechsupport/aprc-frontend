@@ -2,15 +2,22 @@ export function formatPolicyChart(value: Input): Output[] {
   return [
     { label: "Sub-Policy", ...getPreparedReviewed(value.subCount) },
     { label: "Risk", ...getPreparedReviewed(value.riskCount) },
-    { label: "Control", ...getPreparedReviewed(value.controlCount) }
+    { label: "Control", ...getPreparedReviewed(value.controlCount) },
   ];
 }
 
 const getPreparedReviewed = (
   obj: StatusCount
-): { total: number; reviewed: number } => ({
+): {
+  total: number;
+  reviewed: number;
+  prepared: number;
+  addToPrepare: number;
+} => ({
   reviewed: obj.release,
-  total: obj.total
+  addToPrepare: obj.waiting_for_review,
+  prepared: obj.draft,
+  total: obj.total,
 });
 
 interface StatusCount {
@@ -32,5 +39,6 @@ interface Output {
   label: string;
   total: number;
   reviewed: number;
+  prepared: number;
   onClick?: () => void;
 }

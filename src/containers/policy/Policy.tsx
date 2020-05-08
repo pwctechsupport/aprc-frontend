@@ -339,7 +339,6 @@ export default function Policy({
       ? () => history.push(`${location.pathname}/details/#controls`)
       : () => history.push(`${location.pathname}/details/#sub-policies`),
   }));
-
   const renderPolicy = () => {
     const tabs = isAdminView
       ? [{ to: `/policy-admin/${id}/details`, title: "Details" }]
@@ -348,7 +347,6 @@ export default function Policy({
           { to: `/policy/${id}/details`, title: "Details" },
           { to: `/policy/${id}/resources`, title: "Resources" },
         ];
-
     return (
       <div>
         <Nav tabs className="tabs-pwc">
@@ -834,6 +832,7 @@ export default function Policy({
         <Col>
           <HeaderWithBackButton
             draft={!!draft}
+            policy
             review={
               isSubmitted ||
               (draft && isSubmitted && (isAdminReviewer || isAdmin)) ||

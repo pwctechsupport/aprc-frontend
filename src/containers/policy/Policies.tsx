@@ -53,7 +53,6 @@ export default function Policies({ history }: RouteComponentProps) {
   });
   const policies = data?.policies?.collection || [];
   const totalCount = data?.policies?.metadata.totalCount || 0;
-console.log('policies',policies)
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
@@ -74,7 +73,7 @@ console.log('policies',policies)
         <OpacityButton onClick={toggleShowDashboard}>
           {showDashboard ? " Hide" : "Show"} Dashboard
         </OpacityButton>
-        {(isAdmin ||  isAdminPreparer) && (
+        {(isAdmin || isAdminPreparer) && (
           <Button to="/policy/create" tag={Link} className="pwc">
             + Add Policy
           </Button>
@@ -161,7 +160,10 @@ const PolicyTableRow = ({
         </td>
         <td>{policy.policyCategory?.name || ""}</td>
         <td>{capitalCase(policy.status || "")}</td>
-        <td>  <DateHover>{policy?.lastUpdatedAt}</DateHover></td>
+        <td>
+          {" "}
+          <DateHover>{policy?.lastUpdatedAt}</DateHover>
+        </td>
         <td>{policy?.lastUpdatedBy}</td>
         <td className="action">
           <Tooltip description="Delete Policy">
