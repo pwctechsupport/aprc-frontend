@@ -20,24 +20,24 @@ const BusinessProcessSideBox = () => {
     "admin_preparer",
   ]);
   const [condition, setCondition] = useState(false);
-  useEffect(() => {
-    data?.businessProcesses?.collection.length === limit
-      ? setCondition(true)
-      : setCondition(false);
-  });
   const [searchValue, setSearchValue] = useState("");
   const [searchQuery] = useDebounce(searchValue, 400);
   const [limit, setLimit] = useState(25);
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0 && condition) {
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };
   const { data, loading } = useBusinessProcessesQuery({
     variables: { filter: { name_cont: searchQuery }, limit },
   });
+  useEffect(() => {
+    data?.businessProcesses?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [data, limit]);
   const bps = oc(data)
     .businessProcesses.collection([])
     .sort(

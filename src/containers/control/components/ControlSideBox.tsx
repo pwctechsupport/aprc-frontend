@@ -23,17 +23,13 @@ const ControlSideBox = () => {
     "admin_preparer",
   ]);
   const [condition, setCondition] = useState(false);
-  useEffect(() => {
-    data?.controls?.collection.length === limit
-      ? setCondition(true)
-      : setCondition(false);
-  });
+
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(25);
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0 && condition) {
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };
@@ -41,7 +37,11 @@ const ControlSideBox = () => {
     fetchPolicy: "network-only",
     variables: { filter: { description_cont: search }, limit },
   });
-
+  useEffect(() => {
+    data?.controls?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [data, limit]);
   const controls = oc(data)
     .controls.collection([])
     .sort(

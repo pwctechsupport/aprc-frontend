@@ -24,11 +24,6 @@ const RiskSideBox = () => {
   ]);
   const [condition, setCondition] = useState(false);
 
-  useEffect(() => {
-    data?.risks?.collection.length === limit
-      ? setCondition(true)
-      : setCondition(false);
-  });
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
   const [limit, setLimit] = useState(25);
@@ -37,6 +32,11 @@ const RiskSideBox = () => {
     fetchPolicy: "network-only",
     variables: { filter: { name_cont: debouncedSearch }, limit },
   });
+  useEffect(() => {
+    data?.risks?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [data, limit]);
   const risks =
     data?.risks?.collection?.sort(
       (a, b) =>
@@ -46,7 +46,7 @@ const RiskSideBox = () => {
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0 && condition) {
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };

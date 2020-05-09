@@ -19,24 +19,24 @@ import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const ResourceSideBox = () => {
   const [condition, setCondition] = useState(false);
-  useEffect(() => {
-    data?.resources?.collection.length === limit
-      ? setCondition(true)
-      : setCondition(false);
-  });
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
   const [limit, setLimit] = useState(25);
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0 && condition) {
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };
   const { data, loading } = useResourcesQuery({
     variables: { filter: { name_cont: searchQuery }, limit },
   });
+  useEffect(() => {
+    data?.resources?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [data, limit]);
   const resources = oc(data)
     .resources.collection([])
     .sort(

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { oc } from "ts-optchain";
 import { useReferencesQuery } from "../../../generated/graphql";
 import {
@@ -26,7 +26,7 @@ const ReferenceSideBox = () => {
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0) {
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };
@@ -34,7 +34,13 @@ const ReferenceSideBox = () => {
     fetchPolicy: "network-only",
     variables: { filter: { name_cont: search }, limit },
   });
+  const [condition, setCondition] = useState(false);
 
+  useEffect(() => {
+    data?.references?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [data, limit]);
   const references = oc(data)
     .references.collection([])
     .sort(
@@ -49,7 +55,7 @@ const ReferenceSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policy Reference Admin"
             : "Policy Reference"}
-          {(isAdmin ||  isAdminPreparer) && (
+          {(isAdmin || isAdminPreparer) && (
             <Tooltip description="Create Policy">
               <Button
                 tag={Link}

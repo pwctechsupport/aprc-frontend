@@ -19,11 +19,6 @@ const PolicyCategorySideBox = () => {
   const [limit, setLimit] = useState(25);
   const [search, setSearch] = useState("");
   const [condition, setCondition] = useState(false);
-  useEffect(() => {
-    data?.policyCategories?.collection.length === limit
-      ? setCondition(true)
-      : setCondition(false);
-  });
 
   const { data, loading } = usePolicyCategoriesQuery({
     variables: {
@@ -32,6 +27,11 @@ const PolicyCategorySideBox = () => {
     },
     fetchPolicy: "network-only",
   });
+  useEffect(() => {
+    data?.policyCategories?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [data, limit]);
   const policyCategories = oc(data).policyCategories.collection([]);
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
@@ -42,7 +42,8 @@ const PolicyCategorySideBox = () => {
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0 && condition) {
+
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };
