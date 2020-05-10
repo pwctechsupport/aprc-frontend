@@ -2,18 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import { Badge } from "reactstrap";
 
-function Header({ heading = "", children, draft, review }: Header) {
+function Header({ heading = "", children, draft, review, policy }: Header) {
   return (
     <Heading className="text-orange">
       {heading || children}
       {draft && (
         <span className="ml-2">
-          {review ? (
-            <Badge style={{ position: "relative", marginLeft: "5px" }}>
-              Waiting For Review
-            </Badge>
-          ) : <Badge>Draft</Badge>
-        }
+          {policy && review ? (
+            <Badge>Waiting For Review</Badge>
+          ) : policy && !review ? (
+            <Badge>Draft</Badge>
+          ) : (
+            <Badge>Waiting For Review</Badge>
+          )}
         </span>
       )}
     </Heading>
@@ -24,6 +25,7 @@ export default Header;
 
 interface Header {
   heading?: string;
+  policy?: boolean;
   children?: React.ReactNode;
   draft?: boolean;
   review?: boolean;

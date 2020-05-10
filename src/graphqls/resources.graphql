@@ -76,6 +76,7 @@ query resource($id: ID!) {
     name
     status
     category
+    base64File
     policies {
       id
       title

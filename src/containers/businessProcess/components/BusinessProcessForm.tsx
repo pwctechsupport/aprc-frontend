@@ -3,15 +3,17 @@ import { useForm } from "react-hook-form";
 import { Form, Input } from "reactstrap";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
+import * as yup from "yup";
 
 const BusinessProcessForm = ({
   onSubmit,
   defaultValues,
   submitButtonName = "Add",
-  onCancel
+  onCancel,
 }: BusinessProcessFormProps) => {
   const { register, handleSubmit, reset } = useForm<BusinessProcessFormValues>({
-    defaultValues
+    defaultValues,
+    validationSchema,
   });
 
   const submit = (values: BusinessProcessFormValues) => {
@@ -59,3 +61,6 @@ export interface BusinessProcessFormProps {
 export interface BusinessProcessFormValues {
   name: string;
 }
+const validationSchema = yup.object().shape({
+  name: yup.string().required("Name is a required field"),
+});

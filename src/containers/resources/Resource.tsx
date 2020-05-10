@@ -70,6 +70,7 @@ export default function Resource({
   const hasEditAccess = data?.resource?.hasEditAccess || false;
   const requestStatus = data?.resource?.requestStatus;
   const requestEditState = data?.resource?.requestEdit?.state;
+  const base64File = data?.resource?.base64File;
   const status = data?.resource?.status;
   const premise = useEditState({
     draft,
@@ -220,8 +221,9 @@ export default function Resource({
     return (
       <div>
         <Row>
-          <Col xs={12} lg={5}>
+          <Col xs={12} lg={6}>
             <ResourceBox
+              base64File={base64File}
               id={id}
               name={name}
               rating={rating}
@@ -231,7 +233,7 @@ export default function Resource({
               resourceFileType={resourceFileType}
             />
           </Col>
-          <Col xs={12} lg={7}>
+          <Col xs={12} lg={6}>
             <div className="mt-5 mt-lg-0">
               <h5>
                 Status: <DisplayStatus>{status}</DisplayStatus>

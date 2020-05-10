@@ -2,20 +2,20 @@ import React from "react";
 import styled, { css } from "styled-components";
 
 const mockupData = [
-  { label: "Policy", total: 10, reviewed: 8 },
-  { label: "Risk", total: 10, reviewed: 5 },
-  { label: "Control", total: 5, reviewed: 2 }
+  { label: "Policy", total: 10, reviewed: 8, prepared: 2, addToPrepare: 0 },
+  { label: "Risk", total: 10, reviewed: 5, prepared: 5, addToPrepare: 0 },
+  { label: "Control", total: 5, reviewed: 2, prepared: 3, addToPrepare: 0 },
 ];
 
 const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
   const maxCount = Math.max(
-    ...data.map(item => Math.max(item.total, item.reviewed)),
+    ...data.map((item) => Math.max(item.total, item.reviewed)),
     1
   );
 
   return (
     <PolicyChartContainer>
-      {data.map(item => {
+      {data.map((item) => {
         const colors = getColors(item.label);
         return (
           <PolicyChartItemWrapper key={item.label}>
@@ -65,7 +65,7 @@ const colors = {
   paleBlue: "#E3F0FF",
   red: "#F56476",
   lightRed: "#BC072B",
-  paleRed: "#D86179"
+  paleRed: "#D86179",
 };
 
 const PolicyChartContainer = styled.div`
@@ -90,7 +90,7 @@ const PolicyChartItem = styled.div<PolicyChartItemProps>`
   position: absolute;
   width: 100%;
   bottom: 0;
-  background: ${props => props.color};
+  background: ${(props) => props.color};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -111,14 +111,14 @@ const PolicyChartItem = styled.div<PolicyChartItemProps>`
     `};
 `;
 const ChartValue = styled.div<ChartLabelProps>`
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   font-weight: bold;
   font-size: 24px;
   line-height: 27px;
   text-align: center;
 `;
 const ChartLabel = styled.div<ChartLabelProps>`
-  color: ${props => props.color};
+  color: ${(props) => props.color};
   font-weight: 600;
   font-size: 14px;
   line-height: 16px;
@@ -140,6 +140,8 @@ export interface PolicyChartProps {
 interface ChartData {
   label: string;
   total: number;
+  prepared: number;
+  addToPrepare?: number;
   reviewed: number;
   onClick?: () => void;
 }

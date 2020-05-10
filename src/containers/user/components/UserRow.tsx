@@ -159,7 +159,9 @@ export default function UserRow({
     return (
       <tr>
         <td>
-          {draft ? <span className="text-orange">[Draft] </span> : null}
+          {draft ? (
+            <span className="text-orange">[Waiting For Review] </span>
+          ) : null}
           {name}
         </td>
         <td>{oc(user).id("")}</td>

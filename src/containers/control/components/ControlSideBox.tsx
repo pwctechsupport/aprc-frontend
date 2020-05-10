@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { oc } from "ts-optchain";
@@ -14,6 +14,7 @@ import {
 import Tooltip from "../../../shared/components/Tooltip";
 import humanizeDate from "../../../shared/utils/humanizeDate";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const ControlSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -21,12 +22,14 @@ const ControlSideBox = () => {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const [condition, setCondition] = useState(false);
+
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(25);
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0) {
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };
@@ -34,7 +37,11 @@ const ControlSideBox = () => {
     fetchPolicy: "network-only",
     variables: { filter: { description_cont: search }, limit },
   });
-
+  useEffect(() => {
+    data?.controls?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [data, limit]);
   const controls = oc(data)
     .controls.collection([])
     .sort(
@@ -50,7 +57,7 @@ const ControlSideBox = () => {
           {isAdmin || isAdminPreparer || isAdminReviewer
             ? "Control Admin"
             : "Control"}
-          {isAdmin ||  isAdminPreparer ? (
+          {isAdmin || isAdminPreparer ? (
             <Tooltip description="Create Control">
               <Button
                 tag={Link}
@@ -86,6 +93,11 @@ const ControlSideBox = () => {
           </SideBoxItem>
         );
       })}
+      {loading && (
+        <div>
+          <LoadingSpinner className="mt-2 mb-2" centered biggerSize />
+        </div>
+      )}
     </SideBox>
   );
 };

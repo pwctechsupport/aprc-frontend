@@ -18,6 +18,7 @@ import { notifyGraphQLErrors, notifySuccess } from "../utils/notif";
 import ResourceForm, {
   ResourceFormValues,
 } from "../../containers/resources/components/ResourceForm";
+import useAccessRights from "../hooks/useAccessRights";
 
 export default function ResourcesTab({
   queryFilters,
@@ -28,6 +29,10 @@ export default function ResourcesTab({
   formDefaultValues: ResourceFormValues;
   isDraft: any;
 }) {
+  const [isAdmin, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_preparer",
+  ]);
   // Pagination state handlers
   const { limit, page, handlePageChange } = useListState({
     limit: 10,
@@ -91,7 +96,7 @@ export default function ResourcesTab({
           loading={loading}
           placeholder="Search Resources..."
         />
-        {isDraft === null && (
+        {isDraft === null && (isAdmin || isAdminPreparer) && (
           <Tooltip description="Create Resource">
             <Button
               onClick={toggleAddResourceModal}

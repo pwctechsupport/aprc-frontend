@@ -4,9 +4,9 @@ import { oc } from "ts-optchain";
 import PolicyChart, { PolicyChartProps } from "./PolicyChart";
 
 const PolicyDashboard = ({ data }: PolicyChartProps) => {
-  const subPolicy = data.find(item => item.label.match(/polic/gi));
-  const control = data.find(item => item.label.match(/control/gi));
-  const risk = data.find(item => item.label.match(/risk/gi));
+  const subPolicy = data.find((item) => item.label.match(/polic/gi));
+  const control = data.find((item) => item.label.match(/control/gi));
+  const risk = data.find((item) => item.label.match(/risk/gi));
   const tableData = [
     {
       label: "Reviewed",
@@ -15,7 +15,16 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
       risk: oc(risk).reviewed(0),
       sum() {
         return this.subPolicy + this.control + this.risk;
-      }
+      },
+    },
+    {
+      label: "Prepared",
+      subPolicy: oc(subPolicy).prepared(0) + oc(subPolicy).addToPrepare(0),
+      control: oc(control).prepared(0) + oc(control).addToPrepare(0),
+      risk: oc(risk).prepared(0) + oc(risk).addToPrepare(0),
+      sum() {
+        return this.subPolicy + this.control + this.risk;
+      },
     },
     {
       label: "Total",
@@ -24,8 +33,8 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
       risk: oc(risk).total(0),
       sum() {
         return this.subPolicy + this.control + this.risk;
-      }
-    }
+      },
+    },
   ];
   return (
     <div>

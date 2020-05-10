@@ -1,10 +1,15 @@
 import classnames from "classnames";
-import React, { useState } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
-import { useSideboxPolicyQuery } from "../../../generated/graphql";
+import {
+  useSideboxPolicyQuery,
+  useReviewerPoliciesQuery,
+  usePreparerPoliciesQuery,
+  // useUserPoliciesQuery,
+} from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import {
   SideBox,
@@ -18,23 +23,69 @@ import {
 import Tooltip from "../../../shared/components/Tooltip";
 import { getPathnameParams } from "../../../shared/formatter";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 export default function PolicySideBox({ location }: RouteComponentProps) {
   const [activeId, activeMode] = getPathnameParams(location.pathname, "policy");
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 700);
-  // const isAdmin = location.pathname.split("/")[1] === "policy-admin";
   const [limit, setLimit] = useState(25);
+  const [condition, setCondition] = useState(false);
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const [scrollPointer, setScrollPointer] = useState(1000);
+
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0) {
+    setScrollPointer(scroll);
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };
   // This query is unique, if isTree = true, it captures only the root policy and it's sub, to be rendered as tree.
   // When isTree = false, it just query all the policies, to be rendered as search result.
+  const [preparer, setPreparer] = useState(false);
+  const [reviewer, setReviewer] = useState(false);
+  const [anythingelse, setAnythingElse] = useState(false);
+
   const { data, loading } = useSideboxPolicyQuery({
+    skip: anythingelse,
+    variables: {
+      filter: {
+        ...(!searchQuery && {
+          ancestry_null: true,
+        }),
+        title_cont: searchQuery,
+      },
+      limit,
+      isTree: !searchQuery,
+    },
+  });
+  const {
+    data: dataPreparer,
+    loading: loadingPreparer,
+  } = usePreparerPoliciesQuery({
+    skip: preparer,
+    variables: {
+      filter: {
+        ...(!searchQuery && {
+          ancestry_null: true,
+        }),
+        title_cont: searchQuery,
+      },
+      limit,
+      isTree: !searchQuery,
+    },
+  });
+  const {
+    data: dataReviewer,
+    loading: loadingReviewer,
+  } = useReviewerPoliciesQuery({
+    skip: reviewer,
     variables: {
       filter: {
         ...(!searchQuery && {
@@ -47,11 +98,32 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
     },
   });
   const policies = data?.sidebarPolicies?.collection || [];
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
+  const preparerPolicies = dataPreparer?.preparerPolicies?.collection || [];
+  const reviewerPolicies = dataReviewer?.reviewerPolicies?.collection || [];
+  useEffect(() => {
+    data?.sidebarPolicies?.collection.length === limit
+      ? setCondition(true)
+      : dataPreparer?.preparerPolicies?.collection.length === limit
+      ? setCondition(true)
+      : dataReviewer?.reviewerPolicies?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [scrollPointer, data, dataPreparer, dataReviewer, limit]);
+  useEffect(() => {
+    if (isAdminPreparer) {
+      setPreparer(false);
+      setReviewer(true);
+      setAnythingElse(true);
+    } else if (isAdminReviewer) {
+      setPreparer(true);
+      setReviewer(false);
+      setAnythingElse(true);
+    } else {
+      setPreparer(true);
+      setReviewer(true);
+      setAnythingElse(false);
+    }
+  }, [isAdminPreparer, isAdminReviewer]);
   return (
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
@@ -59,7 +131,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policies Admin"
             : "Policies"}
-          {(isAdmin  || isAdminPreparer) && (
+          {(isAdmin || isAdminPreparer) && (
             <Tooltip description="Create Policy">
               <Button
                 tag={Link}
@@ -76,25 +148,70 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       <SideBoxSearch
         search={search}
         setSearch={setSearch}
-        loading={loading}
+        loading={loading || loadingPreparer || loadingReviewer}
         placeholder="Search Policies..."
       />
       <div>
-        {policies.length ? (
-          policies.map((policy) => (
-            <PolicyBranch
-              key={policy.id}
-              id={policy.id}
-              activeId={activeId}
-              activeMode={activeMode}
-              title={policy.title}
-              children={policy.children}
-              level={0}
-              isAdmin={isAdmin}
-            />
+        {isAdminPreparer ? (
+          preparerPolicies.length ? (
+            preparerPolicies.map((policy, index) => (
+              <Fragment key={index}>
+                <PolicyBranch
+                  key={policy.id}
+                  id={policy.id}
+                  activeId={activeId}
+                  activeMode={activeMode}
+                  title={policy.title}
+                  children={policy.children}
+                  level={0}
+                  isAdmin={isAdmin}
+                />
+              </Fragment>
+            ))
+          ) : (
+            <div className="text-center p-2 text-orange">Policy not found</div>
+          )
+        ) : isAdminReviewer ? (
+          reviewerPolicies.length ? (
+            reviewerPolicies.map((policy, index) => (
+              <Fragment key={index}>
+                <PolicyBranch
+                  key={policy.id}
+                  id={policy.id}
+                  activeId={activeId}
+                  activeMode={activeMode}
+                  title={policy.title}
+                  children={policy.children}
+                  level={0}
+                  isAdmin={isAdmin}
+                />
+              </Fragment>
+            ))
+          ) : (
+            <div className="text-center p-2 text-orange">Policy not found</div>
+          )
+        ) : policies.length ? (
+          policies.map((policy, index) => (
+            <Fragment key={index}>
+              <PolicyBranch
+                key={policy.id}
+                id={policy.id}
+                activeId={activeId}
+                activeMode={activeMode}
+                title={policy.title}
+                children={policy.children}
+                level={0}
+                isAdmin={isAdmin}
+              />
+            </Fragment>
           ))
         ) : (
           <div className="text-center p-2 text-orange">Policy not found</div>
+        )}
+        {(loading || loadingPreparer || loadingReviewer) && (
+          <div>
+            <LoadingSpinner className="mt-2 mb-2" centered biggerSize />
+          </div>
         )}
       </div>
     </SideBox>
@@ -106,6 +223,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
 // ================================================
 interface PolicyBranchProps {
   id: string | number;
+  loading?: boolean;
   activeId?: string | number | undefined;
   activeMode?: string;
   title?: string | null | undefined;

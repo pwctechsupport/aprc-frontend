@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import { useResourcesQuery } from "../../../generated/graphql";
@@ -15,21 +15,28 @@ import Button from "../../../shared/components/Button";
 import { Link } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const ResourceSideBox = () => {
+  const [condition, setCondition] = useState(false);
   const [search, setSearch] = useState("");
   const [searchQuery] = useDebounce(search, 400);
   const [limit, setLimit] = useState(25);
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;
-    if (scroll === 0) {
+    if ((scroll === 0 || scroll < 0) && condition) {
       setLimit(limit + 25);
     }
   };
   const { data, loading } = useResourcesQuery({
     variables: { filter: { name_cont: searchQuery }, limit },
   });
+  useEffect(() => {
+    data?.resources?.collection.length === limit
+      ? setCondition(true)
+      : setCondition(false);
+  }, [data, limit]);
   const resources = oc(data)
     .resources.collection([])
     .sort(
@@ -78,6 +85,11 @@ const ResourceSideBox = () => {
           </SideBoxItemText>
         </SideBoxItem>
       ))}
+      {loading && (
+        <div>
+          <LoadingSpinner className="mt-2 mb-2" centered biggerSize />
+        </div>
+      )}
     </SideBox>
   );
 };

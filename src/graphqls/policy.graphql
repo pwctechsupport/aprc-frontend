@@ -113,6 +113,106 @@ query sideboxPolicy(
     }
   }
 }
+
+query reviewerPolicies(
+  $filter: BaseScalar = {}
+  $isTree: Boolean!
+  $limit: Int
+  $page: Int
+) {
+  reviewerPolicies(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      ...policyBranch
+      children @include(if: $isTree) {
+        ...policyBranch
+        children {
+          ...policyBranch
+          children {
+            ...policyBranch
+            children {
+              ...policyBranch
+              children {
+                ...policyBranch
+              }
+            }
+          }
+        }
+      }
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
+  }
+}
+query preparerPolicies(
+  $filter: BaseScalar = {}
+  $isTree: Boolean!
+  $limit: Int
+  $page: Int
+) {
+  preparerPolicies(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      ...policyBranch
+      children @include(if: $isTree) {
+        ...policyBranch
+        children {
+          ...policyBranch
+          children {
+            ...policyBranch
+            children {
+              ...policyBranch
+              children {
+                ...policyBranch
+              }
+            }
+          }
+        }
+      }
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
+  }
+}
+query userPolicies(
+  $filter: BaseScalar = {}
+  $isTree: Boolean!
+  $limit: Int
+  $page: Int
+) {
+  userPolicies(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      ...policyBranch
+      children @include(if: $isTree) {
+        ...policyBranch
+        children {
+          ...policyBranch
+          children {
+            ...policyBranch
+            children {
+              ...policyBranch
+              children {
+                ...policyBranch
+              }
+            }
+          }
+        }
+      }
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
+  }
+}
 fragment policyBranch on Policy {
   id
   title
@@ -172,7 +272,7 @@ query policy($id: ID!, $withChild: Boolean = false) {
       objectChanges
     }
     isSubmitted
-    versionsCount
+    trueVersion
     hasEditAccess
     requestStatus
     status

@@ -9,26 +9,27 @@ import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 
 const CreatePolicy = ({ history, location }: RouteComponentProps) => {
   const [createPolicy, { loading }] = useCreatePolicyMutation({
-    onCompleted: res => {
+    onCompleted: (res) => {
       notifySuccess("Create Success");
       const id = res.createPolicy?.policy?.id || "";
-      history.replace(`/policy/${id}`);
+      history.replace(`/policy/${id}/details`);
+      window.location.reload();
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["policyTree"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function handleSubmit(values: PolicyFormValues) {
     createPolicy({
       variables: {
-        input: values
-      }
+        input: values,
+      },
     });
   }
-  function handleSubmitToReviewer(values:PolicyFormValues){
+  function handleSubmitToReviewer(values: PolicyFormValues) {
     createPolicy({
-      variables:{input:{isSubmitted:true,...values}}
-    })
+      variables: { input: { isSubmitted: true, ...values } },
+    });
   }
   const isAdmin = location.pathname.split("/")[1] === "policy-admin";
 
@@ -42,11 +43,11 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
           isAdmin
             ? [
                 ["/policy-admin", "Policies"],
-                ["/policy-admin/create", "Create Policy"]
+                ["/policy-admin/create", "Create Policy"],
               ]
             : [
                 ["/policy", "Policies"],
-                ["/policy/create", "Create Policy"]
+                ["/policy/create", "Create Policy"],
               ]
         }
       />

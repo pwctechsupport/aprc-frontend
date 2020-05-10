@@ -28,10 +28,12 @@ interface ResourceBoxProps {
   imagePreviewUrl: string | undefined;
   totalRating: number;
   resourceFileType: string | null | undefined;
+  base64File: string | null | undefined;
 }
 
 export default function ResourceBox({
   id,
+  base64File,
   name,
   views,
   rating,
@@ -81,14 +83,14 @@ export default function ResourceBox({
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
     refetchQueries: ["resource"],
   });
-
   // Handle download attachment
   const handleDownload = () => {
     updateResourceVisit({ variables: { id } });
     const link = document.createElement("a");
-    link.target = "_blank";
-    link.href = imagePreviewUrl || "";
-    link.setAttribute("download", name || "PwC-Generated");
+    // link.target = "_blank";
+    link.href = base64File || imagePreviewUrl || "";
+    // link.setAttribute("download", name || "PwC-Generated");
+    link.download = name || "PwC-Generated";
     document.body.appendChild(link);
     link.click();
     link.parentNode && link.parentNode.removeChild(link);
@@ -96,8 +98,6 @@ export default function ResourceBox({
 
   function renderImage() {
     if (!imagePreviewUrl) {
-      console.log("imagePreviewUrl", imagePreviewUrl);
-
       return (
         <div className="d-flex justify-content-center align-items-center py-5 my-5">
           <EmptyAttribute />

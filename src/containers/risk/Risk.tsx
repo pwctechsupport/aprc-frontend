@@ -8,7 +8,7 @@ import {
 } from "react-icons/ai";
 import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
-import { Badge, Col, Container, Row } from "reactstrap";
+import { Badge, Col, Row } from "reactstrap";
 import {
   LevelOfRisk,
   TypeOfRisk,
@@ -34,7 +34,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
-import styled from "styled-components";
+// import styled from "styled-components";
 
 export default function Risk({
   match,
@@ -308,26 +308,26 @@ export default function Risk({
       },
     ];
     return (
-      <Container>
-        <Row>
-          <StyledDiv className="col-md-3">
+      <Row>
+        <Col xs={6}>
+          <dl>
             {details1.map((item) => (
               <Fragment key={item.label}>
                 <dt>{item.label}</dt>
                 <dd>{item.value || "-"}</dd>
               </Fragment>
             ))}
-          </StyledDiv>
-          <Col>
-            {details2.map((item) => (
-              <Fragment key={item.label}>
-                <dt>{item.label}</dt>
-                <dd>{item.value || "-"}</dd>
-              </Fragment>
-            ))}
-          </Col>
-        </Row>
-      </Container>
+          </dl>
+        </Col>
+        <Col xs={6}>
+          {details2.map((item) => (
+            <Fragment key={item.label}>
+              <dt>{item.label}</dt>
+              <dd>{item.value || "-"}</dd>
+            </Fragment>
+          ))}
+        </Col>
+      </Row>
     );
   };
 
@@ -359,11 +359,3 @@ export default function Risk({
     </div>
   );
 }
-
-export const StyledDiv = styled.div`
-  position: relative;
-  right: 10%;
-  @media screen and (max-width: 1440px) {
-    right: 0%;
-  }
-`;

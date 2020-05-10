@@ -21,23 +21,25 @@ const AllPolicyDashboard = () => {
   const totalPolicies = oc(data).totalPolicies.metadata.totalCount(0);
   const totalRisks = oc(data).totalRisks.metadata.totalCount(0);
   const totalControls = oc(data).totalControls.metadata.totalCount(0);
-
   const chartData = [
     {
       label: "Policies",
       total: totalPolicies,
-      reviewed: reviewedPolicies
+      reviewed: reviewedPolicies,
+      prepared: preparedPolicies,
     },
     {
       label: "Risks",
       total: totalRisks,
-      reviewed: reviewedRisks
+      reviewed: reviewedRisks,
+      prepared: preparedRisks,
     },
     {
       label: "Controls",
       total: totalControls,
-      reviewed: reviewedControls
-    }
+      reviewed: reviewedControls,
+      prepared: preparedControls,
+    },
   ];
 
   const tableData = [
@@ -48,7 +50,7 @@ const AllPolicyDashboard = () => {
       control: reviewedControls,
       sum() {
         return this.subPolicy + this.risk + this.control;
-      }
+      },
     },
     {
       label: "Prepared",
@@ -57,7 +59,7 @@ const AllPolicyDashboard = () => {
       control: preparedControls,
       sum() {
         return this.subPolicy + this.risk + this.control;
-      }
+      },
     },
     {
       label: "Total",
@@ -66,8 +68,8 @@ const AllPolicyDashboard = () => {
       control: totalControls,
       sum() {
         return this.subPolicy + this.risk + this.control;
-      }
-    }
+      },
+    },
   ];
 
   return (
