@@ -27,7 +27,7 @@ interface PolicySearchFilter {
   controls_id_in?: string[];
   resources_id_in?: string[];
   references_id_in?: string[];
-  categories_id_in?: string[];
+  policy_category_id_eq?: object;
   updated_at_gteq?: string | null;
 }
 
@@ -61,7 +61,7 @@ export default function PolicySearch({
       controls_id_in: values.controls?.map(takeValue),
       resources_id_in: values.resources?.map(takeValue),
       references_id_in: values.policyReferences?.map(takeValue),
-      categories_id_in: values.policyCategories?.map(takeValue),
+      policy_category_id_eq: values.policyCategories?.value,
       updated_at_gteq: constructDateFilter(values.dateFrom),
     });
     setFilter(filter);
@@ -112,7 +112,12 @@ export default function PolicySearch({
           />
           {policies.length ? (
             policies.map((policy) => (
-              <PolicySearchItem key={policy.id} policy={policy} homepageSearch={'thisIsForSearchPolicy'} filter={filter}/>
+              <PolicySearchItem
+                key={policy.id}
+                policy={policy}
+                homepageSearch={"thisIsForSearchPolicy"}
+                filter={filter}
+              />
             ))
           ) : loading ? (
             <div className={"text-center"}>

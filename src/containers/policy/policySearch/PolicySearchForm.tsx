@@ -21,7 +21,7 @@ export interface PolicySearchFormValues {
   risks?: Suggestions;
   controls?: Suggestions;
   resources?: Suggestions;
-  policyCategories?: Suggestions;
+  policyCategories?: any;
   policyReferences?: Suggestions;
   dateFrom?: DateFilter;
 }
@@ -101,7 +101,6 @@ export default function PolicySearchForm({
         setValue={setValue}
         loadOptions={loadPolicyCategories}
         defaultOptions
-        isMulti
         placeholder="By Categories..."
       />
       <AsyncSelect
