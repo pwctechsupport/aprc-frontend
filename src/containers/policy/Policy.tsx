@@ -5,6 +5,7 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
+  Fragment,
 } from "react";
 import Helmet from "react-helmet";
 import {
@@ -318,8 +319,8 @@ export default function Policy({
   const isMaximumLevel = ancestry.split("/").length === 5;
   const ancestors = data?.policy?.ancestors || [];
   const lastUpdatedAt = data?.policy?.lastUpdatedAt;
+  const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
-
   const trueVersion = data?.policy?.trueVersion;
   const breadcrumb = ancestors.map((a: any) => [
     "/policy/" + a.id,
@@ -381,7 +382,14 @@ export default function Policy({
             >
               <div className="text-right my-2 text-secondary">
                 <div className="mb-1  ">Created By : {createdBy}</div>
-                <DateHover withIcon>{lastUpdatedAt}</DateHover>
+                {lastUpdatedAt ? (
+                  <DateHover withIcon>{lastUpdatedAt}</DateHover>
+                ) : (
+                  <div className="text-secondary">
+                    <DateHover withIcon>{createdAt}</DateHover>
+                  </div>
+                )}
+
                 <div className="mt-1  ">Version : {trueVersion}</div>
               </div>
               <div className="d-flex justify-content-end">

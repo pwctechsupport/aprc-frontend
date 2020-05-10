@@ -6,7 +6,7 @@ import {
   PolicyDocument,
   Status,
   useCreateSubPolicyMutation,
-  usePolicyQuery
+  usePolicyQuery,
 } from "../../generated/graphql";
 import HeaderWithBackButton from "../../shared/components/Header";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
@@ -19,7 +19,7 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
   // Fetch parent policy
   const { data } = usePolicyQuery({
     variables: { id },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
 
   // Create sub-policy handler
@@ -27,10 +27,11 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
     onCompleted: () => {
       toast.success("Berhasil");
       history.goBack();
+      window.location.reload();
     },
     onError: () => toast.error("Gagal"),
     refetchQueries: [{ query: PolicyDocument, variables: { id } }],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
   function createSubPolicy(values: SubPolicyFormValues) {
     create({
@@ -39,9 +40,9 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
           ...values,
           businessProcessIds: values.businessProcessIds || [],
           controlIds: values.controlIds || [],
-          riskIds: values.riskIds || []
-        }
-      }
+          riskIds: values.riskIds || [],
+        },
+      },
     });
   }
   function submitSubPolicy(values: SubPolicyFormValues) {
@@ -49,12 +50,12 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
       variables: {
         input: {
           ...values,
-          isSubmitted:true,
+          isSubmitted: true,
           businessProcessIds: values.businessProcessIds || [],
           controlIds: values.controlIds || [],
-          riskIds: values.riskIds || []
-        }
-      }
+          riskIds: values.riskIds || [],
+        },
+      },
     });
   }
   // Extract necessary variables for UI
@@ -70,7 +71,7 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
     businessProcessIds: [],
     controlIds: [],
     riskIds: [],
-    status: Status.Draft
+    status: Status.Draft,
   };
 
   const isAdmin = location.pathname.split("/")[1] === "policy-admin";
@@ -85,13 +86,13 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
                 ["/policy-admin/" + id, title],
                 [
                   "/policy-admin/" + id + "/create-sub-policy",
-                  "Create Sub-Policy"
-                ]
+                  "Create Sub-Policy",
+                ],
               ]
             : [
                 ["/policy", "Policies"],
                 ["/policy/" + id, title],
-                ["/policy/" + id + "/create-sub-policy", "Create Sub-Policy"]
+                ["/policy/" + id + "/create-sub-policy", "Create Sub-Policy"],
               ]
         }
       />
