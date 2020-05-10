@@ -62,6 +62,7 @@ type TParams = { id: string };
 
 export default function RiskAndControl({
   match,
+  history,
 }: RouteComponentProps<TParams>) {
   const [isAdmin, isAdminPreparer] = useAccessRights([
     "admin",
@@ -163,29 +164,33 @@ export default function RiskAndControl({
   const renderActions = () => {
     return (
       <div className="d-flex align-items-center">
-        <Tooltip
-          description={
-            collapse.length === initialCollapse.length
-              ? "Hide All Attribute"
-              : "Show All Attribute"
-          }
-        >
-          <Button
-            className="ml-3"
-            color="transparent"
-            onClick={() => {
-              collapse.length === initialCollapse.length
-                ? closeAllCollapse()
-                : openAllCollapse();
-            }}
-          >
-            {collapse.length === initialCollapse.length ? (
-              <FaMinus size={20} />
-            ) : (
-              <FaBars size={20} />
-            )}
-          </Button>
-        </Tooltip>
+        {!history.location.pathname.includes("resources") &&
+          !history.location.pathname.includes("flowchart") && (
+            <Tooltip
+              description={
+                collapse.length === initialCollapse.length
+                  ? "Hide All Attribute"
+                  : "Show All Attribute"
+              }
+            >
+              <Button
+                className="ml-3"
+                color="transparent"
+                onClick={() => {
+                  collapse.length === initialCollapse.length
+                    ? closeAllCollapse()
+                    : openAllCollapse();
+                }}
+              >
+                {collapse.length === initialCollapse.length ? (
+                  <FaMinus size={20} />
+                ) : (
+                  <FaBars size={20} />
+                )}
+              </Button>
+            </Tooltip>
+          )}
+
         <Menu
           data={[
             {

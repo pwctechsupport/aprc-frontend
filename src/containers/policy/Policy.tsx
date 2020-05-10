@@ -631,34 +631,42 @@ export default function Policy({
                   ? `/policy-admin/${id}/create-sub-policy`
                   : `/policy/${id}/create-sub-policy`
               }
-              className="pwc"
+              className="pwc "
+              style={{
+                marginRight: `${
+                  history.location.pathname.includes("details") ? "0px" : "10px"
+                }`,
+              }}
             >
               <FaPlus /> Sub-Policy
             </Button>
           )}
-          <Tooltip
-            description={
-              collapse.length === initialCollapse.length
-                ? "Hide All Attribute"
-                : "Show All Attribute"
-            }
-          >
-            <Button
-              className="ml-3"
-              color="transparent"
-              onClick={() => {
+          {history.location.pathname.includes("details") && (
+            <Tooltip
+              description={
                 collapse.length === initialCollapse.length
-                  ? closeAllCollapse()
-                  : openAllCollapse();
-              }}
+                  ? "Hide All Attribute"
+                  : "Show All Attribute"
+              }
             >
-              {collapse.length === initialCollapse.length ? (
-                <FaMinus size={20} />
-              ) : (
-                <FaBars size={20} />
-              )}
-            </Button>
-          </Tooltip>
+              <Button
+                className="ml-3"
+                color="transparent"
+                onClick={() => {
+                  collapse.length === initialCollapse.length
+                    ? closeAllCollapse()
+                    : openAllCollapse();
+                }}
+              >
+                {collapse.length === initialCollapse.length ? (
+                  <FaMinus size={20} />
+                ) : (
+                  <FaBars size={20} />
+                )}
+              </Button>
+            </Tooltip>
+          )}
+
           {isAdmin ||
             isAdminPreparer ||
             (isAdminReviewer && (
