@@ -199,13 +199,13 @@ export default function Resource({
     policyIds: data?.resource?.policies?.map(toLabelValue) || [],
     resuploadUrl: data?.resource?.resuploadUrl || "",
     resuploadLink: data?.resource?.resuploadLink || "",
+    resuploadBase64: data?.resource?.base64File || "",
     tagsAttributes: data?.resource?.tags || [],
   };
 
   if (loading) {
     return <LoadingSpinner centered size={30} />;
   }
-
   const renderResourceInEditMode = () => {
     return (
       <ResourceForm
