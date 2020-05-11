@@ -58,6 +58,7 @@ query businessProcess($id: ID!) {
     id
     name
     parentId
+    bookmarkedBy
     children {
       name
       id

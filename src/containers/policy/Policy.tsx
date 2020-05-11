@@ -189,8 +189,8 @@ export default function Policy({
   const [addBookmark] = useCreateBookmarkPolicyMutation({
     onCompleted: (_) => notifySuccess("Added to bookmark"),
     onError: notifyGraphQLErrors,
+    refetchQueries: ["policy"],
     awaitRefetchQueries: true,
-    refetchQueries: ["bookmarkPolicies"],
   });
 
   // const [update, updateState] = useUpdatePolicyMutation({
@@ -318,6 +318,7 @@ export default function Policy({
   const isMaximumLevel = ancestry.split("/").length === 5;
   const ancestors = data?.policy?.ancestors || [];
   const lastUpdatedAt = data?.policy?.lastUpdatedAt;
+  const bookmarked = data?.policy?.bookmarkedBy;
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
@@ -326,7 +327,6 @@ export default function Policy({
     a.title,
   ]) as CrumbItem[];
   if (loading) return <LoadingSpinner centered size={30} />;
-
   const policyChartData = formatPolicyChart({
     controlCount,
     riskCount,
@@ -569,52 +569,92 @@ export default function Policy({
       },
       { label: "divider" },
     ];
-    const basicMenu: MenuData[] = [
-      {
-        label: (
-          <div>
-            <FaFilePdf /> Preview
-          </div>
-        ),
-        onClick: () =>
-          previewPdf(`/prints/${id}/policy.pdf`, {
-            onStart: () =>
-              notifySuccess("Downloading file for preview", {
-                autoClose: 10000,
+    const basicMenu: MenuData[] = bookmarked
+      ? [
+          {
+            label: (
+              <div>
+                <FaFilePdf /> Preview
+              </div>
+            ),
+            onClick: () =>
+              previewPdf(`/prints/${id}/policy.pdf`, {
+                onStart: () =>
+                  notifySuccess("Downloading file for preview", {
+                    autoClose: 10000,
+                  }),
               }),
-          }),
-      },
-      {
-        label: (
-          <div>
-            <IoMdDownload /> Download
-          </div>
-        ),
-        onClick: () =>
-          downloadPdf(`/prints/${id}/policy.pdf`, {
-            fileName: title,
-            onStart: () => notifyInfo("Download Started"),
-            onError: () => notifyError("Download Failed"),
-            onCompleted: () => notifySuccess("Download Success"),
-          }),
-      },
-      {
-        label: (
-          <div>
-            <MdEmail /> Mail
-          </div>
-        ),
-        onClick: () => emailPdf(title),
-      },
-      {
-        label: (
-          <div>
-            <FaBookmark /> Bookmark
-          </div>
-        ),
-        onClick: () => addBookmark({ variables: { input: { policyId: id } } }),
-      },
-    ];
+          },
+          {
+            label: (
+              <div>
+                <IoMdDownload /> Download
+              </div>
+            ),
+            onClick: () =>
+              downloadPdf(`/prints/${id}/policy.pdf`, {
+                fileName: title,
+                onStart: () => notifyInfo("Download Started"),
+                onError: () => notifyError("Download Failed"),
+                onCompleted: () => notifySuccess("Download Success"),
+              }),
+          },
+          {
+            label: (
+              <div>
+                <MdEmail /> Mail
+              </div>
+            ),
+            onClick: () => emailPdf(title),
+          },
+        ]
+      : [
+          {
+            label: (
+              <div>
+                <FaFilePdf /> Preview
+              </div>
+            ),
+            onClick: () =>
+              previewPdf(`/prints/${id}/policy.pdf`, {
+                onStart: () =>
+                  notifySuccess("Downloading file for preview", {
+                    autoClose: 10000,
+                  }),
+              }),
+          },
+          {
+            label: (
+              <div>
+                <IoMdDownload /> Download
+              </div>
+            ),
+            onClick: () =>
+              downloadPdf(`/prints/${id}/policy.pdf`, {
+                fileName: title,
+                onStart: () => notifyInfo("Download Started"),
+                onError: () => notifyError("Download Failed"),
+                onCompleted: () => notifySuccess("Download Success"),
+              }),
+          },
+          {
+            label: (
+              <div>
+                <MdEmail /> Mail
+              </div>
+            ),
+            onClick: () => emailPdf(title),
+          },
+          {
+            label: (
+              <div>
+                <FaBookmark /> Bookmark
+              </div>
+            ),
+            onClick: () =>
+              addBookmark({ variables: { input: { policyId: id } } }),
+          },
+        ];
     let theMenu = [...basicMenu];
     if (isSmallDevice) {
       theMenu = [...mainMenu, ...basicMenu];

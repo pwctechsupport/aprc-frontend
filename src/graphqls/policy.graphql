@@ -336,6 +336,7 @@ fragment policyFragment on Policy {
     id
     name
   }
+  bookmarkedBy
 }
 
 mutation destroyPolicy($id: ID!) {

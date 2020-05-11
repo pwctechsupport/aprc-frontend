@@ -137,6 +137,8 @@ export default function RiskAndControl({
   const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
     onCompleted: () => notifySuccess("Added to Bookmark"),
     onError: notifyGraphQLErrors,
+    refetchQueries: ["businessProcess"],
+    awaitRefetchQueries: true,
   });
 
   const { id } = match.params;
@@ -148,6 +150,7 @@ export default function RiskAndControl({
   const risks = data?.businessProcess?.risks || [];
   const controls = data?.businessProcess?.controls || [];
   const resources = data?.businessProcess?.resources || [];
+  const isBookmarked = data?.businessProcess?.bookmarkedBy;
   const ancestors = data?.businessProcess?.ancestors || [];
   const breadcrumb = ancestors.map((a) => [
     "/risk-and-control/" + a.id,
@@ -193,52 +196,93 @@ export default function RiskAndControl({
           )}
 
         <Menu
-          data={[
-            {
-              label: (
-                <div>
-                  <FaFilePdf /> Preview
-                </div>
-              ),
-              onClick: () =>
-                previewPdf(`prints/${id}/business_process.pdf`, {
-                  onStart: () =>
-                    notifyInfo("Downloading file for preview", {
-                      autoClose: 10000,
-                    }),
-                }),
-            },
-            {
-              label: (
-                <div>
-                  <IoMdDownload /> Download
-                </div>
-              ),
-              onClick: () =>
-                downloadPdf(`prints/${id}/business_process.pdf`, {
-                  fileName: name,
-                  onStart: () => notifyInfo("Download Started"),
-                  onError: () => notifyError("Download Failed"),
-                  onCompleted: () => notifySuccess("Download Success"),
-                }),
-            },
-            {
-              label: (
-                <div>
-                  <FaBookmark /> Bookmark
-                </div>
-              ),
-              onClick: () => addBookmark({ variables: { id } }),
-            },
-            {
-              label: (
-                <div>
-                  <MdEmail /> Mail
-                </div>
-              ),
-              onClick: () => emailPdf(name),
-            },
-          ]}
+          data={
+            isBookmarked
+              ? [
+                  {
+                    label: (
+                      <div>
+                        <FaFilePdf /> Preview
+                      </div>
+                    ),
+                    onClick: () =>
+                      previewPdf(`prints/${id}/business_process.pdf`, {
+                        onStart: () =>
+                          notifyInfo("Downloading file for preview", {
+                            autoClose: 10000,
+                          }),
+                      }),
+                  },
+                  {
+                    label: (
+                      <div>
+                        <IoMdDownload /> Download
+                      </div>
+                    ),
+                    onClick: () =>
+                      downloadPdf(`prints/${id}/business_process.pdf`, {
+                        fileName: name,
+                        onStart: () => notifyInfo("Download Started"),
+                        onError: () => notifyError("Download Failed"),
+                        onCompleted: () => notifySuccess("Download Success"),
+                      }),
+                  },
+                  {
+                    label: (
+                      <div>
+                        <MdEmail /> Mail
+                      </div>
+                    ),
+                    onClick: () => emailPdf(name),
+                  },
+                ]
+              : [
+                  {
+                    label: (
+                      <div>
+                        <FaFilePdf /> Preview
+                      </div>
+                    ),
+                    onClick: () =>
+                      previewPdf(`prints/${id}/business_process.pdf`, {
+                        onStart: () =>
+                          notifyInfo("Downloading file for preview", {
+                            autoClose: 10000,
+                          }),
+                      }),
+                  },
+                  {
+                    label: (
+                      <div>
+                        <IoMdDownload /> Download
+                      </div>
+                    ),
+                    onClick: () =>
+                      downloadPdf(`prints/${id}/business_process.pdf`, {
+                        fileName: name,
+                        onStart: () => notifyInfo("Download Started"),
+                        onError: () => notifyError("Download Failed"),
+                        onCompleted: () => notifySuccess("Download Success"),
+                      }),
+                  },
+                  {
+                    label: (
+                      <div>
+                        <FaBookmark /> Bookmark
+                      </div>
+                    ),
+                    onClick: () => addBookmark({ variables: { id } }),
+                  },
+                  {
+                    label: (
+                      <div>
+                        <MdEmail /> Mail
+                      </div>
+                    ),
+                    onClick: () => emailPdf(name),
+                  },
+                ]
+          }
         >
           <FaEllipsisV />
         </Menu>
