@@ -577,7 +577,7 @@ export default function Policy({
           </div>
         ),
         onClick: () =>
-          previewPdf(`prints/${id}.pdf`, {
+          previewPdf(`/prints/${id}/policy.pdf`, {
             onStart: () =>
               notifySuccess("Downloading file for preview", {
                 autoClose: 10000,
@@ -591,7 +591,7 @@ export default function Policy({
           </div>
         ),
         onClick: () =>
-          downloadPdf(`prints/${id}.pdf`, {
+          downloadPdf(`/prints/${id}/policy.pdf`, {
             fileName: title,
             onStart: () => notifyInfo("Download Started"),
             onError: () => notifyError("Download Failed"),

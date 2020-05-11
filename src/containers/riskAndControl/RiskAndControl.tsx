@@ -1,5 +1,5 @@
 import startCase from "lodash/startCase";
-import React, { useState, Fragment } from "react";
+import React, { useState } from "react";
 import {
   FaBars,
   FaBookmark,
