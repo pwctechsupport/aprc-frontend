@@ -1,5 +1,5 @@
 import startCase from "lodash/startCase";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import {
   FaBars,
   FaBookmark,
@@ -68,7 +68,7 @@ export default function RiskAndControl({
     "admin",
     "admin_preparer",
   ]);
-  const initialCollapse = ["Risks"];
+  const initialCollapse = ["Risks", "Controls"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse((p) => {
@@ -146,6 +146,7 @@ export default function RiskAndControl({
   });
   const name = data?.businessProcess?.name || "";
   const risks = data?.businessProcess?.risks || [];
+  const controls = data?.businessProcess?.controls || [];
   const resources = data?.businessProcess?.resources || [];
   const ancestors = data?.businessProcess?.ancestors || [];
   const breadcrumb = ancestors.map((a) => [
@@ -344,6 +345,66 @@ export default function RiskAndControl({
               ) : (
                 <EmptyAttribute />
               )}
+            </Collapsible>{" "}
+            <Collapsible
+              title="Controls"
+              show={collapse.includes("Controls")}
+              onClick={toggleCollapse}
+            >
+              {controls.length && (
+                <ControlsTable controls={controls} editControl={editControl} />
+              )}
+              {/* {risks.length ? (
+                <ul>
+                  {risks.map((risk) => (
+                    <li key={risk.id}>
+                      <div className="mb-3 d-flex justify-content-between">
+                        <h5>
+                          {risk.name}
+                          <Badge
+                            color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
+                          >
+                            {startCase(risk.levelOfRisk || "")}
+                          </Badge>
+                          <Badge color="secondary">
+                            {startCase(risk.typeOfRisk || "")}
+                          </Badge>
+                        </h5>
+                        {(isAdmin || isAdminPreparer) && (
+                          <Button
+                            onClick={() =>
+                              editRisk({
+                                id: risk.id,
+                                name: risk.name || "",
+                                businessProcessIds:
+                                  risk.businessProcesses?.map(toLabelValue) ||
+                                  [],
+                                levelOfRisk: risk.levelOfRisk as LevelOfRisk,
+                                typeOfRisk: risk.typeOfRisk as TypeOfRisk,
+                              })
+                            }
+                            color=""
+                          >
+                            <FaPencilAlt />
+                          </Button>
+                        )}
+                      </div>
+
+                      {risk.controls?.length ? (
+                        <>
+                          <h6>Control</h6>
+                          <ControlsTable
+                            controls={risk.controls}
+                            editControl={editControl}
+                          />
+                        </>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <EmptyAttribute />
+              )} */}
             </Collapsible>
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
