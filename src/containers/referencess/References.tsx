@@ -318,7 +318,7 @@ const ReferenceRow = ({
                 </DialogButton>
               </div>
             ) : (
-              <div>
+              <div className="d-flex">
                 {(isAdminPreparer || isAdmin) && (
                   <Button
                     color=""
