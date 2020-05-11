@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import React, { useState, Fragment, useEffect } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaUndo } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
@@ -50,10 +50,10 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   // When isTree = false, it just query all the policies, to be rendered as search result.
   const [preparer, setPreparer] = useState(false);
   const [reviewer, setReviewer] = useState(false);
-  const [anythingelse, setAnythingElse] = useState(false);
+  const [anythingUser, setAnythingUser] = useState(false);
 
   const { data, loading } = useSideboxPolicyQuery({
-    skip: anythingelse,
+    skip: anythingUser,
     variables: {
       filter: {
         ...(!searchQuery && {
@@ -101,29 +101,37 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   const preparerPolicies = dataPreparer?.preparerPolicies?.collection || [];
   const reviewerPolicies = dataReviewer?.reviewerPolicies?.collection || [];
   useEffect(() => {
-    data?.sidebarPolicies?.collection.length === limit
+    policies.length === limit
       ? setCondition(true)
-      : dataPreparer?.preparerPolicies?.collection.length === limit
+      : preparerPolicies.length === limit
       ? setCondition(true)
-      : dataReviewer?.reviewerPolicies?.collection.length === limit
+      : reviewerPolicies.length === limit
       ? setCondition(true)
       : setCondition(false);
   }, [scrollPointer, data, dataPreparer, dataReviewer, limit]);
+
   useEffect(() => {
     if (isAdminPreparer) {
       setPreparer(false);
       setReviewer(true);
-      setAnythingElse(true);
+      setAnythingUser(true);
     } else if (isAdminReviewer) {
       setPreparer(true);
       setReviewer(false);
-      setAnythingElse(true);
+      setAnythingUser(true);
     } else {
       setPreparer(true);
       setReviewer(true);
-      setAnythingElse(false);
+      setAnythingUser(false);
     }
   }, [isAdminPreparer, isAdminReviewer]);
+
+  const hideRefreshReviewer = reviewerPolicies.length < limit;
+  const hideRefreshPreparer = preparerPolicies.length < limit;
+  const hideRefreshAnythingUser = policies.length < limit;
+  const preparerCondition = !loadingPreparer && !preparer;
+  const reviewerCondition = !loadingReviewer && !reviewer;
+  const anythingUserCondition = !loading && !anythingUser;
   return (
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
@@ -208,6 +216,23 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
         ) : (
           <div className="text-center p-2 text-orange">Policy not found</div>
         )}
+        {/* refresh button */}
+        {(!hideRefreshReviewer ||
+          !hideRefreshPreparer ||
+          !hideRefreshAnythingUser) &&
+          (preparerCondition || reviewerCondition || anythingUserCondition) && (
+            <div className="text-center mt-2">
+              <Tooltip description="refresh">
+                <Button
+                  className="soft red "
+                  color=""
+                  onClick={() => setLimit(limit + 25)}
+                >
+                  <FaUndo />
+                </Button>
+              </Tooltip>
+            </div>
+          )}
         {(loading || loadingPreparer || loadingReviewer) && (
           <div>
             <LoadingSpinner className="mt-2 mb-2" centered biggerSize />

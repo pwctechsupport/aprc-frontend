@@ -9,7 +9,7 @@ import {
   SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import Button from "../../../shared/components/Button";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaUndo } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Tooltip from "../../../shared/components/Tooltip";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
@@ -79,6 +79,19 @@ const PolicyCategorySideBox = () => {
             <SideBoxItemText bold>{policyCateg.name}</SideBoxItemText>
           </SideBoxItem>
         ))}
+        {!(policyCategories.length < limit) && !loading && (
+          <div className="text-center mt-2">
+            <Tooltip description="refresh">
+              <Button
+                className="soft red "
+                color=""
+                onClick={() => setLimit(limit + 25)}
+              >
+                <FaUndo />
+              </Button>
+            </Tooltip>
+          </div>
+        )}
         {loading && (
           <div>
             <LoadingSpinner className="mt-2 mb-2" centered biggerSize />

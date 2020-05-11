@@ -12,7 +12,7 @@ import { useDebounce } from "use-debounce/lib";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { Link } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaUndo } from "react-icons/fa";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
@@ -93,6 +93,19 @@ const RiskSideBox = () => {
           </SideBoxItem>
         );
       })}
+      {!(risks.length < limit) && !loading && (
+        <div className="text-center mt-2">
+          <Tooltip description="refresh">
+            <Button
+              className="soft red "
+              color=""
+              onClick={() => setLimit(limit + 25)}
+            >
+              <FaUndo />
+            </Button>
+          </Tooltip>
+        </div>
+      )}
       {loading && (
         <div>
           <LoadingSpinner className="mt-2 mb-2" centered biggerSize />

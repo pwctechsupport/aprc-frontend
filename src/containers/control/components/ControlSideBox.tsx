@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaUndo } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { oc } from "ts-optchain";
 import { useControlsQuery } from "../../../generated/graphql";
@@ -93,6 +93,19 @@ const ControlSideBox = () => {
           </SideBoxItem>
         );
       })}
+      {!(controls.length < limit) && !loading && (
+        <div className="text-center mt-2">
+          <Tooltip description="refresh">
+            <Button
+              className="soft red "
+              color=""
+              onClick={() => setLimit(limit + 25)}
+            >
+              <FaUndo />
+            </Button>
+          </Tooltip>
+        </div>
+      )}
       {loading && (
         <div>
           <LoadingSpinner className="mt-2 mb-2" centered biggerSize />
