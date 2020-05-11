@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import ReferenceSideBox from "./components/ReferenceSideBox";
 import References from "./References";
 import CreateReference from "./CreateReference";
+import Reference from "./Reference";
 
 const ReferenceRoute = () => {
   return (
@@ -20,6 +21,7 @@ const ReferenceRoute = () => {
               path="/references/create"
               component={CreateReference}
             />
+            <Route path="/references/:id" component={Reference} />
           </Switch>
         </Col>
       </Row>

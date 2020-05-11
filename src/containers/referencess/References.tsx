@@ -33,8 +33,9 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import { RouteComponentProps } from "react-router-dom";
 
-const References = () => {
+const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
 
@@ -76,9 +77,7 @@ const References = () => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights([
-    "admin_reviewer",
-  ]);  
+  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
   return (
     <div>
       <Helmet>
@@ -162,6 +161,7 @@ const References = () => {
                     destroyReference({ variables: { id: reference.id } })
                   }
                   deleteLoading={destroyM.loading}
+                  onClick={(id: any) => history.push(`/references/${id}`)}
                 />
               );
             })}
@@ -180,6 +180,7 @@ const ReferenceRow = ({
   deleteLoading,
   selected,
   toggleCheck,
+  onClick,
 }: ReferenceRowProps) => {
   const { register, handleSubmit, setValue } = useForm<ReferenceRowFormValues>({
     defaultValues: {
@@ -212,7 +213,6 @@ const ReferenceRow = ({
   });
 
   function updateReference(values: ReferenceRowFormValues) {
-    // console.log("values", values);
     update({
       variables: {
         input: {
@@ -229,7 +229,16 @@ const ReferenceRow = ({
     "admin_preparer",
   ]);
   return (
-    <tr>
+    <tr
+      key={reference.id}
+      onClick={
+        !edit
+          ? () => {
+              onClick(reference.id);
+            }
+          : () => {}
+      }
+    >
       {isAdminReviewer ? (
         <td>
           <input
@@ -259,10 +268,7 @@ const ReferenceRow = ({
         )}
       </td>
 
-      <td
-        className="align-middle"
-        // style={{ width: "50%" }}
-      >
+      <td className="align-middle">
         {edit ? (
           <AsyncSelect
             row
@@ -313,17 +319,20 @@ const ReferenceRow = ({
               </div>
             ) : (
               <div>
-              {(isAdminPreparer || isAdmin )&&
-              <Button
-                  color=""
-                  onClick={toggleEdit}
-                  className="soft orange mr-2"
-                >
-                  <Tooltip description="Edit Reference">
-                    <FaPencilAlt />
-                  </Tooltip>
-                </Button>
-                }
+                {(isAdminPreparer || isAdmin) && (
+                  <Button
+                    color=""
+                    onClick={(e) => {
+                      toggleEdit();
+                      e?.stopPropagation();
+                    }}
+                    className="soft orange mr-2"
+                  >
+                    <Tooltip description="Edit Reference">
+                      <FaPencilAlt />
+                    </Tooltip>
+                  </Button>
+                )}
                 <DialogButton
                   onConfirm={onDelete}
                   loading={deleteLoading}
@@ -351,6 +360,7 @@ interface ReferenceRowProps {
   deleteLoading: boolean;
   selected: boolean;
   toggleCheck: any;
+  onClick: any;
 }
 interface ReferenceRowFormValues {
   name: string;

@@ -20,7 +20,20 @@ query references($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
     }
   }
 }
-
+query reference($id: ID!) {
+  reference(id: $id) {
+    id
+    name
+    policies {
+      id
+      description
+    }
+    updatedAt
+    lastUpdatedBy
+    createdAt
+    createdBy
+  }
+}
 mutation createReference($input: CreateReferenceInput!) {
   createReference(input: $input) {
     success
