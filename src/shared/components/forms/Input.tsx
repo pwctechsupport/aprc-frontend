@@ -5,7 +5,7 @@ import {
   Input as BsInput,
   InputProps as BsInputProps,
   FormFeedback,
-  FormText
+  FormText,
 } from "reactstrap";
 
 import Label from "./Label";
