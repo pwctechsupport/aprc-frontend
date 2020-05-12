@@ -5,10 +5,10 @@ export async function downloadPdf(url: string, option: FileOption) {
   try {
     option.onStart && option.onStart();
     const res = await MyApi.get(url, {
-      responseType: "blob",
+      responseType: "blob"
     });
     const file = new Blob([res.data], {
-      type: `application/${fileType}`,
+      type: `application/${fileType}`
     });
     const targetUrl = window.URL.createObjectURL(file);
     const link = document.createElement("a");
@@ -31,16 +31,11 @@ export async function previewPdf(url: string, option: FileOption) {
   try {
     option.onStart && option.onStart();
     const res = await MyApi.get(url, {
-      responseType: "blob",
+      responseType: "blob"
     });
     const file = new Blob([res.data], {
-      type: `${
-        option.fileType === "xlsx"
-          ? "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          : "application/pdf"
-      }`,
+      type: "application/pdf"
     });
-
     const targetUrl = window.URL.createObjectURL(file);
     const link = document.createElement("a");
     link.target = "_blank";
@@ -69,10 +64,6 @@ export async function emailPdf(fileName: string) {
 export async function previewPdfs(endpoints: DownloadPdfInput[]) {
   for (const item of endpoints) {
     await previewPdf(item.url, Object.assign({}, item.options));
-    console.log(
-      "Object.assign({}, item.options)",
-      Object.assign({}, item.options)
-    );
   }
 }
 

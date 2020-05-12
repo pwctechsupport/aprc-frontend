@@ -26,7 +26,7 @@ const PolicyForm = ({
   toggleEditMode,
   isAdmin = true,
 }: PolicyFormProps) => {
-  const [createS, setCreateS] = useState(false);
+  const [createS,setCreateS]=useState(false)
   const policyCategoriesState = usePolicyCategoriesQuery();
   const { register, setValue, watch, errors, handleSubmit } = useForm<
     PolicyFormValues
@@ -56,14 +56,14 @@ const PolicyForm = ({
 
   function submit(values: PolicyFormValues) {
     onSubmit && onSubmit(values);
-    setCreateS(true);
-  }
+    setCreateS(true)
+  } 
   function submitToReviewer(values: PolicyFormValues) {
     handleSubmitToReviewer && handleSubmitToReviewer(values);
-    setCreateS(false);
+    setCreateS(false)
   }
-  function submitFromDrafted(values: SubmitAsliBro) {
-    submitFromDraft && submitFromDraft(values);
+  function submitFromDrafted(values:SubmitAsliBro){
+    submitFromDraft && submitFromDraft(values)
   }
   function submitAsDraft(values: PolicyFormValues) {
     onSubmitAsDraft && onSubmitAsDraft(values);
@@ -92,7 +92,6 @@ const PolicyForm = ({
             data={watch("description")}
             onChange={onChangeEditor}
             invalid={!!errors.description}
-            error={errors.description && "Description field is too short"}
           />
         </div>
         <Select
@@ -125,31 +124,31 @@ const PolicyForm = ({
                 message="Submit Policy?"
                 onConfirm={handleSubmit(submitFromDrafted)}
               >
-                Submit
+                Submit 
               </DialogButton>
             </Fragment>
           ) : (
             <Fragment>
-              <DialogButton
-                color="primary"
-                loading={createS ? submitting : false}
-                message="Save Policy as Draft?"
-                className="pwc mr-2 px-5"
-                onConfirm={handleSubmit(submit)}
-              >
-                Save As Draft
-              </DialogButton>
-
-              <DialogButton
-                color="primary"
-                loading={createS ? false : loadingSubmit || submitting}
-                className="pwc px-5"
-                message="Submit Policy?"
-                onConfirm={handleSubmit(submitToReviewer)}
-              >
-                Submit
-              </DialogButton>
-            </Fragment>
+                <DialogButton
+                  color="primary"
+                  loading={createS? submitting : false}
+                  message="Save Policy as Draft?"
+                  className="pwc mr-2 px-5"
+                  onConfirm={handleSubmit(submit)}
+                >
+                  Save As Draft
+                </DialogButton>
+                 
+                <DialogButton
+                  color="primary"
+                  loading={createS? false : loadingSubmit||submitting}
+                  className="pwc px-5"
+                  message="Submit Policy?"
+                  onConfirm={handleSubmit(submitToReviewer)}
+                >
+                  Submit 
+                </DialogButton>
+           </Fragment>
           )}
           {isCreate ? (
             <DialogButton
@@ -184,10 +183,7 @@ export default PolicyForm;
 
 const validationSchema = yup.object().shape({
   title: yup.string().required(),
-  description: yup
-    .string()
-    .min(11)
-    .required(),
+  description: yup.string().required(),
   policyCategoryId: yup.string().required(),
 });
 
@@ -214,12 +210,12 @@ export interface PolicyFormProps {
   isCreate?: boolean;
   history?: any;
   toggleEditMode?: any;
-  submitFromDraft?: any;
-  loadingSubmit?: any;
-  handleSubmitToReviewer?: any;
+  submitFromDraft?:any;
+  loadingSubmit?:any;
+  handleSubmitToReviewer?:any;
 }
-export interface SubmitAsliBro {
-  description?: string;
-  policyCategoryId?: string;
-  title?: string;
+export interface SubmitAsliBro{
+  description?:string;
+  policyCategoryId?:string;
+  title?:string;
 }
