@@ -108,7 +108,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       : reviewerPolicies.length === limit
       ? setCondition(true)
       : setCondition(false);
-  }, [scrollPointer, data, dataPreparer, dataReviewer, limit]);
+  }, [scrollPointer, preparerPolicies, reviewerPolicies, policies, limit]);
 
   useEffect(() => {
     if (isAdminPreparer) {

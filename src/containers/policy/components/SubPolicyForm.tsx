@@ -7,7 +7,7 @@ import {
   useControlsQuery,
   useReferencesQuery,
   useResourcesQuery,
-  useRisksQuery
+  useRisksQuery,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -31,26 +31,26 @@ const SubPolicyForm = ({
   isCreate,
   history,
   toggleEditMode,
-  isAdmin = true
+  isAdmin = true,
 }: SubPolicyFormProps) => {
   const {
     resourceIds,
     businessProcessIds,
     controlIds,
-    riskIds
+    riskIds,
   } = defaultValues;
   const [showAttrs, setShowAttrs] = useState(false);
   const [attr, setAttr] = useState<SubPolicyModalFormValues>({
     resourceIds,
     businessProcessIds,
     controlIds,
-    riskIds
+    riskIds,
   });
 
   const { register, handleSubmit, setValue, errors, watch } = useForm<
     SubPolicyFormValues
   >({
-    defaultValues
+    defaultValues,
   });
 
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
@@ -78,7 +78,7 @@ const SubPolicyForm = ({
   }
 
   // Functions for changing buttons
-    // Functions when create
+  // Functions when create
   function saveAsDraftFirstPhase(values: SubPolicyFormValues) {
     saveAsDraftFirst && saveAsDraftFirst({ ...values, ...attr });
   }
@@ -103,7 +103,7 @@ const SubPolicyForm = ({
     return <LoadingSpinner centered size={30} />;
   }
 
-  const defaultReference = references.filter(reference => {
+  const defaultReference = references.filter((reference) => {
     return oc(defaultValues)
       .referenceIds([])
       .includes(reference.value);
@@ -146,33 +146,33 @@ const SubPolicyForm = ({
           {premise ? (
             //ini yang kedua
             <Fragment>
-            <DialogButton
-              color="primary"
-              loading={submittingDraft}
-              className="pwc mr-2 px-5"
-              onConfirm={handleSubmit(saveAsDraftSecondPhase)}
-              message={
-                defaultValues.title
-                  ? `Save your change on "${defaultValues.title}"?`
-                  : "Create Sub-Policy?"
-              }
-            >
-              Save As Draft
-            </DialogButton>
-            
-            <DialogButton
-              color="primary"
-              loading={secondDraftLoading}
-              className="pwc px-5"
-              onConfirm={handleSubmit(submitSecondPhase)}
-              message={
-                defaultValues.title
-                  ? `Save your change on "${defaultValues.title}"?`
-                  : "Create Sub-Policy?"
-              }
-            >
-              Submit
-            </DialogButton>
+              <DialogButton
+                color="primary"
+                loading={submittingDraft}
+                className="pwc mr-2 px-5"
+                onConfirm={handleSubmit(saveAsDraftSecondPhase)}
+                message={
+                  defaultValues.title
+                    ? `Save your change on "${defaultValues.title}"?`
+                    : "Create Sub-Policy?"
+                }
+              >
+                Save As Draft
+              </DialogButton>
+
+              <DialogButton
+                color="primary"
+                loading={secondDraftLoading}
+                className="pwc px-5"
+                onConfirm={handleSubmit(submitSecondPhase)}
+                message={
+                  defaultValues.title
+                    ? `Save your change on "${defaultValues.title}"?`
+                    : "Create Sub-Policy?"
+                }
+              >
+                Submit
+              </DialogButton>
             </Fragment>
           ) : (
             // ini pertama
@@ -189,7 +189,7 @@ const SubPolicyForm = ({
                 }
               >
                 Save As Draft
-              </DialogButton> 
+              </DialogButton>
               <DialogButton
                 color="primary"
                 loading={submitting}
@@ -253,14 +253,14 @@ export default SubPolicyForm;
 const SubPolicyAttributeForm = ({
   defaultValues,
   onSubmit,
-  onCancel
+  onCancel,
 }: {
   defaultValues: SubPolicyModalFormValues;
   onCancel: () => void;
   onSubmit: (v: SubPolicyModalFormValues) => void;
 }) => {
   const formModal = useForm<SubPolicyModalFormValues>({
-    defaultValues
+    defaultValues,
   });
 
   const resourceQ = useResourcesQuery();
@@ -282,18 +282,18 @@ const SubPolicyAttributeForm = ({
 
   const controlsQ = useControlsQuery({
     variables: {
-      filter
+      filter,
     },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const controlsOptions = oc(controlsQ.data)
     .controls.collection([])
     .map(({ id, description }) => ({ label: description || "", value: id }));
   const risksQ = useRisksQuery({
     variables: {
-      filter
+      filter,
     },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const risksOptions = oc(risksQ.data)
     .risks.collection([])
@@ -318,7 +318,7 @@ const SubPolicyAttributeForm = ({
         setValue={formModal.setValue}
         label="Resources"
         options={resourceOptions}
-        defaultValue={resourceOptions.filter(res =>
+        defaultValue={resourceOptions.filter((res) =>
           oc(defaultValues)
             .resourceIds([])
             .includes(res.value)
@@ -333,7 +333,7 @@ const SubPolicyAttributeForm = ({
         label="Business Processes*"
         placeholder="Business Processes"
         options={businessProcessesOptions}
-        defaultValue={businessProcessesOptions.filter(res =>
+        defaultValue={businessProcessesOptions.filter((res) =>
           oc(defaultValues)
             .businessProcessIds([])
             .includes(res.value)
@@ -341,7 +341,7 @@ const SubPolicyAttributeForm = ({
       />
       <FormSelect
         isMulti
-        isLoading={risksQ.loading}
+        loading={risksQ.loading}
         name="riskIds"
         register={formModal.register}
         setValue={formModal.setValue}
@@ -349,7 +349,7 @@ const SubPolicyAttributeForm = ({
         label="Risk*"
         isDisabled={checkBp?.length ? false : true}
         options={risksOptions}
-        defaultValue={risksOptions.filter(res =>
+        defaultValue={risksOptions.filter((res) =>
           oc(defaultValues)
             .riskIds([])
             .includes(res.value)
@@ -357,7 +357,7 @@ const SubPolicyAttributeForm = ({
       />{" "}
       <FormSelect
         isMulti
-        isLoading={controlsQ.loading}
+        loading={controlsQ.loading}
         name="controlIds"
         register={formModal.register}
         setValue={formModal.setValue}
@@ -365,7 +365,7 @@ const SubPolicyAttributeForm = ({
         label="Control*"
         isDisabled={checkBp?.length ? false : true}
         options={controlsOptions}
-        defaultValue={controlsOptions.filter(res =>
+        defaultValue={controlsOptions.filter((res) =>
           oc(defaultValues)
             .controlIds([])
             .includes(res.value)
@@ -407,9 +407,9 @@ export interface SubPolicyFormProps {
   isCreate?: boolean;
   history?: any;
   toggleEditMode?: any;
-  submitFirst?:any;
-  submitSecond?:any;
-  secondDraftLoading?:any;
+  submitFirst?: any;
+  submitSecond?: any;
+  secondDraftLoading?: any;
 }
 
 export interface SubPolicyFormValues {
