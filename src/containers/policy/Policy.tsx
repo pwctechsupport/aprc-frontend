@@ -310,8 +310,8 @@ export default function Policy({
   const ancestry = oc(data).policy.ancestry("");
   const references = data?.policy?.references || [];
   const referenceIds = references.map((item) => item.id);
-  const controls = oc(data).policy.controls([]);
-  const risks = oc(data).policy.risks([]);
+  // const controls = oc(data).policy.controls([]);
+  // const risks = oc(data).policy.risks([]);
   const controlCount = oc(data).policy.controlCount({});
   const riskCount = oc(data).policy.riskCount({});
   const subCount = oc(data).policy.subCount({});
@@ -421,7 +421,11 @@ export default function Policy({
                   show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
                 >
-                  <RisksList risks={risks} withRelatedControls={false} />
+                  <RisksList
+                    data={data}
+                    // risks={risks}
+                    // withRelatedControls={false}
+                  />
                 </Collapsible>
               </div>
 
@@ -434,7 +438,7 @@ export default function Policy({
                   show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
-                  <ControlsTable controls={controls} />
+                  <ControlsTable data={data} />
                 </Collapsible>
               </div>
 
@@ -591,13 +595,14 @@ export default function Policy({
                 <IoMdDownload /> Download
               </div>
             ),
-            onClick: () =>
+            onClick: () => {
               downloadPdf(`/prints/${id}/policy.pdf`, {
                 fileName: title,
                 onStart: () => notifyInfo("Download Started"),
                 onError: () => notifyError("Download Failed"),
                 onCompleted: () => notifySuccess("Download Success"),
-              }),
+              });
+            },
           },
           {
             label: (
@@ -629,13 +634,14 @@ export default function Policy({
                 <IoMdDownload /> Download
               </div>
             ),
-            onClick: () =>
+            onClick: () => {
               downloadPdf(`/prints/${id}/policy.pdf`, {
                 fileName: title,
                 onStart: () => notifyInfo("Download Started"),
                 onError: () => notifyError("Download Failed"),
                 onCompleted: () => notifySuccess("Download Success"),
-              }),
+              });
+            },
           },
           {
             label: (

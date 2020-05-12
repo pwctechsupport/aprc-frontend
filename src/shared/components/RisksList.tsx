@@ -1,31 +1,81 @@
 import startCase from "lodash/startCase";
 import React from "react";
-import { FaPencilAlt } from "react-icons/fa";
+// import { FaPencilAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Badge } from "reactstrap";
-import { LevelOfRisk, Risk, TypeOfRisk } from "../../generated/graphql";
-import { toLabelValue } from "../formatter";
+import {
+  // LevelOfRisk,
+  // Risk,
+  // TypeOfRisk,
+  // Policy,
+  PolicyQuery,
+} from "../../generated/graphql";
+// import { toLabelValue } from "../formatter";
 import getRiskColor from "../utils/getRiskColor";
-import Button from "./Button";
-import ControlsTable from "./ControlsTable";
+// import Button from "./Button";
+// import ControlsTable from "./ControlsTable";
 import EmptyAttribute from "./EmptyAttribute";
+import { oc } from "ts-optchain";
 
 interface RisksListProps {
-  risks: Risk[];
-  editRisk?: Function;
-  editControl?: Function;
-  withRelatedControls?: boolean;
+  // risks: Risk[];
+  // editRisk?: Function;
+  // editControl?: Function;
+  data?: PolicyQuery;
+  // withRelatedControls?: boolean;
 }
 
 export default function RisksList({
-  risks,
-  editRisk,
-  editControl,
-  withRelatedControls
-}: RisksListProps) {
-  return risks.length ? (
+  // risks,
+  // editRisk,
+  // editControl,
+  data,
+}: // withRelatedControls,
+RisksListProps) {
+  const risksWithoutChildren = oc(data).policy.risks([]);
+  const riskFirstChild = data?.policy?.children?.map((a) => a.risks) || [];
+  const riskSecondChild =
+    data?.policy?.children?.map((a: any) =>
+      a.children.map((b: any) => b.risks)
+    ) || [];
+  const riskThirdChild =
+    data?.policy?.children?.map((a: any) =>
+      a.children?.map((b: any) => b.children.map((c: any) => c.risks))
+    ) || [];
+  const riskFourthChild =
+    data?.policy?.children?.map((a: any) =>
+      a.children?.map((b: any) =>
+        b.children?.map((c: any) => c.children.map((d: any) => d.risks))
+      )
+    ) || [];
+  const riskFifthChild =
+    data?.policy?.children?.map((a: any) =>
+      a.children?.map((b: any) =>
+        b.children?.map((c: any) =>
+          c.children?.map((d: any) => d.map((e: any) => e.risks))
+        )
+      )
+    ) || [];
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) a.splice(j--, 1);
+      }
+    }
+
+    return a;
+  };
+  const newDataControls = [
+    ...risksWithoutChildren.flat(10),
+    ...riskFirstChild.flat(10),
+    ...riskSecondChild.flat(10),
+    ...riskThirdChild.flat(10),
+    ...riskFourthChild.flat(10),
+    ...riskFifthChild.flat(10),
+  ];
+  return dataModifier(newDataControls).length ? (
     <ul>
-      {risks.map(risk => (
+      {dataModifier(newDataControls).map((risk: any) => (
         <li key={risk.id}>
           <div className="mb-3 d-flex justify-content-between">
             <h6>
@@ -37,7 +87,10 @@ export default function RisksList({
                 {startCase(risk.typeOfRisk || "")}
               </Badge>
             </h6>
-            {editRisk && (
+          </div>
+        </li>
+      ))}
+      {/* {editRisk && (
               <Button
                 onClick={() =>
                   editRisk({
@@ -46,16 +99,15 @@ export default function RisksList({
                     businessProcessIds:
                       risk.businessProcesses?.map(toLabelValue) || [],
                     levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                    typeOfRisk: risk.typeOfRisk as TypeOfRisk
+                    typeOfRisk: risk.typeOfRisk as TypeOfRisk,
                   })
                 }
                 color=""
               >
                 <FaPencilAlt />
               </Button>
-            )}
-          </div>
-
+            )} */}
+      {/* 
           {withRelatedControls && risk.controls?.length ? (
             <>
               <h6>Control</h6>
@@ -64,9 +116,7 @@ export default function RisksList({
                 editControl={editControl}
               />
             </>
-          ) : null}
-        </li>
-      ))}
+          ) : null} */}
     </ul>
   ) : (
     <EmptyAttribute />

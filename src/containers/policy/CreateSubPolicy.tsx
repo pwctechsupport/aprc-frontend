@@ -3,7 +3,6 @@ import React from "react";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import {
-  PolicyDocument,
   Status,
   useCreateSubPolicyMutation,
   usePolicyQuery,
@@ -27,10 +26,11 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
     onCompleted: () => {
       toast.success("Berhasil");
       history.goBack();
-      window.location.reload();
+      // window.location.reload();
     },
     onError: () => toast.error("Gagal"),
-    refetchQueries: [{ query: PolicyDocument, variables: { id } }],
+    // refetchQueries: [{ query: PreparerPoliciesDocument, variables: { id } }],
+    refetchQueries: ["preparerPolicies"],
     awaitRefetchQueries: true,
   });
   function createSubPolicy(values: SubPolicyFormValues) {
