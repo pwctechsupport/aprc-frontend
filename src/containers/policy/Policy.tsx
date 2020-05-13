@@ -161,7 +161,12 @@ export default function Policy({
       history.push(url);
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policies", "policyTree"],
+    refetchQueries: [
+      "policies",
+      "preparerPolicies",
+      "sideboxPolicy",
+      "reviewerPolicies",
+    ],
     awaitRefetchQueries: true,
   });
   function handleDeleteMain() {
@@ -215,7 +220,13 @@ export default function Policy({
       toggleEditMode();
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policies", "policyTree", "policy"],
+    refetchQueries: [
+      "policies",
+      "preparerPolicies",
+      "sideboxPolicy",
+      "reviewerPolicies",
+      "policy",
+    ],
     awaitRefetchQueries: true,
   });
   function handleUpdateDraft(values: PolicyFormValues) {
@@ -263,7 +274,12 @@ export default function Policy({
     approveEditMutation,
     approveEditMutationResult,
   ] = useApproveRequestEditMutation({
-    refetchQueries: ["policy", "policyTree"],
+    refetchQueries: [
+      "policy",
+      "preparerPolicies",
+      "sideboxPolicy",
+      "reviewerPolicies",
+    ],
     awaitRefetchQueries: true,
   });
   async function handleApproveRequest(id: string) {
@@ -283,7 +299,12 @@ export default function Policy({
   }
 
   const [reviewPolicy, reviewPolicyM] = useReviewPolicyDraftMutation({
-    refetchQueries: ["policy", "policyTree"],
+    refetchQueries: [
+      "policy",
+      "preparerPolicies",
+      "sideboxPolicy",
+      "reviewerPolicies",
+    ],
   });
   async function review({ publish }: { publish: boolean }) {
     try {
@@ -712,19 +733,17 @@ export default function Policy({
             </Tooltip>
           )}
 
-          {isAdmin ||
-            isAdminPreparer ||
-            (isAdminReviewer && (
-              <Tooltip description="Delete Policy">
-                <Button
-                  onClick={handleDeleteMain}
-                  className="mr-3"
-                  color="transparent"
-                >
-                  <FaTrash className="text-red" />
-                </Button>
-              </Tooltip>
-            ))}
+          {(isAdmin || isAdminPreparer || isAdminReviewer) && (
+            <Tooltip description="Delete Policy">
+              <Button
+                onClick={handleDeleteMain}
+                className="mr-3"
+                color="transparent"
+              >
+                <FaTrash className="text-red" />
+              </Button>
+            </Tooltip>
+          )}
         </div>
         <Menu data={theMenu}>
           <FaEllipsisV />
