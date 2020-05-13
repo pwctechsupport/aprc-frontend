@@ -118,12 +118,7 @@ export default function Policy({
     .data.references.collection([])
     .map(toLabelValue);
   const referenceIds = references.map((a) => a.value);
-  // console.log(
-  //   "referenceData",
-  //   oc(referenceData)
-  //     .data.references.collection([])
-  //     .map(toLabelValue)
-  // );
+
   const isDraft = data?.policy?.draft;
   const isAdminView = location.pathname.split("/")[1] === "policy-admin";
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -681,7 +676,7 @@ export default function Policy({
           {
             label: (
               <div>
-                <IoMdDownload /> Download
+                <IoMdDownload /> download
               </div>
             ),
             onClick: () => {

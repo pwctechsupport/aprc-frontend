@@ -10,17 +10,19 @@ export async function downloadPdf(url: string, option: FileOption) {
     const file = new Blob([res.data], {
       type: `application/${fileType}`,
     });
+    console.log("res", res);
+    console.log("file", file);
     const targetUrl = window.URL.createObjectURL(file);
     const link = document.createElement("a");
     link.href = targetUrl;
     link.setAttribute(
       "download",
-      option.fileName || `PwC-Generated.${fileType}`
+      `${option.fileName}..${fileType}` || `PwC-Generated.${fileType}`
     );
     document.body.appendChild(link);
     link.click();
     link.parentNode && link.parentNode.removeChild(link);
-
+    console.log("link", link);
     option.onCompleted && option.onCompleted();
   } catch (error) {
     option.onError && option.onError(error);

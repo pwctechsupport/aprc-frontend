@@ -28,7 +28,6 @@ export default function ControlsTable({
   // editControl,
   data,
 }: ControlsTableProps) {
-  console.log("data", data);
   const controlsWithoutChildren = oc(data).policy.controls([]);
   const controlFirstChild =
     data?.policy?.children?.map((a: any) => a.controls) || [];
