@@ -38,6 +38,7 @@ import {
   useSubmitPolicyMutation,
   useUpdateDraftPolicyMutation,
   useReferencesQuery,
+  usePolicyCategoriesQuery,
   // useUpdatePolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
@@ -114,11 +115,19 @@ export default function Policy({
   const referenceData = useReferencesQuery({
     variables: { filter: { policies_id_matches_any: id } },
   });
+  const policyCategoriesData = usePolicyCategoriesQuery({
+    variables: { filter: { policies_id_matches_any: id } },
+  });
+
   const references = oc(referenceData)
     .data.references.collection([])
     .map(toLabelValue);
   const referenceIds = references.map((a) => a.value);
 
+  const policyCategories = oc(policyCategoriesData)
+    .data.policyCategories.collection([])
+    .map(toLabelValue);
+  const policyCategoryId = policyCategories.map((a) => a.value).pop() || "";
   const isDraft = data?.policy?.draft;
   const isAdminView = location.pathname.split("/")[1] === "policy-admin";
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -173,6 +182,7 @@ export default function Policy({
     onError: notifyGraphQLErrors,
     refetchQueries: [
       "policies",
+      "policyCategories",
       "preparerPolicies",
       "sideboxPolicy",
       "reviewerPolicies",
@@ -232,6 +242,7 @@ export default function Policy({
     onError: notifyGraphQLErrors,
     refetchQueries: [
       "policies",
+      "policyCategories",
       "preparerPolicies",
       "sideboxPolicy",
       "reviewerPolicies",
@@ -334,7 +345,7 @@ export default function Policy({
   const hasEditAccess = oc(data).policy.hasEditAccess();
   // const requested = oc(data).policy.requestStatus() === "requested";
 
-  const policyCategoryId = oc(data).policy.policyCategory.id("");
+  // const policyCategoryId = oc(data).policy.policyCategory.id("");
   const parentId = oc(data).policy.parentId("");
   const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();

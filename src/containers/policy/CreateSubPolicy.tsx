@@ -30,7 +30,7 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
     },
     onError: () => toast.error("Gagal"),
     // refetchQueries: [{ query: PreparerPoliciesDocument, variables: { id } }],
-    refetchQueries: ["preparerPolicies"],
+    refetchQueries: ["preparerPolicies", "references"],
     awaitRefetchQueries: true,
   });
   function createSubPolicy(values: SubPolicyFormValues) {

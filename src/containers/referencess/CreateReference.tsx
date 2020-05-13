@@ -7,7 +7,7 @@ import * as yup from "yup";
 import {
   useCreateReferenceMutation,
   PoliciesQuery,
-  PoliciesDocument
+  PoliciesDocument,
 } from "../../generated/graphql";
 import AsyncSelect from "../../shared/components/forms/AsyncSelect";
 import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnPromise";
@@ -23,7 +23,7 @@ function useLoadPolicies() {
   async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { title_cont }
+        filter: { title_cont },
       });
       return data.policies?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -45,7 +45,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
       history.replace(`/references`);
       reset();
     },
-    onError: () => toast.error("Create Failed")
+    onError: () => toast.error("Create Failed"),
   });
 
   function submit(values: CreateReferenceFormValues) {
@@ -53,7 +53,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
       name: values.name,
       policyIds: values.policyIds
         ? values.policyIds.map((a: any) => a.value)
-        : null
+        : null,
     };
     createReference({ variables: { input } });
   }
@@ -66,7 +66,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/references", "Reference"],
-          ["/reference/create", "Create Reference"]
+          ["/reference/create", "Create Reference"],
         ]}
       />
       <h4>Create Reference</h4>
@@ -86,7 +86,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
           <Col>
             <AsyncSelect
               name="policyIds"
-              label="Related Policies*"
+              label="Related Policies"
               placeholder="Select"
               register={register}
               setValue={setValue}
@@ -142,7 +142,7 @@ interface CreateReferenceFormValues {
 
 const validationSchema = yup.object().shape({
   name: yup.string().required("Reference name cannot be empty"),
-  policyIds: yup.array().required("Related policies cannot be empty")
+  policyIds: yup.array(),
   // .test("reference", "Require a hashtag", function(value: string) {
   //   return value[0] === "#";
   // })

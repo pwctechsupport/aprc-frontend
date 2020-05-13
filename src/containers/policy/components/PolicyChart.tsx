@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import styled, { css } from "styled-components";
 
 const mockupData = [
@@ -7,7 +7,7 @@ const mockupData = [
   { label: "Control", total: 5, reviewed: 2, prepared: 3, addToPrepare: 0 },
 ];
 
-const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
+const PolicyChart = ({ data = mockupData, policies }: PolicyChartProps) => {
   const maxCount = Math.max(
     ...data.map((item) => Math.max(item.total, item.reviewed)),
     1
@@ -19,17 +19,37 @@ const PolicyChart = ({ data = mockupData }: PolicyChartProps) => {
         const colors = getColors(item.label);
         return (
           <PolicyChartItemWrapper key={item.label}>
-            <PolicyChartItem
-              onClick={item.onClick}
-              height={(item.total / maxCount) * 400}
-              color={colors[2]}
-            />
-            <PolicyChartItem
-              onClick={item.onClick}
-              height={(item.reviewed / maxCount) * 400}
-              color={colors[1]}
-              inner
-            />
+            {policies ? (
+              <Fragment>
+                <PolicyChartItemPolicies
+                  onClick={item.onClick}
+                  height={(item.total / maxCount) * 400}
+                  color={colors[2]}
+                />
+                <PolicyChartItemPolicies
+                  onClick={item.onClick}
+                  height={(item.reviewed / maxCount) * 400}
+                  color={colors[1]}
+                  inner
+                />
+              </Fragment>
+            ) : (
+              <Fragment>
+                {" "}
+                <PolicyChartItem
+                  onClick={item.onClick}
+                  height={(item.total / maxCount) * 400}
+                  color={colors[2]}
+                />
+                <PolicyChartItem
+                  onClick={item.onClick}
+                  height={(item.reviewed / maxCount) * 400}
+                  color={colors[1]}
+                  inner
+                />
+              </Fragment>
+            )}
+
             <ChartLabelValueWrapper>
               <ChartValue color={colors[0]}>{item.total}</ChartValue>
               <ChartLabel color={colors[0]}>{item.label}</ChartLabel>
@@ -94,11 +114,11 @@ const PolicyChartItem = styled.div<PolicyChartItemProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
   border-radius: 10px;
   border-width: 0px;
   border-color: blueviolet;
   border-style: solid;
+  cursor: pointer;
   &:hover {
     border-width: 2px;
   }
@@ -109,6 +129,31 @@ const PolicyChartItem = styled.div<PolicyChartItemProps>`
       bottom: 3px;
       height: ${(p: PolicyChartItemProps) => p.height - 6 + "px"};
     `};
+`;
+const PolicyChartItemPolicies = styled.div<PolicyChartItemProps>`
+height: ${(p: PolicyChartItemProps) => p.height + "px"};
+position: absolute;
+width: 100%;
+bottom: 0;
+background: ${(props) => props.color};
+display: flex;
+justify-content: center;
+align-items: center;
+border-radius: 10px;
+border-width: 0px;
+border-color: blueviolet;
+border-style: solid;
+/* cursor: pointer;
+&:hover {
+  border-width: 2px;
+}
+${(p: PolicyChartItemProps) =>
+  p.inner &&
+  css`
+    width: 98%;
+    bottom: 3px;
+    height: ${(p: PolicyChartItemProps) => p.height - 6 + "px"};
+  `}; */
 `;
 const ChartValue = styled.div<ChartLabelProps>`
   color: ${(props) => props.color};
@@ -135,6 +180,7 @@ const ChartLabelValueWrapper = styled.div`
 // ---------------------------------------------------
 export interface PolicyChartProps {
   data: Array<ChartData>;
+  policies?: boolean;
 }
 
 interface ChartData {

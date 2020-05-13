@@ -319,13 +319,14 @@ const SubPolicyAttributeForm = ({
         name="resourceIds"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Resources"
+        label="Resources*"
         options={resourceOptions}
         defaultValue={resourceOptions.filter((res) =>
           oc(defaultValues)
             .resourceIds([])
             .includes(res.value)
         )}
+        error={formModal.errors.resourceIds && "Resources is a required field"}
       />
       <FormSelect
         isMulti
@@ -341,6 +342,10 @@ const SubPolicyAttributeForm = ({
             .businessProcessIds([])
             .includes(res.value)
         )}
+        error={
+          formModal.errors.businessProcessIds &&
+          "Business processes is a required field"
+        }
       />
       <FormSelect
         isMulti
@@ -357,6 +362,7 @@ const SubPolicyAttributeForm = ({
             .riskIds([])
             .includes(res.value)
         )}
+        error={formModal.errors.riskIds && "Risk is a required field"}
       />{" "}
       <FormSelect
         isMulti
@@ -373,6 +379,7 @@ const SubPolicyAttributeForm = ({
             .controlIds([])
             .includes(res.value)
         )}
+        error={formModal.errors.controlIds && "Control is a required field"}
       />
       <div className=" d-flex justify-content-end">
         <Button
