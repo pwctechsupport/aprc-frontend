@@ -69,7 +69,14 @@ query resourceFormMaster {
     }
   }
 }
-
+query resourceRatings($filter: BaseScalar = {}) {
+  resourceRatings(filter: $filter) {
+    collection {
+      rating
+      userId
+    }
+  }
+}
 query resource($id: ID!) {
   resource(id: $id) {
     id

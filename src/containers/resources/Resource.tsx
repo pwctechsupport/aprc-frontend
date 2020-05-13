@@ -15,6 +15,7 @@ import {
   useCreateRequestEditMutation,
   useDestroyResourceMutation,
   useResourceQuery,
+  useResourceRatingsQuery,
   useReviewResourceDraftMutation,
   useUpdateResourceMutation,
 } from "../../generated/graphql";
@@ -36,6 +37,7 @@ import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 import { APP_ROOT_URL } from "../../settings";
 import DisplayStatus from "../../shared/components/DisplayStatus";
+import { useSelector } from "../../shared/hooks/useSelector";
 
 type TParams = { id: string };
 
@@ -51,12 +53,19 @@ export default function Resource({
   }, [location.pathname]);
 
   const { id } = match.params;
+  const userId = useSelector((state) => state.auth.user)?.id;
+
+  //Queries
+
   const { data, loading } = useResourceQuery({
     variables: { id },
     fetchPolicy: "network-only",
   });
+  const { data: dataRating } = useResourceRatingsQuery({
+    variables: { filter: { user_id_eq: userId, resource_id_eq: id } },
+    fetchPolicy: "network-only",
+  });
   const name = data?.resource?.name || "";
-  const rating = data?.resource?.rating || 0;
   const totalRating = data?.resource?.totalRating || 0;
   const visit = data?.resource?.visit || 0;
   const resourceFileType = data?.resource?.resourceFileType;
@@ -78,6 +87,8 @@ export default function Resource({
     requestStatus,
     requestEditState,
   });
+  const rating =
+    dataRating?.resourceRatings?.collection.map((a) => a.rating).pop() || 0;
   const imagePreviewUrl = resuploadLink
     ? resuploadLink
     : resuploadUrl && !resuploadLink?.includes("original/missing.png")
