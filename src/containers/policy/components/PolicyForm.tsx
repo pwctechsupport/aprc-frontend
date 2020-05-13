@@ -76,6 +76,7 @@ const PolicyForm = ({
   if (policyCategoriesState.loading) {
     return <LoadingSpinner centered size={30} />;
   }
+
   return (
     <div>
       <Form>
@@ -98,6 +99,7 @@ const PolicyForm = ({
         <Select
           name="policyCategoryId"
           label="Policy Category*"
+          loading={policyCategoriesState.loading}
           placeholder="Policy Category"
           options={options}
           onChange={handleChange("policyCategoryId")}
