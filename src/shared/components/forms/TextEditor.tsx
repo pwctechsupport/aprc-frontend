@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import classnames from "classnames";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -9,6 +9,7 @@ export interface TextEditorProps {
   data?: string;
   onChange?: (content: string) => void;
   invalid?: boolean;
+  error?: any;
 }
 const fontSize = Quill.import("attributors/style/size");
 const defaultFontSize = 13;
@@ -120,44 +121,48 @@ const TextEditor = ({
   onChange,
   wrapperClassName,
   invalid,
+  error,
 }: TextEditorProps) => {
   return (
-    <div
-      className={classnames([
-        "editor-wrapper",
-        wrapperClassName,
-        invalid && "invalid",
-      ])}
-    >
-      <QuillCustomToolbar />
-      <ReactQuill
-        value={data || ""}
-        onChange={onChange}
-        modules={{
-          toolbar: {
-            container: "#toolbar",
-          },
-        }}
-        formats={[
-          "header",
-          "size",
-          "bold",
-          "italic",
-          "underline",
-          "color",
-          "background",
-          "font",
-          "align",
-          "strike",
-          "blockquote",
-          "list",
-          "bullet",
-          "indent",
-          "link",
-          "image",
-        ]}
-      />
-    </div>
+    <Fragment>
+      <div
+        className={classnames([
+          "editor-wrapper",
+          wrapperClassName,
+          invalid && "invalid",
+        ])}
+      >
+        <QuillCustomToolbar />
+        <ReactQuill
+          value={data || ""}
+          onChange={onChange}
+          modules={{
+            toolbar: {
+              container: "#toolbar",
+            },
+          }}
+          formats={[
+            "header",
+            "size",
+            "bold",
+            "italic",
+            "underline",
+            "color",
+            "background",
+            "font",
+            "align",
+            "strike",
+            "blockquote",
+            "list",
+            "bullet",
+            "indent",
+            "link",
+            "image",
+          ]}
+        />
+      </div>
+      <div style={{ color: "#e46773", fontSize: "12px" }}>{error}</div>
+    </Fragment>
   );
 };
 

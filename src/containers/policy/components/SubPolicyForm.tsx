@@ -17,6 +17,7 @@ import TextEditor from "../../../shared/components/forms/TextEditor";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
+import * as yup from "yup";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -49,9 +50,7 @@ const SubPolicyForm = ({
 
   const { register, handleSubmit, setValue, errors, watch } = useForm<
     SubPolicyFormValues
-  >({
-    defaultValues,
-  });
+  >({ validationSchema, defaultValues });
 
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
   const references = oc(referenceData)
@@ -116,7 +115,7 @@ const SubPolicyForm = ({
           label="Sub-Policy Title*"
           placeholder="Sub-Policy Title"
           innerRef={register({ required: true })}
-          error={errors.title && errors.title.message}
+          error={errors.title && "title is a required field"}
         />
         <div className="mb-3">
           <label>Policy Description*</label>
@@ -124,17 +123,19 @@ const SubPolicyForm = ({
             data={watch("description")}
             onChange={handleEditorChange}
             invalid={errors.description ? true : false}
+            error={errors.description && "Description field is too short"}
           />
         </div>
         <Select
+          name="referenceIds"
           label="Sub-Policy Reference*"
           placeholder="Sub-Policy Reference"
           onChange={handleReferenceChange}
           options={references}
           isMulti
           defaultValue={defaultReference}
+          error={errors.referenceIds && "referenceIds is a required field"}
         />
-
         <div className="d-flex justify-content-end mt-3">
           <Button
             type="button"
@@ -391,7 +392,19 @@ const SubPolicyAttributeForm = ({
     </Form>
   );
 };
+// ---------------------------------------------------
+// Validation
+// ---------------------------------------------------
 
+const validationSchema = yup.object().shape({
+  title: yup.string().required(),
+  description: yup
+    .string()
+    .min(11)
+    .required(),
+  referenceIds: yup.array().required(),
+  // policyCategoryId: yup.string().required(),
+});
 // -------------------------------------------------------------------------
 // Type Definitions
 // -------------------------------------------------------------------------
