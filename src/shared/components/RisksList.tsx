@@ -52,7 +52,7 @@ RisksListProps) {
     data?.policy?.children?.map((a: any) =>
       a.children?.map((b: any) =>
         b.children?.map((c: any) =>
-          c.children?.map((d: any) => d.map((e: any) => e.risks))
+          c.children.map((d: any) => d.children.map((e: any) => e.risks))
         )
       )
     ) || [];

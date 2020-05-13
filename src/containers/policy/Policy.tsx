@@ -37,6 +37,7 @@ import {
   useReviewPolicyDraftMutation,
   useSubmitPolicyMutation,
   useUpdateDraftPolicyMutation,
+  useReferencesQuery,
   // useUpdatePolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
@@ -70,6 +71,7 @@ import {
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import { toLabelValue } from "../../shared/formatter";
 
 type TParams = { id: string };
 
@@ -109,6 +111,19 @@ export default function Policy({
     fetchPolicy: "network-only",
     pollInterval: 30000,
   });
+  const referenceData = useReferencesQuery({
+    variables: { filter: { policies_id_matches_any: id } },
+  });
+  const references = oc(referenceData)
+    .data.references.collection([])
+    .map(toLabelValue);
+  const referenceIds = references.map((a) => a.value);
+  // console.log(
+  //   "referenceData",
+  //   oc(referenceData)
+  //     .data.references.collection([])
+  //     .map(toLabelValue)
+  // );
   const isDraft = data?.policy?.draft;
   const isAdminView = location.pathname.split("/")[1] === "policy-admin";
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -329,8 +344,8 @@ export default function Policy({
   const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
   const ancestry = oc(data).policy.ancestry("");
-  const references = data?.policy?.references || [];
-  const referenceIds = references.map((item) => item.id);
+  const policyReferences = data?.policy?.references || [];
+  // const referenceIds = references.map((item) => item.id);
   // const controls = oc(data).policy.controls([]);
   // const risks = oc(data).policy.risks([]);
   const controlCount = oc(data).policy.controlCount({});
@@ -422,19 +437,33 @@ export default function Policy({
                   __html: description,
                 }}
               />
-
-              <div
-                className="d-flex"
-                style={{ borderBottom: " 1px solid #d85604" }}
-              >
-                <h6>
-                  {references.map((reference) => (
-                    <Badge key={reference.id} className="mx-1">
-                      {reference.name}
-                    </Badge>
-                  ))}
-                </h6>
-              </div>
+              {policyReferences.length ? (
+                <div
+                  className="d-flex"
+                  style={{ borderBottom: " 1px solid #d85604" }}
+                >
+                  <h6>
+                    {policyReferences.map((reference) => (
+                      <Badge key={reference.id} className="mx-1">
+                        {reference.name}
+                      </Badge>
+                    ))}
+                  </h6>
+                </div>
+              ) : (
+                <div
+                  className="d-flex"
+                  style={{ borderBottom: " 1px solid #d85604" }}
+                >
+                  <h6>
+                    {references.map((reference) => (
+                      <Badge key={reference.value} className="mx-1">
+                        {reference.label}
+                      </Badge>
+                    ))}
+                  </h6>
+                </div>
+              )}
 
               <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
                 <Collapsible

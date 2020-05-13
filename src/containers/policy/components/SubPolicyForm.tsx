@@ -18,6 +18,7 @@ import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 import * as yup from "yup";
+import { toast } from "react-toastify";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -75,22 +76,29 @@ const SubPolicyForm = ({
   function handleEditorChange(data: string) {
     setValue("description", data);
   }
-
   // Functions for changing buttons
   // Functions when create
   function saveAsDraftFirstPhase(values: SubPolicyFormValues) {
-    saveAsDraftFirst && saveAsDraftFirst({ ...values, ...attr });
+    attr.businessProcessIds?.length
+      ? saveAsDraftFirst && saveAsDraftFirst({ ...values, ...attr })
+      : toast.error("Insert attributes is a required field");
   }
   function submitFirstPhase(values: SubPolicyFormValues) {
-    submitFirst && submitFirst({ ...values, ...attr });
+    attr.businessProcessIds?.length
+      ? submitFirst && submitFirst({ ...values, ...attr })
+      : toast.error("Insert attributes is a required field");
   }
 
   // Functions when update
   function saveAsDraftSecondPhase(values: SubPolicyFormValues) {
-    saveAsDraftSecond && saveAsDraftSecond({ ...values, ...attr });
+    attr.businessProcessIds?.length
+      ? saveAsDraftSecond && saveAsDraftSecond({ ...values, ...attr })
+      : toast.error("Insert attributes is a required field");
   }
   function submitSecondPhase(values: SubPolicyFormValues) {
-    submitSecond && submitSecond({ ...values, ...attr });
+    attr.businessProcessIds?.length
+      ? submitSecond && submitSecond({ ...values, ...attr })
+      : toast.error("Insert attributes is a required field");
   }
 
   function onSubmitModal(values: SubPolicyModalFormValues) {
@@ -130,12 +138,14 @@ const SubPolicyForm = ({
           name="referenceIds"
           label="Sub-Policy Reference*"
           placeholder="Sub-Policy Reference"
+          loading={referenceData.loading}
           onChange={handleReferenceChange}
           options={references}
           isMulti
           defaultValue={defaultReference}
           error={errors.referenceIds && "referenceIds is a required field"}
         />
+
         <div className="d-flex justify-content-end mt-3">
           <Button
             type="button"
@@ -262,6 +272,7 @@ const SubPolicyAttributeForm = ({
 }) => {
   const formModal = useForm<SubPolicyModalFormValues>({
     defaultValues,
+    validationSchema: validationSchemaAttributes,
   });
 
   const resourceQ = useResourcesQuery();
@@ -299,15 +310,6 @@ const SubPolicyAttributeForm = ({
   const risksOptions = oc(risksQ.data)
     .risks.collection([])
     .map(toLabelValue);
-
-  // if (
-  //   resourceQ.loading ||
-  //   businessProcessesQ.loading ||
-  //   controlsQ.loading ||
-  //   risksQ.loading
-  // ) {
-  //   return <LoadingSpinner centered size={30} />;
-  // }
 
   return (
     <Form>
@@ -403,7 +405,12 @@ const validationSchema = yup.object().shape({
     .min(11)
     .required(),
   referenceIds: yup.array().required(),
-  // policyCategoryId: yup.string().required(),
+});
+const validationSchemaAttributes = yup.object().shape({
+  businessProcessIds: yup.array().required(),
+  controlIds: yup.array().required(),
+  resourceIds: yup.array().required(),
+  riskIds: yup.array().required(),
 });
 // -------------------------------------------------------------------------
 // Type Definitions

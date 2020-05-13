@@ -28,6 +28,7 @@ export default function ControlsTable({
   // editControl,
   data,
 }: ControlsTableProps) {
+  console.log("data", data);
   const controlsWithoutChildren = oc(data).policy.controls([]);
   const controlFirstChild =
     data?.policy?.children?.map((a: any) => a.controls) || [];
@@ -49,17 +50,17 @@ export default function ControlsTable({
     data?.policy?.children?.map((a: any) =>
       a.children?.map((b: any) =>
         b.children?.map((c: any) =>
-          c.children?.map((d: any) => d.map((e: any) => e.controls))
+          c.children.map((d: any) => d.children.map((e: any) => e.controls))
         )
       )
     ) || [];
+
   const dataModifier = (a: any) => {
     for (let i = 0; i < a.length; ++i) {
       for (let j = i + 1; j < a.length; ++j) {
         if (a[i] === a[j]) a.splice(j--, 1);
       }
     }
-
     return a;
   };
   const newDataControls = [
@@ -70,6 +71,7 @@ export default function ControlsTable({
     ...controlFourthChild.flat(10),
     ...controlFifthChild.flat(10),
   ];
+
   const assertionAndIpoModifier = (data: any) => {
     let finalData: any = data;
     const existence_and_occurence = finalData.findIndex(
