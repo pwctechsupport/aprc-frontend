@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import {
   useCreateRiskMutation,
   LevelOfRisk,
-  TypeOfRisk
+  TypeOfRisk,
 } from "../../generated/graphql";
 import HeaderWithBackButton from "../../shared/components/Header";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
@@ -13,13 +13,13 @@ import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const CreateRisk = ({ history }: RouteComponentProps) => {
   const [createRisk, { loading }] = useCreateRiskMutation({
-    onCompleted: res => {
+    onCompleted: (res) => {
       toast.success("Create Success");
       history.goBack();
     },
     onError: () => toast.error("Create Failed"),
     refetchQueries: ["risks"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   function handleSubmit(values: RiskFormValues) {
@@ -27,11 +27,11 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
       variables: {
         input: {
           name: values.name || "",
-          businessProcessIds: values.businessProcessIds?.map(a => a.value),
+          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
           levelOfRisk: values.levelOfRisk || LevelOfRisk.Low,
-          typeOfRisk: values.typeOfRisk || TypeOfRisk.BusinessRisk
-        }
-      }
+          typeOfRisk: values.typeOfRisk || TypeOfRisk.BusinessRisk,
+        },
+      },
     });
   }
   return (
@@ -42,7 +42,7 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/risk", "Risks"],
-          ["/risk/create", "Create Risk"]
+          ["/risk/create", "Create Risk"],
         ]}
       />
       <HeaderWithBackButton heading="Create Risk" />
@@ -50,7 +50,7 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
         onSubmit={handleSubmit}
         submitting={loading}
         history={history}
-        isCreate={history.location.pathname === "/resources/create"}
+        isCreate
       />
     </div>
   );
