@@ -39,9 +39,7 @@ query risk($id: ID!) {
     draft {
       id
       objectResult {
-        ... on Risk {
-          ...risk
-        }
+        __typename
       }
     }
   }

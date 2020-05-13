@@ -35,7 +35,47 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
     }
   }
 }
-
+query recentResources(
+  $filter: BaseScalar = {}
+  $page: Int
+  $limit: Int = 1000
+) {
+  recentResources(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+      name
+      category
+      policies {
+        id
+        title
+      }
+      controls {
+        id
+        typeOfControl
+      }
+      businessProcess {
+        id
+        name
+      }
+      resuploadLink
+      resuploadUrl
+      resourceFileType
+      createdAt
+      createdBy
+      visit
+      updatedAt
+      lastUpdatedBy
+      rating
+      totalRating
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}
 mutation createResource($input: CreateResourceInput!) {
   createResource(input: $input) {
     success

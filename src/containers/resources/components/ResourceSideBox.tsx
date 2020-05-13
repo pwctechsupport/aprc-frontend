@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
-import { useResourcesQuery } from "../../../generated/graphql";
+import { useRecentResourcesQuery } from "../../../generated/graphql";
 import {
   SideBox,
   SideBoxItem,
@@ -29,16 +29,16 @@ const ResourceSideBox = () => {
       setLimit(limit + 25);
     }
   };
-  const { data, loading } = useResourcesQuery({
+  const { data, loading } = useRecentResourcesQuery({
     variables: { filter: { name_cont: searchQuery }, limit },
   });
   useEffect(() => {
-    data?.resources?.collection.length === limit
+    data?.recentResources?.collection.length === limit
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
   const resources = oc(data)
-    .resources.collection([])
+    .recentResources.collection([])
     .sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()

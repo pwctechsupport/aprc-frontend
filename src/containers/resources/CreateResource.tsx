@@ -2,7 +2,7 @@ import React from "react";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 import {
   useCreateResourceMutation,
-  CreateResourceInput
+  CreateResourceInput,
 } from "../../generated/graphql";
 import { RouteComponentProps } from "react-router";
 import HeaderWithBackButton from "../../shared/components/Header";
@@ -12,23 +12,23 @@ import Helmet from "react-helmet";
 
 const CreateResource = ({ history }: RouteComponentProps) => {
   const [createResource, createResourceM] = useCreateResourceMutation({
-    refetchQueries: ["resources"],
+    refetchQueries: ["resources", "recentResources"],
     onCompleted: ({ createResource }) => {
       notifySuccess("Resource Created");
       history.replace(`/resources/${createResource?.resource?.id}`);
     },
-    onError: notifyGraphQLErrors
+    onError: notifyGraphQLErrors,
   });
   function handleSubmit(data: ResourceFormValues) {
     const input: CreateResourceInput = {
       category: data.category?.value || "",
       name: data.name || "",
       resuploadBase64: data.resuploadBase64,
-      policyIds: data.policyIds?.map(a => a.value),
-      controlIds: data.controlIds?.map(a => a.value),
+      policyIds: data.policyIds?.map((a) => a.value),
+      controlIds: data.controlIds?.map((a) => a.value),
       businessProcessId: data.businessProcessId?.value,
       resuploadLink: data.resuploadLink,
-      tagsAttributes: data.tagsAttributes?.map(tag => {
+      tagsAttributes: data.tagsAttributes?.map((tag) => {
         const { id, risk, control, yCoordinates, xCoordinates, ...rest } = tag;
         return {
           ...rest,
@@ -36,9 +36,9 @@ const CreateResource = ({ history }: RouteComponentProps) => {
           control_id: control?.id,
           business_process_id: data.businessProcessId?.value,
           x_coordinates: xCoordinates,
-          y_coordinates: yCoordinates
+          y_coordinates: yCoordinates,
         };
-      })
+      }),
     };
 
     createResource({ variables: { input } });
@@ -51,7 +51,7 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/resources", "Resources"],
-          ["/resources/create", "Create Resource"]
+          ["/resources/create", "Create Resource"],
         ]}
       />
       <HeaderWithBackButton heading="Create Resource" />
