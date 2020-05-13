@@ -503,6 +503,7 @@ export default function Policy({
             </Route>
             <Route exact path="/policy/:id/resources">
               <ResourcesTab
+                policy
                 isDraft={isDraft}
                 formDefaultValues={{
                   policyIds: [

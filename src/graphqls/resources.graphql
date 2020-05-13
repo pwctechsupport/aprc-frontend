@@ -234,3 +234,9 @@ mutation updateResourceVisit($id: ID!) {
     success
   }
 }
+mutation removeRelation($input: RemoveRelationInput!) {
+  removeRelation(input: $input) {
+    success
+    errors
+  }
+}

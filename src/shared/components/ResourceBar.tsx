@@ -1,11 +1,12 @@
 import React from "react";
-import { FaDownload } from "react-icons/fa";
+import { FaDownload, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import StarRating from "./StarRating";
 import Tooltip from "./Tooltip";
 import { useUpdateResourceVisitMutation } from "../../generated/graphql";
+import useAccessRights from "../hooks/useAccessRights";
 
 interface ResourceBarProps {
   id: string;
@@ -14,18 +15,27 @@ interface ResourceBarProps {
   rating?: number | null;
   visit?: number | null;
   totalRating?: number | null;
+  deleteResource?: any;
+  resourceId?: any;
 }
 
 export default function ResourceBar({
   name,
   id,
   resuploadUrl,
+  deleteResource,
   rating = 0,
   visit,
-  totalRating = 0
+  resourceId,
+  totalRating = 0,
 }: ResourceBarProps) {
+  const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
+    "admin",
+    "admin_preparer",
+    "admin_reviewer",
+  ]);
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
-    refetchQueries: ["resources"]
+    refetchQueries: ["resources"],
   });
 
   return (
@@ -53,6 +63,21 @@ export default function ResourceBar({
             </a>
           </Tooltip>
         </Button>
+        {(isAdmin || isAdminPreparer || isAdminReviewer) && (
+          <Button
+            color=""
+            onClick={() => {
+              deleteResource(resourceId);
+            }}
+          >
+            <Tooltip
+              description="Delete Resource"
+              subtitle="Will be download if file type not supported"
+            >
+              <FaTrash className="text-red" />
+            </Tooltip>
+          </Button>
+        )}
       </ResourceBarDivider>
 
       <ResourceBarDivider width="10">
@@ -86,8 +111,8 @@ const ResourceBarContainer = styled.div`
 `;
 
 const ResourceBarDivider = styled.div<{ width?: string; align?: string }>`
-  width: ${p => p.width + "%"};
-  text-align: ${p => p.align};
+  width: ${(p) => p.width + "%"};
+  text-align: ${(p) => p.align};
   margin: 0px 5px;
 `;
 

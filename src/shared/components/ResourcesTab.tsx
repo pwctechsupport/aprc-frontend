@@ -3,6 +3,8 @@ import { FaPlus } from "react-icons/fa";
 import { useDebounce } from "use-debounce/lib";
 import {
   CreateResourceInput,
+  RemoveRelationInput,
+  useRemoveRelationMutation,
   useCreateResourceMutation,
   useResourcesQuery,
 } from "../../generated/graphql";
@@ -24,10 +26,12 @@ export default function ResourcesTab({
   queryFilters,
   formDefaultValues,
   isDraft,
+  policy,
 }: {
   queryFilters: any;
   formDefaultValues: ResourceFormValues;
   isDraft: any;
+  policy?: boolean;
 }) {
   const [isAdmin, isAdminPreparer] = useAccessRights([
     "admin",
@@ -56,6 +60,8 @@ export default function ResourcesTab({
   });
   const resources = data?.resources?.collection || [];
   const totalCount = data?.resources?.metadata?.totalCount || 0;
+  const policyId = queryFilters.policies_id_in;
+
   // Modal state handlers
   const [addResourceModal, setAddResourceModal] = useState(false);
   const toggleAddResourceModal = () => setAddResourceModal((prev) => !prev);
@@ -70,6 +76,7 @@ export default function ResourcesTab({
     awaitRefetchQueries: true,
     refetchQueries: ["resources"],
   });
+
   function handleCreateResource(values: ResourceFormValues) {
     const input: CreateResourceInput = {
       name: values.name || "",
@@ -86,7 +93,31 @@ export default function ResourcesTab({
       },
     });
   }
-
+  const [removeRelationPolicy] = useRemoveRelationMutation({
+    onCompleted: () => {
+      notifySuccess("Resource Deleted");
+    },
+    onError: notifyGraphQLErrors,
+    awaitRefetchQueries: true,
+    refetchQueries: ["resources"],
+  });
+  function handleDeleteResource(resourceId: string) {
+    const input: RemoveRelationInput = policy
+      ? {
+          originatorId: policyId,
+          originatorType: "Policy",
+          resourceId: resourceId,
+        }
+      : {
+          originatorId: resourceId,
+          originatorType: "BusinessProcess",
+        };
+    removeRelationPolicy({
+      variables: {
+        input,
+      },
+    });
+  }
   return (
     <div className="mt-3">
       <div className="w-40 d-flex justify-content-end align-items-center my-2">
@@ -112,9 +143,11 @@ export default function ResourcesTab({
         resources.map((resource) => (
           <ResourceBar
             rating={resource.rating}
+            deleteResource={handleDeleteResource}
             totalRating={resource.totalRating}
             visit={resource.visit}
             key={resource.id}
+            resourceId={resource.id}
             {...resource}
           />
         ))
