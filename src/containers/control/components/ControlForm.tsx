@@ -23,8 +23,6 @@ import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
-import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
-import { useLoadDepartments } from "../../user/components/UserForm";
 
 const ControlForm = ({
   onSubmit,
@@ -189,7 +187,6 @@ const ControlForm = ({
       );
     }
   };
-  const handleGetDepartments = useLoadDepartments();
 
   return (
     <Fragment>

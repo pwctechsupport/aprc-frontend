@@ -7,6 +7,7 @@ import StarRating from "./StarRating";
 import Tooltip from "./Tooltip";
 import { useUpdateResourceVisitMutation } from "../../generated/graphql";
 import useAccessRights from "../hooks/useAccessRights";
+import DialogButton from "./DialogButton";
 
 interface ResourceBarProps {
   id: string;
@@ -64,19 +65,14 @@ export default function ResourceBar({
           </Tooltip>
         </Button>
         {(isAdmin || isAdminPreparer || isAdminReviewer) && (
-          <Button
-            color=""
-            onClick={() => {
-              deleteResource(resourceId);
-            }}
-          >
+          <DialogButton color="" onConfirm={() => deleteResource(resourceId)}>
             <Tooltip
               description="Delete Resource"
-              subtitle="Will be download if file type not supported"
+              subtitle="Resource will be deleted from current policy"
             >
               <FaTrash className="text-red" />
             </Tooltip>
-          </Button>
+          </DialogButton>
         )}
       </ResourceBarDivider>
 
