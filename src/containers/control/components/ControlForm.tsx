@@ -13,7 +13,8 @@ import {
   Nature,
   TypeOfControl,
   useBusinessProcessesQuery,
-  useRisksQuery
+  useRisksQuery,
+  useDepartmentsQuery,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -32,13 +33,13 @@ const ControlForm = ({
   toggleEditMode,
   history,
   isDraft,
-  isCreate
+  isCreate,
 }: ControlFormProps) => {
   const { register, handleSubmit, setValue } = useForm<CreateControlFormValues>(
     { defaultValues }
   );
   const [isOpen, setIsOpen] = useState(false);
-  const toogleModal = () => setIsOpen(p => !p);
+  const toogleModal = () => setIsOpen((p) => !p);
   const closeModal = () => {
     setIsOpen(false);
     setSelectActivity("");
@@ -53,10 +54,15 @@ const ControlForm = ({
     .data.businessProcesses.collection([])
     .map(toLabelValue);
 
+  const departments = useDepartmentsQuery();
+  const controlOwnerOptions = oc(departments)
+    .data.departments.collection([])
+    .map(toLabelValue);
+
   const risksQ = useRisksQuery();
   const riskOptions = oc(risksQ)
     .data.risks.collection([])
-    .map(risk => ({ label: risk.name || "", value: risk.id }));
+    .map((risk) => ({ label: risk.name || "", value: risk.id }));
 
   useEffect(() => {
     register({ name: "frequency" });
@@ -69,19 +75,18 @@ const ControlForm = ({
   }, [register]);
 
   const handleSelectChange = (name: keyof CreateControlFormValues) => ({
-    value
+    value,
   }: any) => setValue(name, value);
 
   const pDefVal = (value: any, options: Options) => {
-    return options.find(opt => opt.value === value);
+    return options.find((opt) => opt.value === value);
   };
-
+  const controlOwnerId = oc(defaultValues).controlOwner() || [];
   const description = oc(defaultValues).description("");
   const typeOfControl = oc(defaultValues).typeOfControl();
   const frequency = oc(defaultValues).frequency();
   const nature = oc(defaultValues).nature();
   const activityControls = oc(defaultValues).activityControls() || [];
-
   const [cool, setCool] = useState<MyCoolControlActivity[]>(() =>
     activityControls.map(transformActivityControl)
   );
@@ -92,30 +97,30 @@ const ControlForm = ({
     onSubmit?.({
       ...values,
       activityControlsAttributes: prepare,
-      controlOwner: owner
+      controlOwner: owner,
     });
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
     // update
-    const id = cool.filter(c => String(c.id) === selectActivity);
+    const id = cool.filter((c) => String(c.id) === selectActivity);
     if (id.length > 0) {
-      setCool(cool =>
-        cool.map(c => {
+      setCool((cool) =>
+        cool.map((c) => {
           if (String(c.id) === selectActivity) {
             return {
               ...values,
-              id: c.id
+              id: c.id,
             };
           }
           return c;
         })
       );
     } else {
-      setCool(cool =>
+      setCool((cool) =>
         cool.concat({
           ...values,
-          id: "temp" + randomId(1000)
+          id: "temp" + randomId(1000),
         })
       );
     }
@@ -129,18 +134,18 @@ const ControlForm = ({
   };
 
   const handleDelete = (id?: string | number) => {
-    const deleted = cool.find(c => String(c.id) === String(id));
+    const deleted = cool.find((c) => String(c.id) === String(id));
     if (String(deleted?.id).includes("temp")) {
     } else {
       const temp = {
         id: deleted?.id,
         activity: deleted?.activity,
         guidance: deleted?.guidance,
-        _destroy: 1
+        _destroy: 1,
       };
       setDeleteActivity(deleteActivity.concat(temp));
     }
-    setCool(cool.filter(c => c.id !== id));
+    setCool(cool.filter((c) => c.id !== id));
   };
 
   const renderSubmit = () => {
@@ -206,7 +211,7 @@ const ControlForm = ({
           setValue={setValue}
           options={riskOptions}
           loading={risksQ.loading}
-          defaultValue={riskOptions.filter(res =>
+          defaultValue={riskOptions.filter((res) =>
             oc(defaultValues)
               .riskIds([])
               .includes(res.value)
@@ -242,13 +247,20 @@ const ControlForm = ({
           setValue={setValue}
           options={bpOptions}
           loading={risksQ.loading}
-          defaultValue={bpOptions.filter(res =>
+          defaultValue={bpOptions.filter((res) =>
             oc(defaultValues)
               .businessProcessIds([])
               .includes(res.value)
           )}
         />
-
+        {console.log(
+          "test bps",
+          bpOptions.filter((res) =>
+            oc(defaultValues)
+              .businessProcessIds([])
+              .includes(res.value)
+          )
+        )}
         <Select
           options={frequencies}
           onChange={handleSelectChange("frequency")}
@@ -274,7 +286,7 @@ const ControlForm = ({
               register={register}
               setValue={setValue}
               options={assertions}
-              defaultValue={assertions.filter(res =>
+              defaultValue={assertions.filter((res) =>
                 oc(defaultValues)
                   .assertion([])
                   .includes(res.value)
@@ -290,7 +302,7 @@ const ControlForm = ({
               register={register}
               setValue={setValue}
               options={ipos}
-              defaultValue={ipos.filter(res =>
+              defaultValue={ipos.filter((res) =>
                 oc(defaultValues)
                   .ipo([])
                   .includes(res.value)
@@ -298,15 +310,29 @@ const ControlForm = ({
             />
           </Col>
         </Row>
-        <AsyncSelect
-          label="Control Owner*"
+        {console.log("ipos", ipos)}
+        {/* <AsyncSelect
           cacheOptions
           defaultOptions
-          name="controlOwner"
+          
           isMulti
           register={register}
           setValue={setValue}
           loadOptions={handleGetDepartments}
+          defaultValue={controlOwnerId}
+        /> */}
+        <FormSelect
+          isMulti
+          name="controlOwner"
+          label="Control Owner*"
+          placeholder="IPOs"
+          register={register}
+          setValue={setValue}
+          options={controlOwnerOptions}
+          defaultValue={controlOwnerOptions.filter((a) =>
+            controlOwnerId.includes(a.value)
+          )}
+          loading={departments.loading}
         />
         <span>Control Activites</span>
         <div className="mt-2">
@@ -329,7 +355,7 @@ const ControlForm = ({
               </tr>
             </thead>
             <tbody>
-              {cool.map(activity => (
+              {cool.map((activity) => (
                 <tr key={"Row" + activity.id}>
                   <td>{activity.activity}</td>
                   <td>
@@ -361,7 +387,9 @@ const ControlForm = ({
       </Form>
       <Modal isOpen={isOpen} toggle={closeModal} title="Add Control Activity">
         <ActivityModalForm
-          activityDefaultValue={cool.find(c => String(c.id) === selectActivity)}
+          activityDefaultValue={cool.find(
+            (c) => String(c.id) === selectActivity
+          )}
           onSubmit={handleActivitySubmit}
         />
       </Modal>
@@ -376,13 +404,13 @@ const transformActivityControl = (
     activity: input.activity,
     guidance: input.guidance,
     id: Number(input.id),
-    resuploadFileName: input.guidanceFileName
+    resuploadFileName: input.guidanceFileName,
   };
   return output;
 };
 
 const beforeSubmit = (input: MyCoolControlActivity[]) => {
-  const output: MyCoolControlActivity[] = input.map(data => {
+  const output: MyCoolControlActivity[] = input.map((data) => {
     const { resuploadFileName, resupload, ...theRest } = data;
     if (String(theRest.id).includes("temp")) {
       const { id, ...rest } = theRest;
@@ -394,7 +422,7 @@ const beforeSubmit = (input: MyCoolControlActivity[]) => {
         return {
           ...theRest,
           resupload,
-          resupload_file_name: resuploadFileName
+          resupload_file_name: resuploadFileName,
         };
       else return theRest;
     }
@@ -409,14 +437,14 @@ const randomId = (max: number) => {
 
 const ActivityModalForm = ({
   activityDefaultValue,
-  onSubmit
+  onSubmit,
 }: ActivityControlModalProps) => {
   const [error, setError] = useState<string | null>(null);
   const [activityType, setActivityType] = useState(
     activityDefaultValue?.resupload ? "attachment" : "text"
   );
   const { register, handleSubmit, setValue } = useForm<MyCoolControlActivity>({
-    defaultValues: activityDefaultValue
+    defaultValues: activityDefaultValue,
   });
 
   useEffect(() => {
@@ -435,7 +463,7 @@ const ActivityModalForm = ({
         ![
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "application/pdf",
-          "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         ].includes(file.type)
       ) {
         setError("File type not supported. Allowed type are: PDF, Excel, Word");
@@ -512,24 +540,23 @@ export default ControlForm;
 
 const frequencies = Object.entries(Frequency).map(([label, value]) => ({
   label: capitalCase(value),
-  value
+  value,
 }));
 
 const typeOfControls = Object.entries(TypeOfControl).map(([label, value]) => ({
   label: capitalCase(value),
-  value
+  value,
 }));
 
 const natures = Object.entries(Nature).map(([label, value]) => ({
   label: capitalCase(value),
-  value
+  value,
 }));
 
 const ipos = Object.entries(Ipo).map(([label, value]) => ({
   label: value.split("")[0].toUpperCase(),
-  value
+  value,
 }));
-
 const assertions = Object.entries(Assertion).map(([label, value]) => {
   if (value === "cut_over") {
     return { label: "CO", value };
