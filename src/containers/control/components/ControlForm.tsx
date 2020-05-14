@@ -298,22 +298,12 @@ const ControlForm = ({
             />
           </Col>
         </Row>
-        {console.log("ipos", ipos)}
-        {/* <AsyncSelect
-          cacheOptions
-          defaultOptions
-          
-          isMulti
-          register={register}
-          setValue={setValue}
-          loadOptions={handleGetDepartments}
-          defaultValue={controlOwnerId}
-        /> */}
+
         <FormSelect
           isMulti
           name="controlOwner"
           label="Control Owner*"
-          placeholder="IPOs"
+          placeholder="Control Owner"
           register={register}
           setValue={setValue}
           options={controlOwnerOptions}
