@@ -42,6 +42,7 @@ interface ResourceFormProps {
   toggleEditMode?: any;
   isCreate?: boolean;
   history?: any;
+  policy?: boolean;
 }
 
 export interface ResourceFormValues {
@@ -63,6 +64,7 @@ export default function ResourceForm({
   toggleEditMode,
   history,
   isCreate,
+  policy,
 }: // isDraft,
 ResourceFormProps) {
   const dialogBox = useDialogBox();
@@ -105,11 +107,11 @@ ResourceFormProps) {
     }
   }
 
-  const handleGetCategories = useLoadCategories();
+  const handleGetCategories = useLoadCategories(policy);
   const handleGetPolicies = useLoadPolicies();
   const handleGetControls = useLoadControls();
   const handleGetBps = useLoadBps();
-
+  console.log("handleGetCategories", handleGetCategories());
   const selectedCategory = watch("category");
   const selectedBusinessProcess = watch("businessProcessId");
   return (
@@ -308,14 +310,18 @@ const validationSchema = yup.object().shape({
 // Custom Hooks
 // ==========================================
 
-function useLoadCategories() {
+function useLoadCategories(policy?: any) {
   const query = useLazyQueryReturnPromise<EnumListsQuery>(EnumListsDocument);
   async function getSuggestions(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
         filter: { name_cont, category_type_eq: "Category" },
       });
-      return data.enumLists?.collection.map(toLabelValue) || [];
+      return policy
+        ? data.enumLists?.collection
+            .map(toLabelValue)
+            .filter((a) => a.value !== "Flowchart") || []
+        : data.enumLists?.collection.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }

@@ -170,6 +170,7 @@ export default function ResourcesTab({
           defaultValues={formDefaultValues}
           onSubmit={handleCreateResource}
           submitting={createResourceM.loading}
+          policy
         />
       </Modal>
     </div>
