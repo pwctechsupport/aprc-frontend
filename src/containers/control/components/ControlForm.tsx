@@ -91,11 +91,9 @@ const ControlForm = ({
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
-    const owner = values.controlOwner?.map((a: any) => a.value);
     onSubmit?.({
       ...values,
       activityControlsAttributes: prepare,
-      controlOwner: owner,
     });
   };
 
@@ -250,14 +248,7 @@ const ControlForm = ({
               .includes(res.value)
           )}
         />
-        {console.log(
-          "test bps",
-          bpOptions.filter((res) =>
-            oc(defaultValues)
-              .businessProcessIds([])
-              .includes(res.value)
-          )
-        )}
+
         <Select
           options={frequencies}
           onChange={handleSelectChange("frequency")}
