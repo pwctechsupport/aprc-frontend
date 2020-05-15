@@ -34,6 +34,7 @@ import {
 } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import { RouteComponentProps } from "react-router-dom";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -80,11 +81,12 @@ const References = ({ history }: RouteComponentProps) => {
   const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
   return (
     <div>
+      <BreadCrumb crumbs={[["/references", "References"]]} />
       <Helmet>
         <title>References - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="flex-grow-1">
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center mb-3">
           <h4>References</h4>
         </div>
 

@@ -97,56 +97,46 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           <title>Business Process - PricewaterhouseCoopers</title>
         </Helmet>
         <div className="w-100">
-          <Modal
-            isOpen={createBpModal}
-            toggle={toggleCreateBpModal}
-            title="Create Business Process"
-          >
-            <CreateBusinessProcess />
-          </Modal>
-
-          <div className="mb-3 d-flex justify-content-end">
-            {isAdmin ||  isAdminPreparer ? (
+          <div className="d-flex justify-content-between align-items-center mb-3">
+            <h4>Business Process</h4>
+            {isAdmin || isAdminPreparer ? (
               <Tooltip description="Create Business Process">
-                <Button
-                  onClick={toggleCreateBpModal}
-                  className="soft orange mr-2"
-                  color=""
-                >
-                  <FaPlus />
+                <Button onClick={toggleCreateBpModal} className="pwc">
+                  <FaPlus /> Add Business Process
                 </Button>
               </Tooltip>
             ) : null}
             {isAdminReviewer ? (
-              <Tooltip
-                description="Export Business Process"
-                subtitle={
-                  selected.length
-                    ? "Export selected business processes"
-                    : "Select BPs first"
-                }
-              >
-                <Button
-                  color=""
-                  className="soft red mr-2"
-                  onClick={handleExport}
-                  disabled={!selected.length}
+              <div className="d-flex">
+                <Tooltip
+                  description="Export Business Process"
+                  subtitle={
+                    selected.length
+                      ? "Export selected business processes"
+                      : "Select BPs first"
+                  }
                 >
-                  <FaFileExport />
-                </Button>
-              </Tooltip>
+                  <Button
+                    color=""
+                    className="soft red mr-2"
+                    onClick={handleExport}
+                    disabled={!selected.length}
+                  >
+                    <FaFileExport />
+                  </Button>
+                </Tooltip>
+                <Tooltip description="Import Business Process">
+                  <Button
+                    color=""
+                    className="soft orange mr-2"
+                    onClick={toggleImportModal}
+                  >
+                    <FaFileImport />
+                  </Button>
+                </Tooltip>
+              </div>
             ) : null}
-            {isAdminReviewer ? (
-              <Tooltip description="Import Business Process">
-                <Button
-                  color=""
-                  className="soft orange mr-2"
-                  onClick={toggleImportModal}
-                >
-                  <FaFileImport />
-                </Button>
-              </Tooltip>
-            ) : null}
+
             {isAdminReviewer ? (
               <ImportBusinessProcessModal
                 isOpen={modal}
@@ -154,6 +144,13 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
               />
             ) : null}
           </div>
+          <Modal
+            isOpen={createBpModal}
+            toggle={toggleCreateBpModal}
+            title="Create Business Process"
+          >
+            <CreateBusinessProcess />
+          </Modal>
 
           <Table reloading={businessQuery.loading}>
             <thead>

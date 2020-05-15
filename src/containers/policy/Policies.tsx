@@ -84,6 +84,9 @@ export default function Policies({ history }: RouteComponentProps) {
           <AllPolicyDashboard />
         </div>
       </Collapse>
+      <div>
+        <h4 className="mt-4">Policy</h4>
+      </div>
       <SearchBar
         search={search}
         setSearch={setSearch}
