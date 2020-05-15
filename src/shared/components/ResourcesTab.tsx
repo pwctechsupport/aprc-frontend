@@ -7,6 +7,7 @@ import {
   useRemoveRelationMutation,
   useCreateResourceMutation,
   useResourcesQuery,
+  PolicyQuery,
 } from "../../generated/graphql";
 import Button from "./Button";
 import EmptyAttribute from "./EmptyAttribute";
@@ -21,17 +22,20 @@ import ResourceForm, {
   ResourceFormValues,
 } from "../../containers/resources/components/ResourceForm";
 import useAccessRights from "../hooks/useAccessRights";
+import { oc } from "ts-optchain";
 
 export default function ResourcesTab({
   queryFilters,
   formDefaultValues,
   isDraft,
   policy,
+  policyData,
 }: {
   queryFilters: any;
   formDefaultValues: ResourceFormValues;
   isDraft: any;
   policy?: boolean;
+  policyData?: PolicyQuery;
 }) {
   const [isAdmin, isAdminPreparer] = useAccessRights([
     "admin",
@@ -42,6 +46,47 @@ export default function ResourcesTab({
     limit: 10,
     page: 1,
   });
+  const resourcesWithoutChildren = oc(policyData).policy.resources([]);
+  const resourceFirstChild =
+    policyData?.policy?.children?.map((a) => a.resources) || [];
+  const resourceSecondChild =
+    policyData?.policy?.children?.map((a: any) =>
+      a.children.map((b: any) => b.resources)
+    ) || [];
+  const resourceThirdChild =
+    policyData?.policy?.children?.map((a: any) =>
+      a.children?.map((b: any) => b.children.map((c: any) => c.resources))
+    ) || [];
+  const resourceFourthChild =
+    policyData?.policy?.children?.map((a: any) =>
+      a.children?.map((b: any) =>
+        b.children?.map((c: any) => c.children.map((d: any) => d.resources))
+      )
+    ) || [];
+  const resourceFifthChild =
+    policyData?.policy?.children?.map((a: any) =>
+      a.children?.map((b: any) =>
+        b.children?.map((c: any) =>
+          c.children.map((d: any) => d.children.map((e: any) => e.resources))
+        )
+      )
+    ) || [];
+  const newDataResources = [
+    ...resourcesWithoutChildren.flat(10),
+    ...resourceFirstChild.flat(10),
+    ...resourceSecondChild.flat(10),
+    ...resourceThirdChild.flat(10),
+    ...resourceFourthChild.flat(10),
+    ...resourceFifthChild.flat(10),
+  ];
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) a.splice(j--, 1);
+      }
+    }
+    return a;
+  };
 
   // Query Resources for current policy
   const [search, setSearch] = useState("");
@@ -139,8 +184,23 @@ export default function ResourcesTab({
           </Tooltip>
         )}
       </div>
-      {resources.length ? (
-        resources.map((resource) => (
+      {dataModifier(newDataResources).length ? (
+        dataModifier(newDataResources).map((resource: any) => (
+          <ResourceBar
+            rating={resource.rating}
+            deleteResource={handleDeleteResource}
+            totalRating={resource.totalRating}
+            visit={resource.visit}
+            key={resource.id}
+            resourceId={resource.id}
+            {...resource}
+          />
+        ))
+      ) : resources.length ? null : (
+        <EmptyAttribute centered>No Resource</EmptyAttribute>
+      )}
+      {dataModifier(newDataResources).length ? null : resources.length ? (
+        resources.map((resource: any) => (
           <ResourceBar
             rating={resource.rating}
             deleteResource={handleDeleteResource}
@@ -154,9 +214,12 @@ export default function ResourcesTab({
       ) : (
         <EmptyAttribute centered>No Resource</EmptyAttribute>
       )}
-
       <Pagination
-        totalCount={totalCount}
+        totalCount={
+          dataModifier(newDataResources).length
+            ? dataModifier(newDataResources).length
+            : totalCount
+        }
         perPage={limit}
         onPageChange={handlePageChange}
       />

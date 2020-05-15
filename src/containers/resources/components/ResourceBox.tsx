@@ -66,7 +66,7 @@ export default function ResourceBox({
       notifySuccess(`You gave ${rating} star rating`);
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["resource"],
+    refetchQueries: ["resource", "resourceRatings"],
     awaitRefetchQueries: true,
   });
   function handleStarClick(nextValue: number) {
