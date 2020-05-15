@@ -6,7 +6,7 @@ import {
   ModalFooter,
   ModalProps as BsModalProps,
   ModalHeaderProps,
-  Button
+  Button,
 } from "reactstrap";
 import classnames from "classnames";
 import { useSelector } from "../hooks/useSelector";
@@ -47,8 +47,8 @@ const ModalDialog = ({
   isCreate,
   isEdit,
   actions = {
-    yes: isCreate ? "Discard" : isEdit ? "Discard" : "Continue",
-    no: isCreate ? "Continue Creating" : isEdit ? "Continue Editing" : "Cancel"
+    yes: isCreate ? "Yes" : isEdit ? "Yes" : "Continue",
+    no: isCreate ? "No" : isEdit ? "No" : "Cancel",
   },
   functions = {},
   disabled,
@@ -86,7 +86,7 @@ export { ModalDialog };
 
 export function DialogBoxModal() {
   const dispatch = useDispatch();
-  const dialogBox = useSelector(state => state.dialogBox);
+  const dialogBox = useSelector((state) => state.dialogBox);
   function handleClose() {
     dispatch(closeDialogBox());
   }
