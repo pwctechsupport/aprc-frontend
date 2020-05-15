@@ -111,7 +111,6 @@ ResourceFormProps) {
   const handleGetPolicies = useLoadPolicies();
   const handleGetControls = useLoadControls();
   const handleGetBps = useLoadBps();
-  console.log("handleGetCategories", handleGetCategories());
   const selectedCategory = watch("category");
   const selectedBusinessProcess = watch("businessProcessId");
   return (

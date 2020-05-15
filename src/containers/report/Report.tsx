@@ -9,7 +9,7 @@ import Table from "../../shared/components/Table";
 import {
   DownloadPdfInput,
   downloadPdfs,
-  previewPdfs
+  previewPdfs,
 } from "../../shared/utils/accessGeneratedPdf";
 import { notifyError, notifyInfo } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
@@ -20,55 +20,55 @@ const reportOptions = [
     id: "report_risk",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Risk Without Control",
     id: "report_risk_policy",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Control Without Risk",
     id: "report_control_policy",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Resources with rating",
     id: "report_resource_rating",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Unmapped Risk",
     id: "unmapped_risk",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
+      { id: "xlsx", name: "Excel" },
+    ],
   },
   {
     name: "Unmapped Control",
     id: "unmapped_control",
     formats: [
       { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" }
-    ]
-  }
+      { id: "xlsx", name: "Excel" },
+    ],
+  },
 ];
 
 export default function Report() {
   const [downloading, setDownloading] = useState(false);
   const [previewing, setPreviewing] = useState(false);
-  const { register, handleSubmit } = useForm<ReportFormValues>();
+  const { register, handleSubmit, watch } = useForm<ReportFormValues>();
 
   const constructDataFromForm = (
     values: ReportFormValues
@@ -78,27 +78,38 @@ export default function Report() {
         const bro = values[key];
         return { name: key, format: bro };
       })
-      .filter(a => Boolean(a.format))
+      .filter((a) => Boolean(a.format))
       .map(({ name, format }) => {
         const fileName = `${
-          reportOptions.find(a => a.id === name)?.name
+          reportOptions.find((a) => a.id === name)?.name
         }.${format}`;
         return {
           url: `/prints/${name}.${format}`,
           options: {
             fileType: format,
             fileName,
-            onError: () => notifyError(`Error accessing ${fileName}`)
-          }
+            onError: () => notifyError(`Error accessing ${fileName}`),
+          },
         };
       });
   };
 
   async function handlePreview(values: ReportFormValues) {
-    notifyInfo("Preparing file to preview");
-    setPreviewing(true);
-    await previewPdfs(constructDataFromForm(values));
-    setPreviewing(false);
+    if (
+      values.report_control_policy === "xlsx" ||
+      values.report_resource_rating === "xlsx" ||
+      values.report_risk === "xlsx" ||
+      values.report_risk_policy === "xlsx" ||
+      values.unmapped_control === "xlsx" ||
+      values.unmapped_risk === "xlsx"
+    ) {
+      notifyError("Excel format cannot be previewed");
+    } else {
+      notifyInfo("Preparing file to preview");
+      setPreviewing(true);
+      await previewPdfs(constructDataFromForm(values));
+      setPreviewing(false);
+    }
   }
 
   async function handleDownload(values: ReportFormValues) {
@@ -107,6 +118,12 @@ export default function Report() {
     await downloadPdfs(constructDataFromForm(values));
     setDownloading(false);
   }
+  const reportRisk = watch("report_risk");
+  const reportRiskPolicy = watch("report_risk_policy");
+  const reportControlPolicy = watch("report_control_policy");
+  const reportResourceRating = watch("report_resource_rating");
+  const unmappedRisk = watch("unmapped_risk");
+  const unmappedControl = watch("unmapped_control");
 
   return (
     <Container fluid className="p-0 pt-3 px-4">
@@ -134,7 +151,7 @@ export default function Report() {
 
                   <td>
                     <FormGroup tag="fieldset">
-                      {option.formats.map(format => (
+                      {option.formats.map((format) => (
                         <FormGroup key={format.id} check>
                           <Label check>
                             <Input
@@ -156,15 +173,23 @@ export default function Report() {
         </Table>
 
         <div className="text-center mt-3 mb-5">
-          <Button
-            onClick={handleSubmit(handlePreview)}
-            type="button"
-            color="transparent"
-            className="mr-3"
-            loading={previewing}
-          >
-            <FaFile /> Preview
-          </Button>
+          {(reportRisk === "pdf" ||
+            reportRiskPolicy === "pdf" ||
+            reportControlPolicy === "pdf" ||
+            reportResourceRating === "pdf" ||
+            unmappedRisk === "pdf" ||
+            unmappedControl === "pdf") && (
+            <Button
+              onClick={handleSubmit(handlePreview)}
+              type="button"
+              color="transparent"
+              className="mr-3"
+              loading={previewing}
+            >
+              <FaFile /> Preview
+            </Button>
+          )}
+
           <Button
             color="secondary"
             onClick={handleSubmit(handleDownload)}
