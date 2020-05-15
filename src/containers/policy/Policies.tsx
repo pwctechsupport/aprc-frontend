@@ -96,7 +96,6 @@ export default function Policies({ history }: RouteComponentProps) {
       <Table reloading={loading} responsive>
         <thead>
           <tr>
-            <th>ID</th>
             <th className="w-40">Title</th>
             <th>Category</th>
             <th>Status</th>
@@ -110,6 +109,7 @@ export default function Policies({ history }: RouteComponentProps) {
             policies.map((policy) => (
               <PolicyTableRow
                 key={policy.id}
+                isAdmin={isAdminPreparer}
                 policy={policy}
                 onClick={(id) => history.push(`/policy/${id}`)}
                 onDelete={handleDelete}
@@ -137,6 +137,7 @@ export default function Policies({ history }: RouteComponentProps) {
 const PolicyTableRow = ({
   policy,
   onClick,
+  isAdmin,
   onDelete,
   level = 0,
 }: {
@@ -144,12 +145,12 @@ const PolicyTableRow = ({
   onClick: (value: any) => void;
   onDelete: (value: any) => void;
   level?: number;
+  isAdmin?: any;
 }) => {
   const childs = policy.children || [];
   return (
     <>
       <tr key={policy.id} onClick={() => onClick(policy.id)}>
-        <td>{policy.id}</td>
         <td>
           <div
             style={level ? { marginLeft: level * 10 } : {}}
@@ -168,18 +169,22 @@ const PolicyTableRow = ({
           <DateHover>{policy?.lastUpdatedAt}</DateHover>
         </td>
         <td>{policy?.lastUpdatedBy}</td>
-        <td className="action">
-          <Tooltip description="Delete Policy">
-            <DialogButton
-              message={`Are you sure to delete ${policy.title}`}
-              onConfirm={() => onDelete(policy.id)}
-              className="soft red"
-              color=""
-            >
-              <FaTrash />
-            </DialogButton>
-          </Tooltip>
-        </td>
+        {isAdmin ? (
+          <td className="action">
+            <Tooltip description="Delete Policy">
+              <DialogButton
+                message={`Are you sure to delete ${policy.title}`}
+                onConfirm={() => onDelete(policy.id)}
+                className="soft red"
+                color=""
+              >
+                <FaTrash />
+              </DialogButton>
+            </Tooltip>
+          </td>
+        ) : (
+          <td></td>
+        )}
       </tr>
       {childs.length
         ? childs.map((childPol) => (
