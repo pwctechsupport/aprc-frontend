@@ -135,7 +135,6 @@ const Resources = ({ history }: RouteComponentProps) => {
                 />
               </th>
             ) : null}
-            <th>ID</th>
 
             <th style={{ width: "10%" }}>Name</th>
             <th style={{ width: "8%" }}>File Type</th>
@@ -168,7 +167,6 @@ const Resources = ({ history }: RouteComponentProps) => {
                       />
                     </td>
                   ) : null}
-                  <td>{resource.id}</td>
                   <td>{resource.name}</td>
                   <td>{resource.resourceFileType}</td>
                   <td>{capitalCase(resource.category || "")}</td>

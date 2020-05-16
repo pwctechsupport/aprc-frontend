@@ -139,7 +139,6 @@ const Risks = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "5%" }}>ID</th>
             <th style={{ width: "13%" }}>Risk</th>
 
             <th style={{ width: "13%" }}>Risk Level</th>
@@ -173,7 +172,6 @@ const Risks = ({ history }: RouteComponentProps) => {
                   </td>
                 ) : null}
 
-                <td>{risk.id}</td>
                 <td>{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                 <td>

@@ -166,8 +166,6 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                 ) : null}
 
                 <th>Business Process</th>
-                <th>Business Process ID</th>
-
                 <th>Last Updated</th>
                 <th>Last Updated By</th>
                 <th>Created At</th>
@@ -194,7 +192,6 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                   ) : null}
 
                   <td>{item.name}</td>
-                  <td>{item.id}</td>
                   <td>{item.updatedAt.split("T")[0]}</td>
                   <td>{item.lastUpdatedBy}</td>
                   <td>{item.createdAt.split("T")[0]}</td>

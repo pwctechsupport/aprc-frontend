@@ -138,7 +138,6 @@ const Controls = ({ history }: RouteComponentProps) => {
                   </th>
                 ) : null}
 
-                <th>ID</th>
                 <th>Description</th>
                 <th>Freq</th>
                 <th style={{ width: "10%" }}>Type</th>
@@ -170,7 +169,6 @@ const Controls = ({ history }: RouteComponentProps) => {
                       </td>
                     ) : null}
 
-                    <td>{control.id}</td>
                     <td style={{ width: 200 }}>{control.description}</td>
                     <td>{capitalCase(control.frequency || "")}</td>
                     <td>{capitalCase(control.typeOfControl || "")}</td>

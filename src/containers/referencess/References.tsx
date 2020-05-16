@@ -150,7 +150,6 @@ const References = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "5%" }}>ID</th>
             <th style={{ width: "5%" }}>Name</th>
             <th style={{ width: "30%" }}>Policy</th>
             <th style={{ width: "10%" }}>Last Updated</th>
@@ -260,9 +259,6 @@ const ReferenceRow = ({
           />
         </td>
       ) : null}
-
-      <td>{reference.id}</td>
-
       <td
         className="align-middle"
         // style={{ width: "20%" }}
