@@ -724,11 +724,14 @@ export default function Policy({
       let noCreateMenu = [...mainMenu];
       noCreateMenu[0] = { label: "create" };
       const noCreateButton = noCreateMenu.filter((a) => a.label !== "create");
+      let noDeleteMenu = [...mainMenu];
+      noDeleteMenu[1] = { label: "Delete" };
+      const noDeleteButton = noDeleteMenu.filter((a) => a.label !== "Delete");
       theMenu = isAdminReviewer
         ? [...noCreateButton, ...basicMenu]
         : !(isAdminReviewer || isAdmin || isAdminPreparer)
         ? basicMenu
-        : [...mainMenu, ...basicMenu];
+        : [...noDeleteButton, ...basicMenu];
     }
     return (
       <div className="d-flex align-items-center">

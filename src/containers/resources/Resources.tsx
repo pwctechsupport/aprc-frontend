@@ -123,7 +123,7 @@ const Resources = ({ history }: RouteComponentProps) => {
         ) : null}
         {isAdmin || isAdminPreparer ? (
           <Button tag={Link} to="/resources/create" className="pwc">
-            <FaPlus /> Add Resource
+            + Add Resource
           </Button>
         ) : null}
       </div>
@@ -217,7 +217,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                           </a>
                         </Tooltip>
                       </Button>
-                      {(isAdminReviewer || isAdmin || isAdminPreparer) && (
+                      {isAdminReviewer && (
                         <DialogButton
                           onConfirm={() =>
                             destroyResource({ variables: { id: resource.id } })

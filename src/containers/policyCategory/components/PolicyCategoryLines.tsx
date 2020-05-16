@@ -29,7 +29,6 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
 
-  const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [selected, setSelected] = useState<string[]>([]);
   const { loading, data } = usePolicyCategoriesQuery({
     variables: { filter: isUser ? { draft_event_null: true } : {} },
@@ -129,7 +128,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           ) : null}
           {isAdminPreparer ? (
             <Button tag={Link} to="/policy-category/create" className="pwc">
-              <FaPlus /> Add Policy Category
+              + Add Policy Category
             </Button>
           ) : null}
         </div>
@@ -186,7 +185,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                 <td>{policyCategory.status}</td>
                 <td>{policyCategory.updatedAt.split(" ")[0]}</td>
                 <td>{policyCategory.lastUpdatedBy}</td>
-                {admins ? (
+                {isAdminReviewer ? (
                   <td className="action">
                     <Tooltip description="Delete Policy Category">
                       <DialogButton

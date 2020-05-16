@@ -132,7 +132,7 @@ const References = ({ history }: RouteComponentProps) => {
           ) : null}
           {(isAdmin || isAdminPreparer) && (
             <Button tag={Link} to="/references/create" className="pwc">
-              <FaPlus /> Add Reference
+              + Add Reference
             </Button>
           )}
         </div>

@@ -102,7 +102,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
             {isAdmin || isAdminPreparer ? (
               <Tooltip description="Create Business Process">
                 <Button onClick={toggleCreateBpModal} className="pwc">
-                  <FaPlus /> Add Business Process
+                  + Add Business Process
                 </Button>
               </Tooltip>
             ) : null}

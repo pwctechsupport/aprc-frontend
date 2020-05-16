@@ -58,9 +58,7 @@ const Users = () => {
               </NavLink>
               {(isAdmin || isAdminPreparer) && (
                 <NavLink to="/user/create">
-                  <Button outline color="pwc" className="pwc mb-5">
-                    Add User
-                  </Button>
+                  <Button className="pwc mb-5">+ Add User</Button>
                 </NavLink>
               )}
             </Col>

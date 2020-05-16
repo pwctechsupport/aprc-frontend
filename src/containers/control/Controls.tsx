@@ -122,7 +122,7 @@ const Controls = ({ history }: RouteComponentProps) => {
           ) : null}
           {isAdminPreparer ? (
             <Button tag={Link} to="/control/create" className="pwc">
-              <FaPlus /> Create Controls
+              + Add Control
             </Button>
           ) : null}
         </div>
@@ -196,7 +196,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                       {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}
                     </td>
                     <td>{control.lastUpdatedBy}</td>
-                    {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                    {isAdminReviewer ? (
                       <td className="action">
                         <Tooltip description="Delete Control">
                           <DialogButton

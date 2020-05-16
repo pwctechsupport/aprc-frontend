@@ -14,7 +14,6 @@ const CreatePolicyCategory = ({ history }: RouteComponentProps) => {
       notifySuccess("Policy Category Created");
       const id = oc(res).createPolicyCategory.policyCategory.id("");
       history.replace(`/policy-category/${id}`);
-      // window.location.reload();
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,

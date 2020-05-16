@@ -23,16 +23,18 @@ const PolicyCategorySideBox = () => {
     "admin_reviewer",
     "admin_preparer",
   ]);
-  const isUser = isAdmin || isAdminReviewer || isAdminPreparer;
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+
   const { data, loading } = usePolicyCategoriesQuery({
     variables: {
       filter: isUser
-        ? { name_cont: search }
-        : { name_cont: search, draft_event_null: true },
+        ? { name_cont: search, draft_event_null: true }
+        : { name_cont: search },
       limit,
     },
     fetchPolicy: "network-only",
   });
+
   useEffect(() => {
     data?.policyCategories?.collection.length === limit
       ? setCondition(true)

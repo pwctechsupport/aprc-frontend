@@ -128,7 +128,7 @@ const Risks = ({ history }: RouteComponentProps) => {
         ) : null}
         {isAdmin || isAdminPreparer ? (
           <Button tag={Link} to="/risk/create" className="pwc">
-            <FaPlus /> Add Risk
+            + Add Risk
           </Button>
         ) : null}
       </div>
@@ -187,7 +187,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                 <td>{risk.updatedAt?.split(" ")[0]}</td>
                 <td>{risk.lastUpdatedBy}</td>
                 <td>{risk.status}</td>
-                {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                {isAdminReviewer ? (
                   <td className="action">
                     <DialogButton
                       onConfirm={() => handleDelete(risk.id)}

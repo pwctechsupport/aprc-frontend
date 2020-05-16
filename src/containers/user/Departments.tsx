@@ -77,7 +77,7 @@ const Departments = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
-    "admin_preparer"
+    "admin_preparer",
   ]);
   return (
     <div>
@@ -86,54 +86,65 @@ const Departments = ({ history }: RouteComponentProps) => {
       </Helmet>
       <Container fluid className="p-0 pt-3 px-4">
         <h2>Department</h2>
-        
-        {(isAdmin|| isAdminPreparer  )&& 
+
+        {(isAdmin || isAdminPreparer) && (
           <Fragment>
-          <Row style={{ position: "relative", left: "15px" }}>
-            <h5> Add Department</h5>
-          </Row>
-          <Row>
-          <Col>
-            <Form
-              onSubmit={creating.handleSubmit(handleCreate)}
-              className="form"
-            >
-              <Row className="mt-2">
-                <Col lg={9}>
-                  <Input
-                    className="p-0 m-0"
-                    placeholder={"Add new Department..."}
-                    name="name"
-                    innerRef={creating.register}
-                    setValue={creating.setValue}
-                    error={creating.errors.name && "Name is a required field"}
-                    type="text"
-                  />
-                </Col>
-                <Col lg={1}>
-                  <Button loading={createM.loading} className="pwc px-5">
-                    Add
-                  </Button>
-                </Col>
-                <Col lg={2} className="text-right">
-                  <Button
-                    outline
-                    color="pwc"
-                    className="pwc mb-5"
-                    onClick={() => {
-                      history.replace(`/user`);
-                    }}
-                  >
-                    <Tooltip description="Back to users page">Users</Tooltip>
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          </Col>
-          </Row>
-        </Fragment>}
-        
-        <Row style={{ position: "relative", marginTop: `${isAdminReviewer? '40px': '0px'}`, bottom: "20px" }}>
+            <Row style={{ position: "relative", left: "15px" }}>
+              <h5> Add Department</h5>
+            </Row>
+            <Row>
+              <Col>
+                <Form
+                  onSubmit={creating.handleSubmit(handleCreate)}
+                  className="form"
+                >
+                  <Row className="mt-2">
+                    <Col lg={9}>
+                      <Input
+                        className="p-0 m-0"
+                        placeholder={"Add new Department..."}
+                        name="name"
+                        innerRef={creating.register}
+                        setValue={creating.setValue}
+                        error={
+                          creating.errors.name && "Name is a required field"
+                        }
+                        type="text"
+                      />
+                    </Col>
+                    <Col lg={1}>
+                      <Button loading={createM.loading} className="pwc px-5">
+                        Add
+                      </Button>
+                    </Col>
+                    <Col lg={2} className="text-right">
+                      <Button
+                        outline
+                        color="pwc"
+                        className="pwc mb-5"
+                        onClick={() => {
+                          history.replace(`/user`);
+                        }}
+                      >
+                        <Tooltip description="Back to users page">
+                          Users
+                        </Tooltip>
+                      </Button>
+                    </Col>
+                  </Row>
+                </Form>
+              </Col>
+            </Row>
+          </Fragment>
+        )}
+
+        <Row
+          style={{
+            position: "relative",
+            marginTop: `${isAdminReviewer ? "40px" : "0px"}`,
+            bottom: "20px",
+          }}
+        >
           <Col lg={9}>
             <h5> Search Department</h5>
             <Input placeholder="Search Department..." onChange={handleSearch} />
@@ -199,29 +210,29 @@ const Departments = ({ history }: RouteComponentProps) => {
                   ) : (
                     <Fragment>
                       <Fragment>
-                        <DialogButton
-                          title="Delete"
-                          data={department.id}
-                          loading={destroyM.loading}
-                          className="soft red mr-2 "
-                          onConfirm={handleDelete}
-                        >
-                          <Tooltip description="Delete User">
-                            <FaTrash />
-                          </Tooltip>
-                        </DialogButton>
-                        {(isAdmin||isAdminPreparer)&&
-                         <Button
-                          onClick={() => toggleEdit(department.id)}
-                          className="soft orange mr-2"
-                        > 
-                          <Tooltip description="Edit User">
-                            <AiFillEdit />
-                          </Tooltip>
-                        </Button>
-                        }
-
-                       
+                        {(isAdmin || isAdminPreparer) && (
+                          <Button
+                            onClick={() => toggleEdit(department.id)}
+                            className="soft orange mr-2"
+                          >
+                            <Tooltip description="Edit User">
+                              <AiFillEdit />
+                            </Tooltip>
+                          </Button>
+                        )}
+                        {isAdminReviewer ? (
+                          <DialogButton
+                            title="Delete"
+                            data={department.id}
+                            loading={destroyM.loading}
+                            className="soft red mr-2 "
+                            onConfirm={handleDelete}
+                          >
+                            <Tooltip description="Delete User">
+                              <FaTrash />
+                            </Tooltip>
+                          </DialogButton>
+                        ) : null}
                       </Fragment>
                     </Fragment>
                   )}

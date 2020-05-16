@@ -90,7 +90,6 @@ export default function UserRow({
     "admin_preparer",
     "admin_reviewer",
   ]);
-  const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const createdAt = oc(user).createdAt() || "";
   const updatedAt = oc(user).updatedAt() || "";
   const status = oc(user).requestEdit.state() || "";
@@ -262,7 +261,7 @@ export default function UserRow({
               </DialogButton>
             )}
 
-          {!draft && admins && (
+          {!draft && isAdminReviewer && (
             <DialogButton
               title="Delete"
               data={oc(user).id()}
