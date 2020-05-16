@@ -298,7 +298,8 @@ const Notification = ({ history }: RouteComponentProps) => {
                         ? `Notification: [${data.title
                             ?.split(" ")
                             .filter((c) => c !== "Approved")
-                            .join(" ")}] has been ${
+                            .join(" ")
+                            .replace(" Has been Rejected", "")}] has been ${
                             data.title?.includes("Approve")
                               ? "[Approved]"
                               : "[Rejected]"
