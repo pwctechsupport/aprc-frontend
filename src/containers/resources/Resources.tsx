@@ -6,7 +6,6 @@ import {
   FaFileExport,
   FaFileImport,
   FaTrash,
-  FaPlus,
 } from "react-icons/fa";
 import { RouteComponentProps, Link } from "react-router-dom";
 import { toast } from "react-toastify";

@@ -7,7 +7,6 @@ import {
   FaPencilAlt,
   FaTimes,
   FaTrash,
-  FaPlus,
 } from "react-icons/fa";
 import { Input } from "reactstrap";
 import { oc } from "ts-optchain";

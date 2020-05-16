@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaPlus, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Input } from "reactstrap";

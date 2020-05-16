@@ -10,7 +10,7 @@ import { oc } from "ts-optchain";
 import BreadCrumb from "../../../shared/components/BreadCrumb";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
-import { FaFileExport, FaFileImport, FaTrash, FaPlus } from "react-icons/fa";
+import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import ImportModal from "../../../shared/components/ImportModal";
 import {
   notifySuccess,
