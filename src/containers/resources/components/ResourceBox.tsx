@@ -153,7 +153,7 @@ export default function ResourceBox({
             />
           </div>
           <RevenueBoxViews>Downloaded {views} times </RevenueBoxViews>
-          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+          {isAdminReviewer ? (
             <Tooltip description="Delete resource attachment">
               <Button
                 onClick={handleErase}
