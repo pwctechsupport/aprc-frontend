@@ -18,10 +18,17 @@ const PolicyCategorySideBox = () => {
   const [limit, setLimit] = useState(25);
   const [search, setSearch] = useState("");
   const [condition, setCondition] = useState(false);
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = isAdmin || isAdminReviewer || isAdminPreparer;
   const { data, loading } = usePolicyCategoriesQuery({
     variables: {
-      filter: { name_cont: search },
+      filter: isUser
+        ? { name_cont: search }
+        : { name_cont: search, draft_event_null: true },
       limit,
     },
     fetchPolicy: "network-only",
@@ -31,12 +38,8 @@ const PolicyCategorySideBox = () => {
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
+
   const policyCategories = oc(data).policyCategories.collection([]);
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
 
   const onScroll = (e: any) => {
     const scroll =

@@ -24,8 +24,15 @@ const Controls = ({ history }: RouteComponentProps) => {
   const toggleImportModal = () => setModal((p) => !p);
 
   const [selected, setSelected] = useState<string[]>([]);
-
-  const { loading, data } = useControlsQuery();
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+  const { loading, data } = useControlsQuery({
+    variables: { filter: isUser ? { draft_id_null: true } : {} },
+  });
   const controls = oc(data).controls.collection([]);
 
   const [destroy, destroyM] = useDestroyControlMutation({
@@ -67,11 +74,6 @@ const Controls = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
 
   return (
     <div>

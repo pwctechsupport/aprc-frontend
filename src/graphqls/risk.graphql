@@ -19,6 +19,9 @@ query risks($filter: BaseScalar = {}, $limit: Int = 1000) {
   risks(filter: $filter, limit: $limit) {
     collection {
       ...risk
+      draft {
+        id
+      }
     }
   }
 }

@@ -27,12 +27,16 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+
   const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [selected, setSelected] = useState<string[]>([]);
   const { loading, data } = usePolicyCategoriesQuery({
+    variables: { filter: isUser ? { draft_event_null: true } : {} },
     fetchPolicy: "network-only",
   });
   const policyCategories = oc(data).policyCategories.collection([]);
+
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
   const [destroy, destroyM] = useDestroyPolicyCategoriesMutation({

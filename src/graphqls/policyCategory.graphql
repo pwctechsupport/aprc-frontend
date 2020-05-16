@@ -12,6 +12,9 @@ query policyCategories(
       lastUpdatedBy
       createdBy
       status
+      draft {
+        event
+      }
       policies {
         id
         title

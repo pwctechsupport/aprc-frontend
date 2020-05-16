@@ -28,8 +28,20 @@ const ResourceSideBox = () => {
       setLimit(limit + 25);
     }
   };
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+
   const { data, loading } = useRecentResourcesQuery({
-    variables: { filter: { name_cont: searchQuery }, limit },
+    variables: {
+      filter: isUser
+        ? { name_cont: searchQuery, draft_id_null: true }
+        : { name_cont: searchQuery },
+      limit,
+    },
   });
   useEffect(() => {
     data?.recentResources?.collection.length === limit
@@ -42,11 +54,7 @@ const ResourceSideBox = () => {
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
+
   return (
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>

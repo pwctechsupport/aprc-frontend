@@ -2,6 +2,9 @@ query controls($filter: BaseScalar = {}, $limit: Int = 1000) {
   controls(filter: $filter, limit: $limit) {
     collection {
       ...control
+      draft {
+        id
+      }
     }
   }
 }

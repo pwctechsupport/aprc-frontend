@@ -36,6 +36,8 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
+
   const [scrollPointer, setScrollPointer] = useState(1000);
 
   const onScroll = (e: any) => {
@@ -54,12 +56,20 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
 
   const { data, loading } = useSideboxPolicyQuery({
     variables: {
-      filter: {
-        ...(!searchQuery && {
-          ancestry_null: true,
-        }),
-        title_cont: searchQuery,
-      },
+      filter: isUser
+        ? {
+            ...(!searchQuery && {
+              ancestry_null: true,
+            }),
+            title_cont: searchQuery,
+            status_eq: "release",
+          }
+        : {
+            ...(!searchQuery && {
+              ancestry_null: true,
+            }),
+            title_cont: searchQuery,
+          },
       limit,
       isTree: !searchQuery,
     },
@@ -186,6 +196,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
           policies.map((policy, index) => (
             <Fragment key={index}>
               <PolicyBranch
+                originalData={policy}
                 key={policy.id}
                 parentId={policy.parentId}
                 id={policy.id}
@@ -239,6 +250,7 @@ interface PolicyBranchProps {
   isAdmin?: boolean;
   parentId?: any;
   status?: any;
+  originalData?: any;
 }
 
 const PolicyBranch = ({
@@ -249,6 +261,7 @@ const PolicyBranch = ({
   title,
   children = [],
   level,
+  originalData,
   status,
   isAdmin,
 }: PolicyBranchProps) => {
@@ -260,6 +273,7 @@ const PolicyBranch = ({
     "admin_reviewer",
     "admin_preparer",
   ]);
+  console.log("originalData", originalData);
   return (
     <div>
       <Fragment>
@@ -271,9 +285,18 @@ const PolicyBranch = ({
                 active: isActive,
               })}
               padLeft={level ? level * 10 : 0}
-              isLastChild={!hasChild && parentId}
+              isLastChild={
+                (!hasChild ||
+                  originalData?.children
+                    ?.map((a: any) => a.status)
+                    .includes("release")) &&
+                parentId
+              }
             >
-              {hasChild ? (
+              {hasChild &&
+              originalData?.children
+                ?.map((a: any) => a.status)
+                .includes("release") ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
@@ -306,8 +329,9 @@ const PolicyBranch = ({
                     parentId={child.parentId}
                     {...child}
                     activeId={activeId}
-                    activeMode={activeMode}
+                    originalData={child}
                     status={child.status}
+                    activeMode={activeMode}
                     level={Number(level) + 1}
                     isAdmin={isAdmin}
                   />

@@ -32,9 +32,16 @@ const ControlSideBox = () => {
       setLimit(limit + 25);
     }
   };
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+
   const { data, loading } = useControlsQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { description_cont: search }, limit },
+    variables: {
+      filter: isUser
+        ? { draft_id_null: true, description_cont: search }
+        : { description_cont: search },
+      limit,
+    },
   });
   useEffect(() => {
     data?.controls?.collection.length === limit

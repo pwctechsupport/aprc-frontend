@@ -31,6 +31,7 @@ export default function Policies({ history }: RouteComponentProps) {
     "admin_preparer",
     "admin_reviewer",
   ]);
+  const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
   const [showDashboard, setShowDashboard] = useState(false);
   function toggleShowDashboard() {
     setShowDashboard((p) => !p);
@@ -44,10 +45,16 @@ export default function Policies({ history }: RouteComponentProps) {
     fetchPolicy: "network-only",
     variables: {
       isTree,
-      filter: {
-        ...(isTree && { ancestry_null: true }),
-        title_or_status_or_policy_category_name_cont: searchQuery,
-      },
+      filter: isUser
+        ? {
+            ...(isTree && { ancestry_null: true }),
+            title_or_status_or_policy_category_name_cont: searchQuery,
+            status_eq: "release",
+          }
+        : {
+            ...(isTree && { ancestry_null: true }),
+            title_or_status_or_policy_category_name_cont: searchQuery,
+          },
       limit,
       page,
     },
@@ -110,10 +117,10 @@ export default function Policies({ history }: RouteComponentProps) {
             policies.map((policy) => (
               <PolicyTableRow
                 key={policy.id}
-                isAdmin={isAdminReviewer || isAdminPreparer}
                 policy={policy}
                 onClick={(id) => history.push(`/policy/${id}`)}
                 onDelete={handleDelete}
+                status={policy.status}
                 level={0}
               />
             ))
@@ -138,60 +145,111 @@ export default function Policies({ history }: RouteComponentProps) {
 const PolicyTableRow = ({
   policy,
   onClick,
-  isAdmin,
   onDelete,
   level = 0,
+  status,
 }: {
   policy: Omit<Policy, "createdAt" | "updatedAt" | "visit">;
   onClick: (value: any) => void;
   onDelete: (value: any) => void;
   level?: number;
-  isAdmin?: any;
+  status?: any;
 }) => {
   const childs = policy.children || [];
+  const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
+    "admin",
+    "admin_preparer",
+    "admin_reviewer",
+  ]);
+  const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
+  const isAdmins = isAdmin || isAdminPreparer || isAdminReviewer;
   return (
     <>
-      <tr key={policy.id} onClick={() => onClick(policy.id)}>
-        <td>
-          <div
-            style={level ? { marginLeft: level * 10 } : {}}
-            className="d-flex align-items-center"
-          >
-            {level > 0 && (
-              <MdSubdirectoryArrowRight color="grey" className="mr-1" />
-            )}
-            {policy.title}
-          </div>
-        </td>
-        <td>{policy.policyCategory?.name || ""}</td>
-        <td>{capitalCase(policy.status || "")}</td>
-        <td>
-          {" "}
-          <DateHover>{policy?.lastUpdatedAt}</DateHover>
-        </td>
-        <td>{policy?.lastUpdatedBy}</td>
-        {isAdmin ? (
-          <td className="action">
-            <Tooltip description="Delete Policy">
-              <DialogButton
-                message={`Are you sure to delete ${policy.title}`}
-                onConfirm={() => onDelete(policy.id)}
-                className="soft red"
-                color=""
-              >
-                <FaTrash />
-              </DialogButton>
-            </Tooltip>
+      {/* when user */}
+      {isUser && status === "release" && (
+        <tr key={policy.id} onClick={() => onClick(policy.id)}>
+          <td>
+            <div
+              style={level ? { marginLeft: level * 10 } : {}}
+              className="d-flex align-items-center"
+            >
+              {level > 0 && (
+                <MdSubdirectoryArrowRight color="grey" className="mr-1" />
+              )}
+              {policy.title}
+            </div>
           </td>
-        ) : (
-          <td></td>
-        )}
-      </tr>
+          <td>{policy.policyCategory?.name || ""}</td>
+          <td>{capitalCase(policy.status || "")}</td>
+          <td>
+            {" "}
+            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+          </td>
+          <td>{policy?.lastUpdatedBy}</td>
+          {isAdminReviewer ? (
+            <td className="action">
+              <Tooltip description="Delete Policy">
+                <DialogButton
+                  message={`Are you sure to delete ${policy.title}`}
+                  onConfirm={() => onDelete(policy.id)}
+                  className="soft red"
+                  color=""
+                >
+                  <FaTrash />
+                </DialogButton>
+              </Tooltip>
+            </td>
+          ) : (
+            <td></td>
+          )}
+        </tr>
+      )}
+      {/* when admin */}
+      {isAdmins && (
+        <tr key={policy.id} onClick={() => onClick(policy.id)}>
+          <td>
+            <div
+              style={level ? { marginLeft: level * 10 } : {}}
+              className="d-flex align-items-center"
+            >
+              {level > 0 && (
+                <MdSubdirectoryArrowRight color="grey" className="mr-1" />
+              )}
+              {policy.title}
+            </div>
+          </td>
+          <td>{policy.policyCategory?.name || ""}</td>
+          <td>{capitalCase(policy.status || "")}</td>
+          <td>
+            {" "}
+            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+          </td>
+          <td>{policy?.lastUpdatedBy}</td>
+          {isAdminReviewer ? (
+            <td className="action">
+              <Tooltip description="Delete Policy">
+                <DialogButton
+                  message={`Are you sure to delete ${policy.title}`}
+                  onConfirm={() => onDelete(policy.id)}
+                  className="soft red"
+                  color=""
+                >
+                  <FaTrash />
+                </DialogButton>
+              </Tooltip>
+            </td>
+          ) : (
+            <td></td>
+          )}
+        </tr>
+      )}
+
       {childs.length
         ? childs.map((childPol) => (
             <PolicyTableRow
               key={childPol.id}
               policy={childPol}
+              status={childPol.status}
               onClick={onClick}
               onDelete={onDelete}
               level={level + 1}

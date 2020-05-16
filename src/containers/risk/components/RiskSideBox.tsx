@@ -21,6 +21,8 @@ const RiskSideBox = () => {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+
   const [condition, setCondition] = useState(false);
 
   const [search, setSearch] = useState("");
@@ -29,7 +31,12 @@ const RiskSideBox = () => {
 
   const { data, loading } = useRisksQuery({
     fetchPolicy: "network-only",
-    variables: { filter: { name_cont: debouncedSearch }, limit },
+    variables: {
+      filter: isUser
+        ? { name_cont: debouncedSearch, draft_id_null: true }
+        : { name_cont: debouncedSearch },
+      limit,
+    },
   });
   useEffect(() => {
     data?.risks?.collection.length === limit

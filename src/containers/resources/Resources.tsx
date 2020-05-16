@@ -27,7 +27,16 @@ import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
 
 const Resources = ({ history }: RouteComponentProps) => {
-  const { data, loading } = useResourcesQuery({ fetchPolicy: "network-only" });
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+  const { data, loading } = useResourcesQuery({
+    variables: { filter: isUser ? { draft_id_null: true } : {} },
+    fetchPolicy: "network-only",
+  });
   const [destroyResource, destroyM] = useDestroyResourceMutation({
     refetchQueries: ["resources"],
     onCompleted: () => toast.success("Delete Success"),
@@ -66,11 +75,7 @@ const Resources = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
+
   return (
     <div>
       <Helmet>

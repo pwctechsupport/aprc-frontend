@@ -21,7 +21,17 @@ import { notifySuccess } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const Risks = ({ history }: RouteComponentProps) => {
-  const { loading, data } = useRisksQuery({ fetchPolicy: "network-only" });
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+
+  const { loading, data } = useRisksQuery({
+    variables: { filter: isUser ? { draft_id_null: true } : {} },
+    fetchPolicy: "network-only",
+  });
   const [selected, setSelected] = useState<string[]>([]);
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
@@ -73,11 +83,7 @@ const Risks = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
+
   return (
     <div>
       <Helmet>
