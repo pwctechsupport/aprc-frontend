@@ -26,7 +26,6 @@ const Reference = ({
   const policies = data?.reference?.policies;
   const createdBy = data?.reference?.createdBy;
   const createdAt = data?.reference?.createdAt;
-
   const updatedAt = data?.reference?.updatedAt;
   const lastUpdatedBy = data?.reference?.lastUpdatedBy;
   return (
@@ -62,7 +61,7 @@ const Reference = ({
                 {policies?.map((policy) => (
                   <li key={policy.id}>
                     <Link to={`/policy/${policy.id}`}>
-                      {previewHtml(policy.description || "")}
+                      {previewHtml(policy.title || "")}
                     </Link>
                   </li>
                 ))}
