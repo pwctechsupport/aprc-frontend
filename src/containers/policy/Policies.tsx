@@ -26,9 +26,10 @@ import Tooltip from "../../shared/components/Tooltip";
 import DateHover from "../../shared/components/DateHover";
 
 export default function Policies({ history }: RouteComponentProps) {
-  const [isAdmin, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
     "admin",
     "admin_preparer",
+    "admin_reviewer",
   ]);
   const [showDashboard, setShowDashboard] = useState(false);
   function toggleShowDashboard() {
@@ -109,7 +110,7 @@ export default function Policies({ history }: RouteComponentProps) {
             policies.map((policy) => (
               <PolicyTableRow
                 key={policy.id}
-                isAdmin={isAdminPreparer}
+                isAdmin={isAdminReviewer || isAdminPreparer}
                 policy={policy}
                 onClick={(id) => history.push(`/policy/${id}`)}
                 onDelete={handleDelete}

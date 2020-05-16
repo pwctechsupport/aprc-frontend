@@ -19,6 +19,7 @@ import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 interface ResourceBoxProps {
   id: string;
@@ -58,7 +59,11 @@ export default function ResourceBox({
       callback: () => deleteAttachmentMutation({ variables: { id } }),
     });
   }
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
   // Handle give rating
   const [createResourceRatingMutation] = useCreateResourceRatingMutation({
     onCompleted: ({ createResourceRating }) => {
@@ -144,20 +149,24 @@ export default function ResourceBox({
               rating={rating}
               totalRating={totalRating}
               onStarClick={handleStarClick}
+              withoutTooltip
             />
           </div>
-          <RevenueBoxViews>{views} Views</RevenueBoxViews>
-          <Tooltip description="Delete resource attachment">
-            <Button
-              onClick={handleErase}
-              loading={deleteAttachmentMutationInfo.loading}
-              disabled={!imagePreviewUrl}
-              className="cancel"
-              color="primary"
-            >
-              <SmallText>&nbsp;Remove File</SmallText>
-            </Button>
-          </Tooltip>
+          <RevenueBoxViews>Downloaded {views} times </RevenueBoxViews>
+          {isAdmin || isAdminReviewer || isAdminPreparer ? (
+            <Tooltip description="Delete resource attachment">
+              <Button
+                onClick={handleErase}
+                loading={deleteAttachmentMutationInfo.loading}
+                disabled={!imagePreviewUrl}
+                className="cancel"
+                color="primary"
+              >
+                <SmallText>&nbsp;Remove File</SmallText>
+              </Button>
+            </Tooltip>
+          ) : null}
+
           <Tooltip description="Download resource attachment">
             <Button
               onClick={handleDownload}

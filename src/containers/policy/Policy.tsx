@@ -721,7 +721,14 @@ export default function Policy({
         ];
     let theMenu = [...basicMenu];
     if (isSmallDevice) {
-      theMenu = [...mainMenu, ...basicMenu];
+      let noCreateMenu = [...mainMenu];
+      noCreateMenu[0] = { label: "create" };
+      const noCreateButton = noCreateMenu.filter((a) => a.label !== "create");
+      theMenu = isAdminReviewer
+        ? [...noCreateButton, ...basicMenu]
+        : !(isAdminReviewer || isAdmin || isAdminPreparer)
+        ? basicMenu
+        : [...mainMenu, ...basicMenu];
     }
     return (
       <div className="d-flex align-items-center">
@@ -770,7 +777,7 @@ export default function Policy({
             </Tooltip>
           )}
 
-          {(isAdmin || isAdminPreparer || isAdminReviewer) && (
+          {isAdminReviewer && (
             <Tooltip description="Delete Policy">
               <Button
                 onClick={handleDeleteMain}

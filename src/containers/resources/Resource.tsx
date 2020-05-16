@@ -36,7 +36,6 @@ import {
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
 import { APP_ROOT_URL } from "../../settings";
-import DisplayStatus from "../../shared/components/DisplayStatus";
 import { useSelector } from "../../shared/hooks/useSelector";
 
 type TParams = { id: string };
@@ -80,7 +79,6 @@ export default function Resource({
   const requestStatus = data?.resource?.requestStatus;
   const requestEditState = data?.resource?.requestEdit?.state;
   const base64File = data?.resource?.base64File;
-  const status = data?.resource?.status;
   const premise = useEditState({
     draft,
     hasEditAccess,
@@ -247,9 +245,6 @@ export default function Resource({
           <Col xs={12} lg={6}>
             <div className="mt-5 mt-lg-0">
               <h5>
-                Status: <DisplayStatus>{status}</DisplayStatus>
-              </h5>
-              <h5 className="mt-5">
                 Category:&nbsp;
                 <span className="text-orange">{category}</span>
               </h5>

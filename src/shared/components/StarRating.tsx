@@ -7,29 +7,32 @@ interface StarRatingProps {
   rating?: number | null | undefined;
   totalRating?: number | null | undefined;
   onStarClick?: (value: number) => void;
+  withoutTooltip?: boolean;
 }
 
 export default function StarRating({
   id,
   rating,
   totalRating,
-  onStarClick
+  onStarClick,
+  withoutTooltip,
 }: StarRatingProps) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
   const toggle = () => setTooltipOpen(!tooltipOpen);
   const tooltipId = "resourceBarTooltip" + id;
   return (
     <div>
-      <Tooltip
-        placement="top"
-        isOpen={tooltipOpen}
-        target={tooltipId}
-        toggle={toggle}
-      >
-        Avg. Rating: {rating} <br />
-        From {totalRating} user(s)
-      </Tooltip>
-
+      {!withoutTooltip && (
+        <Tooltip
+          placement="top"
+          isOpen={tooltipOpen}
+          target={tooltipId}
+          toggle={toggle}
+        >
+          Avg. Rating: {rating} <br />
+          From {totalRating} user(s)
+        </Tooltip>
+      )}
       <div id={tooltipId}>
         <StarRatingContainer>
           <FillRating rating={rating}>
@@ -81,7 +84,7 @@ const FillRating = styled.div<{ rating: number | null | undefined }>`
   top: 0;
   left: 0;
   overflow: hidden;
-  width: ${p => `${(Number(p.rating) / 5) * 100}%`};
+  width: ${(p) => `${(Number(p.rating) / 5) * 100}%`};
 `;
 const EmptyRating = styled.div`
   padding: 0;
@@ -89,8 +92,8 @@ const EmptyRating = styled.div`
   z-index: 0;
 `;
 const Span = styled.span<{ pointer: boolean }>`
-  cursor: ${p => (p.pointer ? "pointer" : "default")};
+  cursor: ${(p) => (p.pointer ? "pointer" : "default")};
 `;
 const EmptySpan = styled.span<{ pointer: boolean }>`
-  cursor: ${p => (p.pointer ? "pointer" : "default")};
+  cursor: ${(p) => (p.pointer ? "pointer" : "default")};
 `;
