@@ -273,7 +273,9 @@ const PolicyBranch = ({
     "admin_reviewer",
     "admin_preparer",
   ]);
-  console.log("originalData", originalData);
+  const childrenHasChild = originalData?.children
+    ?.map((a: any) => a.status)
+    .includes("release");
   return (
     <div>
       <Fragment>
@@ -285,18 +287,9 @@ const PolicyBranch = ({
                 active: isActive,
               })}
               padLeft={level ? level * 10 : 0}
-              isLastChild={
-                (!hasChild ||
-                  originalData?.children
-                    ?.map((a: any) => a.status)
-                    .includes("release")) &&
-                parentId
-              }
+              isLastChild={(!hasChild || !childrenHasChild) && parentId}
             >
-              {hasChild &&
-              originalData?.children
-                ?.map((a: any) => a.status)
-                .includes("release") ? (
+              {hasChild && childrenHasChild ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
