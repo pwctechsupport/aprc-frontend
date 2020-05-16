@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaPlus, FaUndo } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { FaUndo } from "react-icons/fa";
 import { oc } from "ts-optchain";
 import { useControlsQuery } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
@@ -57,18 +56,6 @@ const ControlSideBox = () => {
           {isAdmin || isAdminPreparer || isAdminReviewer
             ? "Control Admin"
             : "Control"}
-          {isAdmin || isAdminPreparer ? (
-            <Tooltip description="Create Control">
-              <Button
-                tag={Link}
-                to="/control/create"
-                color=""
-                className="soft red"
-              >
-                <FaPlus />
-              </Button>
-            </Tooltip>
-          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch

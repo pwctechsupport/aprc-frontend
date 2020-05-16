@@ -6,8 +6,9 @@ import {
   FaFileExport,
   FaFileImport,
   FaTrash,
+  FaPlus,
 } from "react-icons/fa";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -114,6 +115,11 @@ const Resources = ({ history }: RouteComponentProps) => {
               toggle={toggleImportModal}
             />
           </div>
+        ) : null}
+        {isAdmin || isAdminPreparer ? (
+          <Button tag={Link} to="/resources/create" className="pwc">
+            <FaPlus /> Add Resource
+          </Button>
         ) : null}
       </div>
 

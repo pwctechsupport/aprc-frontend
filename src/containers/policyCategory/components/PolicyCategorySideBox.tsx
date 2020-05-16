@@ -9,11 +9,10 @@ import {
   SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import Button from "../../../shared/components/Button";
-import { FaPlus, FaUndo } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import Tooltip from "../../../shared/components/Tooltip";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
+import { FaUndo } from "react-icons/fa";
 
 const PolicyCategorySideBox = () => {
   const [limit, setLimit] = useState(25);
@@ -55,7 +54,7 @@ const PolicyCategorySideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policy Category Admin"
             : "Policy Category"}
-          {isAdminPreparer || isAdmin ? (
+          {/* {isAdminPreparer || isAdmin ? (
             <Tooltip description="Create Policy Category">
               <Button
                 tag={Link}
@@ -66,7 +65,7 @@ const PolicyCategorySideBox = () => {
                 <FaPlus />
               </Button>
             </Tooltip>
-          ) : null}
+          ) : null} */}
         </div>
       </SideBoxTitle>
       <SideBoxSearch search={search} setSearch={setSearch} loading={loading} />

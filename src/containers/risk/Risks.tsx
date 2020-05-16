@@ -1,8 +1,8 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
-import { RouteComponentProps } from "react-router-dom";
+import { FaFileExport, FaFileImport, FaTrash, FaPlus } from "react-icons/fa";
+import { RouteComponentProps, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -119,6 +119,11 @@ const Risks = ({ history }: RouteComponentProps) => {
               toggle={toggleImportModal}
             />
           </div>
+        ) : null}
+        {isAdmin || isAdminPreparer ? (
+          <Button tag={Link} to="/risk/create" className="pwc">
+            <FaPlus /> Add Risk
+          </Button>
         ) : null}
       </div>
       <Table reloading={loading}>

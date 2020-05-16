@@ -5,12 +5,12 @@ import {
   useDestroyPolicyCategoriesMutation,
 } from "../../../generated/graphql";
 import Table from "../../../shared/components/Table";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 import { oc } from "ts-optchain";
 import BreadCrumb from "../../../shared/components/BreadCrumb";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport, FaTrash, FaPlus } from "react-icons/fa";
 import ImportModal from "../../../shared/components/ImportModal";
 import {
   notifySuccess,
@@ -122,6 +122,11 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                 toggle={toggleImportModal}
               />
             </div>
+          ) : null}
+          {isAdminPreparer ? (
+            <Button tag={Link} to="/policy-category/create" className="pwc">
+              <FaPlus /> Add Policy Category
+            </Button>
           ) : null}
         </div>
       </div>

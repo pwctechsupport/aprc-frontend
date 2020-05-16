@@ -12,8 +12,7 @@ import {
 import humanizeDate from "../../../shared/utils/humanizeDate";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
-import { Link } from "react-router-dom";
-import { FaPlus, FaUndo } from "react-icons/fa";
+import { FaUndo } from "react-icons/fa";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
@@ -55,18 +54,6 @@ const ResourceSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Resources Admin"
             : "Resources"}
-          {isAdmin || isAdminPreparer ? (
-            <Tooltip description="Create Resource">
-              <Button
-                tag={Link}
-                to="/resources/create"
-                className="soft red"
-                color=""
-              >
-                <FaPlus />
-              </Button>
-            </Tooltip>
-          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch

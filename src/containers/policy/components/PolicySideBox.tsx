@@ -1,6 +1,6 @@
 import classnames from "classnames";
 import React, { useState, Fragment, useEffect } from "react";
-import { FaPlus, FaUndo } from "react-icons/fa";
+import { FaUndo } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
@@ -132,18 +132,6 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policies Admin"
             : "Policies"}
-          {(isAdmin || isAdminPreparer) && (
-            <Tooltip description="Create Policy">
-              <Button
-                tag={Link}
-                to={isAdmin ? "/policy-admin/create" : "/policy/create"}
-                className="soft red"
-                color=""
-              >
-                <FaPlus />
-              </Button>
-            </Tooltip>
-          )}
         </div>
       </SideBoxTitle>
       <SideBoxSearch

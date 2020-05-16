@@ -11,8 +11,7 @@ import humanizeDate from "../../../shared/utils/humanizeDate";
 import { useDebounce } from "use-debounce/lib";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
-import { Link } from "react-router-dom";
-import { FaPlus, FaUndo } from "react-icons/fa";
+import { FaUndo } from "react-icons/fa";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
@@ -57,18 +56,6 @@ const RiskSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Risk Admin"
             : "Risk"}
-          {isAdmin || isAdminPreparer ? (
-            <Tooltip description="Create Risk">
-              <Button
-                tag={Link}
-                to="/risk/create"
-                color=""
-                className="soft red"
-              >
-                <FaPlus />
-              </Button>
-            </Tooltip>
-          ) : null}
         </div>
       </SideBoxTitle>
       <SideBoxSearch

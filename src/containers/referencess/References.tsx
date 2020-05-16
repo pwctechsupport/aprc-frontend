@@ -7,6 +7,7 @@ import {
   FaPencilAlt,
   FaTimes,
   FaTrash,
+  FaPlus,
 } from "react-icons/fa";
 import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -33,7 +34,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const References = ({ history }: RouteComponentProps) => {
@@ -78,98 +79,106 @@ const References = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
   return (
     <div>
-      <BreadCrumb crumbs={[["/references", "References"]]} />
       <Helmet>
         <title>References - PricewaterhouseCoopers</title>
       </Helmet>
-      <div className="flex-grow-1">
+      <div className="w-100">
+        <BreadCrumb crumbs={[["/references", "References"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h4>References</h4>
+
+          {isAdminReviewer ? (
+            <div className="mb-3 d-flex justify-content-end">
+              <Tooltip
+                description="Export Policy Reference"
+                subtitle={
+                  selected.length
+                    ? "Export selected Policy References"
+                    : "Select References first"
+                }
+              >
+                <Button
+                  color=""
+                  className="soft red mr-2"
+                  onClick={handleExport}
+                  disabled={!selected.length}
+                >
+                  <FaFileExport />
+                </Button>
+              </Tooltip>
+              <Tooltip description="Import Policy Reference">
+                <Button
+                  color=""
+                  className="soft orange mr-2"
+                  onClick={toggleImportModal}
+                >
+                  <FaFileImport />
+                </Button>
+              </Tooltip>
+              <ImportModal
+                title="Import Policy Reference"
+                endpoint="/references/import"
+                isOpen={modal}
+                toggle={toggleImportModal}
+              />
+            </div>
+          ) : null}
+          {(isAdmin || isAdminPreparer) && (
+            <Button tag={Link} to="/references/create" className="pwc">
+              <FaPlus /> Add Reference
+            </Button>
+          )}
         </div>
-
-        {isAdminReviewer ? (
-          <div className="mb-3 d-flex justify-content-end">
-            <Tooltip
-              description="Export Policy Reference"
-              subtitle={
-                selected.length
-                  ? "Export selected Policy References"
-                  : "Select References first"
-              }
-            >
-              <Button
-                color=""
-                className="soft red mr-2"
-                onClick={handleExport}
-                disabled={!selected.length}
-              >
-                <FaFileExport />
-              </Button>
-            </Tooltip>
-            <Tooltip description="Import Policy Reference">
-              <Button
-                color=""
-                className="soft orange mr-2"
-                onClick={toggleImportModal}
-              >
-                <FaFileImport />
-              </Button>
-            </Tooltip>
-            <ImportModal
-              title="Import Policy Reference"
-              endpoint="/references/import"
-              isOpen={modal}
-              toggle={toggleImportModal}
-            />
-          </div>
-        ) : null}
-
-        <Table reloading={loading}>
-          <thead>
-            <tr>
-              {isAdminReviewer ? (
-                <th style={{ width: "5%" }}>
-                  <input
-                    type="checkbox"
-                    checked={selected.length === references.length}
-                    onChange={toggleCheckAll}
-                  />
-                </th>
-              ) : null}
-
-              <th style={{ width: "5%" }}>ID</th>
-              <th style={{ width: "5%" }}>Name</th>
-              <th style={{ width: "30%" }}>Policy</th>
-              <th style={{ width: "10%" }}>Last Updated</th>
-              <th style={{ width: "10%" }}>Last Updated By</th>
-              <th style={{ width: "10%" }}>Created At</th>
-              <th style={{ width: "10%" }}>Created By</th>
-
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {references.map((reference) => {
-              return (
-                <ReferenceRow
-                  toggleCheck={() => toggleCheck(reference.id)}
-                  selected={selected.includes(reference.id)}
-                  key={reference.id}
-                  reference={reference}
-                  onDelete={() =>
-                    destroyReference({ variables: { id: reference.id } })
-                  }
-                  deleteLoading={destroyM.loading}
-                  onClick={(id: any) => history.push(`/references/${id}`)}
-                />
-              );
-            })}
-          </tbody>
-        </Table>
       </div>
+      <Table reloading={loading}>
+        <thead>
+          <tr>
+            {isAdminReviewer ? (
+              <th style={{ width: "5%" }}>
+                <input
+                  type="checkbox"
+                  checked={selected.length === references.length}
+                  onChange={toggleCheckAll}
+                />
+              </th>
+            ) : null}
+
+            <th style={{ width: "5%" }}>ID</th>
+            <th style={{ width: "5%" }}>Name</th>
+            <th style={{ width: "30%" }}>Policy</th>
+            <th style={{ width: "10%" }}>Last Updated</th>
+            <th style={{ width: "10%" }}>Last Updated By</th>
+            <th style={{ width: "10%" }}>Created At</th>
+            <th style={{ width: "10%" }}>Created By</th>
+
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {references.map((reference) => {
+            return (
+              <ReferenceRow
+                toggleCheck={() => toggleCheck(reference.id)}
+                selected={selected.includes(reference.id)}
+                key={reference.id}
+                reference={reference}
+                onDelete={() =>
+                  destroyReference({ variables: { id: reference.id } })
+                }
+                deleteLoading={destroyM.loading}
+                onClick={(id: any) => history.push(`/references/${id}`)}
+              />
+            );
+          })}
+        </tbody>
+      </Table>
     </div>
   );
 };

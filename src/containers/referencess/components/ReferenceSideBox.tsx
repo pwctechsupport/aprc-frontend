@@ -12,8 +12,7 @@ import humanizeDate from "../../../shared/utils/humanizeDate";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
-import { Link } from "react-router-dom";
-import { FaPlus, FaUndo } from "react-icons/fa";
+import { FaUndo } from "react-icons/fa";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const ReferenceSideBox = () => {
@@ -56,18 +55,6 @@ const ReferenceSideBox = () => {
           {isAdmin || isAdminReviewer || isAdminPreparer
             ? "Policy Reference Admin"
             : "Policy Reference"}
-          {(isAdmin || isAdminPreparer) && (
-            <Tooltip description="Create Policy">
-              <Button
-                tag={Link}
-                to="/references/create"
-                className="soft red"
-                color=""
-              >
-                <FaPlus />
-              </Button>
-            </Tooltip>
-          )}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
