@@ -1,5 +1,5 @@
 import startCase from "lodash/startCase";
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 // import { FaPencilAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import {
@@ -16,6 +16,7 @@ import {
 import EmptyAttribute from "./EmptyAttribute";
 import Table from "./Table";
 import { oc } from "ts-optchain";
+import useAccessRights from "../hooks/useAccessRights";
 
 interface ControlsTableProps {
   // controls: Control[];
@@ -28,6 +29,11 @@ export default function ControlsTable({
   // editControl,
   data,
 }: ControlsTableProps) {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
   const controlsWithoutChildren = oc(data).policy.controls([]);
   const controlFirstChild =
     data?.policy?.children?.map((a: any) => a.controls) || [];
@@ -62,7 +68,7 @@ export default function ControlsTable({
     }
     return a;
   };
-  const newDataControls = [
+  const newData = [
     ...controlsWithoutChildren.flat(10),
     ...controlFirstChild.flat(10),
     ...controlSecondChild.flat(10),
@@ -70,7 +76,15 @@ export default function ControlsTable({
     ...controlFourthChild.flat(10),
     ...controlFifthChild.flat(10),
   ];
-
+  const [newDataControls, setNewDataControls] = useState(newData);
+  useEffect(() => {
+    if (
+      !(isAdmin || isAdminReviewer || isAdminPreparer) &&
+      newData === newDataControls
+    ) {
+      setNewDataControls(newData.filter((a) => a.status === "release"));
+    }
+  }, [isAdmin, isAdminReviewer, isAdminPreparer, newData, newDataControls]);
   const assertionAndIpoModifier = (data: any) => {
     let finalData: any = data;
     const existence_and_occurence = finalData.findIndex(

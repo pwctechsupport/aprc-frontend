@@ -319,6 +319,9 @@ fragment policyFragment on Policy {
     visit
     resuploadUrl
     status
+    draft {
+      id
+    }
   }
   risks {
     id

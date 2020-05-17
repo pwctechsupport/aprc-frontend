@@ -1,5 +1,5 @@
 import startCase from "lodash/startCase";
-import React from "react";
+import React, { useState, useEffect } from "react";
 // import { FaPencilAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Badge } from "reactstrap";
@@ -16,6 +16,7 @@ import getRiskColor from "../utils/getRiskColor";
 // import ControlsTable from "./ControlsTable";
 import EmptyAttribute from "./EmptyAttribute";
 import { oc } from "ts-optchain";
+import useAccessRights from "../hooks/useAccessRights";
 
 interface RisksListProps {
   // risks: Risk[];
@@ -32,6 +33,11 @@ export default function RisksList({
   data,
 }: // withRelatedControls,
 RisksListProps) {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
   const risksWithoutChildren = oc(data).policy.risks([]);
   const riskFirstChild = data?.policy?.children?.map((a) => a.risks) || [];
   const riskSecondChild =
@@ -65,7 +71,7 @@ RisksListProps) {
 
     return a;
   };
-  const newDataControls = [
+  const newData = [
     ...risksWithoutChildren.flat(10),
     ...riskFirstChild.flat(10),
     ...riskSecondChild.flat(10),
@@ -73,9 +79,19 @@ RisksListProps) {
     ...riskFourthChild.flat(10),
     ...riskFifthChild.flat(10),
   ];
-  return dataModifier(newDataControls).length ? (
+  const [newDataRisks, setNewDataRisks] = useState(newData);
+
+  useEffect(() => {
+    if (
+      !(isAdmin || isAdminReviewer || isAdminPreparer) &&
+      newData === newDataRisks
+    ) {
+      setNewDataRisks(newData.filter((a) => a.status === "release"));
+    }
+  }, [isAdmin, isAdminReviewer, isAdminPreparer, newData, newDataRisks]);
+  return dataModifier(newDataRisks).length ? (
     <ul>
-      {dataModifier(newDataControls).map((risk: any) => (
+      {dataModifier(newDataRisks).map((risk: any) => (
         <li key={risk.id}>
           <div className="mb-3 d-flex justify-content-between">
             <h6>

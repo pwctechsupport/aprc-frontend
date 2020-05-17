@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDebounce } from "use-debounce/lib";
 import {
@@ -6,7 +6,6 @@ import {
   RemoveRelationInput,
   useRemoveRelationMutation,
   useCreateResourceMutation,
-  useResourcesQuery,
   PolicyQuery,
 } from "../../generated/graphql";
 import Button from "./Button";
@@ -37,15 +36,17 @@ export default function ResourcesTab({
   policy?: boolean;
   policyData?: PolicyQuery;
 }) {
-  const [isAdmin, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
+    "admin_reviewer",
     "admin_preparer",
   ]);
+
   // Pagination state handlers
-  const { limit, page, handlePageChange } = useListState({
+  const { limit, handlePageChange } = useListState({
     limit: 10,
-    page: 1,
   });
+
   const resourcesWithoutChildren = oc(policyData).policy.resources([]);
   const resourceFirstChild =
     policyData?.policy?.children?.map((a) => a.resources) || [];
@@ -71,7 +72,7 @@ export default function ResourcesTab({
         )
       )
     ) || [];
-  const newDataResources = [
+  const newData = [
     ...resourcesWithoutChildren.flat(10),
     ...resourceFirstChild.flat(10),
     ...resourceSecondChild.flat(10),
@@ -79,6 +80,17 @@ export default function ResourcesTab({
     ...resourceFourthChild.flat(10),
     ...resourceFifthChild.flat(10),
   ];
+  const [newDataResources, setNewDataResources] = useState(newData);
+
+  useEffect(() => {
+    if (
+      !(isAdmin || isAdminReviewer || isAdminPreparer) &&
+      newData === newDataResources
+    ) {
+      setNewDataResources(newData.filter((a: any) => a.draft !== null));
+    }
+  }, [isAdmin, isAdminReviewer, isAdminPreparer, newData, newDataResources]);
+
   const dataModifier = (a: any) => {
     for (let i = 0; i < a.length; ++i) {
       for (let j = i + 1; j < a.length; ++j) {
@@ -90,21 +102,11 @@ export default function ResourcesTab({
 
   // Query Resources for current policy
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 500);
-  const { data, loading } = useResourcesQuery({
-    fetchPolicy: "network-only",
-    variables: {
-      filter: {
-        name_cont: debouncedSearch,
-        // policies_id_in: policyId,
-        ...queryFilters,
-      },
-      limit,
-      page,
-    },
-  });
-  const resources = data?.resources?.collection || [];
-  const totalCount = data?.resources?.metadata?.totalCount || 0;
+  // if(search!==''){
+  //   setNewDataResources(newData.filter((a) => a.status === "release").includes(a=>a.status))
+  // }
+  const [searchQuery] = useDebounce(search, 700);
+
   const policyId = queryFilters.policies_id_in;
 
   // Modal state handlers
@@ -119,7 +121,7 @@ export default function ResourcesTab({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resources"],
+    refetchQueries: ["resources", "policy"],
   });
 
   function handleCreateResource(values: ResourceFormValues) {
@@ -144,7 +146,7 @@ export default function ResourcesTab({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resources"],
+    refetchQueries: ["resources", "policy"],
   });
   function handleDeleteResource(resourceId: string) {
     const input: RemoveRelationInput = policy
@@ -163,13 +165,15 @@ export default function ResourcesTab({
       },
     });
   }
+  const searchData = dataModifier(newDataResources).filter((a: any) =>
+    a.name.toLowerCase().includes(searchQuery)
+  );
   return (
     <div className="mt-3">
       <div className="w-40 d-flex justify-content-end align-items-center my-2">
         <SearchInput
           search={search}
           setSearch={setSearch}
-          loading={loading}
           placeholder="Search Resources..."
         />
         {isDraft === null && (isAdmin || isAdminPreparer) && (
@@ -184,7 +188,8 @@ export default function ResourcesTab({
           </Tooltip>
         )}
       </div>
-      {dataModifier(newDataResources).length ? (
+      {/* Normal state */}
+      {search !== "" ? null : dataModifier(newDataResources).length ? (
         dataModifier(newDataResources).map((resource: any) => (
           <ResourceBar
             rating={resource.rating}
@@ -196,11 +201,12 @@ export default function ResourcesTab({
             {...resource}
           />
         ))
-      ) : resources.length ? null : (
+      ) : (
         <EmptyAttribute centered>No Resource</EmptyAttribute>
       )}
-      {dataModifier(newDataResources).length ? null : resources.length ? (
-        resources.map((resource: any) => (
+      {/* Search State */}
+      {search === "" ? null : searchData.length ? (
+        searchData.map((resource: any) => (
           <ResourceBar
             rating={resource.rating}
             deleteResource={handleDeleteResource}
@@ -215,11 +221,7 @@ export default function ResourcesTab({
         <EmptyAttribute centered>No Resource</EmptyAttribute>
       )}
       <Pagination
-        totalCount={
-          dataModifier(newDataResources).length
-            ? dataModifier(newDataResources).length
-            : totalCount
-        }
+        totalCount={dataModifier(newDataResources).length || 0}
         perPage={limit}
         onPageChange={handlePageChange}
       />

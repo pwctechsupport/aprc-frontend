@@ -59,11 +59,7 @@ export default function ResourceBox({
       callback: () => deleteAttachmentMutation({ variables: { id } }),
     });
   }
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
+  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
   // Handle give rating
   const [createResourceRatingMutation] = useCreateResourceRatingMutation({
     onCompleted: ({ createResourceRating }) => {
