@@ -7,19 +7,18 @@ import PlaceholderDocx from "../../../assets/images/placeholder-docx.png";
 
 import {
   useCreateResourceRatingMutation,
-  useDestroyResourceAttachmentMutation,
+  // useDestroyResourceAttachmentMutation,
   useUpdateResourceVisitMutation,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import StarRating from "../../../shared/components/StarRating";
 import Tooltip from "../../../shared/components/Tooltip";
-import useDialogBox from "../../../shared/hooks/useDialogBox";
+// import useDialogBox from "../../../shared/hooks/useDialogBox";
 import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
-import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 interface ResourceBoxProps {
   id: string;
@@ -42,24 +41,23 @@ export default function ResourceBox({
   imagePreviewUrl,
   resourceFileType,
 }: ResourceBoxProps) {
-  const dialogBox = useDialogBox();
-  // Hanlde delete attachment
-  const [
-    deleteAttachmentMutation,
-    deleteAttachmentMutationInfo,
-  ] = useDestroyResourceAttachmentMutation({
-    onCompleted: () => notifySuccess("Attachment Removed"),
-    onError: notifyGraphQLErrors,
-    refetchQueries: ["resource"],
-    awaitRefetchQueries: true,
-  });
-  function handleErase() {
-    dialogBox({
-      text: `Delete attached file in "${name}"?`,
-      callback: () => deleteAttachmentMutation({ variables: { id } }),
-    });
-  }
-  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
+  // const dialogBox = useDialogBox();
+  // // Hanlde delete attachment
+  // const [
+  //   deleteAttachmentMutation,
+  //   deleteAttachmentMutationInfo,
+  // ] = useDestroyResourceAttachmentMutation({
+  //   onCompleted: () => notifySuccess("Attachment Removed"),
+  //   onError: notifyGraphQLErrors,
+  //   refetchQueries: ["resource"],
+  //   awaitRefetchQueries: true,
+  // });
+  // function handleErase() {
+  //   dialogBox({
+  //     text: `Delete attached file in "${name}"?`,
+  //     callback: () => deleteAttachmentMutation({ variables: { id } }),
+  //   });
+  // }
   // Handle give rating
   const [createResourceRatingMutation] = useCreateResourceRatingMutation({
     onCompleted: ({ createResourceRating }) => {
@@ -149,7 +147,7 @@ export default function ResourceBox({
             />
           </div>
           <RevenueBoxViews>Downloaded {views} times </RevenueBoxViews>
-          {isAdminReviewer ? (
+          {/* {isAdminReviewer ? (
             <Tooltip description="Delete resource attachment">
               <Button
                 onClick={handleErase}
@@ -161,7 +159,7 @@ export default function ResourceBox({
                 <SmallText>&nbsp;Remove File</SmallText>
               </Button>
             </Tooltip>
-          ) : null}
+          ) : null} */}
 
           <Tooltip description="Download resource attachment">
             <Button
