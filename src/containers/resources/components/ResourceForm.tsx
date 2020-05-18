@@ -246,6 +246,12 @@ ResourceFormProps) {
             ) ? (
               <div>{defaultValues.name}.docx</div>
             ) : null}
+            {watchresuploadBase64 === base64File &&
+            defaultValues?.resuploadBase64.includes(
+              "data:application/msword"
+            ) ? (
+              <div>{defaultValues.name}.doc</div>
+            ) : null}
           </Fragment>
         ) : (
           <FileInput

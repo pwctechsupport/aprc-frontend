@@ -20,6 +20,7 @@ const defaultSupportedFileTypes = [
   "image/png",
   "application/pdf",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/msword",
 ];
 const flowchartSupportedFileTypes = ["image/jpeg", "image/png"];
 export default function FileInput({
@@ -57,25 +58,9 @@ export default function FileInput({
           onFileSelect?.(reader.result as string);
         };
         reader.readAsDataURL(e.target.files[0]);
-
         setError(null);
         setValue(name, String(await toBase64(e.target.files[0])), true);
-      }
-      if (e.target.files[0].name.includes(".doc")) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          setPreview(reader.result as string);
-          onFileSelect?.(reader.result as string);
-        };
-        reader.readAsDataURL(e.target.files[0]);
-
-        setError(null);
-        setValue(name, String(await toBase64(e.target.files[0])), true);
-      }
-      if (
-        !e.target.files[0].name.includes(".doc") &&
-        !supportedFileTypes.includes(e.target.files[0].type)
-      ) {
+      } else {
         setError(fileTypeErrorMsg);
       }
     }
