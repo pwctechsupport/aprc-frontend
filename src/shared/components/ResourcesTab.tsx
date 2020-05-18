@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useDebounce } from "use-debounce/lib";
 import {
@@ -22,7 +22,6 @@ import ResourceForm, {
   ResourceFormValues,
 } from "../../containers/resources/components/ResourceForm";
 import useAccessRights from "../hooks/useAccessRights";
-import { oc } from "ts-optchain";
 
 export default function ResourcesTab({
   queryFilters,
@@ -42,87 +41,86 @@ export default function ResourcesTab({
     "admin_reviewer",
     "admin_preparer",
   ]);
+
   const isUser = !isAdmin && !isAdminReviewer && !isAdminPreparer;
+
   // Pagination state handlers
-  const { limit, handlePageChange } = useListState({
+  const { limit, handlePageChange, page } = useListState({
     limit: 10,
   });
 
-  const resourcesWithoutChildren = oc(policyData).policy.resources([]);
-  const resourceFirstChild =
-    policyData?.policy?.children?.map((a) => a.resources) || [];
-  const resourceSecondChild =
+  const policyIdsWithoutChildren = policyData?.policy?.id;
+  const policyIdFirstChild =
+    policyData?.policy?.children?.map((a) => a.id) || [];
+  const policyIdSecondChild =
     policyData?.policy?.children?.map((a: any) =>
-      a.children.map((b: any) => b.resources)
+      a.children.map((b: any) => b.id)
     ) || [];
-  const resourceThirdChild =
+  const policyIdThirdChild =
     policyData?.policy?.children?.map((a: any) =>
-      a.children?.map((b: any) => b.children.map((c: any) => c.resources))
+      a.children?.map((b: any) => b.children.map((c: any) => c.id))
     ) || [];
-  const resourceFourthChild =
+  const policyIdFourthChild =
     policyData?.policy?.children?.map((a: any) =>
       a.children?.map((b: any) =>
-        b.children?.map((c: any) => c.children.map((d: any) => d.resources))
+        b.children?.map((c: any) => c.children.map((d: any) => d.id))
       )
     ) || [];
-  const resourceFifthChild =
+  const policyIdFifthChild =
     policyData?.policy?.children?.map((a: any) =>
       a.children?.map((b: any) =>
         b.children?.map((c: any) =>
-          c.children.map((d: any) => d.children.map((e: any) => e.resources))
+          c.children.map((d: any) => d.children.map((e: any) => e.id))
         )
       )
     ) || [];
-  const newData = [
-    ...resourcesWithoutChildren.flat(10),
-    ...resourceFirstChild.flat(10),
-    ...resourceSecondChild.flat(10),
-    ...resourceThirdChild.flat(10),
-    ...resourceFourthChild.flat(10),
-    ...resourceFifthChild.flat(10),
+  console.log("policyIdFirstChild", policyIdFirstChild);
+  const policyIds = [
+    policyIdsWithoutChildren,
+    ...policyIdFirstChild.flat(10),
+    ...policyIdSecondChild.flat(10),
+    ...policyIdThirdChild.flat(10),
+    ...policyIdFourthChild.flat(10),
+    ...policyIdFifthChild.flat(10),
   ];
-  const [newDataResources, setNewDataResources] = useState(newData);
-
-  useEffect(() => {
-    if (
-      !(isAdmin || isAdminReviewer || isAdminPreparer) &&
-      newData === newDataResources
-    ) {
-      setNewDataResources(newData.filter((a: any) => a.draft !== null));
-    }
-  }, [isAdmin, isAdminReviewer, isAdminPreparer, newData, newDataResources]);
-
-  const dataModifier = (a: any) => {
-    for (let i = 0; i < a.length; ++i) {
-      for (let j = i + 1; j < a.length; ++j) {
-        if (a[i] === a[j]) a.splice(j--, 1);
-      }
-    }
-    return a;
-  };
 
   const [search, setSearch] = useState("");
 
   const [searchQuery] = useDebounce(search, 700);
+
   // Query for RISK AND CONTROL
+
   const { data, loading } = useResourcesQuery({
     fetchPolicy: "network-only",
-    skip: policy,
     variables: {
       filter: isUser
+        ? policy
+          ? {
+              policies_id_matches_any: policyIds,
+              draft_id_null: true,
+              name_cont: searchQuery,
+            }
+          : {
+              business_process_id_eq:
+                formDefaultValues.businessProcessId?.value,
+              name_cont: searchQuery,
+              draft_id_null: true,
+            }
+        : policy
         ? {
-            business_process_id_eq: formDefaultValues.businessProcessId?.value,
+            policies_id_matches_any: policyIds,
             name_cont: searchQuery,
-            draft_id_null: true,
           }
         : {
             business_process_id_eq: formDefaultValues.businessProcessId?.value,
             name_cont: searchQuery,
           },
+      limit,
+      page,
     },
   });
   const resources = data?.resources?.collection || [];
-
+  const totalCount = data?.resources?.metadata.totalCount || 0;
   const policyId = queryFilters.policies_id_in;
   // Modal state handlers
   const [addResourceModal, setAddResourceModal] = useState(false);
@@ -133,13 +131,10 @@ export default function ResourcesTab({
     onCompleted: () => {
       notifySuccess("Resource Added");
       toggleAddResourceModal();
-      if (policy) {
-        window.location.reload();
-      }
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resources", "policy"],
+    refetchQueries: ["resources"],
   });
 
   function handleCreateResource(values: ResourceFormValues) {
@@ -183,9 +178,7 @@ export default function ResourcesTab({
       },
     });
   }
-  const searchData = dataModifier(newDataResources).filter((a: any) =>
-    a.name.toLowerCase().includes(searchQuery)
-  );
+
   return (
     <div className="mt-3">
       <div className="w-40 d-flex justify-content-end align-items-center my-2">
@@ -208,44 +201,7 @@ export default function ResourcesTab({
         )}
       </div>
 
-      {/* POLICY */}
-
-      {/* Normal state */}
-      {policy && search !== "" ? null : dataModifier(newDataResources)
-          .length ? (
-        dataModifier(newDataResources).map((resource: any) => (
-          <ResourceBar
-            rating={resource.rating}
-            deleteResource={handleDeleteResource}
-            totalRating={resource.totalRating}
-            visit={resource.visit}
-            key={resource.id}
-            resourceId={resource.id}
-            {...resource}
-          />
-        ))
-      ) : policy ? (
-        <EmptyAttribute centered>No Resource</EmptyAttribute>
-      ) : null}
-      {/* Search State */}
-      {policy && search === "" ? null : searchData.length ? (
-        searchData.map((resource: any) => (
-          <ResourceBar
-            rating={resource.rating}
-            deleteResource={handleDeleteResource}
-            totalRating={resource.totalRating}
-            visit={resource.visit}
-            key={resource.id}
-            resourceId={resource.id}
-            {...resource}
-          />
-        ))
-      ) : policy ? (
-        <EmptyAttribute centered>No Resource</EmptyAttribute>
-      ) : null}
-
-      {/* RISK & CONTROL */}
-      {!policy && resources.length ? (
+      {resources.length ? (
         resources.map((resource: any) => (
           <ResourceBar
             rating={resource.rating}
@@ -262,7 +218,7 @@ export default function ResourcesTab({
       ) : null}
 
       <Pagination
-        totalCount={dataModifier(newDataResources).length || 0}
+        totalCount={totalCount}
         perPage={limit}
         onPageChange={handlePageChange}
       />
