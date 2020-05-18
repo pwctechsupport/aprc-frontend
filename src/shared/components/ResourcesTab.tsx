@@ -133,6 +133,9 @@ export default function ResourcesTab({
     onCompleted: () => {
       notifySuccess("Resource Added");
       toggleAddResourceModal();
+      if (policy) {
+        window.location.reload();
+      }
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
@@ -254,7 +257,7 @@ export default function ResourcesTab({
             {...resource}
           />
         ))
-      ) : policy ? (
+      ) : !policy ? (
         <EmptyAttribute centered>No Resource</EmptyAttribute>
       ) : null}
 
