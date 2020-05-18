@@ -28,9 +28,11 @@ import {
 import useDialogBox from "../../../shared/hooks/useDialogBox";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import DialogButton from "../../../shared/components/DialogButton";
+import styled from "styled-components";
 // import Flowchart from "../../riskAndControl/components/Flowchart";
 
 interface ResourceFormProps {
+  base64File?: any;
   defaultValues?: ResourceFormValues;
   onSubmit?: (data: ResourceFormValues) => void;
   submitting?: boolean;
@@ -59,6 +61,7 @@ export interface ResourceFormValues {
 
 export default function ResourceForm({
   defaultValues,
+  base64File,
   onSubmit,
   submitting,
   toggleEditMode,
@@ -75,7 +78,10 @@ ResourceFormProps) {
     defaultValues,
     validationSchema,
   });
-  const [activityType, setActivityType] = useState("text");
+
+  const [activityType, setActivityType] = useState(
+    `${defaultValues?.resuploadBase64 ? "attachment" : "text"}`
+  );
   const [tags, setTags] = useState(defaultValues?.tagsAttributes || []);
   const [preview, setPreview] = useState<string | null>(
     defaultValues ? `${APP_ROOT_URL}${defaultValues.resuploadUrl}` : ""
@@ -113,6 +119,7 @@ ResourceFormProps) {
   const handleGetBps = useLoadBps();
   const selectedCategory = watch("category");
   const selectedBusinessProcess = watch("businessProcessId");
+  const watchresuploadBase64 = watch("resuploadBase64");
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <Input
@@ -215,13 +222,31 @@ ResourceFormProps) {
           />
         ) : selectedCategory?.value !== "Flowchart" &&
           activityType !== "text" ? (
-          <FileInput
-            name="resuploadBase64"
-            register={register}
-            setValue={setValue}
-            onFileSelect={setPreview}
-            errorForm={errors.resuploadLink && errors.resuploadLink.message}
-          />
+          <Fragment>
+            <FileInput
+              name="resuploadBase64"
+              register={register}
+              setValue={setValue}
+              onFileSelect={setPreview}
+              errorForm={errors.resuploadLink && errors.resuploadLink.message}
+            />
+            {watchresuploadBase64 === base64File &&
+            defaultValues?.resuploadBase64.includes("application/pdf") ? (
+              <div>{defaultValues.name}.pdf</div>
+            ) : null}
+            {watchresuploadBase64 === base64File &&
+            defaultValues?.resuploadBase64.includes("data:image") ? (
+              <ResourceBoxImagePreview
+                src={`${APP_ROOT_URL}${defaultValues?.resuploadUrl}`}
+              ></ResourceBoxImagePreview>
+            ) : null}
+            {watchresuploadBase64 === base64File &&
+            defaultValues?.resuploadBase64.includes(
+              "data:application/vnd.openxmlformats-officedocument"
+            ) ? (
+              <div>{defaultValues.name}.docx</div>
+            ) : null}
+          </Fragment>
         ) : (
           <FileInput
             name="resuploadBase64"
@@ -380,3 +405,8 @@ function useLoadBps() {
   }
   return getSuggestions;
 }
+const ResourceBoxImagePreview = styled.img`
+  max-width: 100%;
+  max-height: 30vh;
+  border-image-repeat: stretch;
+`;

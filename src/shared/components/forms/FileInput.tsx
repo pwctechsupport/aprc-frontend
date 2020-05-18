@@ -60,7 +60,22 @@ export default function FileInput({
 
         setError(null);
         setValue(name, String(await toBase64(e.target.files[0])), true);
-      } else {
+      }
+      if (e.target.files[0].name.includes(".doc")) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setPreview(reader.result as string);
+          onFileSelect?.(reader.result as string);
+        };
+        reader.readAsDataURL(e.target.files[0]);
+
+        setError(null);
+        setValue(name, String(await toBase64(e.target.files[0])), true);
+      }
+      if (
+        !e.target.files[0].name.includes(".doc") &&
+        !supportedFileTypes.includes(e.target.files[0].type)
+      ) {
         setError(fileTypeErrorMsg);
       }
     }

@@ -60,6 +60,7 @@ export default function Resource({
     variables: { id },
     fetchPolicy: "network-only",
   });
+
   const { data: dataRating } = useResourceRatingsQuery({
     variables: { filter: { user_id_eq: userId, resource_id_eq: id } },
     fetchPolicy: "network-only",
@@ -211,13 +212,13 @@ export default function Resource({
     resuploadBase64: data?.resource?.base64File || "",
     tagsAttributes: data?.resource?.tags || [],
   };
-
   if (loading) {
     return <LoadingSpinner centered size={30} />;
   }
   const renderResourceInEditMode = () => {
     return (
       <ResourceForm
+        base64File={base64File}
         defaultValues={defaultValues}
         onSubmit={handleSubmit}
         submitting={updateResourceM.loading}
