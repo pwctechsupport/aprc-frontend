@@ -171,14 +171,19 @@ export default function Report() {
             })}
           </tbody>
         </Table>
-
         <div className="text-center mt-3 mb-5">
-          {(reportRisk === "pdf" ||
-            reportRiskPolicy === "pdf" ||
-            reportControlPolicy === "pdf" ||
-            reportResourceRating === "pdf" ||
-            unmappedRisk === "pdf" ||
-            unmappedControl === "pdf") && (
+          {reportRisk === "pdf" ||
+          reportRiskPolicy === "pdf" ||
+          reportControlPolicy === "pdf" ||
+          reportResourceRating === "pdf" ||
+          unmappedRisk === "pdf" ||
+          unmappedControl === "pdf" ||
+          (!reportRisk &&
+            !reportRiskPolicy &&
+            !reportControlPolicy &&
+            !reportResourceRating &&
+            !unmappedRisk &&
+            !unmappedControl) ? (
             <Button
               onClick={handleSubmit(handlePreview)}
               type="button"
@@ -188,7 +193,7 @@ export default function Report() {
             >
               <FaFile /> Preview
             </Button>
-          )}
+          ) : null}
 
           <Button
             color="secondary"
