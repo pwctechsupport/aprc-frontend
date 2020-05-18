@@ -93,7 +93,11 @@ export default function FileInput({
     e.persist();
     setDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      if (supportedFileTypesFlowchart.includes(e.dataTransfer.files[0].type)) {
+      if (
+        flowchart
+          ? supportedFileTypesFlowchart.includes(e.dataTransfer.files[0].type)
+          : supportedFileTypes.includes(e.dataTransfer.files[0].type)
+      ) {
         const reader = new FileReader();
         reader.onload = () => {
           setPreview(reader.result as string);

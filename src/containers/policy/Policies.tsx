@@ -1,5 +1,5 @@
 import { capitalCase } from "capital-case";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import { FaTrash } from "react-icons/fa";
 import { MdSubdirectoryArrowRight } from "react-icons/md";
@@ -8,7 +8,9 @@ import { useDebounce } from "use-debounce/lib";
 import {
   Policy,
   useDestroyPolicyMutation,
-  usePolicyTreeQuery,
+  usePreparerPoliciesQuery,
+  useReviewerPoliciesQuery,
+  useSideboxPolicyQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -31,7 +33,31 @@ export default function Policies({ history }: RouteComponentProps) {
     "admin_preparer",
     "admin_reviewer",
   ]);
+
+  //false means true. Because true means it will be skipped
+  const [isPreparer, setIsPreparer] = useState(true);
+  const [isReviewer, setIsReviewer] = useState(true);
+  const [User, setUser] = useState(true);
   const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
+
+  useEffect(() => {
+    if (isAdminPreparer) {
+      setIsPreparer(false);
+      setIsReviewer(true);
+      setUser(true);
+    }
+    if (isAdminReviewer) {
+      setIsPreparer(true);
+      setIsReviewer(false);
+      setUser(true);
+    }
+    if (isUser) {
+      setIsPreparer(true);
+      setIsReviewer(true);
+      setUser(false);
+    }
+  }, [isAdminPreparer, isAdminReviewer, isUser]);
+
   const [showDashboard, setShowDashboard] = useState(false);
   function toggleShowDashboard() {
     setShowDashboard((p) => !p);
@@ -41,8 +67,12 @@ export default function Policies({ history }: RouteComponentProps) {
   const [searchQuery] = useDebounce(search, 400);
 
   const isTree = !searchQuery;
-  const { data, loading } = usePolicyTreeQuery({
+  const {
+    data: dataPreparer,
+    loading: loadingPreparer,
+  } = usePreparerPoliciesQuery({
     fetchPolicy: "network-only",
+    skip: isPreparer,
     variables: {
       isTree,
       filter: isUser
@@ -59,8 +89,58 @@ export default function Policies({ history }: RouteComponentProps) {
       page,
     },
   });
-  const policies = data?.policies?.collection || [];
-  const totalCount = data?.policies?.metadata.totalCount || 0;
+  const {
+    data: dataReviewer,
+    loading: loadingReviewer,
+  } = useReviewerPoliciesQuery({
+    fetchPolicy: "network-only",
+    skip: isReviewer,
+    variables: {
+      isTree,
+      filter: isUser
+        ? {
+            ...(isTree && { ancestry_null: true }),
+            title_or_status_or_policy_category_name_cont: searchQuery,
+            status_eq: "release",
+          }
+        : {
+            ...(isTree && { ancestry_null: true }),
+            title_or_status_or_policy_category_name_cont: searchQuery,
+          },
+      limit,
+      page,
+    },
+  });
+
+  const { data: dataUser, loading: loadingUser } = useSideboxPolicyQuery({
+    fetchPolicy: "network-only",
+    skip: User,
+    variables: {
+      isTree,
+      filter: isUser
+        ? {
+            ...(isTree && { ancestry_null: true }),
+            title_or_status_or_policy_category_name_cont: searchQuery,
+            status_eq: "release",
+          }
+        : {
+            ...(isTree && { ancestry_null: true }),
+            title_or_status_or_policy_category_name_cont: searchQuery,
+          },
+      limit,
+      page,
+    },
+  });
+  const policiesPreparer = dataPreparer?.preparerPolicies?.collection || [];
+  const policiesUser = dataUser?.sidebarPolicies?.collection || [];
+  const policiesReviewer = dataReviewer?.reviewerPolicies?.collection || [];
+
+  const totalCountPreparer =
+    dataPreparer?.preparerPolicies?.metadata.totalCount || 0;
+  const totalCountUser = dataUser?.sidebarPolicies?.metadata.totalCount || 0;
+  const totalCountReviewer =
+    dataReviewer?.reviewerPolicies?.metadata.totalCount || 0;
+
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
@@ -99,9 +179,12 @@ export default function Policies({ history }: RouteComponentProps) {
         search={search}
         setSearch={setSearch}
         placeholder="Search Policies"
-        loading={loading}
+        loading={loadingPreparer || loadingReviewer || loadingUser}
       />
-      <Table reloading={loading} responsive>
+      <Table
+        reloading={loadingPreparer || loadingReviewer || loadingUser}
+        responsive
+      >
         <thead>
           <tr>
             <th className="w-40">Title</th>
@@ -113,8 +196,30 @@ export default function Policies({ history }: RouteComponentProps) {
           </tr>
         </thead>
         <tbody>
-          {policies.length ? (
-            policies.map((policy) => (
+          {policiesPreparer.length ? (
+            policiesPreparer.map((policy) => (
+              <PolicyTableRow
+                key={policy.id}
+                policy={policy}
+                onClick={(id) => history.push(`/policy/${id}`)}
+                onDelete={handleDelete}
+                status={policy.status}
+                level={0}
+              />
+            ))
+          ) : policiesReviewer.length ? (
+            policiesReviewer.map((policy) => (
+              <PolicyTableRow
+                key={policy.id}
+                policy={policy}
+                onClick={(id) => history.push(`/policy/${id}`)}
+                onDelete={handleDelete}
+                status={policy.status}
+                level={0}
+              />
+            ))
+          ) : policiesUser.length ? (
+            policiesUser.map((policy) => (
               <PolicyTableRow
                 key={policy.id}
                 policy={policy}
@@ -134,7 +239,7 @@ export default function Policies({ history }: RouteComponentProps) {
         </tbody>
       </Table>
       <Pagination
-        totalCount={totalCount}
+        totalCount={totalCountPreparer || totalCountUser || totalCountReviewer}
         perPage={limit}
         onPageChange={handlePageChange}
       />
