@@ -132,6 +132,7 @@ ResourceFormProps) {
       <AsyncCreatableSelect
         name="category"
         label="Category*"
+        isDisabled={defaultValues?.businessProcessId ? true : false}
         register={register}
         setValue={setValue}
         cacheOptions
@@ -231,23 +232,23 @@ ResourceFormProps) {
               errorForm={errors.resuploadLink && errors.resuploadLink.message}
             />
             {watchresuploadBase64 === base64File &&
-            defaultValues?.resuploadBase64.includes("application/pdf") ? (
+            defaultValues?.resuploadBase64?.includes("application/pdf") ? (
               <div>{defaultValues.name}.pdf</div>
             ) : null}
             {watchresuploadBase64 === base64File &&
-            defaultValues?.resuploadBase64.includes("data:image") ? (
+            defaultValues?.resuploadBase64?.includes("data:image") ? (
               <ResourceBoxImagePreview
                 src={`${APP_ROOT_URL}${defaultValues?.resuploadUrl}`}
               ></ResourceBoxImagePreview>
             ) : null}
             {watchresuploadBase64 === base64File &&
-            defaultValues?.resuploadBase64.includes(
+            defaultValues?.resuploadBase64?.includes(
               "data:application/vnd.openxmlformats-officedocument"
             ) ? (
               <div>{defaultValues.name}.docx</div>
             ) : null}
             {watchresuploadBase64 === base64File &&
-            defaultValues?.resuploadBase64.includes(
+            defaultValues?.resuploadBase64?.includes(
               "data:application/msword"
             ) ? (
               <div>{defaultValues.name}.doc</div>

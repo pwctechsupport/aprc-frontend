@@ -7,6 +7,7 @@ import {
   useRemoveRelationMutation,
   useCreateResourceMutation,
   PolicyQuery,
+  useResourcesQuery,
 } from "../../generated/graphql";
 import Button from "./Button";
 import EmptyAttribute from "./EmptyAttribute";
@@ -41,7 +42,7 @@ export default function ResourcesTab({
     "admin_reviewer",
     "admin_preparer",
   ]);
-
+  const isUser = !isAdmin && !isAdminReviewer && !isAdminPreparer;
   // Pagination state handlers
   const { limit, handlePageChange } = useListState({
     limit: 10,
@@ -100,15 +101,29 @@ export default function ResourcesTab({
     return a;
   };
 
-  // Query Resources for current policy
   const [search, setSearch] = useState("");
-  // if(search!==''){
-  //   setNewDataResources(newData.filter((a) => a.status === "release").includes(a=>a.status))
-  // }
+
   const [searchQuery] = useDebounce(search, 700);
+  // Query for RISK AND CONTROL
+  const { data, loading } = useResourcesQuery({
+    fetchPolicy: "network-only",
+    skip: policy,
+    variables: {
+      filter: isUser
+        ? {
+            business_process_id_eq: formDefaultValues.businessProcessId?.value,
+            name_cont: searchQuery,
+            draft_id_null: true,
+          }
+        : {
+            business_process_id_eq: formDefaultValues.businessProcessId?.value,
+            name_cont: searchQuery,
+          },
+    },
+  });
+  const resources = data?.resources?.collection || [];
 
   const policyId = queryFilters.policies_id_in;
-
   // Modal state handlers
   const [addResourceModal, setAddResourceModal] = useState(false);
   const toggleAddResourceModal = () => setAddResourceModal((prev) => !prev);
@@ -175,6 +190,7 @@ export default function ResourcesTab({
           search={search}
           setSearch={setSearch}
           placeholder="Search Resources..."
+          loading={loading}
         />
         {isDraft === null && (isAdmin || isAdminPreparer) && (
           <Tooltip description="Create Resource">
@@ -188,8 +204,12 @@ export default function ResourcesTab({
           </Tooltip>
         )}
       </div>
+
+      {/* POLICY */}
+
       {/* Normal state */}
-      {search !== "" ? null : dataModifier(newDataResources).length ? (
+      {policy && search !== "" ? null : dataModifier(newDataResources)
+          .length ? (
         dataModifier(newDataResources).map((resource: any) => (
           <ResourceBar
             rating={resource.rating}
@@ -201,11 +221,11 @@ export default function ResourcesTab({
             {...resource}
           />
         ))
-      ) : (
+      ) : policy ? (
         <EmptyAttribute centered>No Resource</EmptyAttribute>
-      )}
+      ) : null}
       {/* Search State */}
-      {search === "" ? null : searchData.length ? (
+      {policy && search === "" ? null : searchData.length ? (
         searchData.map((resource: any) => (
           <ResourceBar
             rating={resource.rating}
@@ -217,9 +237,27 @@ export default function ResourcesTab({
             {...resource}
           />
         ))
-      ) : (
+      ) : policy ? (
         <EmptyAttribute centered>No Resource</EmptyAttribute>
-      )}
+      ) : null}
+
+      {/* RISK & CONTROL */}
+      {!policy && resources.length ? (
+        resources.map((resource: any) => (
+          <ResourceBar
+            rating={resource.rating}
+            deleteResource={handleDeleteResource}
+            totalRating={resource.totalRating}
+            visit={resource.visit}
+            key={resource.id}
+            resourceId={resource.id}
+            {...resource}
+          />
+        ))
+      ) : policy ? (
+        <EmptyAttribute centered>No Resource</EmptyAttribute>
+      ) : null}
+
       <Pagination
         totalCount={dataModifier(newDataResources).length || 0}
         perPage={limit}
