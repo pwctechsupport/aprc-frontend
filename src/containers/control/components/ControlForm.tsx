@@ -5,6 +5,8 @@ import { AiFillEdit } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import { Col, Form, FormGroup, Input as BsInput, Label, Row } from "reactstrap";
 import { oc } from "ts-optchain";
+import { toast } from "react-toastify";
+
 import {
   ActivityControl,
   Assertion,
@@ -16,6 +18,7 @@ import {
   useRisksQuery,
   useDepartmentsQuery,
 } from "../../../generated/graphql";
+import * as yup from "yup";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
@@ -33,9 +36,9 @@ const ControlForm = ({
   isDraft,
   isCreate,
 }: ControlFormProps) => {
-  const { register, handleSubmit, setValue } = useForm<CreateControlFormValues>(
-    { defaultValues }
-  );
+  const { register, handleSubmit, setValue, errors } = useForm<
+    CreateControlFormValues
+  >({ validationSchema, defaultValues });
   const [isOpen, setIsOpen] = useState(false);
   const toogleModal = () => setIsOpen((p) => !p);
   const closeModal = () => {
@@ -91,10 +94,14 @@ const ControlForm = ({
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
-    onSubmit?.({
-      ...values,
-      activityControlsAttributes: prepare,
-    });
+    if (prepare.length) {
+      onSubmit?.({
+        ...values,
+        activityControlsAttributes: prepare,
+      });
+    } else {
+      toast.error("Add Control Activity is a required field");
+    }
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
@@ -194,6 +201,7 @@ const ControlForm = ({
           label="Description*"
           placeholder="Description"
           innerRef={register}
+          error={errors.description && "Description is a required field"}
         />
 
         <FormSelect
@@ -211,6 +219,7 @@ const ControlForm = ({
               .riskIds([])
               .includes(res.value)
           )}
+          error={errors.riskIds && "Risks is a required field"}
         />
 
         <FormGroup check className="mb-3">
@@ -231,6 +240,7 @@ const ControlForm = ({
           label="Type of Controls*"
           placeholder="Type of Controls"
           defaultValue={pDefVal(typeOfControl, typeOfControls)}
+          error={errors.typeOfControl && "Type of Controls is a required field"}
         />
 
         <FormSelect
@@ -255,6 +265,7 @@ const ControlForm = ({
           placeholder="Frequency"
           label="Frequency*"
           defaultValue={pDefVal(frequency, frequencies)}
+          error={errors.frequency && "Frequency is a required field"}
         />
 
         <Select
@@ -263,6 +274,7 @@ const ControlForm = ({
           onChange={handleSelectChange("nature")}
           label="Nature*"
           defaultValue={pDefVal(nature, natures)}
+          error={errors.nature && "Nature is a required field"}
         />
         <Row form>
           <Col md={6}>
@@ -279,6 +291,7 @@ const ControlForm = ({
                   .assertion([])
                   .includes(res.value)
               )}
+              error={errors.assertion && "Assertion is a required field"}
             />
           </Col>
           <Col md={6}>
@@ -295,6 +308,7 @@ const ControlForm = ({
                   .ipo([])
                   .includes(res.value)
               )}
+              error={errors.ipo && "IPOs is a required field"}
             />
           </Col>
         </Row>
@@ -311,6 +325,7 @@ const ControlForm = ({
             controlOwnerId.includes(a.value)
           )}
           loading={departments.loading}
+          error={errors.controlOwner && "Control owner is a required field"}
         />
         <span>Control Activites</span>
         <div className="mt-2">
@@ -421,7 +436,10 @@ const ActivityModalForm = ({
   const [activityType, setActivityType] = useState(
     activityDefaultValue?.resupload ? "attachment" : "text"
   );
-  const { register, handleSubmit, setValue } = useForm<MyCoolControlActivity>({
+  const { register, handleSubmit, setValue, errors } = useForm<
+    MyCoolControlActivity
+  >({
+    validationSchema: validationSchemaControlActivity,
     defaultValues: activityDefaultValue,
   });
 
@@ -461,6 +479,7 @@ const ActivityModalForm = ({
         required
         placeholder="Title..."
         innerRef={register}
+        error={errors.activity && "Activity is a required field"}
       />
       <span className="mt-2 mb-3">Control Activity Guidance</span>
       <div className="d-flex ml-3">
@@ -609,7 +628,24 @@ interface MyCoolControlActivity {
   resupload?: string;
   resuploadFileName?: string | null;
 }
+// ---------------------------------------------------
+// Validation
+// ---------------------------------------------------
 
+const validationSchema = yup.object().shape({
+  typeOfControl: yup.string().required(),
+  description: yup.string().required(),
+  riskIds: yup.array().required(),
+  frequency: yup.string().required(),
+  ipo: yup.array().required(),
+  assertion: yup.array().required(),
+  nature: yup.string().required(),
+  controlOwner: yup.array().required(),
+});
+
+const validationSchemaControlActivity = yup.object().shape({
+  activity: yup.string().required(),
+});
 // export interface CreateActivityControlFormValues {
 //   activity: string;
 //   guidance: string;
