@@ -29,6 +29,7 @@ import useDialogBox from "../../../shared/hooks/useDialogBox";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import DialogButton from "../../../shared/components/DialogButton";
 import styled from "styled-components";
+import { toast } from "react-toastify";
 // import Flowchart from "../../riskAndControl/components/Flowchart";
 
 interface ResourceFormProps {
@@ -99,6 +100,9 @@ ResourceFormProps) {
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           ))
       ) {
+        toast.error(
+          "File type not supported. Supported types are PNG and JPG/JPEG."
+        );
       } else {
         dialogBox({
           text: name ? `Update Resource "${name}"?` : "Create Resource?",
@@ -261,7 +265,11 @@ ResourceFormProps) {
             register={register}
             setValue={setValue}
             onFileSelect={setPreview}
-            errorForm={errors.resuploadLink && errors.resuploadLink.message}
+            errorForm={
+              selectedCategory?.value === "Flowchart"
+                ? errors.resuploadLink && "Upload is a required field"
+                : errors.resuploadLink && errors.resuploadLink.message
+            }
           />
         )}
       </div>

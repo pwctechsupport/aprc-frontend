@@ -9,7 +9,7 @@ import {
   DepartmentsQuery,
   DepartmentsDocument,
   RolesDocument,
-  RolesQuery
+  RolesQuery,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
@@ -40,7 +40,7 @@ export interface UserFormValues {
 export default function UserForm(props: UserFormProps) {
   const { register, handleSubmit, errors, setValue } = useForm<UserFormValues>({
     validationSchema,
-    defaultValues: props.defaultValues
+    defaultValues: props.defaultValues,
   });
 
   function onSubmit(data: UserFormValues) {
@@ -120,6 +120,9 @@ export default function UserForm(props: UserFormProps) {
         register={register}
         setValue={setValue}
         loadOptions={handleGetPolicyCategories}
+        error={
+          errors.policyCategoryIds && "Policy categories is a required field"
+        }
       />
       <div className="d-flex justify-content-end my-3">
         <Button type="submit" className="pwc px-5" loading={props.submitting}>
@@ -152,7 +155,8 @@ const validationSchema = yup.object().shape({
     .trim()
     .required()
     .oneOf([yup.ref("password")], "Password does not match"),
-  phone: yup.string().required()
+  phone: yup.string().required(),
+  policyCategoryIds: yup.array().required(),
 });
 
 // =======================================================
@@ -179,7 +183,7 @@ export function useLoadPolicyCategories() {
   async function handleGetPolicyCategories(input: string) {
     try {
       const queryResult = await getPolicyCategories({
-        filter: { name_cont: input }
+        filter: { name_cont: input },
       });
       return (
         queryResult.data?.policyCategories?.collection?.map(toLabelValue) || []
@@ -197,7 +201,7 @@ export function useLoadDepartments() {
   async function handleGetDepartments(input: string) {
     try {
       const queryResult = await getDepartments({
-        filter: { name_cont: input }
+        filter: { name_cont: input },
       });
       return queryResult.data?.departments?.collection?.map(toLabelValue) || [];
     } catch (error) {

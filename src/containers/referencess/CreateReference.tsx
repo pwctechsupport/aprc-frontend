@@ -78,6 +78,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
               label="Name*"
               innerRef={register}
               placeholder="Name"
+              error={errors.name && errors.name?.message}
             />
             <FormFeedback>{errors.name && errors.name.message}</FormFeedback>
           </Col>
@@ -141,7 +142,7 @@ interface CreateReferenceFormValues {
 // });
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required("Reference name cannot be empty"),
+  name: yup.string().required("Name is a required field"),
   policyIds: yup.array(),
   // .test("reference", "Require a hashtag", function(value: string) {
   //   return value[0] === "#";

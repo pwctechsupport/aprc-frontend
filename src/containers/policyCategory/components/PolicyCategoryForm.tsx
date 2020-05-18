@@ -9,6 +9,7 @@ import Input from "../../../shared/components/forms/Input";
 import { Suggestions, toLabelValue } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import DialogButton from "../../../shared/components/DialogButton";
+import * as yup from "yup";
 
 const PolicyCategoryForm = ({
   defaultValues,
@@ -17,12 +18,13 @@ const PolicyCategoryForm = ({
   submitting,
   isDraft,
   toggleEditMode,
-  history
+  history,
 }: PolicyCategoryFormProps) => {
-  const { register, setValue, handleSubmit } = useForm<
+  const { register, setValue, handleSubmit, errors } = useForm<
     PolicyCategoryFormValues
   >({
-    defaultValues
+    defaultValues,
+    validationSchema,
   });
 
   const getPolicies = useLoadPolicies();
@@ -65,7 +67,13 @@ const PolicyCategoryForm = ({
   };
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <Input name="name" innerRef={register} placeholder="Name" label="Name*" />
+      <Input
+        name="name"
+        innerRef={register}
+        placeholder="Name"
+        label="Name*"
+        error={errors.name && errors.name.message}
+      />
       <AsyncSelect
         name="policyIds"
         label="Related Policies"
@@ -104,7 +112,7 @@ function useLoadPolicies() {
   async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { title_cont }
+        filter: { title_cont },
       });
       return data.policies?.collection?.map(toLabelValue) || [];
     } catch (error) {
@@ -113,3 +121,6 @@ function useLoadPolicies() {
   }
   return getSuggestions;
 }
+const validationSchema = yup.object().shape({
+  name: yup.string().required("Name is a required field"),
+});

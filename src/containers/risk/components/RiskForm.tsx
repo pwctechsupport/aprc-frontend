@@ -7,7 +7,7 @@ import {
   BusinessProcessesDocument,
   LevelOfRisk,
   TypeOfRisk,
-  BusinessProcessesQuery
+  BusinessProcessesQuery,
 } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
@@ -16,7 +16,7 @@ import Select from "../../../shared/components/forms/Select";
 import {
   prepDefaultValue,
   Suggestions,
-  toLabelValue
+  toLabelValue,
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 
@@ -26,11 +26,11 @@ const RiskForm = ({
   submitting,
   toggleEditMode,
   history,
-  isCreate
+  isCreate,
 }: RiskFormProps) => {
   const { register, setValue, errors, handleSubmit } = useForm<RiskFormValues>({
     validationSchema,
-    defaultValues
+    defaultValues,
   });
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const RiskForm = ({
   async function handleGetBps(name_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await getBusinessProcesses({
-        filter: { name_cont }
+        filter: { name_cont },
       });
       return data.businessProcesses?.collection.map(toLabelValue) || [];
     } catch (error) {
@@ -94,7 +94,7 @@ const RiskForm = ({
           onChange={handleChange("levelOfRisk")}
           error={errors.levelOfRisk && errors.levelOfRisk.message}
           defaultValue={levelOfRisks.find(
-            option => option.value === levelOfRisk
+            (option) => option.value === levelOfRisk
           )}
         />
         <Select
@@ -150,12 +150,12 @@ export default RiskForm;
 
 const levelOfRisks = Object.entries(LevelOfRisk).map(([label, value]) => ({
   label,
-  value
+  value,
 }));
 
 const typeOfRisks = Object.entries(TypeOfRisk).map(([label, value]) => ({
   label: capitalCase(value),
-  value
+  value,
 }));
 
 // -------------------------------------------------------------------------
@@ -167,11 +167,11 @@ const validationSchema = yup.object().shape({
   businessProcessIds: yup.array().of(
     yup.object().shape({
       label: yup.string(),
-      value: yup.string()
+      value: yup.string(),
     })
   ),
-  levelOfRisk: yup.string(),
-  typeOfRisk: yup.string()
+  levelOfRisk: yup.string().required("Level of risk is a required field"),
+  typeOfRisk: yup.string().required("Type of risk is a required field"),
 });
 
 // -------------------------------------------------------------------------

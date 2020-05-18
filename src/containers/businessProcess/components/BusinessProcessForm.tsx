@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useForm } from "react-hook-form";
 import { Form, Input } from "reactstrap";
 import Button from "../../../shared/components/Button";
@@ -11,7 +11,9 @@ const BusinessProcessForm = ({
   submitButtonName = "Add",
   onCancel,
 }: BusinessProcessFormProps) => {
-  const { register, handleSubmit, reset } = useForm<BusinessProcessFormValues>({
+  const { register, handleSubmit, reset, errors } = useForm<
+    BusinessProcessFormValues
+  >({
     defaultValues,
     validationSchema,
   });
@@ -21,31 +23,40 @@ const BusinessProcessForm = ({
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit(submit)}
-      className="d-flex align-items-center mb-4"
-    >
-      <Input
-        name="name"
-        placeholder="Business Process Name*"
-        innerRef={register}
-        required
-      />
-      {onCancel && (
-        <Button onClick={onCancel} className="ml-3" color="grey">
-          Cancel
-        </Button>
-      )}
-      <DialogButton
-        onConfirm={handleSubmit(submit)}
-        className="soft orange ml-3"
-        type="button"
-        color=""
-        message={`${submitButtonName} business process?`}
+    <Fragment>
+      <Form
+        onSubmit={handleSubmit(submit)}
+        className="d-flex align-items-center mb-1"
       >
-        {submitButtonName}
-      </DialogButton>
-    </Form>
+        <Fragment>
+          <Input
+            name="name"
+            placeholder="Business Process Name*"
+            innerRef={register}
+            required
+          />
+        </Fragment>
+        {onCancel && (
+          <Button onClick={onCancel} className="ml-3" color="grey">
+            Cancel
+          </Button>
+        )}
+        <DialogButton
+          onConfirm={handleSubmit(submit)}
+          className="soft orange ml-3"
+          type="button"
+          color=""
+          message={`${submitButtonName} business process?`}
+        >
+          {submitButtonName}
+        </DialogButton>
+      </Form>
+      {errors.name && (
+        <div className="text-red ml-2 mt-1" style={{ fontSize: "12px" }}>
+          {errors.name?.message}
+        </div>
+      )}
+    </Fragment>
   );
 };
 
