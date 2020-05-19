@@ -7,9 +7,11 @@ import { usePolicyCategoriesQuery } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
-import TextEditor from "../../../shared/components/forms/TextEditor";
+import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue } from "../../../shared/formatter";
+// import TextEditor from "../../../shared/components/forms/TextEditor";
+// import { Editor } from "@tinymce/tinymce-react";
 
 const PolicyForm = ({
   submitFromDraft,
@@ -42,8 +44,8 @@ const PolicyForm = ({
     register({ name: "status" });
   }, [register]);
 
-  function onChangeEditor(data: string) {
-    setValue("description", data);
+  function onChangeEditor(data: any) {
+    setValue("description", data?.level?.content);
   }
 
   function handleChange(name: keyof PolicyFormValues) {
@@ -55,18 +57,22 @@ const PolicyForm = ({
   }
 
   function submit(values: PolicyFormValues) {
-    onSubmit && onSubmit(values);
-    setCreateS(true);
+    // onSubmit && onSubmit(values);
+    // setCreateS(true);
+    console.log("values", values);
   }
   function submitToReviewer(values: PolicyFormValues) {
-    handleSubmitToReviewer && handleSubmitToReviewer(values);
-    setCreateS(false);
+    // handleSubmitToReviewer && handleSubmitToReviewer(values);
+    // setCreateS(false);
+    console.log("values", values);
   }
   function submitFromDrafted(values: SubmitAsliBro) {
-    submitFromDraft && submitFromDraft(values);
+    // submitFromDraft && submitFromDraft(values);
+    console.log("values", values);
   }
   function submitAsDraft(values: PolicyFormValues) {
-    onSubmitAsDraft && onSubmitAsDraft(values);
+    // onSubmitAsDraft && onSubmitAsDraft(values);
+    console.log("values", values);
   }
 
   const options = oc(policyCategoriesState)
@@ -89,12 +95,18 @@ const PolicyForm = ({
         />
         <div className="mb-3">
           <label>Policy Description*</label>
-          <TextEditor
+          <TextEditorField
             data={watch("description")}
             onChange={onChangeEditor}
             invalid={!!errors.description}
             error={errors.description && "Description field is too short"}
           />
+          {/* <TextEditor
+            data={watch("description")}
+            onChange={onChangeEditor}
+            invalid={!!errors.description}
+            error={errors.description && "Description field is too short"}
+          />  */}
         </div>
         <Select
           name="policyCategoryId"
