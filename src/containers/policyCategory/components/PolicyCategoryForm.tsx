@@ -28,8 +28,7 @@ const PolicyCategoryForm = ({
   });
 
   const getPolicies = useLoadPolicies();
-  const policies = defaultValues?.policyIds || [];
-
+  const policies = defaultValues?.policies || [];
   const renderSubmit = () => {
     if (!isDraft) {
       return (
@@ -95,6 +94,7 @@ export default PolicyCategoryForm;
 export interface PolicyCategoryFormValues {
   name?: string;
   policyIds?: Suggestions;
+  policies?: any;
 }
 
 interface PolicyCategoryFormProps {

@@ -31,6 +31,7 @@ import PolicyCategoryForm, {
 } from "./components/PolicyCategoryForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import HeaderWithBackButton from "../../shared/components/Header";
+import { toLabelValue } from "../../shared/formatter";
 
 const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -50,11 +51,13 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   });
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const createdBy = data?.policyCategory?.createdBy;
-  const relatedPolicies = data?.policyCategory?.policy || [];
+  const relatedPolicies =
+    data?.policyCategory?.policies?.map(toLabelValue) || [];
   const draft = data?.policyCategory?.draft?.objectResult;
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
   const requestEditState = data?.policyCategory?.requestEdit?.state;
+  console.log("relatedPolicies", relatedPolicies);
   const premise = useEditState({
     draft,
     hasEditAccess,
@@ -78,6 +81,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
         },
       },
     });
+    toggleEditMode();
   }
 
   // Delete handlers
