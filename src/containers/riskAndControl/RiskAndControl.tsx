@@ -1,5 +1,5 @@
 import startCase from "lodash/startCase";
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import {
   FaBars,
   FaBookmark,
@@ -26,6 +26,7 @@ import {
   useCreateBookmarkBusinessProcessMutation,
   useUpdateControlMutation,
   useUpdateRiskMutation,
+  useBookmarksQuery,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -137,7 +138,7 @@ export default function RiskAndControl({
   const [addBookmark] = useCreateBookmarkBusinessProcessMutation({
     onCompleted: () => notifySuccess("Added to Bookmark"),
     onError: notifyGraphQLErrors,
-    refetchQueries: ["businessProcess"],
+    refetchQueries: ["businessProcess", "bookmarks"],
     awaitRefetchQueries: true,
   });
 
@@ -146,11 +147,16 @@ export default function RiskAndControl({
     variables: { id },
     fetchPolicy: "network-only",
   });
+  const { data: bookmarkData, loading: bookmarkLoading } = useBookmarksQuery({
+    variables: {
+      filter: { originator_id_eq: id, originator_type_eq: "BusinessProcess" },
+    },
+  });
   const name = data?.businessProcess?.name || "";
   const risks = data?.businessProcess?.risks || [];
   const controls = data?.businessProcess?.controls || [];
   const resources = data?.businessProcess?.resources || [];
-  const isBookmarked = data?.businessProcess?.bookmarkedBy;
+  const isBookmarked = bookmarkData?.bookmarks?.collection || [];
   const ancestors = data?.businessProcess?.ancestors || [];
   const breadcrumb = ancestors.map((a) => [
     "/risk-and-control/" + a.id,
@@ -197,7 +203,17 @@ export default function RiskAndControl({
 
         <Menu
           data={
-            isBookmarked
+            bookmarkLoading
+              ? [
+                  {
+                    label: (
+                      <Fragment>
+                        <LoadingSpinner className="mt-2 mb-2" centered />
+                      </Fragment>
+                    ),
+                  },
+                ]
+              : isBookmarked.length
               ? [
                   {
                     label: (

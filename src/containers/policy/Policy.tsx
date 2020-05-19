@@ -5,6 +5,7 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
+  Fragment,
 } from "react";
 import Helmet from "react-helmet";
 import {
@@ -39,6 +40,7 @@ import {
   useUpdateDraftPolicyMutation,
   useReferencesQuery,
   usePolicyCategoriesQuery,
+  useBookmarksQuery,
   // useUpdatePolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
@@ -114,6 +116,11 @@ export default function Policy({
   });
   const referenceData = useReferencesQuery({
     variables: { filter: { policies_id_matches_any: id } },
+  });
+  const { data: bookmarkData, loading: bookmarkLoading } = useBookmarksQuery({
+    variables: {
+      filter: { originator_id_eq: id, originator_type_eq: "Policy" },
+    },
   });
   const policyCategoriesData = usePolicyCategoriesQuery({
     variables: { filter: { policies_id_matches_any: id } },
@@ -214,7 +221,7 @@ export default function Policy({
   const [addBookmark] = useCreateBookmarkPolicyMutation({
     onCompleted: (_) => notifySuccess("Added to bookmark"),
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policy"],
+    refetchQueries: ["policy", "bookmarks"],
     awaitRefetchQueries: true,
   });
 
@@ -360,7 +367,7 @@ export default function Policy({
   const isMaximumLevel = ancestry.split("/").length === 5;
   const ancestors = data?.policy?.ancestors || [];
   const lastUpdatedAt = data?.policy?.lastUpdatedAt;
-  const bookmarked = data?.policy?.bookmarkedBy;
+  const bookmarked = bookmarkData?.bookmarks?.collection || [];
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
@@ -631,7 +638,7 @@ export default function Policy({
       },
       { label: "divider" },
     ];
-    const basicMenu: MenuData[] = bookmarked
+    const basicMenu: MenuData[] = bookmarked.length
       ? [
           {
             label: (
@@ -727,7 +734,17 @@ export default function Policy({
       let noDeleteMenu = [...mainMenu];
       noDeleteMenu[1] = { label: "Delete" };
       const noDeleteButton = noDeleteMenu.filter((a) => a.label !== "Delete");
-      theMenu = isAdminReviewer
+      theMenu = bookmarkLoading
+        ? [
+            {
+              label: (
+                <Fragment>
+                  <LoadingSpinner className="mt-2 mb-2" centered />
+                </Fragment>
+              ),
+            },
+          ]
+        : isAdminReviewer
         ? [...noCreateButton, ...basicMenu]
         : !(isAdminReviewer || isAdmin || isAdminPreparer)
         ? basicMenu
