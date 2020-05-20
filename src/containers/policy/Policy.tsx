@@ -132,7 +132,7 @@ export default function Policy({
   const referenceIds = references.map((a) => a.value);
 
   const policyCategories = oc(policyCategoriesData)
-    .data.policyCategories.collection([])
+    .data.navigatorPolicyCategories.collection([])
     .map(toLabelValue);
   const policyCategoryId = policyCategories.map((a) => a.value).pop() || "";
   const isDraft = data?.policy?.draft;

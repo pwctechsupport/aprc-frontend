@@ -186,7 +186,9 @@ export function useLoadPolicyCategories() {
         filter: { name_cont: input },
       });
       return (
-        queryResult.data?.policyCategories?.collection?.map(toLabelValue) || []
+        queryResult.data?.navigatorPolicyCategories?.collection?.map(
+          toLabelValue
+        ) || []
       );
     } catch (error) {
       return [];

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import {
   usePolicyCategoriesQuery,
   useDestroyPolicyCategoriesMutation,
+  useAdminPolicyCategoriesQuery,
 } from "../../../generated/graphql";
 import Table from "../../../shared/components/Table";
 import { RouteComponentProps, Link } from "react-router-dom";
@@ -30,11 +31,28 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
 
   const [selected, setSelected] = useState<string[]>([]);
-  const { loading, data } = usePolicyCategoriesQuery({
-    variables: { filter: isUser ? { draft_event_null: true } : {} },
+
+  // Queries
+  const {
+    loading: loadingAdmin,
+    data: dataAdmin,
+  } = useAdminPolicyCategoriesQuery({
+    skip: isUser,
+    variables: {
+      filter: isAdminPreparer ? {} : { draft_event_not_null: true },
+    },
     fetchPolicy: "network-only",
   });
-  const policyCategories = oc(data).policyCategories.collection([]);
+
+  const { loading, data } = usePolicyCategoriesQuery({
+    skip: !isUser,
+    variables: { filter: { draft_event_null: true } },
+    fetchPolicy: "network-only",
+  });
+  const policyCategories =
+    data?.navigatorPolicyCategories?.collection ||
+    dataAdmin?.preparerPolicyCategories?.collection ||
+    [];
 
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
@@ -133,7 +151,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           ) : null}
         </div>
       </div>
-      <Table reloading={loading}>
+      <Table reloading={loading || loadingAdmin}>
         <thead>
           <tr>
             {isAdminReviewer ? (

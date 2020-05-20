@@ -3,7 +3,7 @@ query policyCategories(
   $limit: Int = 1000
   $page: Int
 ) {
-  policyCategories(filter: $filter, page: $page, limit: $limit) {
+  navigatorPolicyCategories(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
       name
@@ -22,7 +22,30 @@ query policyCategories(
     }
   }
 }
-
+query adminPolicyCategories(
+  $filter: BaseScalar = {}
+  $limit: Int = 1000
+  $page: Int
+) {
+  preparerPolicyCategories(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+      name
+      updatedAt
+      createdAt
+      lastUpdatedBy
+      createdBy
+      status
+      draft {
+        event
+      }
+      policies {
+        id
+        title
+      }
+    }
+  }
+}
 query policyCategory($id: ID!) {
   policyCategory(id: $id) {
     ...policyCategoryFragment

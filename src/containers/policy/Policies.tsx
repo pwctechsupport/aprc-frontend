@@ -9,7 +9,6 @@ import {
   Policy,
   useDestroyPolicyMutation,
   usePreparerPoliciesQuery,
-  useReviewerPoliciesQuery,
   useSideboxPolicyQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
@@ -36,24 +35,16 @@ export default function Policies({ history }: RouteComponentProps) {
 
   //false means true. Because true means it will be skipped
   const [isPreparer, setIsPreparer] = useState(true);
-  const [isReviewer, setIsReviewer] = useState(true);
   const [User, setUser] = useState(true);
   const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
 
   useEffect(() => {
-    if (isAdminPreparer) {
+    if (isAdminPreparer || isAdminReviewer) {
       setIsPreparer(false);
-      setIsReviewer(true);
-      setUser(true);
-    }
-    if (isAdminReviewer) {
-      setIsPreparer(true);
-      setIsReviewer(false);
       setUser(true);
     }
     if (isUser) {
       setIsPreparer(true);
-      setIsReviewer(true);
       setUser(false);
     }
   }, [isAdminPreparer, isAdminReviewer, isUser]);
@@ -75,11 +66,11 @@ export default function Policies({ history }: RouteComponentProps) {
     skip: isPreparer,
     variables: {
       isTree,
-      filter: isUser
+      filter: isAdminReviewer
         ? {
             ...(isTree && { ancestry_null: true }),
             title_or_status_or_policy_category_name_cont: searchQuery,
-            status_eq: "release",
+            status_eq: "draft",
           }
         : {
             ...(isTree && { ancestry_null: true }),
@@ -89,29 +80,6 @@ export default function Policies({ history }: RouteComponentProps) {
       page,
     },
   });
-  const {
-    data: dataReviewer,
-    loading: loadingReviewer,
-  } = useReviewerPoliciesQuery({
-    fetchPolicy: "network-only",
-    skip: isReviewer,
-    variables: {
-      isTree,
-      filter: isUser
-        ? {
-            ...(isTree && { ancestry_null: true }),
-            title_or_status_or_policy_category_name_cont: searchQuery,
-            status_eq: "release",
-          }
-        : {
-            ...(isTree && { ancestry_null: true }),
-            title_or_status_or_policy_category_name_cont: searchQuery,
-          },
-      limit,
-      page,
-    },
-  });
-
   const { data: dataUser, loading: loadingUser } = useSideboxPolicyQuery({
     fetchPolicy: "network-only",
     skip: User,
@@ -133,13 +101,10 @@ export default function Policies({ history }: RouteComponentProps) {
   });
   const policiesPreparer = dataPreparer?.preparerPolicies?.collection || [];
   const policiesUser = dataUser?.sidebarPolicies?.collection || [];
-  const policiesReviewer = dataReviewer?.reviewerPolicies?.collection || [];
 
   const totalCountPreparer =
     dataPreparer?.preparerPolicies?.metadata.totalCount || 0;
   const totalCountUser = dataUser?.sidebarPolicies?.metadata.totalCount || 0;
-  const totalCountReviewer =
-    dataReviewer?.reviewerPolicies?.metadata.totalCount || 0;
 
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => notifySuccess("Delete Success"),
@@ -179,12 +144,9 @@ export default function Policies({ history }: RouteComponentProps) {
         search={search}
         setSearch={setSearch}
         placeholder="Search Policies"
-        loading={loadingPreparer || loadingReviewer || loadingUser}
+        loading={loadingPreparer || loadingUser}
       />
-      <Table
-        reloading={loadingPreparer || loadingReviewer || loadingUser}
-        responsive
-      >
+      <Table reloading={loadingPreparer || loadingUser} responsive>
         <thead>
           <tr>
             <th className="w-40">Title</th>
@@ -198,17 +160,6 @@ export default function Policies({ history }: RouteComponentProps) {
         <tbody>
           {policiesPreparer.length ? (
             policiesPreparer.map((policy) => (
-              <PolicyTableRow
-                key={policy.id}
-                policy={policy}
-                onClick={(id) => history.push(`/policy/${id}`)}
-                onDelete={handleDelete}
-                status={policy.status}
-                level={0}
-              />
-            ))
-          ) : policiesReviewer.length ? (
-            policiesReviewer.map((policy) => (
               <PolicyTableRow
                 key={policy.id}
                 policy={policy}
@@ -239,7 +190,7 @@ export default function Policies({ history }: RouteComponentProps) {
         </tbody>
       </Table>
       <Pagination
-        totalCount={totalCountPreparer || totalCountUser || totalCountReviewer}
+        totalCount={totalCountPreparer || totalCountUser}
         perPage={limit}
         onPageChange={handlePageChange}
       />

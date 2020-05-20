@@ -59,24 +59,20 @@ const PolicyForm = ({
   function submit(values: PolicyFormValues) {
     onSubmit && onSubmit(values);
     setCreateS(true);
-    console.log("values", values);
   }
   function submitToReviewer(values: PolicyFormValues) {
     handleSubmitToReviewer && handleSubmitToReviewer(values);
     setCreateS(false);
-    console.log("values", values);
   }
   function submitFromDrafted(values: SubmitAsliBro) {
     submitFromDraft && submitFromDraft(values);
-    console.log("values", values);
   }
   function submitAsDraft(values: PolicyFormValues) {
     onSubmitAsDraft && onSubmitAsDraft(values);
-    console.log("values", values);
   }
 
   const options = oc(policyCategoriesState)
-    .data.policyCategories.collection([])
+    .data.navigatorPolicyCategories.collection([])
     .map(toLabelValue);
   const policyCategoryId = oc(defaultValues).policyCategoryId("");
   if (policyCategoriesState.loading) {

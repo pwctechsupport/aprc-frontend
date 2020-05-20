@@ -36,12 +36,12 @@ const PolicyCategorySideBox = () => {
   });
 
   useEffect(() => {
-    data?.policyCategories?.collection.length === limit
+    data?.navigatorPolicyCategories?.collection.length === limit
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
 
-  const policyCategories = oc(data).policyCategories.collection([]);
+  const policyCategories = oc(data).navigatorPolicyCategories.collection([]);
 
   const onScroll = (e: any) => {
     const scroll =

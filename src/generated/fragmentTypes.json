@@ -76,6 +76,9 @@
           },
           {
             "name": "Department"
+          },
+          {
+            "name": "RequestEdit"
           }
         ]
       },

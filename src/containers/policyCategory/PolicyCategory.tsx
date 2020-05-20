@@ -57,7 +57,6 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
   const requestEditState = data?.policyCategory?.requestEdit?.state;
-  console.log("relatedPolicies", relatedPolicies);
   const premise = useEditState({
     draft,
     hasEditAccess,
