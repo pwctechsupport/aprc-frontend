@@ -19,6 +19,7 @@ import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 import * as yup from "yup";
 import { toast } from "react-toastify";
+import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -73,8 +74,8 @@ const SubPolicyForm = ({
     }
   }
 
-  function handleEditorChange(data: string) {
-    setValue("description", data);
+  function onChangeEditor(data: any) {
+    setValue("description", data?.level?.content);
   }
   // Functions for changing buttons
   // Functions when create
@@ -127,12 +128,19 @@ const SubPolicyForm = ({
         />
         <div className="mb-3">
           <label>Policy Description*</label>
-          <TextEditor
+          <TextEditorField
+            name="description"
+            register={register}
+            onChange={onChangeEditor}
+            invalid={!!errors.description}
+            error={errors.description && "Description field is too short"}
+          />
+          {/* <TextEditor
             data={watch("description")}
             onChange={handleEditorChange}
             invalid={errors.description ? true : false}
             error={errors.description && "Description field is too short"}
-          />
+          /> */}
         </div>
         <Select
           name="referenceIds"

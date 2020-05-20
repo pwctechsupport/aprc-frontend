@@ -81,7 +81,9 @@ body {
   --primary-grey: #cecece;
   --darker-grey: #808080;
 }
-
+.tox-notifications-container {
+  display: none;
+}
 .ql-font-mirza {
   font-family: "Mirza";
 }

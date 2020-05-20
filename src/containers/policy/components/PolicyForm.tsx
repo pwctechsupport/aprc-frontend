@@ -96,7 +96,8 @@ const PolicyForm = ({
         <div className="mb-3">
           <label>Policy Description*</label>
           <TextEditorField
-            data={watch("description")}
+            name="description"
+            register={register}
             onChange={onChangeEditor}
             invalid={!!errors.description}
             error={errors.description && "Description field is too short"}
