@@ -306,7 +306,7 @@ const SubPolicyAttributeForm = ({
     fetchPolicy: "network-only",
   });
   const controlsOptions = oc(controlsQ.data)
-    .controls.collection([])
+    .navigatorControls.collection([])
     .map(({ id, description }) => ({ label: description || "", value: id }));
   const risksQ = useRisksQuery({
     variables: {

@@ -103,7 +103,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       history.push("/control");
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["controls"],
+    refetchQueries: ["controls", "adminControls"],
     awaitRefetchQueries: true,
   });
 

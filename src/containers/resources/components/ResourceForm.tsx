@@ -393,7 +393,7 @@ function useLoadControls() {
         filter: { description_cont },
       });
       return (
-        data.controls?.collection
+        data.navigatorControls?.collection
           ?.map(({ description, id }) => ({ id, name: description }))
           .map(toLabelValue) || []
       );

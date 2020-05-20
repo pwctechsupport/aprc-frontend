@@ -8,6 +8,7 @@ import { oc } from "ts-optchain";
 import {
   useControlsQuery,
   useDestroyControlMutation,
+  useAdminControlsQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -31,14 +32,22 @@ const Controls = ({ history }: RouteComponentProps) => {
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const { loading, data } = useControlsQuery({
-    variables: { filter: isUser ? { draft_id_null: true } : {} },
+    skip: !isUser,
+    variables: { filter: isUser ? { status_eq: "release" } : {} },
   });
-  const controls = oc(data).controls.collection([]);
+  const { loading: loadingAdmin, data: dataAdmin } = useAdminControlsQuery({
+    skip: isUser,
+    variables: { filter: isAdminPreparer ? {} : { status_eq: "draft" } },
+  });
+  const controls =
+    data?.navigatorControls?.collection ||
+    dataAdmin?.preparerControls?.collection ||
+    [];
 
   const [destroy, destroyM] = useDestroyControlMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["controls"],
+    refetchQueries: ["controls", "adminControls"],
   });
   const handleDelete = (id: string) => {
     destroy({ variables: { id } });
@@ -127,7 +136,7 @@ const Controls = ({ history }: RouteComponentProps) => {
           ) : null}
         </div>
         <div className="table-responsive">
-          <Table reloading={loading}>
+          <Table reloading={loading || loadingAdmin}>
             <thead>
               <tr>
                 {isAdminReviewer ? (

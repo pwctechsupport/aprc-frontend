@@ -1,5 +1,5 @@
 query controls($filter: BaseScalar = {}, $limit: Int = 1000) {
-  controls(filter: $filter, limit: $limit) {
+  navigatorControls(filter: $filter, limit: $limit) {
     collection {
       ...control
       draft {
@@ -8,7 +8,16 @@ query controls($filter: BaseScalar = {}, $limit: Int = 1000) {
     }
   }
 }
-
+query adminControls($filter: BaseScalar = {}, $limit: Int = 1000) {
+  preparerControls(filter: $filter, limit: $limit) {
+    collection {
+      ...control
+      draft {
+        id
+      }
+    }
+  }
+}
 query control($id: ID!) {
   control(id: $id) {
     ...control

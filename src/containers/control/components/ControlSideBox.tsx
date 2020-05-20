@@ -44,12 +44,12 @@ const ControlSideBox = () => {
     },
   });
   useEffect(() => {
-    data?.controls?.collection.length === limit
+    data?.navigatorControls?.collection.length === limit
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
   const controls = oc(data)
-    .controls.collection([])
+    .navigatorControls.collection([])
     .sort(
       (a, b) =>
         new Date(String(b.updatedAt)).getTime() -
