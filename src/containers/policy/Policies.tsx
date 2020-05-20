@@ -109,7 +109,7 @@ export default function Policies({ history }: RouteComponentProps) {
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policies"],
+    refetchQueries: ["policies", "preparerPolicies"],
     awaitRefetchQueries: true,
   });
   function handleDelete(id: string) {

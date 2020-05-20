@@ -40,7 +40,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
 
   const [createReference, createReferenceM] = useCreateReferenceMutation({
     awaitRefetchQueries: true,
-    refetchQueries: ["references"],
+    refetchQueries: ["references", "adminReferences"],
     onCompleted: () => {
       toast.success("Create Success");
       history.replace(`/references`);

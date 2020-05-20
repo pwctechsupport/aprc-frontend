@@ -62,7 +62,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       notifySuccess("Delete Success");
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policyCategories"],
+    refetchQueries: ["policyCategories", "adminPolicyCategories"],
     awaitRefetchQueries: true,
   });
   const handleDelete = (id: string) => {

@@ -58,7 +58,7 @@ const References = ({ history }: RouteComponentProps) => {
 
   const [selected, setSelected] = useState<string[]>([]);
   const [destroyReference, destroyM] = useDestroyReferenceMutation({
-    refetchQueries: ["references"],
+    refetchQueries: ["references", "adminReferences"],
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
   });
@@ -222,7 +222,7 @@ const ReferenceRow = ({
   const toggleEdit = () => setEdit((p) => !p);
   const [update, updateM] = useUpdateReferenceMutation({
     awaitRefetchQueries: true,
-    refetchQueries: ["references"],
+    refetchQueries: ["references", "adminReferences"],
     onCompleted: () => {
       notifySuccess("Update Success");
       toggleEdit();

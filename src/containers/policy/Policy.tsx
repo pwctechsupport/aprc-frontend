@@ -190,6 +190,7 @@ export default function Policy({
     refetchQueries: [
       "policies",
       "policyCategories",
+      "adminPolicyCategories",
       "preparerPolicies",
       "sideboxPolicy",
       "reviewerPolicies",
@@ -249,7 +250,9 @@ export default function Policy({
     onError: notifyGraphQLErrors,
     refetchQueries: [
       "policies",
+      "preparerPolicies",
       "policyCategories",
+      "adminPolicyCategories",
       "preparerPolicies",
       "sideboxPolicy",
       "reviewerPolicies",

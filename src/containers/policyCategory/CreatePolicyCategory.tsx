@@ -17,7 +17,7 @@ const CreatePolicyCategory = ({ history }: RouteComponentProps) => {
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["policyCategories"],
+    refetchQueries: ["policyCategories", "adminPolicyCategories"],
   });
   function handleCreate(values: PolicyCategoryFormValues) {
     mutation({
