@@ -218,7 +218,6 @@ const PolicyTableRow = ({
     "admin_reviewer",
   ]);
   const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
-  const isAdmins = isAdmin || isAdminPreparer || isAdminReviewer;
   return (
     <>
       {/* when user */}

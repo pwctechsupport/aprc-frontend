@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
-import { useRecentResourcesQuery } from "../../../generated/graphql";
+import { useResourcesQuery } from "../../../generated/graphql";
 import {
   SideBox,
   SideBoxItem,
@@ -35,21 +35,24 @@ const ResourceSideBox = () => {
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
 
-  const { data, loading } = useRecentResourcesQuery({
+  const { data, loading } = useResourcesQuery({
     variables: {
       filter: isUser
         ? { name_cont: searchQuery, draft_id_null: true }
+        : isAdminReviewer
+        ? { name_cont: searchQuery, draft_id_not_null: true }
         : { name_cont: searchQuery },
       limit,
     },
   });
+
   useEffect(() => {
-    data?.recentResources?.collection.length === limit
+    data?.navigatorResources?.collection.length === limit
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
   const resources = oc(data)
-    .recentResources.collection([])
+    .navigatorResources.collection([])
     .sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()

@@ -119,8 +119,8 @@ export default function ResourcesTab({
       page,
     },
   });
-  const resources = data?.resources?.collection || [];
-  const totalCount = data?.resources?.metadata.totalCount || 0;
+  const resources = data?.navigatorResources?.collection || [];
+  const totalCount = data?.navigatorResources?.metadata.totalCount || 0;
   const policyId = queryFilters.policies_id_in;
   // Modal state handlers
   const [addResourceModal, setAddResourceModal] = useState(false);
@@ -134,7 +134,7 @@ export default function ResourcesTab({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resources"],
+    refetchQueries: ["resources", "recentResources"],
   });
 
   function handleCreateResource(values: ResourceFormValues) {
@@ -159,7 +159,7 @@ export default function ResourcesTab({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resources", "policy"],
+    refetchQueries: ["resources", "policy", "recentResources"],
   });
   function handleDeleteResource(resourceId: string) {
     const input: RemoveRelationInput = policy

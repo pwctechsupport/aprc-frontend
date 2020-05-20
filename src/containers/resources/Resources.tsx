@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
   useDestroyResourceMutation,
+  useRecentResourcesQuery,
   useResourcesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
@@ -32,17 +33,27 @@ const Resources = ({ history }: RouteComponentProps) => {
     "admin_preparer",
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+  const { data: adminData, loading: adminLoading } = useRecentResourcesQuery({
+    skip: isUser,
+    variables: { filter: isAdminPreparer ? {} : { draft_id_not_null: true } },
+    fetchPolicy: "network-only",
+  });
   const { data, loading } = useResourcesQuery({
+    skip: !isUser,
     variables: { filter: isUser ? { draft_id_null: true } : {} },
     fetchPolicy: "network-only",
   });
+
   const [destroyResource, destroyM] = useDestroyResourceMutation({
-    refetchQueries: ["resources"],
+    refetchQueries: ["resources", "recentResources"],
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
   });
   const [selected, setSelected] = useState<string[]>([]);
-  const resources = oc(data).resources.collection([]);
+  const resources =
+    oc(data).navigatorResources.collection() ||
+    adminData?.recentResources?.collection ||
+    [];
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
   function toggleCheck(id: string) {
@@ -127,7 +138,7 @@ const Resources = ({ history }: RouteComponentProps) => {
         ) : null}
       </div>
 
-      <Table loading={loading} responsive>
+      <Table loading={loading || adminLoading} responsive>
         <thead>
           <tr>
             {isAdminReviewer ? (
@@ -153,88 +164,86 @@ const Resources = ({ history }: RouteComponentProps) => {
           </tr>
         </thead>
         <tbody>
-          {oc(data)
-            .resources.collection([])
-            .map((resource) => {
-              return (
-                <tr
-                  key={resource.id}
-                  onClick={() => history.push(`/resources/${resource.id}`)}
-                >
-                  {isAdminReviewer ? (
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selected.includes(resource.id)}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={() => toggleCheck(resource.id)}
-                      />
-                    </td>
-                  ) : null}
-                  <td>{resource.name}</td>
-                  <td>{resource.resourceFileType}</td>
-                  <td>{capitalCase(resource.category || "")}</td>
+          {resources.map((resource) => {
+            return (
+              <tr
+                key={resource.id}
+                onClick={() => history.push(`/resources/${resource.id}`)}
+              >
+                {isAdminReviewer ? (
                   <td>
-                    {oc(resource)
-                      .controls([])
-                      .map((c) => c.typeOfControl)
-                      .map((c) => capitalCase(c || ""))
-                      .join(", ")}
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(resource.id)}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={() => toggleCheck(resource.id)}
+                    />
                   </td>
-                  <td>
-                    {oc(resource)
-                      .policies([])
-                      .map((p) => p.title)
-                      .join(", ")}
-                  </td>
-                  <td>{resource.businessProcess?.name}</td>
-                  <td>
-                    <DateHover>{resource.updatedAt}</DateHover>
-                  </td>
-                  <td>{resource.createdBy}</td>
-                  <td className="action">
-                    <div className="d-flex align-items-center">
-                      <Button className="soft orange mr-1" color="">
-                        <Tooltip
-                          description="Open File"
-                          subtitle="Will be download if file type not supported"
+                ) : null}
+                <td>{resource.name}</td>
+                <td>{resource.resourceFileType}</td>
+                <td>{capitalCase(resource.category || "")}</td>
+                <td>
+                  {oc(resource)
+                    .controls([])
+                    .map((c) => c.typeOfControl)
+                    .map((c) => capitalCase(c || ""))
+                    .join(", ")}
+                </td>
+                <td>
+                  {oc(resource)
+                    .policies([])
+                    .map((p) => p.title)
+                    .join(", ")}
+                </td>
+                <td>{resource.businessProcess?.name}</td>
+                <td>
+                  <DateHover>{resource.updatedAt}</DateHover>
+                </td>
+                <td>{resource.createdBy}</td>
+                <td className="action">
+                  <div className="d-flex align-items-center">
+                    <Button className="soft orange mr-1" color="">
+                      <Tooltip
+                        description="Open File"
+                        subtitle="Will be download if file type not supported"
+                      >
+                        <a
+                          href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(
+                            event: React.MouseEvent<
+                              HTMLAnchorElement,
+                              MouseEvent
+                            >
+                          ) => {
+                            event.stopPropagation();
+                          }}
                         >
-                          <a
-                            href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(
-                              event: React.MouseEvent<
-                                HTMLAnchorElement,
-                                MouseEvent
-                              >
-                            ) => {
-                              event.stopPropagation();
-                            }}
-                          >
-                            <FaDownload />
-                          </a>
+                          <FaDownload />
+                        </a>
+                      </Tooltip>
+                    </Button>
+                    {isAdminReviewer && (
+                      <DialogButton
+                        onConfirm={() =>
+                          destroyResource({ variables: { id: resource.id } })
+                        }
+                        loading={destroyM.loading}
+                        message={`Delete resource "${resource.name}"?`}
+                        className="soft red"
+                      >
+                        <Tooltip description="Delete Resource">
+                          <FaTrash />
                         </Tooltip>
-                      </Button>
-                      {isAdminReviewer && (
-                        <DialogButton
-                          onConfirm={() =>
-                            destroyResource({ variables: { id: resource.id } })
-                          }
-                          loading={destroyM.loading}
-                          message={`Delete resource "${resource.name}"?`}
-                          className="soft red"
-                        >
-                          <Tooltip description="Delete Resource">
-                            <FaTrash />
-                          </Tooltip>
-                        </DialogButton>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
+                      </DialogButton>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     </div>

@@ -73,7 +73,7 @@ export function useLoadResources() {
       const { data } = await query({
         filter: { name_cont },
       });
-      return data.resources?.collection?.map(toLabelValue) || [];
+      return data.navigatorResources?.collection?.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }

@@ -284,7 +284,7 @@ const SubPolicyAttributeForm = ({
 
   const resourceQ = useResourcesQuery();
   const resourceOptions = oc(resourceQ.data)
-    .resources.collection([])
+    .navigatorResources.collection([])
     .map(toLabelValue);
 
   const businessProcessesQ = useBusinessProcessesQuery();
