@@ -13,7 +13,6 @@ import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
-import TextEditor from "../../../shared/components/forms/TextEditor";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
@@ -50,7 +49,7 @@ const SubPolicyForm = ({
     riskIds,
   });
 
-  const { register, handleSubmit, setValue, errors, watch } = useForm<
+  const { register, handleSubmit, setValue, errors } = useForm<
     SubPolicyFormValues
   >({ validationSchema, defaultValues });
 

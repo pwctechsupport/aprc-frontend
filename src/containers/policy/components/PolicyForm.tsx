@@ -30,7 +30,7 @@ const PolicyForm = ({
 }: PolicyFormProps) => {
   const [createS, setCreateS] = useState(false);
   const policyCategoriesState = usePolicyCategoriesQuery();
-  const { register, setValue, watch, errors, handleSubmit } = useForm<
+  const { register, setValue, errors, handleSubmit } = useForm<
     PolicyFormValues
   >({
     validationSchema,
