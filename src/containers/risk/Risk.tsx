@@ -88,7 +88,7 @@ export default function Risk({
       setInEditMode(false);
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["risks", "risk"],
+    refetchQueries: ["risks", "risk", "adminRisks"],
     awaitRefetchQueries: true,
   });
   function handleUpdate(values: RiskFormValues) {
@@ -112,7 +112,7 @@ export default function Risk({
       history.push("/risk");
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["risks"],
+    refetchQueries: ["risks", "adminRisks"],
     awaitRefetchQueries: true,
   });
 

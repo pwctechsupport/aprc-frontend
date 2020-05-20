@@ -62,7 +62,7 @@ const ControlForm = ({
 
   const risksQ = useRisksQuery();
   const riskOptions = oc(risksQ)
-    .data.risks.collection([])
+    .data.navigatorRisks.collection([])
     .map((risk) => ({ label: risk.name || "", value: risk.id }));
 
   useEffect(() => {

@@ -18,7 +18,7 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
       history.goBack();
     },
     onError: () => toast.error("Create Failed"),
-    refetchQueries: ["risks"],
+    refetchQueries: ["risks", "adminRisks"],
     awaitRefetchQueries: true,
   });
 

@@ -315,7 +315,7 @@ const SubPolicyAttributeForm = ({
     fetchPolicy: "network-only",
   });
   const risksOptions = oc(risksQ.data)
-    .risks.collection([])
+    .navigatorRisks.collection([])
     .map(toLabelValue);
 
   return (

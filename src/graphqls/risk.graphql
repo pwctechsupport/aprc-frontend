@@ -16,7 +16,7 @@ fragment risk on Risk {
 }
 
 query risks($filter: BaseScalar = {}, $limit: Int = 1000) {
-  risks(filter: $filter, limit: $limit) {
+  navigatorRisks(filter: $filter, limit: $limit) {
     collection {
       ...risk
       draft {
@@ -25,7 +25,16 @@ query risks($filter: BaseScalar = {}, $limit: Int = 1000) {
     }
   }
 }
-
+query adminRisks($filter: BaseScalar = {}, $limit: Int = 1000) {
+  preparerRisks(filter: $filter, limit: $limit) {
+    collection {
+      ...risk
+      draft {
+        id
+      }
+    }
+  }
+}
 query risk($id: ID!) {
   risk(id: $id) {
     ...risk

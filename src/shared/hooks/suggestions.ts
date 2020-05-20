@@ -58,7 +58,7 @@ export function useLoadRisks() {
       const { data } = await query({
         filter: { name_cont },
       });
-      return data.risks?.collection?.map(toLabelValue) || [];
+      return data.navigatorRisks?.collection?.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }

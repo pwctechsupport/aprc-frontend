@@ -34,17 +34,19 @@ const RiskSideBox = () => {
     variables: {
       filter: isUser
         ? { name_cont: debouncedSearch, draft_id_null: true }
+        : isAdminReviewer
+        ? { name_cont: debouncedSearch, draft_id_not_null: true }
         : { name_cont: debouncedSearch },
       limit,
     },
   });
   useEffect(() => {
-    data?.risks?.collection.length === limit
+    data?.navigatorRisks?.collection.length === limit
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
   const risks =
-    data?.risks?.collection?.sort(
+    data?.navigatorRisks?.collection?.sort(
       (a, b) =>
         new Date(b.updatedAt || "").getTime() -
         new Date(a.updatedAt || "").getTime()
