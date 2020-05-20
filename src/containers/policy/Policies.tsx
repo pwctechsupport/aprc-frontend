@@ -261,7 +261,45 @@ const PolicyTableRow = ({
         </tr>
       )}
       {/* when admin */}
-      {isAdmins && (
+      {isAdminPreparer && (
+        <tr key={policy.id} onClick={() => onClick(policy.id)}>
+          <td>
+            <div
+              style={level ? { marginLeft: level * 10 } : {}}
+              className="d-flex align-items-center"
+            >
+              {level > 0 && (
+                <MdSubdirectoryArrowRight color="grey" className="mr-1" />
+              )}
+              {policy.title}
+            </div>
+          </td>
+          <td>{policy.policyCategory?.name || ""}</td>
+          <td>{capitalCase(policy.status || "")}</td>
+          <td>
+            {" "}
+            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+          </td>
+          <td>{policy?.lastUpdatedBy}</td>
+          {isAdminReviewer ? (
+            <td className="action">
+              <Tooltip description="Delete Policy">
+                <DialogButton
+                  message={`Are you sure to delete ${policy.title}`}
+                  onConfirm={() => onDelete(policy.id)}
+                  className="soft red"
+                  color=""
+                >
+                  <FaTrash />
+                </DialogButton>
+              </Tooltip>
+            </td>
+          ) : (
+            <td></td>
+          )}
+        </tr>
+      )}
+      {isAdminReviewer && status === "draft" && (
         <tr key={policy.id} onClick={() => onClick(policy.id)}>
           <td>
             <div

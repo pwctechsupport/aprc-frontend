@@ -64,6 +64,14 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
             title_cont: searchQuery,
             status_eq: "release",
           }
+        : isAdminReviewer
+        ? {
+            ...(!searchQuery && {
+              ancestry_null: true,
+            }),
+            title_cont: searchQuery,
+            status_eq: "draft",
+          }
         : {
             ...(!searchQuery && {
               ancestry_null: true,
@@ -74,39 +82,9 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       isTree: !searchQuery,
     },
   });
-  // const {
-  //   data: dataPreparer,
-  //   loading: loadingPreparer,
-  // } = usePreparerPoliciesQuery({
-  //   skip: preparer,
-  //   variables: {
-  //     filter: {
-  //       ...(!searchQuery && {
-  //         ancestry_null: true,
-  //       }),
-  //       title_cont: searchQuery,
-  //     },
-  //     limit,
-  //     isTree: !searchQuery,
-  //   },
-  // });
-  // const {
-  //   data: dataReviewer,
-  //   loading: loadingReviewer,
-  // } = useReviewerPoliciesQuery({
-  //   skip: reviewer,
-  //   variables: {
-  //     filter: {
-  //       ...(!searchQuery && {
-  //         ancestry_null: true,
-  //       }),
-  //       title_cont: searchQuery,
-  //     },
-  //     limit,
-  //     isTree: !searchQuery,
-  //   },
-  // });
+
   const policies = data?.sidebarPolicies?.collection || [];
+  console.log("policies", policies);
   // const preparerPolicies = dataPreparer?.preparerPolicies?.collection || [];
   // const reviewerPolicies = dataReviewer?.reviewerPolicies?.collection || [];
   useEffect(() => {
@@ -334,7 +312,7 @@ const PolicyBranch = ({
           </Fragment>
         ) : null}
         {/* when the current user is an admin */}
-        {isAdmin || isAdminPreparer || isAdminReviewer ? (
+        {isAdmin || isAdminPreparer ? (
           <Fragment>
             <SideBoxBranch
               className={classnames("d-flex align-items-center", {
@@ -378,6 +356,59 @@ const PolicyBranch = ({
                     activeId={activeId}
                     activeMode={activeMode}
                     status={child.status}
+                    level={Number(level) + 1}
+                    isAdmin={isAdmin}
+                  />
+                ))}
+              </Collapse>
+            )}
+          </Fragment>
+        ) : null}
+        {isAdminReviewer && status === "draft" ? (
+          <Fragment>
+            <SideBoxBranch
+              className={classnames("d-flex align-items-center", {
+                active: isActive,
+              })}
+              padLeft={level ? level * 10 : 0}
+              isLastChild={(!hasChild || !childrenHasChild) && parentId}
+            >
+              {hasChild && childrenHasChild ? (
+                <SideBoxBranchIconContainer onClick={toggle}>
+                  <SideBoxBranchIcon
+                    open={isOpen}
+                    className={isActive ? "text-white" : "text-orange"}
+                    size={14}
+                  />
+                </SideBoxBranchIconContainer>
+              ) : (
+                <div style={{ width: 34 }} />
+              )}
+              <SideBoxBranchTitle
+                as={Link}
+                className={classnames({ active: isActive })}
+                to={
+                  isAdmin
+                    ? `/policy-admin/${id}/details`
+                    : activeMode
+                    ? `/policy/${id}/${activeMode}`
+                    : `/policy/${id}/details`
+                }
+              >
+                {title}
+              </SideBoxBranchTitle>
+            </SideBoxBranch>
+            {hasChild && (
+              <Collapse isOpen={isOpen}>
+                {children?.map((child: PolicyBranchProps) => (
+                  <PolicyBranch
+                    key={child.id}
+                    parentId={child.parentId}
+                    {...child}
+                    activeId={activeId}
+                    originalData={child}
+                    status={child.status}
+                    activeMode={activeMode}
                     level={Number(level) + 1}
                     isAdmin={isAdmin}
                   />
