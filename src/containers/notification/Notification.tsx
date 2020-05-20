@@ -286,7 +286,43 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {data.senderUserName}
                     </td>
                     <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {isAdminReviewer &&
+                      {/* isAdminReviewer */}
+
+                      {isAdminReviewer
+                        ? data.dataType === "request_draft"
+                          ? `Action required: [${data.senderUserName}] has requested for approval for [${data.title}]`
+                          : data.dataType === "request_edit" &&
+                            `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
+                        : null}
+
+                      {/* isAdminPreparer */}
+
+                      {isAdminPreparer
+                        ? data.dataType === "request_draft_approved" ||
+                          data.dataType === "request_draft_rejected"
+                          ? `Notification: [${
+                              data.dataType === "request_draft_approved"
+                                ? data.title
+                                    ?.split("Policy Draft titled ")[1]
+                                    .split(" Approved")[0]
+                                : data.title
+                                    ?.split("Policy Draft titled ")[1]
+                                    .split(" Has been Rejected")[0]
+                            }] has been [${
+                              data.dataType === "request_draft_approved"
+                                ? `Approved`
+                                : `Rejected`
+                            }]`
+                          : data.dataType === "request_edit_approved" ||
+                            data.dataType === "request_edit_rejected"
+                          ? `Notification: your edit for request has been [${
+                              data.dataType === "request_edit_approved"
+                                ? "Approved"
+                                : "Rejected"
+                            }]`
+                          : data.dataType === "related_reference" && data.title
+                        : null}
+                      {/* {isAdminReviewer &&
                         `Action required: [${
                           data.senderUserName
                         }] has requested for ${
@@ -324,7 +360,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                             .replace(
                               `${data.title.split("with")[1].split(" ")[1]}`,
                               `[${data.title.split("with")[1].split(" ")[1]}]`
-                            )}`}
+                            )}`} */}
                     </td>
                     <td className={data.isRead ? "" : "text-orang text-bold"}>
                       <div>{humanizeDate(data.createdAt)}</div>
