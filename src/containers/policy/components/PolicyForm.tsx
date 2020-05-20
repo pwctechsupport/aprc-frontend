@@ -57,21 +57,21 @@ const PolicyForm = ({
   }
 
   function submit(values: PolicyFormValues) {
-    // onSubmit && onSubmit(values);
-    // setCreateS(true);
+    onSubmit && onSubmit(values);
+    setCreateS(true);
     console.log("values", values);
   }
   function submitToReviewer(values: PolicyFormValues) {
-    // handleSubmitToReviewer && handleSubmitToReviewer(values);
-    // setCreateS(false);
+    handleSubmitToReviewer && handleSubmitToReviewer(values);
+    setCreateS(false);
     console.log("values", values);
   }
   function submitFromDrafted(values: SubmitAsliBro) {
-    // submitFromDraft && submitFromDraft(values);
+    submitFromDraft && submitFromDraft(values);
     console.log("values", values);
   }
   function submitAsDraft(values: PolicyFormValues) {
-    // onSubmitAsDraft && onSubmitAsDraft(values);
+    onSubmitAsDraft && onSubmitAsDraft(values);
     console.log("values", values);
   }
 
