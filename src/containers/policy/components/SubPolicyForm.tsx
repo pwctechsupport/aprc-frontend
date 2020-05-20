@@ -55,7 +55,7 @@ const SubPolicyForm = ({
 
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
   const references = oc(referenceData)
-    .data.references.collection([])
+    .data.navigatorReferences.collection([])
     .map(toLabelValue);
 
   useEffect(() => {

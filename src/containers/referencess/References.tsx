@@ -16,6 +16,7 @@ import {
   useDestroyReferenceMutation,
   useReferencesQuery,
   useUpdateReferenceMutation,
+  useAdminReferencesQuery,
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
@@ -39,9 +40,21 @@ import BreadCrumb from "../../shared/components/BreadCrumb";
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+  const { data, loading } = useReferencesQuery({ skip: !isUser });
+  const { data: dataAdmin, loading: loadingAdmin } = useAdminReferencesQuery({
+    skip: isUser,
+  });
 
-  const { data, loading } = useReferencesQuery();
-  const references = data?.references?.collection || [];
+  const references =
+    data?.navigatorReferences?.collection ||
+    dataAdmin?.preparerReferences?.collection ||
+    [];
 
   const [selected, setSelected] = useState<string[]>([]);
   const [destroyReference, destroyM] = useDestroyReferenceMutation({
@@ -78,11 +91,7 @@ const References = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
+
   return (
     <div>
       <Helmet>
@@ -136,7 +145,7 @@ const References = ({ history }: RouteComponentProps) => {
           )}
         </div>
       </div>
-      <Table reloading={loading}>
+      <Table reloading={loading || loadingAdmin}>
         <thead>
           <tr>
             {isAdminReviewer ? (

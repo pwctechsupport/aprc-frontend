@@ -88,7 +88,7 @@ export function useLoadPolicyReferences() {
       const { data } = await query({
         filter: { name_cont },
       });
-      return data.references?.collection?.map(toLabelValue) || [];
+      return data.navigatorReferences?.collection?.map(toLabelValue) || [];
     } catch (error) {
       return [];
     }

@@ -1,5 +1,31 @@
 query references($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
-  references(filter: $filter, page: $page, limit: $limit) {
+  navigatorReferences(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+      name
+      updatedAt
+      createdAt
+      createdBy
+      lastUpdatedBy
+      policies {
+        id
+        title
+      }
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}
+query adminReferences(
+  $filter: BaseScalar = {}
+  $page: Int
+  $limit: Int = 1000
+) {
+  preparerReferences(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
       name

@@ -39,6 +39,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
   const handleGetPolicies = useLoadPolicies();
 
   const [createReference, createReferenceM] = useCreateReferenceMutation({
+    awaitRefetchQueries: true,
     refetchQueries: ["references"],
     onCompleted: () => {
       toast.success("Create Success");

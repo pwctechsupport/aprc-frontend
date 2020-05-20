@@ -37,17 +37,16 @@ const ReferenceSideBox = () => {
   const [condition, setCondition] = useState(false);
 
   useEffect(() => {
-    data?.references?.collection.length === limit
+    data?.navigatorReferences?.collection.length === limit
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
   const references = oc(data)
-    .references.collection([])
+    .navigatorReferences.collection([])
     .sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
     );
-
   return (
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>

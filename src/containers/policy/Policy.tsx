@@ -127,7 +127,7 @@ export default function Policy({
   });
 
   const references = oc(referenceData)
-    .data.references.collection([])
+    .data.navigatorReferences.collection([])
     .map(toLabelValue);
   const referenceIds = references.map((a) => a.value);
 
