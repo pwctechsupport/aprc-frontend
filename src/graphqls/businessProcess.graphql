@@ -1,5 +1,5 @@
 query businessProcesses($filter: BaseScalar = {}, $limit: Int = 1000) {
-  businessProcesses(filter: $filter, limit: $limit) {
+  navigatorBusinessProcesses(filter: $filter, limit: $limit) {
     collection {
       ancestry
       id
@@ -13,14 +13,46 @@ query businessProcesses($filter: BaseScalar = {}, $limit: Int = 1000) {
     }
   }
 }
-
+query adminBusinessProcessTree(
+  $filter: BaseScalar = {}
+  $isTree: Boolean = true
+  $limit: Int
+  $page: Int
+) {
+  preparerBusinessProcesses(filter: $filter, limit: $limit, page: $page) {
+    collection {
+      ...businessProcessBranch
+      children @include(if: $isTree) {
+        ...businessProcessBranch
+        children {
+          ...businessProcessBranch
+          children {
+            ...businessProcessBranch
+            children {
+              ...businessProcessBranch
+              children {
+                ...businessProcessBranch
+              }
+            }
+          }
+        }
+      }
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
+  }
+}
 query businessProcessTree(
   $filter: BaseScalar = {}
   $isTree: Boolean = true
   $limit: Int
   $page: Int
 ) {
-  businessProcesses(filter: $filter, limit: $limit, page: $page) {
+  navigatorBusinessProcesses(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...businessProcessBranch
       children @include(if: $isTree) {

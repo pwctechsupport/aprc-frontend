@@ -289,7 +289,7 @@ const SubPolicyAttributeForm = ({
 
   const businessProcessesQ = useBusinessProcessesQuery();
   const businessProcessesOptions = oc(businessProcessesQ.data)
-    .businessProcesses.collection([])
+    .navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
   const checkBp = formModal.watch("businessProcessIds");
 

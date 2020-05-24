@@ -12,10 +12,14 @@ const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
       toast.success("Berhasil");
       reset();
     },
-    onError: error => {
+    onError: (error) => {
       toast.error("Gagal");
     },
-    refetchQueries: ["businessProcess", "businessProcesses"]
+    refetchQueries: [
+      "businessProcess",
+      "businessProcesses",
+      "adminBusinessProcessTree",
+    ],
   });
 
   function submit(values: any) {
@@ -23,9 +27,9 @@ const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
       variables: {
         input: {
           name: values.name,
-          parentId
-        }
-      }
+          parentId,
+        },
+      },
     });
   }
   return (

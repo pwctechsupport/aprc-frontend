@@ -6,7 +6,7 @@ import { useDebounce } from "use-debounce/lib";
 import {
   BusinessProcess,
   Risk,
-  useBusinessProcessTreeQuery
+  useBusinessProcessTreeQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Pagination from "../../shared/components/Pagination";
@@ -23,15 +23,15 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
     variables: {
       filter: {
         name_cont: searchQuery,
-        ...(isTree && { ancestry_null: true })
+        ...(isTree && { ancestry_null: true }),
       },
       limit,
       page,
-      isTree
-    }
+      isTree,
+    },
   });
-  const bps = data?.businessProcesses?.collection || [];
-  const totalCount = data?.businessProcesses?.metadata.totalCount || 0;
+  const bps = data?.navigatorBusinessProcesses?.collection || [];
+  const totalCount = data?.navigatorBusinessProcesses?.metadata.totalCount || 0;
 
   return (
     <div>
@@ -55,12 +55,12 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {bps.length ? (
-            bps.map(bp => {
+            bps.map((bp) => {
               return (
                 <RiskAndControlTableRow
                   key={bp.id}
                   businessProcess={bp}
-                  onClick={id => history.push(`/risk-and-control/${id}`)}
+                  onClick={(id) => history.push(`/risk-and-control/${id}`)}
                 />
               );
             })
@@ -87,7 +87,7 @@ export default RiskAndControls;
 const RiskAndControlTableRow = ({
   businessProcess,
   onClick,
-  level = 0
+  level = 0,
 }: RiskAndControlTableRowProps) => {
   const childs = businessProcess?.children || [];
   return (
@@ -104,7 +104,7 @@ const RiskAndControlTableRow = ({
         </td>
       </tr>
       {childs.length
-        ? childs.map(childBp => (
+        ? childs.map((childBp) => (
             <RiskAndControlTableRow
               key={childBp.id}
               businessProcess={childBp}

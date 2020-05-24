@@ -52,7 +52,7 @@ const ControlForm = ({
 
   const bpsQ = useBusinessProcessesQuery();
   const bpOptions = oc(bpsQ)
-    .data.businessProcesses.collection([])
+    .data.navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
 
   const departments = useDepartmentsQuery();

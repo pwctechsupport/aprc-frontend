@@ -9,7 +9,11 @@ const CreateBusinessProcess = () => {
       toast.success("Create Success");
     },
     onError: () => toast.error("Create Failed"),
-    refetchQueries: ["businessProcesses", "businessProcessTree"]
+    refetchQueries: [
+      "businessProcesses",
+      "businessProcessTree",
+      "adminBusinessProcessTree",
+    ],
   });
   const submit = async (values: CreateBPFormValues, { reset }: any) => {
     try {

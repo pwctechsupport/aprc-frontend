@@ -36,8 +36,7 @@ export default function RiskAndControlSideBox({
     },
   });
 
-  const businessProcesses = data?.businessProcesses?.collection || [];
-
+  const businessProcesses = data?.navigatorBusinessProcesses?.collection || [];
   return (
     <SideBox>
       <SideBoxTitle>Risk & Control</SideBoxTitle>
@@ -52,6 +51,7 @@ export default function RiskAndControlSideBox({
       {businessProcesses.map((businessProcess) => {
         return (
           <BusinessProcessBranch
+            parentId={businessProcess.parentId}
             key={businessProcess.id}
             id={businessProcess.id}
             activeId={activeId}
@@ -76,6 +76,7 @@ interface BusinessBranchProps {
   name?: string | null | undefined;
   children?: Array<BusinessBranchProps> | null | undefined;
   level?: number;
+  parentId?: string | null | undefined;
 }
 
 const BusinessProcessBranch = ({
@@ -83,6 +84,7 @@ const BusinessProcessBranch = ({
   activeId,
   activeMode,
   name,
+  parentId,
   children = [],
   level,
 }: BusinessBranchProps) => {
@@ -90,7 +92,7 @@ const BusinessProcessBranch = ({
   const toggle = () => setIsOpen(!isOpen);
   const isActive = id === activeId;
   const hasChild = Array.isArray(children) && !!children.length;
-
+  const lastChild = parentId !== null && !hasChild;
   return (
     <div>
       <SideBoxBranch
@@ -98,7 +100,7 @@ const BusinessProcessBranch = ({
           active: isActive,
         })}
         padLeft={level ? level * 10 : 0}
-        isLastChild={!hasChild}
+        isLastChild={lastChild}
       >
         {hasChild ? (
           <SideBoxBranchIconContainer onClick={toggle}>
@@ -128,6 +130,7 @@ const BusinessProcessBranch = ({
           {Array.isArray(children) &&
             children.map((child: BusinessBranchProps) => (
               <BusinessProcessBranch
+                parentId={child.parentId}
                 key={child.id}
                 {...child}
                 activeId={activeId}

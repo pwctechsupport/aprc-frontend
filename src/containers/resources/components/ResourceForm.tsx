@@ -413,7 +413,9 @@ function useLoadBps() {
       const { data } = await query({
         filter: { name_cont },
       });
-      return data.businessProcesses?.collection.map(toLabelValue) || [];
+      return (
+        data.navigatorBusinessProcesses?.collection.map(toLabelValue) || []
+      );
     } catch (error) {
       return [];
     }

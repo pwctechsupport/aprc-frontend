@@ -37,12 +37,12 @@ const BusinessProcessSideBox = () => {
     variables: { filter: { name_cont: searchQuery }, limit },
   });
   useEffect(() => {
-    data?.businessProcesses?.collection.length === limit
+    data?.navigatorBusinessProcesses?.collection.length === limit
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
   const bps = oc(data)
-    .businessProcesses.collection([])
+    .navigatorBusinessProcesses.collection([])
     .sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()

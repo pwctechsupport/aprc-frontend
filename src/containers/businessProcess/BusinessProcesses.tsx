@@ -9,6 +9,7 @@ import { useDebounce } from "use-debounce/lib";
 import {
   useBusinessProcessTreeQuery,
   useDestroyBusinessProcessMutation,
+  useAdminBusinessProcessTreeQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -22,6 +23,12 @@ import CreateBusinessProcess from "./CreateBusinessProcess";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
 
@@ -34,6 +41,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 
   const isTree = !searchQuery;
   const businessQuery = useBusinessProcessTreeQuery({
+    skip: !isUser,
     variables: {
       filter: {
         name_cont: searchQuery,
@@ -42,11 +50,25 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       isTree,
     },
   });
-  const bps = oc(businessQuery).data.businessProcesses.collection([]);
+  const adminBusinessQuery = useAdminBusinessProcessTreeQuery({
+    skip: isUser,
+    variables: {
+      filter: {
+        name_cont: searchQuery,
+        ...(isTree && { ancestry_null: true }),
+      },
+      isTree,
+    },
+  });
+
+  const bps =
+    oc(businessQuery).data.navigatorBusinessProcesses.collection() ||
+    oc(adminBusinessQuery).data.preparerBusinessProcesses.collection() ||
+    [];
   const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["businessProcesses"],
+    refetchQueries: ["businessProcesses", "adminBusinessProcessTree"],
   });
 
   const handleDelete = (id: string) => {
@@ -83,11 +105,6 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       }
     );
   }
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
 
   return (
     <div>
@@ -152,7 +169,9 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
             <CreateBusinessProcess />
           </Modal>
 
-          <Table reloading={businessQuery.loading}>
+          <Table
+            reloading={businessQuery.loading || adminBusinessQuery.loading}
+          >
             <thead>
               <tr>
                 {isAdminReviewer ? (
