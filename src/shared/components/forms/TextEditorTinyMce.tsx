@@ -7,11 +7,13 @@ export interface TextEditorProps {
   error?: any;
   name?: any;
   register?: any;
+  defaultValue?: any;
 }
 const TextEditorField = ({
   onChange,
   error,
   name,
+  defaultValue,
   register,
 }: TextEditorProps) => {
   useEffect(() => {
@@ -21,6 +23,7 @@ const TextEditorField = ({
     <Editor
       // apiKey="59bj10y8kde63ifl3evajz27378spyev5hukdkbdbxk3dqks"
       onChange={onChange}
+      initialValue={defaultValue}
       init={{
         font_formats:
           "Sans Serif=sans-serif;Serif=serif;Monospace=monospace;Candara=candara;Verdana=verdana;Arial=arial;Twentieth Century=twentieth-century;Calibri=calibri;Georgia=georgia;Abadi=abadi;Helvetica=helvetica;Garamond=garamond;Bookman=bookman;Arial Nova Cond=arial-nova-cond;Bahnschrift=bahnschrift;Selawik=selawik;Perpetua=perpetua",

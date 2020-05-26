@@ -131,6 +131,7 @@ const SubPolicyForm = ({
             name="description"
             register={register}
             onChange={onChangeEditor}
+            defaultValue={defaultValues?.description || ""}
             invalid={!!errors.description}
             error={errors.description && "Description field is too short"}
           />

@@ -78,7 +78,6 @@ const PolicyForm = ({
   if (policyCategoriesState.loading) {
     return <LoadingSpinner centered size={30} />;
   }
-
   return (
     <div>
       <Form>
@@ -94,6 +93,7 @@ const PolicyForm = ({
           <TextEditorField
             name="description"
             register={register}
+            defaultValue={defaultValues?.description || ""}
             onChange={onChangeEditor}
             invalid={!!errors.description}
             error={errors.description && "Description field is too short"}
