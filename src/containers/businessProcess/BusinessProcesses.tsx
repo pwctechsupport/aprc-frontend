@@ -7,7 +7,6 @@ import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
-  useBusinessProcessTreeQuery,
   useDestroyBusinessProcessMutation,
   useAdminBusinessProcessTreeQuery,
 } from "../../generated/graphql";
@@ -28,7 +27,6 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
-  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
 

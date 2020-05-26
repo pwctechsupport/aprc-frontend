@@ -13,7 +13,6 @@ import { oc } from "ts-optchain";
 import {
   useDestroyResourceMutation,
   useRecentResourcesQuery,
-  useResourcesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";

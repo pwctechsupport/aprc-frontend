@@ -6,7 +6,6 @@ import { RouteComponentProps, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  useControlsQuery,
   useDestroyControlMutation,
   useAdminControlsQuery,
 } from "../../generated/graphql";

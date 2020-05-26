@@ -8,7 +8,6 @@ import { oc } from "ts-optchain";
 import {
   RisksDocument,
   useDestroyRiskMutation,
-  useRisksQuery,
   useAdminRisksQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
