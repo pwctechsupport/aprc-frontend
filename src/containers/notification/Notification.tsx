@@ -84,6 +84,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   });
 
   const notifications = data?.notifications?.collection || [];
+  console.log("notifications", notifications);
   const totalCount = data?.notifications?.metadata?.totalCount || 0;
   const [destroyNotifs, destroyNotifsM] = useDestroyBulkNotificationMutation({
     onCompleted: () => {
@@ -302,12 +303,8 @@ const Notification = ({ history }: RouteComponentProps) => {
                           data.dataType === "request_draft_rejected"
                           ? `Notification: [${
                               data.dataType === "request_draft_approved"
-                                ? data.title
-                                    ?.split("Policy Draft titled ")[1]
-                                    .split(" Approved")[0]
-                                : data.title
-                                    ?.split("Policy Draft titled ")[1]
-                                    .split(" Has been Rejected")[0]
+                                ? data.title?.split(" Approved")[0]
+                                : data.title?.split(" Has been Rejected")[0]
                             }] has been [${
                               data.dataType === "request_draft_approved"
                                 ? `Approved`
@@ -315,7 +312,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                             }]`
                           : data.dataType === "request_edit_approved" ||
                             data.dataType === "request_edit_rejected"
-                          ? `Notification: your edit for request has been [${
+                          ? `Notification: your request for edit has been [${
                               data.dataType === "request_edit_approved"
                                 ? "Approved"
                                 : "Rejected"
