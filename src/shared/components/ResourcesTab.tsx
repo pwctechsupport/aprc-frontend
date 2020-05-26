@@ -74,7 +74,6 @@ export default function ResourcesTab({
         )
       )
     ) || [];
-  console.log("policyIdFirstChild", policyIdFirstChild);
   const policyIds = [
     policyIdsWithoutChildren,
     ...policyIdFirstChild.flat(10),

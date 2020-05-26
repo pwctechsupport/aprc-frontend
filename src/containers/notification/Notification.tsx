@@ -84,7 +84,6 @@ const Notification = ({ history }: RouteComponentProps) => {
   });
 
   const notifications = data?.notifications?.collection || [];
-  console.log("notifications", notifications);
   const totalCount = data?.notifications?.metadata?.totalCount || 0;
   const [destroyNotifs, destroyNotifsM] = useDestroyBulkNotificationMutation({
     onCompleted: () => {

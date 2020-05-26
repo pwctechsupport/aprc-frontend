@@ -84,7 +84,6 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   });
 
   const policies = data?.sidebarPolicies?.collection || [];
-  console.log("policies", policies);
   // const preparerPolicies = dataPreparer?.preparerPolicies?.collection || [];
   // const reviewerPolicies = dataReviewer?.reviewerPolicies?.collection || [];
   useEffect(() => {
