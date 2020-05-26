@@ -148,6 +148,7 @@ export default function RiskAndControl({
     fetchPolicy: "network-only",
   });
   const { data: bookmarkData, loading: bookmarkLoading } = useBookmarksQuery({
+    fetchPolicy: "network-only",
     variables: {
       filter: { originator_id_eq: id, originator_type_eq: "BusinessProcess" },
     },

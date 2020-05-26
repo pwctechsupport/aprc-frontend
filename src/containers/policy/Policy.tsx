@@ -115,9 +115,11 @@ export default function Policy({
     pollInterval: 30000,
   });
   const referenceData = useReferencesQuery({
+    fetchPolicy: "network-only",
     variables: { filter: { policies_id_matches_any: id } },
   });
   const { data: bookmarkData, loading: bookmarkLoading } = useBookmarksQuery({
+    fetchPolicy: "network-only",
     variables: {
       filter: { originator_id_eq: id, originator_type_eq: "Policy" },
     },
@@ -371,6 +373,7 @@ export default function Policy({
   const ancestors = data?.policy?.ancestors || [];
   const lastUpdatedAt = data?.policy?.lastUpdatedAt;
   const bookmarked = bookmarkData?.bookmarks?.collection || [];
+  console.log("bookmarked", bookmarked);
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
