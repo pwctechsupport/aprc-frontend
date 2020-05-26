@@ -29,14 +29,14 @@ const Risks = ({ history }: RouteComponentProps) => {
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
 
-  const { loading, data } = useRisksQuery({
-    skip: !isUser,
-    variables: { filter: isUser ? { draft_id_null: true } : {} },
-    fetchPolicy: "network-only",
-  });
   const { loading: loadingAdmin, data: dataAdmin } = useAdminRisksQuery({
-    skip: isUser,
-    variables: { filter: isAdminReviewer ? { draft_id_not_null: true } : {} },
+    variables: {
+      filter: isAdminReviewer
+        ? { draft_id_not_null: true }
+        : isUser
+        ? { draft_id_null: true }
+        : {},
+    },
     fetchPolicy: "network-only",
   });
   const [selected, setSelected] = useState<string[]>([]);
@@ -54,10 +54,7 @@ const Risks = ({ history }: RouteComponentProps) => {
     ],
   });
 
-  const risks =
-    oc(data).navigatorRisks.collection() ||
-    dataAdmin?.preparerRisks?.collection ||
-    [];
+  const risks = dataAdmin?.preparerRisks?.collection || [];
 
   function handleDelete(id: string) {
     destroy({ variables: { id } });
@@ -142,7 +139,7 @@ const Risks = ({ history }: RouteComponentProps) => {
           </Button>
         ) : null}
       </div>
-      <Table reloading={loading || loadingAdmin}>
+      <Table reloading={loadingAdmin}>
         <thead>
           <tr>
             {isAdminReviewer ? (

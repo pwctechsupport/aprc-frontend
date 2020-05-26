@@ -31,18 +31,17 @@ const Controls = ({ history }: RouteComponentProps) => {
     "admin_preparer",
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
-  const { loading, data } = useControlsQuery({
-    skip: !isUser,
-    variables: { filter: isUser ? { status_eq: "release" } : {} },
-  });
+
   const { loading: loadingAdmin, data: dataAdmin } = useAdminControlsQuery({
-    skip: isUser,
-    variables: { filter: isAdminPreparer ? {} : { status_eq: "draft" } },
+    variables: {
+      filter: isAdminPreparer
+        ? {}
+        : isUser
+        ? { status_eq: "release" }
+        : { status_eq: "draft" },
+    },
   });
-  const controls =
-    data?.navigatorControls?.collection ||
-    dataAdmin?.preparerControls?.collection ||
-    [];
+  const controls = dataAdmin?.preparerControls?.collection || [];
 
   const [destroy, destroyM] = useDestroyControlMutation({
     onCompleted: () => toast.success("Delete Success"),
@@ -136,7 +135,7 @@ const Controls = ({ history }: RouteComponentProps) => {
           ) : null}
         </div>
         <div className="table-responsive">
-          <Table reloading={loading || loadingAdmin}>
+          <Table reloading={loadingAdmin}>
             <thead>
               <tr>
                 {isAdminReviewer ? (

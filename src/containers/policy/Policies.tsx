@@ -1,5 +1,5 @@
 import { capitalCase } from "capital-case";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { FaTrash } from "react-icons/fa";
 import { MdSubdirectoryArrowRight } from "react-icons/md";
@@ -9,7 +9,6 @@ import {
   Policy,
   useDestroyPolicyMutation,
   usePreparerPoliciesQuery,
-  useSideboxPolicyQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -34,20 +33,7 @@ export default function Policies({ history }: RouteComponentProps) {
   ]);
 
   //false means true. Because true means it will be skipped
-  const [isPreparer, setIsPreparer] = useState(true);
-  const [User, setUser] = useState(true);
   const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
-
-  useEffect(() => {
-    if (isAdminPreparer || isAdminReviewer) {
-      setIsPreparer(false);
-      setUser(true);
-    }
-    if (isUser) {
-      setIsPreparer(true);
-      setUser(false);
-    }
-  }, [isAdminPreparer, isAdminReviewer, isUser]);
 
   const [showDashboard, setShowDashboard] = useState(false);
   function toggleShowDashboard() {
@@ -63,7 +49,6 @@ export default function Policies({ history }: RouteComponentProps) {
     loading: loadingPreparer,
   } = usePreparerPoliciesQuery({
     fetchPolicy: "network-only",
-    skip: isPreparer,
     variables: {
       isTree,
       filter: isAdminReviewer
@@ -72,20 +57,7 @@ export default function Policies({ history }: RouteComponentProps) {
             title_or_status_or_policy_category_name_cont: searchQuery,
             status_eq: "draft",
           }
-        : {
-            ...(isTree && { ancestry_null: true }),
-            title_or_status_or_policy_category_name_cont: searchQuery,
-          },
-      limit,
-      page,
-    },
-  });
-  const { data: dataUser, loading: loadingUser } = useSideboxPolicyQuery({
-    fetchPolicy: "network-only",
-    skip: User,
-    variables: {
-      isTree,
-      filter: isUser
+        : isUser
         ? {
             ...(isTree && { ancestry_null: true }),
             title_or_status_or_policy_category_name_cont: searchQuery,
@@ -99,17 +71,16 @@ export default function Policies({ history }: RouteComponentProps) {
       page,
     },
   });
+
   const policiesPreparer = dataPreparer?.preparerPolicies?.collection || [];
-  const policiesUser = dataUser?.sidebarPolicies?.collection || [];
 
   const totalCountPreparer =
     dataPreparer?.preparerPolicies?.metadata.totalCount || 0;
-  const totalCountUser = dataUser?.sidebarPolicies?.metadata.totalCount || 0;
 
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policies", "preparerPolicies"],
+    refetchQueries: ["preparerPolicies"],
     awaitRefetchQueries: true,
   });
   function handleDelete(id: string) {
@@ -144,9 +115,9 @@ export default function Policies({ history }: RouteComponentProps) {
         search={search}
         setSearch={setSearch}
         placeholder="Search Policies"
-        loading={loadingPreparer || loadingUser}
+        loading={loadingPreparer}
       />
-      <Table reloading={loadingPreparer || loadingUser} responsive>
+      <Table reloading={loadingPreparer} responsive>
         <thead>
           <tr>
             <th className="w-40">Title</th>
@@ -169,17 +140,6 @@ export default function Policies({ history }: RouteComponentProps) {
                 level={0}
               />
             ))
-          ) : policiesUser.length ? (
-            policiesUser.map((policy) => (
-              <PolicyTableRow
-                key={policy.id}
-                policy={policy}
-                onClick={(id) => history.push(`/policy/${id}`)}
-                onDelete={handleDelete}
-                status={policy.status}
-                level={0}
-              />
-            ))
           ) : (
             <tr>
               <td className="empty text-grey" colSpan={4}>
@@ -190,7 +150,7 @@ export default function Policies({ history }: RouteComponentProps) {
         </tbody>
       </Table>
       <Pagination
-        totalCount={totalCountPreparer || totalCountUser}
+        totalCount={totalCountPreparer}
         perPage={limit}
         onPageChange={handlePageChange}
       />

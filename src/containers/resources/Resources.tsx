@@ -34,13 +34,13 @@ const Resources = ({ history }: RouteComponentProps) => {
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const { data: adminData, loading: adminLoading } = useRecentResourcesQuery({
-    skip: isUser,
-    variables: { filter: isAdminPreparer ? {} : { draft_id_not_null: true } },
-    fetchPolicy: "network-only",
-  });
-  const { data, loading } = useResourcesQuery({
-    skip: !isUser,
-    variables: { filter: isUser ? { draft_id_null: true } : {} },
+    variables: {
+      filter: isAdminPreparer
+        ? {}
+        : isUser
+        ? { draft_id_null: true }
+        : { draft_id_not_null: true },
+    },
     fetchPolicy: "network-only",
   });
 
@@ -50,10 +50,7 @@ const Resources = ({ history }: RouteComponentProps) => {
     onError: () => toast.error("Delete Failed"),
   });
   const [selected, setSelected] = useState<string[]>([]);
-  const resources =
-    oc(data).navigatorResources.collection() ||
-    adminData?.recentResources?.collection ||
-    [];
+  const resources = adminData?.recentResources?.collection || [];
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
   function toggleCheck(id: string) {
@@ -138,7 +135,7 @@ const Resources = ({ history }: RouteComponentProps) => {
         ) : null}
       </div>
 
-      <Table loading={loading || adminLoading} responsive>
+      <Table loading={adminLoading} responsive>
         <thead>
           <tr>
             {isAdminReviewer ? (

@@ -14,7 +14,6 @@ import {
   PoliciesDocument,
   Reference,
   useDestroyReferenceMutation,
-  useReferencesQuery,
   useUpdateReferenceMutation,
   useAdminReferencesQuery,
 } from "../../generated/graphql";
@@ -45,16 +44,11 @@ const References = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
-  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
-  const { data, loading } = useReferencesQuery({ skip: !isUser });
-  const { data: dataAdmin, loading: loadingAdmin } = useAdminReferencesQuery({
-    skip: isUser,
-  });
+  const { data: dataAdmin, loading: loadingAdmin } = useAdminReferencesQuery(
+    {}
+  );
 
-  const references =
-    data?.navigatorReferences?.collection ||
-    dataAdmin?.preparerReferences?.collection ||
-    [];
+  const references = dataAdmin?.preparerReferences?.collection || [];
 
   const [selected, setSelected] = useState<string[]>([]);
   const [destroyReference, destroyM] = useDestroyReferenceMutation({
@@ -145,7 +139,7 @@ const References = ({ history }: RouteComponentProps) => {
           )}
         </div>
       </div>
-      <Table reloading={loading || loadingAdmin}>
+      <Table reloading={loadingAdmin}>
         <thead>
           <tr>
             {isAdminReviewer ? (

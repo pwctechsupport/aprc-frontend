@@ -37,22 +37,18 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     loading: loadingAdmin,
     data: dataAdmin,
   } = useAdminPolicyCategoriesQuery({
-    skip: isUser,
     variables: {
-      filter: isAdminPreparer ? {} : { draft_event_not_null: true },
+      filter: isAdminPreparer
+        ? {}
+        : isUser
+        ? { draft_event_null: true }
+        : { draft_event_not_null: true },
     },
     fetchPolicy: "network-only",
   });
 
-  const { loading, data } = usePolicyCategoriesQuery({
-    skip: !isUser,
-    variables: { filter: { draft_event_null: true } },
-    fetchPolicy: "network-only",
-  });
   const policyCategories =
-    data?.navigatorPolicyCategories?.collection ||
-    dataAdmin?.preparerPolicyCategories?.collection ||
-    [];
+    dataAdmin?.preparerPolicyCategories?.collection || [];
 
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
@@ -151,7 +147,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           ) : null}
         </div>
       </div>
-      <Table reloading={loading || loadingAdmin}>
+      <Table reloading={loadingAdmin}>
         <thead>
           <tr>
             {isAdminReviewer ? (

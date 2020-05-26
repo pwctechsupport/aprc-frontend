@@ -40,18 +40,8 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [searchQuery] = useDebounce(searchValue, 700);
 
   const isTree = !searchQuery;
-  const businessQuery = useBusinessProcessTreeQuery({
-    skip: !isUser,
-    variables: {
-      filter: {
-        name_cont: searchQuery,
-        ...(isTree && { ancestry_null: true }),
-      },
-      isTree,
-    },
-  });
+
   const adminBusinessQuery = useAdminBusinessProcessTreeQuery({
-    skip: isUser,
     variables: {
       filter: {
         name_cont: searchQuery,
@@ -62,9 +52,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
   });
 
   const bps =
-    oc(businessQuery).data.navigatorBusinessProcesses.collection() ||
-    oc(adminBusinessQuery).data.preparerBusinessProcesses.collection() ||
-    [];
+    oc(adminBusinessQuery).data.preparerBusinessProcesses.collection() || [];
   const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
@@ -169,9 +157,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
             <CreateBusinessProcess />
           </Modal>
 
-          <Table
-            reloading={businessQuery.loading || adminBusinessQuery.loading}
-          >
+          <Table reloading={adminBusinessQuery.loading}>
             <thead>
               <tr>
                 {isAdminReviewer ? (
