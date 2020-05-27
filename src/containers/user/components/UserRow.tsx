@@ -26,6 +26,7 @@ import useAccessRights from "../../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
 import Tooltip from "../../../shared/components/Tooltip";
+import { toast } from "react-toastify";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -56,14 +57,19 @@ export default function UserRow({
     },
     validationSchema,
   });
-
   const [update, updateM] = useAdminUpdateUserMutation({
     refetchQueries: ["users"],
-    onCompleted,
+    onCompleted: () => {
+      toast.success("Update Success");
+    },
     onError: notifyGraphQLErrors,
   });
 
   const [destroy, destroyM] = useDestroyUserMutation({
+    onCompleted: () => {
+      toast.success("Delete Success");
+    },
+
     refetchQueries: ["users"],
     onError: notifyGraphQLErrors,
   });
@@ -76,11 +82,19 @@ export default function UserRow({
   });
 
   const [approveEdit, approveEditM] = useApproveRequestEditMutation({
+    onCompleted: () => {
+      toast.success("User Approved");
+    },
+
     refetchQueries: ["users"],
     onError: notifyGraphQLErrors,
   });
 
   const [reviewUser, reviewM] = useReviewUserDraftMutation({
+    onCompleted: () => {
+      toast.success("User Reviewed");
+    },
+
     refetchQueries: ["users"],
     onError: notifyGraphQLErrors,
   });
@@ -128,11 +142,12 @@ export default function UserRow({
         },
       },
     });
-  }
-
-  function onCompleted() {
     setIsEdit(false);
   }
+
+  // function onCompleted() {
+  //   setIsEdit(false);
+  // }
 
   function handleDestroy(id: string) {
     destroy({ variables: { id } });
