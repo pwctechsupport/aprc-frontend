@@ -48,13 +48,7 @@ const ControlSideBox = () => {
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
-  const controls = oc(data)
-    .navigatorControls.collection([])
-    .sort(
-      (a, b) =>
-        new Date(String(b.updatedAt)).getTime() -
-        new Date(String(a.updatedAt)).getTime()
-    );
+  const controls = oc(data).navigatorControls.collection([]);
 
   return (
     <SideBox onScroll={onScroll}>

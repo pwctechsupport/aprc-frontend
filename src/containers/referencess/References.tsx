@@ -44,10 +44,9 @@ const References = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
-  const { data: dataAdmin, loading: loadingAdmin } = useAdminReferencesQuery(
-    {}
-  );
-
+  const { data: dataAdmin, loading: loadingAdmin } = useAdminReferencesQuery({
+    fetchPolicy: "network-only",
+  });
   const references = dataAdmin?.preparerReferences?.collection || [];
 
   const [selected, setSelected] = useState<string[]>([]);

@@ -51,12 +51,7 @@ const ResourceSideBox = () => {
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
-  const resources = oc(data)
-    .navigatorResources.collection([])
-    .sort(
-      (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
+  const resources = oc(data).navigatorResources.collection([]);
 
   return (
     <SideBox onScroll={onScroll}>

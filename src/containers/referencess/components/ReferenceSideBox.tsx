@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { oc } from "ts-optchain";
-import { useReferencesQuery } from "../../../generated/graphql";
 import {
   SideBoxItem,
   SideBoxItemText,
@@ -14,6 +13,7 @@ import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { FaUndo } from "react-icons/fa";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
+import { useReferencesQuery } from "../../../generated/graphql";
 
 const ReferenceSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -41,12 +41,8 @@ const ReferenceSideBox = () => {
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
-  const references = oc(data)
-    .navigatorReferences.collection([])
-    .sort(
-      (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
+  const references = oc(data).navigatorReferences.collection([]);
+
   return (
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>

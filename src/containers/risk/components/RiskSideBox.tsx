@@ -45,12 +45,7 @@ const RiskSideBox = () => {
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
-  const risks =
-    data?.navigatorRisks?.collection?.sort(
-      (a, b) =>
-        new Date(b.updatedAt || "").getTime() -
-        new Date(a.updatedAt || "").getTime()
-    ) || [];
+  const risks = data?.navigatorRisks?.collection || [];
   const onScroll = (e: any) => {
     const scroll =
       e.target.scrollHeight - e.target.scrollTop - e.target.clientHeight;

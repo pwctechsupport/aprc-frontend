@@ -41,12 +41,8 @@ const BusinessProcessSideBox = () => {
       ? setCondition(true)
       : setCondition(false);
   }, [data, limit]);
-  const bps = oc(data)
-    .navigatorBusinessProcesses.collection([])
-    .sort(
-      (a, b) =>
-        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
+  const bps = oc(data).navigatorBusinessProcesses.collection([]);
+
   return (
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
