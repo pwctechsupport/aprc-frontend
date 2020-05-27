@@ -11,7 +11,7 @@ import {
   SideBoxTitle,
 } from "../../../shared/components/SideBox";
 import Tooltip from "../../../shared/components/Tooltip";
-import humanizeDate from "../../../shared/utils/humanizeDate";
+// import humanizeDate from "../../../shared/utils/humanizeDate";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
@@ -75,9 +75,9 @@ const ControlSideBox = () => {
             <SideBoxItemText flex={2} bold>
               {control.description}
             </SideBoxItemText>
-            <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
+            {/* <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(oc(control).updatedAt(""))}
-            </SideBoxItemText>
+            </SideBoxItemText> */}
           </SideBoxItem>
         );
       })}

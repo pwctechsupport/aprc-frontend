@@ -7,7 +7,7 @@ import {
   SideBoxTitle,
   SideBox,
 } from "../../../shared/components/SideBox";
-import humanizeDate from "../../../shared/utils/humanizeDate";
+// import humanizeDate from "../../../shared/utils/humanizeDate";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
@@ -74,9 +74,9 @@ const ReferenceSideBox = () => {
                   : oc(reference).name("")
                 : null}
             </SideBoxItemText>
-            <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
+            {/* <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(oc(reference).updatedAt(""))}
-            </SideBoxItemText>
+            </SideBoxItemText> */}
           </SideBoxItem>
         );
       })}

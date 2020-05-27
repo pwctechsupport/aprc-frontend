@@ -9,7 +9,7 @@ import {
   SideBoxSearch,
   SideBoxTitle,
 } from "../../../shared/components/SideBox";
-import humanizeDate from "../../../shared/utils/humanizeDate";
+// import humanizeDate from "../../../shared/utils/humanizeDate";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import Tooltip from "../../../shared/components/Tooltip";
@@ -62,9 +62,9 @@ const BusinessProcessSideBox = () => {
             <SideBoxItemText flex={2} bold>
               {bp.name}
             </SideBoxItemText>
-            <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
+            {/* <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
               {humanizeDate(bp.updatedAt)}
-            </SideBoxItemText>
+            </SideBoxItemText> */}
           </SideBoxItem>
         ))}
         {!(bps.length < limit) && !loading && (

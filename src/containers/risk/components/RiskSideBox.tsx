@@ -7,7 +7,7 @@ import {
   SideBoxTitle,
   SideBox,
 } from "../../../shared/components/SideBox";
-import humanizeDate from "../../../shared/utils/humanizeDate";
+// import humanizeDate from "../../../shared/utils/humanizeDate";
 import { useDebounce } from "use-debounce/lib";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
@@ -78,9 +78,9 @@ const RiskSideBox = () => {
             <SideBoxItemText flex={2} bold>
               {risk.name}
             </SideBoxItemText>
-            <SideBoxItemText flex={1} right>
+            {/* <SideBoxItemText flex={1} right>
               {humanizeDate(risk.updatedAt || "")}
-            </SideBoxItemText>
+            </SideBoxItemText> */}
           </SideBoxItem>
         );
       })}

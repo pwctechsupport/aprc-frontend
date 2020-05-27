@@ -9,7 +9,7 @@ import {
   SideBoxSearch,
   SideBoxTitle,
 } from "../../../shared/components/SideBox";
-import humanizeDate from "../../../shared/utils/humanizeDate";
+// import humanizeDate from "../../../shared/utils/humanizeDate";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { FaUndo } from "react-icons/fa";
@@ -73,9 +73,9 @@ const ResourceSideBox = () => {
           <SideBoxItemText flex={2} bold>
             {resource.name}
           </SideBoxItemText>
-          <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
+          {/* <SideBoxItemText style={{ fontSize: "15px" }} flex={1} right>
             {humanizeDate(new Date(resource.updatedAt))}
-          </SideBoxItemText>
+          </SideBoxItemText> */}
         </SideBoxItem>
       ))}
       {!(resources.length < limit) && !loading && (
