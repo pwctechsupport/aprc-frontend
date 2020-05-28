@@ -169,6 +169,28 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   const activityControls = data?.control?.activityControls || [];
   const createdAt = data?.control?.createdAt || "";
   const departments = data?.control?.departments || [];
+
+  //special condition because names rendered twice
+
+  let i = true;
+  let j = true;
+  const riskNamesRenderedOnce = () => {
+    if (risks.length && i) {
+      i = false;
+      return risks.map((a) => a.name);
+    } else {
+      return null;
+    }
+  };
+  const bPNamesRenderedOnce = () => {
+    if (businessProcesses.length && j) {
+      j = false;
+      return businessProcesses.map((a) => a.name);
+    } else {
+      return null;
+    }
+  };
+
   const renderControlAction = () => {
     if (premise === 6) {
       return (
@@ -325,13 +347,17 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
         <Col xs={12} className="mt-3">
           <h5>Risks</h5>
           {risks.length ? (
-            risks.map((risk) => <p key={risk.id}>{risk.name}</p>)
+            risks.map((risk) => (
+              <p key={"risk" + risk.id}>{riskNamesRenderedOnce()}</p>
+            ))
           ) : (
             <EmptyAttribute />
           )}
           <h5 className="mt-2">Business Processes</h5>
           {businessProcesses.length ? (
-            businessProcesses.map((bp) => <p key={bp.id}>{bp.name}</p>)
+            businessProcesses.map((bp) => (
+              <p key={"bp" + bp.id}>{bPNamesRenderedOnce()}</p>
+            ))
           ) : (
             <EmptyAttribute />
           )}
