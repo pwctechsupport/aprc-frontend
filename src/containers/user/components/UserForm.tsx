@@ -88,7 +88,7 @@ export default function UserForm(props: UserFormProps) {
         required
         label="Phone"
         name="phone"
-        type="tel"
+        type="number"
         innerRef={register({ required: true })}
         error={oc(errors).phone.message("")}
       />
