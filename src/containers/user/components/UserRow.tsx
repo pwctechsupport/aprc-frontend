@@ -312,6 +312,7 @@ export default function UserRow({
             defaultOptions
             name="roleIds"
             register={register}
+            error={errors.roleIds && "Role is a required field"}
             setValue={setValue}
             loadOptions={handleGetRoles}
             defaultValue={user?.roles?.map(toLabelValue) || []}
@@ -322,6 +323,9 @@ export default function UserRow({
             isMulti
             cacheOptions
             defaultOptions
+            error={
+              errors.policyCategoryIds && "Policy category is a required field"
+            }
             name="policyCategoryIds"
             register={register}
             setValue={setValue}
@@ -355,5 +359,7 @@ export default function UserRow({
 }
 
 const validationSchema = yup.object().shape({
-  name: yup.string().required("Required"),
+  name: yup.string().required("Name is a required field"),
+  policyCategoryIds: yup.array().required(),
+  roleIds: yup.object().required(),
 });
