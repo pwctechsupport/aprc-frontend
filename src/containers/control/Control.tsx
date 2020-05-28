@@ -48,7 +48,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   }, [location.pathname]);
 
   const id = get(match, "params.id", "");
-  const { loading, data } = useControlQuery({ variables: { id } });
+  const { loading, data } = useControlQuery({
+    fetchPolicy: "network-only",
+    variables: { id },
+  });
 
   const draft = data?.control?.draft?.objectResult;
   const hasEditAccess = data?.control?.hasEditAccess || false;
