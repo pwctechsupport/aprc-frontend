@@ -93,22 +93,24 @@ export default function UserForm(props: UserFormProps) {
         error={oc(errors).phone.message("")}
       />
       <AsyncSelect
-        label="User Group"
+        label="User Group*"
         cacheOptions
         defaultOptions
         name="roleIds"
         register={register}
         setValue={setValue}
         loadOptions={handleGetRoles}
+        error={errors.roleIds && "User group is a required field"}
       />
       <AsyncSelect
-        label="Department"
+        label="Department*"
         cacheOptions
         defaultOptions
         name="departmentIds"
         register={register}
         setValue={setValue}
         loadOptions={handleGetDepartments}
+        error={errors.departmentIds && "Department is a required field"}
       />
       <AsyncSelect
         label="Policy Categories*"
@@ -157,6 +159,8 @@ const validationSchema = yup.object().shape({
     .oneOf([yup.ref("password")], "Password does not match"),
   phone: yup.string().required(),
   policyCategoryIds: yup.array().required(),
+  roleIds: yup.object().required(),
+  departmentIds: yup.object().required(),
 });
 
 // =======================================================
