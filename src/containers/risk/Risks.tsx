@@ -192,7 +192,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                 <td>{bps}</td>
                 <td>{risk.updatedAt?.split(" ")[0]}</td>
                 <td>{risk.lastUpdatedBy}</td>
-                <td>{risk.status}</td>
+                <td>{risk.draft ? "Waiting for review" : "Release"}</td>
                 {isAdminReviewer ? (
                   <td className="action">
                     <DialogButton

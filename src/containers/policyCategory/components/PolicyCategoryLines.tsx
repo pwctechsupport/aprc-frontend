@@ -195,7 +195,9 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                     .map((policy) => policy.title)
                     .join(", ")}
                 </td>
-                <td>{policyCategory.status}</td>
+                <td>
+                  {policyCategory.draft ? "Waiting for review" : "Release"}
+                </td>
                 <td>{policyCategory.updatedAt.split(" ")[0]}</td>
                 <td>{policyCategory.lastUpdatedBy}</td>
                 {isAdminReviewer ? (

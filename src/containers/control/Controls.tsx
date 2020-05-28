@@ -32,6 +32,7 @@ const Controls = ({ history }: RouteComponentProps) => {
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
 
   const { loading: loadingAdmin, data: dataAdmin } = useAdminControlsQuery({
+    fetchPolicy: "network-only",
     variables: {
       filter: isAdminPreparer
         ? {}
@@ -189,16 +190,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                     </td>
                     <td>{capitalCase(control.nature || "")}</td>
                     <td>{control.controlOwner}</td>
-                    <td>
-                      {control.status
-                        ?.split("_")
-                        .map(
-                          (a) =>
-                            a.charAt(0).toUpperCase() +
-                            a.substr(1).toLowerCase()
-                        )
-                        .join(" ")}
-                    </td>
+                    <td>{control.draft ? "Waiting for review" : "Release"}</td>
                     <td>
                       {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}
                     </td>
