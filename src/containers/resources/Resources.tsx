@@ -13,6 +13,7 @@ import { oc } from "ts-optchain";
 import {
   useDestroyResourceMutation,
   useRecentResourcesQuery,
+  useReviewerResourcesStatusQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -33,23 +34,32 @@ const Resources = ({ history }: RouteComponentProps) => {
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const { data: adminData, loading: adminLoading } = useRecentResourcesQuery({
+    skip: isAdminReviewer,
     variables: {
-      filter: isAdminPreparer
-        ? {}
-        : isUser
-        ? { draft_id_null: true }
-        : { draft_id_not_null: true },
+      filter: isAdminPreparer ? {} : { draft_id_not_null: true },
     },
     fetchPolicy: "network-only",
   });
-
+  const {
+    data: dataReviewer,
+    loading: loadingReviewer,
+  } = useReviewerResourcesStatusQuery({
+    skip: isUser || isAdminPreparer,
+    variables: {
+      filter: {},
+    },
+    fetchPolicy: "network-only",
+  });
   const [destroyResource, destroyM] = useDestroyResourceMutation({
-    refetchQueries: ["resources", "recentResources"],
+    refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"],
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
   });
   const [selected, setSelected] = useState<string[]>([]);
-  const resources = adminData?.recentResources?.collection || [];
+  const resources =
+    adminData?.recentResources?.collection ||
+    dataReviewer?.reviewerResourcesStatus?.collection ||
+    [];
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
   function toggleCheck(id: string) {
@@ -134,7 +144,7 @@ const Resources = ({ history }: RouteComponentProps) => {
         ) : null}
       </div>
 
-      <Table loading={adminLoading} responsive>
+      <Table loading={adminLoading || loadingReviewer} responsive>
         <thead>
           <tr>
             {isAdminReviewer ? (

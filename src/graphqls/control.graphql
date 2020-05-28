@@ -18,6 +18,17 @@ query adminControls($filter: BaseScalar = {}, $limit: Int = 1000) {
     }
   }
 }
+query reviewerControlsStatus($filter: BaseScalar = {}, $limit: Int = 1000) {
+  reviewerControlsStatus(filter: $filter, limit: $limit) {
+    collection {
+      ...control
+      draft {
+        id
+      }
+    }
+  }
+}
+
 query control($id: ID!) {
   control(id: $id) {
     ...control

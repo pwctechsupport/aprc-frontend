@@ -3,6 +3,7 @@ import Helmet from "react-helmet";
 import {
   useDestroyPolicyCategoriesMutation,
   useAdminPolicyCategoriesQuery,
+  useReviewerPolicyCategoriesStatusQuery,
 } from "../../../generated/graphql";
 import Table from "../../../shared/components/Table";
 import { RouteComponentProps, Link } from "react-router-dom";
@@ -36,18 +37,26 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     loading: loadingAdmin,
     data: dataAdmin,
   } = useAdminPolicyCategoriesQuery({
+    skip: isAdminReviewer,
     variables: {
-      filter: isAdminPreparer
-        ? {}
-        : isUser
-        ? { draft_event_null: true }
-        : { draft_event_not_null: true },
+      filter: isAdminPreparer ? {} : { draft_event_null: true },
     },
     fetchPolicy: "network-only",
   });
-
+  const {
+    loading: loadingReviewer,
+    data: dataReviewer,
+  } = useReviewerPolicyCategoriesStatusQuery({
+    skip: isAdminPreparer || isUser,
+    variables: {
+      filter: {},
+    },
+    fetchPolicy: "network-only",
+  });
   const policyCategories =
-    dataAdmin?.preparerPolicyCategories?.collection || [];
+    dataAdmin?.preparerPolicyCategories?.collection ||
+    dataReviewer?.reviewerPolicyCategoriesStatus?.collection ||
+    [];
 
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
@@ -57,7 +66,11 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       notifySuccess("Delete Success");
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policyCategories", "adminPolicyCategories"],
+    refetchQueries: [
+      "policyCategories",
+      "adminPolicyCategories",
+      "reviewerPolicyCategoriesStatus",
+    ],
     awaitRefetchQueries: true,
   });
   const handleDelete = (id: string) => {
@@ -146,7 +159,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           ) : null}
         </div>
       </div>
-      <Table reloading={loadingAdmin}>
+      <Table reloading={loadingAdmin || loadingReviewer}>
         <thead>
           <tr>
             {isAdminReviewer ? (

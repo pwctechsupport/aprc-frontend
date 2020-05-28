@@ -8,6 +8,7 @@ import { oc } from "ts-optchain";
 import {
   useDestroyControlMutation,
   useAdminControlsQuery,
+  useReviewerControlsStatusQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -32,21 +33,31 @@ const Controls = ({ history }: RouteComponentProps) => {
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
 
   const { loading: loadingAdmin, data: dataAdmin } = useAdminControlsQuery({
+    skip: isAdminReviewer,
     fetchPolicy: "network-only",
     variables: {
-      filter: isAdminPreparer
-        ? {}
-        : isUser
-        ? { status_eq: "release" }
-        : { status_eq: "draft" },
+      filter: isAdminPreparer ? {} : { draft_id_null: true },
     },
   });
-  const controls = dataAdmin?.preparerControls?.collection || [];
+  const {
+    loading: loadingReviewer,
+    data: dataReviewer,
+  } = useReviewerControlsStatusQuery({
+    skip: isAdminPreparer || isUser,
+    fetchPolicy: "network-only",
+    variables: {
+      filter: {},
+    },
+  });
+  const controls =
+    dataAdmin?.preparerControls?.collection ||
+    dataReviewer?.reviewerControlsStatus?.collection ||
+    [];
 
   const [destroy, destroyM] = useDestroyControlMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: ["controls", "adminControls"],
+    refetchQueries: ["controls", "adminControls", "reviewerControlsStatus"],
   });
   const handleDelete = (id: string) => {
     destroy({ variables: { id } });
@@ -135,7 +146,7 @@ const Controls = ({ history }: RouteComponentProps) => {
           ) : null}
         </div>
         <div className="table-responsive">
-          <Table reloading={loadingAdmin}>
+          <Table reloading={loadingAdmin || loadingReviewer}>
             <thead>
               <tr>
                 {isAdminReviewer ? (

@@ -35,6 +35,16 @@ query adminRisks($filter: BaseScalar = {}, $limit: Int = 1000) {
     }
   }
 }
+query reviewerRisksStatus($filter: BaseScalar = {}, $limit: Int = 1000) {
+  reviewerRisksStatus(filter: $filter, limit: $limit) {
+    collection {
+      ...risk
+      draft {
+        id
+      }
+    }
+  }
+}
 query risk($id: ID!) {
   risk(id: $id) {
     ...risk

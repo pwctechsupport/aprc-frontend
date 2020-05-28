@@ -9,6 +9,7 @@ import {
   RisksDocument,
   useDestroyRiskMutation,
   useAdminRisksQuery,
+  useReviewerRisksStatusQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -29,12 +30,19 @@ const Risks = ({ history }: RouteComponentProps) => {
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
 
   const { loading: loadingAdmin, data: dataAdmin } = useAdminRisksQuery({
+    skip: isAdminReviewer,
     variables: {
-      filter: isAdminReviewer
-        ? { draft_id_not_null: true }
-        : isUser
-        ? { draft_id_null: true }
-        : {},
+      filter: isUser ? { draft_id_null: true } : {},
+    },
+    fetchPolicy: "network-only",
+  });
+  const {
+    loading: loadingReviewer,
+    data: dataReviewer,
+  } = useReviewerRisksStatusQuery({
+    skip: isAdminPreparer || isUser,
+    variables: {
+      filter: {},
     },
     fetchPolicy: "network-only",
   });
@@ -53,7 +61,10 @@ const Risks = ({ history }: RouteComponentProps) => {
     ],
   });
 
-  const risks = dataAdmin?.preparerRisks?.collection || [];
+  const risks =
+    dataAdmin?.preparerRisks?.collection ||
+    dataReviewer?.reviewerRisksStatus?.collection ||
+    [];
 
   function handleDelete(id: string) {
     destroy({ variables: { id } });
@@ -138,7 +149,7 @@ const Risks = ({ history }: RouteComponentProps) => {
           </Button>
         ) : null}
       </div>
-      <Table reloading={loadingAdmin}>
+      <Table reloading={loadingAdmin || loadingReviewer}>
         <thead>
           <tr>
             {isAdminReviewer ? (

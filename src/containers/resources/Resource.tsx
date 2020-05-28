@@ -159,7 +159,12 @@ export default function Resource({
   }
 
   const [updateResource, updateResourceM] = useUpdateResourceMutation({
-    refetchQueries: ["resources", "resource", "recentResources"],
+    refetchQueries: [
+      "resources",
+      "resource",
+      "recentResources",
+      "reviewerResourcesStatus",
+    ],
     awaitRefetchQueries: true,
   });
 

@@ -36,7 +36,7 @@ export default function ResourceBar({
     "admin_reviewer",
   ]);
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
-    refetchQueries: ["resources", "recentResources"],
+    refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"],
   });
 
   return (

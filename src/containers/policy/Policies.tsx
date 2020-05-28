@@ -9,6 +9,7 @@ import {
   Policy,
   useDestroyPolicyMutation,
   usePreparerPoliciesQuery,
+  useReviewerPoliciesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -32,7 +33,6 @@ export default function Policies({ history }: RouteComponentProps) {
     "admin_reviewer",
   ]);
 
-  //false means true. Because true means it will be skipped
   const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
 
   const [showDashboard, setShowDashboard] = useState(false);
@@ -44,20 +44,20 @@ export default function Policies({ history }: RouteComponentProps) {
   const [searchQuery] = useDebounce(search, 400);
 
   const isTree = !searchQuery;
+
+  //false means true. Because true means it will be skipped
+
+  //Query bar
+
   const {
     data: dataPreparer,
     loading: loadingPreparer,
   } = usePreparerPoliciesQuery({
     fetchPolicy: "network-only",
+    skip: isAdminReviewer,
     variables: {
       isTree,
-      filter: isAdminReviewer
-        ? {
-            ...(isTree && { ancestry_null: true }),
-            title_or_status_or_policy_category_name_cont: searchQuery,
-            status_eq: "draft",
-          }
-        : isUser
+      filter: isUser
         ? {
             ...(isTree && { ancestry_null: true }),
             title_or_status_or_policy_category_name_cont: searchQuery,
@@ -72,15 +72,37 @@ export default function Policies({ history }: RouteComponentProps) {
     },
   });
 
-  const policiesPreparer = dataPreparer?.preparerPolicies?.collection || [];
+  const {
+    data: dataReviewer,
+    loading: loadingReviewer,
+  } = useReviewerPoliciesQuery({
+    skip: isAdminPreparer || isUser,
+    fetchPolicy: "network-only",
+    variables: {
+      isTree,
+      filter: {
+        ...(isTree && { ancestry_null: true }),
+        title_or_status_or_policy_category_name_cont: searchQuery,
+      },
+      limit,
+      page,
+    },
+  });
+
+  const policiesPreparer =
+    dataPreparer?.preparerPolicies?.collection ||
+    dataReviewer?.reviewerPoliciesStatus?.collection ||
+    [];
 
   const totalCountPreparer =
-    dataPreparer?.preparerPolicies?.metadata.totalCount || 0;
+    dataPreparer?.preparerPolicies?.metadata.totalCount ||
+    dataReviewer?.reviewerPoliciesStatus?.metadata.totalCount ||
+    0;
 
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => notifySuccess("Delete Success"),
     onError: notifyGraphQLErrors,
-    refetchQueries: ["preparerPolicies"],
+    refetchQueries: ["preparerPolicies", "reviewerPolicies"],
     awaitRefetchQueries: true,
   });
   function handleDelete(id: string) {
@@ -115,9 +137,9 @@ export default function Policies({ history }: RouteComponentProps) {
         search={search}
         setSearch={setSearch}
         placeholder="Search Policies"
-        loading={loadingPreparer}
+        loading={loadingPreparer || loadingReviewer}
       />
-      <Table reloading={loadingPreparer} responsive>
+      <Table reloading={loadingPreparer || loadingReviewer} responsive>
         <thead>
           <tr>
             <th className="w-40">Title</th>

@@ -38,6 +38,49 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
     }
   }
 }
+
+query reviewerResourcesStatus(
+  $filter: BaseScalar = {}
+  $page: Int
+  $limit: Int = 1000
+) {
+  reviewerResourcesStatus(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+      name
+      category
+      policies {
+        id
+        title
+      }
+      controls {
+        id
+        description
+        typeOfControl
+      }
+      businessProcess {
+        id
+        name
+      }
+      resuploadLink
+      resuploadUrl
+      resourceFileType
+      createdAt
+      createdBy
+      visit
+      updatedAt
+      lastUpdatedBy
+      rating
+      totalRating
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}
 query recentResources(
   $filter: BaseScalar = {}
   $page: Int

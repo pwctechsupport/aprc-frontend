@@ -46,6 +46,30 @@ query adminPolicyCategories(
     }
   }
 }
+query reviewerPolicyCategoriesStatus(
+  $filter: BaseScalar = {}
+  $limit: Int = 1000
+  $page: Int
+) {
+  reviewerPolicyCategoriesStatus(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      id
+      name
+      updatedAt
+      createdAt
+      lastUpdatedBy
+      createdBy
+      status
+      draft {
+        event
+      }
+      policies {
+        id
+        title
+      }
+    }
+  }
+}
 query policyCategory($id: ID!) {
   policyCategory(id: $id) {
     ...policyCategoryFragment

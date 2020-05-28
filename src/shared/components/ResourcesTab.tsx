@@ -135,7 +135,7 @@ export default function ResourcesTab({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resources", "recentResources"],
+    refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"],
   });
 
   function handleCreateResource(values: ResourceFormValues) {
@@ -160,7 +160,12 @@ export default function ResourcesTab({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["resources", "policy", "recentResources"],
+    refetchQueries: [
+      "resources",
+      "policy",
+      "recentResources",
+      "reviewerResourcesStatus",
+    ],
   });
   function handleDeleteResource(resourceId: string) {
     const input: RemoveRelationInput = policy

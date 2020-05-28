@@ -12,7 +12,7 @@ import Helmet from "react-helmet";
 
 const CreateResource = ({ history }: RouteComponentProps) => {
   const [createResource, createResourceM] = useCreateResourceMutation({
-    refetchQueries: ["resources", "recentResources"],
+    refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"],
     onCompleted: ({ createResource }) => {
       notifySuccess("Resource Created");
       history.replace(`/resources/${createResource?.resource?.id}`);
