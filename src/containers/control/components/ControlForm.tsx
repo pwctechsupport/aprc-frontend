@@ -449,7 +449,11 @@ const ActivityModalForm = ({
   }, [register]);
 
   const handleSaveActivity = (values: MyCoolControlActivity) => {
-    onSubmit(values);
+    onSubmit({
+      activity: values.activity,
+      resupload: values.resupload,
+      resuploadFileName: values.resuploadFileName,
+    });
   };
 
   async function handleSetFile(e: React.ChangeEvent<HTMLInputElement>) {
