@@ -123,6 +123,7 @@ const UpdateProfileForm = ({
       />
       <Input
         name="phone"
+        type="number"
         label="Phone number"
         innerRef={register({ required: true })}
         error={errors.phone && errors.phone.message}
