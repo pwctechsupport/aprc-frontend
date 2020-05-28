@@ -470,6 +470,7 @@ export default function RiskAndControl({
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
             <ResourcesTab
+              risksnControls
               isDraft={null}
               formDefaultValues={{
                 category: { label: "Flowchart", value: "Flowchart" },

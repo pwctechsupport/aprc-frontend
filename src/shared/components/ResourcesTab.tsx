@@ -29,8 +29,10 @@ export default function ResourcesTab({
   isDraft,
   policy,
   policyData,
+  risksnControls,
 }: {
   queryFilters: any;
+  risksnControls?: boolean;
   formDefaultValues: ResourceFormValues;
   isDraft: any;
   policy?: boolean;
@@ -228,6 +230,7 @@ export default function ResourcesTab({
         title="Create Resource"
       >
         <ResourceForm
+          risksnControls
           defaultValues={formDefaultValues}
           onSubmit={handleCreateResource}
           submitting={createResourceM.loading}

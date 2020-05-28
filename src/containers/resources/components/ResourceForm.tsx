@@ -46,6 +46,7 @@ interface ResourceFormProps {
   isCreate?: boolean;
   history?: any;
   policy?: boolean;
+  risksnControls?: boolean;
 }
 
 export interface ResourceFormValues {
@@ -62,6 +63,7 @@ export interface ResourceFormValues {
 
 export default function ResourceForm({
   defaultValues,
+  risksnControls,
   base64File,
   onSubmit,
   submitting,
@@ -136,7 +138,7 @@ ResourceFormProps) {
       <AsyncCreatableSelect
         name="category"
         label="Category*"
-        isDisabled={defaultValues?.businessProcessId ? true : false}
+        isDisabled={risksnControls ? true : false}
         register={register}
         setValue={setValue}
         cacheOptions
