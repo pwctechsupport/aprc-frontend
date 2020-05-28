@@ -150,7 +150,7 @@ const Resources = ({ history }: RouteComponentProps) => {
             <th style={{ width: "10%" }}>Name</th>
             <th style={{ width: "8%" }}>File Type</th>
             <th style={{ width: "8%" }}>Category</th>
-            <th style={{ width: "14%" }}>Related Resource</th>
+            <th style={{ width: "14%" }}>Related Controls</th>
             <th style={{ width: "14%" }}>Related Policy</th>
             <th style={{ width: "14%" }}>Related Business Process</th>
             <th style={{ width: "8%" }}>Last Updated</th>
@@ -182,8 +182,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                 <td>
                   {oc(resource)
                     .controls([])
-                    .map((c) => c.typeOfControl)
-                    .map((c) => capitalCase(c || ""))
+                    .map((c) => c.description)
                     .join(", ")}
                 </td>
                 <td>

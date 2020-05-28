@@ -54,6 +54,7 @@ query recentResources(
       }
       controls {
         id
+        description
         typeOfControl
       }
       businessProcess {
