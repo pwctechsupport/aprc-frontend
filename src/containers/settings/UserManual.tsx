@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { FaDownload, FaPencilAlt } from "react-icons/fa";
 import {
   useManualsQuery,
   useUpdateManualMutation,
+  useCreateManualMutation,
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
 import Button from "../../shared/components/Button";
@@ -15,6 +16,7 @@ import Modal from "../../shared/components/Modal";
 import Tooltip from "../../shared/components/Tooltip";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
 
 export default function UserManual() {
   const [currentEditId, setCurrentEditId] = useState<string | null>(null);
@@ -25,6 +27,15 @@ export default function UserManual() {
   const [updateManual, updateManualInfo] = useUpdateManualMutation({
     onCompleted: () => {
       notifySuccess("User Manual Updated");
+      closeModal();
+    },
+    onError: notifyGraphQLErrors,
+    refetchQueries: ["manuals"],
+    awaitRefetchQueries: true,
+  });
+  const [create, createM] = useCreateManualMutation({
+    onCompleted: () => {
+      notifySuccess("User Manual Created");
       closeModal();
     },
     onError: notifyGraphQLErrors,
@@ -46,58 +57,79 @@ export default function UserManual() {
   function handleSubmitForm(values: UserManualFormValues) {
     updateManual({ variables: { input: { id: currentEditId, ...values } } });
   }
+  function handleCreate(values: UserManualFormValues) {
+    create({ variables: { input: values } });
+  }
   return (
     <div>
       <Helmet>
         <title>User Manual - Settings - PricewaterhouseCoopers</title>
       </Helmet>
-      <h4>User Manual</h4>
-      <br />
 
-      {manuals.map((manual) => (
-        <div className="d-flex justify-content-between">
-          <div>
-            <dt>Name</dt>
-            <dd>{manual.name}</dd>
+      {manuals.length ? (
+        manuals.map((manual) => (
+          <Fragment>
+            <h4>User Manual</h4>
             <br />
-            <dt>File Size</dt>
-            <dd>{manual.fileSize} bytes</dd>
-            <br />
-            <dt>File Type</dt>
-            <dd>{manual.fileType}</dd>
-            <br />
-            <dt>Last Upadated</dt>
-            <DateHover withIcon>{manual.updatedAt}</DateHover>
-          </div>
-          <div className="d-flex">
-            {isAdminReviewer && (
-              <Tooltip description="Edit User Manual">
-                <Button
-                  onClick={() => setCurrentEditId(manual.id)}
-                  className="soft red mr-2"
-                  color=""
-                >
-                  <FaPencilAlt />
-                </Button>
-              </Tooltip>
+            <div className="d-flex justify-content-between">
+              <div>
+                <dt>Name</dt>
+                <dd>{manual.name}</dd>
+                <br />
+                <dt>File Size</dt>
+                <dd>{manual.fileSize} bytes</dd>
+                <br />
+                <dt>File Type</dt>
+                <dd>{manual.fileType}</dd>
+                <br />
+                <dt>Last Upadated</dt>
+                <DateHover withIcon>{manual.updatedAt}</DateHover>
+              </div>
+              <div className="d-flex">
+                {isAdminReviewer && (
+                  <Tooltip description="Edit User Manual">
+                    <Button
+                      onClick={() => setCurrentEditId(manual.id)}
+                      className="soft red mr-2"
+                      color=""
+                    >
+                      <FaPencilAlt />
+                    </Button>
+                  </Tooltip>
+                )}
+                <Tooltip description="Download User Manual">
+                  <Button
+                    className="soft orange"
+                    color=""
+                    onClick={() =>
+                      handleDownload(
+                        `${APP_ROOT_URL}${manual.resuploadUrl}`,
+                        manual.name || ""
+                      )
+                    }
+                  >
+                    <FaDownload />
+                  </Button>
+                </Tooltip>
+              </div>
+            </div>
+          </Fragment>
+        ))
+      ) : isAdminReviewer ? (
+        <Fragment>
+          <h4>Create User Manual</h4>
+          <UserManualForm
+            onSubmit={handleCreate}
+            onCancel={closeModal}
+            defaultValues={manuals.find(
+              (manual) => manual.id === currentEditId
             )}
-            <Tooltip description="Download User Manual">
-              <Button
-                className="soft orange"
-                color=""
-                onClick={() =>
-                  handleDownload(
-                    `${APP_ROOT_URL}${manual.resuploadUrl}`,
-                    manual.name || ""
-                  )
-                }
-              >
-                <FaDownload />
-              </Button>
-            </Tooltip>
-          </div>
-        </div>
-      ))}
+            submitting={createM.loading}
+          />
+        </Fragment>
+      ) : (
+        <EmptyAttribute></EmptyAttribute>
+      )}
 
       <Modal
         isOpen={Boolean(currentEditId)}
