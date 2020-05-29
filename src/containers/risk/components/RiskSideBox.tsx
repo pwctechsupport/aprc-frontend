@@ -34,8 +34,6 @@ const RiskSideBox = () => {
     variables: {
       filter: isUser
         ? { name_cont: debouncedSearch, draft_id_null: true }
-        : isAdminReviewer
-        ? { name_cont: debouncedSearch, draft_id_not_null: true }
         : { name_cont: debouncedSearch },
       limit,
     },

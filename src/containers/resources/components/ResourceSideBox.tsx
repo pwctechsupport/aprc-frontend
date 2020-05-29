@@ -39,8 +39,6 @@ const ResourceSideBox = () => {
     variables: {
       filter: isUser
         ? { name_cont: searchQuery, draft_id_null: true }
-        : isAdminReviewer
-        ? { name_cont: searchQuery, draft_id_not_null: true }
         : { name_cont: searchQuery },
       limit,
     },
