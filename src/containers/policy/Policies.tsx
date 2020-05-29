@@ -88,7 +88,6 @@ export default function Policies({ history }: RouteComponentProps) {
       page,
     },
   });
-
   const policiesPreparer =
     dataPreparer?.preparerPolicies?.collection ||
     dataReviewer?.reviewerPoliciesStatus?.collection ||
@@ -280,7 +279,7 @@ const PolicyTableRow = ({
           )}
         </tr>
       )}
-      {isAdminReviewer && status === "draft" && (
+      {isAdminReviewer && (
         <tr key={policy.id} onClick={() => onClick(policy.id)}>
           <td>
             <div

@@ -16,7 +16,7 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
       window.location.reload();
     },
     onError: notifyGraphQLErrors,
-    refetchQueries: ["policyTree"],
+    refetchQueries: ["sideboxPolicy"],
     awaitRefetchQueries: true,
   });
   function handleSubmit(values: PolicyFormValues) {
