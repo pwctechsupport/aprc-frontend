@@ -17,13 +17,13 @@ import Tooltip from "../../shared/components/Tooltip";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 
 export default function UserManual() {
   const [currentEditId, setCurrentEditId] = useState<string | null>(null);
   const isAdminReviewer = useAccessRights(["admin_reviewer"]).every(Boolean);
-  const manuals =
-    useManualsQuery({ fetchPolicy: "network-only" }).data?.manuals
-      ?.collection || [];
+  const { data, loading } = useManualsQuery({ fetchPolicy: "network-only" });
+  const manuals = data?.manuals?.collection || [];
   const [updateManual, updateManualInfo] = useUpdateManualMutation({
     onCompleted: () => {
       notifySuccess("User Manual Updated");
@@ -66,7 +66,7 @@ export default function UserManual() {
         <title>User Manual - Settings - PricewaterhouseCoopers</title>
       </Helmet>
 
-      {manuals.length ? (
+      {!loading && manuals.length ? (
         manuals.map((manual) => (
           <Fragment>
             <h4>User Manual</h4>
@@ -115,18 +115,21 @@ export default function UserManual() {
             </div>
           </Fragment>
         ))
-      ) : isAdminReviewer ? (
+      ) : !loading && isAdminReviewer ? (
         <Fragment>
           <h4>Create User Manual</h4>
           <UserManualForm
             onSubmit={handleCreate}
             onCancel={closeModal}
+            create
             defaultValues={manuals.find(
               (manual) => manual.id === currentEditId
             )}
             submitting={createM.loading}
           />
         </Fragment>
+      ) : loading ? (
+        <LoadingSpinner size={30} centered />
       ) : (
         <EmptyAttribute></EmptyAttribute>
       )}
@@ -158,10 +161,12 @@ interface UserManualFormProps {
   onCancel?: () => void;
   submitting?: boolean;
   defaultValues?: UserManualFormValues;
+  create?: boolean;
 }
 
 function UserManualForm({
   onSubmit,
+  create,
   onCancel,
   defaultValues,
   submitting,
@@ -187,7 +192,7 @@ function UserManualForm({
           Cancel
         </Button>
         <Button loading={submitting} className="pwc px-5" color="primary">
-          Update
+          {create ? "Submit" : "Update"}
         </Button>
       </div>
     </form>
