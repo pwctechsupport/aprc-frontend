@@ -14,7 +14,7 @@ import {
   NavbarToggler,
   NavItem,
   NavLink,
-  UncontrolledDropdown
+  UncontrolledDropdown,
 } from "reactstrap";
 import styled from "styled-components";
 import pwcLogo from "../../assets/images/pwc-logo.png";
@@ -25,31 +25,32 @@ import { unauthorize } from "../../redux/auth";
 import useWindowSize from "../hooks/useWindowSize";
 import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
+import useAccessRights from "../hooks/useAccessRights";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
   const location = useLocation();
-  // const rolesArray = useAccessRights([
-  //   "admin",
-  //   "admin_preparer",
-  //   "admin_reviewer"
-  // ]);
-  // const isMereUser = rolesArray.every(a => !a);
+  const rolesArray = useAccessRights([
+    "admin",
+    "admin_preparer",
+    "admin_reviewer",
+  ]);
+  const isMereUser = rolesArray.every((a) => !a);
   const size = useWindowSize();
   const isBigScreen = size.width > 767;
   const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(p => !p);
+  const toggle = () => setIsOpen((p) => !p);
 
   function handleLogout() {
     dispatch(unauthorize());
   }
 
   useEffect(() => {
-    setIsOpen(p => (p ? !p : p));
+    setIsOpen((p) => (p ? !p : p));
   }, [setIsOpen, location.pathname]);
 
   const { data } = useNotificationsCountQuery({
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
 
   const unreadCount = data?.notifications?.metadata.totalCount || 0;
@@ -71,7 +72,13 @@ export default function NewNavbar() {
             // )
             // If the screen is big, remove 'Settings', as it is
             // redundant; already available through side-navigator.
-            .filter(menu => (isBigScreen ? menu.label !== "Settings" : true))
+            .filter((menu) =>
+              isBigScreen
+                ? isMereUser
+                  ? menu.label !== "Administrative" && menu.label !== "Settings"
+                  : menu.label !== "Settings"
+                : true
+            )
             .map(({ label, path, children, dropdown }) => {
               if (dropdown) {
                 return (
@@ -80,7 +87,7 @@ export default function NewNavbar() {
                       {label}
                     </StyledDropdownToggle>
                     <StyledDropdownMenu right className="p-0">
-                      {children?.map(childMenu => (
+                      {children?.map((childMenu) => (
                         <DropdownItem key={childMenu.label} className="p-0">
                           <NavItem key={childMenu.label}>
                             <StyledDropdownNavLink
@@ -161,8 +168,8 @@ const userMenus = [
       { label: "User", path: "/user" },
       { label: "Business Process", path: "/business-process" },
       { label: "Resources", path: "/resources" },
-      { label: "Risks", path: "/risk" }
-    ]
+      { label: "Risks", path: "/risk" },
+    ],
   },
   {
     label: "Settings",
@@ -172,9 +179,9 @@ const userMenus = [
       { label: "Profile", path: "/settings/update-profile" },
       { label: "Notifications", path: "/settings/notifications" },
       { label: "History", path: "/settings/history" },
-      { label: "User Manual", path: "/settings/user-manual" }
-    ]
-  }
+      { label: "User Manual", path: "/settings/user-manual" },
+    ],
+  },
 ];
 
 // =============================================

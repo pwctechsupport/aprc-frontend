@@ -104,7 +104,33 @@ export default function Report() {
       values.unmapped_risk === "xlsx"
     ) {
       notifyError("Excel format cannot be previewed");
-    } else {
+    }
+    if (
+      !values.report_control_policy &&
+      !values.report_resource_rating &&
+      !values.report_risk &&
+      !values.report_risk_policy &&
+      !values.unmapped_control &&
+      !values.unmapped_risk
+    ) {
+      notifyError("Select PDF format to preview");
+    }
+    if (
+      (values.report_control_policy === "pdf" ||
+        values.report_resource_rating === "pdf" ||
+        values.report_risk === "pdf" ||
+        values.report_risk_policy === "pdf" ||
+        values.unmapped_control === "pdf" ||
+        values.unmapped_risk === "pdf") &&
+      !(
+        values.report_control_policy === "xlsx" ||
+        values.report_resource_rating === "xlsx" ||
+        values.report_risk === "xlsx" ||
+        values.report_risk_policy === "xlsx" ||
+        values.unmapped_control === "xlsx" ||
+        values.unmapped_risk === "xlsx"
+      )
+    ) {
       notifyInfo("Preparing file to preview");
       setPreviewing(true);
       await previewPdfs(constructDataFromForm(values));
@@ -124,7 +150,7 @@ export default function Report() {
   const reportResourceRating = watch("report_resource_rating");
   const unmappedRisk = watch("unmapped_risk");
   const unmappedControl = watch("unmapped_control");
-
+  const [checked, setChecked] = useState(true);
   return (
     <Container fluid className="p-0 pt-3 px-4">
       <h4>Exception Report</h4>
@@ -133,10 +159,9 @@ export default function Report() {
         <Table>
           <thead>
             <tr>
-              <th>Nomor</th>
+              <th>Number</th>
               <th>Report Name</th>
               <th>Report Description</th>
-              <th>Report Category</th>
               <th>Format</th>
             </tr>
           </thead>
@@ -147,7 +172,6 @@ export default function Report() {
                   <td>{index + 1}</td>
                   <td>{capitalize(option.name)}</td>
                   <td>-</td>
-                  <td>-</td>
 
                   <td>
                     <FormGroup tag="fieldset">
@@ -157,6 +181,11 @@ export default function Report() {
                             <Input
                               type="radio"
                               name={option.id}
+                              defaultChecked={
+                                option.id === "report_risk" &&
+                                format.id === "pdf" &&
+                                checked
+                              }
                               value={format.id}
                               innerRef={register}
                             />{" "}
@@ -203,7 +232,13 @@ export default function Report() {
             <FaDownload /> Download
           </Button>
           <Tooltip description="Reset Selected Format">
-            <Button type="reset" className="black ml-5">
+            <Button
+              onClick={() => {
+                setChecked(false);
+              }}
+              type="reset"
+              className="black ml-5"
+            >
               <FaUndo />
             </Button>
           </Tooltip>

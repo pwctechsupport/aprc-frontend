@@ -378,7 +378,6 @@ export default function Policy({
   const ancestors = data?.policy?.ancestors || [];
   const lastUpdatedAt = data?.policy?.lastUpdatedAt;
   const bookmarked = bookmarkData?.bookmarks?.collection || [];
-  console.log("bookmarked", bookmarked);
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
