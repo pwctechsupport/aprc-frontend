@@ -23,12 +23,14 @@ interface RisksListProps {
   // editRisk?: Function;
   // editControl?: Function;
   data?: PolicyQuery;
+  setRiskId?: any;
   // withRelatedControls?: boolean;
 }
 
 export default function RisksList({
   // risks,
   // editRisk,
+  setRiskId,
   // editControl,
   data,
 }: // withRelatedControls,
@@ -38,6 +40,7 @@ RisksListProps) {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const policyId = data?.policy?.id;
   const risksWithoutChildren = oc(data).policy.risks([]);
   const riskFirstChild = data?.policy?.children?.map((a) => a.risks) || [];
   const riskSecondChild =
@@ -95,7 +98,12 @@ RisksListProps) {
         <li key={risk.id}>
           <div className="mb-3 d-flex justify-content-between">
             <h6>
-              <Link to={`/risk/${risk.id}`}>{risk.name}</Link>
+              <Link
+                to={`/policy/${policyId}/details/risk/${risk.id}`}
+                onClick={() => setRiskId(risk.id)}
+              >
+                {risk.name}
+              </Link>
               <Badge color={`${getRiskColor(risk.levelOfRisk)} mx-3`}>
                 {startCase(risk.levelOfRisk || "")}
               </Badge>

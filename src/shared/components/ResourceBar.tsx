@@ -1,6 +1,6 @@
 import React from "react";
 import { FaDownload, FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Button } from "reactstrap";
 import styled from "styled-components";
 import StarRating from "./StarRating";
@@ -18,13 +18,17 @@ interface ResourceBarProps {
   totalRating?: number | null;
   deleteResource?: any;
   resourceId?: any;
+  policyIdsWithoutChildren?: any;
+  setResourceId?: any;
 }
 
 export default function ResourceBar({
   name,
+  policyIdsWithoutChildren,
   id,
   resuploadUrl,
   deleteResource,
+  setResourceId,
   rating = 0,
   visit,
   resourceId,
@@ -42,9 +46,22 @@ export default function ResourceBar({
   return (
     <ResourceBarContainer>
       <ResourceBarDivider width="40">
-        <Link to={`/resources/${id}`}>
-          <ResourceName>{name}</ResourceName>
-        </Link>
+        <NavLink
+          exact
+          to={
+            policyIdsWithoutChildren
+              ? `/policy/${policyIdsWithoutChildren}/resources/${id}`
+              : `/risk-and-control/id/resources/${id}`
+          }
+        >
+          <ResourceName
+            onClick={() => {
+              setResourceId(id);
+            }}
+          >
+            {name}
+          </ResourceName>
+        </NavLink>
       </ResourceBarDivider>
 
       <ResourceBarDivider width="20" align="right">
@@ -117,6 +134,7 @@ const ResourceName = styled.div`
   font-size: 18px;
   line-height: 20px;
   color: #d85604;
+  cursor: pointer;
 `;
 
 const ResourceViewCount = styled.div`

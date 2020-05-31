@@ -23,7 +23,8 @@ import {
   FaPlus,
   FaTrash,
 } from "react-icons/fa";
-import { IoMdDownload } from "react-icons/io";
+import Table from "../../shared/components/Table";
+import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
@@ -41,6 +42,10 @@ import {
   useReferencesQuery,
   usePolicyCategoriesQuery,
   useBookmarksQuery,
+  useResourceQuery,
+  useResourceRatingsQuery,
+  useRiskQuery,
+  useControlQuery,
   // useUpdatePolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
@@ -75,6 +80,13 @@ import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import { toLabelValue } from "../../shared/formatter";
+import ResourceBox from "../resources/components/ResourceBox";
+import { useSelector } from "../../shared/hooks/useSelector";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import { APP_ROOT_URL } from "../../settings";
+import getRiskColor from "../../shared/utils/getRiskColor";
+import startCase from "lodash/startCase";
+import { capitalCase } from "capital-case";
 
 type TParams = { id: string };
 
@@ -83,6 +95,7 @@ export default function Policy({
   history,
   location,
 }: RouteComponentProps<TParams>) {
+  const currentUrl = history.location.pathname;
   const dialogBox = useDialogBox();
   const size = useWindowSize();
   const isSmallDevice = size.width <= 992;
@@ -360,17 +373,11 @@ export default function Policy({
     ? get(data, "policy.draft.objectResult.description", "")
     : data?.policy?.description || "";
   const hasEditAccess = oc(data).policy.hasEditAccess();
-  // const requested = oc(data).policy.requestStatus() === "requested";
-
-  // const policyCategoryId = oc(data).policy.policyCategory.id("");
   const parentId = oc(data).policy.parentId("");
   const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
   const ancestry = oc(data).policy.ancestry("");
   const policyReferences = data?.policy?.references || [];
-  // const referenceIds = references.map((item) => item.id);
-  // const controls = oc(data).policy.controls([]);
-  // const risks = oc(data).policy.risks([]);
   const controlCount = oc(data).policy.controlCount({});
   const riskCount = oc(data).policy.riskCount({});
   const subCount = oc(data).policy.subCount({});
@@ -381,6 +388,381 @@ export default function Policy({
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
+
+  //resource Bar
+  const [resourceId, setResourceId] = useState("");
+  const userId = useSelector((state) => state.auth.user)?.id;
+  useEffect(() => {
+    if (currentUrl.includes("resources/")) {
+      setResourceId(currentUrl.split("resources/")[1]);
+    }
+  }, [currentUrl]);
+  const { data: dataResource, loading: loadingResource } = useResourceQuery({
+    skip: !resourceId,
+    variables: { id: resourceId },
+    fetchPolicy: "network-only",
+  });
+  const { data: dataRating } = useResourceRatingsQuery({
+    skip: !resourceId,
+    variables: { filter: { user_id_eq: userId, resource_id_eq: resourceId } },
+    fetchPolicy: "network-only",
+  });
+  const resourceName = dataResource?.resource?.name || "";
+
+  const renderResourceDetails = () => {
+    const totalRating = dataResource?.resource?.totalRating || 0;
+    const visit = dataResource?.resource?.visit || 0;
+    const resourceFileType = dataResource?.resource?.resourceFileType;
+    const businessProcess = dataResource?.resource?.businessProcess;
+    const resuploadUrl = dataResource?.resource?.resuploadUrl;
+    const category = dataResource?.resource?.category;
+    const resuploadLink = dataResource?.resource?.resuploadLink;
+    const policies = dataResource?.resource?.policies || [];
+    const controls = dataResource?.resource?.controls || [];
+    const base64File = dataResource?.resource?.base64File;
+
+    const rating =
+      dataRating?.resourceRatings?.collection.map((a) => a.rating).pop() || 0;
+    const imagePreviewUrl = resuploadLink
+      ? resuploadLink
+      : resuploadUrl && !resuploadLink?.includes("original/missing.png")
+      ? `${APP_ROOT_URL}${resuploadUrl}`
+      : undefined;
+    return (
+      <Route exact path="/policy/:id/resources/:id">
+        <div>
+          {loadingResource ? (
+            <LoadingSpinner centered size={30} />
+          ) : (
+            <Row>
+              {resourceName ? (
+                <Fragment>
+                  <Col xs={12} lg={6}>
+                    <ResourceBox
+                      base64File={base64File}
+                      id={resourceId}
+                      name={resourceName}
+                      rating={rating}
+                      totalRating={totalRating}
+                      views={visit}
+                      imagePreviewUrl={imagePreviewUrl}
+                      resourceFileType={resourceFileType}
+                    />
+                  </Col>
+                  <Col xs={12} lg={6}>
+                    <div className="mt-5 mt-lg-0">
+                      <h5>
+                        Category:&nbsp;
+                        <span className="text-orange">{category}</span>
+                      </h5>
+                      {category === "Flowchart" ? (
+                        <>
+                          <h5 className="mt-5">Business Process:</h5>
+                          <Link to={`/business-process/${businessProcess?.id}`}>
+                            {businessProcess?.name}
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <div>
+                            <h5 className="mt-5">Related Controls:</h5>
+                            {controls.length ? (
+                              <ul>
+                                {controls.map((control) => (
+                                  <li key={control.id}>
+                                    {control.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <EmptyAttribute centered={false} />
+                            )}
+                          </div>
+                          <div>
+                            <h5 className="mt-5">Related Policies:</h5>
+                            {policies.length ? (
+                              <ul>
+                                {policies.map((policy) => (
+                                  <li key={policy.id}>
+                                    <Link to={`/policy/${policy.id}`}>
+                                      {policy.title}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <EmptyAttribute centered={false} />
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </Col>
+                </Fragment>
+              ) : null}
+            </Row>
+          )}
+        </div>
+      </Route>
+    );
+  };
+
+  //Risk bar
+
+  const [riskId, setRiskId] = useState("");
+  useEffect(() => {
+    if (currentUrl.includes("/risk/")) {
+      setRiskId(currentUrl.split("/risk/")[1]);
+    }
+  }, [currentUrl]);
+  const { data: dataRisk, loading: loadingRisk } = useRiskQuery({
+    skip: !riskId,
+    variables: { id: riskId },
+    fetchPolicy: "network-only",
+  });
+  const riskName = dataRisk?.risk?.name || "";
+
+  const renderRiskDetails = () => {
+    const levelOfRisk = dataRisk?.risk?.levelOfRisk || "";
+    const typeOfRisk = dataRisk?.risk?.typeOfRisk || "";
+    const bps = dataRisk?.risk?.businessProcess;
+    const updatedAt = dataRisk?.risk?.updatedAt;
+    const updatedBy = dataRisk?.risk?.lastUpdatedBy;
+    const createdBy = dataRisk?.risk?.createdBy;
+    const status = dataRisk?.risk?.status;
+    const createdAt = dataRisk?.risk?.createdAt;
+
+    const details1 = [
+      { label: "Risk Id", value: id },
+      { label: "Name", value: riskName },
+      {
+        label: "Business Process",
+        value: bps?.join(", "),
+      },
+      {
+        label: "Level of Risk",
+        value: (
+          <Badge color={getRiskColor(levelOfRisk)}>
+            {startCase(levelOfRisk)}
+          </Badge>
+        ),
+      },
+      {
+        label: "Type of Risk",
+        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
+      },
+    ];
+    const details2 = [
+      {
+        label: "Last Updated",
+        value: updatedAt?.split(" ")[0],
+      },
+      {
+        label: "Updated By",
+        value: updatedBy,
+      },
+      {
+        label: "Created At",
+        value: createdAt?.split(" ")[0],
+      },
+      {
+        label: "Created By",
+        value: createdBy,
+      },
+      {
+        label: "Status",
+        value: status,
+      },
+    ];
+    return (
+      <Route exact path="/policy/:id/details/risk/:id">
+        {loadingRisk ? (
+          <LoadingSpinner centered size={30} />
+        ) : (
+          <Row>
+            <Col xs={6}>
+              <dl>
+                {details1.map((item) => (
+                  <Fragment key={item.label}>
+                    <dt>{item.label}</dt>
+                    <dd>{item.value || "-"}</dd>
+                  </Fragment>
+                ))}
+              </dl>
+            </Col>
+            <Col xs={6}>
+              {details2.map((item) => (
+                <Fragment key={item.label}>
+                  <dt>{item.label}</dt>
+                  <dd>{item.value || "-"}</dd>
+                </Fragment>
+              ))}
+            </Col>
+          </Row>
+        )}
+      </Route>
+    );
+  };
+
+  //control Bar
+
+  const [controlId, setControlId] = useState("");
+  useEffect(() => {
+    if (currentUrl.includes("/control/")) {
+      setControlId(currentUrl.split("/control/")[1]);
+    }
+  }, [currentUrl]);
+  const { loading: loadingControl, data: dataControl } = useControlQuery({
+    skip: !controlId,
+    fetchPolicy: "network-only",
+    variables: { id: controlId },
+  });
+  const descriptionControl = dataControl?.control?.description || "";
+
+  const renderControlDetails = () => {
+    const updatedAt = dataControl?.control?.updatedAt
+      ? dataControl?.control?.updatedAt.split(" ")[0]
+      : "";
+    const lastUpdatedBy = dataControl?.control?.lastUpdatedBy || "";
+    const createdBy = dataControl?.control?.createdBy || "";
+    const assertion = dataControl?.control?.assertion || [];
+    const frequency = dataControl?.control?.frequency || "";
+    const ipo = dataControl?.control?.ipo || [];
+    const typeOfControl = dataControl?.control?.typeOfControl || "";
+    const status = dataControl?.control?.status || "";
+    const keyControl = dataControl?.control?.keyControl || false;
+    const risks = dataControl?.control?.risks || [];
+    const businessProcesses = dataControl?.control?.businessProcesses || [];
+    const activityControls = dataControl?.control?.activityControls || [];
+    const createdAt = dataControl?.control?.createdAt || "";
+    const departments = dataControl?.control?.departments || [];
+    const filteredNames = (names: any) =>
+      names.filter((v: any, i: any) => names.indexOf(v) === i);
+    const details = [
+      { label: "Control ID", value: id },
+      { label: "Description", value: descriptionControl },
+
+      {
+        label: "Control Owner",
+        value: departments.map((a: any) => a.name).join(", "),
+      },
+      {
+        label: "Key Control",
+        value: (
+          <input type="checkbox" checked={keyControl} onChange={() => {}} />
+        ),
+      },
+      { label: "Type of Control", value: capitalCase(typeOfControl) },
+      {
+        label: "Assertion",
+        value: assertion.map((x) => capitalCase(x)).join(", "),
+      },
+      {
+        label: "IPO",
+        value: ipo.map((x) => capitalCase(x)).join(", "),
+      },
+      { label: "Frequency", value: capitalCase(frequency) },
+      { label: "Status", value: capitalCase(status) },
+      { label: "Last Updated", value: updatedAt },
+      { label: "Last Updated By", value: lastUpdatedBy },
+      { label: "Created At", value: createdAt.split(" ")[0] },
+      { label: "Created By", value: createdBy },
+    ];
+    return (
+      <Route exact path="/policy/:id/details/control/:id">
+        {loadingControl ? (
+          <LoadingSpinner centered size={30} />
+        ) : (
+          <Row>
+            <Col xs={6}>
+              <dl>
+                {details.slice(0, Math.ceil(details.length / 2)).map((item) => (
+                  <Fragment key={item.label}>
+                    <dt>{item.label}</dt>
+                    <dd>{item.value || "-"}</dd>
+                  </Fragment>
+                ))}
+              </dl>
+            </Col>
+            <Col xs={6}>
+              <dl>
+                {details
+                  .slice(Math.ceil(details.length / 2), details.length)
+                  .map((item) => (
+                    <Fragment key={item.label}>
+                      <dt>{item.label}</dt>
+                      <dd>{item.value || "-"}</dd>
+                    </Fragment>
+                  ))}
+              </dl>
+            </Col>
+
+            <Col xs={12} className="mt-3">
+              <h5>Risks</h5>
+              {risks.length ? (
+                filteredNames(risks).map((risk: any) => (
+                  <p key={risk.id}>{risk.name}</p>
+                ))
+              ) : (
+                <EmptyAttribute />
+              )}
+              <h5 className="mt-2">Business Processes</h5>
+              {businessProcesses.length ? (
+                filteredNames(businessProcesses).map((bp: any) => (
+                  <p key={bp.id}>{bp.name}</p>
+                ))
+              ) : (
+                <EmptyAttribute />
+              )}
+            </Col>
+
+            {activityControls.length > 0 ? (
+              <Col xs={7} className="mt-2">
+                <h5>Control Activities</h5>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th>Control Activity</th>
+                      <th>Guidance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activityControls.map((activity) => (
+                      <tr key={"Row" + activity.id}>
+                        <td>{activity.activity}</td>
+                        <td>
+                          {activity.guidance ? (
+                            activity.guidance
+                          ) : (
+                            <div className="d-flex align-items-center ">
+                              <Button color="" className="soft orange">
+                                <a
+                                  href={`http://mandalorian.rubyh.co${activity.guidanceResuploadUrl}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  download={`Pwc-ActivityControl ${activity.guidanceFileName}`}
+                                  className="text-orange"
+                                >
+                                  <span className="mr-2">
+                                    {activity.guidanceFileName}
+                                  </span>
+                                  <IoMdOpen />
+                                </a>
+                              </Button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Col>
+            ) : null}
+          </Row>
+        )}
+      </Route>
+    );
+  };
   const breadcrumb = ancestors.map((a: any) => [
     "/policy/" + a.id,
     a.title,
@@ -408,20 +790,23 @@ export default function Policy({
         ];
     return (
       <div>
-        <Nav tabs className="tabs-pwc">
-          {tabs.map((tab, index) => (
-            <NavItem key={index}>
-              <NavLink
-                exact
-                to={tab.to}
-                className="nav-link"
-                activeClassName="active"
-              >
-                {tab.title}
-              </NavLink>
-            </NavItem>
-          ))}
-        </Nav>
+        {currentUrl.includes("/resources/") ||
+        currentUrl.includes("/details/") ? null : (
+          <Nav tabs className="tabs-pwc">
+            {tabs.map((tab, index) => (
+              <NavItem key={index}>
+                <NavLink
+                  exact
+                  to={tab.to}
+                  className="nav-link"
+                  activeClassName="active"
+                >
+                  {tab.title}
+                </NavLink>
+              </NavItem>
+            ))}
+          </Nav>
+        )}
 
         <TabContent>
           <TabPane>
@@ -494,11 +879,7 @@ export default function Policy({
                   show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
                 >
-                  <RisksList
-                    data={data}
-                    // risks={risks}
-                    // withRelatedControls={false}
-                  />
+                  <RisksList data={data} setRiskId={setRiskId} />
                 </Collapsible>
               </div>
 
@@ -511,7 +892,7 @@ export default function Policy({
                   show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
-                  <ControlsTable data={data} />
+                  <ControlsTable setControlId={setControlId} data={data} />
                 </Collapsible>
               </div>
 
@@ -531,6 +912,7 @@ export default function Policy({
             </Route>
             <Route exact path="/policy/:id/resources">
               <ResourcesTab
+                setResourceId={setResourceId}
                 policyData={data}
                 policy
                 isDraft={isDraft}
@@ -774,14 +1156,14 @@ export default function Policy({
               className="pwc "
               style={{
                 marginRight: `${
-                  history.location.pathname.includes("details") ? "0px" : "10px"
+                  currentUrl.includes("details") ? "0px" : "10px"
                 }`,
               }}
             >
               <FaPlus /> Sub-Policy
             </Button>
           )}
-          {history.location.pathname.includes("details") && (
+          {currentUrl.includes("details") && (
             <Tooltip
               description={
                 collapse.length === initialCollapse.length
@@ -976,11 +1358,30 @@ export default function Policy({
       </Helmet>
 
       <BreadCrumb
-        crumbs={[
-          ["/policy", "Policies"],
-          ...breadcrumb,
-          ["/policy/" + id, title],
-        ]}
+        crumbs={
+          currentUrl.includes("resources/")
+            ? [
+                ["/policy", "Policies"],
+                ...breadcrumb,
+                ["/policy/" + id, title],
+                [`/policy/${id}/resources/` + resourceId, resourceName],
+              ]
+            : currentUrl.includes("/risk/")
+            ? [
+                ["/policy", "Policies"],
+                ...breadcrumb,
+                ["/policy/" + id, title],
+                [`/policy/${id}/details/risk/` + riskId, riskName],
+              ]
+            : currentUrl.includes("/control/")
+            ? [
+                ["/policy", "Policies"],
+                ...breadcrumb,
+                ["/policy/" + id, title],
+                [`/policy/${id}/details/risk/` + controlId, descriptionControl],
+              ]
+            : [["/policy", "Policies"], ...breadcrumb, ["/policy/" + id, title]]
+        }
       />
       <Row className="d-flex justify-content-between">
         <Col>
@@ -993,13 +1394,23 @@ export default function Policy({
               false
             }
           >
-            {title}
+            {currentUrl.includes("resources/")
+              ? resourceName
+              : currentUrl.includes("/risk/")
+              ? riskName
+              : currentUrl.includes("/control/")
+              ? descriptionControl
+              : title}
           </HeaderWithBackButton>
         </Col>
-        {renderGeneralAction()}
+        {currentUrl.includes("/details/") || currentUrl.includes("resources/")
+          ? null
+          : renderGeneralAction()}
       </Row>
-
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
+      {renderResourceDetails()}
+      {renderRiskDetails()}
+      {renderControlDetails()}
     </div>
   );
 }

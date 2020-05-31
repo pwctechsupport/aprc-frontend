@@ -169,7 +169,8 @@ export default function RiskAndControl({
     { to: `/risk-and-control/${id}/flowchart`, title: "Flowchart" },
     { to: `/risk-and-control/${id}/resources`, title: "Resources" },
   ];
-
+  // Resource Bar
+  const [resourceId, setResourceId] = useState("");
   if (loading) return <LoadingSpinner size={30} centered />;
 
   const renderActions = () => {
@@ -470,6 +471,7 @@ export default function RiskAndControl({
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
             <ResourcesTab
+              setResourceId={setResourceId}
               risksnControls
               isDraft={null}
               formDefaultValues={{

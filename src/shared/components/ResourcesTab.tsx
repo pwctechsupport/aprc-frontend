@@ -28,6 +28,7 @@ export default function ResourcesTab({
   formDefaultValues,
   isDraft,
   policy,
+  setResourceId,
   policyData,
   risksnControls,
 }: {
@@ -36,6 +37,7 @@ export default function ResourcesTab({
   formDefaultValues: ResourceFormValues;
   isDraft: any;
   policy?: boolean;
+  setResourceId?: any;
   policyData?: PolicyQuery;
 }) {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -84,7 +86,6 @@ export default function ResourcesTab({
     ...policyIdFourthChild.flat(10),
     ...policyIdFifthChild.flat(10),
   ];
-
   const [search, setSearch] = useState("");
 
   const [searchQuery] = useDebounce(search, 700);
@@ -210,6 +211,8 @@ export default function ResourcesTab({
       {resources.length ? (
         resources.map((resource: any) => (
           <ResourceBar
+            policyIdsWithoutChildren={policyIdsWithoutChildren}
+            setResourceId={setResourceId}
             rating={resource.rating}
             deleteResource={handleDeleteResource}
             totalRating={resource.totalRating}
@@ -219,9 +222,9 @@ export default function ResourcesTab({
             {...resource}
           />
         ))
-      ) : !policy ? (
+      ) : (
         <EmptyAttribute centered>No Resource</EmptyAttribute>
-      ) : null}
+      )}
 
       <Pagination
         totalCount={totalCount}
@@ -235,11 +238,11 @@ export default function ResourcesTab({
         title="Create Resource"
       >
         <ResourceForm
-          risksnControls
+          risksnControls={risksnControls}
           defaultValues={formDefaultValues}
           onSubmit={handleCreateResource}
           submitting={createResourceM.loading}
-          policy
+          policy={policy}
         />
       </Modal>
     </div>

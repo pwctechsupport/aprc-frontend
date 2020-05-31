@@ -21,7 +21,6 @@ import pwcLogo from "../../assets/images/pwc-logo.png";
 import HomepageSearch from "../../containers/homepage/HomepageSearch";
 import { useNotificationsCountQuery } from "../../generated/graphql";
 import { unauthorize } from "../../redux/auth";
-// import useAccessRights from "../hooks/useAccessRights";
 import useWindowSize from "../hooks/useWindowSize";
 import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";

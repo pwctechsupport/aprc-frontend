@@ -22,18 +22,21 @@ interface ControlsTableProps {
   // controls: Control[];
   // editControl?: Function;
   data?: PolicyQuery;
+  setControlId?: any;
 }
 
 export default function ControlsTable({
   // controls,
   // editControl,
   data,
+  setControlId,
 }: ControlsTableProps) {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const policyId = data?.policy?.id;
   const controlsWithoutChildren = oc(data).policy.controls([]);
   const controlFirstChild =
     data?.policy?.children?.map((a: any) => a.controls) || [];
@@ -149,7 +152,12 @@ export default function ControlsTable({
             {dataModifier(newDataControls)?.map((control: any) => (
               <tr key={control.id}>
                 <td>
-                  <Link to={`/control/${control.id}`}>
+                  <Link
+                    to={`/policy/${policyId}/details/control/${control.id}`}
+                    onClick={() => {
+                      setControlId(control.id);
+                    }}
+                  >
                     {control.description}
                   </Link>
                 </td>
