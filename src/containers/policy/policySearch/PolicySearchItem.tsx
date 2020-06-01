@@ -5,7 +5,7 @@ import { Policy } from "../../../generated/graphql";
 // import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import { previewHtml } from "../../../shared/formatter";
 import DateHover from "../../../shared/components/DateHover";
-import { Row, Col } from "reactstrap";
+import { Row, Col, Badge } from "reactstrap";
 
 interface PolicySearchItemProps {
   policy: Omit<Policy, "createdAt">;
@@ -24,19 +24,10 @@ export default function PolicySearchItem({
     risks,
     controls,
     resources,
+    businessProcesses,
     references,
     updatedAt,
   } = policy;
-
-  // console.log('policy', policy);
-
-  // console.log('filter',filter);
-  // console.log('policy', policy);
-  // const noAttribute =
-  //   risks?.length === 0 &&
-  //   controls?.length === 0 &&
-  //   resources?.length === 0 &&
-  //   references?.length === 0;
 
   const showResource = resources?.map((a) =>
     a.name?.toLowerCase().includes(homepageSearch.toLowerCase())
@@ -47,6 +38,9 @@ export default function PolicySearchItem({
   const showControl = controls?.map((a) =>
     a.description?.toLowerCase().includes(homepageSearch.toLowerCase())
   );
+  const showBP = businessProcesses?.map((a) =>
+    a.name?.toLowerCase().includes(homepageSearch.toLowerCase())
+  );
   const showRisk = risks?.map((a) =>
     a.name?.toLowerCase().includes(homepageSearch.toLowerCase())
   );
@@ -55,7 +49,7 @@ export default function PolicySearchItem({
   const resourcesPolicy = policy.resources;
   const controlsPolicy = policy.controls;
   const polcatPolicy = policy.policyCategory;
-  console.log("filter.policy_category_id_eq", filter.policy_category_id_eq);
+  const bps = policy.businessProcesses;
   return (
     <Fragment>
       {/* homepageSearchs is a string for search */}
@@ -81,9 +75,46 @@ export default function PolicySearchItem({
             </div>
           </StyledLink>
         </Row>
-        {/* Resourcess */}
+
+        {/* Referencess */}
+
+        <Row className="mt-1">
+          {!showReference?.every((a) => a === false) &&
+          homepageSearch !== "" ? (
+            <Col>
+              {references?.map(
+                (reference) =>
+                  reference?.name
+                    ?.toLowerCase()
+                    .includes(homepageSearch.toLowerCase()) && (
+                    <Fragment>
+                      <Link to={`/policy/${id}/details/#references`}>
+                        <Badge className="mx-1" key={reference.id}>
+                          {reference.name}
+                        </Badge>
+                      </Link>
+                    </Fragment>
+                  )
+              )}
+            </Col>
+          ) : referencesPolicy?.filter((ref) =>
+              filter.references_id_in?.includes(ref.id)
+            ).length ? (
+            <Col>
+              {referencesPolicy?.map((reference) => (
+                <Link to={`/policy/${id}/details/#references`}>
+                  <Badge className="mx-1" key={reference.id}>
+                    {reference.name}
+                  </Badge>
+                </Link>
+              ))}
+            </Col>
+          ) : null}
+        </Row>
 
         <Row style={{ marginLeft: "1vw", marginRight: "1vw" }}>
+          {/* Resourcess */}
+
           {(!showResource?.every((a) => a === false) &&
             homepageSearch !== "" && (
               <Col>
@@ -132,55 +163,8 @@ export default function PolicySearchItem({
                 </Col>
               ))}
 
-          {/* Referencess */}
-          {(!showReference?.every((a) => a === false) &&
-            homepageSearch !== "" && (
-              <Col>
-                <StyledLi>
-                  <Names>References:</Names>
-                  <ul>
-                    {references?.map(
-                      (reference) =>
-                        reference?.name
-                          ?.toLowerCase()
-                          .includes(homepageSearch.toLowerCase()) && (
-                          <li>
-                            <StyledTdMini key={reference.id}>
-                              <Link to={`/policy/${id}/details/#references`}>
-                                {reference.name}
-                              </Link>
-                            </StyledTdMini>
-                          </li>
-                        )
-                    )}
-                  </ul>
-                </StyledLi>
-              </Col>
-            )) ||
-            (referencesPolicy?.filter((ref) =>
-              filter.references_id_in?.includes(ref.id)
-            ) &&
-              referencesPolicy?.filter((ref) =>
-                filter.references_id_in?.includes(ref.id)
-              ).length !== 0 && (
-                <Col>
-                  <StyledLi>
-                    <Names>References:</Names>
-                    <ul>
-                      {referencesPolicy?.map((reference) => (
-                        <li>
-                          <StyledTdMini key={reference.id}>
-                            <Link to={`/policy/${id}/details/#references`}>
-                              {reference.name}
-                            </Link>
-                          </StyledTdMini>
-                        </li>
-                      ))}
-                    </ul>
-                  </StyledLi>
-                </Col>
-              ))}
           {/* Riskss */}
+
           {(!showRisk?.every((a) => a === false) && homepageSearch !== "" && (
             <Col>
               <StyledLi>
@@ -226,7 +210,9 @@ export default function PolicySearchItem({
                   </StyledLi>
                 </Col>
               ))}
+
           {/* Controlss */}
+
           {(!showControl?.every((a) => a === false) &&
             homepageSearch !== "" && (
               <Col>
@@ -274,7 +260,9 @@ export default function PolicySearchItem({
                   </StyledLi>
                 </Col>
               ))}
+
           {/* Policy Categoriess */}
+
           {polcatPolicy &&
             polcatPolicy.id === filter.policy_category_id_eq &&
             filter.policy_category_id_eq !== null && (
@@ -293,90 +281,32 @@ export default function PolicySearchItem({
                 </StyledLi>
               </Col>
             )}
+
+          {/* Business Processess */}
+
+          {!showBP?.every((a) => a === false) && homepageSearch !== "" && (
+            <Col>
+              <StyledLi>
+                <Names>Business Process:</Names>
+                <ul>
+                  {bps?.map(
+                    (bP) =>
+                      bP?.name
+                        ?.toLowerCase()
+                        .includes(homepageSearch.toLowerCase()) && (
+                        <li>
+                          <StyledTdMini key={bP.id}>
+                            <Link to={`/policy/${id}/details`}>{bP.name}</Link>
+                          </StyledTdMini>
+                        </li>
+                      )
+                  )}
+                </ul>
+              </StyledLi>
+            </Col>
+          )}
         </Row>
       </PolicySearchItemContainerMini>
-      {/* <PolicySearchItemContainer>
-          <AttributeSection>
-            {noAttribute ? (
-              <EmptyAttribute>No Attribute</EmptyAttribute>
-            ) : (
-              <StyledUl>
-                {risks?.length ? (
-                  <StyledLi>
-                    <Names> Risks</Names>
-                    <ul>
-                      {risks?.map((risk) => (
-                        <StyledTd key={risk.id}>
-                          <Link to={`/policy/${id}/details/#risks`}>
-                            {risk.name}
-                          </Link>
-                        </StyledTd>
-                      ))}
-                    </ul>
-                  </StyledLi>
-                ) : null}
-                {controls?.length ? (
-                  <StyledLi>
-                    <Names>Controls:</Names>
-                    <ul>
-                      {controls?.map((control) => (
-                        <StyledTd key={control.id}>
-                          <Link to={`/policy/${id}/details/#controls`}>
-                            {control.description}
-                          </Link>
-                        </StyledTd>
-                      ))}
-                    </ul>
-                  </StyledLi>
-                ) : null}
-                {resources?.length ? (
-                  <StyledLi>
-                    <Names>Resources:</Names>
-                    <ul>
-                      {resources?.map((resource) => (
-                        <StyledTd key={resource.id}>
-                          <Link to={`/policy/${id}/resources`}>
-                            {resource.name}
-                          </Link>
-                        </StyledTd>
-                      ))}
-                    </ul>
-                  </StyledLi>
-                ) : null}
-                {references?.length ? (
-                  <StyledLi>
-                    <Names>References:</Names>
-                    <ul>
-                      {references?.map((reference) => (
-                        <StyledTd key={reference.id}>
-                          <Link to={`/policy/${id}/details/#references`}>
-                            {reference.name}
-                          </Link>
-                        </StyledTd>
-                      ))}
-                    </ul>
-                  </StyledLi>
-                ) : null}
-              </StyledUl>
-            )}
-          </AttributeSection>
-          <TitleAndDescriptionSection>
-            <StyledLink to={`/policy/${id}/details`}>
-              <div className="text-right">
-                <DateHover withIcon>{updatedAt}</DateHover>
-              </div>
-              <div>
-                <StyledTitle>
-                  <strong>{title}</strong>
-                </StyledTitle>
-              </div>
-              <div className="text-secondary">
-                {previewHtml(description || "")}
-              </div>
-            </StyledLink>
-          </TitleAndDescriptionSection>
-        </PolicySearchItemContainer>
-      )} */}
     </Fragment>
   );
 }
@@ -384,28 +314,8 @@ export default function PolicySearchItem({
 // =========================================================
 // Three Important Part
 // =========================================================
-// const PolicySearchItemContainer = styled.div`
-//   display: flex;
-//   flex-direction: row;
-//   background: #f7f7f7;
-//   align-items: center;
-//   justify-content: space-between;
-//   padding: 10px 15px;
-//   margin-bottom: 10px;
-//   margin-top: 20px;
-//   &:last-child {
-//     margin-bottom: 0px;
-//   }
-//   border-radius: 5px;
-//   overflow: hidden;
-//   /* for small screen */
-//   @media screen and (max-width: 767px) {
-//     flex-direction: column;
-//   }
-// `;
+
 const PolicySearchItemContainerMini = styled.div`
-  /* display: flex;
-  flex-direction: row; */
   background: #f7f7f7;
   align-items: center;
   justify-content: space-between;
@@ -422,26 +332,6 @@ const PolicySearchItemContainerMini = styled.div`
     flex-direction: column;
   }
 `;
-// const TitleAndDescriptionSection = styled.div`
-//   width: 60%;
-//   margin-left: 1.5rem;
-//   /* for small screen */
-//   @media screen and (max-width: 767px) {
-//     order: 1;
-//     width: 100%;
-//     margin: unset;
-//   }
-// `;
-// const AttributeSection = styled.div`
-//   width: 40%;
-//   border-right: 1px solid #d85604;
-//   /* for small screen */
-//   @media screen and (max-width: 767px) {
-//     order: 2;
-//     width: 100%;
-//     border-right: unset;
-//   }
-// `;
 
 // =========================================================
 // Aditional Component
@@ -461,24 +351,11 @@ const StyledLi = styled.li`
   list-style-type: none;
 `;
 
-// const StyledUl = styled.ul`
-//   list-style-type: none;
-// `;
-
 const StyledTitle = styled.h4`
   & :hover {
     color: #d85604;
   }
 `;
-
-// const StyledTd = styled.li`
-//   &:hover {
-//     color: #d85604;
-//   }
-//   font-size: 13px;
-//   word-break: break-all;
-//   width: 140%;
-// `;
 
 const StyledTdMini = styled.li`
   &:hover {

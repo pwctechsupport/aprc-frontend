@@ -19,6 +19,7 @@ import PolicySearchForm, {
 import PolicySearchItem from "./policySearch/PolicySearchItem";
 import OpacityButton from "../../shared/components/OpacityButton";
 import { RouteComponentProps } from "react-router-dom";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 interface PolicySearchFilter {
   title_cont?: string;
@@ -51,23 +52,40 @@ export default function PolicySearch({
       page,
     },
   });
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const policies = data?.policies?.collection || [];
   const totalCount = data?.policies?.metadata.totalCount || 0;
   function handleFormSubmit(values: PolicySearchFormValues) {
-    const filter = removeEmpty({
-      title_cont: values.title,
-      description_cont: values.description,
-      risks_id_in: values.risks?.map(takeValue),
-      controls_id_in: values.controls?.map(takeValue),
-      resources_id_in: values.resources?.map(takeValue),
-      references_id_in: values.policyReferences?.map(takeValue),
-      policy_category_id_eq: values.policyCategories?.value,
-      updated_at_gteq: constructDateFilter(values.dateFrom),
-    });
+    const filter = isUser
+      ? removeEmpty({
+          title_cont: values.title,
+          description_cont: values.description,
+          risks_id_in: values.risks?.map(takeValue),
+          controls_id_in: values.controls?.map(takeValue),
+          resources_id_in: values.resources?.map(takeValue),
+          references_id_in: values.policyReferences?.map(takeValue),
+          policy_category_id_eq: values.policyCategories?.value,
+          updated_at_gteq: constructDateFilter(values.dateFrom),
+          status_eq: "release",
+        })
+      : removeEmpty({
+          title_cont: values.title,
+          description_cont: values.description,
+          risks_id_in: values.risks?.map(takeValue),
+          controls_id_in: values.controls?.map(takeValue),
+          resources_id_in: values.resources?.map(takeValue),
+          references_id_in: values.policyReferences?.map(takeValue),
+          policy_category_id_eq: values.policyCategories?.value,
+          updated_at_gteq: constructDateFilter(values.dateFrom),
+        });
     setFilter(filter);
     history.replace(`?${constructUrlParams(filter)}`);
   }
-
   const defaultValues: PolicySearchFormValues = {
     title: filter.title_cont,
     description: filter.description_cont,
@@ -110,7 +128,18 @@ export default function PolicySearch({
             perPage={limit}
             onPageChange={handlePageChange}
           />
-          {policies.length ? (
+          {isUser &&
+          history.location.search.includes("status_eq=release") &&
+          policies.length ? (
+            policies.map((policy) => (
+              <PolicySearchItem
+                key={policy.id}
+                policy={policy}
+                homepageSearch={"thisIsForSearchPolicy"}
+                filter={filter}
+              />
+            ))
+          ) : !isUser && policies.length ? (
             policies.map((policy) => (
               <PolicySearchItem
                 key={policy.id}

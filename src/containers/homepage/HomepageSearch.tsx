@@ -9,6 +9,7 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import useKeyDetection from "../../shared/hooks/useKeyDetection";
 import { Input } from "../auth/Login";
 import PolicySearchItem from "../policy/policySearch/PolicySearchItem";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 
 interface HomepageSearchProps {
   placeholder?: string | null;
@@ -28,7 +29,12 @@ export default function HomepageSearch({
   });
   const items = queryPoliciesResult.data?.policies?.collection || [];
   const loading = queryPoliciesResult.loading;
-
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin",
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const {
     isOpen,
     getToggleButtonProps,
@@ -43,9 +49,14 @@ export default function HomepageSearch({
     onInputValueChange: ({ inputValue }) => {
       debouncedQueryPolicies({
         variables: {
-          filter: {
-            references_name_or_risks_name_or_controls_description_or_resources_name_or_title_or_description_cont: inputValue,
-          },
+          filter: isUser
+            ? {
+                references_name_or_risks_name_or_business_processes_name_or_controls_description_or_resources_name_or_title_or_description_cont: inputValue,
+                status_eq: "release",
+              }
+            : {
+                references_name_or_risks_name_or_business_processes_name_or_controls_description_or_resources_name_or_title_or_description_cont: inputValue,
+              },
           withDetail: true,
         },
       });
@@ -95,7 +106,11 @@ export default function HomepageSearch({
                 <StyledSpan>Showing {items.length} result(s)</StyledSpan>
                 {items.map((item) => (
                   <li key={item.id}>
-                    <PolicySearchItem homepageSearch={inputValue||''} policy={item} filter={{}} />
+                    <PolicySearchItem
+                      homepageSearch={inputValue || ""}
+                      policy={item}
+                      filter={{}}
+                    />
                   </li>
                 ))}
               </div>

@@ -126,7 +126,14 @@ export default function NewNavbar() {
                 maxMenuWidth={500}
               />
             </SearchBar>
-            <Link to="/search-policy" className="text-dark mr-4">
+            <Link
+              to={`${
+                rolesArray.every((a) => a === false)
+                  ? "/search-policy?status_eq=release"
+                  : "/search-policy"
+              }`}
+              className="text-dark mr-4"
+            >
               <FaSearch className="clickable" size={22} />
             </Link>
             <Link to="/bookmark" className="text-dark">
