@@ -296,7 +296,9 @@ export default function PolicySearchItem({
                         .includes(homepageSearch.toLowerCase()) && (
                         <li>
                           <StyledTdMini key={bP.id}>
-                            <Link to={`/policy/${id}/details`}>{bP.name}</Link>
+                            <Link to={`/risk-and-control/${bP.id}`}>
+                              {bP.name}
+                            </Link>
                           </StyledTdMini>
                         </li>
                       )
