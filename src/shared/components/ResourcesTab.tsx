@@ -8,6 +8,7 @@ import {
   useCreateResourceMutation,
   PolicyQuery,
   useResourcesQuery,
+  useBusinessProcessQuery,
 } from "../../generated/graphql";
 import Button from "./Button";
 import EmptyAttribute from "./EmptyAttribute";
@@ -25,6 +26,7 @@ import useAccessRights from "../hooks/useAccessRights";
 
 export default function ResourcesTab({
   queryFilters,
+  bPId,
   formDefaultValues,
   isDraft,
   policy,
@@ -37,6 +39,7 @@ export default function ResourcesTab({
   formDefaultValues: ResourceFormValues;
   isDraft: any;
   policy?: boolean;
+  bPId?: any;
   setResourceId?: any;
   policyData?: PolicyQuery;
 }) {
@@ -52,6 +55,49 @@ export default function ResourcesTab({
   const { limit, handlePageChange, page } = useListState({
     limit: 10,
   });
+
+  //BP filter
+
+  const id = bPId;
+  const { data: dataBP } = useBusinessProcessQuery({
+    variables: { id },
+  });
+  const bpIdWithoutChildren = dataBP?.businessProcess?.id;
+  const bpIdFirstChild =
+    dataBP?.businessProcess?.children?.map((a) => a.id) || [];
+  const bpIdSecondChild =
+    dataBP?.businessProcess?.children?.map((a: any) =>
+      a.children.map((b: any) => b.id)
+    ) || [];
+  const bpIdThirdChild =
+    dataBP?.businessProcess?.children?.map((a: any) =>
+      a.children?.map((b: any) => b.children.map((c: any) => c.id))
+    ) || [];
+  const bpIdFourthChild =
+    dataBP?.businessProcess?.children?.map((a: any) =>
+      a.children?.map((b: any) =>
+        b.children?.map((c: any) => c.children.map((d: any) => d.id))
+      )
+    ) || [];
+  const bpIdFifthChild =
+    dataBP?.businessProcess?.children?.map((a: any) =>
+      a.children?.map((b: any) =>
+        b.children?.map((c: any) =>
+          c.children.map((d: any) => d.children.map((e: any) => e.id))
+        )
+      )
+    ) || [];
+
+  const bpIds = [
+    bpIdWithoutChildren,
+    ...bpIdFirstChild.flat(10),
+    ...bpIdSecondChild.flat(10),
+    ...bpIdThirdChild.flat(10),
+    ...bpIdFourthChild.flat(10),
+    ...bpIdFifthChild.flat(10),
+  ];
+
+  //policy filter
 
   const policyIdsWithoutChildren = policyData?.policy?.id;
   const policyIdFirstChild =
@@ -78,6 +124,7 @@ export default function ResourcesTab({
         )
       )
     ) || [];
+
   const policyIds = [
     policyIdsWithoutChildren,
     ...policyIdFirstChild.flat(10),
@@ -90,8 +137,7 @@ export default function ResourcesTab({
 
   const [searchQuery] = useDebounce(search, 700);
 
-  // Query for RISK AND CONTROL
-
+  // Query for Modified Resources
   const { data, loading } = useResourcesQuery({
     fetchPolicy: "network-only",
     variables: {
@@ -103,8 +149,7 @@ export default function ResourcesTab({
               name_cont: searchQuery,
             }
           : {
-              business_process_id_eq:
-                formDefaultValues.businessProcessId?.value,
+              business_process_id_matches_any: bpIds,
               name_cont: searchQuery,
               draft_id_null: true,
             }
@@ -114,7 +159,8 @@ export default function ResourcesTab({
             name_cont: searchQuery,
           }
         : {
-            business_process_id_eq: formDefaultValues.businessProcessId?.value,
+            business_process_id_matches_any: bpIds,
+
             name_cont: searchQuery,
           },
       limit,
@@ -213,6 +259,7 @@ export default function ResourcesTab({
           <ResourceBar
             policyIdsWithoutChildren={policyIdsWithoutChildren}
             setResourceId={setResourceId}
+            bPId={bPId}
             rating={resource.rating}
             deleteResource={handleDeleteResource}
             totalRating={resource.totalRating}

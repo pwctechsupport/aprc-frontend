@@ -79,7 +79,26 @@ query businessProcessTree(
     }
   }
 }
-
+# query bPChildren($id: ID!) {
+#   businessProcess(id: $id) {
+#     id
+#     children {
+#       ...businessProcessBranch
+#       children {
+#         ...businessProcessBranch
+#         children {
+#           ...businessProcessBranch
+#           children {
+#             ...businessProcessBranch
+#             children {
+#               ...businessProcessBranch
+#             }
+#           }
+#         }
+#       }
+#     }
+#   }
+# }
 query businessProcess($id: ID!) {
   businessProcess(id: $id) {
     ancestors {
@@ -95,6 +114,18 @@ query businessProcess($id: ID!) {
       name
       id
       ancestry
+      children {
+        ...businessProcessBranch
+        children {
+          ...businessProcessBranch
+          children {
+            ...businessProcessBranch
+            children {
+              ...businessProcessBranch
+            }
+          }
+        }
+      }
     }
     risks {
       ...risk

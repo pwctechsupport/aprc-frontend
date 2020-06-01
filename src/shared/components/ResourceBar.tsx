@@ -20,6 +20,7 @@ interface ResourceBarProps {
   resourceId?: any;
   policyIdsWithoutChildren?: any;
   setResourceId?: any;
+  bPId?: any;
 }
 
 export default function ResourceBar({
@@ -27,6 +28,7 @@ export default function ResourceBar({
   policyIdsWithoutChildren,
   id,
   resuploadUrl,
+  bPId,
   deleteResource,
   setResourceId,
   rating = 0,
@@ -51,7 +53,7 @@ export default function ResourceBar({
           to={
             policyIdsWithoutChildren
               ? `/policy/${policyIdsWithoutChildren}/resources/${id}`
-              : `/risk-and-control/id/resources/${id}`
+              : `/risk-and-control/${bPId}/resources/${id}`
           }
         >
           <ResourceName

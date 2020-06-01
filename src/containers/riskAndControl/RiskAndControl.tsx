@@ -1,5 +1,5 @@
 import startCase from "lodash/startCase";
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import {
   FaBars,
   FaBookmark,
@@ -10,8 +10,17 @@ import {
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { NavLink, Route, RouteComponentProps } from "react-router-dom";
-import { Badge, Nav, NavItem, TabContent, Table, TabPane } from "reactstrap";
+import { NavLink, Route, RouteComponentProps, Link } from "react-router-dom";
+import {
+  Badge,
+  Nav,
+  NavItem,
+  TabContent,
+  Table,
+  TabPane,
+  Row,
+  Col,
+} from "reactstrap";
 import {
   Assertion,
   Control,
@@ -27,6 +36,8 @@ import {
   useUpdateControlMutation,
   useUpdateRiskMutation,
   useBookmarksQuery,
+  useResourceRatingsQuery,
+  useResourceQuery,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -58,6 +69,9 @@ import ControlForm, {
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import { useSelector } from "../../shared/hooks/useSelector";
+import { APP_ROOT_URL } from "../../settings";
+import ResourceBox from "../resources/components/ResourceBox";
 
 type TParams = { id: string };
 
@@ -169,8 +183,123 @@ export default function RiskAndControl({
     { to: `/risk-and-control/${id}/flowchart`, title: "Flowchart" },
     { to: `/risk-and-control/${id}/resources`, title: "Resources" },
   ];
-  // Resource Bar
+  //resources Bar
+  const currentUrl = history.location.pathname;
   const [resourceId, setResourceId] = useState("");
+  const userId = useSelector((state) => state.auth.user)?.id;
+  useEffect(() => {
+    if (currentUrl.includes("resources/")) {
+      setResourceId(currentUrl.split("resources/")[1]);
+    }
+  }, [currentUrl]);
+  const { data: dataResource, loading: loadingResource } = useResourceQuery({
+    skip: !resourceId && currentUrl.includes("resources/"),
+    variables: { id: resourceId },
+    fetchPolicy: "network-only",
+  });
+  const { data: dataRating } = useResourceRatingsQuery({
+    skip: !resourceId && currentUrl.includes("resources/"),
+    variables: { filter: { user_id_eq: userId, resource_id_eq: resourceId } },
+    fetchPolicy: "network-only",
+  });
+  const resourceName = dataResource?.resource?.name || "";
+
+  const renderResourceDetails = () => {
+    const totalRating = dataResource?.resource?.totalRating || 0;
+    const visit = dataResource?.resource?.visit || 0;
+    const resourceFileType = dataResource?.resource?.resourceFileType;
+    const businessProcess = dataResource?.resource?.businessProcess;
+    const resuploadUrl = dataResource?.resource?.resuploadUrl;
+    const category = dataResource?.resource?.category;
+    const resuploadLink = dataResource?.resource?.resuploadLink;
+    const policies = dataResource?.resource?.policies || [];
+    const controls = dataResource?.resource?.controls || [];
+    const base64File = dataResource?.resource?.base64File;
+    const rating =
+      dataRating?.resourceRatings?.collection.map((a) => a.rating).pop() || 0;
+    const imagePreviewUrl = resuploadLink
+      ? resuploadLink
+      : resuploadUrl && !resuploadLink?.includes("original/missing.png")
+      ? `${APP_ROOT_URL}${resuploadUrl}`
+      : undefined;
+    return (
+      <Route exact path="/risk-and-control/:id/resources/:id">
+        <div>
+          {loadingResource ? (
+            <LoadingSpinner centered size={30} />
+          ) : (
+            <Row>
+              {resourceName ? (
+                <Fragment>
+                  <Col xs={12} lg={6}>
+                    <ResourceBox
+                      base64File={base64File}
+                      id={resourceId}
+                      name={resourceName}
+                      rating={rating}
+                      totalRating={totalRating}
+                      views={visit}
+                      imagePreviewUrl={imagePreviewUrl}
+                      resourceFileType={resourceFileType}
+                    />
+                  </Col>
+                  <Col xs={12} lg={6}>
+                    <div className="mt-5 mt-lg-0">
+                      <h5>
+                        Category:&nbsp;
+                        <span className="text-orange">{category}</span>
+                      </h5>
+                      {category === "Flowchart" ? (
+                        <>
+                          <h5 className="mt-5">Business Process:</h5>
+                          <Link to={`/risk-and-control/${businessProcess?.id}`}>
+                            {businessProcess?.name}
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <div>
+                            <h5 className="mt-5">Related Controls:</h5>
+                            {controls.length ? (
+                              <ul>
+                                {controls.map((control) => (
+                                  <li key={control.id}>
+                                    {control.description}
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <EmptyAttribute centered={false} />
+                            )}
+                          </div>
+                          <div>
+                            <h5 className="mt-5">Related Policies:</h5>
+                            {policies.length ? (
+                              <ul>
+                                {policies.map((policy) => (
+                                  <li key={policy.id}>
+                                    <Link to={`/policy/${policy.id}`}>
+                                      {policy.title}
+                                    </Link>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <EmptyAttribute centered={false} />
+                            )}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </Col>
+                </Fragment>
+              ) : null}
+            </Row>
+          )}
+        </div>
+      </Route>
+    );
+  };
   if (loading) return <LoadingSpinner size={30} centered />;
 
   const renderActions = () => {
@@ -311,30 +440,43 @@ export default function RiskAndControl({
   return (
     <div>
       <BreadCrumb
-        crumbs={[
-          ["/risk-and-control", "Risk and Controls"],
-          ...breadcrumb,
-          ["/risk-and-control/" + id, name],
-        ]}
+        crumbs={
+          history.location.pathname.includes("resources/")
+            ? [
+                ["/risk-and-control", "Risk and Controls"],
+                ...breadcrumb,
+                ["/risk-and-control/" + id, name],
+                ["/risk-and-control/" + resourceId, resourceName],
+              ]
+            : [
+                ["/risk-and-control", "Risk and Controls"],
+                ...breadcrumb,
+                ["/risk-and-control/" + id, name],
+              ]
+        }
       />
       <div className="d-flex justify-content-between">
-        <HeaderWithBackButton heading={name} />
-        {renderActions()}
+        <HeaderWithBackButton
+          heading={currentUrl.includes("resources/") ? resourceName : name}
+        />
+        {currentUrl.includes("resources/") ? null : renderActions()}
       </div>
       <Nav tabs className="tabs-pwc">
-        {tabs.map((tab, index) => (
-          <NavItem key={index}>
-            <NavLink
-              exact
-              to={tab.to}
-              className="nav-link"
-              activeClassName="active"
-            >
-              {tab.title}
-            </NavLink>
-          </NavItem>
-        ))}
+        {!currentUrl.includes("resources/") &&
+          tabs.map((tab, index) => (
+            <NavItem key={index}>
+              <NavLink
+                exact
+                to={tab.to}
+                className="nav-link"
+                activeClassName="active"
+              >
+                {tab.title}
+              </NavLink>
+            </NavItem>
+          ))}
       </Nav>
+      {renderResourceDetails()}
 
       <TabContent>
         <TabPane>
@@ -472,6 +614,7 @@ export default function RiskAndControl({
           <Route exact path="/risk-and-control/:id/resources">
             <ResourcesTab
               setResourceId={setResourceId}
+              bPId={id}
               risksnControls
               isDraft={null}
               formDefaultValues={{

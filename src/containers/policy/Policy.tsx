@@ -458,7 +458,7 @@ export default function Policy({
                       {category === "Flowchart" ? (
                         <>
                           <h5 className="mt-5">Business Process:</h5>
-                          <Link to={`/business-process/${businessProcess?.id}`}>
+                          <Link to={`/risk-and-control/${businessProcess?.id}`}>
                             {businessProcess?.name}
                           </Link>
                         </>
