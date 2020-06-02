@@ -17,10 +17,10 @@ interface AvatarProps {
 
 export default function Avatar({ data }: AvatarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const user = useSelector(state => state.auth.user);
+  const user = useSelector((state) => state.auth.user);
   const name = user?.name || "";
 
-  const toggle = () => setDropdownOpen(prevState => !prevState);
+  const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
@@ -36,7 +36,18 @@ export default function Avatar({ data }: AvatarProps) {
           >
             <div className="d-flex flex-column justify-content-center align-items-center mb-3">
               <DropdownAvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
-              {user ? <h4>{name}</h4> : null}
+              {user ? (
+                <h4>
+                  {!name.includes(" ")
+                    ? name.split("")[0].toUpperCase()
+                    : name.split("")[0].toUpperCase() +
+                      " " +
+                      name
+                        .split(" ")[1]
+                        .split("")[0]
+                        .toUpperCase()}
+                </h4>
+              ) : null}
             </div>
             <div className="d-flex justify-content-between">
               {user ? (
