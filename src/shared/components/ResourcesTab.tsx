@@ -241,7 +241,7 @@ export default function ResourcesTab({
           placeholder="Search Resources..."
           loading={loading}
         />
-        {isDraft === null && (isAdmin || isAdminPreparer) && (
+        {isDraft === null && (isAdmin || isAdminPreparer || isUser) && (
           <Tooltip description="Create Resource">
             <Button
               onClick={toggleAddResourceModal}

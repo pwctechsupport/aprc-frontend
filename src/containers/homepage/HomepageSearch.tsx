@@ -150,7 +150,7 @@ const InputWrapper = styled.div`
   margin-right: 90px;
   margin-left: -35px;
 
-  @media screen and (max-width: 1025px) {
+  @media screen and (max-width: 1325px) {
     margin-left: 0px;
   }
 `;
