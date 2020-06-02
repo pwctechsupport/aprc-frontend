@@ -27,6 +27,7 @@ import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
 import Tooltip from "../../../shared/components/Tooltip";
 import { toast } from "react-toastify";
+import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -38,6 +39,7 @@ interface UserRowValues {
   name?: string;
   roleIds?: any;
   policyCategoryIds?: Suggestions;
+  departmentId?: any;
 }
 
 export default function UserRow({
@@ -106,14 +108,13 @@ export default function UserRow({
   ]);
   const createdAt = oc(user).createdAt() || "";
   const updatedAt = oc(user).updatedAt() || "";
-  const status = oc(user).requestEdit.state() || "";
   const draft = oc(user).draft.objectResult();
   const requestStatus = oc(user).requestStatus();
   const notRequested = !requestStatus;
   const requested = requestStatus === "requested";
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
-  let name = oc(user).name("");
+  let name = user?.name || "";
 
   if (draft) {
     const draftData: any = draft || {};
@@ -122,7 +123,7 @@ export default function UserRow({
 
   const handleGetRoles = useLoadRoles();
   const handleGetPolicyCategories = useLoadPolicyCategories();
-
+  const handleGetDepartments = useLoadDepartmentUser();
   function toggleEdit() {
     setIsEdit(!isEdit);
   }
@@ -139,15 +140,12 @@ export default function UserRow({
           userId: oc(user).id(""),
           policyCategoryIds: data.policyCategoryIds?.map((a) => a.value),
           roleIds: data.roleIds?.value || "",
+          departmentId: data.departmentId.value || "",
         },
       },
     });
     setIsEdit(false);
   }
-
-  // function onCompleted() {
-  //   setIsEdit(false);
-  // }
 
   function handleDestroy(id: string) {
     destroy({ variables: { id } });
@@ -172,12 +170,7 @@ export default function UserRow({
   if (!isEdit) {
     return (
       <tr>
-        <td>
-          {draft ? (
-            <span className="text-orange">[Waiting For Review] </span>
-          ) : null}
-          {name}
-        </td>
+        <td>{name}</td>
         <td>{oc(user).id("")}</td>
         <td>
           {oc(user)
@@ -186,7 +179,13 @@ export default function UserRow({
             .join(",")}
         </td>
         <td>{policyCategories.join(",")}</td>
-        <td>{status}</td>
+        <td>
+          {draft ? (
+            <span className="text-orange">[Waiting for review] </span>
+          ) : (
+            <span className="text-orange">[Approved] </span>
+          )}
+        </td>
         <td>{createdAt.split(" ")[0]}</td>
         <td>{updatedAt.split(" ")[0]}</td>
 
@@ -299,6 +298,7 @@ export default function UserRow({
           <Input
             required
             name="name"
+            label="Name"
             innerRef={register({ required: true })}
             defaultValue={name}
             error={get(errors, "name.message", undefined) as string | undefined}
@@ -309,6 +309,7 @@ export default function UserRow({
           <AsyncSelect
             // isMulti
             cacheOptions
+            label="User Group"
             defaultOptions
             name="roleIds"
             register={register}
@@ -322,6 +323,7 @@ export default function UserRow({
           <AsyncSelect
             isMulti
             cacheOptions
+            label="Policy Category"
             defaultOptions
             error={
               errors.policyCategoryIds && "Policy category is a required field"
@@ -331,6 +333,23 @@ export default function UserRow({
             setValue={setValue}
             loadOptions={handleGetPolicyCategories}
             defaultValue={user?.policyCategories?.map(toLabelValue) || []}
+          />
+        </td>
+        <td>
+          <AsyncSelect
+            cacheOptions
+            label="Department"
+            defaultOptions
+            error={
+              errors.policyCategoryIds && "Policy category is a required field"
+            }
+            name="departmentId"
+            register={register}
+            setValue={setValue}
+            loadOptions={handleGetDepartments}
+            defaultValue={
+              (user?.department && [user.department].map(toLabelValue)) || []
+            }
           />
         </td>
         <td>

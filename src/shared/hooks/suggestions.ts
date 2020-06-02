@@ -12,6 +12,8 @@ import {
   ResourcesDocument,
   ReferencesDocument,
   ReferencesQuery,
+  DepartmentsQuery,
+  DepartmentsDocument,
 } from "../../generated/graphql";
 import { Suggestions, toLabelValue } from "../formatter";
 
@@ -111,13 +113,26 @@ export function useLoadCategories() {
   }
   return getSuggestions;
 }
-
+export function useLoadDepartmentUser() {
+  const query = useLazyQueryReturnPromise<DepartmentsQuery>(
+    DepartmentsDocument
+  );
+  async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
+    try {
+      const { data } = await query({ filter: { title_cont } });
+      return data.departments?.collection.map(toLabelValue) || [];
+    } catch (error) {
+      return [];
+    }
+  }
+  return getSuggestions;
+}
 export function useLoadDepartments() {
   // const query = useLazyQueryReturnPromise<PoliciesQuery>(PoliciesDocument);
   // async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
   //   try {
   //     const { data } = await query({
-  //       filter: { title_cont }
+  //       filter: { title_cont },
   //     });
   //     return data.policies?.collection?.map(toLabelValue) || [];
   //   } catch (error) {

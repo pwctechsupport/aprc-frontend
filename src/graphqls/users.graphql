@@ -32,7 +32,10 @@ fragment userRowFragment on User {
   ...userFragment
   hasEditAccess
   requestStatus
-
+  department {
+    id
+    name
+  }
   requestEdit {
     id
     state
