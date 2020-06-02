@@ -10,6 +10,7 @@ import DisplayStatus from "./DisplayStatus";
 import EmptyAttribute from "./EmptyAttribute";
 import Table from "./Table";
 import Tooltip from "./Tooltip";
+import useAccessRights from "../hooks/useAccessRights";
 
 interface PoliciesTableProps {
   policies: Policy[];
@@ -88,7 +89,7 @@ const PolicyTableRow = ({
     event.stopPropagation();
     onDelete();
   }
-
+  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
   return (
     <>
       <tr key={id}>
@@ -131,11 +132,13 @@ const PolicyTableRow = ({
           <DateHover withIcon>{policy.updatedAt}</DateHover>
         </td>
         <td className="action">
-          <Tooltip description="Delete Policy">
-            <Button onClick={handleDelete} className="soft red" color="">
-              <FaTrash />
-            </Button>
-          </Tooltip>
+          {isAdminReviewer ? (
+            <Tooltip description="Delete Policy">
+              <Button onClick={handleDelete} className="soft red" color="">
+                <FaTrash />
+              </Button>
+            </Tooltip>
+          ) : null}
         </td>
       </tr>
       {childs.length && showChild

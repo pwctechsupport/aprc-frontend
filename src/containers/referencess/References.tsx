@@ -341,16 +341,18 @@ const ReferenceRow = ({
                     </Tooltip>
                   </Button>
                 )}
-                <DialogButton
-                  onConfirm={onDelete}
-                  loading={deleteLoading}
-                  message={`Delete ${reference.name}?`}
-                  className="soft red"
-                >
-                  <Tooltip description="Delete Reference">
-                    <FaTrash />
-                  </Tooltip>
-                </DialogButton>
+                {isAdminReviewer && (
+                  <DialogButton
+                    onConfirm={onDelete}
+                    loading={deleteLoading}
+                    message={`Delete ${reference.name}?`}
+                    className="soft red"
+                  >
+                    <Tooltip description="Delete Reference">
+                      <FaTrash />
+                    </Tooltip>
+                  </DialogButton>
+                )}
               </div>
             )}
           </div>

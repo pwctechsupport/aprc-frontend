@@ -199,7 +199,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                   <td>{item.lastUpdatedBy}</td>
                   <td>{item.createdAt.split("T")[0]}</td>
                   <td>{item.createdBy}</td>
-                  {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                  {isAdminReviewer ? (
                     <td className="action">
                       <DialogButton
                         onConfirm={() => handleDelete(item.id)}
