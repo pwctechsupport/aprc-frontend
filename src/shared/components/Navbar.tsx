@@ -138,7 +138,7 @@ export default function NewNavbar() {
                 <FaSearch className="clickable" size={22} />
               </Link>
             </SearchPolicies>
-            <Link to="/bookmark" className="text-dark">
+            <Link to="/bookmark" className="text-dark ml-2">
               <FaBookmark className="clickable" size={22} />
             </Link>
             <div className="ml-4 mr-4">

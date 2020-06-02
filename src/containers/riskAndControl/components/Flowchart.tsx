@@ -4,11 +4,11 @@ import Switch from "react-switch";
 import { useTagsQuery } from "../../../generated/graphql";
 import Header from "../../../shared/components/Header";
 import {
-  ImageTaggerWrapper,
   PreviewTag,
   PreviewTagText,
   TargetImage,
 } from "../../../shared/components/ImageTagger";
+import styled from "styled-components";
 
 interface FlowchartProps {
   bpId: string;
@@ -54,8 +54,11 @@ export default function Flowchart({
         </div>
       ) : null}
 
-      <ImageTaggerWrapper>
-        <TargetImage src={img} editable={editable} />
+      <Container>
+        <div className="d-flex justify-content-center align-items-center py-1">
+          <TargetImage src={img} editable={editable} />
+        </div>
+
         {tags.map((tag) => {
           const id = tag.risk?.id || tag.control?.id;
           const type = tag.risk?.id ? "Risk" : "Control";
@@ -82,7 +85,15 @@ export default function Flowchart({
             </PreviewTag>
           );
         })}
-      </ImageTaggerWrapper>
+      </Container>
     </div>
   );
 }
+const Container = styled.div`
+  max-width: 36vw;
+  max-height: 30vw;
+  background: white;
+  border: grey 2px solid;
+  border-radius: 5px;
+  position: relative;
+`;

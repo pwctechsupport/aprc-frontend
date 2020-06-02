@@ -103,7 +103,7 @@ export default function HomepageSearch({
             }`}
           >
             {/* <Tooltip description="Full Search Policies"> */}
-            <StyledButton>Full Search</StyledButton>
+            <StyledButton className="pwc">Full Search</StyledButton>
             {/* </Tooltip> */}
           </Link>
         </InputWrapper>
@@ -203,7 +203,7 @@ const StyledButton = styled(Button)`
   padding-bottom: 9px;
   position: absolute;
   width: 100px;
-  right: -100px;
+  right: -105px;
   top: 0px;
   color: white;
   background: var(--darker-grey);
