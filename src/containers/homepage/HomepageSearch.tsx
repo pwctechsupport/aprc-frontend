@@ -1,7 +1,7 @@
 import { useCombobox } from "downshift";
 import React, { useCallback, useRef } from "react";
 import { FaSearch } from "react-icons/fa";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDebouncedCallback } from "use-debounce/lib";
 import { usePoliciesLazyQuery } from "../../generated/graphql";
@@ -10,6 +10,8 @@ import useKeyDetection from "../../shared/hooks/useKeyDetection";
 import { Input } from "../auth/Login";
 import PolicySearchItem from "../policy/policySearch/PolicySearchItem";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import Button from "../../shared/components/Button";
+import Tooltip from "../../shared/components/Tooltip";
 
 interface HomepageSearchProps {
   placeholder?: string | null;
@@ -84,7 +86,7 @@ export default function HomepageSearch({
   return (
     <div>
       <div {...getComboboxProps()}>
-        <InputWrapper ref={inputRef}>
+        <InputWrapper ref={inputRef} className="d-flex">
           <Input
             {...getInputProps()}
             placeholder={placeholder}
@@ -96,6 +98,15 @@ export default function HomepageSearch({
             aria-label={"toggle menu"}
             size={20}
           />
+          <Link
+            to={`${
+              isUser ? "/search-policy?status_eq=release" : "/search-policy"
+            }`}
+          >
+            {/* <Tooltip description="Full Search Policies"> */}
+            <StyledButton>Full Search</StyledButton>
+            {/* </Tooltip> */}
+          </Link>
         </InputWrapper>
       </div>
       {isOpen ? (
@@ -135,6 +146,13 @@ export default function HomepageSearch({
 // =============================================
 const InputWrapper = styled.div`
   position: relative;
+  display: inline-block;
+  margin-right: 90px;
+  margin-left: -35px;
+
+  @media screen and (max-width: 1025px) {
+    margin-left: 0px;
+  }
 `;
 
 const MenuWrapper = styled.div`
@@ -179,4 +197,15 @@ const ToggleButton = styled(FaSearch)`
   top: 10px;
   color: var(--darker-grey);
   background: white;
+`;
+const StyledButton = styled(Button)`
+  cursor: pointer;
+  font-size: 14px;
+  padding-bottom: 9px;
+  position: absolute;
+  width: 100px;
+  right: -100px;
+  top: 0px;
+  color: white;
+  background: var(--darker-grey);
 `;

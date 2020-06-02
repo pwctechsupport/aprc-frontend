@@ -126,16 +126,18 @@ export default function NewNavbar() {
                 maxMenuWidth={500}
               />
             </SearchBar>
-            <Link
-              to={`${
-                rolesArray.every((a) => a === false)
-                  ? "/search-policy?status_eq=release"
-                  : "/search-policy"
-              }`}
-              className="text-dark mr-4"
-            >
-              <FaSearch className="clickable" size={22} />
-            </Link>
+            <SearchPolicies>
+              <Link
+                to={`${
+                  rolesArray.every((a) => a === false)
+                    ? "/search-policy?status_eq=release"
+                    : "/search-policy"
+                }`}
+                className="text-dark mr-4"
+              >
+                <FaSearch className="clickable" size={22} />
+              </Link>
+            </SearchPolicies>
             <Link to="/bookmark" className="text-dark">
               <FaBookmark className="clickable" size={22} />
             </Link>
@@ -212,7 +214,12 @@ const StyledNavbarBrand = styled(NavbarBrand)`
     width: unset;
   }
 `;
-
+const SearchPolicies = styled.div`
+  display: none;
+  @media only screen and (max-width: 977px) {
+    display: block;
+  }
+`;
 const StyledNavLink = styled(NavLink)`
   color: rgba(0, 0, 0, 0.8) !important;
   font-weight: bold;
