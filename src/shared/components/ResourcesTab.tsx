@@ -194,6 +194,17 @@ export default function ResourcesTab({
       controlIds: values.controlIds?.map((a) => a.value),
       businessProcessId: values.businessProcessId?.value,
       resuploadLink: values.resuploadLink,
+      tagsAttributes: values.tagsAttributes?.map((tag) => {
+        const { id, risk, control, yCoordinates, xCoordinates, ...rest } = tag;
+        return {
+          ...rest,
+          risk_id: risk?.id,
+          control_id: control?.id,
+          business_process_id: values.businessProcessId?.value,
+          x_coordinates: xCoordinates,
+          y_coordinates: yCoordinates,
+        };
+      }),
     };
     createResource({
       variables: {
