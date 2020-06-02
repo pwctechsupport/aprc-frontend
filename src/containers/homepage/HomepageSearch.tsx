@@ -11,7 +11,6 @@ import { Input } from "../auth/Login";
 import PolicySearchItem from "../policy/policySearch/PolicySearchItem";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Button from "../../shared/components/Button";
-import Tooltip from "../../shared/components/Tooltip";
 
 interface HomepageSearchProps {
   placeholder?: string | null;

@@ -1,14 +1,43 @@
 query businessProcesses($filter: BaseScalar = {}, $limit: Int = 1000) {
   navigatorBusinessProcesses(filter: $filter, limit: $limit) {
     collection {
-      ancestry
-      id
-      name
-      parentId
-      updatedAt
-      risks {
-        id
-        name
+      controls {
+        ...businessProcessControl
+      }
+      controls {
+        ...businessProcessControl
+      }
+      ...businessProcessForBPsRisks
+      children {
+        controls {
+          ...businessProcessControl
+        }
+        ...businessProcessForBPsRisks
+
+        children {
+          controls {
+            ...businessProcessControl
+          }
+          ...businessProcessForBPsRisks
+          children {
+            controls {
+              ...businessProcessControl
+            }
+            ...businessProcessForBPsRisks
+            children {
+              controls {
+                ...businessProcessControl
+              }
+              ...businessProcessForBPsRisks
+              children {
+                controls {
+                  ...businessProcessControl
+                }
+                ...businessProcessForBPsRisks
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -114,32 +143,100 @@ query businessProcess($id: ID!) {
       name
       id
       ancestry
+      risks {
+        draft {
+          id
+        }
+        ...risk
+        controls {
+          ...businessProcessControl
+        }
+      }
+      controls {
+        ...businessProcessControl
+      }
+      resources {
+        id
+        name
+        draft {
+          id
+        }
+      }
       children {
         ...businessProcessBranch
+        controls {
+          ...businessProcessControl
+        }
+        resources {
+          id
+          name
+          draft {
+            id
+          }
+        }
         children {
           ...businessProcessBranch
+          controls {
+            ...businessProcessControl
+          }
+          resources {
+            id
+            name
+            draft {
+              id
+            }
+          }
           children {
             ...businessProcessBranch
+            controls {
+              ...businessProcessControl
+            }
+            resources {
+              id
+              name
+              draft {
+                id
+              }
+            }
             children {
               ...businessProcessBranch
+              controls {
+                ...businessProcessControl
+              }
+              resources {
+                id
+                name
+                draft {
+                  id
+                }
+              }
             }
           }
         }
       }
     }
     risks {
+      draft {
+        id
+      }
       ...risk
       controls {
         ...businessProcessControl
       }
     }
     controls {
+      draft {
+        id
+      }
       ...businessProcessControl
     }
     resources {
       name
       category
       id
+      draft {
+        id
+      }
       rating
       visit
       resuploadUrl
@@ -173,6 +270,29 @@ fragment businessProcessBranch on BusinessProcess {
   risks {
     id
     name
+    draft {
+      id
+    }
+  }
+}
+fragment businessProcessForBPsRisks on BusinessProcess {
+  ancestry
+  id
+  name
+  status
+  parentId
+  createdAt
+  createdBy
+  lastUpdatedBy
+  updatedAt
+  risks {
+    draft {
+      id
+    }
+    ...risk
+    controls {
+      ...businessProcessControl
+    }
   }
 }
 
@@ -184,6 +304,9 @@ fragment businessProcessControl on Control {
   nature
   assertion
   frequency
+  draft {
+    id
+  }
   typeOfControl
   controlOwner
   status

@@ -38,6 +38,8 @@ import {
   useBookmarksQuery,
   useResourceRatingsQuery,
   useResourceQuery,
+  useResourcesQuery,
+  useBusinessProcessesQuery,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -79,10 +81,12 @@ export default function RiskAndControl({
   match,
   history,
 }: RouteComponentProps<TParams>) {
-  const [isAdmin, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
+    "admin_reviewer",
     "admin_preparer",
   ]);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const initialCollapse = ["Risks", "Controls"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
@@ -157,20 +161,86 @@ export default function RiskAndControl({
   });
 
   const { id } = match.params;
+
   const { data, loading } = useBusinessProcessQuery({
     variables: { id },
     fetchPolicy: "network-only",
   });
+  const { data: dataResources, loading: loadingResources } = useResourcesQuery({
+    skip: !history.location.pathname.includes("/flowchart"),
+    variables: {
+      filter: isUser
+        ? { business_process_id_eq: id, draft_id_null: true }
+        : { business_process_id_eq: id },
+    },
+    fetchPolicy: "network-only",
+  });
+  const bpIds = data?.businessProcess?.id || [];
+  const bpIds2 = data?.businessProcess?.children?.map((a) => a.id) || [];
+  const bpIds3 =
+    data?.businessProcess?.children?.map((a) => a.children?.map((b) => b.id)) ||
+    [];
+  const bpIds4 =
+    data?.businessProcess?.children?.map((a) =>
+      a.children?.map((b) => b.children?.map((c) => c.id))
+    ) || [];
+  const bpIds5 =
+    data?.businessProcess?.children?.map((a) =>
+      a.children?.map((b) =>
+        b.children?.map((c) => c.children?.map((d) => d.id))
+      )
+    ) || [];
+  const bpIds6 =
+    data?.businessProcess?.children?.map((a) =>
+      a.children?.map((b) =>
+        b.children?.map((c) =>
+          c.children?.map((d) => d.children?.map((e) => e.id))
+        )
+      )
+    ) || [];
+  const bpIdsTotal = [
+    bpIds,
+    ...bpIds2.flat(10),
+    ...bpIds3.flat(10),
+    ...bpIds4.flat(10),
+    ...bpIds5.flat(10),
+    ...bpIds6.flat(10),
+  ];
+
+  // bookmark Query
   const { data: bookmarkData, loading: bookmarkLoading } = useBookmarksQuery({
     fetchPolicy: "network-only",
     variables: {
       filter: { originator_id_eq: id, originator_type_eq: "BusinessProcess" },
     },
   });
+
+  const {
+    data: dataRisksnControl,
+    loading: loadingRisksnControl,
+  } = useBusinessProcessesQuery({
+    skip:
+      history.location.pathname.includes("resources") ||
+      history.location.pathname.includes("flowchart"),
+    variables: {
+      filter: isUser
+        ? { id_matches_any: bpIdsTotal, draft_id_null: true }
+        : { id_matches_any: bpIdsTotal },
+    },
+    fetchPolicy: "network-only",
+  });
+
   const name = data?.businessProcess?.name || "";
-  const risks = data?.businessProcess?.risks || [];
-  const controls = data?.businessProcess?.controls || [];
-  const resources = data?.businessProcess?.resources || [];
+  const risks =
+    dataRisksnControl?.navigatorBusinessProcesses?.collection
+      .map((a) => a.risks)
+      .flat(10) || [];
+  const controls =
+    dataRisksnControl?.navigatorBusinessProcesses?.collection
+      .map((a) => a.controls)
+      .flat(10) || [];
+  const resources = dataResources?.navigatorResources?.collection || [];
+
   const isBookmarked = bookmarkData?.bookmarks?.collection || [];
   const ancestors = data?.businessProcess?.ancestors || [];
   const breadcrumb = ancestors.map((a) => [
@@ -192,11 +262,14 @@ export default function RiskAndControl({
       setResourceId(currentUrl.split("resources/")[1]);
     }
   }, [currentUrl]);
+
+  // query for Flowchart Tab
   const { data: dataResource, loading: loadingResource } = useResourceQuery({
-    skip: !resourceId && currentUrl.includes("resources/"),
     variables: { id: resourceId },
     fetchPolicy: "network-only",
   });
+
+  //Query for rating resource
   const { data: dataRating } = useResourceRatingsQuery({
     skip: !resourceId && currentUrl.includes("resources/"),
     variables: { filter: { user_id_eq: userId, resource_id_eq: resourceId } },
@@ -225,82 +298,77 @@ export default function RiskAndControl({
     return (
       <Route exact path="/risk-and-control/:id/resources/:id">
         <div>
-          {loadingResource ? (
-            <LoadingSpinner centered size={30} />
-          ) : (
-            <Row>
-              {resourceName ? (
-                <Fragment>
-                  <Col xs={12} lg={6}>
-                    <ResourceBox
-                      base64File={base64File}
-                      id={resourceId}
-                      name={resourceName}
-                      rating={rating}
-                      totalRating={totalRating}
-                      views={visit}
-                      imagePreviewUrl={imagePreviewUrl}
-                      resourceFileType={resourceFileType}
-                    />
-                  </Col>
-                  <Col xs={12} lg={6}>
-                    <div className="mt-5 mt-lg-0">
-                      <h5>
-                        Category:&nbsp;
-                        <span className="text-orange">{category}</span>
-                      </h5>
-                      {category === "Flowchart" ? (
-                        <>
-                          <h5 className="mt-5">Business Process:</h5>
-                          <Link to={`/risk-and-control/${businessProcess?.id}`}>
-                            {businessProcess?.name}
-                          </Link>
-                        </>
-                      ) : (
-                        <>
-                          <div>
-                            <h5 className="mt-5">Related Controls:</h5>
-                            {controls.length ? (
-                              <ul>
-                                {controls.map((control) => (
-                                  <li key={control.id}>
-                                    {control.description}
-                                  </li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <EmptyAttribute centered={false} />
-                            )}
-                          </div>
-                          <div>
-                            <h5 className="mt-5">Related Policies:</h5>
-                            {policies.length ? (
-                              <ul>
-                                {policies.map((policy) => (
-                                  <li key={policy.id}>
-                                    <Link to={`/policy/${policy.id}`}>
-                                      {policy.title}
-                                    </Link>
-                                  </li>
-                                ))}
-                              </ul>
-                            ) : (
-                              <EmptyAttribute centered={false} />
-                            )}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </Col>
-                </Fragment>
-              ) : null}
-            </Row>
-          )}
+          <Row>
+            {resourceName ? (
+              <Fragment>
+                <Col xs={12} lg={6}>
+                  <ResourceBox
+                    base64File={base64File}
+                    id={resourceId}
+                    name={resourceName}
+                    rating={rating}
+                    totalRating={totalRating}
+                    views={visit}
+                    imagePreviewUrl={imagePreviewUrl}
+                    resourceFileType={resourceFileType}
+                  />
+                </Col>
+                <Col xs={12} lg={6}>
+                  <div className="mt-5 mt-lg-0">
+                    <h5>
+                      Category:&nbsp;
+                      <span className="text-orange">{category}</span>
+                    </h5>
+                    {category === "Flowchart" ? (
+                      <>
+                        <h5 className="mt-5">Business Process:</h5>
+                        <Link to={`/risk-and-control/${businessProcess?.id}`}>
+                          {businessProcess?.name}
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <div>
+                          <h5 className="mt-5">Related Controls:</h5>
+                          {controls.length ? (
+                            <ul>
+                              {controls.map((control) => (
+                                <li key={control.id}>{control.description}</li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <EmptyAttribute centered={false} />
+                          )}
+                        </div>
+                        <div>
+                          <h5 className="mt-5">Related Policies:</h5>
+                          {policies.length ? (
+                            <ul>
+                              {policies.map((policy) => (
+                                <li key={policy.id}>
+                                  <Link to={`/policy/${policy.id}`}>
+                                    {policy.title}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          ) : (
+                            <EmptyAttribute centered={false} />
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </Col>
+              </Fragment>
+            ) : null}
+          </Row>
         </div>
       </Route>
     );
   };
-  if (loading) return <LoadingSpinner size={30} centered />;
+  if (loadingRisksnControl || loading || loadingResource)
+    return <LoadingSpinner size={30} centered />;
 
   const renderActions = () => {
     return (
@@ -486,6 +554,7 @@ export default function RiskAndControl({
             render={() => (
               <Flowcharts
                 bpId={id}
+                loading={loadingResources}
                 resources={resources.filter((resource) =>
                   resource.category?.match(/flowchart/gi)
                 )}
@@ -555,60 +624,11 @@ export default function RiskAndControl({
               show={collapse.includes("Controls")}
               onClick={toggleCollapse}
             >
-              {controls.length && (
+              {controls.length ? (
                 <ControlsTable controls={controls} editControl={editControl} />
-              )}
-              {/* {risks.length ? (
-                <ul>
-                  {risks.map((risk) => (
-                    <li key={risk.id}>
-                      <div className="mb-3 d-flex justify-content-between">
-                        <h5>
-                          {risk.name}
-                          <Badge
-                            color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
-                          >
-                            {startCase(risk.levelOfRisk || "")}
-                          </Badge>
-                          <Badge color="secondary">
-                            {startCase(risk.typeOfRisk || "")}
-                          </Badge>
-                        </h5>
-                        {(isAdmin || isAdminPreparer) && (
-                          <Button
-                            onClick={() =>
-                              editRisk({
-                                id: risk.id,
-                                name: risk.name || "",
-                                businessProcessIds:
-                                  risk.businessProcesses?.map(toLabelValue) ||
-                                  [],
-                                levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                                typeOfRisk: risk.typeOfRisk as TypeOfRisk,
-                              })
-                            }
-                            color=""
-                          >
-                            <FaPencilAlt />
-                          </Button>
-                        )}
-                      </div>
-
-                      {risk.controls?.length ? (
-                        <>
-                          <h6>Control</h6>
-                          <ControlsTable
-                            controls={risk.controls}
-                            editControl={editControl}
-                          />
-                        </>
-                      ) : null}
-                    </li>
-                  ))}
-                </ul>
               ) : (
-                <EmptyAttribute />
-              )} */}
+                <EmptyAttribute></EmptyAttribute>
+              )}
             </Collapsible>
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
