@@ -122,6 +122,7 @@ export default function NewNavbar() {
           <div className="d-flex align-items-center">
             <SearchBar className="mr-4">
               <HomepageSearch
+                navBar
                 placeholder="Search policies..."
                 maxMenuWidth={500}
               />

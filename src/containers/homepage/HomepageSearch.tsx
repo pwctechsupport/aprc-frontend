@@ -15,11 +15,13 @@ import Button from "../../shared/components/Button";
 interface HomepageSearchProps {
   placeholder?: string | null;
   maxMenuWidth?: number;
+  navBar?: boolean;
 }
 
 export default function HomepageSearch({
   placeholder = "Search policies by title, content, related resource, and attributes (Risk, Control, Reference)...",
   maxMenuWidth,
+  navBar,
 }: HomepageSearchProps) {
   const history = useHistory();
 
@@ -85,7 +87,7 @@ export default function HomepageSearch({
   return (
     <div>
       <div {...getComboboxProps()}>
-        <InputWrapper ref={inputRef} className="d-flex">
+        <InputWrapper isNavBar={navBar} ref={inputRef} className="d-flex">
           <Input
             {...getInputProps()}
             placeholder={placeholder}
@@ -97,15 +99,15 @@ export default function HomepageSearch({
             aria-label={"toggle menu"}
             size={20}
           />
-          <Link
-            to={`${
-              isUser ? "/search-policy?status_eq=release" : "/search-policy"
-            }`}
-          >
-            {/* <Tooltip description="Full Search Policies"> */}
-            <StyledButton className="pwc">Full Search</StyledButton>
-            {/* </Tooltip> */}
-          </Link>
+          {navBar ? (
+            <Link
+              to={`${
+                isUser ? "/search-policy?status_eq=release" : "/search-policy"
+              }`}
+            >
+              <StyledButton className="pwc">Full Search</StyledButton>
+            </Link>
+          ) : null}
         </InputWrapper>
       </div>
       {isOpen ? (
@@ -143,11 +145,11 @@ export default function HomepageSearch({
 // =============================================
 // Styled Components
 // =============================================
-const InputWrapper = styled.div`
+const InputWrapper = styled.div<{ isNavBar?: boolean }>`
   position: relative;
   display: inline-block;
-  margin-right: 90px;
-  margin-left: -35px;
+  margin-right: ${(p) => (p.isNavBar ? "90px" : "0px")};
+  margin-left: ${(p) => (p.isNavBar ? "-35px" : "0px")};
 
   @media screen and (max-width: 1325px) {
     margin-left: 0px;
