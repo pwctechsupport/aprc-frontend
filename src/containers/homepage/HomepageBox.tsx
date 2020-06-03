@@ -21,23 +21,27 @@ export default function HomepageBox({
   basePath,
   boldColor,
   lineColor,
-  softColor,
+  softColor = "rgb(255,255,255)",
 }: HomepageBoxProps) {
   const [open, setOpen] = useState(true);
   return (
-    <div className="my-2">
-      <div
-        className="d-flex justify-content-between align-items-center"
-        style={{ backgroundColor: "#eeeeee" }}
-      >
+    <div
+      className="my-2 p-2"
+      style={{
+        backgroundColor: "rgb(255,255,255)",
+        boxShadow: "3px 6px 20px 0px rgba(0,0,0,0.3)",
+        borderRadius: "0.3rem",
+      }}
+    >
+      <div className="d-flex justify-content-between align-items-center ">
         <h5
-          style={{
-            color: `${boldColor}`,
-            marginTop: "3px",
-            marginBottom: "3px",
-            position: "relative",
-            marginLeft: "3px",
-          }}
+        // style={{
+        //   color: `${boldColor}`,
+        //   marginTop: "3px",
+        //   marginBottom: "3px",
+        //   position: "relative",
+        //   marginLeft: "3px",
+        // }}
         >
           {title}
         </h5>
@@ -46,10 +50,10 @@ export default function HomepageBox({
         </BoxHeader>
       </div>
       <Collapse
-        style={{
-          backgroundColor: `${softColor}`,
-          borderTop: `5px solid ${boldColor}`,
-        }}
+        // style={{
+        //   backgroundColor: `${softColor}`,
+        //   borderTop: `5px solid ${boldColor}`,
+        // }}
         isOpen={open}
       >
         <div>
@@ -63,10 +67,10 @@ export default function HomepageBox({
                     : `/${basePath}/${item.value}`
                 }
                 className="d-flex align-items-center my-2"
-                style={{
-                  borderBottom: `1px solid ${lineColor}`,
-                  color: `black`,
-                }}
+                // style={{
+                //   borderBottom: `1px solid ${lineColor}`,
+                //   color: `black`,
+                // }}
               >
                 <div className="mr-3">
                   <Circle>{item.label.charAt(0).toUpperCase()}</Circle>

@@ -52,8 +52,8 @@ export default function Homepage() {
               basePath="policy"
               title="Recently Added Policies"
               boldColor="rgb(255, 180, 105)"
-              lineColor="rgba(231, 155, 86,0.4)"
-              softColor="rgb(254, 204, 148)"
+              // lineColor="rgba(231, 155, 86,0.4)"
+              // softColor="rgb(254, 204, 148)"
             />
           </Col>
           <Col xs={12} md={6} lg={4}>
@@ -61,9 +61,9 @@ export default function Homepage() {
               list={popularPolicies.map(toLabelValue)}
               basePath="policy"
               title="Most Popular Policies"
-              boldColor="rgb(255, 196, 79)"
-              lineColor="rgba(255, 172, 90,0.4)"
-              softColor="rgb(255, 219, 147)"
+              // boldColor="rgb(255, 196, 79)"
+              // lineColor="rgba(255, 172, 90,0.4)"
+              // softColor="rgb(255, 219, 147)"
             />
           </Col>{" "}
           <Col xs={12} md={6} lg={4}>
@@ -76,35 +76,35 @@ export default function Homepage() {
               })}
               basePath="policy"
               title="My Saved Policies"
-              boldColor="rgb(255, 126, 169)"
-              lineColor="rgba(255, 126, 169,0.4)"
-              softColor="rgb(251, 189, 201)"
+              // boldColor="rgb(255, 126, 169)"
+              // lineColor="rgba(255, 126, 169,0.4)"
+              // softColor="rgb(251, 189, 201)"
             />
           </Col>
-          <Fragment>
-            <Col xs={12} md={6} lg={4}></Col>
+        </Row>
+        <Row className="mt-3">
+          <Col xs={12} md={6} lg={4}></Col>
 
-            <Col xs={12} md={6} lg={4}>
-              <HomepageBox
-                list={popularResources.map(toLabelValue)}
-                basePath="resources"
-                title="Most Popular Resources"
-                boldColor="rgb(255, 196, 79)"
-                lineColor="rgba(255, 172, 90,0.4)"
-                softColor="rgb(255, 219, 147)"
-              />
-            </Col>
-            <Col xs={12} md={6} lg={4}>
-              <HomepageBox
-                list={recentlyVisitedPolicies.map(toLabelValue)}
-                basePath="policy"
-                title="My Recently Visited Policies"
-                boldColor="rgb(255, 126, 169)"
-                lineColor="rgba(255, 126, 169,0.4)"
-                softColor="rgb(251, 189, 201)"
-              />
-            </Col>
-          </Fragment>
+          <Col xs={12} md={6} lg={4}>
+            <HomepageBox
+              list={popularResources.map(toLabelValue)}
+              basePath="resources"
+              title="Most Popular Resources"
+              // boldColor="rgb(255, 196, 79)"
+              // lineColor="rgba(255, 172, 90,0.4)"
+              // softColor="rgb(255, 219, 147)"
+            />
+          </Col>
+          <Col xs={12} md={6} lg={4}>
+            <HomepageBox
+              list={recentlyVisitedPolicies.map(toLabelValue)}
+              basePath="policy"
+              title="My Recently Visited Policies"
+              // boldColor="rgb(255, 126, 169)"
+              // lineColor="rgba(255, 126, 169,0.4)"
+              // softColor="rgb(251, 189, 201)"
+            />
+          </Col>
         </Row>
       </Container>
     </Background>
