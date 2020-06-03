@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import React from "react";
+import React, { useState } from "react";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import {
@@ -60,7 +60,13 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
   }
   // Extract necessary variables for UI
   const title = oc(data).policy.title("");
-
+  // const test = data?.policy?.parentId || "";
+  // console.log("test", test);
+  // const { data: secondData } = usePolicyQuery({
+  //   variables: { id: test },
+  //   fetchPolicy: "network-only",
+  // });
+  const parentStatus = data?.policy?.status || "";
   // Extract defaultValues for Form
   const defaultValues = {
     parentId: id,
@@ -98,6 +104,7 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
       />
       <HeaderWithBackButton heading="Create Sub-Policy" />
       <SubPolicyForm
+        parentStatus={parentStatus}
         saveAsDraftFirst={createSubPolicy}
         submitFirst={submitSubPolicy}
         defaultValues={defaultValues}

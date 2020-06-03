@@ -129,6 +129,7 @@ export default function Policy({
     fetchPolicy: "network-only",
     pollInterval: 30000,
   });
+  console.log("data", data);
   const referenceData = useReferencesQuery({
     fetchPolicy: "network-only",
     variables: { filter: { policies_id_matches_any: id } },

@@ -28,6 +28,7 @@ const SubPolicyForm = ({
   defaultValues,
   submitting,
   saveAsDraftSecond,
+  parentStatus,
   premise,
   submittingDraft,
   isCreate,
@@ -84,9 +85,13 @@ const SubPolicyForm = ({
       : toast.error("Insert attributes is a required field");
   }
   function submitFirstPhase(values: SubPolicyFormValues) {
-    attr.businessProcessIds?.length
-      ? submitFirst && submitFirst({ ...values, ...attr })
-      : toast.error("Insert attributes is a required field");
+    parentStatus === "release"
+      ? attr.businessProcessIds?.length
+        ? submitFirst && submitFirst({ ...values, ...attr })
+        : toast.error("Insert attributes is a required field")
+      : toast.error(
+          "Parent policy status must be 'release' before user can submit Sub Policy"
+        );
   }
 
   // Functions when update
@@ -96,9 +101,13 @@ const SubPolicyForm = ({
       : toast.error("Insert attributes is a required field");
   }
   function submitSecondPhase(values: SubPolicyFormValues) {
-    attr.businessProcessIds?.length
-      ? submitSecond && submitSecond({ ...values, ...attr })
-      : toast.error("Insert attributes is a required field");
+    parentStatus === "release"
+      ? attr.businessProcessIds?.length
+        ? submitSecond && submitSecond({ ...values, ...attr })
+        : toast.error("Insert attributes is a required field")
+      : toast.error(
+          "Parent policy status must be 'release' before user can submit Sub Policy"
+        );
   }
 
   function onSubmitModal(values: SubPolicyModalFormValues) {
@@ -178,20 +187,21 @@ const SubPolicyForm = ({
               >
                 Save As Draft
               </DialogButton>
-
-              <DialogButton
-                color="primary"
-                loading={secondDraftLoading}
-                className="pwc px-5"
-                onConfirm={handleSubmit(submitSecondPhase)}
-                message={
-                  defaultValues.title
-                    ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
-                }
-              >
-                Submit
-              </DialogButton>
+              {parentStatus === "release" ? (
+                <DialogButton
+                  color="primary"
+                  loading={secondDraftLoading}
+                  className="pwc px-5"
+                  onConfirm={handleSubmit(submitSecondPhase)}
+                  message={
+                    defaultValues.title
+                      ? `Save your change on "${defaultValues.title}"?`
+                      : "Create Sub-Policy?"
+                  }
+                >
+                  Submit
+                </DialogButton>
+              ) : null}
             </Fragment>
           ) : (
             // ini pertama
@@ -209,19 +219,21 @@ const SubPolicyForm = ({
               >
                 Save As Draft
               </DialogButton>
-              <DialogButton
-                color="primary"
-                loading={submitting}
-                className="pwc px-5"
-                onConfirm={handleSubmit(submitFirstPhase)}
-                message={
-                  defaultValues.title
-                    ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
-                }
-              >
-                Submit
-              </DialogButton>
+              {parentStatus === "release" ? (
+                <DialogButton
+                  color="primary"
+                  loading={submitting}
+                  className="pwc px-5"
+                  onConfirm={handleSubmit(submitFirstPhase)}
+                  message={
+                    defaultValues.title
+                      ? `Save your change on "${defaultValues.title}"?`
+                      : "Create Sub-Policy?"
+                  }
+                >
+                  Submit
+                </DialogButton>
+              ) : null}
             </Fragment>
           )}{" "}
           {isCreate ? (
@@ -445,6 +457,7 @@ export interface SubPolicyFormProps {
   submitFirst?: any;
   submitSecond?: any;
   secondDraftLoading?: any;
+  parentStatus?: string;
 }
 
 export interface SubPolicyFormValues {
