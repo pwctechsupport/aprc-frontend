@@ -149,6 +149,7 @@ const UpdateProfileForm = ({
 interface UpdatePasswordFormValues {
   password: string;
   passwordConfirmation: string;
+  oldPassword: string;
 }
 
 interface UpdatePasswordFormProps {
@@ -173,6 +174,14 @@ const UpdatePasswordForm = ({
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <h4>Update Password</h4>
+      <Input
+        name="oldPassword"
+        label="Current Password"
+        type="password"
+        innerRef={register({ required: true })}
+        error={errors.oldPassword?.message}
+        required
+      />
       <Input
         name="password"
         label="New Password"

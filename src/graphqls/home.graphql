@@ -5,12 +5,12 @@ query homepage {
       title
     }
   }
-  recentlyAddedPolicies(filter: {status_eq:"release"}) {
+  recentlyAddedPolicies(filter: { status_eq: "release" }) {
     collection {
       id
       title
       status
-      draft{
+      draft {
         id
       }
     }
@@ -34,6 +34,18 @@ query homepage {
       originator {
         ...policyBookmark
       }
+    }
+  }
+}
+query UserPVisit {
+  userPolicyVisits(filter: {}) {
+    collection {
+      id
+      policy {
+        id
+        title
+      }
+      recentVisit
     }
   }
 }

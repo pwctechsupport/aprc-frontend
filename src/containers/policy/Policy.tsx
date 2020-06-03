@@ -46,6 +46,8 @@ import {
   useResourceRatingsQuery,
   useRiskQuery,
   useControlQuery,
+  useCreateUserPVisitMutation,
+  useUpdatePolicyVisitMutation,
   // useUpdatePolicyMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
@@ -220,7 +222,12 @@ export default function Policy({
       callback: () => destroyMain({ variables: { id } }),
     });
   }
-
+  const [visit] = useCreateUserPVisitMutation();
+  const [visitToo] = useUpdatePolicyVisitMutation();
+  useEffect(() => {
+    visit({ variables: { input: { policyId: id } } });
+    visitToo({ variables: { id } });
+  }, [id, visit, visitToo]);
   // Delete child policy
   const [destroy] = useDestroyPolicyMutation({
     onCompleted: () => notifySuccess("Delete Success"),

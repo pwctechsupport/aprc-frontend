@@ -1,9 +1,9 @@
 import get from "lodash/get";
-import React, { Fragment } from "react";
+import React from "react";
 import { Col, Container, Row } from "reactstrap";
 import styled from "styled-components";
 import backgroundImage from "../../assets/images/homepage-background.jpg";
-import { useHomepageQuery } from "../../generated/graphql";
+import { useHomepageQuery, useUserPVisitQuery } from "../../generated/graphql";
 import { toLabelValue } from "../../shared/formatter";
 import { useSelector } from "../../shared/hooks/useSelector";
 import HomepageBox from "./HomepageBox";
@@ -13,13 +13,18 @@ import Helmet from "react-helmet";
 export default function Homepage() {
   const username = useSelector((state) => state.auth.user?.name);
   const { data } = useHomepageQuery({ fetchPolicy: "network-only" });
+  const { data: dataRP } = useUserPVisitQuery({ fetchPolicy: "network-only" });
   const popularPolicies = data?.popularPolicies?.collection || [];
   const recentlyAddedPolicies = data?.recentlyAddedPolicies?.collection || [];
   const modifiedRecentlyAddedPol = recentlyAddedPolicies
     .filter((a) => a.draft === null)
     .slice(0, 5);
-  const recentlyVisitedPolicies =
-    data?.recentlyVisitedPolicies?.collection || [];
+
+  const customModifier = (data: any) => {
+    return { label: data.title, value: data.id };
+  };
+  const recentlyVisitedPolicies = dataRP?.userPolicyVisits?.collection || [];
+
   const popularResources = data?.popularResources?.collection || [];
   const savedPolicies = data?.bookmarks?.collection || [];
   return (
@@ -97,7 +102,13 @@ export default function Homepage() {
           </Col>
           <Col xs={12} md={6} lg={4}>
             <HomepageBox
-              list={recentlyVisitedPolicies.map(toLabelValue)}
+              list={
+                recentlyVisitedPolicies.length
+                  ? recentlyVisitedPolicies
+                      .map((a) => a.policy)
+                      .map(customModifier)
+                  : []
+              }
               basePath="policy"
               title="My Recently Visited Policies"
               // boldColor="rgb(255, 126, 169)"

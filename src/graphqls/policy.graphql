@@ -378,6 +378,24 @@ mutation createSubPolicy($input: CreateSubPolicyInput!) {
     clientMutationId
   }
 }
+mutation createUserPVisit($input: CreateUserPolicyVisitInput!) {
+  createUserPolicyVisit(input: $input) {
+    userPolicyVisit {
+      id
+      policy {
+        id
+        title
+      }
+      recentVisit
+      userId
+    }
+  }
+}
+mutation updatePolicyVisit($id: ID!) {
+  isVisit(input: { originatorId: $id, originatorType: "Policy" }) {
+    success
+  }
+}
 
 query policyDashboard {
   # POLICY
