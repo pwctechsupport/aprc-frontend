@@ -553,6 +553,7 @@ export default function RiskAndControl({
             path="/risk-and-control/:id/flowchart"
             render={() => (
               <Flowcharts
+                history={history.location.pathname}
                 bpId={id}
                 loading={loadingResources}
                 resources={resources.filter((resource) =>

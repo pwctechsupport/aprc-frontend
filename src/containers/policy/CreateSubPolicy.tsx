@@ -1,5 +1,5 @@
 import get from "lodash/get";
-import React, { useState } from "react";
+import React from "react";
 import { RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import {
@@ -26,7 +26,6 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
     onCompleted: () => {
       toast.success("Berhasil");
       history.goBack();
-      // window.location.reload();
     },
     onError: () => toast.error("Gagal"),
     // refetchQueries: [{ query: PreparerPoliciesDocument, variables: { id } }],

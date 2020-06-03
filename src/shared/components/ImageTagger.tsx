@@ -308,6 +308,7 @@ export const PreviewTag = styled.div<PreviewTagProps>`
   background-color: ${(p) => p.background || "rgba(0, 0, 0, 0.85)"};
   width: 100px;
   border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
   text-align: center;
   vertical-align: middle;
   z-index: 10;
@@ -350,7 +351,7 @@ export const PreviewTag = styled.div<PreviewTagProps>`
 `;
 
 export const PreviewTagText = styled.div`
-  color: white;
+  color: black;
   font-size: smaller;
   font-weight: bold;
   text-overflow: ellipsis;

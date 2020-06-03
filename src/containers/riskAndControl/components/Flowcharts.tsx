@@ -11,12 +11,14 @@ interface FlowchartsProps {
   bpId: string;
   resources: MyResource[];
   loading?: any;
+  history?: string;
 }
 
 export default function Flowcharts({
   resources,
   bpId,
   loading,
+  history,
 }: FlowchartsProps) {
   const [activeId, setActiveId] = useState("");
   useEffect(() => {
@@ -32,6 +34,7 @@ export default function Flowcharts({
   return (
     <div className="mt-3">
       <Flowchart
+        history={history}
         img={
           "http://mandalorian.rubyh.co" + currentResource?.resuploadUrl || ""
         }
