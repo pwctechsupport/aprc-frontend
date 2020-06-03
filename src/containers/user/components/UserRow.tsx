@@ -21,7 +21,11 @@ import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
-import { Suggestions, toLabelValue } from "../../../shared/formatter";
+import {
+  Suggestions,
+  toLabelValue,
+  Suggestion,
+} from "../../../shared/formatter";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
@@ -37,9 +41,9 @@ interface UserRowProps {
 
 interface UserRowValues {
   name?: string;
-  roleIds?: any;
+  roleIds?: Suggestion;
   policyCategoryIds?: Suggestions;
-  departmentId?: any;
+  departmentId?: Suggestion;
 }
 
 export default function UserRow({
@@ -52,10 +56,14 @@ export default function UserRow({
     defaultValues: {
       roleIds: oc(user)
         .roles([])
-        .map(toLabelValue),
+        .map(toLabelValue)
+        .pop(),
       policyCategoryIds: oc(user)
         .policyCategories([])
         .map(toLabelValue),
+      departmentId: user?.department
+        ? [user?.department].map(toLabelValue).pop()
+        : {},
     },
     validationSchema,
   });
@@ -139,8 +147,8 @@ export default function UserRow({
           name: data.name || "",
           userId: oc(user).id(""),
           policyCategoryIds: data.policyCategoryIds?.map((a) => a.value),
-          roleIds: data.roleIds?.value || "",
-          departmentId: data.departmentId.value || "",
+          roleIds: [data.roleIds?.value || ""] || [""],
+          departmentId: data.departmentId?.value || "",
         },
       },
     });
@@ -306,8 +314,11 @@ export default function UserRow({
         </td>
         <td>{oc(user).id("")}</td>
         <td>
+          {console.log(
+            "user?.roles?.map(toLabelValue).pop() ",
+            user?.roles?.map(toLabelValue).pop()
+          )}
           <AsyncSelect
-            // isMulti
             cacheOptions
             label="User Group"
             defaultOptions
@@ -316,7 +327,7 @@ export default function UserRow({
             error={errors.roleIds && "Role is a required field"}
             setValue={setValue}
             loadOptions={handleGetRoles}
-            defaultValue={user?.roles?.map(toLabelValue) || []}
+            defaultValue={user?.roles?.map(toLabelValue).pop() || {}}
           />
         </td>
         <td>
@@ -335,20 +346,22 @@ export default function UserRow({
             defaultValue={user?.policyCategories?.map(toLabelValue) || []}
           />
         </td>
+        {console.log(
+          "(user?.department && [user.department].map(toLabelValue))",
+          user?.department && [user.department].map(toLabelValue)
+        )}
         <td>
           <AsyncSelect
             cacheOptions
             label="Department"
             defaultOptions
-            error={
-              errors.policyCategoryIds && "Policy category is a required field"
-            }
+            error={errors.departmentId && "Department is a required field"}
             name="departmentId"
             register={register}
             setValue={setValue}
             loadOptions={handleGetDepartments}
             defaultValue={
-              (user?.department && [user.department].map(toLabelValue)) || []
+              (user?.department && [user.department].map(toLabelValue)) || {}
             }
           />
         </td>
@@ -381,4 +394,5 @@ const validationSchema = yup.object().shape({
   name: yup.string().required("Name is a required field"),
   policyCategoryIds: yup.array().required(),
   roleIds: yup.object().required(),
+  departmentId: yup.object().required(),
 });

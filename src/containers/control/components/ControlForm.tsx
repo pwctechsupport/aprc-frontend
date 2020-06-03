@@ -36,6 +36,7 @@ const ControlForm = ({
   isDraft,
   isCreate,
 }: ControlFormProps) => {
+  console.log("defaultValues", defaultValues);
   const { register, handleSubmit, setValue, errors } = useForm<
     CreateControlFormValues
   >({ validationSchema, defaultValues });
@@ -54,7 +55,7 @@ const ControlForm = ({
   const bpOptions = oc(bpsQ)
     .data.navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
-
+  console.log("bpOptions", bpOptions);
   const departments = useDepartmentsQuery();
   const controlOwnerOptions = oc(departments)
     .data.departments.collection([])
@@ -64,6 +65,7 @@ const ControlForm = ({
   const riskOptions = oc(risksQ)
     .data.navigatorRisks.collection([])
     .map((risk) => ({ label: risk.name || "", value: risk.id }));
+  console.log("riskOptions", riskOptions);
 
   useEffect(() => {
     register({ name: "frequency" });
@@ -251,7 +253,7 @@ const ControlForm = ({
           register={register}
           setValue={setValue}
           options={bpOptions}
-          loading={risksQ.loading}
+          loading={bpsQ.loading}
           defaultValue={bpOptions.filter((res) =>
             oc(defaultValues)
               .businessProcessIds([])
