@@ -23,10 +23,17 @@ export default function Login({ history }: RouteComponentProps) {
   const [login, { loading }] = useLoginMutation();
   const { register, handleSubmit } = useForm<LoginMutationVariables>();
 
+  //refreshes Captcha when error
+
+  const [t, st] = useState({
+    refresh: () => {},
+  });
+
   async function onSubmit(values: LoginMutationVariables) {
     try {
       const res = await login({ variables: values });
       if (!res.data?.login) {
+        t.refresh();
         throw new Error("Error");
       }
       notifySuccess("Welcome");
@@ -87,7 +94,11 @@ export default function Login({ history }: RouteComponentProps) {
         <br />
         <br />
 
-        <Captcha onChange={setCaptcha} placeholder="Insert captcha" />
+        <Captcha
+          ref={(e: any) => st(e)}
+          onChange={setCaptcha}
+          placeholder="Insert captcha"
+        />
 
         <br />
         <br />

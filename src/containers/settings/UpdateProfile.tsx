@@ -109,22 +109,7 @@ const UpdateProfileForm = ({
         innerRef={register({ required: true })}
         error={errors.name && errors.name.message}
       />
-      <Input
-        required
-        label="Password"
-        name="password"
-        type="password"
-        innerRef={register({ required: true })}
-        // error={errors?.password?.message}
-      />
-      <Input
-        required
-        label="Password Confirmation"
-        name="passwordConfirmation"
-        type="password"
-        innerRef={register({ required: true })}
-        // error={errors?.passwordConfirmation?.message}
-      />
+
       <Input
         name="jobPosition"
         label="Position"
