@@ -16,8 +16,9 @@ import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/app.scss";
 import fragmentTypes from "./generated/fragmentTypes.json";
+import { APP_GRAPHQL_URL } from "./settings";
 
-const graphqlUri = "http://mandalorian.rubyh.co/graphql";
+const graphqlUri = APP_GRAPHQL_URL;
 const httpLink = createHttpLink({ uri: graphqlUri });
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.token;

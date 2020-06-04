@@ -4,6 +4,7 @@ import Flowchart from "./Flowchart";
 import styled, { css } from "styled-components";
 import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import { FaSpinner } from "react-icons/fa";
+import { APP_ROOT_URL } from "../../../settings";
 
 type MyResource = Omit<Resource, "createdAt" | "updatedAt">;
 
@@ -36,7 +37,7 @@ export default function Flowcharts({
       <Flowchart
         history={history}
         img={
-          "http://mandalorian.rubyh.co" + currentResource?.resuploadUrl || ""
+          APP_ROOT_URL + currentResource?.resuploadUrl || ""
         }
         resourceId={currentResource?.id || ""}
         title={currentResource?.name}
@@ -51,7 +52,7 @@ export default function Flowcharts({
             isActive={resource.id === activeId}
           >
             <ResourceImage
-              src={"http://mandalorian.rubyh.co" + resource.resuploadUrl || ""}
+              src={APP_ROOT_URL + resource.resuploadUrl || ""}
               alt={resource.name || ""}
             />
           </ResourceBox>
