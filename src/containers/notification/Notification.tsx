@@ -82,7 +82,6 @@ const Notification = ({ history }: RouteComponentProps) => {
       page,
     },
   });
-
   const notifications = data?.notifications?.collection || [];
   const totalCount = data?.notifications?.metadata?.totalCount || 0;
   const [destroyNotifs, destroyNotifsM] = useDestroyBulkNotificationMutation({
@@ -155,6 +154,7 @@ const Notification = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const isUser = !(isAdminReviewer || isAdminPreparer);
   return (
     <div>
       <Helmet>
@@ -289,21 +289,21 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {/* isAdminReviewer */}
 
                       {isAdminReviewer
-                        ? data.dataType === "request_draft"
+                        ? data.dataType === "request_draft" ||
+                          data.dataType === "request draft"
                           ? `Action required: [${data.senderUserName}] has requested for approval for [${data.title}]`
                           : data.dataType === "request_edit" &&
                             `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
                         : null}
 
                       {/* isAdminPreparer */}
-
-                      {isAdminPreparer
+                      {isAdminPreparer || isUser
                         ? data.dataType === "request_draft_approved" ||
                           data.dataType === "request_draft_rejected"
                           ? `Notification: [${
                               data.dataType === "request_draft_approved"
                                 ? data.title?.split(" Approved")[0]
-                                : data.title?.split(" Has been Rejected")[0]
+                                : data.title?.split(" Rejected")[0]
                             }] has been [${
                               data.dataType === "request_draft_approved"
                                 ? `Approved`
