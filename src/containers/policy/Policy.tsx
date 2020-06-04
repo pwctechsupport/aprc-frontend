@@ -744,7 +744,7 @@ export default function Policy({
                             <div className="d-flex align-items-center ">
                               <Button color="" className="soft orange">
                                 <a
-                                  href={`http://mandalorian.rubyh.co${activity.guidanceResuploadUrl}`}
+                                  href={`${APP_ROOT_URL}${activity.guidanceResuploadUrl}`}
                                   target="_blank"
                                   rel="noopener noreferrer"
                                   download={`Pwc-ActivityControl ${activity.guidanceFileName}`}
