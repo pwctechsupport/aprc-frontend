@@ -38,7 +38,7 @@ query homepage {
   }
 }
 query UserPVisit {
-  userPolicyVisits(filter: {}) {
+  userPolicyVisits(filter: {}, limit: 5) {
     collection {
       id
       policy {
