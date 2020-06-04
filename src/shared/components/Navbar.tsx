@@ -186,7 +186,7 @@ const userMenus = [
     path: "/",
     children: [
       { label: "Profile", path: "/settings/update-profile" },
-      { label: "Notifications", path: "/settings/notifications" },
+      // { label: "Notifications", path: "/settings/notifications" },
       { label: "History", path: "/settings/history" },
       { label: "User Manual", path: "/settings/user-manual" },
     ],

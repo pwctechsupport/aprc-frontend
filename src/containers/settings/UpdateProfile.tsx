@@ -14,6 +14,7 @@ import Button from "../../shared/components/Button";
 import Input from "../../shared/components/forms/Input";
 import { useSelector } from "../../shared/hooks/useSelector";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import NotificationSettings from "./NotificationSettings";
 
 export default function UpdateProfile() {
   const user = useSelector((state) => state.auth.user);
@@ -63,11 +64,14 @@ export default function UpdateProfile() {
       <Helmet>
         <title>Profile - Settings - PricewaterhouseCoopers</title>
       </Helmet>
-      <UpdateProfileForm
-        onSubmit={updateProfile}
-        submitting={loading}
-        defaultValues={defaultValues}
-      />
+      {NotificationSettings()}
+      <div className="mt-5">
+        <UpdateProfileForm
+          onSubmit={updateProfile}
+          submitting={loading}
+          defaultValues={defaultValues}
+        />
+      </div>
       <UpdatePasswordForm
         onSubmit={updateUserPassword}
         submitting={updateUserPasswordMutInfo.loading}
