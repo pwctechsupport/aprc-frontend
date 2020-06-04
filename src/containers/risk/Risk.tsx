@@ -54,6 +54,7 @@ export default function Risk({
     variables: { id },
     fetchPolicy: "network-only",
   });
+  const draft = data?.risk?.draft?.objectResult;
   const name = data?.risk?.name || "";
   const levelOfRisk = data?.risk?.levelOfRisk || "";
   const typeOfRisk = data?.risk?.typeOfRisk || "";
@@ -61,9 +62,7 @@ export default function Risk({
   const updatedAt = data?.risk?.updatedAt;
   const updatedBy = data?.risk?.lastUpdatedBy;
   const createdBy = data?.risk?.createdBy;
-  const status = data?.risk?.status;
   const createdAt = data?.risk?.createdAt;
-  const draft = data?.risk?.draft?.objectResult;
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
   const requestEditState = data?.risk?.requestEdit?.state;
@@ -216,8 +215,8 @@ export default function Risk({
       if (inEditMode) {
         return null;
         // <Button onClick={toggleEditMode} color="">
-        //   <FaTimes size={22} className="mr-2" />
-        //   Cancel Edit
+        // <FaTimes size={22} className="mr-2" />
+        // Cancel Edit
         // </Button>
       }
       return (
@@ -287,7 +286,7 @@ export default function Risk({
     const details2 = [
       {
         label: "Last Updated",
-        value: updatedAt?.split(" ")[0],
+        value: draft ? updatedAt?.split("T")[0] : updatedAt?.split(" ")[0],
       },
       {
         label: "Updated By",
@@ -295,7 +294,7 @@ export default function Risk({
       },
       {
         label: "Created At",
-        value: createdAt?.split(" ")[0],
+        value: draft ? createdAt?.split("T")[0] : createdAt?.split(" ")[0],
       },
       {
         label: "Created By",
@@ -303,7 +302,7 @@ export default function Risk({
       },
       {
         label: "Status",
-        value: status,
+        value: draft ? "Waiting for review" : "Release",
       },
     ];
     return (

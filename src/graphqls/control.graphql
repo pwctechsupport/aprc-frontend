@@ -52,8 +52,18 @@ query control($id: ID!) {
     draft {
       id
       objectResult {
-        __typename
+        ... on Control {
+          ...control
+          activityControls {
+            id
+            activity
+            guidance
+            guidanceFileName
+            guidanceResuploadUrl
+          }
+        }
       }
+      objectChanges
     }
   }
 }

@@ -51,6 +51,8 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   });
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const createdBy = data?.policyCategory?.createdBy;
+  const relatedPolicies =
+    data?.policyCategory?.policies?.map(toLabelValue) || [];
   const draft = data?.policyCategory?.draft?.objectResult;
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
@@ -159,10 +161,12 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const modifiedPolicies = policies?.filter((jay) =>
     policiesReal?.includes(jay.title || "")
   );
-
+  const dsa = policies
+    ?.filter((jay) => policiesReal?.includes(jay.title || ""))
+    .map(toLabelValue);
   const defaultValues = {
     name,
-    policies: relatedPolicies,
+    policies: dsa,
   };
 
   const renderPolicyCategoryAction = () => {
@@ -215,8 +219,8 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       if (inEditMode) {
         return null;
         // <Button onClick={toggleEditMode} color="">
-        //   <FaTimes size={22} className="mr-2" />
-        //   Cancel Edit
+        // <FaTimes size={22} className="mr-2" />
+        // Cancel Edit
         // </Button>
       }
       return (
