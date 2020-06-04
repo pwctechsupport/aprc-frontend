@@ -8,6 +8,7 @@ import {
   useReferencesQuery,
   useResourcesQuery,
   useRisksQuery,
+  usePolicyQuery,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -49,11 +50,14 @@ const SubPolicyForm = ({
     controlIds,
     riskIds,
   });
-
+  const { data } = usePolicyQuery({
+    variables: { id: defaultValues.parentId },
+    fetchPolicy: "network-only",
+  });
+  const statusWhenUpdate = data?.policy?.status || "";
   const { register, handleSubmit, setValue, errors } = useForm<
     SubPolicyFormValues
   >({ validationSchema, defaultValues });
-
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
   const references = oc(referenceData)
     .data.navigatorReferences.collection([])
@@ -85,7 +89,7 @@ const SubPolicyForm = ({
       : toast.error("Insert attributes is a required field");
   }
   function submitFirstPhase(values: SubPolicyFormValues) {
-    parentStatus === "release"
+    statusWhenUpdate === "release" || parentStatus === "release"
       ? attr.businessProcessIds?.length
         ? submitFirst && submitFirst({ ...values, ...attr })
         : toast.error("Insert attributes is a required field")
@@ -101,7 +105,7 @@ const SubPolicyForm = ({
       : toast.error("Insert attributes is a required field");
   }
   function submitSecondPhase(values: SubPolicyFormValues) {
-    parentStatus === "release"
+    statusWhenUpdate === "release" || parentStatus === "release"
       ? attr.businessProcessIds?.length
         ? submitSecond && submitSecond({ ...values, ...attr })
         : toast.error("Insert attributes is a required field")
@@ -187,7 +191,7 @@ const SubPolicyForm = ({
               >
                 Save As Draft
               </DialogButton>
-              {parentStatus === "release" ? (
+              {parentStatus === "release" || statusWhenUpdate === "release" ? (
                 <DialogButton
                   color="primary"
                   loading={secondDraftLoading}
@@ -219,7 +223,7 @@ const SubPolicyForm = ({
               >
                 Save As Draft
               </DialogButton>
-              {parentStatus === "release" ? (
+              {parentStatus === "release" || statusWhenUpdate === "release" ? (
                 <DialogButton
                   color="primary"
                   loading={submitting}
