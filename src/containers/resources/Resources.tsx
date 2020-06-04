@@ -25,6 +25,7 @@ import Tooltip from "../../shared/components/Tooltip";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import { APP_ROOT_URL } from "../../settings";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -214,7 +215,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                         subtitle="Will be download if file type not supported"
                       >
                         <a
-                          href={`http://mandalorian.rubyh.co${resource.resuploadUrl}`}
+                          href={`${APP_ROOT_URL}${resource.resuploadUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(

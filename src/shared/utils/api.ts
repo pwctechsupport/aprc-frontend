@@ -1,8 +1,9 @@
 import axios from "axios";
 import store from "../../redux/index";
+import { APP_REST_URL } from "../../settings";
 
 const MyApi = axios.create({
-  baseURL: "http://mandalorian.rubyh.co/api",
+  baseURL: APP_REST_URL,
   onDownloadProgress: console.info
 });
 

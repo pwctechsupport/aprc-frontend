@@ -36,6 +36,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
+import { APP_ROOT_URL } from "../../settings";
 // import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
@@ -365,7 +366,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                         <div className="d-flex align-items-center ">
                           <Button color="" className="soft orange">
                             <a
-                              href={`http://mandalorian.rubyh.co${activity.guidanceResuploadUrl}`}
+                              href={`${APP_ROOT_URL}${activity.guidanceResuploadUrl}`}
                               target="_blank"
                               rel="noopener noreferrer"
                               download={`Pwc-ActivityControl ${activity.guidanceFileName}`}
