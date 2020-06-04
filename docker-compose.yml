@@ -2,28 +2,15 @@ version: '3.7'
 
 services:
 
-<<<<<<< HEAD
   web:
     container_name: pwc_front_end
     build:
       context: .
       dockerfile: Dockerfile
-=======
-  sample:
-    container_name: sample
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: "yarn start"
->>>>>>> 1501d1a990dabc7e194630586357e05ff8a8cf37
     volumes:
       - '.:/app'
       - '/app/node_modules'
     ports:
-<<<<<<< HEAD
       - 8080:80
-=======
-      - 3001:3000
->>>>>>> 1501d1a990dabc7e194630586357e05ff8a8cf37
     environment:
       - CHOKIDAR_USEPOLLING=true
