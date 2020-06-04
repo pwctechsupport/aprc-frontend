@@ -3940,7 +3940,11 @@
           },
           {
             "name": "bookmarkedBy",
+<<<<<<< HEAD
             "description": null,
+=======
+            "description": "",
+>>>>>>> 1501d1a990dabc7e194630586357e05ff8a8cf37
             "args": [],
             "type": {
               "kind": "SCALAR",
@@ -4255,7 +4259,11 @@
           },
           {
             "name": "bookmarkedBy",
+<<<<<<< HEAD
             "description": null,
+=======
+            "description": "",
+>>>>>>> 1501d1a990dabc7e194630586357e05ff8a8cf37
             "args": [],
             "type": {
               "kind": "SCALAR",
