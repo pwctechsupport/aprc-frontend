@@ -165,6 +165,13 @@ ResourceFormProps) {
         />
       ) : (
         <Fragment>
+          <div
+            style={{ fontStyle: "italic", color: "red", fontSize: "12px" }}
+            className="mb-1"
+          >
+            Note: Please select related policies or related control
+          </div>
+
           <AsyncSelect
             name="policyIds"
             label="Related Policies*"

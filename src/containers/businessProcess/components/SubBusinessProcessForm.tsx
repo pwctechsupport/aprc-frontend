@@ -9,11 +9,11 @@ const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
   const { register, handleSubmit, reset } = useForm();
   const [createSubBusinessProcess] = useCreateSubBusinessProcessMutation({
     onCompleted: () => {
-      toast.success("Berhasil");
+      toast.success("Create Success");
       reset();
     },
     onError: (error) => {
-      toast.error("Gagal");
+      toast.error("Create Failed");
     },
     refetchQueries: [
       "businessProcess",
