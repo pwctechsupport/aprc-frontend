@@ -52,7 +52,6 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     fetchPolicy: "network-only",
     variables: { id },
   });
-
   const draft = data?.control?.draft?.objectResult;
   const hasEditAccess = data?.control?.hasEditAccess || false;
   const requestStatus = data?.control?.requestStatus;
@@ -168,8 +167,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   const businessProcessIds = businessProcesses.map((bp) => bp.id);
   const activityControls = data?.control?.activityControls || [];
   const createdAt = data?.control?.createdAt || "";
-  const departments = data?.control?.departments || [];
-
+  const controlOwners = data?.control?.controlOwner || "";
   const filteredNames = (names: any) =>
     names.filter((v: any, i: any) => names.indexOf(v) === i);
   const renderControlAction = () => {
@@ -276,7 +274,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
       {
         label: "Control Owner",
-        value: departments.map((a: any) => a.name).join(", "),
+        value: controlOwners,
       },
       {
         label: "Key Control",

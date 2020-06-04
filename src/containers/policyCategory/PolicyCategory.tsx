@@ -156,6 +156,11 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   let name = data?.policyCategory?.name || "";
   // name = draft ? `[Draft] ${name}` : name;
   const policies = data?.policyCategory?.policies || [];
+  const policiesReal = data?.policyCategory?.policy || [];
+
+  const modifiedPolicies = policies?.filter((jay) =>
+    policiesReal?.includes(jay.title || "")
+  );
 
   const defaultValues = {
     name,
@@ -274,7 +279,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
         <Fragment>
           <dt>Related Policies</dt>
           <ul>
-            {policies.map((policy) => (
+            {modifiedPolicies.map((policy) => (
               <li key={policy.id}>
                 <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
               </li>

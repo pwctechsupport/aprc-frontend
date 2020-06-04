@@ -57,8 +57,7 @@ export default function Risk({
   const name = data?.risk?.name || "";
   const levelOfRisk = data?.risk?.levelOfRisk || "";
   const typeOfRisk = data?.risk?.typeOfRisk || "";
-  const bps = data?.risk?.businessProcess;
-
+  const bps = data?.risk?.businessProcesses || [];
   const updatedAt = data?.risk?.updatedAt;
   const updatedBy = data?.risk?.lastUpdatedBy;
   const createdBy = data?.risk?.createdBy;
@@ -270,7 +269,7 @@ export default function Risk({
       { label: "Name", value: name },
       {
         label: "Business Process",
-        value: bps?.join(", "),
+        value: bps.length ? bps?.map((a) => a.name).join(", ") : "",
       },
       {
         label: "Level of Risk",
