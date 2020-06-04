@@ -51,8 +51,6 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   });
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const createdBy = data?.policyCategory?.createdBy;
-  const relatedPolicies =
-    data?.policyCategory?.policies?.map(toLabelValue) || [];
   const draft = data?.policyCategory?.draft?.objectResult;
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
