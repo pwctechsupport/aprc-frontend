@@ -8,6 +8,7 @@ import Tooltip from "./Tooltip";
 import { useUpdateResourceVisitMutation } from "../../generated/graphql";
 import useAccessRights from "../hooks/useAccessRights";
 import DialogButton from "./DialogButton";
+import { APP_ROOT_URL } from "../../settings";
 
 interface ResourceBarProps {
   id: string;
@@ -34,15 +35,15 @@ export default function ResourceBar({
   rating = 0,
   visit,
   resourceId,
-  totalRating = 0,
+  totalRating = 0
 }: ResourceBarProps) {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
     "admin",
     "admin_preparer",
-    "admin_reviewer",
+    "admin_reviewer"
   ]);
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
-    refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"],
+    refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"]
   });
 
   return (
@@ -73,7 +74,7 @@ export default function ResourceBar({
             subtitle="Will be download if file type not supported"
           >
             <a
-              href={`http://mandalorian.rubyh.co${resuploadUrl}`}
+              href={`${APP_ROOT_URL}${resuploadUrl}`}
               target="_blank"
               rel="noopener noreferrer"
               download={`Pwc-Resource ${name}`}
@@ -126,8 +127,8 @@ const ResourceBarContainer = styled.div`
 `;
 
 const ResourceBarDivider = styled.div<{ width?: string; align?: string }>`
-  width: ${(p) => p.width + "%"};
-  text-align: ${(p) => p.align};
+  width: ${p => p.width + "%"};
+  text-align: ${p => p.align};
   margin: 0px 5px;
 `;
 
