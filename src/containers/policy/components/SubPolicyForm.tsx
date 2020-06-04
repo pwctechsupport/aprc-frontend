@@ -191,21 +191,19 @@ const SubPolicyForm = ({
               >
                 Save As Draft
               </DialogButton>
-              {parentStatus === "release" || statusWhenUpdate === "release" ? (
-                <DialogButton
-                  color="primary"
-                  loading={secondDraftLoading}
-                  className="pwc px-5"
-                  onConfirm={handleSubmit(submitSecondPhase)}
-                  message={
-                    defaultValues.title
-                      ? `Save your change on "${defaultValues.title}"?`
-                      : "Create Sub-Policy?"
-                  }
-                >
-                  Submit
-                </DialogButton>
-              ) : null}
+              <DialogButton
+                color="primary"
+                loading={secondDraftLoading}
+                className="pwc px-5"
+                onConfirm={handleSubmit(submitSecondPhase)}
+                message={
+                  defaultValues.title
+                    ? `Save your change on "${defaultValues.title}"?`
+                    : "Create Sub-Policy?"
+                }
+              >
+                Submit
+              </DialogButton>
             </Fragment>
           ) : (
             // ini pertama
@@ -223,21 +221,19 @@ const SubPolicyForm = ({
               >
                 Save As Draft
               </DialogButton>
-              {parentStatus === "release" || statusWhenUpdate === "release" ? (
-                <DialogButton
-                  color="primary"
-                  loading={submitting}
-                  className="pwc px-5"
-                  onConfirm={handleSubmit(submitFirstPhase)}
-                  message={
-                    defaultValues.title
-                      ? `Save your change on "${defaultValues.title}"?`
-                      : "Create Sub-Policy?"
-                  }
-                >
-                  Submit
-                </DialogButton>
-              ) : null}
+              <DialogButton
+                color="primary"
+                loading={submitting}
+                className="pwc px-5"
+                onConfirm={handleSubmit(submitFirstPhase)}
+                message={
+                  defaultValues.title
+                    ? `Save your change on "${defaultValues.title}"?`
+                    : "Create Sub-Policy?"
+                }
+              >
+                Submit
+              </DialogButton>
             </Fragment>
           )}{" "}
           {isCreate ? (
