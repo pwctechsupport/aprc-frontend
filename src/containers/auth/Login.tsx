@@ -57,8 +57,8 @@ export default function Login({ history }: RouteComponentProps) {
     } catch (error) {
       toast.error(
         <div>
-          <h5>Login Error!</h5>
-          <div>Mohon coba lagi</div>
+          <h5>Wrong email or password</h5>
+          <div>Please try again</div>
         </div>
       );
     }
