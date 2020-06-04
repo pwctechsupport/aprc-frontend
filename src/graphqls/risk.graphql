@@ -61,7 +61,18 @@ query risk($id: ID!) {
     draft {
       id
       objectResult {
-        __typename
+        ... on Risk {
+          id
+          name
+          levelOfRisk
+          typeOfRisk
+          createdBy
+          createdAt
+          lastUpdatedBy
+          updatedAt
+          status
+          businessProcess
+        }
       }
     }
   }
