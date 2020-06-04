@@ -92,7 +92,6 @@ query policyCategory($id: ID!) {
           name
           id
           updatedAt
-          policy
         }
       }
     }

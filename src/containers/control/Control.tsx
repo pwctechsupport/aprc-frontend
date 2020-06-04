@@ -147,52 +147,27 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
   if (loading) return <LoadingSpinner centered size={30} />;
 
-  const description = draft
-    ? get(data, "control.draft.objectResult.description", "")
-    : data?.control?.description || "";
-  const updatedAt = draft
-    ? get(data, "control.draft.objectResult.updatedAt", "")
-    : data?.control?.updatedAt?.split(" ")[0] || "";
-
-  const lastUpdatedBy = draft
-    ? get(data, "control.draft.objectResult.lastUpdatedBy", "")
-    : data?.control?.lastUpdatedBy || "";
-  const createdBy = draft
-    ? get(data, "control.draft.objectResult.createdBy", "")
-    : data?.control?.createdBy || "";
+  const description = data?.control?.description || "";
+  const updatedAt = data?.control?.updatedAt
+    ? data?.control?.updatedAt.split(" ")[0]
+    : "";
+  const lastUpdatedBy = data?.control?.lastUpdatedBy || "";
+  const createdBy = data?.control?.createdBy || "";
   const controlOwnerId = data?.control?.departments?.map((a) => a.id) || [];
-  const assertion = draft
-    ? get(data, "control.draft.objectResult.assertion", [])
-    : data?.control?.assertion || [];
-  const frequency = draft
-    ? get(data, "control.draft.objectResult.frequency", "")
-    : data?.control?.frequency || "";
-  const ipo = draft
-    ? get(data, "control.draft.objectResult.ipo", [])
-    : data?.control?.ipo || [];
-  const nature = draft
-    ? get(data, "control.draft.objectResult.nature", "")
-    : data?.control?.nature || "";
-  const typeOfControl = draft
-    ? get(data, "control.draft.objectResult.typeOfControl", "")
-    : data?.control?.typeOfControl || "";
-  const status = draft
-    ? get(data, "control.draft.objectResult.status", "")
-    : data?.control?.status || "";
-  const keyControl = draft
-    ? get(data, "control.draft.objectResult.keyControl", false)
-    : data?.control?.keyControl || false;
+  const assertion = data?.control?.assertion || [];
+  const frequency = data?.control?.frequency || "";
+  const ipo = data?.control?.ipo || [];
+  const nature = data?.control?.nature || "";
+  const typeOfControl = data?.control?.typeOfControl || "";
+  const status = data?.control?.status || "";
+  const keyControl = data?.control?.keyControl || false;
   const risks = data?.control?.risks || [];
   const riskIds = risks.map((a) => a.id);
   const businessProcesses = data?.control?.businessProcesses || [];
   const businessProcessIds = businessProcesses.map((bp) => bp.id);
   const activityControls = data?.control?.activityControls || [];
-  const createdAt = draft
-    ? get(data, "control.draft.objectResult.createdAt", "")
-    : data?.control?.createdAt || "";
-  const controlOwners = draft
-    ? get(data, "control.draft.objectResult.controlOwner", "")
-    : data?.control?.controlOwner || "";
+  const createdAt = data?.control?.createdAt || "";
+  const controlOwners = data?.control?.controlOwner || "";
   const filteredNames = (names: any) =>
     names.filter((v: any, i: any) => names.indexOf(v) === i);
   const renderControlAction = () => {
@@ -310,11 +285,11 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
-        value: assertion.map((x: any) => capitalCase(x)).join(", "),
+        value: assertion.map((x) => capitalCase(x)).join(", "),
       },
       {
         label: "IPO",
-        value: ipo.map((x: any) => capitalCase(x)).join(", "),
+        value: ipo.map((x) => capitalCase(x)).join(", "),
       },
       { label: "Frequency", value: capitalCase(frequency) },
       { label: "Status", value: capitalCase(status) },

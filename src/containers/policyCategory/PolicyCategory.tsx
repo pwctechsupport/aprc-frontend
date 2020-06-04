@@ -161,12 +161,10 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const modifiedPolicies = policies?.filter((jay) =>
     policiesReal?.includes(jay.title || "")
   );
-  const dsa = policies
-    ?.filter((jay) => policiesReal?.includes(jay.title || ""))
-    .map(toLabelValue);
+
   const defaultValues = {
     name,
-    policies: dsa,
+    policies: relatedPolicies,
   };
 
   const renderPolicyCategoryAction = () => {
