@@ -415,7 +415,7 @@ export default function Policy({
     fetchPolicy: "network-only",
   });
   const resourceName = dataResource?.resource?.name || "";
-
+  const draftRes = dataResource?.resource?.draft;
   const renderResourceDetails = () => {
     const totalRating = dataResource?.resource?.totalRating || 0;
     const visit = dataResource?.resource?.visit || 0;
@@ -528,7 +528,7 @@ export default function Policy({
     fetchPolicy: "network-only",
   });
   const riskName = dataRisk?.risk?.name || "";
-
+  const draftRisk = dataRisk?.risk?.draft;
   const renderRiskDetails = () => {
     const levelOfRisk = dataRisk?.risk?.levelOfRisk || "";
     const typeOfRisk = dataRisk?.risk?.typeOfRisk || "";
@@ -536,7 +536,6 @@ export default function Policy({
     const updatedAt = dataRisk?.risk?.updatedAt;
     const updatedBy = dataRisk?.risk?.lastUpdatedBy;
     const createdBy = dataRisk?.risk?.createdBy;
-    const status = dataRisk?.risk?.status;
     const createdAt = dataRisk?.risk?.createdAt;
 
     const details1 = [
@@ -578,7 +577,7 @@ export default function Policy({
       },
       {
         label: "Status",
-        value: status,
+        value: draftRisk ? "Waiting for review" : "Release",
       },
     ];
     return (
@@ -625,7 +624,7 @@ export default function Policy({
     variables: { id: controlId },
   });
   const descriptionControl = dataControl?.control?.description || "";
-
+  const draftControl = dataControl?.control?.draft;
   const renderControlDetails = () => {
     const updatedAt = dataControl?.control?.updatedAt
       ? dataControl?.control?.updatedAt.split(" ")[0]
@@ -636,7 +635,6 @@ export default function Policy({
     const frequency = dataControl?.control?.frequency || "";
     const ipo = dataControl?.control?.ipo || [];
     const typeOfControl = dataControl?.control?.typeOfControl || "";
-    const status = dataControl?.control?.status || "";
     const keyControl = dataControl?.control?.keyControl || false;
     const risks = dataControl?.control?.risks || [];
     const businessProcesses = dataControl?.control?.businessProcesses || [];
@@ -669,7 +667,10 @@ export default function Policy({
         value: ipo.map((x) => capitalCase(x)).join(", "),
       },
       { label: "Frequency", value: capitalCase(frequency) },
-      { label: "Status", value: capitalCase(status) },
+      {
+        label: "Status",
+        value: `${draftControl ? "Waiting for review" : "Release"}`,
+      },
       { label: "Last Updated", value: updatedAt },
       { label: "Last Updated By", value: lastUpdatedBy },
       { label: "Created At", value: createdAt.split(" ")[0] },
@@ -1393,8 +1394,20 @@ export default function Policy({
       <Row className="d-flex justify-content-between">
         <Col>
           <HeaderWithBackButton
-            draft={!!draft}
-            policy
+            draft={
+              currentUrl.includes("resources/")
+                ? !!draftRes
+                : currentUrl.includes("/risk/")
+                ? !!draftRisk
+                : currentUrl.includes("/control/")
+                ? !!draftControl
+                : !!draft
+            }
+            policy={
+              !currentUrl.includes("/control/") &&
+              !currentUrl.includes("/risk/") &&
+              !currentUrl.includes("resources/")
+            }
             review={
               isSubmitted ||
               (draft && isSubmitted && (isAdminReviewer || isAdmin)) ||
