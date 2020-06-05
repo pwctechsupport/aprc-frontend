@@ -276,7 +276,7 @@ export default function RiskAndControl({
     fetchPolicy: "network-only",
   });
   const resourceName = dataResource?.resource?.name || "";
-
+  const draftRes = dataResource?.resource?.draft;
   const renderResourceDetails = () => {
     const totalRating = dataResource?.resource?.totalRating || 0;
     const visit = dataResource?.resource?.visit || 0;
@@ -526,6 +526,7 @@ export default function RiskAndControl({
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton
           heading={currentUrl.includes("resources/") ? resourceName : name}
+          draft={currentUrl.includes("resources/") ? !!draftRes : undefined}
         />
         {currentUrl.includes("resources/") ? null : renderActions()}
       </div>
