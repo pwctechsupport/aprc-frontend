@@ -6,7 +6,10 @@ import Input from "../../shared/components/forms/Input";
 import Table from "../../shared/components/Table";
 import UserRow from "./components/UserRow";
 import { NavLink } from "react-router-dom";
-import { useUsersQuery } from "../../generated/graphql";
+import {
+  usePreparerUsersQuery,
+  useReviewerUsersStatusQuery,
+} from "../../generated/graphql";
 import { NetworkStatus } from "apollo-boost";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
@@ -22,7 +25,8 @@ const Users = () => {
   const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
-  const { data, networkStatus } = useUsersQuery({
+  const { data, networkStatus } = usePreparerUsersQuery({
+    skip: isAdminReviewer,
     variables: {
       filter: {
         name_or_draft_object_cont: debouncedSearch,
@@ -30,7 +34,22 @@ const Users = () => {
     },
     fetchPolicy: "no-cache",
   });
-
+  const {
+    data: dataReviewer,
+    networkStatus: networkStatusreviewer,
+  } = useReviewerUsersStatusQuery({
+    skip: isAdminPreparer || isAdmin,
+    variables: {
+      filter: {
+        name_or_draft_object_cont: debouncedSearch,
+      },
+    },
+    fetchPolicy: "no-cache",
+  });
+  const userData =
+    data?.preparerUsers?.collection ||
+    dataReviewer?.reviewerUsersStatus?.collection ||
+    [];
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
   }
@@ -67,8 +86,14 @@ const Users = () => {
 
         <div className="table-responsive">
           <Table
-            loading={networkStatus === NetworkStatus.loading}
-            reloading={networkStatus === NetworkStatus.setVariables}
+            loading={
+              networkStatus === NetworkStatus.loading ||
+              networkStatusreviewer === NetworkStatus.loading
+            }
+            reloading={
+              networkStatus === NetworkStatus.setVariables ||
+              networkStatusreviewer === NetworkStatus.setVariables
+            }
           >
             <thead>
               <tr>
@@ -99,17 +124,15 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {oc(data)
-                .users.collection([])
-                .map((user) => {
-                  return (
-                    <UserRow
-                      key={user.id}
-                      user={user}
-                      policyCategories={user.policyCategory}
-                    />
-                  );
-                })}
+              {userData.map((user) => {
+                return (
+                  <UserRow
+                    key={user.id}
+                    user={user}
+                    policyCategories={user.policyCategory}
+                  />
+                );
+              })}
             </tbody>
           </Table>
         </div>
