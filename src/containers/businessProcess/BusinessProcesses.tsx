@@ -152,7 +152,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
             toggle={toggleCreateBpModal}
             title="Create Business Process"
           >
-            <CreateBusinessProcess />
+            <CreateBusinessProcess createBpModal={setCreateBpModal} />
           </Modal>
 
           <Table reloading={adminBusinessQuery.loading}>
