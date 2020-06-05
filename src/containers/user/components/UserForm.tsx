@@ -88,6 +88,14 @@ export default function UserForm(props: UserFormProps) {
         required
         label="Phone"
         name="phone"
+        onKeyDown={(e) =>
+          (e.keyCode === 69 ||
+            e.keyCode === 188 ||
+            e.keyCode === 190 ||
+            e.keyCode === 38 ||
+            e.keyCode === 40) &&
+          e.preventDefault()
+        }
         type="number"
         innerRef={register({ required: true })}
         error={oc(errors).phone.message("")}

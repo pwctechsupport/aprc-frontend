@@ -126,6 +126,14 @@ const UpdateProfileForm = ({
       />
       <Input
         name="phone"
+        onKeyDown={(e) =>
+          (e.keyCode === 69 ||
+            e.keyCode === 188 ||
+            e.keyCode === 190 ||
+            e.keyCode === 38 ||
+            e.keyCode === 40) &&
+          e.preventDefault()
+        }
         type="number"
         label="Phone number"
         innerRef={register({ required: true })}
