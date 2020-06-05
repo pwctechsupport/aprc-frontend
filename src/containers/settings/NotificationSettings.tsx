@@ -40,7 +40,7 @@ export default function NotificationSettings() {
       {/* <h4>Notifications</h4>
         <br /> */}
       <Row>
-        <Col md={6}>
+        <Col md={3}>
           {settings.map((s) => (
             <div key={s.name} className="d-flex justify-content-between">
               <h6>{s.label}</h6>
