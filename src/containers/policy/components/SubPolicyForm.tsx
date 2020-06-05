@@ -55,6 +55,8 @@ const SubPolicyForm = ({
     fetchPolicy: "network-only",
   });
   const statusWhenUpdate = data?.policy?.status || "";
+  const draft = data?.policy?.draft;
+
   const { register, handleSubmit, setValue, errors } = useForm<
     SubPolicyFormValues
   >({ validationSchema, defaultValues });
@@ -89,7 +91,7 @@ const SubPolicyForm = ({
       : toast.error("Insert attributes is a required field");
   }
   function submitFirstPhase(values: SubPolicyFormValues) {
-    statusWhenUpdate === "release" || parentStatus === "release"
+    statusWhenUpdate === "release" || parentStatus === "release" || !draft
       ? attr.businessProcessIds?.length
         ? submitFirst && submitFirst({ ...values, ...attr })
         : toast.error("Insert attributes is a required field")
@@ -105,7 +107,7 @@ const SubPolicyForm = ({
       : toast.error("Insert attributes is a required field");
   }
   function submitSecondPhase(values: SubPolicyFormValues) {
-    statusWhenUpdate === "release" || parentStatus === "release"
+    statusWhenUpdate === "release" || parentStatus === "release" || !draft
       ? attr.businessProcessIds?.length
         ? submitSecond && submitSecond({ ...values, ...attr })
         : toast.error("Insert attributes is a required field")
