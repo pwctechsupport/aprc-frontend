@@ -27,8 +27,8 @@ const reportOptions = [
     name: "Risk Without Control",
     id: "report_risk_policy",
     formats: [
-      { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" },
+      { id: "jangan masuk", name: "PDF" },
+      { id: "jangan masuk", name: "Excel" },
     ],
   },
   {
@@ -115,6 +115,9 @@ export default function Report() {
     ) {
       notifyError("Select PDF format to preview");
     }
+    if (values.report_risk_policy === "jangan masuk") {
+      notifyError("cant preview Risk Without Control");
+    }
     if (
       (values.report_control_policy === "pdf" ||
         values.report_resource_rating === "pdf" ||
@@ -139,10 +142,23 @@ export default function Report() {
   }
 
   async function handleDownload(values: ReportFormValues) {
-    notifyInfo("Preparing file to download");
-    setDownloading(true);
-    await downloadPdfs(constructDataFromForm(values));
-    setDownloading(false);
+    console.log("values", values);
+    if (
+      values.report_risk_policy === "jangan masuk" ||
+      (values.report_control_policy === "" &&
+        values.report_resource_rating === "" &&
+        values.report_risk === "" &&
+        values.report_risk_policy === "" &&
+        values.unmapped_control === "" &&
+        values.unmapped_risk === "")
+    ) {
+      notifyError("cant preview Risk Without Control");
+    } else {
+      notifyInfo("Preparing file to download");
+      setDownloading(true);
+      await downloadPdfs(constructDataFromForm(values));
+      setDownloading(false);
+    }
   }
   const reportRisk = watch("report_risk");
   const reportRiskPolicy = watch("report_risk_policy");

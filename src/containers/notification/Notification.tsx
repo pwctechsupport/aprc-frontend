@@ -294,7 +294,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                           ? `Action required: [${data.senderUserName}] has requested for approval for [${data.title}]`
                           : data.dataType === "request_edit" &&
                             `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
-                        : null}
+                        : data.title}
 
                       {/* isAdminPreparer */}
                       {isAdminPreparer || isUser
@@ -317,7 +317,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                                 : "Rejected"
                             }]`
                           : data.dataType === "related_reference" && data.title
-                        : null}
+                        : data.title}
                       {/* {isAdminReviewer &&
                         `Action required: [${
                           data.senderUserName

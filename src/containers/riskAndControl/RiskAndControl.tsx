@@ -620,7 +620,7 @@ export default function RiskAndControl({
                 <EmptyAttribute />
               )}
             </Collapsible>{" "}
-            <Collapsible
+            {/* <Collapsible
               title="Controls"
               show={collapse.includes("Controls")}
               onClick={toggleCollapse}
@@ -630,7 +630,7 @@ export default function RiskAndControl({
               ) : (
                 <EmptyAttribute></EmptyAttribute>
               )}
-            </Collapsible>
+            </Collapsible> */}
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
             <ResourcesTab

@@ -82,7 +82,10 @@ const Users = () => {
                 <th style={admins ? { width: "17%" } : { width: "17%" }}>
                   Policy Category
                 </th>
-                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                <th style={admins ? { width: "10%" } : { width: "14.2%" }}>
+                  Department
+                </th>
+                <th style={admins ? { width: "10%" } : { width: "14.2%" }}>
                   Status
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>

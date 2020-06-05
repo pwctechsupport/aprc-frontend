@@ -122,6 +122,7 @@ export default function UserRow({
   const requested = requestStatus === "requested";
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
+  const department = user?.department?.name || "";
   let name = user?.name || "";
 
   if (draft) {
@@ -187,6 +188,7 @@ export default function UserRow({
             .join(",")}
         </td>
         <td>{policyCategories.join(",")}</td>
+        <td>{department}</td>
         <td>
           {draft ? (
             <span className="text-orange">[Waiting for review] </span>
@@ -314,10 +316,6 @@ export default function UserRow({
         </td>
         <td>{oc(user).id("")}</td>
         <td>
-          {console.log(
-            "user?.roles?.map(toLabelValue).pop() ",
-            user?.roles?.map(toLabelValue).pop()
-          )}
           <AsyncSelect
             cacheOptions
             label="User Group"
