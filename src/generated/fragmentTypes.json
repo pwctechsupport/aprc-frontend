@@ -46,6 +46,9 @@
           },
           {
             "name": "User"
+          },
+          {
+            "name": "ActivityControl"
           }
         ]
       },
@@ -79,6 +82,9 @@
           },
           {
             "name": "RequestEdit"
+          },
+          {
+            "name": "ActivityControl"
           }
         ]
       },
