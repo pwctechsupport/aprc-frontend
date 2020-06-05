@@ -1,5 +1,9 @@
-query policies($filter: BaseScalar = {}, $withDetail: Boolean = false) {
-  policies(filter: $filter) {
+query policies(
+  $filter: BaseScalar = {}
+  $withDetail: Boolean = false
+  $limit: Int = 1000
+) {
+  policies(filter: $filter, limit: $limit) {
     collection {
       id
       title
