@@ -33,28 +33,28 @@ export default function NotificationSettings() {
 
   return (
     <div>
-      <Helmet>
+      {/* <Helmet>
         <title>Notification - Settings - PricewaterhouseCoopers</title>
-      </Helmet>
-      <div>
-        <h4>Notifications</h4>
-        <br />
-        <Row>
-          <Col md={6}>
-            {settings.map((s) => (
-              <div key={s.name} className="d-flex justify-content-between">
-                <h6>{s.label}</h6>
-                <Switch
-                  checked={show}
-                  height={25}
-                  width={50}
-                  onChange={handleClick}
-                />
-              </div>
-            ))}
-          </Col>
-        </Row>
-      </div>
+      </Helmet> */}
+      {/* <div> */}
+      {/* <h4>Notifications</h4>
+        <br /> */}
+      <Row>
+        <Col md={6}>
+          {settings.map((s) => (
+            <div key={s.name} className="d-flex justify-content-between">
+              <h6>{s.label}</h6>
+              <Switch
+                checked={show}
+                height={25}
+                width={50}
+                onChange={handleClick}
+              />
+            </div>
+          ))}
+        </Col>
+      </Row>
+      {/* </div> */}
     </div>
   );
 }
