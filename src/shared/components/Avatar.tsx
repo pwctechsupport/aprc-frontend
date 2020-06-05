@@ -73,18 +73,7 @@ export default function Avatar({ data }: AvatarProps) {
                 </h4>
               ) : null}
             </div>
-            <div className="d-flex justify-content-between mb-2">
-              <UserDetailTitle>Notifications</UserDetailTitle>
-              <UserDetail>
-                {" "}
-                <Switch
-                  checked={show}
-                  height={25}
-                  width={50}
-                  onChange={handleClick}
-                />
-              </UserDetail>
-            </div>
+
             <div className="d-flex justify-content-between">
               {user ? (
                 <>
