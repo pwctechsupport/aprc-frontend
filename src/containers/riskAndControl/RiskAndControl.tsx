@@ -235,10 +235,10 @@ export default function RiskAndControl({
     dataRisksnControl?.navigatorBusinessProcesses?.collection
       .map((a) => a.risks)
       .flat(10) || [];
-  const controls =
-    dataRisksnControl?.navigatorBusinessProcesses?.collection
-      .map((a) => a.controls)
-      .flat(10) || [];
+  // const controls =
+  //   dataRisksnControl?.navigatorBusinessProcesses?.collection
+  //     .map((a) => a.controls)
+  //     .flat(10) || [];
   const resources = dataResources?.navigatorResources?.collection || [];
 
   const isBookmarked = bookmarkData?.bookmarks?.collection || [];
