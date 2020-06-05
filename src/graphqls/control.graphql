@@ -53,21 +53,34 @@ query control($id: ID!) {
       id
       objectResult {
         ... on Control {
-          ...control
-          activityControls {
-            id
-            activity
-            guidance
-            guidanceFileName
-            guidanceResuploadUrl
-          }
+          ...objectResulto
         }
       }
       objectChanges
     }
   }
 }
+fragment objectResulto on Control {
+  id
+  keyControl
 
+  description
+  frequency
+  nature
+  controlOwner
+  departments {
+    id
+    name
+  }
+  assertion
+  typeOfControl
+  ipo
+  status
+  updatedAt
+  lastUpdatedBy
+  createdBy
+  createdAt
+}
 fragment control on Control {
   id
   keyControl
