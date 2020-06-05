@@ -86,6 +86,7 @@ export default function Resource({
     requestStatus,
     requestEditState,
   });
+
   const rating =
     dataRating?.resourceRatings?.collection.map((a) => a.rating).pop() || 0;
   const imagePreviewUrl = resuploadLink
@@ -94,6 +95,8 @@ export default function Resource({
     ? `${APP_ROOT_URL}${resuploadUrl}`
     : undefined;
 
+  const filteredNames = (names: any) =>
+    names.filter((v: any, i: any) => names.indexOf(v) === i);
   // Delete handlers
   const [deleteMutation, deleteInfo] = useDestroyResourceMutation({
     onCompleted: () => {
@@ -267,7 +270,7 @@ export default function Resource({
                     <h5 className="mt-5">Related Controls:</h5>
                     {controls.length ? (
                       <ul>
-                        {controls.map((control) => (
+                        {filteredNames(controls).map((control: any) => (
                           <li key={control.id}>
                             <Link to={`/control/${control.id}`}>
                               {control.description}
@@ -283,7 +286,7 @@ export default function Resource({
                     <h5 className="mt-5">Related Policies:</h5>
                     {policies.length ? (
                       <ul>
-                        {policies.map((policy) => (
+                        {filteredNames(policies).map((policy: any) => (
                           <li key={policy.id}>
                             <Link to={`/policy/${policy.id}`}>
                               {policy.title}
