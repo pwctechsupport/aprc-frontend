@@ -4,12 +4,6 @@ import { Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import styled from "styled-components";
 import { useSelector } from "../hooks/useSelector";
 import Button from "./Button";
-import Switch from "react-switch";
-import {
-  useNotificationsCountQuery,
-  useNotifBadgesMutation,
-} from "../../generated/graphql";
-import { useDebouncedCallback } from "use-debounce/lib";
 
 interface DataType {
   onClick?: () => void;
@@ -27,25 +21,7 @@ export default function Avatar({ data }: AvatarProps) {
   const name = user?.name || "";
 
   const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const [show, setShow] = useState(false);
-  useNotificationsCountQuery({
-    fetchPolicy: "network-only",
-    onCompleted: (data) => setShow(Boolean(data.me?.notifShow)),
-  });
 
-  const [notifBadgesMutation] = useNotifBadgesMutation({
-    awaitRefetchQueries: true,
-    refetchQueries: ["notificationsCount"],
-  });
-  async function handleSwitch(notifShow: boolean) {
-    notifBadgesMutation({ variables: { input: { notifShow } } });
-  }
-
-  const [debouncedHandleSwitch] = useDebouncedCallback(handleSwitch, 900);
-  const handleClick = (a: boolean) => {
-    setShow(a);
-    debouncedHandleSwitch(a);
-  };
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
       <DropdownToggle tag="div">
@@ -73,7 +49,6 @@ export default function Avatar({ data }: AvatarProps) {
                 </h4>
               ) : null}
             </div>
-
             <div className="d-flex justify-content-between">
               {user ? (
                 <>
@@ -90,7 +65,6 @@ export default function Avatar({ data }: AvatarProps) {
                 </>
               ) : null}
             </div>
-
             <Button
               tag={Link}
               to="/settings"

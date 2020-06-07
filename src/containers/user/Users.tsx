@@ -11,7 +11,6 @@ import {
   useReviewerUsersStatusQuery,
 } from "../../generated/graphql";
 import { NetworkStatus } from "apollo-boost";
-import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Tooltip from "../../shared/components/Tooltip";
