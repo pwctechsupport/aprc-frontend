@@ -434,7 +434,6 @@ export default function RiskAndControl({
       { label: "Created At", value: createdAt.split(" ")[0] },
       { label: "Created By", value: createdBy },
     ];
-    console.log("masuk");
     return (
       <Route exact path="/risk-and-control/:id/control/:id">
         {loadingControl ? (

@@ -118,7 +118,9 @@ const BusinessProcessBranch = ({
           className={classnames("side-box__item__title", { active: isActive })}
           to={
             activeMode
-              ? `/risk-and-control/${id}/${activeMode}`
+              ? activeMode === "risk"
+                ? `/risk-and-control/${id}`
+                : `/risk-and-control/${id}/${activeMode}`
               : `/risk-and-control/${id}`
           }
         >
