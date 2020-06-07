@@ -285,13 +285,15 @@ ResourceFormProps) {
 
       {preview && selectedCategory?.value === "Flowchart" && (
         <div>
-          <ImageTagger
-            src={preview}
-            bpId={selectedBusinessProcess?.value || ""}
-            editable
-            onTagsChanged={setTags}
-            defaultTags={defaultValues?.tagsAttributes}
-          />
+          {preview === `http://mandalorian.rubyh.coundefined` ? null : (
+            <ImageTagger
+              src={preview}
+              bpId={selectedBusinessProcess?.value || ""}
+              editable
+              onTagsChanged={setTags}
+              defaultTags={defaultValues?.tagsAttributes}
+            />
+          )}
         </div>
       )}
 

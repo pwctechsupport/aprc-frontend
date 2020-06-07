@@ -72,9 +72,9 @@ export default function Flowchart({
           const type = tag.risk?.id ? "Risk" : "Control";
           const name = tag.risk?.name || tag.control?.description;
           const background = tag.risk?.id
-            ? "#fdfd96"
+            ? "orange"
             : tag.control?.id
-            ? "#ff6666"
+            ? "#810001"
             : undefined;
           const to =
             isUser && history.includes("/flowchart")

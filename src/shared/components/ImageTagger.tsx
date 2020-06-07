@@ -223,7 +223,7 @@ export default function ImageTagger({
               <TaggerBoxCloseButton
                 onClick={handleClose}
                 size={13}
-                color="lightgrey"
+                color="black"
               />
               <Async
                 loadOptions={handleLoadOptions}
@@ -308,7 +308,6 @@ export const PreviewTag = styled.div<PreviewTagProps>`
   background-color: ${(p) => p.background || "rgba(0, 0, 0, 0.85)"};
   width: 100px;
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.5);
   text-align: center;
   vertical-align: middle;
   z-index: 10;
@@ -351,7 +350,7 @@ export const PreviewTag = styled.div<PreviewTagProps>`
 `;
 
 export const PreviewTagText = styled.div`
-  color: black;
+  color: white;
   font-size: smaller;
   font-weight: bold;
   text-overflow: ellipsis;
@@ -366,11 +365,11 @@ const TaggerBox = styled.div<{ x: number; y: number }>`
   position: absolute;
   top: ${(p) => p.y + 10}px;
   left: ${(p) => p.x - 50}px;
-  background-color: rgba(0, 0, 0, 1);
+  background-color: rgba(233, 236, 239, 1);
   width: 300px;
   height: 120px;
   border-radius: 5px;
-  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   z-index: 1000000;
   &::before {
     content: "";
