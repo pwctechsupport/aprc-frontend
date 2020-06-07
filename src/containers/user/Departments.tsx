@@ -10,15 +10,16 @@ import {
   useCreateDepartmentMutation,
 } from "../../generated/graphql";
 import { NetworkStatus } from "apollo-boost";
+import Modal from "../../shared/components/Modal";
 import Table from "../../shared/components/Table";
 import DateHover from "../../shared/components/DateHover";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, Link } from "react-router-dom";
 import { useDebounce } from "use-debounce/lib";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import { useForm } from "react-hook-form";
 import Tooltip from "../../shared/components/Tooltip";
 import { AiFillEdit } from "react-icons/ai";
-import { FaTrash, FaTimes } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import DialogButton from "../../shared/components/DialogButton";
 import * as yup from "yup";
 import useAccessRights from "../../shared/hooks/useAccessRights";
@@ -70,87 +71,73 @@ const Departments = ({ history }: RouteComponentProps) => {
     notifySuccess("Department Updated");
     setIsEdit(false);
   }
+  const [modal, setModal] = useState(false);
+
   const handleCreate = (values: any) => {
     create({ variables: { input: { name: values.name } } });
-    creating.reset();
+    toggleModal();
   };
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const toggleModal = () => {
+    setModal((a) => !a);
+  };
   return (
     <div>
       <Helmet>
         <title>Department - PricewaterhouseCoopers</title>
       </Helmet>
       <Container fluid className="p-0 pt-3 px-4">
-        <h2>Department</h2>
+        <h2>Departments Management</h2>
 
-        {(isAdmin || isAdminPreparer) && (
-          <Fragment>
-            <Row style={{ position: "relative", left: "15px" }}>
-              <h5> Add Department</h5>
-            </Row>
-            <Row>
-              <Col>
-                <Form
-                  onSubmit={creating.handleSubmit(handleCreate)}
-                  className="form"
-                >
-                  <Row className="mt-2">
-                    <Col lg={9}>
-                      <Input
-                        className="p-0 m-0"
-                        placeholder={"Add new Department..."}
-                        name="name"
-                        innerRef={creating.register}
-                        setValue={creating.setValue}
-                        error={
-                          creating.errors.name && "Name is a required field"
-                        }
-                        type="text"
-                      />
-                    </Col>
-                    <Col lg={1}>
-                      <Button loading={createM.loading} className="pwc px-5">
-                        Add
-                      </Button>
-                    </Col>
-                    <Col lg={2} className="text-right">
-                      <Button
-                        outline
-                        color="pwc"
-                        className="pwc mb-5"
-                        onClick={() => {
-                          history.replace(`/user`);
-                        }}
-                      >
-                        <Tooltip description="Back to users page">
-                          Users
-                        </Tooltip>
-                      </Button>
-                    </Col>
-                  </Row>
-                </Form>
-              </Col>
-            </Row>
-          </Fragment>
-        )}
-
-        <Row
-          style={{
-            position: "relative",
-            marginTop: `${isAdminReviewer ? "40px" : "0px"}`,
-            bottom: "20px",
-          }}
-        >
-          <Col lg={9}>
-            <h5> Search Department</h5>
+        <Row className="mb-5">
+          <Col lg={4}>
             <Input placeholder="Search Department..." onChange={handleSearch} />
           </Col>
+          <Col className="text-right">
+            <Link to="/user">
+              <Button outline color="pwc" className="pwc mr-1">
+                {" "}
+                Users
+              </Button>
+            </Link>
+            <Button className="pwc" onClick={toggleModal}>
+              + Add Department
+            </Button>
+          </Col>
         </Row>
-
+        <Modal isOpen={modal} toggle={toggleModal} title="Create Departments">
+          <Row>
+            <Col>
+              <Form
+                onSubmit={creating.handleSubmit(handleCreate)}
+                className="form"
+              >
+                <Row className="mt-2">
+                  <Col lg={8}>
+                    <Input
+                      className="p-0 m-0"
+                      placeholder={"Add new Department..."}
+                      name="name"
+                      innerRef={creating.register}
+                      setValue={creating.setValue}
+                      error={creating.errors.name && "Name is a required field"}
+                      type="text"
+                    />
+                  </Col>
+                  <Col>
+                    <Button loading={createM.loading} className="pwc px-5">
+                      Add
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            </Col>
+          </Row>
+        </Modal>
         <Table
           loading={networkStatus === NetworkStatus.loading}
           reloading={networkStatus === NetworkStatus.setVariables}
@@ -159,9 +146,9 @@ const Departments = ({ history }: RouteComponentProps) => {
             <tr>
               <th style={{ width: "20%" }}>Department ID</th>
               <th style={{ width: "20%" }}>Name</th>
-              <th>Created At</th>
-              <th>Last Updated</th>
-              <th>Action</th>
+              <th style={{ width: "20%" }}>Created At</th>
+              <th style={{ width: "20%" }}>Last Updated</th>
+              <th style={{ width: "20%" }}>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -191,21 +178,25 @@ const Departments = ({ history }: RouteComponentProps) => {
                 <td>
                   {isEdit && selected === department.id ? (
                     <Fragment>
-                      <Button
-                        className="soft orange mr-2"
-                        onClick={() => toggleEdit(department.id)}
-                      >
-                        <Tooltip description="Cancel Edit">
-                          <FaTimes />
-                        </Tooltip>
-                      </Button>
-                      <Button
-                        onClick={updating.handleSubmit(handleUpdate)}
-                        className="pwc"
+                      <DialogButton
+                        color="primary"
+                        onConfirm={updating.handleSubmit(handleUpdate)}
+                        className="pwc mr-1"
                         loading={updateM.loading}
                       >
                         Save
-                      </Button>
+                      </DialogButton>
+                      <DialogButton
+                        loading={destroyM.loading}
+                        className="ml-1 black"
+                        style={{
+                          backgroundColor: "rgba(233, 236, 239, 1)",
+                          color: "black",
+                        }}
+                        onConfirm={() => toggleEdit(department.id)}
+                      >
+                        Cancel
+                      </DialogButton>
                     </Fragment>
                   ) : (
                     <Fragment>
