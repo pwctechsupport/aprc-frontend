@@ -56,7 +56,6 @@ const SubPolicyForm = ({
   });
   const statusWhenUpdate = data?.policy?.status || "";
   const draft = data?.policy?.draft;
-
   const { register, handleSubmit, setValue, errors } = useForm<
     SubPolicyFormValues
   >({ validationSchema, defaultValues });
@@ -93,7 +92,9 @@ const SubPolicyForm = ({
   function submitFirstPhase(values: SubPolicyFormValues) {
     statusWhenUpdate === "release" || parentStatus === "release" || !draft
       ? attr.businessProcessIds?.length
-        ? submitFirst && submitFirst({ ...values, ...attr })
+        ? data
+          ? submitFirst && submitFirst({ ...values, ...attr })
+          : toast.error("Network Error")
         : toast.error("Insert attributes is a required field")
       : toast.error(
           "Parent policy status must be 'release' before user can submit Sub Policy"
