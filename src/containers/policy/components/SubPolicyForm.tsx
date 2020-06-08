@@ -341,7 +341,7 @@ const SubPolicyAttributeForm = ({
         name="resourceIds"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Resources*"
+        label="Resources"
         options={resourceOptions}
         defaultValue={resourceOptions.filter((res) =>
           oc(defaultValues)
@@ -376,7 +376,7 @@ const SubPolicyAttributeForm = ({
         register={formModal.register}
         setValue={formModal.setValue}
         placeholder="Risk"
-        label="Risk*"
+        label="Risk"
         isDisabled={checkBp?.length ? false : true}
         options={risksOptions}
         defaultValue={risksOptions.filter((res) =>
@@ -393,7 +393,7 @@ const SubPolicyAttributeForm = ({
         register={formModal.register}
         setValue={formModal.setValue}
         placeholder="Control"
-        label="Control*"
+        label="Control"
         isDisabled={checkBp?.length ? false : true}
         options={controlsOptions}
         defaultValue={controlsOptions.filter((res) =>
@@ -437,9 +437,9 @@ const validationSchema = yup.object().shape({
 });
 const validationSchemaAttributes = yup.object().shape({
   businessProcessIds: yup.array().required(),
-  controlIds: yup.array().required(),
-  resourceIds: yup.array().required(),
-  riskIds: yup.array().required(),
+  // controlIds: yup.array().required(),
+  // resourceIds: yup.array().required(),
+  // riskIds: yup.array().required(),
 });
 // -------------------------------------------------------------------------
 // Type Definitions
