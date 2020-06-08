@@ -93,6 +93,7 @@ export default function Policies({ history }: RouteComponentProps) {
     dataPreparer?.preparerPolicies?.collection ||
     dataReviewer?.reviewerPoliciesStatus?.collection ||
     [];
+  console.log("policiesPreparer", policiesPreparer);
   const totalCountPreparer =
     dataPreparer?.preparerPolicies?.metadata.totalCount ||
     dataReviewer?.reviewerPoliciesStatus?.metadata.totalCount ||
@@ -258,6 +259,15 @@ const PolicyTableRow = ({
           <td>
             {policy.status === "waiting_for_review" && !policy.isSubmitted
               ? "Draft"
+              : policy.status === "draft"
+              ? "Draft"
+              : policy.isSubmitted ||
+                (policy.draft && policy.isSubmitted) ||
+                false
+              ? "Waiting for review"
+              : !policy.requestStatus ||
+                (policy.requestStatus === "rejected" && !policy.draft)
+              ? "Release"
               : capitalCase(policy.status || "")}
           </td>
           <td>

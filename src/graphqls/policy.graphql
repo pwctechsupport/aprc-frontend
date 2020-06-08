@@ -164,10 +164,7 @@ query preparerPolicies(
   preparerPolicies(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...policyBranch
-      draft {
-        id
-      }
-      isSubmitted
+
       children @include(if: $isTree) {
         ...policyBranch
         children {
@@ -234,6 +231,11 @@ fragment policyBranch on Policy {
   ancestry
   lastUpdatedAt
   lastUpdatedBy
+  draft {
+    id
+  }
+  isSubmitted
+  requestStatus
   policyCategory {
     id
     name
@@ -310,6 +312,7 @@ fragment policyFragment on Policy {
   status
   createdAt
   updatedAt
+
   policyCategory {
     id
     name
