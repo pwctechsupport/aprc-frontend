@@ -68,7 +68,7 @@ export default function UserRow({
     validationSchema,
   });
   const [update, updateM] = useAdminUpdateUserMutation({
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
     onCompleted: () => {
       toast.success("Update Success");
     },
@@ -80,7 +80,7 @@ export default function UserRow({
       toast.success("Delete Success");
     },
 
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
     onError: notifyGraphQLErrors,
   });
 
@@ -88,7 +88,7 @@ export default function UserRow({
     variables: { id: oc(user).id(""), type: "User" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
   });
 
   const [approveEdit, approveEditM] = useApproveRequestEditMutation({
@@ -96,7 +96,7 @@ export default function UserRow({
       toast.success("User Approved");
     },
 
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
     onError: notifyGraphQLErrors,
   });
 
@@ -105,7 +105,7 @@ export default function UserRow({
       toast.success("User Reviewed");
     },
 
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
     onError: notifyGraphQLErrors,
   });
 
@@ -344,10 +344,7 @@ export default function UserRow({
             defaultValue={user?.policyCategories?.map(toLabelValue) || []}
           />
         </td>
-        {console.log(
-          "(user?.department && [user.department].map(toLabelValue))",
-          user?.department && [user.department].map(toLabelValue)
-        )}
+
         <td>
           <AsyncSelect
             cacheOptions
