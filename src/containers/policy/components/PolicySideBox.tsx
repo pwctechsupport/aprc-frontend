@@ -68,7 +68,6 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   });
 
   const policies = data?.sidebarPolicies?.collection || [];
-  console.log("policies", policies);
   useEffect(() => {
     policies.length === limit ? setCondition(true) : setCondition(false);
   }, [policies, scrollPointer, limit]);

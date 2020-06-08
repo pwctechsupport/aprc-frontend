@@ -93,7 +93,6 @@ export default function Policies({ history }: RouteComponentProps) {
     dataPreparer?.preparerPolicies?.collection ||
     dataReviewer?.reviewerPoliciesStatus?.collection ||
     [];
-  console.log("policiesPreparer", policiesPreparer);
   const totalCountPreparer =
     dataPreparer?.preparerPolicies?.metadata.totalCount ||
     dataReviewer?.reviewerPoliciesStatus?.metadata.totalCount ||
