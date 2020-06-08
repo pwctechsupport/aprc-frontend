@@ -1,7 +1,7 @@
 query policies(
   $filter: BaseScalar = {}
   $withDetail: Boolean = false
-  $limit: Int = 1000
+  $limit: Int
 ) {
   policies(filter: $filter, limit: $limit) {
     collection {
@@ -127,6 +127,10 @@ query reviewerPolicies(
   reviewerPoliciesStatus(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...policyBranch
+      draft {
+        id
+      }
+      isSubmitted
       children @include(if: $isTree) {
         ...policyBranch
         children {
@@ -160,6 +164,10 @@ query preparerPolicies(
   preparerPolicies(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...policyBranch
+      draft {
+        id
+      }
+      isSubmitted
       children @include(if: $isTree) {
         ...policyBranch
         children {
