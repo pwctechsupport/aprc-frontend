@@ -17,6 +17,7 @@ import Button from "../../shared/components/Button";
 import { Suggestion, toLabelValue } from "../../shared/formatter";
 import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnPromise";
 import useKeyDetection from "../hooks/useKeyDetection";
+import { Row, Col } from "reactstrap";
 
 interface ImageTaggerProps {
   bpId: string;
@@ -170,108 +171,112 @@ export default function ImageTagger({
           className="mb-2"
         />
       </div>
-      <ImageTaggerWrapper onClick={editable ? handleClick : undefined}>
-        <TargetImage src={src} editable={editable} />
-        {tags.map((tag) => {
-          const id = tag.risk?.id || tag.control?.id;
-          const type = tag.risk?.id ? "Risk" : "Control";
-          const name = tag.risk?.name || tag.control?.description;
-          const background = tag.risk?.id
-            ? "orange"
-            : tag.control?.id
-            ? "#810001"
-            : undefined;
-          const to = tag.risk?.id
-            ? `/risk/${tag.risk?.id}`
-            : `/control/${tag.control?.id}`;
+      <Row>
+        <Col lg={6}>
+          <ImageTaggerWrapper onClick={editable ? handleClick : undefined}>
+            <TargetImage src={src} editable={editable} />
+            {tags.map((tag) => {
+              const id = tag.risk?.id || tag.control?.id;
+              const type = tag.risk?.id ? "Risk" : "Control";
+              const name = tag.risk?.name || tag.control?.description;
+              const background = tag.risk?.id
+                ? "orange"
+                : tag.control?.id
+                ? "#810001"
+                : undefined;
+              const to = tag.risk?.id
+                ? `/risk/${tag.risk?.id}`
+                : `/control/${tag.control?.id}`;
 
-          if (editable) {
-            return (
-              <PreviewTag
-                key={tag.id}
-                show={show}
-                onClick={handlePreviewTagClick(tag)}
-                x={tag.xCoordinates || 0}
-                y={tag.yCoordinates || 0}
-                background={background}
-              >
-                <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
-              </PreviewTag>
-            );
-          }
-          return (
-            <PreviewTag
-              key={tag.id}
-              show={show}
-              x={tag.xCoordinates || 0}
-              y={tag.yCoordinates || 0}
-              as={Link}
-              to={to}
-              background={background}
-            >
-              <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
-            </PreviewTag>
-          );
-        })}
-        {currentTag.active && (
-          <TaggerBox
-            onClick={(e) => e.stopPropagation()}
-            x={currentTag.x}
-            y={currentTag.y}
-          >
-            <TaggerBoxInner>
-              <TaggerBoxCloseButton
-                onClick={handleClose}
-                size={13}
-                color="black"
-              />
-              <Async
-                loadOptions={handleLoadOptions}
-                defaultOptions
-                onFocus={(e) => e.stopPropagation()}
-                placeholder="Select..."
-                onChange={handleSelectChange}
-                value={
-                  currentTag.risk
-                    ? {
-                        label: currentTag.risk?.name,
-                        value: { riskId: currentTag.risk?.id },
-                      }
-                    : currentTag.control
-                    ? {
-                        label: currentTag.control?.description,
-                        value: { controlId: currentTag.control?.id },
-                      }
-                    : undefined
-                }
-              />
-              <div className="d-flex justify-content-end">
-                {currentTag.id ? (
-                  <Button
-                    onClick={() => handleDelete(currentTag.id)}
-                    size="sm"
-                    className="mr-1 pwc cancel"
-                    color="danger"
+              if (editable) {
+                return (
+                  <PreviewTag
+                    key={tag.id}
+                    show={show}
+                    onClick={handlePreviewTagClick(tag)}
+                    x={tag.xCoordinates || 0}
+                    y={tag.yCoordinates || 0}
+                    background={background}
                   >
-                    Delete
-                  </Button>
-                ) : null}
-                <Button
-                  onClick={() =>
-                    currentTag.id
-                      ? handleUpdate(currentTag.id)
-                      : handleCreate(currentTag.x, currentTag.y)
-                  }
-                  size="sm"
-                  className="pwc"
+                    <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
+                  </PreviewTag>
+                );
+              }
+              return (
+                <PreviewTag
+                  key={tag.id}
+                  show={show}
+                  x={tag.xCoordinates || 0}
+                  y={tag.yCoordinates || 0}
+                  as={Link}
+                  to={to}
+                  background={background}
                 >
-                  Save
-                </Button>
-              </div>
-            </TaggerBoxInner>
-          </TaggerBox>
-        )}
-      </ImageTaggerWrapper>
+                  <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
+                </PreviewTag>
+              );
+            })}
+            {currentTag.active && (
+              <TaggerBox
+                onClick={(e) => e.stopPropagation()}
+                x={currentTag.x}
+                y={currentTag.y}
+              >
+                <TaggerBoxInner>
+                  <TaggerBoxCloseButton
+                    onClick={handleClose}
+                    size={13}
+                    color="red"
+                  />
+                  <Async
+                    loadOptions={handleLoadOptions}
+                    defaultOptions
+                    onFocus={(e) => e.stopPropagation()}
+                    placeholder="Select..."
+                    onChange={handleSelectChange}
+                    value={
+                      currentTag.risk
+                        ? {
+                            label: currentTag.risk?.name,
+                            value: { riskId: currentTag.risk?.id },
+                          }
+                        : currentTag.control
+                        ? {
+                            label: currentTag.control?.description,
+                            value: { controlId: currentTag.control?.id },
+                          }
+                        : undefined
+                    }
+                  />
+                  <div className="d-flex justify-content-end">
+                    {currentTag.id ? (
+                      <Button
+                        onClick={() => handleDelete(currentTag.id)}
+                        size="sm"
+                        className="mr-1 pwc cancel"
+                        color="danger"
+                      >
+                        Delete
+                      </Button>
+                    ) : null}
+                    <Button
+                      onClick={() =>
+                        currentTag.id
+                          ? handleUpdate(currentTag.id)
+                          : handleCreate(currentTag.x, currentTag.y)
+                      }
+                      size="sm"
+                      className="pwc"
+                    >
+                      Save
+                    </Button>
+                  </div>
+                </TaggerBoxInner>
+              </TaggerBox>
+            )}
+          </ImageTaggerWrapper>
+        </Col>
+      </Row>
     </div>
   );
 }
