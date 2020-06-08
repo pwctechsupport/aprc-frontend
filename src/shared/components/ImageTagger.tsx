@@ -287,7 +287,7 @@ export const ImageTaggerWrapper = styled.div`
 
 export const TargetImage = styled.img<{ editable: boolean }>`
   cursor: ${(p) => (p.editable ? "crosshair" : "")};
-  max-width: 35vw;
+  width: 33vw;
   max-height: 30vw;
 `;
 
