@@ -21,6 +21,7 @@ import {
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 
 const RiskForm = ({
+  setModal,
   onSubmit,
   defaultValues,
   submitting,
@@ -123,7 +124,11 @@ const RiskForm = ({
             <DialogButton
               className="black px-5 ml-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
-              onConfirm={() => history.replace(`/risk`)}
+              onConfirm={
+                setModal
+                  ? () => setModal(false)
+                  : () => history.replace(`/risk`)
+              }
               isCreate
             >
               Cancel
@@ -132,7 +137,7 @@ const RiskForm = ({
             <DialogButton
               className="black px-5 ml-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
-              onConfirm={toggleEditMode}
+              onConfirm={setModal ? () => setModal(false) : toggleEditMode}
               isEdit
             >
               Cancel
@@ -196,6 +201,7 @@ export interface RiskFormValues {
 
 export interface RiskFormProps {
   onCancel?: () => void;
+  setModal?: any;
   onSubmit?: (data: RiskFormValues) => void;
   submitting?: boolean;
   defaultValues?: RiskFormValues;

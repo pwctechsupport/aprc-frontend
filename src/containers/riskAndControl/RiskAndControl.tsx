@@ -962,6 +962,7 @@ export default function RiskAndControl({
 
       <Modal isOpen={riskModal} toggle={toggleRiskModal} title="Edit Risk">
         <RiskForm
+          setModal={setRiskModal}
           defaultValues={risk}
           onSubmit={handleUpdateRisk}
           submitting={updateRiskM.loading}
@@ -974,6 +975,7 @@ export default function RiskAndControl({
         title="Edit Control"
       >
         <ControlForm
+          setModal={setControlModal}
           defaultValues={control}
           onSubmit={handleUpdateControl}
           submitting={updateControlM.loading}

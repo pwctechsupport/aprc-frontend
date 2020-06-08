@@ -29,6 +29,7 @@ import { toBase64, toLabelValue } from "../../../shared/formatter";
 
 const ControlForm = ({
   onSubmit,
+  setModal,
   defaultValues,
   submitting,
   toggleEditMode,
@@ -172,7 +173,11 @@ const ControlForm = ({
             <DialogButton
               className="black px-5 ml-2 mb-3"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
-              onConfirm={() => history.replace(`/control`)}
+              onConfirm={
+                setModal
+                  ? () => setModal(false)
+                  : () => history.replace(`/control`)
+              }
               isCreate
             >
               Cancel
@@ -181,7 +186,7 @@ const ControlForm = ({
             <DialogButton
               className="black px-5 ml-2 mb-3"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
-              onConfirm={toggleEditMode}
+              onConfirm={setModal ? () => setModal(false) : toggleEditMode}
               isEdit
             >
               Cancel
@@ -585,6 +590,7 @@ const assertions = Object.entries(Assertion).map(([label, value]) => {
 
 export interface ControlFormProps {
   defaultValues?: ControlFormValues;
+  setModal?: any;
   onSubmit?: (val: CreateControlFormValues) => void;
   submitting?: boolean;
   isDraft?: boolean;
