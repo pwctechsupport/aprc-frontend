@@ -85,6 +85,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   });
   const notifications = data?.notifications?.collection || [];
   const totalCount = data?.notifications?.metadata?.totalCount || 0;
+  console.log("notifications", notifications);
   const [destroyNotifs, destroyNotifsM] = useDestroyBulkNotificationMutation({
     onCompleted: () => {
       toast.success("Delete Success");
@@ -296,6 +297,8 @@ const Notification = ({ history }: RouteComponentProps) => {
                           ? `Action required: [${data.senderUserName}] has requested for approval for [${data.title}]`
                           : data.dataType === "request_edit" &&
                             `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
+                        : isAdminPreparer || isUser
+                        ? null
                         : data.title}
 
                       {/* isAdminPreparer */}
@@ -319,6 +322,8 @@ const Notification = ({ history }: RouteComponentProps) => {
                                 : "Rejected"
                             }]`
                           : data.dataType === "related_reference" && data.title
+                        : isAdminReviewer
+                        ? null
                         : data.title}
                       {/* {isAdminReviewer &&
                         `Action required: [${
