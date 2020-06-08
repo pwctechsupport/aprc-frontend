@@ -45,6 +45,7 @@ interface ResourceFormProps {
   toggleEditMode?: any;
   isCreate?: boolean;
   history?: any;
+  setModal?: any;
   policy?: boolean;
   risksnControls?: boolean;
 }
@@ -63,6 +64,7 @@ export interface ResourceFormValues {
 
 export default function ResourceForm({
   defaultValues,
+  setModal,
   risksnControls,
   base64File,
   onSubmit,
@@ -310,7 +312,11 @@ ResourceFormProps) {
           <DialogButton
             className="black px-5 ml-2"
             style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
-            onConfirm={() => history.replace(`/resources`)}
+            onConfirm={
+              setModal
+                ? () => setModal(false)
+                : () => history.replace(`/resources`)
+            }
             isCreate
           >
             Cancel
@@ -319,7 +325,7 @@ ResourceFormProps) {
           <DialogButton
             className="black px-5 ml-2"
             style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
-            onConfirm={toggleEditMode}
+            onConfirm={setModal ? () => setModal(false) : toggleEditMode}
             isEdit
           >
             Cancel

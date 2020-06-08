@@ -296,6 +296,7 @@ export default function ResourcesTab({
         title="Create Resource"
       >
         <ResourceForm
+          setModal={setAddResourceModal}
           risksnControls={risksnControls}
           defaultValues={formDefaultValues}
           onSubmit={handleCreateResource}
