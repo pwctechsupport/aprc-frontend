@@ -307,22 +307,25 @@ const SubPolicyAttributeForm = ({
     .navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
   const checkBp = formModal.watch("businessProcessIds");
+  const checkRisk = formModal.watch("riskIds");
 
   const [filter, setFilter] = useState({});
-
+  const [filterControl, setFilterControl] = useState({});
   useEffect(() => {
     setFilter({ business_processes_id_in: checkBp });
-  }, [checkBp]);
+    setFilterControl({ risks_id_in: checkRisk });
+  }, [checkBp, checkRisk]);
 
   const controlsQ = useControlsQuery({
     variables: {
-      filter,
+      filter: filterControl,
     },
     fetchPolicy: "network-only",
   });
   const controlsOptions = oc(controlsQ.data)
     .navigatorControls.collection([])
     .map(({ id, description }) => ({ label: description || "", value: id }));
+
   const risksQ = useRisksQuery({
     variables: {
       filter,
@@ -394,7 +397,7 @@ const SubPolicyAttributeForm = ({
         setValue={formModal.setValue}
         placeholder="Control"
         label="Control"
-        isDisabled={checkBp?.length ? false : true}
+        isDisabled={checkRisk?.length ? false : true}
         options={controlsOptions}
         defaultValue={controlsOptions.filter((res) =>
           oc(defaultValues)
