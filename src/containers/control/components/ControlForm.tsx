@@ -245,7 +245,8 @@ const ControlForm = ({
         <FormSelect
           isMulti
           name="businessProcessIds"
-          label="Business Processes"
+          label="Business Processes*"
+          placeholder="Business Processes"
           isLoading={bpsQ.loading}
           register={register}
           setValue={setValue}
@@ -256,6 +257,9 @@ const ControlForm = ({
               .businessProcessIds([])
               .includes(res.value)
           )}
+          error={
+            errors.businessProcessIds && "Business Process is a required field"
+          }
         />
 
         <Select
@@ -645,6 +649,7 @@ const validationSchema = yup.object().shape({
   assertion: yup.array().required(),
   nature: yup.string().required(),
   controlOwner: yup.array().required(),
+  businessProcessIds: yup.array().required(),
 });
 
 const validationSchemaControlActivity = yup.object().shape({
