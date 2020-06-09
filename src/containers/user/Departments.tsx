@@ -104,9 +104,11 @@ const Departments = ({ history }: RouteComponentProps) => {
                 Users
               </Button>
             </Link>
-            <Button className="pwc" onClick={toggleModal}>
-              + Add Department
-            </Button>
+            {isAdminPreparer ? (
+              <Button className="pwc" onClick={toggleModal}>
+                + Add Department
+              </Button>
+            ) : null}
           </Col>
         </Row>
         <Modal isOpen={modal} toggle={toggleModal} title="Create Departments">
