@@ -306,7 +306,8 @@ ResourceFormProps) {
           loading={submitting}
           message="Create New Resource?"
         >
-          {defaultValues?.name ? "Save" : "Submit"}
+          Save
+          {/* {defaultValues?.name ? "Save" : "Submit"} */}
         </Button>
         {isCreate ? (
           <DialogButton
