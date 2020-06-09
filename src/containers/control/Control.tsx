@@ -177,9 +177,9 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   const typeOfControl = draft
     ? get(data, "control.draft.objectResult.typeOfControl", "")
     : data?.control?.typeOfControl || "";
-  const status = draft
-    ? get(data, "control.draft.objectResult.status", "")
-    : data?.control?.status || "";
+  // const status = draft
+  //   ? get(data, "control.draft.objectResult.status", "")
+  //   : data?.control?.status || "";
   const keyControl = draft
     ? get(data, "control.draft.objectResult.keyControl", false)
     : data?.control?.keyControl || false;
@@ -318,7 +318,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
         value: ipo.map((x: any) => capitalCase(x)).join(", "),
       },
       { label: "Frequency", value: capitalCase(frequency) },
-      { label: "Status", value: capitalCase(status) },
+      // { label: "Status", value: capitalCase(status) },
       { label: "Last Updated", value: updatedAt },
       { label: "Last Updated By", value: lastUpdatedBy },
       { label: "Created At", value: createdAt.split(" ")[0] },
