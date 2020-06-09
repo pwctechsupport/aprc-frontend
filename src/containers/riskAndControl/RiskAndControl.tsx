@@ -448,6 +448,22 @@ export default function RiskAndControl({
                     <dd>{item.value || "-"}</dd>
                   </Fragment>
                 ))}
+                <dt>Risks</dt>
+                {risks.length ? (
+                  filteredNames(risks).map((risk: any) => (
+                    <dd key={risk.id}>{risk.name}</dd>
+                  ))
+                ) : (
+                  <EmptyAttribute />
+                )}
+                <dt>Business Processes</dt>
+                {businessProcesses.length ? (
+                  filteredNames(businessProcesses).map((bp: any) => (
+                    <dd key={bp.id}>{bp.name}</dd>
+                  ))
+                ) : (
+                  <EmptyAttribute />
+                )}
               </dl>
             </Col>
             <Col xs={6}>
@@ -463,40 +479,27 @@ export default function RiskAndControl({
               </dl>
             </Col>
 
-            <Col xs={12} className="mt-3">
-              <h5>Risks</h5>
-              {risks.length ? (
-                filteredNames(risks).map((risk: any) => (
-                  <p key={risk.id}>{risk.name}</p>
-                ))
-              ) : (
-                <EmptyAttribute />
-              )}
-              <h5 className="mt-2">Business Processes</h5>
-              {businessProcesses.length ? (
-                filteredNames(businessProcesses).map((bp: any) => (
-                  <p key={bp.id}>{bp.name}</p>
-                ))
-              ) : (
-                <EmptyAttribute />
-              )}
-            </Col>
-
             {activityControls.length > 0 ? (
               <Col xs={7} className="mt-2">
-                <h5>Control Activities</h5>
+                <dt className="mb-1">Control Activities</dt>
                 <Table>
                   <thead>
                     <tr>
-                      <th>Control Activity</th>
-                      <th>Guidance</th>
+                      <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                        Control Activity
+                      </th>
+                      <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                        Guidance
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {activityControls.map((activity) => (
                       <tr key={"Row" + activity.id}>
-                        <td>{activity.activity}</td>
-                        <td>
+                        <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                          {activity.activity}
+                        </td>
+                        <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                           {activity.guidance ? (
                             activity.guidance
                           ) : (
