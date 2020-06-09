@@ -88,7 +88,7 @@ export default function Flowchart({
             <PreviewTag
               key={tag.id}
               show={show}
-              x={tag.xCoordinates || 0}
+              x={(tag.xCoordinates || 0) + 110}
               y={tag.yCoordinates || 0}
               as={Link}
               to={to}
