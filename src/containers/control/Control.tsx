@@ -367,19 +367,25 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
         {activityControls.length > 0 ? (
           <Col xs={7} className="mt-2">
-            <h5>Control Activities</h5>
+            <dt className="mb-1">Control Activities</dt>
             <Table>
               <thead>
                 <tr>
-                  <th>Control Activity</th>
-                  <th>Guidance</th>
+                  <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                    Control Activity
+                  </th>
+                  <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                    Guidance
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {activityControls.map((activity) => (
                   <tr key={"Row" + activity.id}>
-                    <td>{activity.activity}</td>
-                    <td>
+                    <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                      {activity.activity}
+                    </td>
+                    <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                       {activity.guidance ? (
                         activity.guidance
                       ) : (
