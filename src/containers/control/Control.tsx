@@ -334,6 +334,22 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                 <dd>{item.value || "-"}</dd>
               </Fragment>
             ))}
+            <dt>Risks</dt>
+            {risks.length ? (
+              filteredNames(risks).map((risk: any) => (
+                <dd key={risk.id}>{risk.name}</dd>
+              ))
+            ) : (
+              <EmptyAttribute />
+            )}
+            <dt>Business Processes</dt>
+            {businessProcesses.length ? (
+              filteredNames(businessProcesses).map((bp: any) => (
+                <dd key={bp.id}>{bp.name}</dd>
+              ))
+            ) : (
+              <EmptyAttribute />
+            )}
           </dl>
         </Col>
         <Col xs={6}>
@@ -347,25 +363,6 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                 </Fragment>
               ))}
           </dl>
-        </Col>
-
-        <Col xs={12} className="mt-3">
-          <h5>Risks</h5>
-          {risks.length ? (
-            filteredNames(risks).map((risk: any) => (
-              <p key={risk.id}>{risk.name}</p>
-            ))
-          ) : (
-            <EmptyAttribute />
-          )}
-          <h5 className="mt-2">Business Processes</h5>
-          {businessProcesses.length ? (
-            filteredNames(businessProcesses).map((bp: any) => (
-              <p key={bp.id}>{bp.name}</p>
-            ))
-          ) : (
-            <EmptyAttribute />
-          )}
         </Col>
 
         {activityControls.length > 0 ? (
