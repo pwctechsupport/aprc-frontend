@@ -104,7 +104,7 @@ export default function Flowchart({
 }
 const Container = styled.div`
   max-width: 36vw;
-  max-height: 30vw;
+  max-height: 36vw;
   background: white;
   border: grey 2px solid;
   border-radius: 5px;
