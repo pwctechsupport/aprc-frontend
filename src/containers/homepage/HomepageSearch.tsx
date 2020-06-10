@@ -1,5 +1,5 @@
 import { useCombobox } from "downshift";
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, Fragment } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useHistory, Link } from "react-router-dom";
 import styled from "styled-components";
@@ -215,7 +215,7 @@ const StyledButton = styled(Button)`
   font-size: 14px;
   padding-bottom: 9px;
   position: absolute;
-  width: 115px;
+  /* width: 115px; */
   right: -105px;
   top: 0px;
   color: white;
