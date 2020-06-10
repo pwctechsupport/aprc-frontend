@@ -33,6 +33,15 @@ const Users = () => {
     },
     fetchPolicy: "no-cache",
   });
+  const magicOfSort = data?.preparerUsers?.collection.sort((a, b) =>
+    b.name && a.name
+      ? a.name.toLowerCase() > b.name.toLowerCase()
+        ? 1
+        : b.name.toLowerCase() > a.name.toLowerCase()
+        ? -1
+        : 0
+      : 0
+  );
   const {
     data: dataReviewer,
     networkStatus: networkStatusreviewer,
@@ -46,9 +55,7 @@ const Users = () => {
     fetchPolicy: "no-cache",
   });
   const userData =
-    data?.preparerUsers?.collection ||
-    dataReviewer?.reviewerUsersStatus?.collection ||
-    [];
+    magicOfSort || dataReviewer?.reviewerUsersStatus?.collection || [];
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
   }

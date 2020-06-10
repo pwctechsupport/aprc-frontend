@@ -1,5 +1,5 @@
 import { useCombobox } from "downshift";
-import React, { useCallback, useRef, Fragment } from "react";
+import React, { useCallback, useRef } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useHistory, Link } from "react-router-dom";
 import styled from "styled-components";
