@@ -9,7 +9,6 @@ import {
   TargetImage,
 } from "../../../shared/components/ImageTagger";
 import styled from "styled-components";
-import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 interface FlowchartProps {
   bpId: string;
@@ -42,12 +41,7 @@ export default function Flowchart({
       },
     },
   });
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
-  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+
   const tags = resourceId ? data?.tags?.collection || [] : [];
   return (
     <div className={className}>
@@ -76,14 +70,9 @@ export default function Flowchart({
             : tag.control?.id
             ? "#810001"
             : undefined;
-          const to =
-            isUser && history.includes("/flowchart")
-              ? `/risk-and-control/${
-                  history.split("/risk-and-control/")[1].split("flowchart")[0]
-                }`
-              : tag.risk?.id
-              ? `/risk/${tag.risk?.id}`
-              : `/control/${tag.control?.id}`;
+          const to = tag.risk?.id
+            ? `${history.split("flowchart")[0]}risk/${tag.risk?.id}`
+            : `${history.split("flowchart")[0]}control/${tag.control?.id}`;
           return (
             <PreviewTag
               key={tag.id}
