@@ -308,7 +308,8 @@ const SubPolicyAttributeForm = ({
     .navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
   const checkBp = formModal.watch("businessProcessIds");
-  const checkRisk = formModal.watch("riskIds");
+  const checkRisk = formModal.watch("riskIds") || [];
+  const checkControl = formModal.watch("controlIds") || [];
 
   const [filter, setFilter] = useState({});
   const [filterControl, setFilterControl] = useState({});
@@ -337,6 +338,44 @@ const SubPolicyAttributeForm = ({
     .navigatorRisks.collection([])
     .map(toLabelValue);
 
+  //risk modified default Values
+
+  const riskDefaultValuesOrigin = risksOptions
+    .filter((res) =>
+      oc(defaultValues)
+        .riskIds([])
+        .includes(res.value)
+    )
+    .map((a) => a.value);
+  const [riskValue, setRiskValue] = useState(riskDefaultValuesOrigin);
+  useEffect(() => {
+    if (checkRisk.length) {
+      setRiskValue(checkRisk);
+    }
+  }, [checkRisk]);
+
+  const riskDefaultValues = risksOptions.filter((a) =>
+    riskValue.includes(a.value)
+  );
+
+  //control modified default Values
+
+  const controlDefaultValuesOrigin = controlsOptions
+    .filter((res) =>
+      oc(defaultValues)
+        .controlIds([])
+        .includes(res.value)
+    )
+    .map((a) => a.value);
+  const [controlValue, setControlValue] = useState(controlDefaultValuesOrigin);
+  useEffect(() => {
+    if (checkControl.length) {
+      setControlValue(checkControl);
+    }
+  }, [checkControl]);
+  const controlDefaultValues = controlsOptions.filter((a) =>
+    controlValue.includes(a.value)
+  );
   return (
     <Form>
       <FormSelect
@@ -383,11 +422,7 @@ const SubPolicyAttributeForm = ({
         label="Risk"
         isDisabled={checkBp?.length ? false : true}
         options={risksOptions}
-        defaultValue={risksOptions.filter((res) =>
-          oc(defaultValues)
-            .riskIds([])
-            .includes(res.value)
-        )}
+        defaultValue={riskDefaultValues}
         error={formModal.errors.riskIds && "Risk is a required field"}
       />{" "}
       <FormSelect
@@ -400,11 +435,7 @@ const SubPolicyAttributeForm = ({
         label="Control"
         isDisabled={checkRisk?.length ? false : true}
         options={controlsOptions}
-        defaultValue={controlsOptions.filter((res) =>
-          oc(defaultValues)
-            .controlIds([])
-            .includes(res.value)
-        )}
+        defaultValue={controlDefaultValues}
         error={formModal.errors.controlIds && "Control is a required field"}
       />
       <div className=" d-flex justify-content-end">
