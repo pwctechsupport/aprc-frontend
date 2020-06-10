@@ -11,6 +11,7 @@ import pwcLogo from "../../assets/images/pwc-logo.png";
 import {
   useLoginMutation,
   LoginMutationVariables,
+  useUsersQuery,
 } from "../../generated/graphql";
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
@@ -21,10 +22,11 @@ export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  const { register, handleSubmit } = useForm<LoginMutationVariables>();
-
+  const { data, loading: loadingUsers } = useUsersQuery();
+  const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
+  const checkEmail = watch("email");
   //refreshes Captcha when error
-
+  const email = data?.users?.collection.map((a) => a.email);
   const [t, st] = useState({
     refresh: () => {},
   });
@@ -55,12 +57,21 @@ export default function Login({ history }: RouteComponentProps) {
       );
       history.push("/");
     } catch (error) {
-      toast.error(
-        <div>
-          <h5>Wrong email or password</h5>
-          <div>Please try again</div>
-        </div>
-      );
+      if (email?.includes(checkEmail) === false) {
+        toast.error(
+          <div>
+            <h5>Email is not registered in database</h5>
+            <div>Please try again</div>
+          </div>
+        );
+      } else {
+        toast.error(
+          <div>
+            <h5>Wrong password</h5>
+            <div>Please try again</div>
+          </div>
+        );
+      }
     }
   }
 
