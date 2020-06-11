@@ -119,7 +119,7 @@ export default function Login({ history }: RouteComponentProps) {
           color="primary"
           type="submit"
           block
-          loading={loading}
+          loading={loading||loadingUsers}
           disabled={!captcha}
         >
           Login
