@@ -872,62 +872,77 @@ export default function RiskAndControl({
             >
               {risks.length ? (
                 <ul>
-                  {risks.map((risk) => (
-                    <li key={risk.id}>
-                      <div className="mb-3 d-flex justify-content-between">
-                        <Link
-                          to={`/risk-and-control/${
-                            currentUrl.split("control/")[1]
-                          }/risk/${risk.id}`}
-                          onClick={() => {
-                            setRiskId(risk.id);
-                          }}
-                        >
-                          <h5>
-                            {risk.name}
-                            <Badge
-                              color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
-                            >
-                              {startCase(risk.levelOfRisk || "")}
-                            </Badge>
-                            <Badge color="secondary">
-                              {startCase(risk.typeOfRisk || "")}
-                            </Badge>
-                          </h5>
-                        </Link>
-
-                        {(isAdmin || isAdminPreparer) && (
-                          <Button
-                            onClick={() =>
-                              editRisk({
-                                id: risk.id,
-                                name: risk.name || "",
-                                businessProcessIds:
-                                  risk.businessProcesses?.map(toLabelValue) ||
-                                  [],
-                                levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                                typeOfRisk: risk.typeOfRisk as TypeOfRisk,
-                              })
-                            }
-                            color=""
+                  {risks
+                    .filter((a) => a?.draft === null)
+                    .map((risk) => (
+                      <li key={risk.id}>
+                        <div className="mb-3 d-flex justify-content-between">
+                          <Link
+                            to={`/risk-and-control/${
+                              currentUrl.split("control/")[1]
+                            }/risk/${risk.id}`}
+                            onClick={() => {
+                              setRiskId(risk.id);
+                            }}
                           >
-                            <FaPencilAlt />
-                          </Button>
-                        )}
-                      </div>
+                            <h5>
+                              {risk.name}
+                              <Badge
+                                color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
+                              >
+                                {startCase(risk.levelOfRisk || "")}
+                              </Badge>
+                              <Badge color="secondary">
+                                {startCase(risk.typeOfRisk || "")}
+                              </Badge>
+                            </h5>
+                          </Link>
 
-                      {risk.controls?.length ? (
-                        <>
-                          <h6>Control</h6>
-                          <ControlsTable
-                            history={history.location.pathname}
-                            controls={risk.controls}
-                            editControl={editControl}
-                          />
-                        </>
-                      ) : null}
-                    </li>
-                  ))}
+                          {(isAdmin || isAdminPreparer) && (
+                            <Button
+                              onClick={() =>
+                                editRisk({
+                                  id: risk.id,
+                                  name: risk.name || "",
+                                  businessProcessIds:
+                                    risk.businessProcesses?.map(toLabelValue) ||
+                                    [],
+                                  levelOfRisk: risk.levelOfRisk as LevelOfRisk,
+                                  typeOfRisk: risk.typeOfRisk as TypeOfRisk,
+                                })
+                              }
+                              color=""
+                            >
+                              <FaPencilAlt />
+                            </Button>
+                          )}
+                        </div>
+                        {isUser ? (
+                          risk?.controls?.filter((a: any) => a.draft === null)
+                            .length ? (
+                            <>
+                              <h6>Control</h6>
+                              <ControlsTable
+                                history={history.location.pathname}
+                                controls={risk.controls.filter(
+                                  (a: any) => a.draft === null
+                                )}
+                                editControl={editControl}
+                              />
+                            </>
+                          ) : null
+                        ) : risk?.controls?.length ? (
+                          <>
+                            <h6>Control</h6>
+                            <ControlsTable
+                              history={history.location.pathname}
+                              controls={risk.controls}
+                              editControl={editControl}
+                            />
+                          </>
+                        ) : null}
+                      </li>
+                    ))}
                 </ul>
               ) : (
                 <EmptyAttribute />
