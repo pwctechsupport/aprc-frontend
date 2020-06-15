@@ -84,6 +84,7 @@ export default function Policies({ history }: RouteComponentProps) {
       filter: {
         ...(isTree && { ancestry_null: true }),
         title_cont: searchQuery,
+        status_not_eq: "draft",
       },
       limit,
       page,

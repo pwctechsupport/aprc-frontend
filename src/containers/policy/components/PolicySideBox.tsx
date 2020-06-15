@@ -56,9 +56,17 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
             title_cont: searchQuery,
             status_eq: "release",
           }
+        : isAdminPreparer
+        ? {
+            ...(!searchQuery && {
+              ancestry_null: true,
+            }),
+            title_cont: searchQuery,
+          }
         : {
             ...(!searchQuery && {
               ancestry_null: true,
+              status_not_eq: "draft",
             }),
             title_cont: searchQuery,
           },
