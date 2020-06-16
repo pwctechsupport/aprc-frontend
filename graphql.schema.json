@@ -17250,8 +17250,8 @@
             "name": "status",
             "description": "",
             "type": {
-              "kind": "ENUM",
-              "name": "Status",
+              "kind": "SCALAR",
+              "name": "String",
               "ofType": null
             },
             "defaultValue": null

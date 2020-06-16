@@ -40,6 +40,7 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
           businessProcessIds: values.businessProcessIds || [],
           controlIds: values.controlIds || [],
           riskIds: values.riskIds || [],
+          status: "draft",
         },
       },
     });
@@ -53,6 +54,7 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
           businessProcessIds: values.businessProcessIds || [],
           controlIds: values.controlIds || [],
           riskIds: values.riskIds || [],
+          status: "waiting_for_review",
         },
       },
     });

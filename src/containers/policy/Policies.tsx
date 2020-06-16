@@ -336,7 +336,22 @@ const PolicyTableRow = ({
         </tr>
       )}
 
-      {childs.length
+      {isAdminReviewer
+        ? childs.filter((a) => a.status !== "draft").length
+          ? childs
+              .filter((a) => a.status !== "draft")
+              .map((childPol) => (
+                <PolicyTableRow
+                  key={childPol.id}
+                  policy={childPol}
+                  status={childPol.status}
+                  onClick={onClick}
+                  onDelete={onDelete}
+                  level={level + 1}
+                />
+              ))
+          : null
+        : childs.length
         ? childs.map((childPol) => (
             <PolicyTableRow
               key={childPol.id}
