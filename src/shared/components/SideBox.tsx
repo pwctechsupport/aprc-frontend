@@ -7,8 +7,7 @@ import LoadingSpinner from "./LoadingSpinner";
 
 // SideBox is the main wrapper to use side box.
 export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
-  /* ganti warna di background */
-  background: #fff4ed;
+  background: var(--soft-orange);
   width: 25vw;
   position: fixed;
   height: calc(100vh - 63px);
