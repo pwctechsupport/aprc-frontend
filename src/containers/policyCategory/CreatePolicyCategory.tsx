@@ -7,6 +7,7 @@ import { useCreatePolicyCategoryMutation } from "../../generated/graphql";
 import Helmet from "react-helmet";
 import { notifySuccess, notifyGraphQLErrors } from "../../shared/utils/notif";
 import { oc } from "ts-optchain";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 
 const CreatePolicyCategory = ({ history }: RouteComponentProps) => {
   const [mutation, { loading }] = useCreatePolicyCategoryMutation({
@@ -34,7 +35,13 @@ const CreatePolicyCategory = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Create - Policy Category - PricewaterhouseCoopers</title>
       </Helmet>
-      <h4>Create Policy Category</h4>
+      <BreadCrumb
+        crumbs={[
+          ["/policy-category", "Policy Category"],
+          ["/policy-category/create", "Create Policy Category"],
+        ]}
+      />
+      <h4 className="mb-3">Create Policy Category</h4>
       <PolicyCategoryForm
         onSubmit={handleCreate}
         submitting={loading}

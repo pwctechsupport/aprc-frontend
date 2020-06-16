@@ -26,6 +26,7 @@ import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
+import styled from "styled-components";
 
 const ControlForm = ({
   onSubmit,
@@ -170,9 +171,8 @@ const ControlForm = ({
             Submit
           </DialogButton>
           {isCreate ? (
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2 mb-3"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={
                 setModal
                   ? () => setModal(false)
@@ -181,16 +181,15 @@ const ControlForm = ({
               isCreate
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           ) : (
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2 mb-3"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={setModal ? () => setModal(false) : toggleEditMode}
               isEdit
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           )}
         </div>
       );
@@ -583,6 +582,10 @@ const assertions = Object.entries(Assertion).map(([label, value]) => {
     return { label: value.split("")[0].toUpperCase(), value };
   }
 });
+
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 
 // -------------------------------------------------------------------------
 // Type Definitions

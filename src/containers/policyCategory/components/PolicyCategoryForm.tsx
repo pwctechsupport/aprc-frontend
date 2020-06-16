@@ -10,6 +10,7 @@ import { Suggestions, toLabelValue } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import DialogButton from "../../../shared/components/DialogButton";
 import * as yup from "yup";
+import styled from "styled-components";
 
 const PolicyCategoryForm = ({
   defaultValues,
@@ -33,32 +34,25 @@ const PolicyCategoryForm = ({
     if (!isDraft) {
       return (
         <div className="d-flex justify-content-end">
-          <Button
-            type="submit"
-            className="soft red"
-            color=""
-            loading={submitting}
-          >
+          <Button type="submit" className="pwc px-5" loading={submitting}>
             {oc(defaultValues).name("") ? "Save" : "Submit"}
           </Button>
           {isCreate ? (
-            <DialogButton
+            <StyledDialogButton
               className="black ml-2"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={() => history.replace(`/policy-category`)}
               isCreate
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           ) : (
-            <DialogButton
+            <StyledDialogButton
               className="black ml-2"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={toggleEditMode}
               isEdit
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           )}
         </div>
       );
@@ -90,6 +84,10 @@ const PolicyCategoryForm = ({
 };
 
 export default PolicyCategoryForm;
+
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 
 export interface PolicyCategoryFormValues {
   name?: string;

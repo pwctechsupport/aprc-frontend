@@ -19,6 +19,7 @@ import {
   toLabelValue,
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import styled from "styled-components";
 
 const RiskForm = ({
   setModal,
@@ -121,9 +122,8 @@ const RiskForm = ({
             Submit
           </DialogButton>
           {isCreate ? (
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={
                 setModal
                   ? () => setModal(false)
@@ -132,16 +132,15 @@ const RiskForm = ({
               isCreate
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           ) : (
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={setModal ? () => setModal(false) : toggleEditMode}
               isEdit
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           )}
         </div>
       </Form>
@@ -150,7 +149,9 @@ const RiskForm = ({
 };
 
 export default RiskForm;
-
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 // -------------------------------------------------------------------------
 // Construct Options
 // -------------------------------------------------------------------------

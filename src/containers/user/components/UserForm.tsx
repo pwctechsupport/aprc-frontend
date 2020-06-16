@@ -18,6 +18,7 @@ import { Suggestions, toLabelValue } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import DialogButton from "../../../shared/components/DialogButton";
 import { toast } from "react-toastify";
+import styled from "styled-components";
 
 export interface UserFormProps {
   onSubmit?: (values: UserFormValues) => void;
@@ -191,19 +192,21 @@ export default function UserForm(props: UserFormProps) {
           Submit
         </Button>
         {props.isCreate && (
-          <DialogButton
+          <StyledDialogButton
             className="black px-5 ml-2"
-            style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
             onConfirm={() => props.history.replace(`/user`)}
             isCreate
           >
             Cancel
-          </DialogButton>
+          </StyledDialogButton>
         )}
       </div>
     </Form>
   );
 }
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 // =======================================================
 // Validation Schema
 // =======================================================

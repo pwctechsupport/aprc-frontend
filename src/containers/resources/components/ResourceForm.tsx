@@ -310,7 +310,7 @@ ResourceFormProps) {
           {/* {defaultValues?.name ? "Save" : "Submit"} */}
         </Button>
         {isCreate ? (
-          <DialogButton
+          <StyledDialogButton
             className="black px-5 ml-2"
             style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
             onConfirm={
@@ -321,22 +321,24 @@ ResourceFormProps) {
             isCreate
           >
             Cancel
-          </DialogButton>
+          </StyledDialogButton>
         ) : (
-          <DialogButton
+          <StyledDialogButton
             className="black px-5 ml-2"
             style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
             onConfirm={setModal ? () => setModal(false) : toggleEditMode}
             isEdit
           >
             Cancel
-          </DialogButton>
+          </StyledDialogButton>
         )}
       </div>
     </Form>
   );
 }
-
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 // ==========================================
 // Form Validation
 // ==========================================

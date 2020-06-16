@@ -10,6 +10,7 @@ import Select from "../../../shared/components/forms/Select";
 import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue } from "../../../shared/formatter";
+import styled from "styled-components";
 // import TextEditor from "../../../shared/components/forms/TextEditor";
 // import { Editor } from "@tinymce/tinymce-react";
 
@@ -163,23 +164,21 @@ const PolicyForm = ({
             </Fragment>
           )}
           {isCreate ? (
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={() => history.replace(`/policy`)}
               isCreate
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           ) : (
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={toggleEditMode}
               isEdit
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           )}
         </div>
       </Form>
@@ -188,6 +187,10 @@ const PolicyForm = ({
 };
 
 export default PolicyForm;
+
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 
 // ---------------------------------------------------
 // Validation
