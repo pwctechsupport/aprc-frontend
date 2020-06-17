@@ -295,11 +295,10 @@ const Notification = ({ history }: RouteComponentProps) => {
                         ? data.dataType === "request_draft" ||
                           data.dataType === "request draft"
                           ? `Action required: [${data.senderUserName}] has requested for approval for [${data.title}]`
-                          : data.dataType === "request_edit" &&
-                            `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
-                        : isAdminPreparer || isUser
-                        ? null
-                        : data.title}
+                          : data.dataType === "request_edit"
+                          ? `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
+                          : data.title
+                        : null}
 
                       {/* isAdminPreparer */}
                       {isAdminPreparer || isUser
@@ -321,10 +320,10 @@ const Notification = ({ history }: RouteComponentProps) => {
                                 ? "Approved"
                                 : "Rejected"
                             }]`
-                          : data.dataType === "related_reference" && data.title
-                        : isAdminReviewer
-                        ? null
-                        : data.title}
+                          : data.dataType === "related_reference"
+                          ? data.title
+                          : data.title
+                        : null}
                       {/* {isAdminReviewer &&
                         `Action required: [${
                           data.senderUserName
