@@ -35,6 +35,8 @@ import {
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import { RouteComponentProps, Link } from "react-router-dom";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import Pagination from "../../shared/components/Pagination";
+import useListState from "../../shared/hooks/useList";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -44,9 +46,13 @@ const References = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
+
   const { data: dataAdmin, loading: loadingAdmin } = useAdminReferencesQuery({
     fetchPolicy: "network-only",
+    variables: { limit, page },
   });
+  const totalCount = dataAdmin?.preparerReferences?.metadata.totalCount || 0;
   const references = dataAdmin?.preparerReferences?.collection || [];
 
   const [selected, setSelected] = useState<string[]>([]);
@@ -179,6 +185,11 @@ const References = ({ history }: RouteComponentProps) => {
           })}
         </tbody>
       </Table>
+      <Pagination
+        totalCount={totalCount}
+        perPage={limit}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };
