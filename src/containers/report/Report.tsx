@@ -22,6 +22,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Risk Without Control",
@@ -30,6 +31,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Control Without Risk",
@@ -38,6 +40,7 @@ const reportOptions = [
       { id: "jangan masuk", name: "PDF" },
       { id: "jangan masuk", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Resources with rating",
@@ -46,6 +49,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Unmapped Risk",
@@ -54,6 +58,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Unmapped Control",
@@ -62,6 +67,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
 ];
 
@@ -186,8 +192,7 @@ export default function Report() {
                 <tr key={option.id}>
                   <td>{index + 1}</td>
                   <td>{capitalize(option.name)}</td>
-                  <td>-</td>
-
+                  <td>{option.description || "-"}</td>
                   <td>
                     <FormGroup tag="fieldset">
                       {option.formats.map((format) => (
