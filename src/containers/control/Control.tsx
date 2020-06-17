@@ -1,12 +1,12 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
   AiOutlineEdit,
 } from "react-icons/ai";
-import { FaExclamationCircle, FaTrash } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 import { IoMdOpen } from "react-icons/io";
 import { RouteComponentProps } from "react-router";
 import { Col, Row } from "reactstrap";
@@ -17,10 +17,10 @@ import {
   useApproveRequestEditMutation,
   useControlQuery,
   useCreateRequestEditMutation,
-  useDestroyControlMutation,
   useReviewControlDraftMutation,
   useUpdateControlMutation,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
@@ -36,7 +36,6 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
-import { APP_ROOT_URL } from "../../settings";
 // import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
@@ -100,15 +99,15 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   }
 
   // Delete handlers
-  const [destoryControl, destoryControlInfo] = useDestroyControlMutation({
-    onCompleted: () => {
-      notifySuccess("Delete Success");
-      history.push("/control");
-    },
-    onError: notifyGraphQLErrors,
-    refetchQueries: ["controls", "adminControls", "reviewerControlsStatus"],
-    awaitRefetchQueries: true,
-  });
+  // const [destoryControl, destoryControlInfo] = useDestroyControlMutation({
+  //   onCompleted: () => {
+  //     notifySuccess("Delete Success");
+  //     history.push("/control");
+  //   },
+  //   onError: notifyGraphQLErrors,
+  //   refetchQueries: ["controls", "adminControls", "reviewerControlsStatus"],
+  //   awaitRefetchQueries: true,
+  // });
 
   // Request Edit handlers
   const [
@@ -252,14 +251,14 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       }
       return (
         <div className="d-flex">
-          <DialogButton
+          {/* <DialogButton
             onConfirm={() => destoryControl({ variables: { id } })}
             loading={destoryControlInfo.loading}
             message={`Delete Control "${description}"?`}
             className="soft red mr-2"
           >
             <FaTrash />
-          </DialogButton>
+          </DialogButton> */}
           <Tooltip description="Edit Control">
             <Button onClick={toggleEditMode} color="" className="soft orange">
               <AiFillEdit />

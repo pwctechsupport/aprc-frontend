@@ -6,7 +6,7 @@ import {
   AiOutlineClockCircle,
   AiOutlineEdit,
 } from "react-icons/ai";
-import { FaExclamationCircle, FaTrash } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Badge, Col, Row } from "reactstrap";
 import {
@@ -14,7 +14,6 @@ import {
   TypeOfRisk,
   useApproveRequestEditMutation,
   useCreateRequestEditMutation,
-  useDestroyRiskMutation,
   useReviewRiskDraftMutation,
   useRiskQuery,
   useUpdateRiskMutation,
@@ -104,15 +103,15 @@ export default function Risk({
   }
 
   // Delete hanlders
-  const [destoryRisk, destoryRiskInfo] = useDestroyRiskMutation({
-    onCompleted: () => {
-      notifySuccess("Delete Success");
-      history.push("/risk");
-    },
-    onError: notifyGraphQLErrors,
-    refetchQueries: ["risks", "adminRisks", "reviewerRisksStatus"],
-    awaitRefetchQueries: true,
-  });
+  // const [destoryRisk, destoryRiskInfo] = useDestroyRiskMutation({
+  //   onCompleted: () => {
+  //     notifySuccess("Delete Success");
+  //     history.push("/risk");
+  //   },
+  //   onError: notifyGraphQLErrors,
+  //   refetchQueries: ["risks", "adminRisks", "reviewerRisksStatus"],
+  //   awaitRefetchQueries: true,
+  // });
 
   // Review handlers
   const [reviewMutation, reviewMutationInfo] = useReviewRiskDraftMutation({
@@ -221,14 +220,14 @@ export default function Risk({
       }
       return (
         <div className="d-flex">
-          <DialogButton
+          {/* <DialogButton
             onConfirm={() => destoryRisk({ variables: { id } })}
             loading={destoryRiskInfo.loading}
             message={`Delete Risk "${name}"?`}
             className="soft red mr-2"
           >
             <FaTrash />
-          </DialogButton>
+          </DialogButton> */}
           <Tooltip description="Edit Risk">
             <Button onClick={toggleEditMode} color="" className="soft orange">
               <AiFillEdit />

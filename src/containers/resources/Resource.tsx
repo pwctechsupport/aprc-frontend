@@ -5,7 +5,7 @@ import {
   AiOutlineClockCircle,
   AiOutlineEdit,
 } from "react-icons/ai";
-import { FaExclamationCircle, FaTrash } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
@@ -13,7 +13,6 @@ import {
   UpdateResourceInput,
   useApproveRequestEditMutation,
   useCreateRequestEditMutation,
-  useDestroyResourceMutation,
   useResourceQuery,
   useResourceRatingsQuery,
   useReviewResourceDraftMutation,
@@ -98,18 +97,18 @@ export default function Resource({
   const filteredNames = (names: any) =>
     names.filter((v: any, i: any) => names.indexOf(v) === i);
   // Delete handlers
-  const [deleteMutation, deleteInfo] = useDestroyResourceMutation({
-    onCompleted: () => {
-      notifySuccess("Resource Deleted");
-      history.push("/resource");
-    },
-    onError: notifyGraphQLErrors,
-    awaitRefetchQueries: true,
-    refetchQueries: ["resource"],
-  });
-  function handleDelete() {
-    deleteMutation({ variables: { id } });
-  }
+  // const [deleteMutation, deleteInfo] = useDestroyResourceMutation({
+  //   onCompleted: () => {
+  //     notifySuccess("Resource Deleted");
+  //     history.push("/resource");
+  //   },
+  //   onError: notifyGraphQLErrors,
+  //   awaitRefetchQueries: true,
+  //   refetchQueries: ["resource"],
+  // });
+  // function handleDelete() {
+  //   deleteMutation({ variables: { id } });
+  // }
 
   // Review handlers
   const [reviewResource, reviewResourceM] = useReviewResourceDraftMutation({
@@ -363,14 +362,14 @@ export default function Resource({
       }
       return (
         <div className="d-flex">
-          <DialogButton
+          {/* <DialogButton
             onConfirm={handleDelete}
             loading={deleteInfo.loading}
             message={`Delete Resource "${name}"?`}
             className="soft red mr-2"
           >
             <FaTrash />
-          </DialogButton>
+          </DialogButton> */}
           <Tooltip description="Edit Resource">
             <Button onClick={toggleEditMode} color="" className="soft orange">
               <AiFillEdit />
