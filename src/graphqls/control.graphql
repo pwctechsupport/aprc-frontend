@@ -8,23 +8,39 @@ query controls($filter: BaseScalar = {}, $limit: Int = 1000) {
     }
   }
 }
-query adminControls($filter: BaseScalar = {}, $limit: Int = 1000) {
-  preparerControls(filter: $filter, limit: $limit) {
+query adminControls($filter: BaseScalar = {}, $limit: Int = 1000, $page: Int) {
+  preparerControls(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...control
       draft {
         id
       }
     }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
   }
 }
-query reviewerControlsStatus($filter: BaseScalar = {}, $limit: Int = 1000) {
-  reviewerControlsStatus(filter: $filter, limit: $limit) {
+query reviewerControlsStatus(
+  $filter: BaseScalar = {}
+  $limit: Int = 1000
+  $page: Int
+) {
+  reviewerControlsStatus(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...control
       draft {
         id
       }
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
     }
   }
 }

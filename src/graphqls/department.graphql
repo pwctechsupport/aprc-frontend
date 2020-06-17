@@ -17,6 +17,12 @@ query departments($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
         }
       }
     }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
   }
 }
 mutation createDepartment($input: CreateDepartmentInput!) {

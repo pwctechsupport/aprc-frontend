@@ -25,23 +25,39 @@ query risks($filter: BaseScalar = {}, $limit: Int = 1000) {
     }
   }
 }
-query adminRisks($filter: BaseScalar = {}, $limit: Int = 1000) {
-  preparerRisks(filter: $filter, limit: $limit) {
+query adminRisks($filter: BaseScalar = {}, $limit: Int = 1000, $page: Int) {
+  preparerRisks(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...risk
       draft {
         id
       }
     }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
   }
 }
-query reviewerRisksStatus($filter: BaseScalar = {}, $limit: Int = 1000) {
-  reviewerRisksStatus(filter: $filter, limit: $limit) {
+query reviewerRisksStatus(
+  $filter: BaseScalar = {}
+  $limit: Int = 1000
+  $page: Int
+) {
+  reviewerRisksStatus(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...risk
       draft {
         id
       }
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
     }
   }
 }

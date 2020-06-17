@@ -20,6 +20,8 @@ import Tooltip from "../../shared/components/Tooltip";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import useListState from "../../shared/hooks/useList";
+import Pagination from "../../shared/components/Pagination";
 
 const Risks = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -28,11 +30,14 @@ const Risks = ({ history }: RouteComponentProps) => {
     "admin_preparer",
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
 
   const { loading: loadingAdmin, data: dataAdmin } = useAdminRisksQuery({
     skip: isAdminReviewer,
     variables: {
       filter: isUser ? { draft_id_null: true } : {},
+      limit,
+      page,
     },
     fetchPolicy: "network-only",
   });
@@ -43,9 +48,15 @@ const Risks = ({ history }: RouteComponentProps) => {
     skip: isAdminPreparer || isUser,
     variables: {
       filter: {},
+      limit,
+      page,
     },
     fetchPolicy: "network-only",
   });
+  const totalCount =
+    dataAdmin?.preparerRisks?.metadata.totalCount ||
+    dataReviewer?.reviewerRisksStatus?.metadata.totalCount ||
+    0;
   const [selected, setSelected] = useState<string[]>([]);
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
@@ -224,7 +235,12 @@ const Risks = ({ history }: RouteComponentProps) => {
             );
           })}
         </tbody>
-      </Table>
+      </Table>{" "}
+      <Pagination
+        totalCount={totalCount}
+        perPage={limit}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

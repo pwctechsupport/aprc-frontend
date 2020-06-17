@@ -19,6 +19,8 @@ import Tooltip from "../../shared/components/Tooltip";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import useListState from "../../shared/hooks/useList";
+import Pagination from "../../shared/components/Pagination";
 
 const Controls = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -31,12 +33,14 @@ const Controls = ({ history }: RouteComponentProps) => {
     "admin_preparer",
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
-
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const { loading: loadingAdmin, data: dataAdmin } = useAdminControlsQuery({
     skip: isAdminReviewer,
     fetchPolicy: "network-only",
     variables: {
       filter: isAdminPreparer ? {} : { draft_id_null: true },
+      limit,
+      page,
     },
   });
   const {
@@ -47,8 +51,14 @@ const Controls = ({ history }: RouteComponentProps) => {
     fetchPolicy: "network-only",
     variables: {
       filter: {},
+      limit,
+      page,
     },
   });
+  const totalCount =
+    dataAdmin?.preparerControls?.metadata.totalCount ||
+    dataReviewer?.reviewerControlsStatus?.metadata.totalCount ||
+    0;
   const controls =
     dataAdmin?.preparerControls?.collection ||
     dataReviewer?.reviewerControlsStatus?.collection ||
@@ -227,6 +237,11 @@ const Controls = ({ history }: RouteComponentProps) => {
               })}
             </tbody>
           </Table>
+          <Pagination
+            totalCount={totalCount}
+            perPage={limit}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>

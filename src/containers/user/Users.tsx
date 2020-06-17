@@ -14,6 +14,8 @@ import { NetworkStatus } from "apollo-boost";
 import { useDebounce } from "use-debounce/lib";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Tooltip from "../../shared/components/Tooltip";
+import useListState from "../../shared/hooks/useList";
+import Pagination from "../../shared/components/Pagination";
 
 const Users = () => {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
@@ -24,12 +26,16 @@ const Users = () => {
   const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
+
   const { data, networkStatus } = usePreparerUsersQuery({
     skip: isAdminReviewer,
     variables: {
       filter: {
         name_or_draft_object_cont: debouncedSearch,
       },
+      limit,
+      page,
     },
     fetchPolicy: "no-cache",
   });
@@ -51,9 +57,15 @@ const Users = () => {
       filter: {
         name_or_draft_object_cont: debouncedSearch,
       },
+      limit,
+      page,
     },
     fetchPolicy: "no-cache",
   });
+  const totalCount =
+    data?.preparerUsers?.metadata.totalCount ||
+    dataReviewer?.reviewerUsersStatus?.metadata.totalCount ||
+    0;
   const userData =
     magicOfSort || dataReviewer?.reviewerUsersStatus?.collection || [];
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
@@ -141,6 +153,11 @@ const Users = () => {
               })}
             </tbody>
           </Table>
+          <Pagination
+            totalCount={totalCount}
+            perPage={limit}
+            onPageChange={handlePageChange}
+          />
         </div>
       </Container>
     </div>

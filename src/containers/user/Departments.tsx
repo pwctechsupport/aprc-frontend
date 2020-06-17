@@ -23,20 +23,27 @@ import { FaTrash } from "react-icons/fa";
 import DialogButton from "../../shared/components/DialogButton";
 import * as yup from "yup";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import Pagination from "../../shared/components/Pagination";
+import useListState from "../../shared/hooks/useList";
 
 const Departments = ({ history }: RouteComponentProps) => {
   const [isEdit, setIsEdit] = useState(false);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
   const [selected, setSelected] = useState("");
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
+
   const { data, networkStatus } = useDepartmentsQuery({
     variables: {
       filter: {
         name_cont: debouncedSearch,
       },
+      limit,
+      page,
     },
     fetchPolicy: "no-cache",
   });
+  const totalCount = data?.departments?.metadata.totalCount;
   const updating = useForm({ validationSchema });
   const creating = useForm({ validationSchema });
   const departments = data?.departments?.collection;
@@ -234,6 +241,11 @@ const Departments = ({ history }: RouteComponentProps) => {
             ))}
           </tbody>
         </Table>
+        <Pagination
+          totalCount={totalCount}
+          perPage={limit}
+          onPageChange={handlePageChange}
+        />
       </Container>
     </div>
   );

@@ -20,6 +20,8 @@ import MyApi from "../../shared/utils/api";
 import downloadXls from "../../shared/utils/downloadXls";
 import CreateBusinessProcess from "./CreateBusinessProcess";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import useListState from "../../shared/hooks/useList";
+import Pagination from "../../shared/components/Pagination";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -38,6 +40,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [searchQuery] = useDebounce(searchValue, 700);
 
   const isTree = !searchQuery;
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
 
   const adminBusinessQuery = useAdminBusinessProcessTreeQuery({
     variables: {
@@ -45,10 +48,14 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
         name_cont: searchQuery,
         ...(isTree && { ancestry_null: true }),
       },
+      limit,
+      page,
       isTree,
     },
   });
-
+  const totalCount =
+    adminBusinessQuery.data?.preparerBusinessProcesses?.metadata.totalCount ||
+    0;
   const bps =
     oc(adminBusinessQuery).data.preparerBusinessProcesses.collection() || [];
   const [destroy, destroyM] = useDestroyBusinessProcessMutation({
@@ -154,7 +161,6 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           >
             <CreateBusinessProcess createBpModal={setCreateBpModal} />
           </Modal>
-
           <Table reloading={adminBusinessQuery.loading}>
             <thead>
               <tr>
@@ -219,6 +225,11 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
               ))}
             </tbody>
           </Table>
+          <Pagination
+            totalCount={totalCount}
+            perPage={limit}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </div>
