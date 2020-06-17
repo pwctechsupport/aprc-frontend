@@ -32,6 +32,7 @@ import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
 import Tooltip from "../../../shared/components/Tooltip";
 import { toast } from "react-toastify";
 import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
+import styled from "styled-components";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -361,30 +362,29 @@ export default function UserRow({
           />
         </td>
         <td>
-          <Button
+          <DialogButton
             loading={updateM.loading}
             className="pwc"
-            onClick={handleSubmit(handleSave)}
+            color="primary"
+            onConfirm={handleSubmit(handleSave)}
           >
             Save
-          </Button>
-          <Button
+          </DialogButton>
+          <StyledButton
             // loading={updateM.loading}
-            className="ml-1 black"
-            style={{
-              backgroundColor: "rgba(233, 236, 239, 1)",
-              color: "black",
-            }}
-            onClick={toggleEdit}
+            className="ml-1"
+            onConfirm={toggleEdit}
           >
             Cancel
-          </Button>
+          </StyledButton>
         </td>
       </tr>
     );
   }
 }
-
+export const StyledButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is a required field"),
   policyCategoryIds: yup.array().required(),

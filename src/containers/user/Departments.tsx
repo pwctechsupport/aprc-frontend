@@ -25,6 +25,7 @@ import * as yup from "yup";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
+import styled from "styled-components";
 
 const Departments = ({ history }: RouteComponentProps) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -195,17 +196,13 @@ const Departments = ({ history }: RouteComponentProps) => {
                       >
                         Save
                       </DialogButton>
-                      <DialogButton
+                      <StyledDialogButton
                         loading={destroyM.loading}
                         className="ml-1 black"
-                        style={{
-                          backgroundColor: "rgba(233, 236, 239, 1)",
-                          color: "black",
-                        }}
                         onConfirm={() => toggleEdit(department.id)}
                       >
                         Cancel
-                      </DialogButton>
+                      </StyledDialogButton>
                     </Fragment>
                   ) : (
                     <Fragment>
@@ -251,6 +248,9 @@ const Departments = ({ history }: RouteComponentProps) => {
   );
 };
 export default Departments;
+export const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 const validationSchema = yup
   .object()
   .shape({ name: yup.string().required("This field is required") });
