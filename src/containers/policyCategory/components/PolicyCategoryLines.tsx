@@ -21,6 +21,8 @@ import { toast } from "react-toastify";
 import downloadXls from "../../../shared/utils/downloadXls";
 import DialogButton from "../../../shared/components/DialogButton";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import Pagination from "../../../shared/components/Pagination";
+import useListState from "../../../shared/hooks/useList";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -32,6 +34,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
 
   const [selected, setSelected] = useState<string[]>([]);
 
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
+
   // Queries
   const {
     loading: loadingAdmin,
@@ -40,6 +44,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     skip: isAdminReviewer,
     variables: {
       filter: isAdminPreparer ? {} : { draft_event_null: true },
+      limit,
+      page,
     },
     fetchPolicy: "network-only",
   });
@@ -50,6 +56,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     skip: isAdminPreparer || isUser,
     variables: {
       filter: {},
+      limit,
+      page,
     },
     fetchPolicy: "network-only",
   });
@@ -57,7 +65,10 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     dataAdmin?.preparerPolicyCategories?.collection ||
     dataReviewer?.reviewerPolicyCategoriesStatus?.collection ||
     [];
-
+  const totalCount =
+    dataAdmin?.preparerPolicyCategories?.metadata.totalCount ||
+    dataReviewer?.reviewerPolicyCategoriesStatus?.metadata.totalCount ||
+    0;
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
   const [destroy, destroyM] = useDestroyPolicyCategoriesMutation({
@@ -234,6 +245,11 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           })}
         </tbody>
       </Table>
+      <Pagination
+        totalCount={totalCount}
+        perPage={limit}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

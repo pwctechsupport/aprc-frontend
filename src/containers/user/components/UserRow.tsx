@@ -32,6 +32,7 @@ import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
 import Tooltip from "../../../shared/components/Tooltip";
 import { toast } from "react-toastify";
 import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
+import styled from "styled-components";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -68,7 +69,7 @@ export default function UserRow({
     validationSchema,
   });
   const [update, updateM] = useAdminUpdateUserMutation({
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
     onCompleted: () => {
       toast.success("Update Success");
     },
@@ -80,7 +81,7 @@ export default function UserRow({
       toast.success("Delete Success");
     },
 
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
     onError: notifyGraphQLErrors,
   });
 
@@ -88,7 +89,7 @@ export default function UserRow({
     variables: { id: oc(user).id(""), type: "User" },
     onError: notifyGraphQLErrors,
     onCompleted: () => notifyInfo("Edit access requested"),
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
   });
 
   const [approveEdit, approveEditM] = useApproveRequestEditMutation({
@@ -96,7 +97,7 @@ export default function UserRow({
       toast.success("User Approved");
     },
 
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
     onError: notifyGraphQLErrors,
   });
 
@@ -105,7 +106,7 @@ export default function UserRow({
       toast.success("User Reviewed");
     },
 
-    refetchQueries: ["users"],
+    refetchQueries: ["preparerUsers", "reviewerUsersStatus"],
     onError: notifyGraphQLErrors,
   });
 
@@ -122,6 +123,7 @@ export default function UserRow({
   const requested = requestStatus === "requested";
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
+  const department = user?.department?.name || "";
   let name = user?.name || "";
 
   if (draft) {
@@ -187,6 +189,7 @@ export default function UserRow({
             .join(",")}
         </td>
         <td>{policyCategories.join(",")}</td>
+        <td>{department}</td>
         <td>
           {draft ? (
             <span className="text-orange">[Waiting for review] </span>
@@ -314,10 +317,6 @@ export default function UserRow({
         </td>
         <td>{oc(user).id("")}</td>
         <td>
-          {console.log(
-            "user?.roles?.map(toLabelValue).pop() ",
-            user?.roles?.map(toLabelValue).pop()
-          )}
           <AsyncSelect
             cacheOptions
             label="User Group"
@@ -346,10 +345,7 @@ export default function UserRow({
             defaultValue={user?.policyCategories?.map(toLabelValue) || []}
           />
         </td>
-        {console.log(
-          "(user?.department && [user.department].map(toLabelValue))",
-          user?.department && [user.department].map(toLabelValue)
-        )}
+
         <td>
           <AsyncSelect
             cacheOptions
@@ -366,30 +362,29 @@ export default function UserRow({
           />
         </td>
         <td>
-          <Button
+          <DialogButton
             loading={updateM.loading}
             className="pwc"
-            onClick={handleSubmit(handleSave)}
+            color="primary"
+            onConfirm={handleSubmit(handleSave)}
           >
             Save
-          </Button>
-          <Button
+          </DialogButton>
+          <StyledButton
             // loading={updateM.loading}
-            className="ml-1 black"
-            style={{
-              backgroundColor: "rgba(233, 236, 239, 1)",
-              color: "black",
-            }}
-            onClick={toggleEdit}
+            className="ml-1"
+            onConfirm={toggleEdit}
           >
             Cancel
-          </Button>
+          </StyledButton>
         </td>
       </tr>
     );
   }
 }
-
+export const StyledButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 const validationSchema = yup.object().shape({
   name: yup.string().required("Name is a required field"),
   policyCategoryIds: yup.array().required(),

@@ -45,6 +45,7 @@ interface ResourceFormProps {
   toggleEditMode?: any;
   isCreate?: boolean;
   history?: any;
+  setModal?: any;
   policy?: boolean;
   risksnControls?: boolean;
 }
@@ -63,6 +64,7 @@ export interface ResourceFormValues {
 
 export default function ResourceForm({
   defaultValues,
+  setModal,
   risksnControls,
   base64File,
   onSubmit,
@@ -165,6 +167,13 @@ ResourceFormProps) {
         />
       ) : (
         <Fragment>
+          <div
+            style={{ fontStyle: "italic", color: "red", fontSize: "12px" }}
+            className="mb-1"
+          >
+            Note: Please select related policies or related control
+          </div>
+
           <AsyncSelect
             name="policyIds"
             label="Related Policies*"
@@ -278,13 +287,15 @@ ResourceFormProps) {
 
       {preview && selectedCategory?.value === "Flowchart" && (
         <div>
-          <ImageTagger
-            src={preview}
-            bpId={selectedBusinessProcess?.value || ""}
-            editable
-            onTagsChanged={setTags}
-            defaultTags={defaultValues?.tagsAttributes}
-          />
+          {preview === `http://mandalorian.rubyh.coundefined` ? null : (
+            <ImageTagger
+              src={preview}
+              bpId={selectedBusinessProcess?.value || ""}
+              editable
+              onTagsChanged={setTags}
+              defaultTags={defaultValues?.tagsAttributes}
+            />
+          )}
         </div>
       )}
 
@@ -295,32 +306,39 @@ ResourceFormProps) {
           loading={submitting}
           message="Create New Resource?"
         >
-          {defaultValues?.name ? "Save" : "Submit"}
+          Submit
+          {/* {defaultValues?.name ? "Save" : "Submit"} */}
         </Button>
         {isCreate ? (
-          <DialogButton
+          <StyledDialogButton
             className="black px-5 ml-2"
             style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
-            onConfirm={() => history.replace(`/resources`)}
+            onConfirm={
+              setModal
+                ? () => setModal(false)
+                : () => history.replace(`/resources`)
+            }
             isCreate
           >
             Cancel
-          </DialogButton>
+          </StyledDialogButton>
         ) : (
-          <DialogButton
+          <StyledDialogButton
             className="black px-5 ml-2"
             style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
-            onConfirm={toggleEditMode}
+            onConfirm={setModal ? () => setModal(false) : toggleEditMode}
             isEdit
           >
             Cancel
-          </DialogButton>
+          </StyledDialogButton>
         )}
       </div>
     </Form>
   );
 }
-
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 // ==========================================
 // Form Validation
 // ==========================================

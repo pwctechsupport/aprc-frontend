@@ -26,9 +26,11 @@ import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
+import styled from "styled-components";
 
 const ControlForm = ({
   onSubmit,
+  setModal,
   defaultValues,
   submitting,
   toggleEditMode,
@@ -36,7 +38,6 @@ const ControlForm = ({
   isDraft,
   isCreate,
 }: ControlFormProps) => {
-  console.log("defaultValues", defaultValues);
   const { register, handleSubmit, setValue, errors } = useForm<
     CreateControlFormValues
   >({ validationSchema, defaultValues });
@@ -55,7 +56,6 @@ const ControlForm = ({
   const bpOptions = oc(bpsQ)
     .data.navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
-  console.log("bpOptions", bpOptions);
   const departments = useDepartmentsQuery();
   const controlOwnerOptions = oc(departments)
     .data.departments.collection([])
@@ -65,7 +65,6 @@ const ControlForm = ({
   const riskOptions = oc(risksQ)
     .data.navigatorRisks.collection([])
     .map((risk) => ({ label: risk.name || "", value: risk.id }));
-  console.log("riskOptions", riskOptions);
 
   useEffect(() => {
     register({ name: "frequency" });
@@ -172,23 +171,25 @@ const ControlForm = ({
             Submit
           </DialogButton>
           {isCreate ? (
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2 mb-3"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
-              onConfirm={() => history.replace(`/control`)}
+              onConfirm={
+                setModal
+                  ? () => setModal(false)
+                  : () => history.replace(`/control`)
+              }
               isCreate
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           ) : (
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2 mb-3"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
-              onConfirm={toggleEditMode}
+              onConfirm={setModal ? () => setModal(false) : toggleEditMode}
               isEdit
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           )}
         </div>
       );
@@ -248,7 +249,8 @@ const ControlForm = ({
         <FormSelect
           isMulti
           name="businessProcessIds"
-          label="Business Processes"
+          label="Business Processes*"
+          placeholder="Business Processes"
           isLoading={bpsQ.loading}
           register={register}
           setValue={setValue}
@@ -259,6 +261,9 @@ const ControlForm = ({
               .businessProcessIds([])
               .includes(res.value)
           )}
+          error={
+            errors.businessProcessIds && "Business Process is a required field"
+          }
         />
 
         <Select
@@ -354,9 +359,9 @@ const ControlForm = ({
                 <tr key={"Row" + activity.id}>
                   <td>{activity.activity}</td>
                   <td>
-                    {activity.guidance
-                      ? activity.guidance
-                      : activity.resuploadFileName}
+                    {activity.resuploadFileName
+                      ? activity.resuploadFileName?.toString()
+                      : activity.guidance}
                   </td>
                   <td className="action">
                     <Button
@@ -454,6 +459,7 @@ const ActivityModalForm = ({
     onSubmit({
       activity: values.activity,
       resupload: values.resupload,
+      guidance: values.guidance || "",
       resuploadFileName: values.resuploadFileName,
     });
   };
@@ -577,12 +583,17 @@ const assertions = Object.entries(Assertion).map(([label, value]) => {
   }
 });
 
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
+
 // -------------------------------------------------------------------------
 // Type Definitions
 // -------------------------------------------------------------------------
 
 export interface ControlFormProps {
   defaultValues?: ControlFormValues;
+  setModal?: any;
   onSubmit?: (val: CreateControlFormValues) => void;
   submitting?: boolean;
   isDraft?: boolean;
@@ -647,6 +658,7 @@ const validationSchema = yup.object().shape({
   assertion: yup.array().required(),
   nature: yup.string().required(),
   controlOwner: yup.array().required(),
+  businessProcessIds: yup.array().required(),
 });
 
 const validationSchemaControlActivity = yup.object().shape({

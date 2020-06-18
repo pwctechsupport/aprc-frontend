@@ -124,17 +124,17 @@ export default function BusinessProcess({
       ) : (
         <div className="d-flex justify-content-between align-items-center mt-3">
           <h4>{name}</h4>
-          {isAdmin || isAdminReviewer || isAdminPreparer ? (
-            <div>
-              {(isAdmin || isAdminPreparer )?
-                <Button
+          <div>
+            {isAdmin || isAdminPreparer ? (
+              <Button
                 onClick={toggleEdit}
                 className="soft orange mr-3"
                 color=""
-                >
-                  <FaPencilAlt />
-                </Button>
-              :null}
+              >
+                <FaPencilAlt />
+              </Button>
+            ) : null}
+            {isAdminReviewer ? (
               <DialogButton
                 onConfirm={() => handleDeleteMain(id)}
                 loading={destroyMainM.loading}
@@ -143,8 +143,8 @@ export default function BusinessProcess({
               >
                 <FaTrash />
               </DialogButton>
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
       )}
       <h6>ID: {id}</h6>
@@ -154,7 +154,7 @@ export default function BusinessProcess({
         </div>
       ) : null}
 
-      <Table reloading={loading} className='mt-5'>
+      <Table reloading={loading} className="mt-5">
         <thead>
           <tr>
             <th>Business Process</th>
@@ -172,7 +172,7 @@ export default function BusinessProcess({
                 >
                   <td>{child.name}</td>
                   <td>{child.id}</td>
-                  {isAdmin || isAdminReviewer || isAdminPreparer ? (
+                  {isAdmin || isAdminReviewer ? (
                     <td className="action">
                       <DialogButton
                         onConfirm={() => handleDelete(child.id)}

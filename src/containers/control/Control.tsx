@@ -1,12 +1,12 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
   AiOutlineEdit,
 } from "react-icons/ai";
-import { FaExclamationCircle, FaTrash } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 import { IoMdOpen } from "react-icons/io";
 import { RouteComponentProps } from "react-router";
 import { Col, Row } from "reactstrap";
@@ -17,10 +17,10 @@ import {
   useApproveRequestEditMutation,
   useControlQuery,
   useCreateRequestEditMutation,
-  useDestroyControlMutation,
   useReviewControlDraftMutation,
   useUpdateControlMutation,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
@@ -53,7 +53,6 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     fetchPolicy: "network-only",
     variables: { id },
   });
-
   const draft = data?.control?.draft?.objectResult;
   const hasEditAccess = data?.control?.hasEditAccess || false;
   const requestStatus = data?.control?.requestStatus;
@@ -101,15 +100,15 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   }
 
   // Delete handlers
-  const [destoryControl, destoryControlInfo] = useDestroyControlMutation({
-    onCompleted: () => {
-      notifySuccess("Delete Success");
-      history.push("/control");
-    },
-    onError: notifyGraphQLErrors,
-    refetchQueries: ["controls", "adminControls", "reviewerControlsStatus"],
-    awaitRefetchQueries: true,
-  });
+  // const [destoryControl, destoryControlInfo] = useDestroyControlMutation({
+  //   onCompleted: () => {
+  //     notifySuccess("Delete Success");
+  //     history.push("/control");
+  //   },
+  //   onError: notifyGraphQLErrors,
+  //   refetchQueries: ["controls", "adminControls", "reviewerControlsStatus"],
+  //   awaitRefetchQueries: true,
+  // });
 
   // Request Edit handlers
   const [
@@ -149,28 +148,52 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
   if (loading) return <LoadingSpinner centered size={30} />;
 
-  const description = data?.control?.description || "";
-  const updatedAt = data?.control?.updatedAt
-    ? data?.control?.updatedAt.split(" ")[0]
-    : "";
-  const lastUpdatedBy = data?.control?.lastUpdatedBy || "";
-  const createdBy = data?.control?.createdBy || "";
+  const description = draft
+    ? get(data, "control.draft.objectResult.description", "")
+    : data?.control?.description || "";
+  const updatedAt = draft
+    ? get(data, "control.draft.objectResult.updatedAt", "")
+    : data?.control?.updatedAt?.split(" ")[0] || "";
+
+  const lastUpdatedBy = draft
+    ? get(data, "control.draft.objectResult.lastUpdatedBy", "")
+    : data?.control?.lastUpdatedBy || "";
+  const createdBy = draft
+    ? get(data, "control.draft.objectResult.createdBy", "")
+    : data?.control?.createdBy || "";
   const controlOwnerId = data?.control?.departments?.map((a) => a.id) || [];
-  const assertion = data?.control?.assertion || [];
-  const frequency = data?.control?.frequency || "";
-  const ipo = data?.control?.ipo || [];
-  const nature = data?.control?.nature || "";
-  const typeOfControl = data?.control?.typeOfControl || "";
-  const status = data?.control?.status || "";
-  const keyControl = data?.control?.keyControl || false;
+  const assertion = draft
+    ? get(data, "control.draft.objectResult.assertion", [])
+    : data?.control?.assertion || [];
+  const frequency = draft
+    ? get(data, "control.draft.objectResult.frequency", "")
+    : data?.control?.frequency || "";
+  const ipo = draft
+    ? get(data, "control.draft.objectResult.ipo", [])
+    : data?.control?.ipo || [];
+  const nature = draft
+    ? get(data, "control.draft.objectResult.nature", "")
+    : data?.control?.nature || "";
+  const typeOfControl = draft
+    ? get(data, "control.draft.objectResult.typeOfControl", "")
+    : data?.control?.typeOfControl || "";
+  // const status = draft
+  //   ? get(data, "control.draft.objectResult.status", "")
+  //   : data?.control?.status || "";
+  const keyControl = draft
+    ? get(data, "control.draft.objectResult.keyControl", false)
+    : data?.control?.keyControl || false;
   const risks = data?.control?.risks || [];
   const riskIds = risks.map((a) => a.id);
   const businessProcesses = data?.control?.businessProcesses || [];
   const businessProcessIds = businessProcesses.map((bp) => bp.id);
   const activityControls = data?.control?.activityControls || [];
-  const createdAt = data?.control?.createdAt || "";
-  const departments = data?.control?.departments || [];
-
+  const createdAt = draft
+    ? get(data, "control.draft.objectResult.createdAt", "")
+    : data?.control?.createdAt || "";
+  const controlOwners = draft
+    ? get(data, "control.draft.objectResult.controlOwner", "")
+    : data?.control?.controlOwner || "";
   const filteredNames = (names: any) =>
     names.filter((v: any, i: any) => names.indexOf(v) === i);
   const renderControlAction = () => {
@@ -223,20 +246,20 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       if (inEditMode) {
         return null;
         // <Button onClick={toggleEditMode} color="">
-        //   <FaTimes size={22} className="mr-2" />
-        //   Cancel Edit
+        // <FaTimes size={22} className="mr-2" />
+        // Cancel Edit
         // </Button>
       }
       return (
         <div className="d-flex">
-          <DialogButton
+          {/* <DialogButton
             onConfirm={() => destoryControl({ variables: { id } })}
             loading={destoryControlInfo.loading}
             message={`Delete Control "${description}"?`}
             className="soft red mr-2"
           >
             <FaTrash />
-          </DialogButton>
+          </DialogButton> */}
           <Tooltip description="Edit Control">
             <Button onClick={toggleEditMode} color="" className="soft orange">
               <AiFillEdit />
@@ -277,7 +300,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
       {
         label: "Control Owner",
-        value: departments.map((a: any) => a.name).join(", "),
+        value: controlOwners,
       },
       {
         label: "Key Control",
@@ -288,14 +311,14 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
-        value: assertion.map((x) => capitalCase(x)).join(", "),
+        value: assertion.map((x: any) => capitalCase(x)).join(", "),
       },
       {
         label: "IPO",
-        value: ipo.map((x) => capitalCase(x)).join(", "),
+        value: ipo.map((x: any) => capitalCase(x)).join(", "),
       },
       { label: "Frequency", value: capitalCase(frequency) },
-      { label: "Status", value: capitalCase(status) },
+      // { label: "Status", value: capitalCase(status) },
       { label: "Last Updated", value: updatedAt },
       { label: "Last Updated By", value: lastUpdatedBy },
       { label: "Created At", value: createdAt.split(" ")[0] },
@@ -311,6 +334,22 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                 <dd>{item.value || "-"}</dd>
               </Fragment>
             ))}
+            <dt>Risks</dt>
+            {risks.length ? (
+              filteredNames(risks).map((risk: any) => (
+                <dd key={risk.id}>{risk.name}</dd>
+              ))
+            ) : (
+              <EmptyAttribute />
+            )}
+            <dt>Business Processes</dt>
+            {businessProcesses.length ? (
+              filteredNames(businessProcesses).map((bp: any) => (
+                <dd key={bp.id}>{bp.name}</dd>
+              ))
+            ) : (
+              <EmptyAttribute />
+            )}
           </dl>
         </Col>
         <Col xs={6}>
@@ -326,40 +365,27 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
           </dl>
         </Col>
 
-        <Col xs={12} className="mt-3">
-          <h5>Risks</h5>
-          {risks.length ? (
-            filteredNames(risks).map((risk: any) => (
-              <p key={risk.id}>{risk.name}</p>
-            ))
-          ) : (
-            <EmptyAttribute />
-          )}
-          <h5 className="mt-2">Business Processes</h5>
-          {businessProcesses.length ? (
-            filteredNames(businessProcesses).map((bp: any) => (
-              <p key={bp.id}>{bp.name}</p>
-            ))
-          ) : (
-            <EmptyAttribute />
-          )}
-        </Col>
-
         {activityControls.length > 0 ? (
           <Col xs={7} className="mt-2">
-            <h5>Control Activities</h5>
+            <dt className="mb-1">Control Activities</dt>
             <Table>
               <thead>
                 <tr>
-                  <th>Control Activity</th>
-                  <th>Guidance</th>
+                  <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                    Control Activity
+                  </th>
+                  <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                    Guidance
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {activityControls.map((activity) => (
                   <tr key={"Row" + activity.id}>
-                    <td>{activity.activity}</td>
-                    <td>
+                    <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                      {activity.activity}
+                    </td>
+                    <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                       {activity.guidance ? (
                         activity.guidance
                       ) : (

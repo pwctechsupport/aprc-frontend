@@ -1,6 +1,10 @@
 @font-face {
+  font-family: "Helvetica";
+  src: local("Helvetica"),
+    url(./assets/fonts/helvetica/helvetica.ttf) format("truetype");
+}
+@font-face {
   font-family: "Georgia";
-
   src: local("Georgia"),
     url(./assets/fonts/georgia/georgia.ttf) format("truetype");
 }
@@ -69,16 +73,16 @@
 }
 body {
   margin: 0;
-  font-family: Georgia, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif !important;
+  font-family: Helvetica, "Times New Roman", Times, serif, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --primary-color: #f56409;
   --pale-primary-color: #fccfb8;
   --soft-orange: #fff4ed;
-
   --primary-grey: #cecece;
+  --soft-grey: rgba(233, 236, 239, 0.8);
   --darker-grey: #808080;
 }
 .tox-notifications-container {

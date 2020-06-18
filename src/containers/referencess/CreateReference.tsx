@@ -17,6 +17,7 @@ import BreadCrumb from "../../shared/components/BreadCrumb";
 // import Button from "../../shared/components/Button";
 import { RouteComponentProps } from "react-router-dom";
 import DialogButton from "../../shared/components/DialogButton";
+import styled from "styled-components";
 
 function useLoadPolicies() {
   const query = useLazyQueryReturnPromise<PoliciesQuery>(PoliciesDocument);
@@ -112,14 +113,13 @@ const CreateReference = ({ history }: RouteComponentProps) => {
             >
               Submit
             </DialogButton>
-            <DialogButton
+            <StyledDialogButton
               className="black px-5 ml-2"
-              style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={() => history.replace(`/references`)}
               isCreate
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           </Col>
         </Row>
       </Form>
@@ -128,7 +128,9 @@ const CreateReference = ({ history }: RouteComponentProps) => {
 };
 
 export default CreateReference;
-
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 interface CreateReferenceFormValues {
   name: string;
   policyIds: any;

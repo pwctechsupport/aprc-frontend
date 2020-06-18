@@ -22,6 +22,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Risk Without Control",
@@ -30,14 +31,16 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Control Without Risk",
     id: "report_control_policy",
     formats: [
-      { id: "pdf", name: "PDF" },
-      { id: "xlsx", name: "Excel" },
+      { id: "jangan masuk", name: "PDF" },
+      { id: "jangan masuk", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Resources with rating",
@@ -46,6 +49,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Unmapped Risk",
@@ -54,6 +58,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
   {
     name: "Unmapped Control",
@@ -62,6 +67,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
+    description: "",
   },
 ];
 
@@ -115,6 +121,9 @@ export default function Report() {
     ) {
       notifyError("Select PDF format to preview");
     }
+    if (values.report_control_policy === "jangan masuk") {
+      notifyError("cant preview or download Control Without Risk");
+    }
     if (
       (values.report_control_policy === "pdf" ||
         values.report_resource_rating === "pdf" ||
@@ -139,10 +148,22 @@ export default function Report() {
   }
 
   async function handleDownload(values: ReportFormValues) {
-    notifyInfo("Preparing file to download");
-    setDownloading(true);
-    await downloadPdfs(constructDataFromForm(values));
-    setDownloading(false);
+    if (
+      values.report_control_policy === "jangan masuk" ||
+      (values.report_control_policy === "" &&
+        values.report_resource_rating === "" &&
+        values.report_risk === "" &&
+        values.report_risk_policy === "" &&
+        values.unmapped_control === "" &&
+        values.unmapped_risk === "")
+    ) {
+      notifyError("cant preview or download Control Without Risk");
+    } else {
+      notifyInfo("Preparing file to download");
+      setDownloading(true);
+      await downloadPdfs(constructDataFromForm(values));
+      setDownloading(false);
+    }
   }
   const reportRisk = watch("report_risk");
   const reportRiskPolicy = watch("report_risk_policy");
@@ -171,8 +192,7 @@ export default function Report() {
                 <tr key={option.id}>
                   <td>{index + 1}</td>
                   <td>{capitalize(option.name)}</td>
-                  <td>-</td>
-
+                  <td>{option.description || "-"}</td>
                   <td>
                     <FormGroup tag="fieldset">
                       {option.formats.map((format) => (

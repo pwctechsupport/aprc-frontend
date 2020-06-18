@@ -93,19 +93,30 @@ export default function HomepageSearch({
             placeholder={placeholder}
             onClick={handleInputClick}
           />
-          <ToggleButton
-            {...getToggleButtonProps()}
-            ref={undefined}
-            aria-label={"toggle menu"}
-            size={20}
-          />
+          {navBar ? null : (
+            <ToggleButton
+              {...getToggleButtonProps()}
+              ref={undefined}
+              aria-label={"toggle menu"}
+              size={20}
+            />
+          )}
           {navBar ? (
             <Link
               to={`${
                 isUser ? "/search-policy?status_eq=release" : "/search-policy"
               }`}
             >
-              <StyledButton className="pwc">Full Search</StyledButton>
+              <StyledButton>
+                <FaSearch
+                  style={{
+                    position: "relative",
+                    marginRight: "5px",
+                    bottom: "3px",
+                  }}
+                />
+                Full Search
+              </StyledButton>
             </Link>
           ) : null}
         </InputWrapper>
@@ -204,7 +215,7 @@ const StyledButton = styled(Button)`
   font-size: 14px;
   padding-bottom: 9px;
   position: absolute;
-  width: 100px;
+  /* width: 115px; */
   right: -105px;
   top: 0px;
   color: white;

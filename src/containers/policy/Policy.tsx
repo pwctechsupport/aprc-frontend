@@ -129,7 +129,6 @@ export default function Policy({
     fetchPolicy: "network-only",
     pollInterval: 30000,
   });
-  console.log("data", data);
   const referenceData = useReferencesQuery({
     fetchPolicy: "network-only",
     variables: { filter: { policies_id_matches_any: id } },
@@ -416,7 +415,7 @@ export default function Policy({
     fetchPolicy: "network-only",
   });
   const resourceName = dataResource?.resource?.name || "";
-
+  const draftRes = dataResource?.resource?.draft;
   const renderResourceDetails = () => {
     const totalRating = dataResource?.resource?.totalRating || 0;
     const visit = dataResource?.resource?.visit || 0;
@@ -529,7 +528,7 @@ export default function Policy({
     fetchPolicy: "network-only",
   });
   const riskName = dataRisk?.risk?.name || "";
-
+  const draftRisk = dataRisk?.risk?.draft;
   const renderRiskDetails = () => {
     const levelOfRisk = dataRisk?.risk?.levelOfRisk || "";
     const typeOfRisk = dataRisk?.risk?.typeOfRisk || "";
@@ -537,7 +536,6 @@ export default function Policy({
     const updatedAt = dataRisk?.risk?.updatedAt;
     const updatedBy = dataRisk?.risk?.lastUpdatedBy;
     const createdBy = dataRisk?.risk?.createdBy;
-    const status = dataRisk?.risk?.status;
     const createdAt = dataRisk?.risk?.createdAt;
 
     const details1 = [
@@ -579,7 +577,7 @@ export default function Policy({
       },
       {
         label: "Status",
-        value: status,
+        value: draftRisk ? "Waiting for review" : "Release",
       },
     ];
     return (
@@ -626,7 +624,7 @@ export default function Policy({
     variables: { id: controlId },
   });
   const descriptionControl = dataControl?.control?.description || "";
-
+  const draftControl = dataControl?.control?.draft;
   const renderControlDetails = () => {
     const updatedAt = dataControl?.control?.updatedAt
       ? dataControl?.control?.updatedAt.split(" ")[0]
@@ -637,7 +635,6 @@ export default function Policy({
     const frequency = dataControl?.control?.frequency || "";
     const ipo = dataControl?.control?.ipo || [];
     const typeOfControl = dataControl?.control?.typeOfControl || "";
-    const status = dataControl?.control?.status || "";
     const keyControl = dataControl?.control?.keyControl || false;
     const risks = dataControl?.control?.risks || [];
     const businessProcesses = dataControl?.control?.businessProcesses || [];
@@ -670,7 +667,10 @@ export default function Policy({
         value: ipo.map((x) => capitalCase(x)).join(", "),
       },
       { label: "Frequency", value: capitalCase(frequency) },
-      { label: "Status", value: capitalCase(status) },
+      {
+        label: "Status",
+        value: `${draftControl ? "Waiting for review" : "Release"}`,
+      },
       { label: "Last Updated", value: updatedAt },
       { label: "Last Updated By", value: lastUpdatedBy },
       { label: "Created At", value: createdAt.split(" ")[0] },
@@ -690,6 +690,22 @@ export default function Policy({
                     <dd>{item.value || "-"}</dd>
                   </Fragment>
                 ))}
+                <dt>Risks</dt>
+                {risks.length ? (
+                  filteredNames(risks).map((risk: any) => (
+                    <dd key={risk.id}>{risk.name}</dd>
+                  ))
+                ) : (
+                  <EmptyAttribute />
+                )}
+                <dt>Business Processes</dt>
+                {businessProcesses.length ? (
+                  filteredNames(businessProcesses).map((bp: any) => (
+                    <dd key={bp.id}>{bp.name}</dd>
+                  ))
+                ) : (
+                  <EmptyAttribute />
+                )}
               </dl>
             </Col>
             <Col xs={6}>
@@ -705,40 +721,27 @@ export default function Policy({
               </dl>
             </Col>
 
-            <Col xs={12} className="mt-3">
-              <h5>Risks</h5>
-              {risks.length ? (
-                filteredNames(risks).map((risk: any) => (
-                  <p key={risk.id}>{risk.name}</p>
-                ))
-              ) : (
-                <EmptyAttribute />
-              )}
-              <h5 className="mt-2">Business Processes</h5>
-              {businessProcesses.length ? (
-                filteredNames(businessProcesses).map((bp: any) => (
-                  <p key={bp.id}>{bp.name}</p>
-                ))
-              ) : (
-                <EmptyAttribute />
-              )}
-            </Col>
-
             {activityControls.length > 0 ? (
               <Col xs={7} className="mt-2">
-                <h5>Control Activities</h5>
+                <dt className="mb-1">Control Activities</dt>
                 <Table>
                   <thead>
                     <tr>
-                      <th>Control Activity</th>
-                      <th>Guidance</th>
+                      <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                        Control Activity
+                      </th>
+                      <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                        Guidance
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {activityControls.map((activity) => (
                       <tr key={"Row" + activity.id}>
-                        <td>{activity.activity}</td>
-                        <td>
+                        <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                          {activity.activity}
+                        </td>
+                        <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                           {activity.guidance ? (
                             activity.guidance
                           ) : (
@@ -1394,8 +1397,20 @@ export default function Policy({
       <Row className="d-flex justify-content-between">
         <Col>
           <HeaderWithBackButton
-            draft={!!draft}
-            policy
+            draft={
+              currentUrl.includes("resources/")
+                ? !!draftRes
+                : currentUrl.includes("/risk/")
+                ? !!draftRisk
+                : currentUrl.includes("/control/")
+                ? !!draftControl
+                : !!draft
+            }
+            policy={
+              !currentUrl.includes("/control/") &&
+              !currentUrl.includes("/risk/") &&
+              !currentUrl.includes("resources/")
+            }
             review={
               isSubmitted ||
               (draft && isSubmitted && (isAdminReviewer || isAdmin)) ||

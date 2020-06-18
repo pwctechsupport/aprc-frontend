@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ import Button from "../../shared/components/Button";
 import Input from "../../shared/components/forms/Input";
 import { useSelector } from "../../shared/hooks/useSelector";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import { toast } from "react-toastify";
 
 export default function UpdateProfile() {
   const user = useSelector((state) => state.auth.user);
@@ -63,11 +64,13 @@ export default function UpdateProfile() {
       <Helmet>
         <title>Profile - Settings - PricewaterhouseCoopers</title>
       </Helmet>
-      <UpdateProfileForm
-        onSubmit={updateProfile}
-        submitting={loading}
-        defaultValues={defaultValues}
-      />
+      <div className="mt-5">
+        <UpdateProfileForm
+          onSubmit={updateProfile}
+          submitting={loading}
+          defaultValues={defaultValues}
+        />
+      </div>
       <UpdatePasswordForm
         onSubmit={updateUserPassword}
         submitting={updateUserPasswordMutInfo.loading}
@@ -124,6 +127,14 @@ const UpdateProfileForm = ({
       />
       <Input
         name="phone"
+        onKeyDown={(e) =>
+          (e.keyCode === 69 ||
+            e.keyCode === 188 ||
+            e.keyCode === 190 ||
+            e.keyCode === 38 ||
+            e.keyCode === 40) &&
+          e.preventDefault()
+        }
         type="number"
         label="Phone number"
         innerRef={register({ required: true })}
@@ -161,15 +172,45 @@ const UpdatePasswordForm = ({
   onSubmit,
   submitting,
 }: UpdatePasswordFormProps) => {
-  const { register, handleSubmit, errors, reset } = useForm<
+  const { register, handleSubmit, errors, reset, watch } = useForm<
     UpdatePasswordFormValues
   >();
+  const checkPassword = watch("password")?.split("") || [""];
+  console.log("checkPassword", checkPassword);
+  const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
+  const numbers = "1234567890".split("");
+
+  const noLowerCasePassword = checkPassword
+    ?.map((a) => lowerCaseWords.includes(a))
+    .every((a) => a === false);
+
+  const noCapitalPassword = checkPassword
+    ?.map((a) => capitalWords.includes(a))
+    .every((a) => a === false);
+
+  const noNumberPassword = checkPassword
+    ?.map((a) => numbers.includes(a))
+    .every((a) => a === false);
+
+  const falsePasswordLength = (checkPassword?.length || 0) < 8;
+
+  const validatePassword =
+    noLowerCasePassword ||
+    noCapitalPassword ||
+    noNumberPassword ||
+    falsePasswordLength;
+  console.log("noCapitalPassword", noCapitalPassword);
   const submit = (data: UpdatePasswordFormValues) => {
-    onSubmit(data);
-    reset({
-      password: "",
-      passwordConfirmation: "",
-    });
+    if (!validatePassword) {
+      onSubmit(data);
+      reset({
+        password: "",
+        passwordConfirmation: "",
+      });
+    } else {
+      toast.error("Password doesn't fullfill requirement(s)");
+    }
   };
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -189,7 +230,28 @@ const UpdatePasswordForm = ({
         innerRef={register({ required: true })}
         error={errors.password?.message}
         required
-      />
+      />{" "}
+      {validatePassword && (
+        <Fragment>
+          <h6 style={{ fontSize: "14px", color: "red" }}>
+            Password requirements:
+          </h6>
+          <ul>
+            {falsePasswordLength && (
+              <li style={{ color: "red" }}>At least 8 characters</li>
+            )}
+            {noCapitalPassword && (
+              <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
+            )}
+            {noLowerCasePassword && (
+              <li style={{ color: "red" }}>Lowercase characters (a - z)</li>
+            )}
+            {noNumberPassword && (
+              <li style={{ color: "red" }}>Numbers (0 - 9)</li>
+            )}
+          </ul>
+        </Fragment>
+      )}
       <Input
         name="passwordConfirmation"
         label="New Password Confirmation"

@@ -1,25 +1,27 @@
 import get from "lodash/get";
-import React, { useState, Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import {
   AiFillEdit,
   AiOutlineClockCircle,
   AiOutlineEdit,
 } from "react-icons/ai";
-import { FaExclamationCircle, FaTrash } from "react-icons/fa";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { FaExclamationCircle } from "react-icons/fa";
+import { Link, RouteComponentProps } from "react-router-dom";
 import {
   useApproveRequestEditMutation,
   useCreateRequestEditMutation,
-  useDestroyPolicyCategoryMutation,
   usePolicyCategoryQuery,
   useReviewPolicyCategoryDraftMutation,
   useUpdatePolicyCategoryMutation,
 } from "../../generated/graphql";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Tooltip from "../../shared/components/Tooltip";
+import { toLabelValue } from "../../shared/formatter";
 import useEditState from "../../shared/hooks/useEditState";
 import {
   notifyGraphQLErrors,
@@ -29,9 +31,6 @@ import {
 import PolicyCategoryForm, {
   PolicyCategoryFormValues,
 } from "./components/PolicyCategoryForm";
-import BreadCrumb from "../../shared/components/BreadCrumb";
-import HeaderWithBackButton from "../../shared/components/Header";
-import { toLabelValue } from "../../shared/formatter";
 
 const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -51,8 +50,6 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   });
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const createdBy = data?.policyCategory?.createdBy;
-  const relatedPolicies =
-    data?.policyCategory?.policies?.map(toLabelValue) || [];
   const draft = data?.policyCategory?.draft?.objectResult;
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
@@ -84,18 +81,18 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   }
 
   // Delete handlers
-  const [deleteMutation, deleteInfo] = useDestroyPolicyCategoryMutation({
-    onCompleted: () => {
-      notifySuccess("Policy Category Deleted");
-      history.push("/policy-category");
-    },
-    onError: notifyGraphQLErrors,
-    awaitRefetchQueries: true,
-    refetchQueries: ["policyCategory"],
-  });
-  function handleDelete() {
-    deleteMutation({ variables: { id } });
-  }
+  // const [deleteMutation, deleteInfo] = useDestroyPolicyCategoryMutation({
+  //   onCompleted: () => {
+  //     notifySuccess("Policy Category Deleted");
+  //     history.push("/policy-category");
+  //   },
+  //   onError: notifyGraphQLErrors,
+  //   awaitRefetchQueries: true,
+  //   refetchQueries: ["policyCategory"],
+  // });
+  // function handleDelete() {
+  //   deleteMutation({ variables: { id } });
+  // }
 
   // Review handlers
   const [
@@ -156,10 +153,17 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   let name = data?.policyCategory?.name || "";
   // name = draft ? `[Draft] ${name}` : name;
   const policies = data?.policyCategory?.policies || [];
+  const policiesReal = data?.policyCategory?.policy || [];
 
+  const modifiedPolicies = policies?.filter((jay) =>
+    policiesReal?.includes(jay.title || "")
+  );
+  const dsa = policies
+    ?.filter((jay) => policiesReal?.includes(jay.title || ""))
+    .map(toLabelValue);
   const defaultValues = {
     name,
-    policies: relatedPolicies,
+    policies: dsa,
   };
 
   const renderPolicyCategoryAction = () => {
@@ -212,20 +216,20 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       if (inEditMode) {
         return null;
         // <Button onClick={toggleEditMode} color="">
-        //   <FaTimes size={22} className="mr-2" />
-        //   Cancel Edit
+        // <FaTimes size={22} className="mr-2" />
+        // Cancel Edit
         // </Button>
       }
       return (
         <div className="d-flex">
-          <DialogButton
+          {/* <DialogButton
             onConfirm={handleDelete}
             loading={deleteInfo.loading}
             message={`Delete Policy Category "${name}"?`}
             className="soft red mr-2"
           >
             <FaTrash />
-          </DialogButton>
+          </DialogButton> */}
           <Tooltip description="Edit Policy Category">
             <Button onClick={toggleEditMode} color="" className="soft orange">
               <AiFillEdit />
@@ -274,7 +278,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
         <Fragment>
           <dt>Related Policies</dt>
           <ul>
-            {policies.map((policy) => (
+            {modifiedPolicies.map((policy) => (
               <li key={policy.id}>
                 <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
               </li>

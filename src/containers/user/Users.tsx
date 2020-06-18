@@ -6,12 +6,16 @@ import Input from "../../shared/components/forms/Input";
 import Table from "../../shared/components/Table";
 import UserRow from "./components/UserRow";
 import { NavLink } from "react-router-dom";
-import { useUsersQuery } from "../../generated/graphql";
+import {
+  usePreparerUsersQuery,
+  useReviewerUsersStatusQuery,
+} from "../../generated/graphql";
 import { NetworkStatus } from "apollo-boost";
-import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Tooltip from "../../shared/components/Tooltip";
+import useListState from "../../shared/hooks/useList";
+import Pagination from "../../shared/components/Pagination";
 
 const Users = () => {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
@@ -22,15 +26,48 @@ const Users = () => {
   const admins = isAdmin || isAdminPreparer || isAdminReviewer;
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
-  const { data, networkStatus } = useUsersQuery({
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
+
+  const { data, networkStatus } = usePreparerUsersQuery({
+    skip: isAdminReviewer,
     variables: {
       filter: {
         name_or_draft_object_cont: debouncedSearch,
       },
+      limit,
+      page,
     },
     fetchPolicy: "no-cache",
   });
-
+  const magicOfSort = data?.preparerUsers?.collection.sort((a, b) =>
+    b.name && a.name
+      ? a.name.toLowerCase() > b.name.toLowerCase()
+        ? 1
+        : b.name.toLowerCase() > a.name.toLowerCase()
+        ? -1
+        : 0
+      : 0
+  );
+  const {
+    data: dataReviewer,
+    networkStatus: networkStatusreviewer,
+  } = useReviewerUsersStatusQuery({
+    skip: isAdminPreparer || isAdmin,
+    variables: {
+      filter: {
+        name_or_draft_object_cont: debouncedSearch,
+      },
+      limit,
+      page,
+    },
+    fetchPolicy: "no-cache",
+  });
+  const totalCount =
+    data?.preparerUsers?.metadata.totalCount ||
+    dataReviewer?.reviewerUsersStatus?.metadata.totalCount ||
+    0;
+  const userData =
+    magicOfSort || dataReviewer?.reviewerUsersStatus?.collection || [];
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearch(e.target.value);
   }
@@ -67,8 +104,14 @@ const Users = () => {
 
         <div className="table-responsive">
           <Table
-            loading={networkStatus === NetworkStatus.loading}
-            reloading={networkStatus === NetworkStatus.setVariables}
+            loading={
+              networkStatus === NetworkStatus.loading ||
+              networkStatusreviewer === NetworkStatus.loading
+            }
+            reloading={
+              networkStatus === NetworkStatus.setVariables ||
+              networkStatusreviewer === NetworkStatus.setVariables
+            }
           >
             <thead>
               <tr>
@@ -82,7 +125,10 @@ const Users = () => {
                 <th style={admins ? { width: "17%" } : { width: "17%" }}>
                   Policy Category
                 </th>
-                <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
+                <th style={admins ? { width: "10%" } : { width: "14.2%" }}>
+                  Department
+                </th>
+                <th style={admins ? { width: "10%" } : { width: "14.2%" }}>
                   Status
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
@@ -96,19 +142,22 @@ const Users = () => {
               </tr>
             </thead>
             <tbody>
-              {oc(data)
-                .users.collection([])
-                .map((user) => {
-                  return (
-                    <UserRow
-                      key={user.id}
-                      user={user}
-                      policyCategories={user.policyCategory}
-                    />
-                  );
-                })}
+              {userData.map((user) => {
+                return (
+                  <UserRow
+                    key={user.id}
+                    user={user}
+                    policyCategories={user.policyCategory}
+                  />
+                );
+              })}
             </tbody>
           </Table>
+          <Pagination
+            totalCount={totalCount}
+            perPage={limit}
+            onPageChange={handlePageChange}
+          />
         </div>
       </Container>
     </div>

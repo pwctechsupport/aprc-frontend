@@ -44,6 +44,12 @@ query adminPolicyCategories(
         title
       }
     }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
   }
 }
 query reviewerPolicyCategoriesStatus(
@@ -67,6 +73,12 @@ query reviewerPolicyCategoriesStatus(
         id
         title
       }
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
     }
   }
 }
@@ -92,6 +104,7 @@ query policyCategory($id: ID!) {
           name
           id
           updatedAt
+          policy
         }
       }
     }

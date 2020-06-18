@@ -56,9 +56,17 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
             title_cont: searchQuery,
             status_eq: "release",
           }
+        : isAdminPreparer
+        ? {
+            ...(!searchQuery && {
+              ancestry_null: true,
+            }),
+            title_cont: searchQuery,
+          }
         : {
             ...(!searchQuery && {
               ancestry_null: true,
+              status_not_eq: "draft",
             }),
             title_cont: searchQuery,
           },
@@ -163,6 +171,17 @@ const PolicyBranch = ({
   status,
   isAdmin,
 }: PolicyBranchProps) => {
+  const modifiedChildren =
+    children &&
+    children.sort((a, b) =>
+      b.title && a.title
+        ? a.title.toLowerCase() > b.title.toLowerCase()
+          ? 1
+          : b.title.toLowerCase() > a.title.toLowerCase()
+          ? -1
+          : 0
+        : 0
+    );
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const isActive = id === activeId;
@@ -214,7 +233,7 @@ const PolicyBranch = ({
             </SideBoxBranch>
             {hasChild && (
               <Collapse isOpen={isOpen}>
-                {children?.map((child: PolicyBranchProps) => (
+                {modifiedChildren?.map((child: PolicyBranchProps) => (
                   <PolicyBranch
                     key={child.id}
                     parentId={child.parentId}
@@ -232,7 +251,7 @@ const PolicyBranch = ({
           </Fragment>
         ) : null}
         {/* when the current user is an admin */}
-        {isAdmin || isAdminReviewer || isAdminPreparer ? (
+        {isAdmin || isAdminPreparer ? (
           <Fragment>
             <SideBoxBranch
               className={classnames("d-flex align-items-center", {
@@ -280,6 +299,59 @@ const PolicyBranch = ({
                     isAdmin={isAdmin}
                   />
                 ))}
+              </Collapse>
+            )}
+          </Fragment>
+        ) : isAdminReviewer ? (
+          <Fragment>
+            <SideBoxBranch
+              className={classnames("d-flex align-items-center", {
+                active: isActive,
+              })}
+              padLeft={level ? level * 10 : 0}
+              isLastChild={!hasChild && parentId}
+            >
+              {hasChild ? (
+                <SideBoxBranchIconContainer onClick={toggle}>
+                  <SideBoxBranchIcon
+                    open={isOpen}
+                    className={isActive ? "text-white" : "text-orange"}
+                    size={14}
+                  />
+                </SideBoxBranchIconContainer>
+              ) : (
+                <div style={{ width: 34 }} />
+              )}
+              <SideBoxBranchTitle
+                as={Link}
+                className={classnames({ active: isActive })}
+                to={
+                  isAdmin
+                    ? `/policy-admin/${id}/details`
+                    : activeMode
+                    ? `/policy/${id}/${activeMode}`
+                    : `/policy/${id}/details`
+                }
+              >
+                {title}
+              </SideBoxBranchTitle>
+            </SideBoxBranch>
+            {hasChild && (
+              <Collapse isOpen={isOpen}>
+                {children
+                  ?.filter((a) => a.status !== "draft")
+                  .map((child: PolicyBranchProps) => (
+                    <PolicyBranch
+                      key={child.id}
+                      parentId={child.parentId}
+                      {...child}
+                      activeId={activeId}
+                      activeMode={activeMode}
+                      status={child.status}
+                      level={Number(level) + 1}
+                      isAdmin={isAdmin}
+                    />
+                  ))}
               </Collapse>
             )}
           </Fragment>

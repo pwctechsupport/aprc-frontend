@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -17,6 +17,8 @@ import Input from "../../../shared/components/forms/Input";
 import { Suggestions, toLabelValue } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import DialogButton from "../../../shared/components/DialogButton";
+import { toast } from "react-toastify";
+import styled from "styled-components";
 
 export interface UserFormProps {
   onSubmit?: (values: UserFormValues) => void;
@@ -38,13 +40,43 @@ export interface UserFormValues {
 }
 
 export default function UserForm(props: UserFormProps) {
-  const { register, handleSubmit, errors, setValue } = useForm<UserFormValues>({
+  const { register, handleSubmit, errors, setValue, watch } = useForm<
+    UserFormValues
+  >({
     validationSchema,
     defaultValues: props.defaultValues,
   });
+  const checkPassword = watch("password")?.split("") || [""];
 
+  const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
+  const numbers = "1234567890".split("");
+
+  const noLowerCasePassword = checkPassword
+    ?.map((a) => lowerCaseWords.includes(a))
+    .every((a) => a === false);
+
+  const noCapitalPassword = checkPassword
+    ?.map((a) => capitalWords.includes(a))
+    .every((a) => a === false);
+
+  const noNumberPassword = checkPassword
+    ?.map((a) => numbers.includes(a))
+    .every((a) => a === false);
+
+  const falsePasswordLength = (checkPassword?.length || 0) < 8;
+
+  const validatePassword =
+    noLowerCasePassword ||
+    noCapitalPassword ||
+    noNumberPassword ||
+    falsePasswordLength;
   function onSubmit(data: UserFormValues) {
-    if (!props.submitting) props.onSubmit?.(data);
+    if (!props.submitting && !validatePassword) {
+      props.onSubmit?.(data);
+    } else {
+      toast.error("Password doesn't fullfill requirement(s)");
+    }
   }
 
   const handleGetRoles = useLoadRoles();
@@ -76,6 +108,27 @@ export default function UserForm(props: UserFormProps) {
         innerRef={register({ required: true })}
         error={errors?.password?.message}
       />
+      {validatePassword && (
+        <Fragment>
+          <h6 style={{ fontSize: "14px", color: "red" }}>
+            Password requirements:
+          </h6>
+          <ul>
+            {falsePasswordLength && (
+              <li style={{ color: "red" }}>At least 8 characters</li>
+            )}
+            {noCapitalPassword && (
+              <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
+            )}
+            {noLowerCasePassword && (
+              <li style={{ color: "red" }}>Lowercase characters (a - z)</li>
+            )}
+            {noNumberPassword && (
+              <li style={{ color: "red" }}>Numbers (0 - 9)</li>
+            )}
+          </ul>
+        </Fragment>
+      )}
       <Input
         required
         label="Password Confirmation"
@@ -88,6 +141,14 @@ export default function UserForm(props: UserFormProps) {
         required
         label="Phone"
         name="phone"
+        onKeyDown={(e) =>
+          (e.keyCode === 69 ||
+            e.keyCode === 188 ||
+            e.keyCode === 190 ||
+            e.keyCode === 38 ||
+            e.keyCode === 40) &&
+          e.preventDefault()
+        }
         type="number"
         innerRef={register({ required: true })}
         error={oc(errors).phone.message("")}
@@ -131,19 +192,21 @@ export default function UserForm(props: UserFormProps) {
           Submit
         </Button>
         {props.isCreate && (
-          <DialogButton
+          <StyledDialogButton
             className="black px-5 ml-2"
-            style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
             onConfirm={() => props.history.replace(`/user`)}
             isCreate
           >
             Cancel
-          </DialogButton>
+          </StyledDialogButton>
         )}
       </div>
     </Form>
   );
 }
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 // =======================================================
 // Validation Schema
 // =======================================================

@@ -26,6 +26,8 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
 import { APP_ROOT_URL } from "../../settings";
+import useListState from "../../shared/hooks/useList";
+import Pagination from "../../shared/components/Pagination";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -33,11 +35,14 @@ const Resources = ({ history }: RouteComponentProps) => {
     "admin_reviewer",
     "admin_preparer",
   ]);
+  const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const { data: adminData, loading: adminLoading } = useRecentResourcesQuery({
     skip: isAdminReviewer,
     variables: {
       filter: isAdminPreparer ? {} : { draft_id_not_null: true },
+      limit,
+      page,
     },
     fetchPolicy: "network-only",
   });
@@ -48,9 +53,16 @@ const Resources = ({ history }: RouteComponentProps) => {
     skip: isUser || isAdminPreparer,
     variables: {
       filter: {},
+      limit,
+      page,
     },
     fetchPolicy: "network-only",
   });
+  const totalCount =
+    dataReviewer?.reviewerResourcesStatus?.metadata.totalCount ||
+    adminData?.recentResources?.metadata.totalCount ||
+    0;
+
   const [destroyResource, destroyM] = useDestroyResourceMutation({
     refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"],
     onCompleted: () => toast.success("Delete Success"),
@@ -144,7 +156,6 @@ const Resources = ({ history }: RouteComponentProps) => {
           </Button>
         ) : null}
       </div>
-
       <Table loading={adminLoading || loadingReviewer} responsive>
         <thead>
           <tr>
@@ -252,6 +263,11 @@ const Resources = ({ history }: RouteComponentProps) => {
           })}
         </tbody>
       </Table>
+      <Pagination
+        totalCount={totalCount}
+        perPage={limit}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 };

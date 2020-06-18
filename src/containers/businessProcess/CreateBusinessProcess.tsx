@@ -3,10 +3,11 @@ import { toast } from "react-toastify";
 import { useCreateBusinessProcessMutation } from "../../generated/graphql";
 import BusinessProcessForm from "./components/BusinessProcessForm";
 
-const CreateBusinessProcess = () => {
+const CreateBusinessProcess = ({ createBpModal }: any) => {
   const [createBP] = useCreateBusinessProcessMutation({
     onCompleted: () => {
       toast.success("Create Success");
+      createBpModal(false);
     },
     onError: () => toast.error("Create Failed"),
     refetchQueries: [

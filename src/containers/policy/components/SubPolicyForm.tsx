@@ -8,6 +8,7 @@ import {
   useReferencesQuery,
   useResourcesQuery,
   useRisksQuery,
+  usePolicyQuery,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -49,11 +50,15 @@ const SubPolicyForm = ({
     controlIds,
     riskIds,
   });
-
+  const { data } = usePolicyQuery({
+    variables: { id: defaultValues.parentId },
+    fetchPolicy: "network-only",
+  });
+  const statusWhenUpdate = data?.policy?.status || "";
+  const draft = data?.policy?.draft;
   const { register, handleSubmit, setValue, errors } = useForm<
     SubPolicyFormValues
   >({ validationSchema, defaultValues });
-
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
   const references = oc(referenceData)
     .data.navigatorReferences.collection([])
@@ -85,9 +90,11 @@ const SubPolicyForm = ({
       : toast.error("Insert attributes is a required field");
   }
   function submitFirstPhase(values: SubPolicyFormValues) {
-    parentStatus === "release"
+    statusWhenUpdate === "release" || parentStatus === "release" || !draft
       ? attr.businessProcessIds?.length
-        ? submitFirst && submitFirst({ ...values, ...attr })
+        ? data
+          ? submitFirst && submitFirst({ ...values, ...attr })
+          : toast.error("Network Error")
         : toast.error("Insert attributes is a required field")
       : toast.error(
           "Parent policy status must be 'release' before user can submit Sub Policy"
@@ -101,7 +108,7 @@ const SubPolicyForm = ({
       : toast.error("Insert attributes is a required field");
   }
   function submitSecondPhase(values: SubPolicyFormValues) {
-    parentStatus === "release"
+    statusWhenUpdate === "release" || parentStatus === "release" || !draft
       ? attr.businessProcessIds?.length
         ? submitSecond && submitSecond({ ...values, ...attr })
         : toast.error("Insert attributes is a required field")
@@ -187,21 +194,19 @@ const SubPolicyForm = ({
               >
                 Save As Draft
               </DialogButton>
-              {parentStatus === "release" ? (
-                <DialogButton
-                  color="primary"
-                  loading={secondDraftLoading}
-                  className="pwc px-5"
-                  onConfirm={handleSubmit(submitSecondPhase)}
-                  message={
-                    defaultValues.title
-                      ? `Save your change on "${defaultValues.title}"?`
-                      : "Create Sub-Policy?"
-                  }
-                >
-                  Submit
-                </DialogButton>
-              ) : null}
+              <DialogButton
+                color="primary"
+                loading={secondDraftLoading}
+                className="pwc px-5"
+                onConfirm={handleSubmit(submitSecondPhase)}
+                message={
+                  defaultValues.title
+                    ? `Save your change on "${defaultValues.title}"?`
+                    : "Create Sub-Policy?"
+                }
+              >
+                Submit
+              </DialogButton>
             </Fragment>
           ) : (
             // ini pertama
@@ -219,21 +224,19 @@ const SubPolicyForm = ({
               >
                 Save As Draft
               </DialogButton>
-              {parentStatus === "release" ? (
-                <DialogButton
-                  color="primary"
-                  loading={submitting}
-                  className="pwc px-5"
-                  onConfirm={handleSubmit(submitFirstPhase)}
-                  message={
-                    defaultValues.title
-                      ? `Save your change on "${defaultValues.title}"?`
-                      : "Create Sub-Policy?"
-                  }
-                >
-                  Submit
-                </DialogButton>
-              ) : null}
+              <DialogButton
+                color="primary"
+                loading={submitting}
+                className="pwc px-5"
+                onConfirm={handleSubmit(submitFirstPhase)}
+                message={
+                  defaultValues.title
+                    ? `Save your change on "${defaultValues.title}"?`
+                    : "Create Sub-Policy?"
+                }
+              >
+                Submit
+              </DialogButton>
             </Fragment>
           )}{" "}
           {isCreate ? (
@@ -305,22 +308,26 @@ const SubPolicyAttributeForm = ({
     .navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
   const checkBp = formModal.watch("businessProcessIds");
+  const checkRisk = formModal.watch("riskIds") || [];
+  const checkControl = formModal.watch("controlIds") || [];
 
   const [filter, setFilter] = useState({});
-
+  const [filterControl, setFilterControl] = useState({});
   useEffect(() => {
     setFilter({ business_processes_id_in: checkBp });
-  }, [checkBp]);
+    setFilterControl({ risks_id_in: checkRisk });
+  }, [checkBp, checkRisk]);
 
   const controlsQ = useControlsQuery({
     variables: {
-      filter,
+      filter: filterControl,
     },
     fetchPolicy: "network-only",
   });
   const controlsOptions = oc(controlsQ.data)
     .navigatorControls.collection([])
     .map(({ id, description }) => ({ label: description || "", value: id }));
+
   const risksQ = useRisksQuery({
     variables: {
       filter,
@@ -331,6 +338,44 @@ const SubPolicyAttributeForm = ({
     .navigatorRisks.collection([])
     .map(toLabelValue);
 
+  //risk modified default Values
+
+  const riskDefaultValuesOrigin = risksOptions
+    .filter((res) =>
+      oc(defaultValues)
+        .riskIds([])
+        .includes(res.value)
+    )
+    .map((a) => a.value);
+  const [riskValue, setRiskValue] = useState(riskDefaultValuesOrigin);
+  useEffect(() => {
+    if (checkRisk.length) {
+      setRiskValue(checkRisk);
+    }
+  }, [checkRisk]);
+
+  const riskDefaultValues = risksOptions.filter((a) =>
+    riskValue.includes(a.value)
+  );
+
+  //control modified default Values
+
+  const controlDefaultValuesOrigin = controlsOptions
+    .filter((res) =>
+      oc(defaultValues)
+        .controlIds([])
+        .includes(res.value)
+    )
+    .map((a) => a.value);
+  const [controlValue, setControlValue] = useState(controlDefaultValuesOrigin);
+  useEffect(() => {
+    if (checkControl.length) {
+      setControlValue(checkControl);
+    }
+  }, [checkControl]);
+  const controlDefaultValues = controlsOptions.filter((a) =>
+    controlValue.includes(a.value)
+  );
   return (
     <Form>
       <FormSelect
@@ -339,7 +384,7 @@ const SubPolicyAttributeForm = ({
         name="resourceIds"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Resources*"
+        label="Resources"
         options={resourceOptions}
         defaultValue={resourceOptions.filter((res) =>
           oc(defaultValues)
@@ -374,14 +419,10 @@ const SubPolicyAttributeForm = ({
         register={formModal.register}
         setValue={formModal.setValue}
         placeholder="Risk"
-        label="Risk*"
+        label="Risk"
         isDisabled={checkBp?.length ? false : true}
         options={risksOptions}
-        defaultValue={risksOptions.filter((res) =>
-          oc(defaultValues)
-            .riskIds([])
-            .includes(res.value)
-        )}
+        defaultValue={riskDefaultValues}
         error={formModal.errors.riskIds && "Risk is a required field"}
       />{" "}
       <FormSelect
@@ -391,14 +432,10 @@ const SubPolicyAttributeForm = ({
         register={formModal.register}
         setValue={formModal.setValue}
         placeholder="Control"
-        label="Control*"
-        isDisabled={checkBp?.length ? false : true}
+        label="Control"
+        isDisabled={checkRisk?.length ? false : true}
         options={controlsOptions}
-        defaultValue={controlsOptions.filter((res) =>
-          oc(defaultValues)
-            .controlIds([])
-            .includes(res.value)
-        )}
+        defaultValue={controlDefaultValues}
         error={formModal.errors.controlIds && "Control is a required field"}
       />
       <div className=" d-flex justify-content-end">
@@ -435,9 +472,9 @@ const validationSchema = yup.object().shape({
 });
 const validationSchemaAttributes = yup.object().shape({
   businessProcessIds: yup.array().required(),
-  controlIds: yup.array().required(),
-  resourceIds: yup.array().required(),
-  riskIds: yup.array().required(),
+  // controlIds: yup.array().required(),
+  // resourceIds: yup.array().required(),
+  // riskIds: yup.array().required(),
 });
 // -------------------------------------------------------------------------
 // Type Definitions

@@ -17,9 +17,7 @@ const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
     const path = crumb[0].includes(":")
       ? params[crumb[0].replace(":", "")]
       : crumb[0];
-    const label = crumb[1].includes(":")
-      ? params[crumb[1].replace(":", "")]
-      : crumb[1];
+    const label = crumb[1];
 
     return [path, label];
   }

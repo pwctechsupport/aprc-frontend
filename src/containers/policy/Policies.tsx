@@ -60,12 +60,13 @@ export default function Policies({ history }: RouteComponentProps) {
       filter: isUser
         ? {
             ...(isTree && { ancestry_null: true }),
-            title_or_status_or_policy_category_name_cont: searchQuery,
+            //title_or_policy_category_name_cont
+            title_or_policy_category_name_or_status_cont: searchQuery,
             status_eq: "release",
           }
         : {
             ...(isTree && { ancestry_null: true }),
-            title_or_status_or_policy_category_name_cont: searchQuery,
+            title_or_policy_category_name_or_status_cont: searchQuery,
           },
       limit,
       page,
@@ -82,7 +83,8 @@ export default function Policies({ history }: RouteComponentProps) {
       isTree,
       filter: {
         ...(isTree && { ancestry_null: true }),
-        title_or_status_or_policy_category_name_cont: searchQuery,
+        title_cont: searchQuery,
+        status_not_eq: "draft",
       },
       limit,
       page,
@@ -92,7 +94,6 @@ export default function Policies({ history }: RouteComponentProps) {
     dataPreparer?.preparerPolicies?.collection ||
     dataReviewer?.reviewerPoliciesStatus?.collection ||
     [];
-
   const totalCountPreparer =
     dataPreparer?.preparerPolicies?.metadata.totalCount ||
     dataReviewer?.reviewerPoliciesStatus?.metadata.totalCount ||
@@ -255,7 +256,20 @@ const PolicyTableRow = ({
             </div>
           </td>
           <td>{policy.policyCategory?.name || ""}</td>
-          <td>{capitalCase(policy.status || "")}</td>
+          <td>
+            {policy.status === "waiting_for_review" && !policy.isSubmitted
+              ? "Draft"
+              : policy.status === "draft"
+              ? "Draft"
+              : policy.isSubmitted ||
+                (policy.draft && policy.isSubmitted) ||
+                false
+              ? "Waiting for review"
+              : !policy.requestStatus ||
+                (policy.requestStatus === "rejected" && !policy.draft)
+              ? "Release"
+              : capitalCase(policy.status || "")}
+          </td>
           <td>
             {" "}
             <DateHover>{policy?.lastUpdatedAt}</DateHover>
@@ -293,7 +307,11 @@ const PolicyTableRow = ({
             </div>
           </td>
           <td>{policy.policyCategory?.name || ""}</td>
-          <td>{capitalCase(policy.status || "")}</td>
+          <td>
+            {policy.status === "waiting_for_review" && !policy.isSubmitted
+              ? "Draft"
+              : capitalCase(policy.status || "")}
+          </td>
           <td>
             {" "}
             <DateHover>{policy?.lastUpdatedAt}</DateHover>
@@ -318,7 +336,22 @@ const PolicyTableRow = ({
         </tr>
       )}
 
-      {childs.length
+      {isAdminReviewer
+        ? childs.filter((a) => a.status !== "draft").length
+          ? childs
+              .filter((a) => a.status !== "draft")
+              .map((childPol) => (
+                <PolicyTableRow
+                  key={childPol.id}
+                  policy={childPol}
+                  status={childPol.status}
+                  onClick={onClick}
+                  onDelete={onDelete}
+                  level={level + 1}
+                />
+              ))
+          : null
+        : childs.length
         ? childs.map((childPol) => (
             <PolicyTableRow
               key={childPol.id}

@@ -8,7 +8,7 @@ import {
   FaMinus,
   FaPencilAlt,
 } from "react-icons/fa";
-import { IoMdDownload } from "react-icons/io";
+import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { NavLink, Route, RouteComponentProps, Link } from "react-router-dom";
 import {
@@ -40,6 +40,8 @@ import {
   useResourceQuery,
   useResourcesQuery,
   useBusinessProcessesQuery,
+  useControlQuery,
+  useRiskQuery,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -74,6 +76,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import { useSelector } from "../../shared/hooks/useSelector";
 import { APP_ROOT_URL } from "../../settings";
 import ResourceBox from "../resources/components/ResourceBox";
+import { capitalCase } from "capital-case";
 
 type TParams = { id: string };
 
@@ -235,10 +238,10 @@ export default function RiskAndControl({
     dataRisksnControl?.navigatorBusinessProcesses?.collection
       .map((a) => a.risks)
       .flat(10) || [];
-  const controls =
-    dataRisksnControl?.navigatorBusinessProcesses?.collection
-      .map((a) => a.controls)
-      .flat(10) || [];
+  // const controls =
+  //   dataRisksnControl?.navigatorBusinessProcesses?.collection
+  //     .map((a) => a.controls)
+  //     .flat(10) || [];
   const resources = dataResources?.navigatorResources?.collection || [];
 
   const isBookmarked = bookmarkData?.bookmarks?.collection || [];
@@ -269,6 +272,267 @@ export default function RiskAndControl({
     fetchPolicy: "network-only",
   });
 
+  //Risk bar
+
+  const [riskId, setRiskId] = useState("");
+  useEffect(() => {
+    if (currentUrl.includes("/risk/")) {
+      setRiskId(currentUrl.split("/risk/")[1]);
+    }
+  }, [currentUrl]);
+  const { data: dataRisk, loading: loadingRisk } = useRiskQuery({
+    skip: !riskId,
+    variables: { id: riskId },
+    fetchPolicy: "network-only",
+  });
+  const riskName = dataRisk?.risk?.name || "";
+  const draftRisk = dataRisk?.risk?.draft;
+  const renderRiskDetails = () => {
+    const levelOfRisk = dataRisk?.risk?.levelOfRisk || "";
+    const typeOfRisk = dataRisk?.risk?.typeOfRisk || "";
+    const bps = dataRisk?.risk?.businessProcess;
+    const updatedAt = dataRisk?.risk?.updatedAt;
+    const updatedBy = dataRisk?.risk?.lastUpdatedBy;
+    const createdBy = dataRisk?.risk?.createdBy;
+    const createdAt = dataRisk?.risk?.createdAt;
+
+    const details1 = [
+      { label: "Risk Id", value: id },
+      { label: "Name", value: riskName },
+      {
+        label: "Business Process",
+        value: bps?.join(", "),
+      },
+      {
+        label: "Level of Risk",
+        value: (
+          <Badge color={getRiskColor(levelOfRisk)}>
+            {startCase(levelOfRisk)}
+          </Badge>
+        ),
+      },
+      {
+        label: "Type of Risk",
+        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
+      },
+    ];
+    const details2 = [
+      {
+        label: "Last Updated",
+        value: updatedAt?.split(" ")[0],
+      },
+      {
+        label: "Updated By",
+        value: updatedBy,
+      },
+      {
+        label: "Created At",
+        value: createdAt?.split(" ")[0],
+      },
+      {
+        label: "Created By",
+        value: createdBy,
+      },
+      {
+        label: "Status",
+        value: draftRisk ? "Waiting for review" : "Release",
+      },
+    ];
+    return (
+      <Route exact path="/risk-and-control/:id/risk/:id">
+        {loadingRisk ? (
+          <LoadingSpinner centered size={30} />
+        ) : (
+          <Row>
+            <Col xs={6}>
+              <dl>
+                {details1.map((item) => (
+                  <Fragment key={item.label}>
+                    <dt>{item.label}</dt>
+                    <dd>{item.value || "-"}</dd>
+                  </Fragment>
+                ))}
+              </dl>
+            </Col>
+            <Col xs={6}>
+              {details2.map((item) => (
+                <Fragment key={item.label}>
+                  <dt>{item.label}</dt>
+                  <dd>{item.value || "-"}</dd>
+                </Fragment>
+              ))}
+            </Col>
+          </Row>
+        )}
+      </Route>
+    );
+  };
+
+  //control Bar
+
+  const [controlId, setControlId] = useState("");
+  useEffect(() => {
+    if (currentUrl.includes("/control/")) {
+      setControlId(currentUrl.split("/control/")[1]);
+    }
+  }, [currentUrl]);
+  const { loading: loadingControl, data: dataControl } = useControlQuery({
+    skip: !controlId,
+    fetchPolicy: "network-only",
+    variables: { id: controlId },
+  });
+  const descriptionControl = dataControl?.control?.description || "";
+  const draftControl = dataControl?.control?.draft;
+  const renderControlDetails = () => {
+    const updatedAt = dataControl?.control?.updatedAt
+      ? dataControl?.control?.updatedAt.split(" ")[0]
+      : "";
+    const lastUpdatedBy = dataControl?.control?.lastUpdatedBy || "";
+    const createdBy = dataControl?.control?.createdBy || "";
+    const assertion = dataControl?.control?.assertion || [];
+    const frequency = dataControl?.control?.frequency || "";
+    const ipo = dataControl?.control?.ipo || [];
+    const typeOfControl = dataControl?.control?.typeOfControl || "";
+    const keyControl = dataControl?.control?.keyControl || false;
+    const risks = dataControl?.control?.risks || [];
+    const businessProcesses = dataControl?.control?.businessProcesses || [];
+    const activityControls = dataControl?.control?.activityControls || [];
+    const createdAt = dataControl?.control?.createdAt || "";
+    const departments = dataControl?.control?.departments || [];
+    const filteredNames = (names: any) =>
+      names.filter((v: any, i: any) => names.indexOf(v) === i);
+    const details = [
+      { label: "Control ID", value: id },
+      { label: "Description", value: descriptionControl },
+
+      {
+        label: "Control Owner",
+        value: departments.map((a: any) => a.name).join(", "),
+      },
+      {
+        label: "Key Control",
+        value: (
+          <input type="checkbox" checked={keyControl} onChange={() => {}} />
+        ),
+      },
+      { label: "Type of Control", value: capitalCase(typeOfControl) },
+      {
+        label: "Assertion",
+        value: assertion.map((x) => capitalCase(x)).join(", "),
+      },
+      {
+        label: "IPO",
+        value: ipo.map((x) => capitalCase(x)).join(", "),
+      },
+      { label: "Frequency", value: capitalCase(frequency) },
+      {
+        label: "Status",
+        value: `${draftControl ? "Waiting for review" : "Release"}`,
+      },
+      { label: "Last Updated", value: updatedAt },
+      { label: "Last Updated By", value: lastUpdatedBy },
+      { label: "Created At", value: createdAt.split(" ")[0] },
+      { label: "Created By", value: createdBy },
+    ];
+    return (
+      <Route exact path="/risk-and-control/:id/control/:id">
+        {loadingControl ? (
+          <LoadingSpinner centered size={30} />
+        ) : (
+          <Row>
+            <Col xs={6}>
+              <dl>
+                {details.slice(0, Math.ceil(details.length / 2)).map((item) => (
+                  <Fragment key={item.label}>
+                    <dt>{item.label}</dt>
+                    <dd>{item.value || "-"}</dd>
+                  </Fragment>
+                ))}
+                <dt>Risks</dt>
+                {risks.length ? (
+                  filteredNames(risks).map((risk: any) => (
+                    <dd key={risk.id}>{risk.name}</dd>
+                  ))
+                ) : (
+                  <EmptyAttribute />
+                )}
+                <dt>Business Processes</dt>
+                {businessProcesses.length ? (
+                  filteredNames(businessProcesses).map((bp: any) => (
+                    <dd key={bp.id}>{bp.name}</dd>
+                  ))
+                ) : (
+                  <EmptyAttribute />
+                )}
+              </dl>
+            </Col>
+            <Col xs={6}>
+              <dl>
+                {details
+                  .slice(Math.ceil(details.length / 2), details.length)
+                  .map((item) => (
+                    <Fragment key={item.label}>
+                      <dt>{item.label}</dt>
+                      <dd>{item.value || "-"}</dd>
+                    </Fragment>
+                  ))}
+              </dl>
+            </Col>
+
+            {activityControls.length > 0 ? (
+              <Col xs={7} className="mt-2">
+                <dt className="mb-1">Control Activities</dt>
+                <Table>
+                  <thead>
+                    <tr>
+                      <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                        Control Activity
+                      </th>
+                      <th style={{ fontSize: "13px", fontWeight: "normal" }}>
+                        Guidance
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {activityControls.map((activity) => (
+                      <tr key={"Row" + activity.id}>
+                        <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                          {activity.activity}
+                        </td>
+                        <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                          {activity.guidance ? (
+                            activity.guidance
+                          ) : (
+                            <div className="d-flex align-items-center ">
+                              <Button color="" className="soft orange">
+                                <a
+                                  href={`${APP_ROOT_URL}${activity.guidanceResuploadUrl}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  download={`Pwc-ActivityControl ${activity.guidanceFileName}`}
+                                  className="text-orange"
+                                >
+                                  <span className="mr-2">
+                                    {activity.guidanceFileName}
+                                  </span>
+                                  <IoMdOpen />
+                                </a>
+                              </Button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Col>
+            ) : null}
+          </Row>
+        )}
+      </Route>
+    );
+  };
+
   //Query for rating resource
   const { data: dataRating } = useResourceRatingsQuery({
     skip: !resourceId && currentUrl.includes("resources/"),
@@ -276,7 +540,7 @@ export default function RiskAndControl({
     fetchPolicy: "network-only",
   });
   const resourceName = dataResource?.resource?.name || "";
-
+  const draftRes = dataResource?.resource?.draft;
   const renderResourceDetails = () => {
     const totalRating = dataResource?.resource?.totalRating || 0;
     const visit = dataResource?.resource?.visit || 0;
@@ -516,6 +780,20 @@ export default function RiskAndControl({
                 ["/risk-and-control/" + id, name],
                 ["/risk-and-control/" + resourceId, resourceName],
               ]
+            : history.location.pathname.includes("risk/")
+            ? [
+                ["/risk-and-control", "Risk and Controls"],
+                ...breadcrumb,
+                ["/risk-and-control/" + id, name],
+                ["/risk-and-control/" + riskId, riskName],
+              ]
+            : currentUrl.includes("/control/")
+            ? [
+                ["/risk-and-control", "Risk and Controls"],
+                ...breadcrumb,
+                ["/risk-and-control/" + id, name],
+                ["/risk-and-control/" + controlId, descriptionControl],
+              ]
             : [
                 ["/risk-and-control", "Risk and Controls"],
                 ...breadcrumb,
@@ -525,27 +803,51 @@ export default function RiskAndControl({
       />
       <div className="d-flex justify-content-between">
         <HeaderWithBackButton
-          heading={currentUrl.includes("resources/") ? resourceName : name}
+          heading={
+            currentUrl.includes("resources/")
+              ? resourceName
+              : currentUrl.includes("risk/")
+              ? riskName
+              : currentUrl.includes("/control/")
+              ? descriptionControl
+              : name
+          }
+          draft={
+            currentUrl.includes("resources/")
+              ? !!draftRes
+              : currentUrl.includes("risk/")
+              ? !!draftRisk
+              : currentUrl.includes("/control/")
+              ? !!draftControl
+              : undefined
+          }
         />
-        {currentUrl.includes("resources/") ? null : renderActions()}
+        {currentUrl.includes("resources/") || currentUrl.includes("risk/")
+          ? null
+          : renderActions()}
       </div>
-      <Nav tabs className="tabs-pwc">
-        {!currentUrl.includes("resources/") &&
-          tabs.map((tab, index) => (
-            <NavItem key={index}>
-              <NavLink
-                exact
-                to={tab.to}
-                className="nav-link"
-                activeClassName="active"
-              >
-                {tab.title}
-              </NavLink>
-            </NavItem>
-          ))}
-      </Nav>
+      {currentUrl.includes("resources/") ||
+      currentUrl.includes("risk/") ||
+      currentUrl.includes("/control/") ? null : (
+        <Nav tabs className="tabs-pwc">
+          {!currentUrl.includes("resources/") &&
+            tabs.map((tab, index) => (
+              <NavItem key={index}>
+                <NavLink
+                  exact
+                  to={tab.to}
+                  className="nav-link"
+                  activeClassName="active"
+                >
+                  {tab.title}
+                </NavLink>
+              </NavItem>
+            ))}
+        </Nav>
+      )}
       {renderResourceDetails()}
-
+      {renderRiskDetails()}
+      {renderControlDetails()}
       <TabContent>
         <TabPane>
           <Route
@@ -570,57 +872,83 @@ export default function RiskAndControl({
             >
               {risks.length ? (
                 <ul>
-                  {risks.map((risk) => (
-                    <li key={risk.id}>
-                      <div className="mb-3 d-flex justify-content-between">
-                        <h5>
-                          {risk.name}
-                          <Badge
-                            color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
+                  {risks
+                    .filter((a) => a?.draft === null)
+                    .map((risk) => (
+                      <li key={risk.id}>
+                        <div className="mb-3 d-flex justify-content-between">
+                          <Link
+                            to={`/risk-and-control/${
+                              currentUrl.split("control/")[1]
+                            }/risk/${risk.id}`}
+                            onClick={() => {
+                              setRiskId(risk.id);
+                            }}
                           >
-                            {startCase(risk.levelOfRisk || "")}
-                          </Badge>
-                          <Badge color="secondary">
-                            {startCase(risk.typeOfRisk || "")}
-                          </Badge>
-                        </h5>
-                        {(isAdmin || isAdminPreparer) && (
-                          <Button
-                            onClick={() =>
-                              editRisk({
-                                id: risk.id,
-                                name: risk.name || "",
-                                businessProcessIds:
-                                  risk.businessProcesses?.map(toLabelValue) ||
-                                  [],
-                                levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                                typeOfRisk: risk.typeOfRisk as TypeOfRisk,
-                              })
-                            }
-                            color=""
-                          >
-                            <FaPencilAlt />
-                          </Button>
-                        )}
-                      </div>
+                            <h5>
+                              {risk.name}
+                              <Badge
+                                color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
+                              >
+                                {startCase(risk.levelOfRisk || "")}
+                              </Badge>
+                              <Badge color="secondary">
+                                {startCase(risk.typeOfRisk || "")}
+                              </Badge>
+                            </h5>
+                          </Link>
 
-                      {risk.controls?.length ? (
-                        <>
-                          <h6>Control</h6>
-                          <ControlsTable
-                            controls={risk.controls}
-                            editControl={editControl}
-                          />
-                        </>
-                      ) : null}
-                    </li>
-                  ))}
+                          {(isAdmin || isAdminPreparer) && (
+                            <Button
+                              onClick={() =>
+                                editRisk({
+                                  id: risk.id,
+                                  name: risk.name || "",
+                                  businessProcessIds:
+                                    risk.businessProcesses?.map(toLabelValue) ||
+                                    [],
+                                  levelOfRisk: risk.levelOfRisk as LevelOfRisk,
+                                  typeOfRisk: risk.typeOfRisk as TypeOfRisk,
+                                })
+                              }
+                              color=""
+                            >
+                              <FaPencilAlt />
+                            </Button>
+                          )}
+                        </div>
+                        {isUser ? (
+                          risk?.controls?.filter((a: any) => a.draft === null)
+                            .length ? (
+                            <>
+                              <h6>Control</h6>
+                              <ControlsTable
+                                history={history.location.pathname}
+                                controls={risk.controls.filter(
+                                  (a: any) => a.draft === null
+                                )}
+                                editControl={editControl}
+                              />
+                            </>
+                          ) : null
+                        ) : risk?.controls?.length ? (
+                          <>
+                            <h6>Control</h6>
+                            <ControlsTable
+                              history={history.location.pathname}
+                              controls={risk.controls}
+                              editControl={editControl}
+                            />
+                          </>
+                        ) : null}
+                      </li>
+                    ))}
                 </ul>
               ) : (
                 <EmptyAttribute />
               )}
             </Collapsible>{" "}
-            <Collapsible
+            {/* <Collapsible
               title="Controls"
               show={collapse.includes("Controls")}
               onClick={toggleCollapse}
@@ -630,7 +958,7 @@ export default function RiskAndControl({
               ) : (
                 <EmptyAttribute></EmptyAttribute>
               )}
-            </Collapsible>
+            </Collapsible> */}
           </Route>
           <Route exact path="/risk-and-control/:id/resources">
             <ResourcesTab
@@ -652,6 +980,7 @@ export default function RiskAndControl({
 
       <Modal isOpen={riskModal} toggle={toggleRiskModal} title="Edit Risk">
         <RiskForm
+          setModal={setRiskModal}
           defaultValues={risk}
           onSubmit={handleUpdateRisk}
           submitting={updateRiskM.loading}
@@ -664,6 +993,7 @@ export default function RiskAndControl({
         title="Edit Control"
       >
         <ControlForm
+          setModal={setControlModal}
           defaultValues={control}
           onSubmit={handleUpdateControl}
           submitting={updateControlM.loading}
@@ -684,9 +1014,11 @@ interface ControlState extends ControlFormValues {
 const ControlsTable = ({
   controls,
   editControl,
+  history,
 }: {
   controls: Control[];
   editControl: Function;
+  history?: any;
 }) => {
   const assertionAndIpoModifier = (data: any) => {
     let finalData: any = data;
@@ -754,7 +1086,15 @@ const ControlsTable = ({
           {controls?.length ? (
             controls?.map((control) => (
               <tr key={control.id}>
-                <td>{control.description}</td>
+                <td>
+                  <Link
+                    to={`/risk-and-control/${
+                      history.split("control/")[1]
+                    }/control/${control.id}`}
+                  >
+                    {control.description}
+                  </Link>
+                </td>
                 <td>{startCase(control.frequency || "")}</td>
                 <td>{startCase(control.typeOfControl || "")}</td>
                 <td>{startCase(control.nature || "")}</td>

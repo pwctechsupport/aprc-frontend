@@ -8,23 +8,39 @@ query controls($filter: BaseScalar = {}, $limit: Int = 1000) {
     }
   }
 }
-query adminControls($filter: BaseScalar = {}, $limit: Int = 1000) {
-  preparerControls(filter: $filter, limit: $limit) {
+query adminControls($filter: BaseScalar = {}, $limit: Int = 1000, $page: Int) {
+  preparerControls(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...control
       draft {
         id
       }
     }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
+    }
   }
 }
-query reviewerControlsStatus($filter: BaseScalar = {}, $limit: Int = 1000) {
-  reviewerControlsStatus(filter: $filter, limit: $limit) {
+query reviewerControlsStatus(
+  $filter: BaseScalar = {}
+  $limit: Int = 1000
+  $page: Int
+) {
+  reviewerControlsStatus(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...control
       draft {
         id
       }
+    }
+    metadata {
+      totalCount
+      currentPage
+      totalPages
+      limitValue
     }
   }
 }
@@ -52,12 +68,35 @@ query control($id: ID!) {
     draft {
       id
       objectResult {
-        __typename
+        ... on Control {
+          ...objectResulto
+        }
       }
+      objectChanges
     }
   }
 }
+fragment objectResulto on Control {
+  id
+  keyControl
 
+  description
+  frequency
+  nature
+  controlOwner
+  departments {
+    id
+    name
+  }
+  assertion
+  typeOfControl
+  ipo
+  status
+  updatedAt
+  lastUpdatedBy
+  createdBy
+  createdAt
+}
 fragment control on Control {
   id
   keyControl

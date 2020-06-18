@@ -62,6 +62,16 @@ query reviewerResourcesStatus(
         id
         name
       }
+      draft {
+        id
+        objectResult {
+          ... on Resource {
+            name
+            id
+            updatedAt
+          }
+        }
+      }
       resuploadLink
       resuploadUrl
       resourceFileType
@@ -99,6 +109,16 @@ query recentResources(
         id
         description
         typeOfControl
+      }
+      draft {
+        id
+        objectResult {
+          ... on Resource {
+            name
+            id
+            updatedAt
+          }
+        }
       }
       businessProcess {
         id

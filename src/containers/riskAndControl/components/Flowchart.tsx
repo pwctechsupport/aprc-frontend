@@ -9,7 +9,6 @@ import {
   TargetImage,
 } from "../../../shared/components/ImageTagger";
 import styled from "styled-components";
-import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 interface FlowchartProps {
   bpId: string;
@@ -42,12 +41,7 @@ export default function Flowchart({
       },
     },
   });
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-  ]);
-  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+
   const tags = resourceId ? data?.tags?.collection || [] : [];
   return (
     <div className={className}>
@@ -72,23 +66,18 @@ export default function Flowchart({
           const type = tag.risk?.id ? "Risk" : "Control";
           const name = tag.risk?.name || tag.control?.description;
           const background = tag.risk?.id
-            ? "#fdfd96"
+            ? "orange"
             : tag.control?.id
-            ? "#ff6666"
+            ? "#810001"
             : undefined;
-          const to =
-            isUser && history.includes("/flowchart")
-              ? `/risk-and-control/${
-                  history.split("/risk-and-control/")[1].split("flowchart")[0]
-                }`
-              : tag.risk?.id
-              ? `/risk/${tag.risk?.id}`
-              : `/control/${tag.control?.id}`;
+          const to = tag.risk?.id
+            ? `${history.split("flowchart")[0]}risk/${tag.risk?.id}`
+            : `${history.split("flowchart")[0]}control/${tag.control?.id}`;
           return (
             <PreviewTag
               key={tag.id}
               show={show}
-              x={tag.xCoordinates || 0}
+              x={(tag.xCoordinates || 0) + 110}
               y={tag.yCoordinates || 0}
               as={Link}
               to={to}
@@ -104,7 +93,7 @@ export default function Flowchart({
 }
 const Container = styled.div`
   max-width: 36vw;
-  max-height: 30vw;
+  max-height: 36vw;
   background: white;
   border: grey 2px solid;
   border-radius: 5px;

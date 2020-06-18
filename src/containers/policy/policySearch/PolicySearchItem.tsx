@@ -24,7 +24,6 @@ export default function PolicySearchItem({
     risks,
     controls,
     resources,
-    businessProcesses,
     references,
     updatedAt,
   } = policy;
@@ -38,9 +37,6 @@ export default function PolicySearchItem({
   const showControl = controls?.map((a) =>
     a.description?.toLowerCase().includes(homepageSearch.toLowerCase())
   );
-  const showBP = businessProcesses?.map((a) =>
-    a.name?.toLowerCase().includes(homepageSearch.toLowerCase())
-  );
   const showRisk = risks?.map((a) =>
     a.name?.toLowerCase().includes(homepageSearch.toLowerCase())
   );
@@ -49,7 +45,6 @@ export default function PolicySearchItem({
   const resourcesPolicy = policy.resources;
   const controlsPolicy = policy.controls;
   const polcatPolicy = policy.policyCategory;
-  const bps = policy.businessProcesses;
   return (
     <Fragment>
       {/* homepageSearchs is a string for search */}
@@ -281,32 +276,6 @@ export default function PolicySearchItem({
                 </StyledLi>
               </Col>
             )}
-
-          {/* Business Processess */}
-
-          {!showBP?.every((a) => a === false) && homepageSearch !== "" && (
-            <Col>
-              <StyledLi>
-                <Names>Business Process:</Names>
-                <ul>
-                  {bps?.map(
-                    (bP) =>
-                      bP?.name
-                        ?.toLowerCase()
-                        .includes(homepageSearch.toLowerCase()) && (
-                        <li>
-                          <StyledTdMini key={bP.id}>
-                            <Link to={`/risk-and-control/${bP.id}`}>
-                              {bP.name}
-                            </Link>
-                          </StyledTdMini>
-                        </li>
-                      )
-                  )}
-                </ul>
-              </StyledLi>
-            </Col>
-          )}
         </Row>
       </PolicySearchItemContainerMini>
     </Fragment>

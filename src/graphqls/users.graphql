@@ -3,6 +3,40 @@ query users($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
     collection {
       ...userRowFragment
       policyCategory
+      email
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}
+
+query preparerUsers($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
+  preparerUsers(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      ...userRowFragment
+      policyCategory
+    }
+    metadata {
+      currentPage
+      limitValue
+      totalCount
+      totalPages
+    }
+  }
+}
+query reviewerUsersStatus(
+  $filter: BaseScalar = {}
+  $page: Int
+  $limit: Int = 1000
+) {
+  reviewerUsersStatus(filter: $filter, page: $page, limit: $limit) {
+    collection {
+      ...userRowFragment
+      policyCategory
     }
     metadata {
       currentPage

@@ -3,7 +3,6 @@ import { Redirect, Route, Switch } from "react-router";
 import { Col, Container, Row } from "reactstrap";
 import SettingsSideBox from "./components/SettingsSideBox";
 import History from "./History";
-import NotificationSettings from "./NotificationSettings";
 import UpdateProfile from "./UpdateProfile";
 import UserManual from "./UserManual";
 
@@ -22,11 +21,11 @@ export default function SettingsRoute() {
               component={UpdateProfile}
             />
             <Route exact path="/settings/history" component={History} />
-            <Route
+            {/* <Route
               exact
               path="/settings/notifications"
               component={NotificationSettings}
-            />
+            /> */}
             <Route exact path="/settings/user-manual" component={UserManual} />
             <Redirect exact from="/settings" to="/settings/update-profile" />
           </Switch>

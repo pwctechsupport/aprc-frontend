@@ -22,13 +22,15 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
   function handleSubmit(values: PolicyFormValues) {
     createPolicy({
       variables: {
-        input: values,
+        input: { ...values, status: "draft" },
       },
     });
   }
   function handleSubmitToReviewer(values: PolicyFormValues) {
     createPolicy({
-      variables: { input: { isSubmitted: true, ...values } },
+      variables: {
+        input: { isSubmitted: true, ...values, status: "waiting_for_review" },
+      },
     });
   }
   const isAdmin = location.pathname.split("/")[1] === "policy-admin";

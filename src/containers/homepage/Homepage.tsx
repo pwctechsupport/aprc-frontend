@@ -21,7 +21,10 @@ export default function Homepage() {
     .slice(0, 5);
 
   const customModifier = (data: any) => {
-    return { label: data.title, value: data.id };
+    const safetyNet = data
+      ? { label: data.title, value: data.id }
+      : { label: "", value: "" };
+    return safetyNet;
   };
   const recentlyVisitedPolicies = dataRP?.userPolicyVisits?.collection || [];
 
@@ -106,6 +109,7 @@ export default function Homepage() {
                 recentlyVisitedPolicies.length
                   ? recentlyVisitedPolicies
                       .map((a) => a.policy)
+                      .filter((b) => b !== null)
                       .map(customModifier)
                   : []
               }
