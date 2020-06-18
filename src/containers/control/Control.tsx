@@ -36,7 +36,6 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
-import { APP_ROOT_URL } from "../../settings";
 // import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
