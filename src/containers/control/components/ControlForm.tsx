@@ -38,7 +38,7 @@ const ControlForm = ({
   isDraft,
   isCreate,
 }: ControlFormProps) => {
-  const { register, handleSubmit, setValue, errors } = useForm<
+  const { register, handleSubmit, setValue, errors, watch } = useForm<
     CreateControlFormValues
   >({ validationSchema, defaultValues });
   const [isOpen, setIsOpen] = useState(false);
@@ -52,19 +52,54 @@ const ControlForm = ({
     []
   );
 
-  const bpsQ = useBusinessProcessesQuery();
-  const bpOptions = oc(bpsQ)
-    .data.navigatorBusinessProcesses.collection([])
-    .map(toLabelValue);
-  const departments = useDepartmentsQuery();
-  const controlOwnerOptions = oc(departments)
-    .data.departments.collection([])
-    .map(toLabelValue);
-
   const risksQ = useRisksQuery();
   const riskOptions = oc(risksQ)
     .data.navigatorRisks.collection([])
     .map((risk) => ({ label: risk.name || "", value: risk.id }));
+
+  const checkRisk = watch("riskIds") || [];
+  const bpsQ = useBusinessProcessesQuery({
+    skip: checkRisk.length ? false : true,
+    variables: { filter: { risks_id_in: checkRisk } },
+  });
+  const ultimateBp =
+    risksQ.data?.navigatorRisks?.collection.filter((a) =>
+      checkRisk.includes(a.id)
+    ) || [];
+
+  const groupedBpOptions = ultimateBp.map((a) => {
+    return {
+      label: a.name,
+      options: oc(bpsQ.data)
+        .navigatorBusinessProcesses.collection([])
+        .map((b) => {
+          return {
+            risks: b.risks?.map((c) => {
+              if (c.id === a.id) {
+                return 1;
+              } else {
+                return 0;
+              }
+            }),
+            label: b.name,
+            value: b.id,
+          };
+        })
+        .filter((d) => d.risks?.includes(1))
+        .map((z) => {
+          return { label: z.label || "", value: z.value };
+        }),
+    };
+  });
+
+  const bpOptions = oc(bpsQ)
+    .data.navigatorBusinessProcesses.collection([])
+    .map(toLabelValue);
+
+  const departments = useDepartmentsQuery();
+  const controlOwnerOptions = oc(departments)
+    .data.departments.collection([])
+    .map(toLabelValue);
 
   useEffect(() => {
     register({ name: "frequency" });
@@ -248,13 +283,14 @@ const ControlForm = ({
 
         <FormSelect
           isMulti
+          isDisabled={checkRisk.length ? false : true}
           name="businessProcessIds"
           label="Business Processes*"
           placeholder="Business Processes"
           isLoading={bpsQ.loading}
           register={register}
           setValue={setValue}
-          options={bpOptions}
+          options={groupedBpOptions}
           loading={bpsQ.loading}
           defaultValue={bpOptions.filter((res) =>
             oc(defaultValues)

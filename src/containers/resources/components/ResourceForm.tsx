@@ -56,6 +56,7 @@ export interface ResourceFormValues {
   policyIds?: Suggestions;
   controlIds?: Suggestions;
   businessProcessId?: Suggestion;
+  businessProcessIdNotFlowchart?: Suggestion;
   resuploadBase64?: any;
   resuploadUrl?: string;
   resuploadLink?: string;
@@ -110,13 +111,27 @@ ResourceFormProps) {
       } else {
         dialogBox({
           text: name ? `Update Resource "${name}"?` : "Create Resource?",
-          callback: () => onSubmit?.({ ...data, tagsAttributes: tags }),
+          callback: () =>
+            onSubmit?.({
+              ...data,
+              businessProcessId: !data.businessProcessId
+                ? data.businessProcessIdNotFlowchart
+                : data.businessProcessId,
+              tagsAttributes: tags,
+            }),
         });
       }
     } else {
       dialogBox({
         text: name ? `Update Resource "${name}"?` : "Create Resource?",
-        callback: () => onSubmit?.({ ...data, tagsAttributes: tags }),
+        callback: () =>
+          onSubmit?.({
+            ...data,
+            businessProcessId: !data.businessProcessId
+              ? data.businessProcessIdNotFlowchart
+              : data.businessProcessId,
+            tagsAttributes: tags,
+          }),
       });
     }
   }
@@ -173,7 +188,6 @@ ResourceFormProps) {
           >
             Note: Please select related policies or related control
           </div>
-
           <AsyncSelect
             name="policyIds"
             label="Related Policies*"
@@ -189,7 +203,7 @@ ResourceFormProps) {
           />
           <AsyncSelect
             name="controlIds"
-            label="Related Control*"
+            label="Related Controls*"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -198,6 +212,20 @@ ResourceFormProps) {
             defaultValue={defaultValues?.controlIds || []}
             isMulti
             error={errors.policyIds && errors.policyIds.message}
+          />
+          <AsyncSelect
+            name="businessProcessIdNotFlowchart"
+            label="Related Sub-business Process*"
+            register={register}
+            setValue={setValue}
+            cacheOptions
+            loadOptions={handleGetBps}
+            defaultOptions
+            defaultValue={defaultValues?.businessProcessId}
+            error={
+              errors.businessProcessIdNotFlowchart &&
+              "Related sub-business process is a required field"
+            }
           />
         </Fragment>
       )}
@@ -351,6 +379,11 @@ const validationSchema = yup.object().shape({
   }),
   controlIds: yup.array(),
   businessProcessId: yup.object(),
+  businessProcessIdNotFlowchart: yup.object().when(["businessProcessId"], {
+    is: undefined,
+    then: yup.object().required(),
+    otherwise: yup.object(),
+  }),
   policyIds: yup.array().when(["controlIds", "businessProcessId"], {
     is: undefined,
     then: yup

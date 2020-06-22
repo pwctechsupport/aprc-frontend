@@ -345,7 +345,7 @@ const SubPolicyAttributeForm = ({
   const controlsQ = useControlsQuery({
     skip: checkRisk.length ? false : true,
     variables: {
-      filter: filterControl,
+      filter: "filterControl",
     },
     fetchPolicy: "network-only",
   });
@@ -353,20 +353,25 @@ const SubPolicyAttributeForm = ({
   const controlsOptions = oc(controlsQ.data)
     .navigatorControls.collection([])
     .map(({ id, description }) => ({ label: description || "", value: id }));
-
   const groupedControlOptions = controlOption.map((a) => {
     return {
       label: a.label,
       options: oc(controlsQ.data)
         .navigatorControls.collection([])
-        .map((c) => {
+        .map((b) => {
           return {
-            risks: c.risks?.filter((b) => b.name),
-            label: c.description,
-            value: c.id,
+            risks: b.risks?.map((c) => {
+              if (c.id === a.value) {
+                return 1;
+              } else {
+                return 0;
+              }
+            }),
+            label: b.description,
+            value: b.id,
           };
         })
-        .filter((d) => d.risks?.length)
+        .filter((d) => d.risks?.includes(1))
         .map((z) => {
           return { label: z.label || "", value: z.value };
         }),
