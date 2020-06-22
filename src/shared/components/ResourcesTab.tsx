@@ -152,6 +152,7 @@ export default function ResourcesTab({
               business_process_id_matches_any: bpIds,
               name_cont: searchQuery,
               draft_id_null: true,
+              category_not_eq: "Flowchart",
             }
         : policy
         ? {
@@ -159,8 +160,8 @@ export default function ResourcesTab({
             name_cont: searchQuery,
           }
         : {
+            category_not_eq: "Flowchart",
             business_process_id_matches_any: bpIds,
-
             name_cont: searchQuery,
           },
       limit,

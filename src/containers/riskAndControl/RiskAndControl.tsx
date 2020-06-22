@@ -964,7 +964,7 @@ export default function RiskAndControl({
             <ResourcesTab
               setResourceId={setResourceId}
               bPId={id}
-              risksnControls
+              // risksnControls
               isDraft={null}
               formDefaultValues={{
                 category: { label: "Flowchart", value: "Flowchart" },
