@@ -345,7 +345,7 @@ const SubPolicyAttributeForm = ({
   const controlsQ = useControlsQuery({
     skip: checkRisk.length ? false : true,
     variables: {
-      filter: "filterControl",
+      filter: filterControl,
     },
     fetchPolicy: "network-only",
   });
