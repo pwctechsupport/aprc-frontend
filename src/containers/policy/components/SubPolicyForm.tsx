@@ -307,7 +307,8 @@ const SubPolicyAttributeForm = ({
   const businessProcessesOptions = oc(businessProcessesQ.data)
     .navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
-  const checkBp = formModal.watch("businessProcessIds");
+
+  const checkBp = formModal.watch("businessProcessIds") || [];
   const checkRisk = formModal.watch("riskIds") || [];
   const checkControl = formModal.watch("controlIds") || [];
 
@@ -318,26 +319,59 @@ const SubPolicyAttributeForm = ({
     setFilterControl({ risks_id_in: checkRisk });
   }, [checkBp, checkRisk]);
 
-  const controlsQ = useControlsQuery({
-    variables: {
-      filter: filterControl,
-    },
-    fetchPolicy: "network-only",
-  });
-  const controlsOptions = oc(controlsQ.data)
-    .navigatorControls.collection([])
-    .map(({ id, description }) => ({ label: description || "", value: id }));
-
   const risksQ = useRisksQuery({
+    skip: checkBp.length ? false : true,
     variables: {
       filter,
     },
     fetchPolicy: "network-only",
   });
+  const riskOption = businessProcessesOptions.filter((a) =>
+    checkBp.includes(a.value)
+  );
   const risksOptions = oc(risksQ.data)
     .navigatorRisks.collection([])
     .map(toLabelValue);
+  const groupedRiskOptions = riskOption.map((a) => {
+    return {
+      label: a.label,
+      options: oc(risksQ.data)
+        .navigatorRisks.collection([])
+        .filter((b) => b.businessProcess?.includes(a.label))
+        .map(toLabelValue),
+    };
+  });
 
+  const controlsQ = useControlsQuery({
+    skip: checkRisk.length ? false : true,
+    variables: {
+      filter: filterControl,
+    },
+    fetchPolicy: "network-only",
+  });
+  const controlOption = risksOptions.filter((a) => checkRisk.includes(a.value));
+  const controlsOptions = oc(controlsQ.data)
+    .navigatorControls.collection([])
+    .map(({ id, description }) => ({ label: description || "", value: id }));
+
+  const groupedControlOptions = controlOption.map((a) => {
+    return {
+      label: a.label,
+      options: oc(controlsQ.data)
+        .navigatorControls.collection([])
+        .map((c) => {
+          return {
+            risks: c.risks?.filter((b) => b.name),
+            label: c.description,
+            value: c.id,
+          };
+        })
+        .filter((d) => d.risks?.length)
+        .map((z) => {
+          return { label: z.label || "", value: z.value };
+        }),
+    };
+  });
   //risk modified default Values
 
   const riskDefaultValuesOrigin = risksOptions
@@ -421,10 +455,10 @@ const SubPolicyAttributeForm = ({
         placeholder="Risk"
         label="Risk"
         isDisabled={checkBp?.length ? false : true}
-        options={risksOptions}
+        options={groupedRiskOptions}
         defaultValue={riskDefaultValues}
         error={formModal.errors.riskIds && "Risk is a required field"}
-      />{" "}
+      />
       <FormSelect
         isMulti
         loading={controlsQ.loading}
@@ -434,7 +468,7 @@ const SubPolicyAttributeForm = ({
         placeholder="Control"
         label="Control"
         isDisabled={checkRisk?.length ? false : true}
-        options={controlsOptions}
+        options={groupedControlOptions}
         defaultValue={controlDefaultValues}
         error={formModal.errors.controlIds && "Control is a required field"}
       />
