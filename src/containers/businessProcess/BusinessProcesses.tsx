@@ -22,6 +22,7 @@ import CreateBusinessProcess from "./CreateBusinessProcess";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import Pagination from "../../shared/components/Pagination";
+import { notifyError, notifySuccess } from "../../shared/utils/notif";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -268,7 +269,18 @@ const ImportBusinessProcessModal = ({
     try {
       setLoading(true);
       await MyApi.put("/business_processes/import", formData);
-      toast.success("Import Business Process Berhasil");
+      const showErrors = (
+        await MyApi.put("/business_processes/import", formData)
+      ).data.error_data.slice(0, 4);
+      if (showErrors.length) {
+        return notifyError(
+          showErrors.map(
+            (a: any) => `Error in line ${a.line}, Error message: ${a.message} `
+          )
+        );
+      } else {
+        notifySuccess(`Import Business Process Success`);
+      }
       toggle();
     } catch (error) {
       setError(error);

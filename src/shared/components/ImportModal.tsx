@@ -11,7 +11,7 @@ const ImportModal = ({
   title,
   endpoint,
   onCompleted,
-  onError
+  onError,
 }: ImportModalProps) => {
   const [file, setFile] = useState();
   const [error, setError] = useState<null | string>(null);
@@ -38,7 +38,18 @@ const ImportModal = ({
     try {
       setLoading(true);
       await MyApi.put(endpoint, formData);
-      notifySuccess(`${title} Success`);
+      const showErrors = (
+        await MyApi.put(endpoint, formData)
+      ).data.error_data.slice(0, 4);
+      if (showErrors.length) {
+        return notifyError(
+          showErrors.map(
+            (a: any) => `Error in line ${a.line}, Error message: ${a.message} `
+          )
+        );
+      } else {
+        notifySuccess(`${title} Success`);
+      }
       toggle();
       onCompleted && onCompleted();
     } catch (error) {
