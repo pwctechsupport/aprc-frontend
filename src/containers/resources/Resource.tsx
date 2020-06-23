@@ -73,7 +73,7 @@ export default function Resource({
   const category = data?.resource?.category;
   const resuploadLink = data?.resource?.resuploadLink;
   const policies = data?.resource?.policies || [];
-  const controls = data?.resource?.controls || [];
+  const bps = data?.resource?.businessProcess;
   const draft = data?.resource?.draft?.objectResult;
   const hasEditAccess = data?.resource?.hasEditAccess || false;
   const requestStatus = data?.resource?.requestStatus;
@@ -266,16 +266,14 @@ export default function Resource({
               ) : (
                 <>
                   <div>
-                    <h5 className="mt-5">Related Controls:</h5>
-                    {controls.length ? (
+                    <h5 className="mt-5">Related Business Process:</h5>
+                    {bps ? (
                       <ul>
-                        {filteredNames(controls).map((control: any) => (
-                          <li key={control.id}>
-                            <Link to={`/control/${control.id}`}>
-                              {control.description}
-                            </Link>
+                        {
+                          <li>
+                            <Link to={`/control/${bps.id}`}>{bps.name}</Link>
                           </li>
-                        ))}
+                        }
                       </ul>
                     ) : (
                       <EmptyAttribute centered={false} />

@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { Form, Label } from "reactstrap";
+import styled from "styled-components";
 import * as yup from "yup";
 import {
   BusinessProcessesDocument,
   BusinessProcessesQuery,
-  ControlsDocument,
-  ControlsQuery,
   EnumListsDocument,
   EnumListsQuery,
   PoliciesDocument,
@@ -15,6 +15,7 @@ import {
 } from "../../../generated/graphql";
 import { APP_ROOT_URL } from "../../../settings";
 import Button from "../../../shared/components/Button";
+import DialogButton from "../../../shared/components/DialogButton";
 import AsyncCreatableSelect from "../../../shared/components/forms/AsyncCreatableSelect";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import FileInput from "../../../shared/components/forms/FileInput";
@@ -27,9 +28,6 @@ import {
 } from "../../../shared/formatter";
 import useDialogBox from "../../../shared/hooks/useDialogBox";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
-import DialogButton from "../../../shared/components/DialogButton";
-import styled from "styled-components";
-import { toast } from "react-toastify";
 // import Flowchart from "../../riskAndControl/components/Flowchart";
 
 interface ResourceFormProps {
@@ -138,7 +136,7 @@ ResourceFormProps) {
 
   const handleGetCategories = useLoadCategories(policy);
   const handleGetPolicies = useLoadPolicies();
-  const handleGetControls = useLoadControls();
+  // const handleGetControls = useLoadControls();
   const handleGetBps = useLoadBps();
   const selectedCategory = watch("category");
   const selectedBusinessProcess = watch("businessProcessId");
@@ -186,7 +184,7 @@ ResourceFormProps) {
             style={{ fontStyle: "italic", color: "red", fontSize: "12px" }}
             className="mb-1"
           >
-            Note: Please select related policies or related control
+            Note: Please select related policies or related sub-business process
           </div>
           <AsyncSelect
             name="policyIds"
@@ -201,7 +199,7 @@ ResourceFormProps) {
             error={errors.policyIds && errors.policyIds.message}
             isResourcePolicy
           />
-          <AsyncSelect
+          {/* <AsyncSelect
             name="controlIds"
             label="Related Controls*"
             register={register}
@@ -212,7 +210,7 @@ ResourceFormProps) {
             defaultValue={defaultValues?.controlIds || []}
             isMulti
             error={errors.policyIds && errors.policyIds.message}
-          />
+          /> */}
           <AsyncSelect
             name="businessProcessIdNotFlowchart"
             label="Related Sub-business Process*"
@@ -222,10 +220,12 @@ ResourceFormProps) {
             loadOptions={handleGetBps}
             defaultOptions
             defaultValue={defaultValues?.businessProcessId}
-            error={
-              errors.businessProcessIdNotFlowchart &&
-              "Related sub-business process is a required field"
-            }
+            error={errors.policyIds && errors.policyIds.message}
+
+            // error={
+            //   errors.businessProcessIdNotFlowchart &&
+            //   "Related sub-business process is a required field"
+            // }
           />
         </Fragment>
       )}
@@ -377,18 +377,21 @@ const validationSchema = yup.object().shape({
     label: yup.string().required("Category is a required field"),
     value: yup.string().required(),
   }),
-  controlIds: yup.array(),
+  // controlIds: yup.array(),
   businessProcessId: yup.object(),
-  businessProcessIdNotFlowchart: yup.object().when(["businessProcessId"], {
-    is: undefined,
-    then: yup.object().required(),
-    otherwise: yup.object(),
-  }),
-  policyIds: yup.array().when(["controlIds", "businessProcessId"], {
+  businessProcessIdNotFlowchart: yup.object(),
+  // .when(["businessProcessId"], {
+  //   is: undefined,
+  //   then: yup.object().required(),
+  //   otherwise: yup.object(),
+  // }),
+  policyIds: yup.array().when(["businessProcessId"], {
     is: undefined,
     then: yup
       .array()
-      .required("Please select related policies or related control"),
+      .required(
+        "Please select related policies or related sub-business process"
+      ),
     otherwise: yup.array(),
   }),
   resuploadBase64: yup.string(),
@@ -436,26 +439,26 @@ function useLoadPolicies() {
   return getSuggestions;
 }
 
-function useLoadControls() {
-  const query = useLazyQueryReturnPromise<ControlsQuery>(ControlsDocument);
-  async function getSuggestions(
-    description_cont: string = ""
-  ): Promise<Suggestions> {
-    try {
-      const { data } = await query({
-        filter: { description_cont },
-      });
-      return (
-        data.navigatorControls?.collection
-          ?.map(({ description, id }) => ({ id, name: description }))
-          .map(toLabelValue) || []
-      );
-    } catch (error) {
-      return [];
-    }
-  }
-  return getSuggestions;
-}
+// function useLoadControls() {
+//   const query = useLazyQueryReturnPromise<ControlsQuery>(ControlsDocument);
+//   async function getSuggestions(
+//     description_cont: string = ""
+//   ): Promise<Suggestions> {
+//     try {
+//       const { data } = await query({
+//         filter: { description_cont },
+//       });
+//       return (
+//         data.navigatorControls?.collection
+//           ?.map(({ description, id }) => ({ id, name: description }))
+//           .map(toLabelValue) || []
+//       );
+//     } catch (error) {
+//       return [];
+//     }
+//   }
+//   return getSuggestions;
+// }
 
 function useLoadBps() {
   const query = useLazyQueryReturnPromise<BusinessProcessesQuery>(
