@@ -3,7 +3,6 @@ import Helmet from "react-helmet";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
@@ -16,13 +15,12 @@ import DialogButton from "../../shared/components/DialogButton";
 import Modal from "../../shared/components/Modal";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
-import MyApi from "../../shared/utils/api";
 import downloadXls from "../../shared/utils/downloadXls";
 import CreateBusinessProcess from "./CreateBusinessProcess";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import Pagination from "../../shared/components/Pagination";
-import { notifyError, notifySuccess } from "../../shared/utils/notif";
+import ImportModal from "../../shared/components/ImportModal";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -149,7 +147,9 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
             ) : null}
 
             {isAdminReviewer ? (
-              <ImportBusinessProcessModal
+              <ImportModal
+                title="Import Business Process"
+                endpoint="/business_processes/import"
                 isOpen={modal}
                 toggle={toggleImportModal}
               />
@@ -238,76 +238,3 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 };
 
 export default BusinessProcesses;
-
-const ImportBusinessProcessModal = ({
-  isOpen,
-  toggle,
-}: ImportBusinessProcessModalProps) => {
-  const [file, setFile] = useState();
-  const [error, setError] = useState<null | string>(null);
-  const [loading, setLoading] = useState(false);
-
-  function handleSetFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files && e.target.files[0];
-    if (file) {
-      if (
-        file.type !==
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ) {
-        setError("File type not supported. Allowed type are: .xls, .xlsx");
-      } else {
-        setError(null);
-        setFile(file);
-      }
-    }
-  }
-
-  async function handleImport() {
-    const formData = new FormData();
-
-    formData.append("file", file);
-    try {
-      setLoading(true);
-      await MyApi.put("/business_processes/import", formData);
-      const showErrors = (
-        await MyApi.put("/business_processes/import", formData)
-      ).data.error_data.slice(0, 4);
-      if (showErrors.length) {
-        return notifyError(
-          showErrors.map(
-            (a: any) => `Error in line ${a.line}, Error message: ${a.message} `
-          )
-        );
-      } else {
-        notifySuccess(`Import Business Process Success`);
-      }
-      toggle();
-    } catch (error) {
-      setError(error);
-      toast.error("Import Business Process Gagal");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <Modal isOpen={isOpen} title="Import Business Process" toggle={toggle}>
-      <Input type="file" onChange={handleSetFile} />
-      {error && <h6 className="text-red mt-2">{error}</h6>}
-      <div className="d-flex justify-content-end mt-3">
-        <Button
-          className="pwc"
-          onClick={handleImport}
-          disabled={!file || !!error}
-          loading={loading}
-        >
-          Import
-        </Button>
-      </div>
-    </Modal>
-  );
-};
-interface ImportBusinessProcessModalProps {
-  isOpen: boolean;
-  toggle: () => void;
-}

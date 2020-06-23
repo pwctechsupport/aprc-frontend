@@ -213,7 +213,8 @@ const ToggleButton = styled(FaSearch)`
 const StyledButton = styled(Button)`
   cursor: pointer;
   font-size: 14px;
-  padding-bottom: 9px;
+  padding-top: 8px;
+  padding-bottom: 7px;
   position: absolute;
   /* width: 115px; */
   right: -105px;
