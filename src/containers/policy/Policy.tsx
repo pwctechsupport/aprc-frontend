@@ -425,7 +425,7 @@ export default function Policy({
     const category = dataResource?.resource?.category;
     const resuploadLink = dataResource?.resource?.resuploadLink;
     const policies = dataResource?.resource?.policies || [];
-    const controls = dataResource?.resource?.controls || [];
+    const bps = dataResource?.resource?.businessProcess;
     const base64File = dataResource?.resource?.base64File;
 
     const rating =
@@ -472,14 +472,14 @@ export default function Policy({
                       ) : (
                         <>
                           <div>
-                            <h5 className="mt-5">Related Controls:</h5>
-                            {controls.length ? (
+                            <h5 className="mt-5">Related Business Process:</h5>
+                            {bps ? (
                               <ul>
-                                {controls.map((control) => (
-                                  <li key={control.id}>
-                                    {control.description}
-                                  </li>
-                                ))}
+                                <li>
+                                  <Link to={`/risk-and-control/${bps.id}`}>
+                                    {bps.name}
+                                  </Link>
+                                </li>
                               </ul>
                             ) : (
                               <EmptyAttribute centered={false} />

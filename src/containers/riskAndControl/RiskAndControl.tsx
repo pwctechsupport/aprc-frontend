@@ -550,7 +550,7 @@ export default function RiskAndControl({
     const category = dataResource?.resource?.category;
     const resuploadLink = dataResource?.resource?.resuploadLink;
     const policies = dataResource?.resource?.policies || [];
-    const controls = dataResource?.resource?.controls || [];
+    const bps = dataResource?.resource?.businessProcess;
     const base64File = dataResource?.resource?.base64File;
     const rating =
       dataRating?.resourceRatings?.collection.map((a) => a.rating).pop() || 0;
@@ -593,12 +593,10 @@ export default function RiskAndControl({
                     ) : (
                       <>
                         <div>
-                          <h5 className="mt-5">Related Controls:</h5>
-                          {controls.length ? (
+                          <h5 className="mt-5">Related Business Process:</h5>
+                          {bps ? (
                             <ul>
-                              {controls.map((control) => (
-                                <li key={control.id}>{control.description}</li>
-                              ))}
+                              <li>{bps.name}</li>
                             </ul>
                           ) : (
                             <EmptyAttribute centered={false} />

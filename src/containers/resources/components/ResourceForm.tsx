@@ -196,7 +196,10 @@ ResourceFormProps) {
             defaultOptions
             defaultValue={defaultValues?.policyIds || []}
             isMulti
-            error={errors.policyIds && errors.policyIds.message}
+            error={
+              errors.policyIds &&
+              "Please select related policies or related sub-business process"
+            }
             isResourcePolicy
           />
           {/* <AsyncSelect
@@ -220,7 +223,10 @@ ResourceFormProps) {
             loadOptions={handleGetBps}
             defaultOptions
             defaultValue={defaultValues?.businessProcessId}
-            error={errors.policyIds && errors.policyIds.message}
+            error={
+              errors.policyIds &&
+              "Please select related policies or related sub-business process"
+            }
 
             // error={
             //   errors.businessProcessIdNotFlowchart &&
@@ -377,23 +383,15 @@ const validationSchema = yup.object().shape({
     label: yup.string().required("Category is a required field"),
     value: yup.string().required(),
   }),
-  // controlIds: yup.array(),
   businessProcessId: yup.object(),
+  policyIds: yup
+    .array()
+    .when(["businessProcessIdNotFlowchart", "businessProcessId"], {
+      is: undefined,
+      then: yup.array().required(),
+      otherwise: yup.array(),
+    }),
   businessProcessIdNotFlowchart: yup.object(),
-  // .when(["businessProcessId"], {
-  //   is: undefined,
-  //   then: yup.object().required(),
-  //   otherwise: yup.object(),
-  // }),
-  policyIds: yup.array().when(["businessProcessId"], {
-    is: undefined,
-    then: yup
-      .array()
-      .required(
-        "Please select related policies or related sub-business process"
-      ),
-    otherwise: yup.array(),
-  }),
   resuploadBase64: yup.string(),
   resuploadLink: yup.string().when("resuploadBase64", {
     is: undefined,

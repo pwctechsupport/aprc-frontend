@@ -271,7 +271,9 @@ export default function Resource({
                       <ul>
                         {
                           <li>
-                            <Link to={`/control/${bps.id}`}>{bps.name}</Link>
+                            <Link to={`/risk-and-control/${bps.id}`}>
+                              {bps.name}
+                            </Link>
                           </li>
                         }
                       </ul>
