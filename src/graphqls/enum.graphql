@@ -1,4 +1,4 @@
-query enumLists($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
+query enumLists($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
   enumLists(filter: $filter, page: $page, limit: $limit) {
     collection {
       code

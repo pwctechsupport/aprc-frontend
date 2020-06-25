@@ -1,4 +1,4 @@
-query tags($filter: BaseScalar = {}, $limit: Int = 1000, $page: Int) {
+query tags($filter: BaseScalar = {}, $limit: Int = 25, $page: Int) {
   tags(filter: $filter, limit: $limit, page: $page) {
     collection {
       xCoordinates

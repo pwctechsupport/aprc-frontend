@@ -1,4 +1,4 @@
-query roles($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
+query roles($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
   roles(filter: $filter, page: $page, limit: $limit) {
     collection {
       id

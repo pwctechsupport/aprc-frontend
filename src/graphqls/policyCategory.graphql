@@ -1,6 +1,6 @@
 query policyCategories(
   $filter: BaseScalar = {}
-  $limit: Int = 1000
+  $limit: Int = 25
   $page: Int
 ) {
   navigatorPolicyCategories(filter: $filter, page: $page, limit: $limit) {
@@ -24,7 +24,7 @@ query policyCategories(
 }
 query adminPolicyCategories(
   $filter: BaseScalar = {}
-  $limit: Int = 1000
+  $limit: Int = 25
   $page: Int
 ) {
   preparerPolicyCategories(filter: $filter, page: $page, limit: $limit) {
@@ -54,7 +54,7 @@ query adminPolicyCategories(
 }
 query reviewerPolicyCategoriesStatus(
   $filter: BaseScalar = {}
-  $limit: Int = 1000
+  $limit: Int = 25
   $page: Int
 ) {
   reviewerPolicyCategoriesStatus(filter: $filter, page: $page, limit: $limit) {
