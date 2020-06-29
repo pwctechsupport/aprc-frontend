@@ -15,7 +15,7 @@ import {
   Nature,
   TypeOfControl,
   useBusinessProcessesQuery,
-  useRisksQuery,
+  useAdminRisksQuery,
   useDepartmentsQuery,
 } from "../../../generated/graphql";
 import * as yup from "yup";
@@ -52,18 +52,17 @@ const ControlForm = ({
     []
   );
 
-  const risksQ = useRisksQuery();
+  const risksQ = useAdminRisksQuery();
   const riskOptions = oc(risksQ)
-    .data.navigatorRisks.collection([])
+    .data.preparerRisks.collection([])
     .map((risk) => ({ label: risk.name || "", value: risk.id }));
-
   const checkRisk = watch("riskIds") || [];
   const bpsQ = useBusinessProcessesQuery({
     skip: checkRisk.length ? false : true,
     variables: { filter: { risks_id_in: checkRisk } },
   });
   const ultimateBp =
-    risksQ.data?.navigatorRisks?.collection.filter((a) =>
+    risksQ.data?.preparerRisks?.collection.filter((a) =>
       checkRisk.includes(a.id)
     ) || [];
 
