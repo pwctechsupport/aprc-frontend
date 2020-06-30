@@ -169,14 +169,13 @@ const Resources = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "10%" }}>Name</th>
-            <th style={{ width: "8%" }}>File Type</th>
-            <th style={{ width: "8%" }}>Category</th>
-            <th style={{ width: "14%" }}>Related Controls</th>
-            <th style={{ width: "14%" }}>Related Policy</th>
-            <th style={{ width: "14%" }}>Related Business Process</th>
-            <th style={{ width: "8%" }}>Last Updated</th>
-            <th style={{ width: "8%" }}>Created By</th>
+            <th style={{ width: "12%" }}>Name</th>
+            <th style={{ width: "10%" }}>File Type</th>
+            <th style={{ width: "10%" }}>Category</th>
+            <th style={{ width: "16%" }}>Related Policy</th>
+            <th style={{ width: "16%" }}>Related Business Process</th>
+            <th style={{ width: "10%" }}>Last Updated</th>
+            <th style={{ width: "10%" }}>Created By</th>
 
             <th></th>
           </tr>
@@ -201,12 +200,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                 <td>{resource.name}</td>
                 <td>{resource.resourceFileType}</td>
                 <td>{capitalCase(resource.category || "")}</td>
-                <td>
-                  {oc(resource)
-                    .controls([])
-                    .map((c) => c.description)
-                    .join(", ")}
-                </td>
+
                 <td>
                   {oc(resource)
                     .policies([])
