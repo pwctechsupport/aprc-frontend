@@ -37,21 +37,24 @@ const ImportModal = ({
     formData.append("file", file);
     try {
       setLoading(true);
-      await MyApi.put(endpoint, formData);
-      const showErrors = (
-        await MyApi.put(endpoint, formData)
-      ).data.error_data.slice(0, 4);
-      if (showErrors.length) {
+      const tes = await MyApi.put(endpoint, formData);
+      toggle();
+      onCompleted && onCompleted();
+      if (
+        tes.data.error_data !== undefined &&
+        tes.data.error_data.slice(0, 4)
+      ) {
         return notifyError(
-          showErrors.map(
-            (a: any) => `Error in line ${a.line}, Error message: ${a.message} `
-          )
+          tes.data.error_data
+            .slice(0, 4)
+            .map(
+              (a: any) =>
+                `Error in line ${a.line}, Error message: ${a.message} `
+            )
         );
       } else {
         notifySuccess(`${title} Success`);
       }
-      toggle();
-      onCompleted && onCompleted();
     } catch (error) {
       setError("Error uploading document");
       notifyError(`${title} Failed`);
