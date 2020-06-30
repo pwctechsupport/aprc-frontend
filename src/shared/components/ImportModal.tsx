@@ -37,15 +37,15 @@ const ImportModal = ({
     formData.append("file", file);
     try {
       setLoading(true);
-      const tes = await MyApi.put(endpoint, formData);
+      const rawData = await MyApi.put(endpoint, formData);
       toggle();
       onCompleted && onCompleted();
       if (
-        tes.data.error_data !== undefined &&
-        tes.data.error_data.slice(0, 4)
+        rawData.data.error_data !== undefined &&
+        rawData.data.error_data.length !== 0
       ) {
         return notifyError(
-          tes.data.error_data
+          rawData.data.error_data
             .slice(0, 4)
             .map(
               (a: any) =>
