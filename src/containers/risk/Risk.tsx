@@ -57,7 +57,7 @@ export default function Risk({
   const name = data?.risk?.name || "";
   const levelOfRisk = data?.risk?.levelOfRisk || "";
   const typeOfRisk = data?.risk?.typeOfRisk || "";
-  const bps = data?.risk?.businessProcesses || [];
+  const bps = data?.risk?.businessProcess || [];
   const updatedAt = data?.risk?.updatedAt;
   const updatedBy = data?.risk?.lastUpdatedBy;
   const createdBy = data?.risk?.createdBy;
@@ -73,7 +73,10 @@ export default function Risk({
   });
   const defaultValues: RiskFormValues = {
     name,
-    businessProcessIds: data?.risk?.businessProcesses?.map(toLabelValue) || [],
+    businessProcessIds:
+      data?.risk?.businessProcesses
+        ?.filter((a) => bps.includes(a.name || ""))
+        .map(toLabelValue) || [],
     levelOfRisk: levelOfRisk as LevelOfRisk,
     typeOfRisk: typeOfRisk as TypeOfRisk,
   };
@@ -267,7 +270,7 @@ export default function Risk({
       { label: "Name", value: name },
       {
         label: "Business Process",
-        value: bps.length ? bps?.map((a) => a.name).join(", ") : "",
+        value: bps.length ? bps?.join(", ") : "",
       },
       {
         label: "Level of Risk",
