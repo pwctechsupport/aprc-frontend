@@ -17,6 +17,8 @@ import {
   useBusinessProcessesQuery,
   useAdminRisksQuery,
   useDepartmentsQuery,
+  useControlQuery,
+  useControlsQuery,
 } from "../../../generated/graphql";
 import * as yup from "yup";
 import Button from "../../../shared/components/Button";
@@ -41,6 +43,18 @@ const ControlForm = ({
   const { register, handleSubmit, setValue, errors, watch } = useForm<
     CreateControlFormValues
   >({ validationSchema, defaultValues });
+  const controlsQ = useControlsQuery({
+    skip: defaultValues?.description ? false : true,
+    fetchPolicy: "network-only",
+    variables: { filter: { description_eq: defaultValues?.description } },
+  });
+  const getAssertion =
+    controlsQ.data?.navigatorControls?.collection
+      .map((a) => a.assertion)
+      .flat(2) || [];
+  const getIPO =
+    controlsQ.data?.navigatorControls?.collection.map((a) => a.ipo).flat(2) ||
+    [];
   const [isOpen, setIsOpen] = useState(false);
   const toogleModal = () => setIsOpen((p) => !p);
   const closeModal = () => {
@@ -325,13 +339,12 @@ const ControlForm = ({
               name="assertion"
               label="Assertions*"
               placeholder="Assertions"
+              loading={controlsQ.loading}
               register={register}
               setValue={setValue}
               options={assertions}
               defaultValue={assertions.filter((res) =>
-                oc(defaultValues)
-                  .assertion([])
-                  .includes(res.value)
+                getAssertion.includes(res.value)
               )}
               error={errors.assertion && "Assertion is a required field"}
             />
@@ -342,14 +355,11 @@ const ControlForm = ({
               name="ipo"
               label="IPOs*"
               placeholder="IPOs"
+              loading={controlsQ.loading}
               register={register}
               setValue={setValue}
               options={ipos}
-              defaultValue={ipos.filter((res) =>
-                oc(defaultValues)
-                  .ipo([])
-                  .includes(res.value)
-              )}
+              defaultValue={ipos.filter((res) => getIPO.includes(res.value))}
               error={errors.ipo && "IPOs is a required field"}
             />
           </Col>
