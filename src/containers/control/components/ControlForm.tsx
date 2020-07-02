@@ -17,7 +17,6 @@ import {
   useBusinessProcessesQuery,
   useAdminRisksQuery,
   useDepartmentsQuery,
-  useControlQuery,
   useControlsQuery,
 } from "../../../generated/graphql";
 import * as yup from "yup";
@@ -374,7 +373,7 @@ const ControlForm = ({
           setValue={setValue}
           options={controlOwnerOptions}
           defaultValue={controlOwnerOptions.filter((a) =>
-            controlOwnerId.includes(a.value)
+            controlOwnerId.includes(a.label)
           )}
           loading={departments.loading}
           error={errors.controlOwner && "Control owner is a required field"}
