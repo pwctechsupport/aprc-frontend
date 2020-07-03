@@ -11,6 +11,7 @@ query policyCategories($filter: BaseScalar = {}, $limit: Int = 25, $page: Int) {
       draft {
         event
       }
+      policy
       policies {
         id
         title
@@ -31,6 +32,7 @@ query adminPolicyCategories(
       createdAt
       lastUpdatedBy
       createdBy
+      policy
       status
       draft {
         event
@@ -65,6 +67,7 @@ query reviewerPolicyCategoriesStatus(
       draft {
         event
       }
+      policy
       policies {
         id
         title

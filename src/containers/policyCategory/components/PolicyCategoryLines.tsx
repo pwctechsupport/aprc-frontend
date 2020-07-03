@@ -213,14 +213,12 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                 ) : null}
 
                 <td>{policyCategory.name}</td>
+                <td>{policyCategory.policy?.join(", ")}</td>
                 <td>
-                  {oc(policyCategory)
-                    .policies([])
-                    .map((policy) => policy.title)
-                    .join(", ")}
-                </td>
-                <td>
-                  {policyCategory.draft ? "Waiting for review" : "Release"}
+                  {policyCategory.draft ||
+                  policyCategory.status === "waiting_for_approval"
+                    ? "Waiting for review"
+                    : "Release"}
                 </td>
                 <td>{policyCategory.updatedAt.split(" ")[0]}</td>
                 <td>{policyCategory.lastUpdatedBy}</td>

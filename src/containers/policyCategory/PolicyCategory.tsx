@@ -14,6 +14,7 @@ import {
   usePolicyCategoryQuery,
   useReviewPolicyCategoryDraftMutation,
   useUpdatePolicyCategoryMutation,
+  usePreparerPoliciesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -48,6 +49,16 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
     },
     fetchPolicy: "network-only",
   });
+  const policiesReal = data?.policyCategory?.policy || [];
+  const policiesDataRaw = usePreparerPoliciesQuery({
+    skip: policiesReal.length ? false : true,
+    variables: {
+      isTree: false,
+      filter: { title_matches_any: policiesReal },
+      limit: 1000,
+    },
+  });
+  const policiesData = policiesDataRaw.data?.preparerPolicies?.collection || [];
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const createdBy = data?.policyCategory?.createdBy;
   const lastUpdatedBy = data?.policyCategory?.lastUpdatedBy;
@@ -153,18 +164,10 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
 
   let name = data?.policyCategory?.name || "";
   // name = draft ? `[Draft] ${name}` : name;
-  const policies = data?.policyCategory?.policies || [];
-  const policiesReal = data?.policyCategory?.policy || [];
 
-  const modifiedPolicies = policies?.filter((jay) =>
-    policiesReal?.includes(jay.title || "")
-  );
-  const dsa = policies
-    ?.filter((jay) => policiesReal?.includes(jay.title || ""))
-    .map(toLabelValue);
   const defaultValues = {
     name,
-    policies: dsa,
+    policies: policiesData.map(toLabelValue),
   };
 
   const renderPolicyCategoryAction = () => {
@@ -232,9 +235,13 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
             <FaTrash />
           </DialogButton> */}
           <Tooltip description="Edit Policy Category">
-            <Button onClick={toggleEditMode} color="" className="soft orange">
-              <AiFillEdit />
-            </Button>
+            {policiesDataRaw.loading ? (
+              <LoadingSpinner size={10} centered />
+            ) : (
+              <Button onClick={toggleEditMode} color="" className="soft orange">
+                <AiFillEdit />
+              </Button>
+            )}
           </Tooltip>
         </div>
       );
@@ -282,9 +289,9 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
         {/* <h6 className="mt-4"> </h6> */}
         <Fragment>
           <dt>Related Policies</dt>
-          {modifiedPolicies.length ? (
+          {policiesData.length ? (
             <ul>
-              {modifiedPolicies.map((policy) => (
+              {policiesData.map((policy) => (
                 <li key={policy.id}>
                   <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
                 </li>
