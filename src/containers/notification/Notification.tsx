@@ -309,7 +309,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       {isAdminPreparer || isUser
                         ? data.dataType === "request_draft_approved" ||
                           data.dataType === "request_draft_rejected"
-                          ? `Notification: [${
+                          ? `[${
                               data.dataType === "request_draft_approved"
                                 ? data.title?.split(" Approved")[0]
                                 : data.title?.split(" Rejected")[0]
@@ -320,7 +320,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                             }]`
                           : data.dataType === "request_edit_approved" ||
                             data.dataType === "request_edit_rejected"
-                          ? `Notification: your request for edit has been [${
+                          ? `Your request for edit has been [${
                               data.dataType === "request_edit_approved"
                                 ? "Approved"
                                 : "Rejected"
