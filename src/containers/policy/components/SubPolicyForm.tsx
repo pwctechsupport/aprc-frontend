@@ -139,7 +139,7 @@ const SubPolicyForm = ({
           label="Sub-Policy Title*"
           placeholder="Sub-Policy Title"
           innerRef={register({ required: true })}
-          error={errors.title && "title is a required field"}
+          error={errors.title && "Sub policy title is a required field"}
         />
         <div className="mb-3">
           <label>Policy Description*</label>
@@ -149,7 +149,10 @@ const SubPolicyForm = ({
             onChange={onChangeEditor}
             defaultValue={defaultValues?.description || ""}
             invalid={!!errors.description}
-            error={errors.description && "Description field is too short"}
+            error={
+              errors.description &&
+              "Description field is too short and the field is required"
+            }
           />
           {/* <TextEditor
             data={watch("description")}
@@ -167,7 +170,9 @@ const SubPolicyForm = ({
           options={references}
           isMulti
           defaultValue={defaultReference}
-          error={errors.referenceIds && "referenceIds is a required field"}
+          error={
+            errors.referenceIds && "Sub-policy reference is a required field"
+          }
         />
 
         <div className="d-flex justify-content-end mt-3">

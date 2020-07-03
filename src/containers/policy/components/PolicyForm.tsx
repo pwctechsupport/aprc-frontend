@@ -87,7 +87,7 @@ const PolicyForm = ({
           label="Title*"
           placeholder="Title"
           innerRef={register({ required: true })}
-          error={errors.title && errors.title.message}
+          error={errors.title && "Policy title is a required field"}
         />
         <div className="mb-3">
           <label>Policy Description*</label>
@@ -97,7 +97,10 @@ const PolicyForm = ({
             defaultValue={defaultValues?.description || ""}
             onChange={onChangeEditor}
             invalid={!!errors.description}
-            error={errors.description && "Description field is too short"}
+            error={
+              errors.description &&
+              "Description field is too short and the field is required"
+            }
           />
           {/* <TextEditor
             data={watch("description")}
@@ -116,7 +119,9 @@ const PolicyForm = ({
           defaultValue={options.find(
             (option) => option.value === policyCategoryId
           )}
-          error={errors.policyCategoryId && errors.policyCategoryId.message}
+          error={
+            errors.policyCategoryId && "Policy category is a required field"
+          }
         />
         <div className="d-flex justify-content-end mt-3">
           {premise ? (
