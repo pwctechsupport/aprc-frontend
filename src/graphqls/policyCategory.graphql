@@ -1,8 +1,4 @@
-query policyCategories(
-  $filter: BaseScalar = {}
-  $limit: Int = 25
-  $page: Int
-) {
+query policyCategories($filter: BaseScalar = {}, $limit: Int = 25, $page: Int) {
   navigatorPolicyCategories(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
@@ -89,6 +85,7 @@ query policyCategory($id: ID!) {
     requestStatus
     createdBy
     policy
+    lastUpdatedBy
     requestEdit {
       id
       state

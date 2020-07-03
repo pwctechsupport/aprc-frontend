@@ -50,6 +50,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   });
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const createdBy = data?.policyCategory?.createdBy;
+  const lastUpdatedBy = data?.policyCategory?.lastUpdatedBy;
   const draft = data?.policyCategory?.draft?.objectResult;
   const hasEditAccess = data?.policyCategory?.hasEditAccess || false;
   const requestStatus = data?.policyCategory?.requestStatus;
@@ -274,16 +275,24 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
           <dt>Created By</dt>
           <dd> {createdBy ? createdBy : "-"}</dd>
         </Fragment>
+        <Fragment>
+          <dt>Last Updated By</dt>
+          <dd> {lastUpdatedBy ? lastUpdatedBy : "-"}</dd>
+        </Fragment>
         {/* <h6 className="mt-4"> </h6> */}
         <Fragment>
           <dt>Related Policies</dt>
-          <ul>
-            {modifiedPolicies.map((policy) => (
-              <li key={policy.id}>
-                <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
-              </li>
-            ))}
-          </ul>
+          {modifiedPolicies.length ? (
+            <ul>
+              {modifiedPolicies.map((policy) => (
+                <li key={policy.id}>
+                  <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <dd>-</dd>
+          )}
         </Fragment>
       </div>
     );
