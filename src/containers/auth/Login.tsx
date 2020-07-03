@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -22,9 +22,16 @@ export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  const { data, loading: loadingUsers } = useUsersQuery();
+  const [mail, sMail] = useState("");
+  const { data, loading: loadingUsers } = useUsersQuery({
+    variables: { filter: { email_cont: mail } },
+  });
   const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
   const checkEmail = watch("email");
+  useEffect(() => {
+    sMail(checkEmail);
+  }, [checkEmail]);
+
   //refreshes Captcha when error
   const email = data?.users?.collection.map((a) => a.email);
   const [t, st] = useState({
@@ -119,7 +126,7 @@ export default function Login({ history }: RouteComponentProps) {
           color="primary"
           type="submit"
           block
-          loading={loading||loadingUsers}
+          loading={loading || loadingUsers}
           disabled={!captcha}
         >
           Login
