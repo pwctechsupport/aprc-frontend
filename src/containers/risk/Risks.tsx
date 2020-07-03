@@ -6,7 +6,6 @@ import { RouteComponentProps, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  RisksDocument,
   useDestroyRiskMutation,
   useAdminRisksQuery,
   useReviewerRisksStatusQuery,
@@ -64,12 +63,8 @@ const Risks = ({ history }: RouteComponentProps) => {
   const [destroy, destroyM] = useDestroyRiskMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: [
-      {
-        query: RisksDocument,
-        variables: { filter: {} },
-      },
-    ],
+    refetchQueries: ["reviewerRisksStatus", "adminRisks", "risks"],
+    awaitRefetchQueries: true,
   });
 
   const risks =
