@@ -19,6 +19,7 @@ import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnP
 import DialogButton from "../../../shared/components/DialogButton";
 import { toast } from "react-toastify";
 import styled from "styled-components";
+import { capitalCase } from "capital-case";
 
 export interface UserFormProps {
   onSubmit?: (values: UserFormValues) => void;
@@ -47,7 +48,6 @@ export default function UserForm(props: UserFormProps) {
     defaultValues: props.defaultValues,
   });
   const checkPassword = watch("password")?.split("") || [""];
-
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
   const numbers = "1234567890".split("");
@@ -234,8 +234,21 @@ export function useLoadRoles() {
   const getRoles = useLazyQueryReturnPromise<RolesQuery>(RolesDocument);
   async function handleGetRoles(input: string) {
     try {
-      const queryResult = await getRoles({ filter: { name_cont: input } });
-      return queryResult.data?.roles?.collection?.map(toLabelValue) || [];
+      const queryResult = await getRoles({
+        filter: {
+          name_cont: input,
+          name_matches_any: ["admin_preparer", "user", "admin_reviewer"],
+        },
+      });
+
+      return (
+        queryResult.data?.roles?.collection?.map(toLabelValue).map((a) => {
+          return {
+            label: capitalCase(a.label.split("_").join(" ")),
+            value: a.value,
+          };
+        }) || []
+      );
     } catch (error) {
       return [];
     }
