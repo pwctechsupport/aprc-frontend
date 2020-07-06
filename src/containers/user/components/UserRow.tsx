@@ -206,7 +206,7 @@ export default function UserRow({
 
           {/* premis 2 Approve */}
           {draft && (isAdminReviewer || isAdmin) && (
-            <Fragment>
+            <div className="d-flex">
               <DialogButton
                 title="Approve"
                 data={oc(user).id()}
@@ -229,7 +229,7 @@ export default function UserRow({
                   <FaTimes />
                 </Tooltip>
               </DialogButton>
-            </Fragment>
+            </div>
           )}
 
           {/* premis 3 Edit */}
