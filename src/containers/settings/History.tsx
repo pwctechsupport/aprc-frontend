@@ -9,7 +9,7 @@ import {
   DestroyVersionInput,
   HistoryListQuery,
   useDestroyHistoryMutation,
-  useHistoryListQuery
+  useHistoryListQuery,
 } from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
 import Tooltip from "../../shared/components/Tooltip";
@@ -19,7 +19,7 @@ import Helmet from "react-helmet";
 
 const History = () => {
   const { data, loading } = useHistoryListQuery({
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const sectionedData = prepareHistory(data);
   const defaultValues = {};
@@ -27,21 +27,21 @@ const History = () => {
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
     refetchQueries: ["historyList"],
-    awaitRefetchQueries: true
+    awaitRefetchQueries: true,
   });
 
   const { register, handleSubmit } = useForm<DestroyVersionInput>({
-    defaultValues
+    defaultValues,
   });
 
   const handleDelete = (values: any) => {
     const ids = Object.keys(values)
-      .filter(key => values[key])
+      .filter((key) => values[key])
       .map(Number);
 
     const historyIds: DestroyVersionInput = { ids };
     destroy({
-      variables: { input: historyIds }
+      variables: { input: historyIds },
     });
   };
 
@@ -70,11 +70,11 @@ const History = () => {
         </div>
         <div>
           {sectionedData &&
-            Object.keys(sectionedData).map(key => {
+            Object.keys(sectionedData).map((key) => {
               return (
                 <Fragment key={key}>
                   <HistoryTitle className="mt-3 text-grey">{key}</HistoryTitle>
-                  {sectionedData[key].map(history => {
+                  {sectionedData[key].map((history) => {
                     return (
                       <Fragment key={history.key + " " + history.id}>
                         <FormGroup check className="py-3">
@@ -89,7 +89,7 @@ const History = () => {
                             check
                             className="pl-2"
                           >
-                            {history.description}
+                            {history.description?.replace("destroy", "remove")}
                           </Label>
                         </FormGroup>
                         <div className="divider" />
@@ -125,19 +125,19 @@ const prepareHistory = (history: HistoryListQuery | undefined) => {
   const historyData = history && history.versions;
   if (historyData) {
     const histories = historyData.collection
-      .map(h => {
+      .map((h) => {
         const key = formatDate(h.createdAt, {
           year: "numeric",
           month: "long",
           day: "numeric",
-          weekday: "long"
+          weekday: "long",
         });
         return { ...h, key };
       })
       .sort((a, b) => new Date(b.key).getTime() - new Date(a.key).getTime());
     // histories = [ {key: '12-12-12', id: 'b', desc: 'c' }, ...]
 
-    const groupedHistories = groupBy(histories, item => item.key);
+    const groupedHistories = groupBy(histories, (item) => item.key);
     // groupedHistories = { '12-12-12': [ History ], .... }
 
     return groupedHistories;

@@ -108,7 +108,7 @@ const UpdateProfileForm = ({
       <h4>Profile</h4>
       <Input
         name="name"
-        label="First name"
+        label="Full name"
         innerRef={register({ required: true })}
         error={errors.name && errors.name.message}
       />
