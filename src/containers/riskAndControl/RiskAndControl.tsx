@@ -896,24 +896,28 @@ export default function RiskAndControl({
                             </h5>
                           </Link>
 
-                          {(isAdmin || isAdminPreparer) && (
-                            <Button
-                              onClick={() =>
-                                editRisk({
-                                  id: risk.id,
-                                  name: risk.name || "",
-                                  businessProcessIds:
-                                    risk.businessProcesses?.map(toLabelValue) ||
-                                    [],
-                                  levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                                  typeOfRisk: risk.typeOfRisk as TypeOfRisk,
-                                })
-                              }
-                              color=""
-                            >
-                              <FaPencilAlt />
-                            </Button>
-                          )}
+                          {(isAdmin || isAdminPreparer) &&
+                            risk?.hasEditAccess &&
+                            !risk.draft &&
+                            isAdminPreparer && (
+                              <Button
+                                onClick={() =>
+                                  editRisk({
+                                    id: risk.id,
+                                    name: risk.name || "",
+                                    businessProcessIds:
+                                      risk.businessProcesses?.map(
+                                        toLabelValue
+                                      ) || [],
+                                    levelOfRisk: risk.levelOfRisk as LevelOfRisk,
+                                    typeOfRisk: risk.typeOfRisk as TypeOfRisk,
+                                  })
+                                }
+                                color=""
+                              >
+                                <FaPencilAlt />
+                              </Button>
+                            )}
                         </div>
                         {isUser ? (
                           risk?.controls?.filter((a: any) => a.draft === null)
@@ -1100,32 +1104,35 @@ const ControlsTable = ({
                 <td>{assertionAndIpoModifier(control.ipo)}</td>
                 <td>{control.controlOwner}</td>
                 <td>
-                  {(isAdmin || isAdminPreparer) && (
-                    <Button
-                      onClick={() =>
-                        editControl({
-                          id: control.id,
-                          assertion: control.assertion as Assertion[],
-                          controlOwner: control.controlOwner || "",
-                          description: control.description || "",
-                          status: control.status as Status,
-                          typeOfControl: control.typeOfControl as TypeOfControl,
-                          nature: control.nature as Nature,
-                          ipo: control.ipo as Ipo[],
-                          businessProcessIds:
-                            control?.businessProcesses?.map(({ id }) => id) ||
-                            [],
-                          frequency: control.frequency as Frequency,
-                          keyControl: control.keyControl || false,
-                          riskIds: control?.risks?.map(({ id }) => id) || [],
-                          activityControls: control.activityControls,
-                        })
-                      }
-                      color=""
-                    >
-                      <FaPencilAlt />
-                    </Button>
-                  )}
+                  {(isAdmin || isAdminPreparer) &&
+                    control.hasEditAccess &&
+                    !control.draft &&
+                    isAdminPreparer && (
+                      <Button
+                        onClick={() =>
+                          editControl({
+                            id: control.id,
+                            assertion: control.assertion as Assertion[],
+                            controlOwner: control.controlOwner || "",
+                            description: control.description || "",
+                            status: control.status as Status,
+                            typeOfControl: control.typeOfControl as TypeOfControl,
+                            nature: control.nature as Nature,
+                            ipo: control.ipo as Ipo[],
+                            businessProcessIds:
+                              control?.businessProcesses?.map(({ id }) => id) ||
+                              [],
+                            frequency: control.frequency as Frequency,
+                            keyControl: control.keyControl || false,
+                            riskIds: control?.risks?.map(({ id }) => id) || [],
+                            activityControls: control.activityControls,
+                          })
+                        }
+                        color=""
+                      >
+                        <FaPencilAlt />
+                      </Button>
+                    )}
                 </td>
               </tr>
             ))

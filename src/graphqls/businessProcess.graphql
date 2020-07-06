@@ -289,8 +289,10 @@ fragment businessProcessForBPsRisks on BusinessProcess {
     draft {
       id
     }
+    hasEditAccess
     ...risk
     controls {
+      hasEditAccess
       ...businessProcessControl
     }
   }
