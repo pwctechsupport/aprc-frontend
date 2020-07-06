@@ -1,13 +1,8 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import {
-  FaDownload,
-  FaFileExport,
-  FaFileImport,
-  FaTrash,
-} from "react-icons/fa";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { FaDownload, FaFileExport, FaTrash } from "react-icons/fa";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -15,19 +10,18 @@ import {
   useRecentResourcesQuery,
   useReviewerResourcesStatusQuery,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
-import ImportModal from "../../shared/components/ImportModal";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
-import { APP_ROOT_URL } from "../../settings";
-import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -73,8 +67,8 @@ const Resources = ({ history }: RouteComponentProps) => {
     adminData?.recentResources?.collection ||
     dataReviewer?.reviewerResourcesStatus?.collection ||
     [];
-  const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal((p) => !p);
+  // const [modal, setModal] = useState(false);
+  // const toggleImportModal = () => setModal((p) => !p);
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
       setSelected(selected.filter((i) => i !== id));
@@ -133,7 +127,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                 <FaFileExport />
               </Button>
             </Tooltip>
-            <Tooltip description="Import Resource">
+            {/* <Tooltip description="Import Resource">
               <Button
                 color=""
                 className="soft orange mr-2"
@@ -141,13 +135,13 @@ const Resources = ({ history }: RouteComponentProps) => {
               >
                 <FaFileImport />
               </Button>
-            </Tooltip>
-            <ImportModal
+            </Tooltip> */}
+            {/* <ImportModal
               title="Import Resources"
               endpoint="/resources/import"
               isOpen={modal}
               toggle={toggleImportModal}
-            />
+            /> */}
           </div>
         ) : null}
         {isAdmin || isAdminPreparer ? (
