@@ -11,7 +11,7 @@ import { oc } from "ts-optchain";
 import Button from "../../shared/components/Button";
 import {
   useBookmarksQuery,
-  useDestroyBookmarkMutation
+  useDestroyBookmarkMutation,
 } from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
@@ -30,7 +30,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
     { label: "In 7 days", value: 3 },
     { label: "In a month", value: 4 },
     { label: "In 90 days", value: 5 },
-    { label: "In a year", value: 6 }
+    { label: "In a year", value: 6 },
   ];
   const aDay = 86400000;
   const aWeek = 604800000;
@@ -59,19 +59,19 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const [filter, setFilter] = useState({});
   const { data, networkStatus, loading } = useBookmarksQuery({
     variables: {
-      filter
+      filter,
     },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const [deleteBookmarks, deleteBookmarksM] = useDestroyBookmarkMutation({
     refetchQueries: ["bookmarks"],
     onError: notifyGraphQLErrors,
-    onCompleted: onDeleteComplete
+    onCompleted: onDeleteComplete,
   });
 
   function toggleCheck(id: string) {
     if (checked.includes(id)) {
-      setChecked(checked.filter(i => i !== id));
+      setChecked(checked.filter((i) => i !== id));
     } else {
       setChecked(checked.concat(id));
     }
@@ -82,7 +82,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
       setChecked(
         oc(data)
           .bookmarks.collection([])
-          .map(b => b.id)
+          .map((b) => b.id)
       );
     } else {
       setChecked([]);
@@ -100,7 +100,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
 
   function handleClickRow({
     id,
-    type
+    type,
   }: {
     id?: string | null;
     type: OriginatorType;
@@ -127,7 +127,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
     setFilter({
       originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_or_originator_type_cont:
         values.title,
-      created_at_gteq: constructDateFilter(labelTime)
+      created_at_gteq: constructDateFilter(labelTime),
     });
   };
   const handleChange = (props: any) => {
@@ -158,7 +158,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                     innerRef={bookmarkForm.register}
                   />
                 </Col>
-                <Col xs={12} md={4} className="mb-1">
+                <Col xs={12} md={2} className="mb-1">
                   <Select
                     options={time}
                     name="date"
@@ -234,14 +234,14 @@ const Bookmark = ({ history }: RouteComponentProps) => {
               {isDataExist ? (
                 oc(data)
                   .bookmarks.collection([])
-                  .map(bookmark => {
+                  .map((bookmark) => {
                     return (
                       <tr
                         key={bookmark.id}
                         onClick={() =>
                           handleClickRow({
                             id: bookmark.originatorId,
-                            type: bookmark.originatorType as OriginatorType
+                            type: bookmark.originatorType as OriginatorType,
                           })
                         }
                       >
@@ -249,8 +249,8 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                           <input
                             type="checkbox"
                             checked={checked.includes(bookmark.id)}
-                            onChange={e => toggleCheck(bookmark.id)}
-                            onClick={e => e.stopPropagation()}
+                            onChange={(e) => toggleCheck(bookmark.id)}
+                            onClick={(e) => e.stopPropagation()}
                           />
                         </td>
                         <td>{bookmark.originatorType}</td>
