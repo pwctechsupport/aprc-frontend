@@ -178,7 +178,7 @@ export default function ResourceBox({
 }
 
 const ResourceBoxContainer = styled.div`
-  width: 75%;
+  width: 95%;
   background: white;
   border: grey 2px solid;
   border-radius: 5px;

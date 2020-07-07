@@ -238,7 +238,7 @@ export default function Resource({
     return (
       <div>
         <Row>
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={5}>
             <ResourceBox
               base64File={base64File}
               id={id}
@@ -250,7 +250,7 @@ export default function Resource({
               resourceFileType={resourceFileType}
             />
           </Col>
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={7}>
             <div className="mt-5 mt-lg-0">
               <h5>
                 Category:&nbsp;
