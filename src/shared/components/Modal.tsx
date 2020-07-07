@@ -32,6 +32,20 @@ const Modal = ({ title, className, toggle, ...props }: ModalProps) => {
     </BsModal>
   );
 };
+const LargeModal = ({ title, className, toggle, ...props }: ModalProps) => {
+  return (
+    <BsModal
+      centered
+      {...props}
+      size={"xl"}
+      className={classnames("modal-enlogy", className)}
+    >
+      <ModalHeader toggle={toggle}>{title}</ModalHeader>
+      <ModalBody>{props.children}</ModalBody>
+      {props.footer && <ModalFooter>{props.footer}</ModalFooter>}
+    </BsModal>
+  );
+};
 
 type onClick = ((e: React.MouseEvent<any, MouseEvent>) => void) | undefined;
 
@@ -80,7 +94,7 @@ const ModalDialog = ({
     </Modal>
   );
 };
-
+export { LargeModal };
 export default Modal;
 export { ModalDialog };
 

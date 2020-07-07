@@ -12,7 +12,7 @@ import {
 } from "../../generated/graphql";
 import Button from "./Button";
 import EmptyAttribute from "./EmptyAttribute";
-import Modal from "./Modal";
+import { LargeModal } from "./Modal";
 import Pagination from "./Pagination";
 import ResourceBar from "./ResourceBar";
 import SearchInput from "./SearchInput";
@@ -291,7 +291,7 @@ export default function ResourcesTab({
         onPageChange={handlePageChange}
       />
 
-      <Modal
+      <LargeModal
         isOpen={addResourceModal}
         toggle={toggleAddResourceModal}
         title="Create Resource"
@@ -304,7 +304,7 @@ export default function ResourcesTab({
           submitting={createResourceM.loading}
           policy={policy}
         />
-      </Modal>
+      </LargeModal>
     </div>
   );
 }
