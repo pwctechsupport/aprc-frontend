@@ -5,6 +5,7 @@ import CreateControl from "./CreateControl";
 import Control from "./Control";
 import { Row, Col, Container } from "reactstrap";
 import ControlSideBox from "./components/ControlSideBox";
+import Footer from "../../shared/components/Footer";
 
 const ControlRoute = () => {
   return (
@@ -19,6 +20,7 @@ const ControlRoute = () => {
             <Route exact path="/control/create" component={CreateControl} />
             <Route exact path="/control/:id" component={Control} />
           </Switch>
+          <Footer />
         </Col>
       </Row>
     </Container>

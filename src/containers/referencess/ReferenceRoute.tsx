@@ -5,6 +5,7 @@ import ReferenceSideBox from "./components/ReferenceSideBox";
 import References from "./References";
 import CreateReference from "./CreateReference";
 import Reference from "./Reference";
+import Footer from "../../shared/components/Footer";
 
 const ReferenceRoute = () => {
   return (
@@ -23,6 +24,7 @@ const ReferenceRoute = () => {
             />
             <Route path="/references/:id" component={Reference} />
           </Switch>
+          <Footer />
         </Col>
       </Row>
     </Container>

@@ -5,6 +5,7 @@ import BusinessProcess from "./BusinessProcess";
 import CreateBusinessProcess from "./CreateBusinessProcess";
 import BusinessProcessSideBox from "./components/BusinessProcessSideBox";
 import { Row, Col, Container } from "reactstrap";
+import Footer from "../../shared/components/Footer";
 
 const ResourceRoute = () => {
   return (
@@ -27,6 +28,7 @@ const ResourceRoute = () => {
               component={BusinessProcess}
             />
           </Switch>
+          <Footer />
         </Col>
       </Row>
     </Container>

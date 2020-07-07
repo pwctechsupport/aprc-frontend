@@ -18,6 +18,7 @@ import Table from "../../shared/components/Table";
 import { date } from "../../shared/formatter";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
+import Footer from "../../shared/components/Footer";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
@@ -273,6 +274,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
               )}
             </tbody>
           </Table>
+          <Footer />
         </div>
       </Container>
     </div>

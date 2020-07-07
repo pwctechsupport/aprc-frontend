@@ -16,6 +16,7 @@ import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Helmet from "react-helmet";
+import Footer from "../../shared/components/Footer";
 
 const History = () => {
   const { data, loading } = useHistoryListQuery({
@@ -100,6 +101,7 @@ const History = () => {
               );
             })}
         </div>
+        <Footer />
       </Form>
     </div>
   );

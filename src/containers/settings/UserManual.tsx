@@ -18,6 +18,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import Footer from "../../shared/components/Footer";
 
 export default function UserManual() {
   const [currentEditId, setCurrentEditId] = useState<string | null>(null);
@@ -146,6 +147,7 @@ export default function UserManual() {
           submitting={updateManualInfo.loading}
         />
       </Modal>
+      <Footer />
     </div>
   );
 }

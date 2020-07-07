@@ -24,6 +24,7 @@ import { useForm } from "react-hook-form";
 import Select from "react-select";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import NotificationSettings from "../settings/NotificationSettings";
+import Footer from "../../shared/components/Footer";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [labelTime, setLabelTime] = useState("Date Added...");
@@ -380,6 +381,7 @@ const Notification = ({ history }: RouteComponentProps) => {
               })}
             </tbody>
           </Table>
+          <Footer />
         </div>
 
         <Pagination

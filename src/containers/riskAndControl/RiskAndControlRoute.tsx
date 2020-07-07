@@ -4,6 +4,7 @@ import { Col, Container, Row } from "reactstrap";
 import RiskAndControl from "./RiskAndControl";
 import RiskAndControls from "./RiskAndControls";
 import RiskAndControlSideBox from "./RiskAndControlSideBox";
+import Footer from "../../shared/components/Footer";
 
 const RiskAndControlRoute = () => {
   return (
@@ -17,6 +18,7 @@ const RiskAndControlRoute = () => {
             <Route path="/risk-and-control/:id" component={RiskAndControl} />
             <Route path="/risk-and-control" component={RiskAndControls} />
           </Switch>
+          <Footer />
         </Col>
       </Row>
     </Container>

@@ -9,6 +9,7 @@ import { useSelector } from "../../shared/hooks/useSelector";
 import HomepageBox from "./HomepageBox";
 import HomepageSearch from "./HomepageSearch";
 import Helmet from "react-helmet";
+import Footer from "../../shared/components/Footer";
 
 export default function Homepage() {
   const username = useSelector((state) => state.auth.user?.name);
@@ -122,6 +123,7 @@ export default function Homepage() {
           </Col>
         </Row>
       </Container>
+      <Footer />
     </Background>
   );
 }

@@ -13,6 +13,7 @@ import {
 } from "../../shared/utils/accessGeneratedPdf";
 import { notifyError, notifyInfo } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
+import Footer from "../../shared/components/Footer";
 
 const reportOptions = [
   {
@@ -264,6 +265,8 @@ export default function Report() {
           </Tooltip>
         </div>
       </Form>
+      <Footer />
+
       <Helmet>
         <title>Reports - PricewaterhouseCoopers</title>
       </Helmet>

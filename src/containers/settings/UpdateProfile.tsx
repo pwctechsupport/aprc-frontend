@@ -15,6 +15,7 @@ import Input from "../../shared/components/forms/Input";
 import { useSelector } from "../../shared/hooks/useSelector";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import { toast } from "react-toastify";
+import Footer from "../../shared/components/Footer";
 
 export default function UpdateProfile() {
   const user = useSelector((state) => state.auth.user);
@@ -270,6 +271,7 @@ const UpdatePasswordForm = ({
           Update Password
         </Button>
       </div>
+      <Footer />
     </Form>
   );
 };

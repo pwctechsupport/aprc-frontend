@@ -5,6 +5,7 @@ import PolicyCategoryLines from "../../../src/containers/policyCategory/componen
 import PolicyCategorySideBox from "./components/PolicyCategorySideBox";
 import CreatePolicyCategory from "./CreatePolicyCategory";
 import PolicyCategory from "./PolicyCategory";
+import Footer from "../../shared/components/Footer";
 
 const PolicyCategoryRoute = () => {
   return (
@@ -31,6 +32,7 @@ const PolicyCategoryRoute = () => {
               component={PolicyCategory}
             />
           </Switch>
+          <Footer />
         </Col>
       </Row>
     </Container>

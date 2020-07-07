@@ -5,6 +5,7 @@ import CreateRisk from "./CreateRisk";
 import Risk from "./Risk";
 import RiskSideBox from "./components/RiskSideBox";
 import { Row, Col, Container } from "reactstrap";
+import Footer from "../../shared/components/Footer";
 
 const RiskRoute = () => {
   return (
@@ -19,6 +20,7 @@ const RiskRoute = () => {
             <Route exact path="/risk/create" component={CreateRisk} />
             <Route exact path="/risk/:id" component={Risk} />
           </Switch>
+          <Footer />
         </Col>
       </Row>
     </Container>

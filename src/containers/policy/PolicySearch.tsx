@@ -20,6 +20,7 @@ import PolicySearchItem from "./policySearch/PolicySearchItem";
 import OpacityButton from "../../shared/components/OpacityButton";
 import { RouteComponentProps } from "react-router-dom";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import Footer from "../../shared/components/Footer";
 
 interface PolicySearchFilter {
   title_cont?: string;
@@ -155,6 +156,7 @@ export default function PolicySearch({
           ) : (
             <div className="text-center p-2 text-orange">Policy not found</div>
           )}
+          <Footer />
         </Col>
       </Row>
     </Container>
