@@ -1,5 +1,30 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 const Footer = () => {
+  function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height,
+    };
+  }
+
+  function useWindowDimensions() {
+    const [windowDimensions, setWindowDimensions] = useState(
+      getWindowDimensions()
+    );
+
+    useEffect(() => {
+      function handleResize() {
+        setWindowDimensions(getWindowDimensions());
+      }
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
+    return windowDimensions;
+  }
+  const { width } = useWindowDimensions();
   return (
     <div
       style={{
@@ -10,20 +35,22 @@ const Footer = () => {
       }}
     >
       <div
-        className="justify-content-center d-flex  "
+        className="justify-content-center   "
         style={{
-          // backgroundColor: "#F8F8F8",
           borderTop: "1px solid #E7E7E7",
           padding: "5px",
           position: "fixed",
           bottom: "-5px",
-          height: "40px",
+          height: `${
+            475 < width && width < 936 ? "80px" : width < 475 ? "100px" : "60px"
+          }`,
           // width: "100%",
         }}
       >
         <p
           style={{
             // position: "fixed",
+            textAlign: "center",
             color: "rgba(0,0,0,.5)",
           }}
         >
