@@ -76,6 +76,14 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
   });
 
   const policies = data?.sidebarPolicies?.collection || [];
+  const policiesReal = policies
+    .map((a) => {
+      if (a.status !== "draft") {
+        return a;
+      }
+    })
+    .filter((b) => b !== undefined);
+
   useEffect(() => {
     policies.length === limit ? setCondition(true) : setCondition(false);
   }, [policies, scrollPointer, limit]);
@@ -98,24 +106,28 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
         placeholder="Search Policies..."
       />
       <div>
-        {policies.length ? (
-          policies.map((policy, index) => (
-            <Fragment key={index}>
-              <PolicyBranch
-                originalData={policy}
-                key={policy.id}
-                parentId={policy.parentId}
-                id={policy.id}
-                activeId={activeId}
-                activeMode={activeMode}
-                title={policy.title}
-                children={policy.children}
-                level={0}
-                status={policy.status}
-                isAdmin={isAdmin}
-              />
-            </Fragment>
-          ))
+        {policiesReal.length ? (
+          policies.map((policy, index) => {
+            if (policy.status !== "draft") {
+              return (
+                <Fragment key={index}>
+                  <PolicyBranch
+                    originalData={policy}
+                    key={policy.id}
+                    parentId={policy.parentId}
+                    id={policy.id}
+                    activeId={activeId}
+                    activeMode={activeMode}
+                    title={policy.title}
+                    children={policy.children}
+                    level={0}
+                    status={policy.status}
+                    isAdmin={isAdmin}
+                  />
+                </Fragment>
+              );
+            }
+          })
         ) : (
           <div className="text-center p-2 text-orange">Policy not found</div>
         )}
