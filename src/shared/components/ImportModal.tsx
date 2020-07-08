@@ -50,7 +50,10 @@ const ImportModal = ({
             .map(
               (a: any) =>
                 `Error in line ${a.line}, Error message: ${a.message} `
-            )
+            ),
+          {
+            autoClose: 10000,
+          }
         );
       } else {
         notifySuccess(`${title} Success`);
