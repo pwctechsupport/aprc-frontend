@@ -33,6 +33,7 @@ const TextEditorField = ({
             return img.hasAttribute("internal-base64");
           },
           branding: false,
+          statusbar: false,
           images_upload_handler: function(
             blobInfo: any,
             success: any,
