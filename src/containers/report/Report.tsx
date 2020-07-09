@@ -166,6 +166,7 @@ export default function Report() {
       setDownloading(false);
     }
   }
+  const [text, sText] = useState("");
   const reportRisk = watch("report_risk");
   const reportRiskPolicy = watch("report_risk_policy");
   const reportControlPolicy = watch("report_control_policy");
@@ -207,9 +208,37 @@ export default function Report() {
                                 format.id === "pdf" &&
                                 checked
                               }
+                              disabled={
+                                // 1
+                                !reportRisk &&
+                                checked &&
+                                [
+                                  "report_risk_policy",
+                                  "report_control_policy",
+                                  "report_resource_rating",
+                                  "unmapped_risk",
+                                  "unmapped_control",
+                                ].includes(option.id)
+                                  ? true
+                                  : !checked &&
+                                    text !== "" &&
+                                    [
+                                      "report_risk",
+                                      "report_risk_policy",
+                                      "report_control_policy",
+                                      "report_resource_rating",
+                                      "unmapped_risk",
+                                      "unmapped_control",
+                                    ]
+                                      .filter((a) => a !== text)
+                                      .includes(option.id)
+                                  ? true
+                                  : false
+                              }
+                              onClick={(e) => sText(e.currentTarget.name)}
                               value={format.id}
                               innerRef={register}
-                            />{" "}
+                            />
                             {format.name}
                           </Label>
                         </FormGroup>
@@ -256,6 +285,7 @@ export default function Report() {
             <Button
               onClick={() => {
                 setChecked(false);
+                sText("");
               }}
               type="reset"
               className="black ml-5"
