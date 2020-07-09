@@ -309,8 +309,12 @@ const PolicyTableRow = ({
           </td>
           <td>{policy.policyCategory?.name || ""}</td>
           <td>
-            {policy.status === "waiting_for_review" && !policy.isSubmitted
+            {policy.status === "waiting_for_review" &&
+            !policy.isSubmitted &&
+            policy.draft
               ? "Draft"
+              : policy.status === "waiting_for_review" && !policy.isSubmitted
+              ? "Release"
               : capitalCase(policy.status || "")}
           </td>
           <td>

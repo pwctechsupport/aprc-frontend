@@ -17,7 +17,7 @@ import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
 import Captcha from "react-numeric-captcha";
-
+import useWindowSize from "../../shared/hooks/useWindowSize";
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
@@ -81,7 +81,7 @@ export default function Login({ history }: RouteComponentProps) {
       }
     }
   }
-
+  const screenSize = useWindowSize();
   return (
     <Container>
       <Helmet>
@@ -89,7 +89,18 @@ export default function Login({ history }: RouteComponentProps) {
       </Helmet>
       <Image src={pwcLogo} alt="pwc-logo" />
       <H1>Welcome, Please Sign in Here</H1>
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        style={{
+          width: `${
+            screenSize.width < 426
+              ? "90vw"
+              : screenSize.width < 850
+              ? "60VW"
+              : "30vw"
+          }`,
+        }}
+      >
         <Label>Email</Label>
         <br />
         <Input
@@ -111,13 +122,11 @@ export default function Login({ history }: RouteComponentProps) {
         />
         <br />
         <br />
-
         <Captcha
           ref={(e: any) => st(e)}
           onChange={setCaptcha}
           placeholder="Insert captcha"
         />
-
         <br />
         <br />
 
