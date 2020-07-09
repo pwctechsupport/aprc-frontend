@@ -1,9 +1,9 @@
 import groupBy from "lodash/groupBy";
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { Form, FormGroup, Input, Label } from "reactstrap";
+import { Form, FormGroup, Input, Label, Row, Col } from "reactstrap";
 import styled from "styled-components";
 import {
   DestroyVersionInput,
@@ -22,7 +22,25 @@ const History = () => {
   const { data, loading } = useHistoryListQuery({
     fetchPolicy: "network-only",
   });
+  const [selected, setSelected] = useState<string[]>([]);
+  function toggleCheck(id: string) {
+    if (selected.includes(id)) {
+      setSelected(selected.filter((i) => i !== id));
+    } else {
+      setSelected(selected.concat(id));
+    }
+  }
   const sectionedData = prepareHistory(data);
+  const histories = data?.versions?.collection || [];
+  const selectAllHistories = histories.map((a) => a.id || "");
+  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.checked) {
+      setSelected(selectAllHistories);
+    } else {
+      setSelected([]);
+    }
+  }
+
   const defaultValues = {};
   const [destroy] = useDestroyHistoryMutation({
     onCompleted: () => toast.success("Delete Success"),
@@ -31,18 +49,13 @@ const History = () => {
     awaitRefetchQueries: true,
   });
 
-  const { register, handleSubmit } = useForm<DestroyVersionInput>({
+  const { handleSubmit } = useForm<DestroyVersionInput>({
     defaultValues,
   });
 
-  const handleDelete = (values: any) => {
-    const ids = Object.keys(values)
-      .filter((key) => values[key])
-      .map(Number);
-
-    const historyIds: DestroyVersionInput = { ids };
+  const handleDelete = () => {
     destroy({
-      variables: { input: historyIds },
+      variables: { input: { ids: selected.map(Number) } },
     });
   };
 
@@ -69,6 +82,16 @@ const History = () => {
             </DialogButton>
           </Tooltip>
         </div>
+        <Row>
+          <Col lg={2}>
+            <input
+              type="checkbox"
+              checked={selected.length === histories.length}
+              onChange={toggleCheckAll}
+            />
+            <Label className="ml-2">Select All</Label>
+          </Col>
+        </Row>
         <div>
           {sectionedData &&
             Object.keys(sectionedData).map((key) => {
@@ -81,9 +104,9 @@ const History = () => {
                         <FormGroup check className="py-3">
                           <Input
                             type="checkbox"
-                            name={history.id + ""}
-                            id={"historyCheckbox" + history.id}
-                            innerRef={register}
+                            checked={selected.includes(history.id || "")}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={() => toggleCheck(history.id || "")}
                           />
                           <Label
                             for={"historyCheckbox" + history.id}
