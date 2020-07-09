@@ -27,11 +27,13 @@ const Footer = () => {
   const { width } = useWindowDimensions();
   return (
     <div
+      className="mt-3"
       style={{
         display: "block",
-        padding: "20px",
+        // padding: "20px",
         height: "60px",
         width: "100%",
+        marginTop: "auto",
       }}
     >
       <div
@@ -39,17 +41,14 @@ const Footer = () => {
         style={{
           borderTop: "1px solid #E7E7E7",
           padding: "5px",
-          position: "fixed",
           bottom: "-5px",
           height: `${
             475 < width && width < 936 ? "80px" : width < 475 ? "100px" : "60px"
           }`,
-          // width: "100%",
         }}
       >
         <p
           style={{
-            // position: "fixed",
             textAlign: "center",
             color: "rgba(0,0,0,.5)",
           }}

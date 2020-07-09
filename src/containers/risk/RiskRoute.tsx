@@ -15,11 +15,13 @@ const RiskRoute = () => {
           <Route path="/risk" component={RiskSideBox} />
         </Col>
         <Col md={9} className="p-4">
-          <Route exact path="/risk" component={Risks} />
-          <Switch>
-            <Route exact path="/risk/create" component={CreateRisk} />
-            <Route exact path="/risk/:id" component={Risk} />
-          </Switch>
+          <div style={{ minHeight: "80vh" }}>
+            <Route exact path="/risk" component={Risks} />
+            <Switch>
+              <Route exact path="/risk/create" component={CreateRisk} />
+              <Route exact path="/risk/:id" component={Risk} />
+            </Switch>
+          </div>
           <Footer />
         </Col>
       </Row>

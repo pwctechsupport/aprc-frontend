@@ -177,124 +177,126 @@ export default function Report() {
   return (
     <Container fluid className="p-0 pt-3 px-4">
       <h4>Exception Report</h4>
+      <div style={{ minHeight: "60vh" }}>
+        <Form>
+          <Table>
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Report Name</th>
+                <th>Report Description</th>
+                <th>Format</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reportOptions.map((option, index) => {
+                return (
+                  <tr key={option.id}>
+                    <td>{index + 1}</td>
+                    <td>{capitalize(option.name)}</td>
+                    <td>{option.description || "-"}</td>
+                    <td>
+                      <FormGroup tag="fieldset">
+                        {option.formats.map((format) => (
+                          <FormGroup key={format.id} check>
+                            <Label check>
+                              <Input
+                                type="radio"
+                                name={option.id}
+                                defaultChecked={
+                                  option.id === "report_risk" &&
+                                  format.id === "pdf" &&
+                                  checked
+                                }
+                                disabled={
+                                  // 1
+                                  !reportRisk &&
+                                  checked &&
+                                  [
+                                    "report_risk_policy",
+                                    "report_control_policy",
+                                    "report_resource_rating",
+                                    "unmapped_risk",
+                                    "unmapped_control",
+                                  ].includes(option.id)
+                                    ? true
+                                    : !checked &&
+                                      text !== "" &&
+                                      [
+                                        "report_risk",
+                                        "report_risk_policy",
+                                        "report_control_policy",
+                                        "report_resource_rating",
+                                        "unmapped_risk",
+                                        "unmapped_control",
+                                      ]
+                                        .filter((a) => a !== text)
+                                        .includes(option.id)
+                                    ? true
+                                    : false
+                                }
+                                onClick={(e) => sText(e.currentTarget.name)}
+                                value={format.id}
+                                innerRef={register}
+                              />
+                              {format.name}
+                            </Label>
+                          </FormGroup>
+                        ))}
+                      </FormGroup>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <div className="text-center mt-3 mb-5">
+            {reportRisk === "pdf" ||
+            reportRiskPolicy === "pdf" ||
+            reportControlPolicy === "pdf" ||
+            reportResourceRating === "pdf" ||
+            unmappedRisk === "pdf" ||
+            unmappedControl === "pdf" ||
+            (!reportRisk &&
+              !reportRiskPolicy &&
+              !reportControlPolicy &&
+              !reportResourceRating &&
+              !unmappedRisk &&
+              !unmappedControl) ? (
+              <Button
+                onClick={handleSubmit(handlePreview)}
+                type="button"
+                color="transparent"
+                className="mr-3"
+                loading={previewing}
+              >
+                <FaFile /> Preview
+              </Button>
+            ) : null}
 
-      <Form>
-        <Table>
-          <thead>
-            <tr>
-              <th>Number</th>
-              <th>Report Name</th>
-              <th>Report Description</th>
-              <th>Format</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reportOptions.map((option, index) => {
-              return (
-                <tr key={option.id}>
-                  <td>{index + 1}</td>
-                  <td>{capitalize(option.name)}</td>
-                  <td>{option.description || "-"}</td>
-                  <td>
-                    <FormGroup tag="fieldset">
-                      {option.formats.map((format) => (
-                        <FormGroup key={format.id} check>
-                          <Label check>
-                            <Input
-                              type="radio"
-                              name={option.id}
-                              defaultChecked={
-                                option.id === "report_risk" &&
-                                format.id === "pdf" &&
-                                checked
-                              }
-                              disabled={
-                                // 1
-                                !reportRisk &&
-                                checked &&
-                                [
-                                  "report_risk_policy",
-                                  "report_control_policy",
-                                  "report_resource_rating",
-                                  "unmapped_risk",
-                                  "unmapped_control",
-                                ].includes(option.id)
-                                  ? true
-                                  : !checked &&
-                                    text !== "" &&
-                                    [
-                                      "report_risk",
-                                      "report_risk_policy",
-                                      "report_control_policy",
-                                      "report_resource_rating",
-                                      "unmapped_risk",
-                                      "unmapped_control",
-                                    ]
-                                      .filter((a) => a !== text)
-                                      .includes(option.id)
-                                  ? true
-                                  : false
-                              }
-                              onClick={(e) => sText(e.currentTarget.name)}
-                              value={format.id}
-                              innerRef={register}
-                            />
-                            {format.name}
-                          </Label>
-                        </FormGroup>
-                      ))}
-                    </FormGroup>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-        <div className="text-center mt-3 mb-5">
-          {reportRisk === "pdf" ||
-          reportRiskPolicy === "pdf" ||
-          reportControlPolicy === "pdf" ||
-          reportResourceRating === "pdf" ||
-          unmappedRisk === "pdf" ||
-          unmappedControl === "pdf" ||
-          (!reportRisk &&
-            !reportRiskPolicy &&
-            !reportControlPolicy &&
-            !reportResourceRating &&
-            !unmappedRisk &&
-            !unmappedControl) ? (
             <Button
-              onClick={handleSubmit(handlePreview)}
-              type="button"
-              color="transparent"
-              className="mr-3"
-              loading={previewing}
+              color="secondary"
+              onClick={handleSubmit(handleDownload)}
+              loading={downloading}
             >
-              <FaFile /> Preview
+              <FaDownload /> Download
             </Button>
-          ) : null}
+            <Tooltip description="Reset Selected Format">
+              <Button
+                onClick={() => {
+                  setChecked(false);
+                  sText("");
+                }}
+                type="reset"
+                className="black ml-5"
+              >
+                <FaUndo />
+              </Button>
+            </Tooltip>
+          </div>
+        </Form>
+      </div>
 
-          <Button
-            color="secondary"
-            onClick={handleSubmit(handleDownload)}
-            loading={downloading}
-          >
-            <FaDownload /> Download
-          </Button>
-          <Tooltip description="Reset Selected Format">
-            <Button
-              onClick={() => {
-                setChecked(false);
-                sText("");
-              }}
-              type="reset"
-              className="black ml-5"
-            >
-              <FaUndo />
-            </Button>
-          </Tooltip>
-        </div>
-      </Form>
       <Footer />
 
       <Helmet>

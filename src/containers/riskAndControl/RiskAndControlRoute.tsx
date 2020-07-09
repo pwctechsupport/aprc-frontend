@@ -14,10 +14,12 @@ const RiskAndControlRoute = () => {
           <Route path="/risk-and-control" component={RiskAndControlSideBox} />
         </Col>
         <Col md={9} className="p-4">
-          <Switch>
-            <Route path="/risk-and-control/:id" component={RiskAndControl} />
-            <Route path="/risk-and-control" component={RiskAndControls} />
-          </Switch>
+          <div style={{ minHeight: "80vh" }}>
+            <Switch>
+              <Route path="/risk-and-control/:id" component={RiskAndControl} />
+              <Route path="/risk-and-control" component={RiskAndControls} />
+            </Switch>
+          </div>
           <Footer />
         </Col>
       </Row>

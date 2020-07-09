@@ -15,19 +15,25 @@ const ResourceRoute = () => {
           <Route path="/business-process" component={BusinessProcessSideBox} />
         </Col>
         <Col md={9} className="p-4">
-          <Route exact path="/business-process" component={BusinessProcesses} />
-          <Switch>
+          <div style={{ minHeight: "80vh" }}>
             <Route
               exact
-              path="/business-process/create"
-              component={CreateBusinessProcess}
+              path="/business-process"
+              component={BusinessProcesses}
             />
-            <Route
-              exact
-              path="/business-process/:id"
-              component={BusinessProcess}
-            />
-          </Switch>
+            <Switch>
+              <Route
+                exact
+                path="/business-process/create"
+                component={CreateBusinessProcess}
+              />
+              <Route
+                exact
+                path="/business-process/:id"
+                component={BusinessProcess}
+              />
+            </Switch>
+          </div>
           <Footer />
         </Col>
       </Row>

@@ -66,87 +66,90 @@ export default function UserManual() {
       <Helmet>
         <title>User Manual - Settings - PricewaterhouseCoopers</title>
       </Helmet>
-
-      {!loading && manuals.length ? (
-        manuals.map((manual) => (
-          <Fragment>
-            <h4>User Manual</h4>
-            <br />
-            <div className="d-flex justify-content-between">
-              <div>
-                <dt>Name</dt>
-                <dd>{manual.name}</dd>
-                <br />
-                <dt>File Size</dt>
-                <dd>{manual.fileSize} bytes</dd>
-                <br />
-                <dt>File Type</dt>
-                <dd>{manual.fileType}</dd>
-                <br />
-                <dt>Last Upadated</dt>
-                <DateHover withIcon>{manual.updatedAt}</DateHover>
-              </div>
-              <div className="d-flex">
-                {isAdminReviewer && (
-                  <Tooltip description="Edit User Manual">
+      <div style={{ minHeight: "80vh" }}>
+        {!loading && manuals.length ? (
+          manuals.map((manual) => (
+            <Fragment>
+              <h4>User Manual</h4>
+              <br />
+              <div className="d-flex justify-content-between">
+                <div>
+                  <dt>Name</dt>
+                  <dd>{manual.name}</dd>
+                  <br />
+                  <dt>File Size</dt>
+                  <dd>{manual.fileSize} bytes</dd>
+                  <br />
+                  <dt>File Type</dt>
+                  <dd>{manual.fileType}</dd>
+                  <br />
+                  <dt>Last Upadated</dt>
+                  <DateHover withIcon>{manual.updatedAt}</DateHover>
+                </div>
+                <div className="d-flex">
+                  {isAdminReviewer && (
+                    <Tooltip description="Edit User Manual">
+                      <Button
+                        onClick={() => setCurrentEditId(manual.id)}
+                        className="soft red mr-2"
+                        color=""
+                      >
+                        <FaPencilAlt />
+                      </Button>
+                    </Tooltip>
+                  )}
+                  <Tooltip description="Download User Manual">
                     <Button
-                      onClick={() => setCurrentEditId(manual.id)}
-                      className="soft red mr-2"
+                      className="soft orange"
                       color=""
+                      onClick={() =>
+                        handleDownload(
+                          `${APP_ROOT_URL}${manual.resuploadUrl}`,
+                          manual.name || ""
+                        )
+                      }
                     >
-                      <FaPencilAlt />
+                      <FaDownload />
                     </Button>
                   </Tooltip>
-                )}
-                <Tooltip description="Download User Manual">
-                  <Button
-                    className="soft orange"
-                    color=""
-                    onClick={() =>
-                      handleDownload(
-                        `${APP_ROOT_URL}${manual.resuploadUrl}`,
-                        manual.name || ""
-                      )
-                    }
-                  >
-                    <FaDownload />
-                  </Button>
-                </Tooltip>
+                </div>
               </div>
-            </div>
+            </Fragment>
+          ))
+        ) : !loading && isAdminReviewer ? (
+          <Fragment>
+            <h4>Create User Manual</h4>
+            <UserManualForm
+              onSubmit={handleCreate}
+              onCancel={closeModal}
+              create
+              defaultValues={manuals.find(
+                (manual) => manual.id === currentEditId
+              )}
+              submitting={createM.loading}
+            />
           </Fragment>
-        ))
-      ) : !loading && isAdminReviewer ? (
-        <Fragment>
-          <h4>Create User Manual</h4>
+        ) : loading ? (
+          <LoadingSpinner size={30} centered />
+        ) : (
+          <EmptyAttribute></EmptyAttribute>
+        )}
+
+        <Modal
+          isOpen={Boolean(currentEditId)}
+          toggle={closeModal}
+          title="Update User Manual"
+        >
           <UserManualForm
-            onSubmit={handleCreate}
+            onSubmit={handleSubmitForm}
             onCancel={closeModal}
-            create
             defaultValues={manuals.find(
               (manual) => manual.id === currentEditId
             )}
-            submitting={createM.loading}
+            submitting={updateManualInfo.loading}
           />
-        </Fragment>
-      ) : loading ? (
-        <LoadingSpinner size={30} centered />
-      ) : (
-        <EmptyAttribute></EmptyAttribute>
-      )}
-
-      <Modal
-        isOpen={Boolean(currentEditId)}
-        toggle={closeModal}
-        title="Update User Manual"
-      >
-        <UserManualForm
-          onSubmit={handleSubmitForm}
-          onCancel={closeModal}
-          defaultValues={manuals.find((manual) => manual.id === currentEditId)}
-          submitting={updateManualInfo.loading}
-        />
-      </Modal>
+        </Modal>
+      </div>
       <Footer />
     </div>
   );

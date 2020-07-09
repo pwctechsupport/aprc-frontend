@@ -17,16 +17,18 @@ const PolicyRoute = () => {
             <Route path="/policy" component={PolicySideBox} />
           </Col>
           <Col md={9} className="p-4">
-            <Switch>
-              <Route
-                exact
-                path="/policy/:id/create-sub-policy"
-                component={CreateSubPolicy}
-              />
-              <Route exact path="/policy/create" component={CreatePolicy} />
-              <Route path="/policy/:id" component={Policy} />
-              <Route path="/policy" component={Policies} />
-            </Switch>
+            <div style={{ minHeight: "85vh" }}>
+              <Switch>
+                <Route
+                  exact
+                  path="/policy/:id/create-sub-policy"
+                  component={CreateSubPolicy}
+                />
+                <Route exact path="/policy/create" component={CreatePolicy} />
+                <Route path="/policy/:id" component={Policy} />
+                <Route path="/policy" component={Policies} />
+              </Switch>
+            </div>
             <Footer />
           </Col>
         </Row>

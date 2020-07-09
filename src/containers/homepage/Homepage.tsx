@@ -53,7 +53,7 @@ export default function Homepage() {
           </Container>
         </Centerer>
       </BackgroundImage>
-      <Container className="mt-5 pb-5">
+      <Container className="mt-5 pb-5" style={{ minHeight: "50vh" }}>
         <Row>
           <Col xs={12} md={6} lg={4}>
             <HomepageBox

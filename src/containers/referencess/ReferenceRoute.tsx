@@ -15,15 +15,17 @@ const ReferenceRoute = () => {
           <Route path="/references" component={ReferenceSideBox} />
         </Col>
         <Col md={9} className="p-4">
-          <Route exact path="/references" component={References} />
-          <Switch>
-            <Route
-              exact
-              path="/references/create"
-              component={CreateReference}
-            />
-            <Route path="/references/:id" component={Reference} />
-          </Switch>
+          <div style={{ minHeight: "80vh" }}>
+            <Route exact path="/references" component={References} />
+            <Switch>
+              <Route
+                exact
+                path="/references/create"
+                component={CreateReference}
+              />
+              <Route path="/references/:id" component={Reference} />
+            </Switch>
+          </div>
           <Footer />
         </Col>
       </Row>

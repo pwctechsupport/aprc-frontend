@@ -68,64 +68,71 @@ const History = () => {
       <Helmet>
         <title>History - Settings - PricewaterhouseCoopers</title>
       </Helmet>
-      <Form onSubmit={handleSubmit(handleDelete)}>
-        <div className="d-flex flex-row justify-content-between">
-          <h4>User Activity Log</h4>
-        </div>
-        <div className="d-flex justify-content-end">
-          <Tooltip description="Delete Selected History">
-            <DialogButton
-              onConfirm={handleSubmit(handleDelete)}
-              className="soft red"
-            >
-              <FaTrash className="text-orange " />
-            </DialogButton>
-          </Tooltip>
-        </div>
-        <Row>
-          <Col lg={2}>
-            <input
-              type="checkbox"
-              checked={selected.length === histories.length}
-              onChange={toggleCheckAll}
-            />
-            <Label className="ml-2">Select All</Label>
-          </Col>
-        </Row>
-        <div>
-          {sectionedData &&
-            Object.keys(sectionedData).map((key) => {
-              return (
-                <Fragment key={key}>
-                  <HistoryTitle className="mt-3 text-grey">{key}</HistoryTitle>
-                  {sectionedData[key].map((history) => {
-                    return (
-                      <Fragment key={history.key + " " + history.id}>
-                        <FormGroup check className="py-3">
-                          <Input
-                            type="checkbox"
-                            checked={selected.includes(history.id || "")}
-                            onClick={(e) => e.stopPropagation()}
-                            onChange={() => toggleCheck(history.id || "")}
-                          />
-                          <Label
-                            for={"historyCheckbox" + history.id}
-                            check
-                            className="pl-2"
-                          >
-                            {history.description?.replace("destroy", "remove")}
-                          </Label>
-                        </FormGroup>
-                        <div className="divider" />
-                      </Fragment>
-                    );
-                  })}
-                </Fragment>
-              );
-            })}
-        </div>
-        <Footer />
-      </Form>
+      <div style={{ minHeight: "80vh" }}>
+        <Form onSubmit={handleSubmit(handleDelete)}>
+          <div className="d-flex flex-row justify-content-between">
+            <h4>User Activity Log</h4>
+          </div>
+          <div className="d-flex justify-content-end">
+            <Tooltip description="Delete Selected History">
+              <DialogButton
+                onConfirm={handleSubmit(handleDelete)}
+                className="soft red"
+              >
+                <FaTrash className="text-orange " />
+              </DialogButton>
+            </Tooltip>
+          </div>
+          <Row>
+            <Col lg={2}>
+              <input
+                type="checkbox"
+                checked={selected.length === histories.length}
+                onChange={toggleCheckAll}
+              />
+              <Label className="ml-2">Select All</Label>
+            </Col>
+          </Row>
+          <div>
+            {sectionedData &&
+              Object.keys(sectionedData).map((key) => {
+                return (
+                  <Fragment key={key}>
+                    <HistoryTitle className="mt-3 text-grey">
+                      {key}
+                    </HistoryTitle>
+                    {sectionedData[key].map((history) => {
+                      return (
+                        <Fragment key={history.key + " " + history.id}>
+                          <FormGroup check className="py-3">
+                            <Input
+                              type="checkbox"
+                              checked={selected.includes(history.id || "")}
+                              onClick={(e) => e.stopPropagation()}
+                              onChange={() => toggleCheck(history.id || "")}
+                            />
+                            <Label
+                              for={"historyCheckbox" + history.id}
+                              check
+                              className="pl-2"
+                            >
+                              {history.description?.replace(
+                                "destroy",
+                                "remove"
+                              )}
+                            </Label>
+                          </FormGroup>
+                          <div className="divider" />
+                        </Fragment>
+                      );
+                    })}
+                  </Fragment>
+                );
+              })}
+          </div>
+        </Form>
+      </div>
+      <Footer />
     </div>
   );
 };

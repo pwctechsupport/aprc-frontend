@@ -15,11 +15,13 @@ const ControlRoute = () => {
           <Route path="/control" component={ControlSideBox} />
         </Col>
         <Col md={9} className="p-4">
-          <Route exact path="/control" component={Controls} />
-          <Switch>
-            <Route exact path="/control/create" component={CreateControl} />
-            <Route exact path="/control/:id" component={Control} />
-          </Switch>
+          <div style={{ minHeight: "80vh" }}>
+            <Route exact path="/control" component={Controls} />
+            <Switch>
+              <Route exact path="/control/create" component={CreateControl} />
+              <Route exact path="/control/:id" component={Control} />
+            </Switch>
+          </div>
           <Footer />
         </Col>
       </Row>

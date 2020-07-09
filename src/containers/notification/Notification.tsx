@@ -227,110 +227,114 @@ const Notification = ({ history }: RouteComponentProps) => {
             </div>
           </Col>
         </Row>
+        <div style={{ minHeight: "70vh" }}>
+          <div className="table-responsive mt-1">
+            <Table
+              loading={networkStatus === NetworkStatus.loading}
+              reloading={networkStatus === NetworkStatus.setVariables}
+            >
+              <thead>
+                <tr>
+                  <th>
+                    <input
+                      type="checkbox"
+                      checked={
+                        selected.length === notifications.length ? true : false
+                      }
+                      onChange={toggleCheckAll}
+                    />
+                  </th>
+                  <th>Name</th>
+                  <th>Subject</th>
+                  <th style={{ width: "10%" }}>Date Added</th>
+                </tr>
+              </thead>
+              <tbody>
+                {notifications.map((data) => {
+                  let dataType: string = "";
 
-        <div className="table-responsive mt-1">
-          <Table
-            loading={networkStatus === NetworkStatus.loading}
-            reloading={networkStatus === NetworkStatus.setVariables}
-          >
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={
-                      selected.length === notifications.length ? true : false
-                    }
-                    onChange={toggleCheckAll}
-                  />
-                </th>
-                <th>Name</th>
-                <th>Subject</th>
-                <th style={{ width: "10%" }}>Date Added</th>
-              </tr>
-            </thead>
-            <tbody>
-              {notifications.map((data) => {
-                let dataType: string = "";
+                  switch (data.dataType) {
+                    case "request_edit":
+                      dataType = "edit";
+                      break;
+                    case "request_draft":
+                      dataType = "approve";
+                      break;
+                    default:
+                      break;
+                  }
 
-                switch (data.dataType) {
-                  case "request_edit":
-                    dataType = "edit";
-                    break;
-                  case "request_draft":
-                    dataType = "approve";
-                    break;
-                  default:
-                    break;
-                }
+                  return data ? (
+                    <tr
+                      key={String(data.id)}
+                      onClick={() =>
+                        data.originatorType
+                          ? redirect(
+                              data.originatorType,
+                              data.originatorId || "",
+                              data.id || ""
+                            )
+                          : null
+                      }
+                    >
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={selected.includes(String(data.id))}
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={() => toggleCheck(String(data.id))}
+                        />
+                      </td>
+                      <td
+                        className={data.isRead ? "" : "text-orange text-bold"}
+                      >
+                        {data.senderUserName}
+                      </td>
+                      <td
+                        className={data.isRead ? "" : "text-orange text-bold"}
+                      >
+                        {/* isAdminReviewer */}
 
-                return data ? (
-                  <tr
-                    key={String(data.id)}
-                    onClick={() =>
-                      data.originatorType
-                        ? redirect(
-                            data.originatorType,
-                            data.originatorId || "",
-                            data.id || ""
-                          )
-                        : null
-                    }
-                  >
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selected.includes(String(data.id))}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={() => toggleCheck(String(data.id))}
-                      />
-                    </td>
-                    <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {data.senderUserName}
-                    </td>
-                    <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {/* isAdminReviewer */}
+                        {isAdminReviewer
+                          ? data.dataType === "request_draft" ||
+                            data.dataType === "request draft"
+                            ? `Action required: [${
+                                data.senderUserName
+                              }] has requested for approval for [${
+                                data.title?.includes(" Has Been Submitted")
+                                  ? data.title.split(" Has Been Submitted")[0]
+                                  : data.title
+                              }]`
+                            : data.dataType === "request_edit"
+                            ? `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
+                            : data.title
+                          : null}
 
-                      {isAdminReviewer
-                        ? data.dataType === "request_draft" ||
-                          data.dataType === "request draft"
-                          ? `Action required: [${
-                              data.senderUserName
-                            }] has requested for approval for [${
-                              data.title?.includes(" Has Been Submitted")
-                                ? data.title.split(" Has Been Submitted")[0]
-                                : data.title
-                            }]`
-                          : data.dataType === "request_edit"
-                          ? `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
-                          : data.title
-                        : null}
-
-                      {/* isAdminPreparer */}
-                      {isAdminPreparer || isUser
-                        ? data.dataType === "request_draft_approved" ||
-                          data.dataType === "request_draft_rejected"
-                          ? `[${
-                              data.dataType === "request_draft_approved"
-                                ? data.title?.split(" Approved")[0]
-                                : data.title?.split(" Rejected")[0]
-                            }] has been [${
-                              data.dataType === "request_draft_approved"
-                                ? `Approved`
-                                : `Rejected`
-                            }]`
-                          : data.dataType === "request_edit_approved" ||
-                            data.dataType === "request_edit_rejected"
-                          ? `Your request for edit has been [${
-                              data.dataType === "request_edit_approved"
-                                ? "Approved"
-                                : "Rejected"
-                            }]`
-                          : data.dataType === "related_reference"
-                          ? data.title
-                          : data.title
-                        : null}
-                      {/* {isAdminReviewer &&
+                        {/* isAdminPreparer */}
+                        {isAdminPreparer || isUser
+                          ? data.dataType === "request_draft_approved" ||
+                            data.dataType === "request_draft_rejected"
+                            ? `[${
+                                data.dataType === "request_draft_approved"
+                                  ? data.title?.split(" Approved")[0]
+                                  : data.title?.split(" Rejected")[0]
+                              }] has been [${
+                                data.dataType === "request_draft_approved"
+                                  ? `Approved`
+                                  : `Rejected`
+                              }]`
+                            : data.dataType === "request_edit_approved" ||
+                              data.dataType === "request_edit_rejected"
+                            ? `Your request for edit has been [${
+                                data.dataType === "request_edit_approved"
+                                  ? "Approved"
+                                  : "Rejected"
+                              }]`
+                            : data.dataType === "related_reference"
+                            ? data.title
+                            : data.title
+                          : null}
+                        {/* {isAdminReviewer &&
                         `Action required: [${
                           data.senderUserName
                         }] has requested for ${
@@ -369,26 +373,26 @@ const Notification = ({ history }: RouteComponentProps) => {
                               `${data.title.split("with")[1].split(" ")[1]}`,
                               `[${data.title.split("with")[1].split(" ")[1]}]`
                             )}`} */}
-                    </td>
-                    <td className={data.isRead ? "" : "text-orang text-bold"}>
-                      <div>{humanizeDate(data.createdAt)}</div>
-                      <span className="text-secondary">
-                        {formatDate(data.createdAt)}
-                      </span>
-                    </td>
-                  </tr>
-                ) : null;
-              })}
-            </tbody>
-          </Table>
-          <Footer />
+                      </td>
+                      <td className={data.isRead ? "" : "text-orang text-bold"}>
+                        <div>{humanizeDate(data.createdAt)}</div>
+                        <span className="text-secondary">
+                          {formatDate(data.createdAt)}
+                        </span>
+                      </td>
+                    </tr>
+                  ) : null;
+                })}
+              </tbody>
+            </Table>
+          </div>
+          <Pagination
+            totalCount={totalCount}
+            perPage={limit}
+            onPageChange={handlePageChange}
+          />
         </div>
-
-        <Pagination
-          totalCount={totalCount}
-          perPage={limit}
-          onPageChange={handlePageChange}
-        />
+        <Footer />
       </Container>
     </div>
   );

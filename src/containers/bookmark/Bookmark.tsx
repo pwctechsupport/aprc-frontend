@@ -143,8 +143,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Bookmarks - PricewaterhouseCoopers</title>
       </Helmet>
-
-      <Container fluid className="p-md-5">
+      <Container style={{ minHeight: "80vh" }} fluid className="p-md-5">
         <h2>Bookmarks Manager</h2>
 
         <Row>
@@ -206,7 +205,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
             </div>
           </Col>
         </Row>
-        <div className="table-responsive mt-1">
+        <div className="table-responsive mt-1" style={{ minHeight: "70vh" }}>
           <Table
             loading={networkStatus === NetworkStatus.loading}
             reloading={networkStatus === NetworkStatus.setVariables}
@@ -274,9 +273,9 @@ const Bookmark = ({ history }: RouteComponentProps) => {
               )}
             </tbody>
           </Table>
-          <Footer />
         </div>
       </Container>
+      <Footer />
     </div>
   );
 };
