@@ -238,6 +238,14 @@ export default function RiskAndControl({
     dataRisksnControl?.navigatorBusinessProcesses?.collection
       .map((a) => a.risks)
       .flat(10) || [];
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) a.splice(j--, 1);
+      }
+    }
+    return a;
+  };
   // const controls =
   //   dataRisksnControl?.navigatorBusinessProcesses?.collection
   //     .map((a) => a.controls)
@@ -559,6 +567,7 @@ export default function RiskAndControl({
       : resuploadUrl && !resuploadLink?.includes("original/missing.png")
       ? `${APP_ROOT_URL}${resuploadUrl}`
       : undefined;
+
     return (
       <Route exact path="/risk-and-control/:id/resources/:id">
         <div>
@@ -920,25 +929,28 @@ export default function RiskAndControl({
                             )}
                         </div>
                         {isUser ? (
-                          risk?.controls?.filter((a: any) => a.draft === null)
-                            .length ? (
+                          dataModifier(
+                            risk?.controls?.filter((a: any) => a.draft === null)
+                          ).length ? (
                             <>
                               <h6>Control</h6>
                               <ControlsTable
                                 history={history.location.pathname}
-                                controls={risk.controls.filter(
-                                  (a: any) => a.draft === null
+                                controls={dataModifier(
+                                  risk.controls.filter(
+                                    (a: any) => a.draft === null
+                                  )
                                 )}
                                 editControl={editControl}
                               />
                             </>
                           ) : null
-                        ) : risk?.controls?.length ? (
+                        ) : dataModifier(risk?.controls).length ? (
                           <>
                             <h6>Control</h6>
                             <ControlsTable
                               history={history.location.pathname}
-                              controls={risk.controls}
+                              controls={dataModifier(risk.controls)}
                               editControl={editControl}
                             />
                           </>
