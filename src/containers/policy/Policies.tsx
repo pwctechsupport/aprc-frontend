@@ -219,7 +219,6 @@ const PolicyTableRow = ({
           <td>{policy.policyCategory?.name || ""}</td>
           <td>{capitalCase(policy.status || "")}</td>
           <td>
-            {" "}
             <DateHover>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
@@ -257,7 +256,9 @@ const PolicyTableRow = ({
           </td>
           <td>{policy.policyCategory?.name || ""}</td>
           <td>
-            {policy.status === "waiting_for_review" && !policy.isSubmitted
+            {policy.status === "waiting_for_review" &&
+            !policy.isSubmitted &&
+            policy.draft
               ? "Draft"
               : policy.status === "draft"
               ? "Draft"
