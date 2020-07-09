@@ -1,11 +1,13 @@
 import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Policy } from "../../../generated/graphql";
+import { Policy, usePreparerPoliciesQuery } from "../../../generated/graphql";
 // import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import { previewHtml } from "../../../shared/formatter";
 import DateHover from "../../../shared/components/DateHover";
 import { Row, Col, Badge } from "reactstrap";
+import { FaSpinner } from "react-icons/fa";
+import BreadCrumb, { CrumbItem } from "../../../shared/components/BreadCrumb";
 
 interface PolicySearchItemProps {
   policy: Omit<Policy, "createdAt">;
@@ -27,7 +29,16 @@ export default function PolicySearchItem({
     references,
     updatedAt,
   } = policy;
+  const ancestry = policy?.ancestry?.split("/") || [];
+  const { data, loading } = usePreparerPoliciesQuery({
+    skip: ancestry.length ? false : true,
+    variables: { isTree: false, filter: { id_matches_any: ancestry } },
+  });
 
+  const parentTitle = data?.preparerPolicies?.collection || [];
+  const sortedParentTitle = parentTitle.sort((a: any, b: any) => {
+    return a.id > b.id ? 1 : b.id > a.id ? -1 : 0;
+  });
   const showResource = resources?.map((a) =>
     a.name?.toLowerCase().includes(homepageSearch.toLowerCase())
   );
@@ -45,10 +56,24 @@ export default function PolicySearchItem({
   const resourcesPolicy = policy.resources;
   const controlsPolicy = policy.controls;
   const polcatPolicy = policy.policyCategory;
+  const breadcrumb = sortedParentTitle
+    .map((a: any) => ["/policy/" + a.id, a.title])
+    .concat([["/policy/" + policy.id, policy.title || ""]]) as CrumbItem[];
+
   return (
     <Fragment>
       {/* homepageSearchs is a string for search */}
       <PolicySearchItemContainerMini>
+        <div>
+          {loading ? (
+            <div className={"text-center"}>
+              <FaSpinner className="icon-spin" size={20} />
+            </div>
+          ) : parentTitle.length ? (
+            <BreadCrumb crumbs={[...breadcrumb]} />
+          ) : null}
+        </div>
+
         <Row>
           <StyledLink to={`/policy/${id}/details`}>
             <div className="ml-2">
