@@ -15,7 +15,7 @@ fragment risk on Risk {
   }
 }
 
-query risks($filter: BaseScalar = {}, $limit: Int = 25) {
+query risks($filter: BaseScalar = {}, $limit: Int = 1000) {
   navigatorRisks(filter: $filter, limit: $limit) {
     collection {
       ...risk
@@ -25,7 +25,7 @@ query risks($filter: BaseScalar = {}, $limit: Int = 25) {
     }
   }
 }
-query adminRisks($filter: BaseScalar = {}, $limit: Int = 25, $page: Int) {
+query adminRisks($filter: BaseScalar = {}, $limit: Int = 1000, $page: Int) {
   preparerRisks(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...risk
@@ -43,7 +43,7 @@ query adminRisks($filter: BaseScalar = {}, $limit: Int = 25, $page: Int) {
 }
 query reviewerRisksStatus(
   $filter: BaseScalar = {}
-  $limit: Int = 25
+  $limit: Int = 1000
   $page: Int
 ) {
   reviewerRisksStatus(filter: $filter, limit: $limit, page: $page) {

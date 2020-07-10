@@ -1,4 +1,4 @@
-query users($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
+query users($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   users(filter: $filter, page: $page, limit: $limit) {
     collection {
       ...userRowFragment
@@ -14,7 +14,7 @@ query users($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
   }
 }
 
-query preparerUsers($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
+query preparerUsers($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   preparerUsers(filter: $filter, page: $page, limit: $limit) {
     collection {
       ...userRowFragment
@@ -31,7 +31,7 @@ query preparerUsers($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
 query reviewerUsersStatus(
   $filter: BaseScalar = {}
   $page: Int
-  $limit: Int = 25
+  $limit: Int = 1000
 ) {
   reviewerUsersStatus(filter: $filter, page: $page, limit: $limit) {
     collection {

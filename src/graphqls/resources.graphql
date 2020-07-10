@@ -1,4 +1,4 @@
-query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
+query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   navigatorResources(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
@@ -42,7 +42,7 @@ query resources($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
 query reviewerResourcesStatus(
   $filter: BaseScalar = {}
   $page: Int
-  $limit: Int = 25
+  $limit: Int = 1000
 ) {
   reviewerResourcesStatus(filter: $filter, page: $page, limit: $limit) {
     collection {
@@ -94,7 +94,7 @@ query reviewerResourcesStatus(
 query recentResources(
   $filter: BaseScalar = {}
   $page: Int
-  $limit: Int = 25
+  $limit: Int = 1000
 ) {
   recentResources(filter: $filter, page: $page, limit: $limit) {
     collection {

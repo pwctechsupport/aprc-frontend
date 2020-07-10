@@ -19,7 +19,7 @@ fragment userBookmark on User {
   name
 }
 
-query bookmarks($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
+query bookmarks($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   bookmarks(filter: $filter, page: $page, limit: $limit) {
     collection {
       id

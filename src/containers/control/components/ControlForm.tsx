@@ -373,7 +373,7 @@ const ControlForm = ({
           setValue={setValue}
           options={controlOwnerOptions}
           defaultValue={controlOwnerOptions.filter((a) =>
-            controlOwnerId.includes(a.label)
+            controlOwnerId.includes(a.value)
           )}
           loading={departments.loading}
           error={errors.controlOwner && "Control owner is a required field"}

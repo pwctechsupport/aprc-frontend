@@ -1,4 +1,4 @@
-query references($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
+query references($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   navigatorReferences(filter: $filter, page: $page, limit: $limit) {
     collection {
       id
@@ -23,7 +23,7 @@ query references($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
 query adminReferences(
   $filter: BaseScalar = {}
   $page: Int
-  $limit: Int = 25
+  $limit: Int = 1000
 ) {
   preparerReferences(filter: $filter, page: $page, limit: $limit) {
     collection {

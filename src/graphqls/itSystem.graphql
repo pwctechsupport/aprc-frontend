@@ -1,4 +1,4 @@
-query itSystems($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
+query itSystems($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   itSystems(filter: $filter, page: $page, limit: $limit) {
     collection {
       id

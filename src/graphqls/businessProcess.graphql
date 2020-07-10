@@ -1,4 +1,4 @@
-query businessProcesses($filter: BaseScalar = {}, $limit: Int = 25) {
+query businessProcesses($filter: BaseScalar = {}, $limit: Int = 1000) {
   navigatorBusinessProcesses(filter: $filter, limit: $limit) {
     collection {
       controls {

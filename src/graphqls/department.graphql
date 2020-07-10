@@ -1,4 +1,4 @@
-query departments($filter: BaseScalar = {}, $page: Int, $limit: Int = 25) {
+query departments($filter: BaseScalar = {}, $page: Int, $limit: Int = 1000) {
   departments(filter: $filter, page: $page, limit: $limit) {
     collection {
       name

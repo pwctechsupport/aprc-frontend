@@ -1,4 +1,4 @@
-query controls($filter: BaseScalar = {}, $limit: Int = 25) {
+query controls($filter: BaseScalar = {}, $limit: Int = 1000) {
   navigatorControls(filter: $filter, limit: $limit) {
     collection {
       ...control
@@ -8,7 +8,7 @@ query controls($filter: BaseScalar = {}, $limit: Int = 25) {
     }
   }
 }
-query adminControls($filter: BaseScalar = {}, $limit: Int = 25, $page: Int) {
+query adminControls($filter: BaseScalar = {}, $limit: Int = 1000, $page: Int) {
   preparerControls(filter: $filter, limit: $limit, page: $page) {
     collection {
       ...control
@@ -26,7 +26,7 @@ query adminControls($filter: BaseScalar = {}, $limit: Int = 25, $page: Int) {
 }
 query reviewerControlsStatus(
   $filter: BaseScalar = {}
-  $limit: Int = 25
+  $limit: Int = 1000
   $page: Int
 ) {
   reviewerControlsStatus(filter: $filter, limit: $limit, page: $page) {
