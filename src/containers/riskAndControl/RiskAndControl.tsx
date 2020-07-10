@@ -6,7 +6,6 @@ import {
   FaEllipsisV,
   FaFilePdf,
   FaMinus,
-  FaPencilAlt,
   FaExclamationCircle,
 } from "react-icons/fa";
 import get from "lodash/get";
@@ -30,7 +29,6 @@ import {
   Ipo,
   LevelOfRisk,
   Nature,
-  Status,
   TypeOfControl,
   TypeOfRisk,
   useBusinessProcessQuery,
@@ -1267,7 +1265,7 @@ export default function RiskAndControl({
                           </h5>
                         </Link>
 
-                        {(isAdmin || isAdminPreparer) &&
+                        {/* {(isAdmin || isAdminPreparer) &&
                           risk?.hasEditAccess &&
                           !risk.draft &&
                           isAdminPreparer && (
@@ -1287,7 +1285,7 @@ export default function RiskAndControl({
                             >
                               <FaPencilAlt />
                             </Button>
-                          )}
+                          )} */}
                       </div>
                       {isUser ? (
                         dataModifier(
@@ -1438,10 +1436,10 @@ const ControlsTable = ({
     }
     return finalData.join(", ");
   };
-  const [isAdmin, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_preparer",
-  ]);
+  // const [isAdmin, isAdminPreparer] = useAccessRights([
+  //   "admin",
+  //   "admin_preparer",
+  // ]);
   return (
     <div className="table-responsive">
       <Table>
@@ -1476,7 +1474,7 @@ const ControlsTable = ({
                 <td>{assertionAndIpoModifier(control.assertion)}</td>
                 <td>{assertionAndIpoModifier(control.ipo)}</td>
                 <td>{control.controlOwner}</td>
-                <td>
+                {/* <td>
                   {(isAdmin || isAdminPreparer) &&
                     control.hasEditAccess &&
                     !control.draft &&
@@ -1506,7 +1504,7 @@ const ControlsTable = ({
                         <FaPencilAlt />
                       </Button>
                     )}
-                </td>
+                </td> */}
               </tr>
             ))
           ) : (
