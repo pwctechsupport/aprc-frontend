@@ -47,6 +47,7 @@ import {
   useApproveRequestEditMutation,
   useCreateRequestEditMutation,
   useReviewControlDraftMutation,
+  useReviewRiskDraftMutation,
 } from "../../generated/graphql";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -129,7 +130,7 @@ export default function RiskAndControl({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"],
+    refetchQueries: ["businessProcess", "risk"],
   });
   const handleUpdateRisk = (values: RiskFormValues) => {
     updateRisk({
@@ -250,6 +251,9 @@ export default function RiskAndControl({
     dataRisksnControl?.navigatorBusinessProcesses?.collection
       .map((a) => a.risks)
       .flat(10) || [];
+  const modifiedRisks = !isUser
+    ? risks
+    : risks.filter((a) => a?.draft === null);
   const dataModifier = (a: any) => {
     for (let i = 0; i < a.length; ++i) {
       for (let j = i + 1; j < a.length; ++j) {
@@ -305,8 +309,161 @@ export default function RiskAndControl({
     variables: { id: riskId },
     fetchPolicy: "network-only",
   });
-  const riskName = dataRisk?.risk?.name || "";
+
+  // Welcome to risk administrative
+
   const draftRisk = dataRisk?.risk?.draft;
+  const hasEditAccessRisk = dataRisk?.risk?.hasEditAccess || false;
+  const requestStatusRisk = dataRisk?.risk?.requestStatus;
+  const requestEditState = dataRisk?.risk?.requestEdit?.state;
+
+  const premiseRisk = useEditState({
+    draft: draftRisk,
+    hasEditAccess: hasEditAccessRisk,
+    requestStatus: requestStatusRisk,
+    requestEditState: requestEditState,
+  });
+  async function handleApproveRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: true } });
+      notifySuccess("You Gave Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  async function handleRejectRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: false } });
+      notifySuccess("You Restrict Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  const [
+    requestEditMutation,
+    requestEditMutationInfo,
+  ] = useCreateRequestEditMutation({
+    variables: { id: riskId, type: "Risk" },
+    onError: notifyGraphQLErrors,
+    onCompleted: () => notifyInfo("Edit access requested"),
+    refetchQueries: ["risk"],
+  });
+  const [reviewMutation, reviewMutationInfo] = useReviewRiskDraftMutation({
+    refetchQueries: ["risk"],
+    // onCompleted: () => {
+    //   window.location.reload();
+    // },
+  });
+  async function reviewRisk({ publish }: { publish: boolean }) {
+    try {
+      await reviewMutation({ variables: { id: riskId, publish } });
+      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  const renderRiskAction = () => {
+    if (premiseRisk === 6) {
+      return (
+        <Tooltip description="Accept edit request">
+          <DialogButton
+            title={`Accept request to edit?`}
+            message={`Request by ${dataRisk?.risk?.requestEdit?.user?.name}`}
+            className="soft red mr-2"
+            data={dataRisk?.risk?.requestEdit?.id}
+            onConfirm={handleApproveRequest}
+            onReject={handleRejectRequest}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
+          >
+            <FaExclamationCircle />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premiseRisk === 5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
+        >
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+    if (premiseRisk === 4) {
+      return (
+        <Tooltip description="Request edit access">
+          <DialogButton
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutation()}
+            loading={requestEditMutationInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatusRisk === "requested"}
+          >
+            <AiOutlineEdit />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premiseRisk === 3) {
+      if (riskModal) {
+        return null;
+      }
+      return (
+        <div className="d-flex">
+          <Tooltip description="Edit Risk">
+            <Button
+              onClick={() =>
+                editRisk({
+                  id: dataRisk?.risk?.id || "",
+                  name: dataRisk?.risk?.name || "",
+                  businessProcessIds:
+                    dataRisk?.risk?.businessProcesses?.map(toLabelValue) || [],
+                  levelOfRisk: dataRisk?.risk?.levelOfRisk as LevelOfRisk,
+                  typeOfRisk: dataRisk?.risk?.typeOfRisk as TypeOfRisk,
+                })
+              }
+              color=""
+              className="soft orange"
+            >
+              <AiFillEdit />
+            </Button>
+          </Tooltip>
+        </div>
+      );
+    }
+    if (premiseRisk === 2) {
+      return (
+        <div className="d-flex">
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => reviewRisk({ publish: false })}
+            loading={reviewMutationInfo.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => reviewRisk({ publish: true })}
+            loading={reviewMutationInfo.loading}
+          >
+            Approve
+          </DialogButton>
+        </div>
+      );
+    }
+    return null;
+  };
+  const draftRiskReal = dataRisk?.risk?.draft?.objectResult;
+  const riskName = draftRiskReal
+    ? get(dataRisk, "risk.draft.objectResult.name")
+    : dataRisk?.risk?.name || "";
+
   const renderRiskDetails = () => {
     const levelOfRisk = dataRisk?.risk?.levelOfRisk || "";
     const typeOfRisk = dataRisk?.risk?.typeOfRisk || "";
@@ -317,7 +474,7 @@ export default function RiskAndControl({
     const createdAt = dataRisk?.risk?.createdAt;
 
     const details1 = [
-      { label: "Risk Id", value: id },
+      { label: "Risk Id", value: riskId },
       { label: "Name", value: riskName },
       {
         label: "Business Process",
@@ -423,7 +580,7 @@ export default function RiskAndControl({
     approveEditMutation,
     approveEditMutationResult,
   ] = useApproveRequestEditMutation({
-    refetchQueries: ["control"],
+    refetchQueries: ["control", "risk"],
     onError: notifyGraphQLErrors,
   });
   async function handleApproveRequestControl(id: string) {
@@ -1034,7 +1191,9 @@ export default function RiskAndControl({
 
         {currentUrl.includes("/control/")
           ? renderControlAction()
-          : currentUrl.includes("resources/") || currentUrl.includes("risk/")
+          : currentUrl.includes("risk/")
+          ? renderRiskAction()
+          : currentUrl.includes("resources/")
           ? null
           : renderActions()}
       </div>
@@ -1084,84 +1243,81 @@ export default function RiskAndControl({
             >
               {risks.length ? (
                 <ul>
-                  {risks
-                    .filter((a) => a?.draft === null)
-                    .map((risk) => (
-                      <li key={risk.id}>
-                        <div className="mb-3 d-flex justify-content-between">
-                          <Link
-                            to={`/risk-and-control/${
-                              currentUrl.split("control/")[1]
-                            }/risk/${risk.id}`}
-                            onClick={() => {
-                              setRiskId(risk.id);
-                            }}
-                          >
-                            <h5>
-                              {risk.name}
-                              <Badge
-                                color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
-                              >
-                                {startCase(risk.levelOfRisk || "")}
-                              </Badge>
-                              <Badge color="secondary">
-                                {startCase(risk.typeOfRisk || "")}
-                              </Badge>
-                            </h5>
-                          </Link>
+                  {modifiedRisks.map((risk) => (
+                    <li key={risk?.id || ""}>
+                      <div className="mb-3 d-flex justify-content-between">
+                        <Link
+                          to={`/risk-and-control/${
+                            currentUrl.split("control/")[1]
+                          }/risk/${risk?.id || ""}`}
+                          onClick={() => {
+                            setRiskId(risk?.id || "");
+                          }}
+                        >
+                          <h5>
+                            {risk?.name}
+                            <Badge
+                              color={`${getRiskColor(risk?.levelOfRisk)} mx-3`}
+                            >
+                              {startCase(risk?.levelOfRisk || "")}
+                            </Badge>
+                            <Badge color="secondary">
+                              {startCase(risk?.typeOfRisk || "")}
+                            </Badge>
+                          </h5>
+                        </Link>
 
-                          {(isAdmin || isAdminPreparer) &&
-                            risk?.hasEditAccess &&
-                            !risk.draft &&
-                            isAdminPreparer && (
-                              <Button
-                                onClick={() =>
-                                  editRisk({
-                                    id: risk.id,
-                                    name: risk.name || "",
-                                    businessProcessIds:
-                                      risk.businessProcesses?.map(
-                                        toLabelValue
-                                      ) || [],
-                                    levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                                    typeOfRisk: risk.typeOfRisk as TypeOfRisk,
-                                  })
-                                }
-                                color=""
-                              >
-                                <FaPencilAlt />
-                              </Button>
-                            )}
-                        </div>
-                        {isUser ? (
-                          dataModifier(
-                            risk?.controls?.filter((a: any) => a.draft === null)
-                          ).length ? (
-                            <>
-                              <h6>Control</h6>
-                              <ControlsTable
-                                history={history.location.pathname}
-                                controls={dataModifier(
-                                  risk.controls.filter(
-                                    (a: any) => a.draft === null
-                                  )
-                                )}
-                                editControl={editControl}
-                              />
-                            </>
-                          ) : null
-                        ) : dataModifier(risk?.controls).length ? (
+                        {(isAdmin || isAdminPreparer) &&
+                          risk?.hasEditAccess &&
+                          !risk.draft &&
+                          isAdminPreparer && (
+                            <Button
+                              onClick={() =>
+                                editRisk({
+                                  id: risk.id,
+                                  name: risk.name || "",
+                                  businessProcessIds:
+                                    risk.businessProcesses?.map(toLabelValue) ||
+                                    [],
+                                  levelOfRisk: risk.levelOfRisk as LevelOfRisk,
+                                  typeOfRisk: risk.typeOfRisk as TypeOfRisk,
+                                })
+                              }
+                              color=""
+                            >
+                              <FaPencilAlt />
+                            </Button>
+                          )}
+                      </div>
+                      {isUser ? (
+                        dataModifier(
+                          risk?.controls?.filter((a: any) => a.draft === null)
+                        ).length ? (
                           <>
                             <h6>Control</h6>
                             <ControlsTable
                               history={history.location.pathname}
-                              controls={dataModifier(risk.controls)}
+                              controls={dataModifier(
+                                risk?.controls?.filter(
+                                  (a: any) => a.draft === null
+                                )
+                              )}
                               editControl={editControl}
                             />
                           </>
-                        ) : null}
-                      </li>
-                    ))}
+                        ) : null
+                      ) : dataModifier(risk?.controls).length ? (
+                        <>
+                          <h6>Control</h6>
+                          <ControlsTable
+                            history={history.location.pathname}
+                            controls={dataModifier(risk?.controls)}
+                            editControl={editControl}
+                          />
+                        </>
+                      ) : null}
+                    </li>
+                  ))}
                 </ul>
               ) : (
                 <EmptyAttribute />
