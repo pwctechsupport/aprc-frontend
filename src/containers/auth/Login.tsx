@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
-import pwcLogo from "../../assets/images/pwc-logo.png";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline.png";
 import {
   useLoginMutation,
   LoginMutationVariables,
@@ -18,6 +18,7 @@ import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
 import Captcha from "react-numeric-captcha";
 import useWindowSize from "../../shared/hooks/useWindowSize";
+import { Row, Col } from "reactstrap";
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
@@ -82,71 +83,80 @@ export default function Login({ history }: RouteComponentProps) {
     }
   }
   const screenSize = useWindowSize();
-  return (
-    <Container>
-      <Helmet>
-        <title>Login - PricewaterhouseCoopers</title>
-      </Helmet>
-      <Image src={pwcLogo} alt="pwc-logo" />
-      <H1>Welcome, Please Sign in Here</H1>
-      <Form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{
-          width: `${
-            screenSize.width < 426
-              ? "90vw"
-              : screenSize.width < 850
-              ? "60VW"
-              : "30vw"
-          }`,
-        }}
-      >
-        <Label>Email</Label>
-        <br />
-        <Input
-          name="email"
-          placeholder="Enter email address"
-          required
-          ref={register({ required: true })}
-        />
-        <br />
-        <br />
-        <Label>Password</Label>
-        <br />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Enter password"
-          required
-          ref={register({ required: true })}
-        />
-        <br />
-        <br />
-        <Captcha
-          ref={(e: any) => st(e)}
-          onChange={setCaptcha}
-          placeholder="Insert captcha"
-        />
-        <br />
-        <br />
 
-        <Button
-          className="pwc"
-          color="primary"
-          type="submit"
-          block
-          loading={loading || loadingUsers}
-          disabled={!captcha}
-        >
-          Login
-        </Button>
-        <div className="text-center my-4">
-          <Link to="/forgot-password" className="link-pwc">
-            Forgot Password?
-          </Link>
-        </div>
-      </Form>
-    </Container>
+  return (
+    <Row className="login-background" style={{ minHeight: "100vh" }}>
+      <div>
+        <Image className="mt-0 ml-5" src={pwcLogoOutline} alt="pwc-logo" />
+      </div>
+      {screenSize.width > 850 ? <Col></Col> : null}
+      <Col
+        style={{ marginTop: `${screenSize.width < 491 ? "0vh" : "30vh"}` }}
+        className="ml-3"
+      >
+        <Container>
+          <Helmet>
+            <title>Login - PricewaterhouseCoopers</title>
+          </Helmet>
+          <div
+            style={{
+              border: "1px solid rgba(0,0,0,0.5)",
+              padding: "1vw",
+              borderRadius: "3px",
+              backgroundColor: "white",
+            }}
+          >
+            <H1>Welcome, Please Sign in Here</H1>
+            <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+              <Label>Email</Label>
+              <br />
+              <Input
+                name="email"
+                placeholder="Enter email address"
+                required
+                ref={register({ required: true })}
+              />
+              <br />
+              <br />
+              <Label>Password</Label>
+              <br />
+              <Input
+                name="password"
+                type="password"
+                placeholder="Enter password"
+                required
+                ref={register({ required: true })}
+              />
+              <br />
+              <br />
+              <Captcha
+                ref={(e: any) => st(e)}
+                onChange={setCaptcha}
+                placeholder="Insert captcha"
+              />
+              <br />
+              <br />
+
+              <Button
+                className="pwc"
+                color="primary"
+                type="submit"
+                block
+                loading={loading || loadingUsers}
+                disabled={!captcha}
+              >
+                Login
+              </Button>
+              <div className="text-center my-4">
+                <Link to="/forgot-password" className="link-pwc">
+                  Forgot Password?
+                </Link>
+              </div>
+            </Form>
+          </div>
+        </Container>
+      </Col>
+    </Row>
   );
 }
 
@@ -162,7 +172,7 @@ export const Form = styled.form`
 `;
 
 export const Image = styled.img`
-  width: 90px;
+  width: 200px;
   height: auto;
   margin: 70px;
 `;

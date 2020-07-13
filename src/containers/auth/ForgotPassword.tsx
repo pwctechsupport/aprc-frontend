@@ -7,12 +7,13 @@ import { useForgotPasswordMutation } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import { Container, Form, H1, Image, Input, Label } from "./Login";
 import Helmet from "react-helmet";
+import { Link } from "react-router-dom";
 
 const ForgotPassword = ({ history }: RouteComponentProps) => {
   const { register, handleSubmit } = useForm();
   const [forgotPassword, { loading }] = useForgotPasswordMutation({
     onCompleted,
-    onError
+    onError,
   });
 
   const onSubmit = (data: any) => {
@@ -39,8 +40,11 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
         <title>Forgot Password - PricewaterhouseCoopers</title>
       </Helmet>
       <Image src={pwcLogo} alt="pwc-logo" />
-      <H1>Forgot Your Password? Dont Worry,</H1>
-      <h4>We got you, Just send us your email</h4>
+      <H1>Password recovery</H1>
+      <h4>
+        Enter the email address for your account and we'll send you instructions
+        to reset your password.
+      </h4>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="my-5">
           <Label>Email</Label>
@@ -63,6 +67,11 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
           Confirm Email
         </Button>
       </Form>
+      <div className="text-center my-4">
+        <Link to="/auth" className="link-pwc">
+          Back to log in page
+        </Link>
+      </div>
     </Container>
   );
 };
