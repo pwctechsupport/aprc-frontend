@@ -21,6 +21,7 @@ import { notifySuccess } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import Pagination from "../../shared/components/Pagination";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const Risks = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -160,7 +161,7 @@ const Risks = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
-                <input
+                <PwcCheckInput
                   type="checkbox"
                   checked={selected.length === risks.length}
                   onChange={toggleCheckAll}
@@ -192,10 +193,10 @@ const Risks = ({ history }: RouteComponentProps) => {
               >
                 {isAdminReviewer ? (
                   <td>
-                    <input
+                    <PwcCheckInput
                       type="checkbox"
                       checked={selected.includes(risk.id)}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e: any) => e.stopPropagation()}
                       onChange={() => toggleCheck(risk.id)}
                     />
                   </td>

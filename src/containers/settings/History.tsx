@@ -3,7 +3,7 @@ import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { Form, FormGroup, Input, Label, Row, Col } from "reactstrap";
+import { Form, FormGroup, Label, Row, Col } from "reactstrap";
 import styled from "styled-components";
 import {
   DestroyVersionInput,
@@ -17,6 +17,7 @@ import { date as formatDate } from "../../shared/formatter";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Helmet from "react-helmet";
 import Footer from "../../shared/components/Footer";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const History = () => {
   const { data, loading } = useHistoryListQuery({
@@ -85,7 +86,7 @@ const History = () => {
           </div>
           <Row>
             <Col lg={2}>
-              <input
+              <PwcCheckInput
                 type="checkbox"
                 checked={selected.length === histories.length}
                 onChange={toggleCheckAll}
@@ -105,10 +106,10 @@ const History = () => {
                       return (
                         <Fragment key={history.key + " " + history.id}>
                           <FormGroup check className="py-3">
-                            <Input
+                            <PwcCheckInput
                               type="checkbox"
                               checked={selected.includes(history.id || "")}
-                              onClick={(e) => e.stopPropagation()}
+                              onClick={(e: any) => e.stopPropagation()}
                               onChange={() => toggleCheck(history.id || "")}
                             />
                             <Label

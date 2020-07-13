@@ -37,6 +37,7 @@ import { RouteComponentProps, Link } from "react-router-dom";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -149,7 +150,7 @@ const References = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
-                <input
+                <PwcCheckInput
                   type="checkbox"
                   checked={selected.length === references.length}
                   onChange={toggleCheckAll}
@@ -263,10 +264,10 @@ const ReferenceRow = ({
     >
       {isAdminReviewer ? (
         <td>
-          <input
+          <PwcCheckInput
             type="checkbox"
             checked={selected}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: any) => e.stopPropagation()}
             onChange={toggleCheck}
           />
         </td>

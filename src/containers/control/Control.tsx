@@ -36,6 +36,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 // import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
@@ -304,7 +305,11 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       {
         label: "Key Control",
         value: (
-          <input type="checkbox" checked={keyControl} onChange={() => {}} />
+          <PwcCheckInput
+            type="checkbox"
+            checked={keyControl}
+            onChange={() => {}}
+          />
         ),
       },
       { label: "Type of Control", value: capitalCase(typeOfControl) },

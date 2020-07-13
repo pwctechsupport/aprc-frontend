@@ -89,6 +89,7 @@ import { APP_ROOT_URL } from "../../settings";
 import getRiskColor from "../../shared/utils/getRiskColor";
 import startCase from "lodash/startCase";
 import { capitalCase } from "capital-case";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 type TParams = { id: string };
 
@@ -654,7 +655,11 @@ export default function Policy({
       {
         label: "Key Control",
         value: (
-          <input type="checkbox" checked={keyControl} onChange={() => {}} />
+          <PwcCheckInput
+            type="checkbox"
+            checked={keyControl}
+            onChange={() => {}}
+          />
         ),
       },
       { label: "Type of Control", value: capitalCase(typeOfControl) },

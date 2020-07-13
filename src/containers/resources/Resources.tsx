@@ -22,6 +22,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -155,7 +156,7 @@ const Resources = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th>
-                <input
+                <PwcCheckInput
                   type="checkbox"
                   checked={selected.length === resources.length}
                   onChange={toggleCheckAll}
@@ -183,10 +184,10 @@ const Resources = ({ history }: RouteComponentProps) => {
               >
                 {isAdminReviewer ? (
                   <td>
-                    <input
+                    <PwcCheckInput
                       type="checkbox"
                       checked={selected.includes(resource.id)}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e: any) => e.stopPropagation()}
                       onChange={() => toggleCheck(resource.id)}
                     />
                   </td>

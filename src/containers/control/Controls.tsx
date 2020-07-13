@@ -21,6 +21,7 @@ import { notifySuccess } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import Pagination from "../../shared/components/Pagination";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const Controls = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -161,7 +162,7 @@ const Controls = ({ history }: RouteComponentProps) => {
               <tr>
                 {isAdminReviewer ? (
                   <th>
-                    <input
+                    <PwcCheckInput
                       type="checkbox"
                       checked={selected.length === controls.length}
                       onChange={toggleCheckAll}
@@ -191,10 +192,10 @@ const Controls = ({ history }: RouteComponentProps) => {
                   >
                     {isAdminReviewer ? (
                       <td>
-                        <input
+                        <PwcCheckInput
                           type="checkbox"
                           checked={selected.includes(control.id)}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e: any) => e.stopPropagation()}
                           onChange={() => toggleCheck(control.id)}
                         />
                       </td>

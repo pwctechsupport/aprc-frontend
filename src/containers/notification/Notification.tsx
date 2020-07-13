@@ -25,6 +25,7 @@ import Select from "react-select";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import NotificationSettings from "../settings/NotificationSettings";
 import Footer from "../../shared/components/Footer";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [labelTime, setLabelTime] = useState("Date Added...");
@@ -236,7 +237,7 @@ const Notification = ({ history }: RouteComponentProps) => {
               <thead>
                 <tr>
                   <th>
-                    <input
+                    <PwcCheckInput
                       type="checkbox"
                       checked={
                         selected.length === notifications.length ? true : false
@@ -278,10 +279,10 @@ const Notification = ({ history }: RouteComponentProps) => {
                       }
                     >
                       <td>
-                        <input
+                        <PwcCheckInput
                           type="checkbox"
                           checked={selected.includes(String(data.id))}
-                          onClick={(e) => e.stopPropagation()}
+                          onClick={(e: any) => e.stopPropagation()}
                           onChange={() => toggleCheck(String(data.id))}
                         />
                       </td>

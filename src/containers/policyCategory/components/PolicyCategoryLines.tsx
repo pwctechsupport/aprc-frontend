@@ -22,6 +22,7 @@ import DialogButton from "../../../shared/components/DialogButton";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import Pagination from "../../../shared/components/Pagination";
 import useListState from "../../../shared/hooks/useList";
+import styled from "styled-components";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -174,11 +175,16 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
-                <input
+                <PwcCheckInput
                   type="checkbox"
                   checked={selected.length === policyCategories.length}
                   onChange={toggleCheckAll}
                 />
+                {/* <label
+                  style={{ position: "relative", left: "-16px", top: "-3px" }}
+                >
+                  <MdCheckBox size={20} color={`var(--tangerine)`} />
+                </label> */}
               </th>
             ) : null}
 
@@ -202,7 +208,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
               >
                 {isAdminReviewer ? (
                   <td>
-                    <input
+                    <PwcCheckInput
                       type="checkbox"
                       checked={selected.includes(policyCategory.id)}
                       onClick={(e) => e.stopPropagation()}
@@ -252,3 +258,31 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
 };
 
 export default PolicyCategoryLines;
+
+export const PwcCheckInput = styled.input`
+  &:after {
+    width: 15px;
+    height: 15px;
+
+    top: -2px;
+    left: -1px;
+    position: relative;
+    visibility: hidden;
+    background-color: var(--primary-grey);
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid var(--primary-grey);
+  }
+  &:checked::after {
+    width: 15px;
+    height: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: white;
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid var(--tangerine);
+  }
+`;

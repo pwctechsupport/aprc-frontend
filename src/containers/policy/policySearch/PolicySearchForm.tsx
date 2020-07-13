@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaUndo } from "react-icons/fa";
-import { Form, FormGroup, Input as ReactstrapInput, Label } from "reactstrap";
+import { Form, FormGroup, Label } from "reactstrap";
 import Button from "../../../shared/components/Button";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";

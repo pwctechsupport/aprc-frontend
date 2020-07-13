@@ -19,6 +19,7 @@ import { date } from "../../shared/formatter";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
 import Footer from "../../shared/components/Footer";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
@@ -213,7 +214,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
             <thead>
               <tr>
                 <th>
-                  <input
+                  <PwcCheckInput
                     type="checkbox"
                     checked={
                       checked.length &&
@@ -246,11 +247,11 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                         }
                       >
                         <td>
-                          <input
+                          <PwcCheckInput
                             type="checkbox"
                             checked={checked.includes(bookmark.id)}
-                            onChange={(e) => toggleCheck(bookmark.id)}
-                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e: any) => toggleCheck(bookmark.id)}
+                            onClick={(e: any) => e.stopPropagation()}
                           />
                         </td>
                         <td>{bookmark.originatorType}</td>

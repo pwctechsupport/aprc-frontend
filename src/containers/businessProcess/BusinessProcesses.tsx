@@ -21,6 +21,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import Pagination from "../../shared/components/Pagination";
 import ImportModal from "../../shared/components/ImportModal";
+import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -167,7 +168,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
               <tr>
                 {isAdminReviewer ? (
                   <th>
-                    <input
+                    <PwcCheckInput
                       type="checkbox"
                       checked={selected.length === bps.length}
                       onChange={toggleCheckAll}
@@ -192,10 +193,10 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                 >
                   {isAdminReviewer ? (
                     <td>
-                      <input
+                      <PwcCheckInput
                         type="checkbox"
                         checked={selected.includes(item.id)}
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: any) => e.stopPropagation()}
                         onChange={() => toggleCheck(item.id)}
                       />
                     </td>
