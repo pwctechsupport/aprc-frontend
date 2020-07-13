@@ -52,7 +52,13 @@ const DialogButton = ({
 
   return (
     <Fragment>
-      <Button {...btnProps} loading={loading} color={color} onClick={_onClick}>
+      <Button
+        {...btnProps}
+        loading={loading}
+        color={color}
+        onClick={_onClick}
+        style={{ borderRadius: "3px" }}
+      >
         {children}
       </Button>
       <ModalDialog
