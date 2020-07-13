@@ -96,12 +96,12 @@ export const SideBoxItem = styled(NavLink)`
   text-decoration: none;
   color: var(--item-title-side-box);
   &:hover {
-    background: var(--hover-grey-side-box);
+    background: var(--darker-grey-2);
     color: var(--hover-item-title-side-box);
     text-decoration: none;
   }
   &.active {
-    background: var(--active-grey-side-box);
+    background: var(--darker-grey-2);
     color: black;
   }
 `;
@@ -149,12 +149,12 @@ export const SideBoxBranch = styled.div<SideBoxBranchProps>`
   padding-right: 0px;
   font-size: 18px;
   &.active {
-    background: var(--active-grey-side-box);
+    background: var(--darker-grey-2);
   }
   &:hover {
-    background: var(--hover-grey-side-box);
+    background: var(--darker-grey-2);
     &.active {
-      background: var(--hover-grey-side-box);
+      background: var(--darker-grey-2);
     }
   }
   ${(p) =>
@@ -202,7 +202,7 @@ export const SideBoxBranchIconContainer = styled.div`
   margin: 0;
   cursor: pointer;
   &:hover {
-    background: var(--hover-grey-side-box);
+    background: var(--darker-grey-2);
   }
 `;
 
