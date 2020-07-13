@@ -8,6 +8,7 @@ import Button from "../../shared/components/Button";
 import { Container, Form, H1, Image, Input, Label } from "./Login";
 import Helmet from "react-helmet";
 import { Link } from "react-router-dom";
+import useWindowSize from "../../shared/hooks/useWindowSize";
 
 const ForgotPassword = ({ history }: RouteComponentProps) => {
   const { register, handleSubmit } = useForm();
@@ -33,45 +34,52 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
       </div>
     );
   }
+  const screenSize = useWindowSize();
 
   return (
     <Container>
       <Helmet>
         <title>Forgot Password - PricewaterhouseCoopers</title>
       </Helmet>
-      <Image src={pwcLogo} alt="pwc-logo" />
-      <H1>Password recovery</H1>
-      <h4>
-        Enter the email address for your account and we'll send you instructions
-        to reset your password.
-      </h4>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <div className="my-5">
-          <Label>Email</Label>
-          <br />
-          <Input
-            name="email"
-            placeholder="Enter email address"
-            required
-            ref={register({ required: true })}
-          />
-        </div>
+      <Container
+        style={{ width: `${screenSize.width < 768 ? "100%" : "30%"}` }}
+      >
+        <Image src={pwcLogo} alt="pwc-logo" />
+        <H1 style={{ fontSize: "16px", textAlign: "center" }}>
+          Password recovery
+        </H1>
+        <h4 style={{ fontSize: "14px", textAlign: "center" }}>
+          Enter the email address for your account and we'll send you
+          instructions to reset your password.
+        </h4>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <div className="my-5">
+            <Label>Email</Label>
+            <br />
+            <Input
+              name="email"
+              placeholder="Enter email address"
+              required
+              ref={register({ required: true })}
+            />
+          </div>
 
-        <Button
-          className="pwc"
-          color="primary"
-          type="submit"
-          block
-          loading={loading}
-        >
-          Confirm Email
-        </Button>
-      </Form>
-      <div className="text-center my-4">
-        <Link to="/auth" className="link-pwc">
-          Back to log in page
-        </Link>
-      </div>
+          <Button
+            className="pwc"
+            color="primary"
+            type="submit"
+            block
+            loading={loading}
+          >
+            Confirm Email
+          </Button>
+        </Form>
+        <div className="text-center my-4">
+          <Link to="/auth" className="link-pwc">
+            Back to log in page
+          </Link>
+        </div>
+      </Container>
     </Container>
   );
 };
