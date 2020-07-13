@@ -129,7 +129,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
             </Fragment>
           ))
         ) : (
-          <div className="text-center p-2 text-orange">Policy not found</div>
+          <div className="text-center p-2 text-grey">Policy not found</div>
         )}
         {!hideRefreshButton && (
           <div className="text-center mt-2">
@@ -222,7 +222,7 @@ const PolicyBranch = ({
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className={isActive ? "text-white" : "text-orange"}
+                    className="text-grey"
                     size={14}
                   />
                 </SideBoxBranchIconContainer>
@@ -276,7 +276,7 @@ const PolicyBranch = ({
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className={isActive ? "text-white" : "text-orange"}
+                    className="text-grey"
                     size={14}
                   />
                 </SideBoxBranchIconContainer>
@@ -327,7 +327,7 @@ const PolicyBranch = ({
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className={isActive ? "text-white" : "text-orange"}
+                    className="text-grey"
                     size={14}
                   />
                 </SideBoxBranchIconContainer>

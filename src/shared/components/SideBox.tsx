@@ -7,7 +7,7 @@ import LoadingSpinner from "./LoadingSpinner";
 
 // SideBox is the main wrapper to use side box.
 export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
-  background: var(--soft-orange);
+  background: var(--soft-grey);
   width: 25vw;
   position: fixed;
   height: calc(100vh - 63px);
@@ -30,7 +30,7 @@ export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
 
 // SideBoxTitle, the wrapper for the header. Better name should be SideBoxHeader.
 export const SideBoxTitle = styled.h4.attrs(() => ({
-  className: "text-orange",
+  className: "text-grey",
 }))`
   padding: 1.5rem 1rem 0.5rem 1rem;
   text-overflow: ellipsis;
@@ -58,7 +58,8 @@ export const SideBoxSearch = ({
       value={search}
       placeholder={placeholder || "Search..."}
       onChange={(e) => setSearch(e.target.value)}
-      className="orange"
+      // className="orange"
+      style={{ border: `1px solid var(--search-border-side-box)` }}
     />
     <SideBoxSearchLoadingIndicator>
       {loading && <LoadingSpinner />}
@@ -86,18 +87,22 @@ export const SideBoxItem = styled(NavLink)`
   display: flex;
   justify-content: space-between;
   padding: 10px 1rem;
-  border-bottom: 1px solid var(--pale-primary-color);
+  border-bottom: 1px solid var(--soft-black);
+  border-top: 0px;
+  border-right: 0px;
+  border-left: 0px;
   font-size: 18px;
+  border-style: dashed;
   text-decoration: none;
-  color: var(--primary-color);
+  color: var(--item-title-side-box);
   &:hover {
-    background: var(--pale-primary-color);
-    color: var(--primary-color);
+    background: var(--hover-grey-side-box);
+    color: var(--hover-item-title-side-box);
     text-decoration: none;
   }
   &.active {
-    background: var(--primary-color);
-    color: white;
+    background: var(--active-grey-side-box);
+    color: black;
   }
 `;
 
@@ -133,19 +138,23 @@ interface SideBoxBranchProps {
 }
 export const SideBoxBranch = styled.div<SideBoxBranchProps>`
   position: relative;
-  border-bottom: 1px solid var(--pale-primary-color);
+  border-bottom: 1px solid var(--soft-black);
+  border-top: 0px;
+  border-right: 0px;
+  border-left: 0px;
+  border-style: dashed;
   padding-top: 5px;
   padding-bottom: 5px;
   padding-left: ${(p) => (p.padLeft ? p.padLeft : 0)}px;
   padding-right: 0px;
   font-size: 18px;
   &.active {
-    background: var(--primary-color);
+    background: var(--active-grey-side-box);
   }
   &:hover {
-    background: var(--pale-primary-color);
+    background: var(--hover-grey-side-box);
     &.active {
-      background: var(--primary-color);
+      background: var(--hover-grey-side-box);
     }
   }
   ${(p) =>
@@ -164,7 +173,7 @@ export const SideBoxBranchTitle = styled.div`
   /* overflow: hidden; */
   /* white-space: nowrap; */
   /* text-overflow: ellipsis; */
-  color: var(--primary-color);
+  color: var(--item-title-side-box);
   font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -175,13 +184,13 @@ export const SideBoxBranchTitle = styled.div`
   max-height: 3.6em;
   /* font-size: 18px; */
   &.active {
-    color: white;
+    color: var(--item-title-side-box);
   }
   &:hover {
     text-decoration: none;
-    color: var(--primary-color);
+    color: var(--hover-item-title-side-box);
     &.active {
-      color: white;
+      color: var(--hover-item-title-side-box);
     }
   }
 `;
@@ -193,7 +202,7 @@ export const SideBoxBranchIconContainer = styled.div`
   margin: 0;
   cursor: pointer;
   &:hover {
-    background: rgba(245, 100, 9, 0.2);
+    background: var(--hover-grey-side-box);
   }
 `;
 

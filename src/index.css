@@ -83,6 +83,13 @@ body {
   --soft-orange: #fff4ed;
   --primary-grey: #cecece;
   --soft-grey: rgba(233, 236, 239, 0.8);
+  --soft-black: rgba(0, 0, 0, 0.2);
+  --active-grey-side-box: rgba(223, 223, 223, 1);
+  --item-title-side-box: rgba(0, 0, 0, 0.7);
+  --hover-item-title-side-box: rgba(0, 0, 0, 0.5);
+  --search-border-side-box: rgba(0, 0, 0, 0.3);
+  --hover-grey-side-box: rgba(223, 223, 223, 0.5);
+  --primary-side-box: #dedede;
   --darker-grey: #808080;
 }
 .tox-notifications-container {
