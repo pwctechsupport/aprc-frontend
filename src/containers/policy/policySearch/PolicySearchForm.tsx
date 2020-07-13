@@ -14,6 +14,7 @@ import {
 } from "../../../shared/hooks/suggestions";
 import { useLoadPolicyCategories } from "../../user/components/UserForm";
 import { Suggestions } from "../../../shared/formatter";
+import { PwcRadioInput } from "../../report/Report";
 
 export interface PolicySearchFormValues {
   title?: string;
@@ -118,7 +119,7 @@ export default function PolicySearchForm({
         {dateFilters.map((item) => (
           <FormGroup key={item} check>
             <Label check>
-              <ReactstrapInput
+              <PwcRadioInput
                 type="radio"
                 name="dateFrom"
                 value={item}

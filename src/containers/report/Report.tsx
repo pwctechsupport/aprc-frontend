@@ -14,6 +14,7 @@ import {
 import { notifyError, notifyInfo } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
 import Footer from "../../shared/components/Footer";
+import styled from "styled-components";
 
 const reportOptions = [
   {
@@ -200,7 +201,7 @@ export default function Report() {
                         {option.formats.map((format) => (
                           <FormGroup key={format.id} check>
                             <Label check>
-                              <Input
+                              <PwcRadioInput
                                 type="radio"
                                 name={option.id}
                                 defaultChecked={
@@ -235,7 +236,9 @@ export default function Report() {
                                     ? true
                                     : false
                                 }
-                                onClick={(e) => sText(e.currentTarget.name)}
+                                onClick={(e: any) =>
+                                  sText(e.currentTarget.name)
+                                }
                                 value={format.id}
                                 innerRef={register}
                               />
@@ -307,7 +310,37 @@ export default function Report() {
 }
 
 type Key = keyof ReportFormValues;
-
+interface Props {
+  disabled?: boolean;
+}
+export const PwcRadioInput = styled(Input)<Props>`
+  &:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: ${(p) => (p.disabled ? `var(--primary-grey)` : "white")};
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid var(--primary-grey);
+  }
+  &:checked:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: white;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid var(--tangerine);
+  }
+`;
 interface ReportFormValues {
   report_risk?: string;
   report_risk_policy?: string;

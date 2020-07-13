@@ -83,12 +83,12 @@ body {
   --soft-orange: #fff4ed;
   --primary-grey: #cecece;
   --soft-grey: #dedede;
-  --soft-black: rgba(0, 0, 0, 0.2);
   --darker-grey-2: #7d7d7d;
   --primary-side-box: #dedede;
   --darker-grey: #808080;
   --tangerine: #eb8c00;
   /* only in sidebox */
+  --soft-black: rgba(0, 0, 0, 0.2);
   --item-title-side-box: rgba(0, 0, 0, 0.7);
   --hover-item-title-side-box: rgba(0, 0, 0, 0.5);
   --search-border-side-box: rgba(0, 0, 0, 0.3);

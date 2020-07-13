@@ -28,6 +28,7 @@ import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
+import { PwcRadioInput } from "../../report/Report";
 
 const ControlForm = ({
   onSubmit,
@@ -540,7 +541,7 @@ const ActivityModalForm = ({
       <span className="mt-2 mb-3">Control Activity Guidance</span>
       <div className="d-flex ml-3">
         <Label check className="d-flex align-items-center pr-4">
-          <Input
+          <PwcRadioInput
             type="radio"
             name="controlActivity_type"
             value="text"
@@ -550,7 +551,7 @@ const ActivityModalForm = ({
           Free text
         </Label>
         <Label check className="d-flex align-items-center pl-3">
-          <Input
+          <PwcRadioInput
             type="radio"
             name="controlActivity_type"
             value="attachment"

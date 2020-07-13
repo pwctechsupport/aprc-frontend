@@ -28,6 +28,7 @@ import {
 } from "../../../shared/formatter";
 import useDialogBox from "../../../shared/hooks/useDialogBox";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
+import { PwcRadioInput } from "../../report/Report";
 // import Flowchart from "../../riskAndControl/components/Flowchart";
 
 interface ResourceFormProps {
@@ -239,23 +240,23 @@ ResourceFormProps) {
       {selectedCategory?.value === "Flowchart" ? null : (
         <div className="d-flex ml-4">
           <Label check className="d-flex align-items-center pr-4">
-            <Input
+            <PwcRadioInput
               type="radio"
               name="controlActivity_type"
               value="text"
               onChange={() => setActivityType("text")}
               defaultChecked={activityType === "text"}
-            />{" "}
+            />
             URL
           </Label>
           <Label check className="d-flex align-items-center pl-3">
-            <Input
+            <PwcRadioInput
               type="radio"
               name="controlActivity_type"
               value="attachment"
               onChange={() => setActivityType("attachment")}
               defaultChecked={activityType === "attachment"}
-            />{" "}
+            />
             Attachment
           </Label>
         </div>
