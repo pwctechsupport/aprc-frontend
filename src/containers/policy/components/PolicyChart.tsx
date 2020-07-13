@@ -16,7 +16,7 @@ const PolicyChart = ({ data = mockupData, policies }: PolicyChartProps) => {
   return (
     <PolicyChartContainer>
       {data.map((item) => {
-        const colors = getColors(item.label);
+        const colors = getColors(item.total, item.label);
         return (
           <PolicyChartItemWrapper key={item.label}>
             {policies ? (
@@ -35,7 +35,6 @@ const PolicyChart = ({ data = mockupData, policies }: PolicyChartProps) => {
               </Fragment>
             ) : (
               <Fragment>
-                {" "}
                 <PolicyChartItem
                   onClick={item.onClick}
                   height={(item.total / maxCount) * 400}
@@ -63,29 +62,38 @@ const PolicyChart = ({ data = mockupData, policies }: PolicyChartProps) => {
 
 export default PolicyChart;
 
-const getColors = (label: string): [string, string, string] => {
+const getColors = (total: number, label: string): [string, string, string] => {
+  if (label.match(/risk/gi) && total)
+    return [colors.risk, colors.lightrisk, colors.palerisk];
+  if (label.match(/polic/gi) && total)
+    return [colors.policy, colors.lightpolicy, colors.palepolicy];
+  if (label.match(/control/gi) && total)
+    return [colors.control, colors.lightcontrol, colors.palecontrol];
   if (label.match(/risk/gi))
-    return [colors.green, colors.lightGreen, colors.paleGreen];
+    return [colors.riskText, colors.lightrisk, colors.palerisk];
   if (label.match(/polic/gi))
-    return [colors.orange, colors.lightOrange, colors.paleOrange];
+    return [colors.policyText, colors.lightpolicy, colors.palepolicy];
   if (label.match(/control/gi))
-    return [colors.blue, colors.lightBlue, colors.paleBlue];
+    return [colors.controlText, colors.lightcontrol, colors.palecontrol];
   return [colors.red, colors.lightRed, colors.paleRed];
 };
 
 const colors = {
-  orange: "#D85604",
-  lightOrange: "#FFE3D1",
-  paleOrange: "#FFEDE2",
-  green: "#04C07C",
-  lightGreen: "#D1FFD8",
-  paleGreen: "#E3FFE7",
-  blue: "#0459D8",
-  lightBlue: "#D1E6FF",
-  paleBlue: "#E3F0FF",
+  policy: "white",
+  lightpolicy: "#FFE3D1",
+  palepolicy: "#D04A02 ",
+  risk: "white ",
+  lightrisk: "#D1FFD8",
+  palerisk: "#EB8C00 ",
+  control: "white",
+  lightcontrol: "#D1E6FF",
+  palecontrol: "#FFB600 ",
   red: "#F56476",
   lightRed: "#BC072B",
   paleRed: "#D86179",
+  policyText: "#D04A02",
+  riskText: "#EB8C00",
+  controlText: "#FFB600",
 };
 
 const PolicyChartContainer = styled.div`
