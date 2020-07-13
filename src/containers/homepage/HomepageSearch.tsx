@@ -194,7 +194,7 @@ const StyledUl = styled.ul<{ width?: number }>`
   padding: 20px;
   color: black;
   list-style-type: none;
-  border-radius: 10px;
+  border-radius: 3px;
   z-index: 100;
   overflow-y: scroll;
   width: ${(p) => (p.width ? p.width + "px" : "100%")};

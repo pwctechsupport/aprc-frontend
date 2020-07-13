@@ -105,7 +105,7 @@ const PolicyChartItemWrapper = styled.div`
   flex: 1;
   height: 400px;
   margin-right: 20px;
-  border-radius: 10px;
+  border-radius: 3px;
   display: flex;
   justify-content: center;
   &:last-child {
@@ -122,7 +122,7 @@ const PolicyChartItem = styled.div<PolicyChartItemProps>`
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 3px;
   border-width: 0px;
   border-color: blueviolet;
   border-style: solid;
@@ -147,7 +147,7 @@ background: ${(props) => props.color};
 display: flex;
 justify-content: center;
 align-items: center;
-border-radius: 10px;
+border-radius: 3px;
 border-width: 0px;
 border-color: blueviolet;
 border-style: solid;

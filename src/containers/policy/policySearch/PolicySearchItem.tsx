@@ -321,7 +321,7 @@ const PolicySearchItemContainerMini = styled.div`
   &:last-child {
     margin-bottom: 0px;
   }
-  border-radius: 5px;
+  border-radius: 3px;
   overflow: hidden;
   /* for small screen */
   @media screen and (max-width: 767px) {

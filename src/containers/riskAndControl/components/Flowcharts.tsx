@@ -36,9 +36,7 @@ export default function Flowcharts({
     <div className="mt-3">
       <Flowchart
         history={history}
-        img={
-          APP_ROOT_URL + currentResource?.resuploadUrl || ""
-        }
+        img={APP_ROOT_URL + currentResource?.resuploadUrl || ""}
         resourceId={currentResource?.id || ""}
         title={currentResource?.name}
         bpId={bpId}
@@ -81,7 +79,7 @@ const ResourceBox = styled.div<{ isActive: boolean }>`
   margin: 8.5px;
   cursor: pointer;
   margin-top: 20px;
-  border-radius: 8px;
+  border-radius: 3px;
   border-width: 1px;
   border-style: solid;
   border-color: transparent;

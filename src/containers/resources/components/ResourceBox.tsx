@@ -181,7 +181,7 @@ const ResourceBoxContainer = styled.div`
   width: 95%;
   background: white;
   border: grey 2px solid;
-  border-radius: 5px;
+  border-radius: 3px;
   position: relative;
 `;
 

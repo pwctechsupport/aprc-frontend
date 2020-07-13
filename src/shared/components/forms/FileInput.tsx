@@ -179,7 +179,7 @@ const UploadButton = styled.label`
   margin-bottom: unset;
   padding: 5px;
   margin: 0px 4px;
-  border-radius: 2px;
+  border-radius: 3px;
   transition: background 0.1s ease-out 0s;
   background: none rgb(244, 245, 247);
   &:hover {
@@ -195,7 +195,7 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
   margin: 0.5rem 0;
   padding: 20px;
   border: 1px dashed grey;
-  border-radius: 5px;
+  border-radius: 3px;
   transition: 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
   font-size: big;
   font-weight: bold;

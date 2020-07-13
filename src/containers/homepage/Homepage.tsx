@@ -153,5 +153,5 @@ const ContentBox = styled.div`
   padding: 2rem 1rem;
   margin-bottom: 2rem;
   background-color: rgba(54, 48, 60, 0.6);
-  border-radius: 0.3rem;
+  border-radius: 3px;
 `;

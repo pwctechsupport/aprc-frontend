@@ -96,6 +96,6 @@ const Container = styled.div`
   max-height: 36vw;
   background: white;
   border: grey 2px solid;
-  border-radius: 5px;
+  border-radius: 3px;
   position: relative;
 `;
