@@ -29,6 +29,8 @@ import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
 import { PwcRadioInput } from "../../report/Report";
+import CheckBox from "../../../shared/components/forms/CheckBox";
+import { PwcCheckInput } from "../../policyCategory/components/PolicyCategoryLines";
 
 const ControlForm = ({
   onSubmit,
@@ -274,12 +276,13 @@ const ControlForm = ({
         />
 
         <FormGroup check className="mb-3">
-          <BsInput
+          <PwcCheckInput
             type="checkbox"
             name="keyControl"
             id="keyControlCheckbox"
             innerRef={register}
           />
+          {/* <CheckBox checked={} onClick={()=>{}} /> */}
           <Label for="keyControlCheckbox" check>
             Key Control
           </Label>

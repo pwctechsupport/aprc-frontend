@@ -88,6 +88,7 @@ import {
   AiOutlineEdit,
   AiFillEdit,
 } from "react-icons/ai";
+import CheckBox from "../../shared/components/forms/CheckBox";
 
 type TParams = { id: string };
 
@@ -776,9 +777,7 @@ export default function RiskAndControl({
       },
       {
         label: "Key Control",
-        value: (
-          <input type="checkbox" checked={keyControl} onChange={() => {}} />
-        ),
+        value: <CheckBox checked={keyControl} />,
       },
       { label: "Type of Control", value: capitalCase(typeOfControl) },
       {

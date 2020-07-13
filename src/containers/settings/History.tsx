@@ -18,6 +18,7 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Helmet from "react-helmet";
 import Footer from "../../shared/components/Footer";
 import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
+import CheckBox from "../../shared/components/forms/CheckBox";
 
 const History = () => {
   const { data, loading } = useHistoryListQuery({
@@ -34,8 +35,11 @@ const History = () => {
   const sectionedData = prepareHistory(data);
   const histories = data?.versions?.collection || [];
   const selectAllHistories = histories.map((a) => a.id || "");
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+
+  const [clicked, setClicked] = useState(false);
+  const clickButton = () => setClicked((p) => !p);
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(selectAllHistories);
     } else {
       setSelected([]);
@@ -86,10 +90,12 @@ const History = () => {
           </div>
           <Row>
             <Col lg={2}>
-              <PwcCheckInput
-                type="checkbox"
+              <CheckBox
                 checked={selected.length === histories.length}
-                onChange={toggleCheckAll}
+                onClick={() => {
+                  clickButton();
+                  toggleCheckAll();
+                }}
               />
               <Label className="ml-2">Select All</Label>
             </Col>
@@ -106,11 +112,12 @@ const History = () => {
                       return (
                         <Fragment key={history.key + " " + history.id}>
                           <FormGroup check className="py-3">
-                            <PwcCheckInput
-                              type="checkbox"
+                            <CheckBox
                               checked={selected.includes(history.id || "")}
-                              onClick={(e: any) => e.stopPropagation()}
-                              onChange={() => toggleCheck(history.id || "")}
+                              onClick={(e: any) => {
+                                e.stopPropagation();
+                                toggleCheck(history.id || "");
+                              }}
                             />
                             <Label
                               for={"historyCheckbox" + history.id}

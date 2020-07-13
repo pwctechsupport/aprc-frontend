@@ -24,6 +24,7 @@ import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
+import { Input } from "reactstrap";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -259,7 +260,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
 
 export default PolicyCategoryLines;
 
-export const PwcCheckInput = styled.input`
+export const PwcCheckInput = styled(Input)`
   &:after {
     width: 15px;
     height: 15px;

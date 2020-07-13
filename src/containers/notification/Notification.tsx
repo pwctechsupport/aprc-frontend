@@ -26,6 +26,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import NotificationSettings from "../settings/NotificationSettings";
 import Footer from "../../shared/components/Footer";
 import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
+import CheckBox from "../../shared/components/forms/CheckBox";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [labelTime, setLabelTime] = useState("Date Added...");
@@ -139,9 +140,11 @@ const Notification = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
+  const [clicked, setClicked] = useState(false);
+  const clickButton = () => setClicked((p) => !p);
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(notifications.map((n) => String(n.id)));
     } else {
       setSelected([]);
@@ -237,12 +240,14 @@ const Notification = ({ history }: RouteComponentProps) => {
               <thead>
                 <tr>
                   <th>
-                    <PwcCheckInput
-                      type="checkbox"
+                    <CheckBox
                       checked={
                         selected.length === notifications.length ? true : false
                       }
-                      onChange={toggleCheckAll}
+                      onClick={() => {
+                        clickButton();
+                        toggleCheckAll();
+                      }}
                     />
                   </th>
                   <th>Name</th>
@@ -279,11 +284,12 @@ const Notification = ({ history }: RouteComponentProps) => {
                       }
                     >
                       <td>
-                        <PwcCheckInput
-                          type="checkbox"
+                        <CheckBox
                           checked={selected.includes(String(data.id))}
-                          onClick={(e: any) => e.stopPropagation()}
-                          onChange={() => toggleCheck(String(data.id))}
+                          onClick={(e: any) => {
+                            e.stopPropagation();
+                            toggleCheck(String(data.id));
+                          }}
                         />
                       </td>
                       <td

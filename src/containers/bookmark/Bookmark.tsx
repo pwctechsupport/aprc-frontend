@@ -20,6 +20,7 @@ import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
 import Footer from "../../shared/components/Footer";
 import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
+import CheckBox from "../../shared/components/forms/CheckBox";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
@@ -78,9 +79,10 @@ const Bookmark = ({ history }: RouteComponentProps) => {
       setChecked(checked.concat(id));
     }
   }
-
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  const [clicked, setClicked] = useState(false);
+  const clickButton = () => setClicked((p) => !p);
+  function toggleCheckAll() {
+    if (clicked) {
       setChecked(
         oc(data)
           .bookmarks.collection([])
@@ -214,8 +216,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
             <thead>
               <tr>
                 <th>
-                  <PwcCheckInput
-                    type="checkbox"
+                  <CheckBox
                     checked={
                       checked.length &&
                       checked.length ===
@@ -223,7 +224,10 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                         ? true
                         : false
                     }
-                    onChange={toggleCheckAll}
+                    onClick={() => {
+                      clickButton();
+                      toggleCheckAll();
+                    }}
                   />
                 </th>
                 <th>Bookmarks Category</th>
@@ -247,11 +251,12 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                         }
                       >
                         <td>
-                          <PwcCheckInput
-                            type="checkbox"
+                          <CheckBox
                             checked={checked.includes(bookmark.id)}
-                            onChange={(e: any) => toggleCheck(bookmark.id)}
-                            onClick={(e: any) => e.stopPropagation()}
+                            onClick={(e: any) => {
+                              e.stopPropagation();
+                              toggleCheck(bookmark.id);
+                            }}
                           />
                         </td>
                         <td>{bookmark.originatorType}</td>
