@@ -1,27 +1,27 @@
 import { capitalCase } from "capital-case";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  useDestroyRiskMutation,
   useAdminRisksQuery,
+  useDestroyRiskMutation,
   useReviewerRisksStatusQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import ImportModal from "../../shared/components/ImportModal";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
-import downloadXls from "../../shared/utils/downloadXls";
-import { notifySuccess } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
+import downloadXls from "../../shared/utils/downloadXls";
+import { notifySuccess } from "../../shared/utils/notif";
 
 const Risks = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -84,15 +84,19 @@ const Risks = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
+  const [clicked, setClicked] = useState(false);
+  const clickButton = () => setClicked((p) => !p);
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(risks.map((r) => r.id));
     } else {
       setSelected([]);
     }
   }
-
+  useEffect(() => {
+    toggleCheckAll();
+  }, [clicked]);
   function handleExport() {
     downloadXls(
       "/prints/risk_excel.xlsx",
@@ -161,10 +165,9 @@ const Risks = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
-                <PwcCheckInput
-                  type="checkbox"
+                <CheckBox
                   checked={selected.length === risks.length}
-                  onChange={toggleCheckAll}
+                  onClick={clickButton}
                 />
               </th>
             ) : null}
@@ -193,15 +196,15 @@ const Risks = ({ history }: RouteComponentProps) => {
               >
                 {isAdminReviewer ? (
                   <td>
-                    <PwcCheckInput
-                      type="checkbox"
+                    <CheckBox
                       checked={selected.includes(risk.id)}
-                      onClick={(e: any) => e.stopPropagation()}
-                      onChange={() => toggleCheck(risk.id)}
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        toggleCheck(risk.id);
+                      }}
                     />
                   </td>
                 ) : null}
-
                 <td>{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                 <td>

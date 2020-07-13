@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
@@ -6,22 +6,22 @@ import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
-  useDestroyBusinessProcessMutation,
   useAdminBusinessProcessTreeQuery,
+  useDestroyBusinessProcessMutation,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import CheckBox from "../../shared/components/forms/CheckBox";
+import ImportModal from "../../shared/components/ImportModal";
 import Modal from "../../shared/components/Modal";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
-import downloadXls from "../../shared/utils/downloadXls";
-import CreateBusinessProcess from "./CreateBusinessProcess";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
-import ImportModal from "../../shared/components/ImportModal";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
+import downloadXls from "../../shared/utils/downloadXls";
+import CreateBusinessProcess from "./CreateBusinessProcess";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -76,14 +76,19 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
     }
   }
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  const [clicked, setClicked] = useState(false);
+  const clickButton = () => setClicked((p) => !p);
+
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(bps.map((n) => n.id));
     } else {
       setSelected([]);
     }
   }
-
+  useEffect(() => {
+    toggleCheckAll();
+  }, [clicked]);
   function handleExport() {
     downloadXls(
       "/prints/business_process_excel.xlsx",
@@ -168,10 +173,9 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
               <tr>
                 {isAdminReviewer ? (
                   <th>
-                    <PwcCheckInput
-                      type="checkbox"
+                    <CheckBox
                       checked={selected.length === bps.length}
-                      onChange={toggleCheckAll}
+                      onClick={clickButton}
                     />
                   </th>
                 ) : null}
@@ -193,11 +197,12 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                 >
                   {isAdminReviewer ? (
                     <td>
-                      <PwcCheckInput
-                        type="checkbox"
+                      <CheckBox
                         checked={selected.includes(item.id)}
-                        onClick={(e: any) => e.stopPropagation()}
-                        onChange={() => toggleCheck(item.id)}
+                        onClick={(e: any) => {
+                          e.stopPropagation();
+                          toggleCheck(item.id);
+                        }}
                       />
                     </td>
                   ) : null}

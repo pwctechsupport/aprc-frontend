@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import {
@@ -37,7 +37,7 @@ import { RouteComponentProps, Link } from "react-router-dom";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
+import CheckBox from "../../shared/components/forms/CheckBox";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -69,14 +69,19 @@ const References = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
+  const [clicked, setClicked] = useState(false);
+  const clickButton = () => setClicked((p) => !p);
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(references.map((n) => n.id));
     } else {
       setSelected([]);
     }
   }
+  useEffect(() => {
+    toggleCheckAll();
+  }, [clicked]);
   function handleExport() {
     downloadXls(
       "/prints/reference_excel.xlsx",
@@ -150,10 +155,9 @@ const References = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
-                <PwcCheckInput
-                  type="checkbox"
+                <CheckBox
                   checked={selected.length === references.length}
-                  onChange={toggleCheckAll}
+                  onClick={clickButton}
                 />
               </th>
             ) : null}
@@ -264,11 +268,12 @@ const ReferenceRow = ({
     >
       {isAdminReviewer ? (
         <td>
-          <PwcCheckInput
-            type="checkbox"
+          <CheckBox
             checked={selected}
-            onClick={(e: any) => e.stopPropagation()}
-            onChange={toggleCheck}
+            onClick={(e: any) => {
+              e.stopPropagation();
+              toggleCheck();
+            }}
           />
         </td>
       ) : null}

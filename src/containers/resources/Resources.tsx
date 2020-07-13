@@ -1,5 +1,5 @@
 import { capitalCase } from "capital-case";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
 import { FaDownload, FaFileExport, FaTrash } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
@@ -15,6 +15,7 @@ import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
@@ -22,7 +23,6 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -78,13 +78,19 @@ const Resources = ({ history }: RouteComponentProps) => {
     }
   }
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  const [clicked, setClicked] = useState(false);
+  const clickButton = () => setClicked((p) => !p);
+
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(resources.map((n) => n.id));
     } else {
       setSelected([]);
     }
   }
+  useEffect(() => {
+    toggleCheckAll();
+  }, [clicked]);
   function handleExport() {
     downloadXls(
       "/prints/resource_excel.xlsx",
@@ -156,10 +162,9 @@ const Resources = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th>
-                <PwcCheckInput
-                  type="checkbox"
+                <CheckBox
                   checked={selected.length === resources.length}
-                  onChange={toggleCheckAll}
+                  onClick={clickButton}
                 />
               </th>
             ) : null}
@@ -184,11 +189,12 @@ const Resources = ({ history }: RouteComponentProps) => {
               >
                 {isAdminReviewer ? (
                   <td>
-                    <PwcCheckInput
-                      type="checkbox"
+                    <CheckBox
                       checked={selected.includes(resource.id)}
-                      onClick={(e: any) => e.stopPropagation()}
-                      onChange={() => toggleCheck(resource.id)}
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        toggleCheck(resource.id);
+                      }}
                     />
                   </td>
                 ) : null}
