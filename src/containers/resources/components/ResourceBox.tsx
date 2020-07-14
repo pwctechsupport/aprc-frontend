@@ -29,6 +29,7 @@ interface ResourceBoxProps {
   totalRating: number;
   resourceFileType: string | null | undefined;
   base64File: string | null | undefined;
+  flowchart?: boolean;
 }
 
 export default function ResourceBox({
@@ -40,6 +41,7 @@ export default function ResourceBox({
   totalRating,
   imagePreviewUrl,
   resourceFileType,
+  flowchart,
 }: ResourceBoxProps) {
   // const dialogBox = useDialogBox();
   // // Hanlde delete attachment
@@ -136,18 +138,19 @@ export default function ResourceBox({
       </div>
       <ResourceBoxMeta>
         <div>{name}</div>
-        <ResourceBoxMetaWrapper>
-          <div>
-            <StarRating
-              id={id}
-              rating={rating}
-              totalRating={totalRating}
-              onStarClick={handleStarClick}
-              withoutTooltip
-            />
-          </div>
-          <RevenueBoxViews>Downloaded {views} times </RevenueBoxViews>
-          {/* {isAdminReviewer ? (
+        {flowchart ? null : (
+          <ResourceBoxMetaWrapper>
+            <div>
+              <StarRating
+                id={id}
+                rating={rating}
+                totalRating={totalRating}
+                onStarClick={handleStarClick}
+                withoutTooltip
+              />
+            </div>
+            <RevenueBoxViews>Downloaded {views} times </RevenueBoxViews>
+            {/* {isAdminReviewer ? (
             <Tooltip description="Delete resource attachment">
               <Button
                 onClick={handleErase}
@@ -161,17 +164,18 @@ export default function ResourceBox({
             </Tooltip>
           ) : null} */}
 
-          <Tooltip description="Download resource attachment">
-            <Button
-              onClick={handleDownload}
-              disabled={!imagePreviewUrl}
-              className="pwc"
-              color="primary"
-            >
-              <SmallText>&nbsp;Download File</SmallText>
-            </Button>
-          </Tooltip>
-        </ResourceBoxMetaWrapper>
+            <Tooltip description="Download resource attachment">
+              <Button
+                onClick={handleDownload}
+                disabled={!imagePreviewUrl}
+                className="pwc"
+                color="primary"
+              >
+                <SmallText>&nbsp;Download File</SmallText>
+              </Button>
+            </Tooltip>
+          </ResourceBoxMetaWrapper>
+        )}
       </ResourceBoxMeta>
     </ResourceBoxContainer>
   );

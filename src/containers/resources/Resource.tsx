@@ -59,8 +59,10 @@ export default function Resource({
     variables: { id },
     fetchPolicy: "network-only",
   });
+  const category = data?.resource?.category;
 
   const { data: dataRating } = useResourceRatingsQuery({
+    skip: category === "Flowchart",
     variables: { filter: { user_id_eq: userId, resource_id_eq: id } },
     fetchPolicy: "network-only",
   });
@@ -70,7 +72,6 @@ export default function Resource({
   const resourceFileType = data?.resource?.resourceFileType;
   const businessProcess = data?.resource?.businessProcess;
   const resuploadUrl = data?.resource?.resuploadUrl;
-  const category = data?.resource?.category;
   const resuploadLink = data?.resource?.resuploadLink;
   const policies = data?.resource?.policies || [];
   const bps = data?.resource?.businessProcess;
@@ -241,6 +242,7 @@ export default function Resource({
           <Col xs={12} lg={5}>
             <ResourceBox
               base64File={base64File}
+              flowchart={category === "Flowchart"}
               id={id}
               name={name}
               rating={rating}
