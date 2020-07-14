@@ -96,7 +96,7 @@ const History = () => {
                   toggleCheckAll();
                 }}
               />
-              <Label className="ml-2">Select All</Label>
+              <Label className="ml-2">Select all</Label>
             </Col>
           </Row>
           <div>
