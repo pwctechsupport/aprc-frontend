@@ -270,35 +270,50 @@ export default function UserRow({
           {/* premis 6 Accept request to edit */}
           {oc(user).requestEdit.state() === "requested" &&
             (isAdminReviewer || isAdmin) && (
+              <div className="d-flex">
+                <DialogButton
+                  title={`Accept request to edit?`}
+                  message={`Request by ${oc(user).requestEdit.user.name()}`}
+                  className="soft red mr-2"
+                  data={oc(user).requestEdit.id()}
+                  onConfirm={handleApproveRequest}
+                  onReject={handleRejectRequest}
+                  actions={{ no: "Reject", yes: "Approve" }}
+                  loading={approveEditM.loading}
+                >
+                  <Tooltip description="Accept Request To Edit">
+                    <FaExclamationCircle />
+                  </Tooltip>
+                </DialogButton>
+                <DialogButton
+                  title="Delete"
+                  data={oc(user).id()}
+                  loading={destroyM.loading}
+                  className="soft red"
+                  onConfirm={handleDestroy}
+                >
+                  <Tooltip description="Delete User">
+                    <FaTrash />
+                  </Tooltip>
+                </DialogButton>
+              </div>
+            )}
+
+          {!(oc(user).requestEdit.state() === "requested") &&
+            !draft &&
+            isAdminReviewer && (
               <DialogButton
-                title={`Accept request to edit?`}
-                message={`Request by ${oc(user).requestEdit.user.name()}`}
-                className="soft red mr-2"
-                data={oc(user).requestEdit.id()}
-                onConfirm={handleApproveRequest}
-                onReject={handleRejectRequest}
-                actions={{ no: "Reject", yes: "Approve" }}
-                loading={approveEditM.loading}
+                title="Delete"
+                data={oc(user).id()}
+                loading={destroyM.loading}
+                className="soft red"
+                onConfirm={handleDestroy}
               >
-                <Tooltip description="Accept Request To Edit">
-                  <FaExclamationCircle />
+                <Tooltip description="Delete User">
+                  <FaTrash />
                 </Tooltip>
               </DialogButton>
             )}
-
-          {!draft && isAdminReviewer && (
-            <DialogButton
-              title="Delete"
-              data={oc(user).id()}
-              loading={destroyM.loading}
-              className="soft red"
-              onConfirm={handleDestroy}
-            >
-              <Tooltip description="Delete User">
-                <FaTrash />
-              </Tooltip>
-            </DialogButton>
-          )}
         </td>
       </tr>
     );
