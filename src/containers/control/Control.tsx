@@ -36,7 +36,6 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 import CheckBox from "../../shared/components/forms/CheckBox";
 // import { takeValue } from "../../shared/formatter";
 

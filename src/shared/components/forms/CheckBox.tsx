@@ -25,6 +25,7 @@ interface Props {
 const StyledCheckbox = styled.div<Props>`
   display: inline-block;
   width: 16px;
+  cursor: pointer;
   height: 16px;
   background: ${(props) =>
     props.checked ? `var(--tangerine)` : "var(--soft-grey)"};

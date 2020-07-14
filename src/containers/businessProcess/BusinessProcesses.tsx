@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
@@ -76,7 +76,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
     }
   }
 
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
   const clickButton = () => setClicked((p) => !p);
 
   function toggleCheckAll() {
@@ -86,9 +86,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       setSelected([]);
     }
   }
-  useEffect(() => {
-    toggleCheckAll();
-  }, [clicked]);
+
   function handleExport() {
     downloadXls(
       "/prints/business_process_excel.xlsx",
@@ -175,7 +173,10 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                   <th>
                     <CheckBox
                       checked={selected.length === bps.length}
-                      onClick={clickButton}
+                      onClick={() => {
+                        clickButton();
+                        toggleCheckAll();
+                      }}
                     />
                   </th>
                 ) : null}

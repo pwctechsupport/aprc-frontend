@@ -19,7 +19,6 @@ import { date } from "../../shared/formatter";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
 import Footer from "../../shared/components/Footer";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 import CheckBox from "../../shared/components/forms/CheckBox";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
@@ -79,7 +78,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
       setChecked(checked.concat(id));
     }
   }
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
   const clickButton = () => setClicked((p) => !p);
   function toggleCheckAll() {
     if (clicked) {

@@ -25,7 +25,6 @@ import Select from "react-select";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import NotificationSettings from "../settings/NotificationSettings";
 import Footer from "../../shared/components/Footer";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 import CheckBox from "../../shared/components/forms/CheckBox";
 
 const Notification = ({ history }: RouteComponentProps) => {
@@ -140,7 +139,7 @@ const Notification = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
   const clickButton = () => setClicked((p) => !p);
 
   function toggleCheckAll() {

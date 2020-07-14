@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Input } from "reactstrap";
 import styled from "styled-components";
 import {
   useAdminPolicyCategoriesQuery,
@@ -24,7 +25,6 @@ import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
-import { Input } from "reactstrap";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -97,7 +97,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
   const clickButton = () => setClicked((p) => !p);
   function toggleCheckAll() {
     if (clicked) {
@@ -106,9 +106,6 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       setSelected([]);
     }
   }
-  useEffect(() => {
-    toggleCheckAll();
-  }, [clicked]);
 
   function handleExport() {
     downloadXls(
@@ -183,7 +180,10 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
               <th style={{ width: "5%" }}>
                 <CheckBox
                   checked={selected.length === policyCategories.length}
-                  onClick={clickButton}
+                  onClick={() => {
+                    clickButton();
+                    toggleCheckAll();
+                  }}
                 />
               </th>
             ) : null}

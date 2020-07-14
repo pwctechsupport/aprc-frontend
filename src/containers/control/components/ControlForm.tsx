@@ -3,7 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiFillEdit } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
-import { Col, Form, FormGroup, Input as BsInput, Label, Row } from "reactstrap";
+import { Col, Form, FormGroup, Label, Row } from "reactstrap";
 import { oc } from "ts-optchain";
 import { toast } from "react-toastify";
 
@@ -30,7 +30,6 @@ import { toBase64, toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
 import { PwcRadioInput } from "../../report/Report";
 import CheckBox from "../../../shared/components/forms/CheckBox";
-import { PwcCheckInput } from "../../policyCategory/components/PolicyCategoryLines";
 
 const ControlForm = ({
   onSubmit,
@@ -143,11 +142,16 @@ const ControlForm = ({
     activityControls.map(transformActivityControl)
   );
 
+  const [clicked, setClicked] = useState(false);
+  const clickButton = () => setClicked((p) => !p);
+
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
+    let modifiedValues = values;
+    modifiedValues.keyControl = clicked;
     if (prepare.length) {
       onSubmit?.({
-        ...values,
+        ...modifiedValues,
         activityControlsAttributes: prepare,
       });
     } else {
@@ -276,14 +280,13 @@ const ControlForm = ({
         />
 
         <FormGroup check className="mb-3">
-          <PwcCheckInput
-            type="checkbox"
-            name="keyControl"
-            id="keyControlCheckbox"
-            innerRef={register}
-          />
-          {/* <CheckBox checked={} onClick={()=>{}} /> */}
-          <Label for="keyControlCheckbox" check>
+          <CheckBox checked={clicked} onClick={clickButton} />
+          <Label
+            className="ml-2"
+            for="keyControlCheckbox"
+            check
+            onClick={clickButton}
+          >
             Key Control
           </Label>
         </FormGroup>

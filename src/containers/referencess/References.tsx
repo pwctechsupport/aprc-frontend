@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import {
@@ -69,7 +69,7 @@ const References = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
   const clickButton = () => setClicked((p) => !p);
 
   function toggleCheckAll() {
@@ -79,9 +79,7 @@ const References = ({ history }: RouteComponentProps) => {
       setSelected([]);
     }
   }
-  useEffect(() => {
-    toggleCheckAll();
-  }, [clicked]);
+
   function handleExport() {
     downloadXls(
       "/prints/reference_excel.xlsx",
@@ -157,7 +155,10 @@ const References = ({ history }: RouteComponentProps) => {
               <th style={{ width: "5%" }}>
                 <CheckBox
                   checked={selected.length === references.length}
-                  onClick={clickButton}
+                  onClick={() => {
+                    clickButton();
+                    toggleCheckAll();
+                  }}
                 />
               </th>
             ) : null}

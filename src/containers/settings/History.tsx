@@ -17,7 +17,6 @@ import { date as formatDate } from "../../shared/formatter";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Helmet from "react-helmet";
 import Footer from "../../shared/components/Footer";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
 import CheckBox from "../../shared/components/forms/CheckBox";
 
 const History = () => {
@@ -36,7 +35,7 @@ const History = () => {
   const histories = data?.versions?.collection || [];
   const selectAllHistories = histories.map((a) => a.id || "");
 
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
   const clickButton = () => setClicked((p) => !p);
   function toggleCheckAll() {
     if (clicked) {

@@ -1,5 +1,5 @@
 import { capitalCase } from "capital-case";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { FaDownload, FaFileExport, FaTrash } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
@@ -78,7 +78,7 @@ const Resources = ({ history }: RouteComponentProps) => {
     }
   }
 
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
   const clickButton = () => setClicked((p) => !p);
 
   function toggleCheckAll() {
@@ -88,9 +88,7 @@ const Resources = ({ history }: RouteComponentProps) => {
       setSelected([]);
     }
   }
-  useEffect(() => {
-    toggleCheckAll();
-  }, [clicked]);
+
   function handleExport() {
     downloadXls(
       "/prints/resource_excel.xlsx",
@@ -164,7 +162,10 @@ const Resources = ({ history }: RouteComponentProps) => {
               <th>
                 <CheckBox
                   checked={selected.length === resources.length}
-                  onClick={clickButton}
+                  onClick={() => {
+                    clickButton();
+                    toggleCheckAll();
+                  }}
                 />
               </th>
             ) : null}

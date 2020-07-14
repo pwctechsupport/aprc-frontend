@@ -1,11 +1,13 @@
+import { capitalCase } from "capital-case";
 import get from "lodash/get";
+import startCase from "lodash/startCase";
 import React, {
+  Fragment,
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  Fragment,
 } from "react";
 import Helmet from "react-helmet";
 import {
@@ -23,48 +25,52 @@ import {
   FaPlus,
   FaTrash,
 } from "react-icons/fa";
-import Table from "../../shared/components/Table";
 import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
-import { Badge, Nav, NavItem, TabContent, TabPane, Row, Col } from "reactstrap";
+import { Badge, Col, Nav, NavItem, Row, TabContent, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useApproveRequestEditMutation,
+  useBookmarksQuery,
+  useControlQuery,
   useCreateBookmarkPolicyMutation,
   useCreateRequestEditMutation,
+  useCreateUserPVisitMutation,
   useDestroyPolicyMutation,
-  usePolicyQuery,
-  useReviewPolicyDraftMutation,
-  useSubmitPolicyMutation,
-  useUpdateDraftPolicyMutation,
-  useReferencesQuery,
   usePolicyCategoriesQuery,
-  useBookmarksQuery,
+  usePolicyQuery,
+  useReferencesQuery,
   useResourceQuery,
   useResourceRatingsQuery,
+  useReviewPolicyDraftMutation,
   useRiskQuery,
-  useControlQuery,
-  useCreateUserPVisitMutation,
+  useSubmitPolicyMutation,
+  useUpdateDraftPolicyMutation,
   useUpdatePolicyVisitMutation,
-  // useUpdatePolicyMutation,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import ControlsTable from "../../shared/components/ControlsTable";
 import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu, { MenuData } from "../../shared/components/Menu";
 import PoliciesTable from "../../shared/components/PoliciesTable";
 import ResourcesTab from "../../shared/components/ResourcesTab";
 import RisksList from "../../shared/components/RisksList";
+import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
+import { toLabelValue } from "../../shared/formatter";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useDialogBox from "../../shared/hooks/useDialogBox";
+import { useSelector } from "../../shared/hooks/useSelector";
 import useWindowSize from "../../shared/hooks/useWindowSize";
 import {
   downloadPdf,
@@ -72,25 +78,17 @@ import {
   previewPdf,
 } from "../../shared/utils/accessGeneratedPdf";
 import { formatPolicyChart } from "../../shared/utils/formatPolicy";
+import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyError,
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
 } from "../../shared/utils/notif";
+import ResourceBox from "../resources/components/ResourceBox";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import { toLabelValue } from "../../shared/formatter";
-import ResourceBox from "../resources/components/ResourceBox";
-import { useSelector } from "../../shared/hooks/useSelector";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import { APP_ROOT_URL } from "../../settings";
-import getRiskColor from "../../shared/utils/getRiskColor";
-import startCase from "lodash/startCase";
-import { capitalCase } from "capital-case";
-import { PwcCheckInput } from "../policyCategory/components/PolicyCategoryLines";
-import CheckBox from "../../shared/components/forms/CheckBox";
 
 type TParams = { id: string };
 
