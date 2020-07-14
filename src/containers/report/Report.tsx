@@ -238,6 +238,19 @@ export default function Report() {
                                         .filter((a) => a !== text)
                                         .includes(option.id)
                                     ? true
+                                    : checked &&
+                                      text === "report_risk" &&
+                                      [
+                                        "report_risk",
+                                        "report_risk_policy",
+                                        "report_control_policy",
+                                        "report_resource_rating",
+                                        "unmapped_risk",
+                                        "unmapped_control",
+                                      ]
+                                        .filter((a) => a !== text)
+                                        .includes(option.id)
+                                    ? true
                                     : false
                                 }
                                 onClick={(e: any) =>
