@@ -23,19 +23,26 @@ const Select = ({
 }: SelectProps) => {
   const Select = (
     <Fragment>
-      <ReactSelect
-        className={classnames(
-          "enlogy-react-select",
-          error ? "invalid" : undefined
-        )}
-        classNamePrefix="enlogy"
-        {...props}
-        components={{ IndicatorSeparator: null }}
-        placeholder={props.placeholder || label || ""}
-      />
+      <div
+        style={{
+          border: `${error ? "1px solid red" : ""} `,
+          borderRadius: "6px",
+        }}
+      >
+        <ReactSelect
+          className={classnames(
+            "enlogy-react-select",
+            error ? "invalid" : undefined
+          )}
+          classNamePrefix="enlogy"
+          {...props}
+          components={{ IndicatorSeparator: null }}
+          placeholder={props.placeholder || label || ""}
+        />
+      </div>
       <FormText>{formText}</FormText>
       {error && (
-        <FormText className="text-danger pl-3" color="red">
+        <FormText className="text-danger " color="red">
           {error}
         </FormText>
       )}

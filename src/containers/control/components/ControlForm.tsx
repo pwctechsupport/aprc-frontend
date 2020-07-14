@@ -280,9 +280,14 @@ const ControlForm = ({
         />
 
         <FormGroup check className="mb-3">
-          <CheckBox checked={clicked} onClick={clickButton} />
+          <CheckBox
+            checked={clicked}
+            onClick={clickButton}
+            style={{ position: "relative", left: "-20px" }}
+          />
           <Label
             className="ml-2"
+            style={{ position: "relative", left: "-20px" }}
             for="keyControlCheckbox"
             check
             onClick={clickButton}

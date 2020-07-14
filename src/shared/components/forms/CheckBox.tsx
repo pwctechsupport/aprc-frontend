@@ -3,10 +3,22 @@ import styled from "styled-components";
 interface CheckboxInterface {
   checked?: boolean;
   onClick?: any;
+  className?: string;
+  style?: any;
 }
-const CheckBox = ({ checked, onClick }: CheckboxInterface) => {
+const CheckBox = ({
+  checked,
+  onClick,
+  className,
+  style,
+}: CheckboxInterface) => {
   return (
-    <StyledCheckbox checked={checked} onClick={onClick}>
+    <StyledCheckbox
+      checked={checked}
+      onClick={onClick}
+      className={className}
+      style={style}
+    >
       <Icon viewBox="0 0 24 24">
         <polyline points="20 6 9 17 4 12" />
       </Icon>

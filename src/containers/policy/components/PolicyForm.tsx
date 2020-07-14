@@ -119,12 +119,10 @@ const PolicyForm = ({
           defaultValue={options.find(
             (option) => option.value === policyCategoryId
           )}
+          error={
+            errors.policyCategoryId && "Policy category is a required field"
+          }
         />
-        {errors.policyCategoryId && (
-          <div style={{ color: "#e46773", fontSize: "12px", marginTop: -10 }}>
-            Policy category is a required field
-          </div>
-        )}
 
         <div className="d-flex justify-content-end mt-3">
           {premise ? (
