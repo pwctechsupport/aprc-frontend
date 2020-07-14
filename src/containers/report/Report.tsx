@@ -24,7 +24,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description: "List of reviewed risks that are not mapped to any policies",
   },
   {
     name: "Risk Without Control",
@@ -33,7 +33,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description: "List of reviewed risks that are not mapped with any control",
   },
   {
     name: "Control Without Risk",
@@ -42,7 +42,8 @@ const reportOptions = [
       { id: "jangan masuk", name: "PDF" },
       { id: "jangan masuk", name: "Excel" },
     ],
-    description: "",
+    description:
+      "List of reviewed control(s) that are not mapped with any control",
   },
   {
     name: "Resources with rating",
@@ -51,7 +52,8 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description:
+      "Report that summarizes resources (SOP) with highest utilisation",
   },
   {
     name: "Unmapped Risk",
@@ -60,7 +62,8 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description:
+      "List of reviewed risks that have been mapped into sub-business process but not yet tagged in flowchart",
   },
   {
     name: "Unmapped Control",
@@ -69,7 +72,8 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description:
+      "List of reviewed controls that have been mapped into sub-business process but not yet tagged in flowchart",
   },
 ];
 
