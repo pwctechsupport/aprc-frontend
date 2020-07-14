@@ -309,6 +309,12 @@ const Notification = ({ history }: RouteComponentProps) => {
                               }] has requested for approval for [${
                                 data.title?.includes(" Has Been Submitted")
                                   ? data.title.split(" Has Been Submitted")[0]
+                                  : data.title?.includes(
+                                      data.senderUserName || ""
+                                    )
+                                  ? data.title.split(
+                                      data.senderUserName + " " || ""
+                                    )[1]
                                   : data.title
                               }]`
                             : data.dataType === "request_edit"
