@@ -211,14 +211,14 @@ const Image = styled.img`
 
 const SearchBar = styled.div`
   width: 15em;
-  @media only screen and (max-width: 977px) {
+  @media only screen and (max-width: 1002px) {
     display: none;
   }
 `;
 
 const StyledNavbarBrand = styled(NavbarBrand)`
   width: calc(25vw - 20px);
-  @media only screen and (max-width: 977px) {
+  @media only screen and (max-width: 1400px) {
     width: unset;
   }
 `;
@@ -248,7 +248,7 @@ const StyledNavLink = styled(NavLink)`
       background: var(--tangerine);
     }
   }
-  @media only screen and (min-width: 1027px) {
+  @media only screen and (min-width: 1081px) {
     margin: 0px 0.5rem;
   }
   @media only screen and (max-width: 767px) {
