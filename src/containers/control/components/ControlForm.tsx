@@ -29,7 +29,7 @@ import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
 import { PwcRadioInput } from "../../report/Report";
-import CheckBox from "../../../shared/components/forms/CheckBox";
+import CheckBox2 from "../../../shared/components/forms/TestNewCheckBox";
 
 const ControlForm = ({
   onSubmit,
@@ -142,16 +142,11 @@ const ControlForm = ({
     activityControls.map(transformActivityControl)
   );
 
-  const [clicked, setClicked] = useState(false);
-  const clickButton = () => setClicked((p) => !p);
-
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
-    let modifiedValues = values;
-    modifiedValues.keyControl = clicked;
     if (prepare.length) {
       onSubmit?.({
-        ...modifiedValues,
+        ...values,
         activityControlsAttributes: prepare,
       });
     } else {
@@ -280,18 +275,12 @@ const ControlForm = ({
         />
 
         <FormGroup check className="mb-3">
-          <CheckBox
-            checked={clicked}
-            onClick={clickButton}
-            style={{ position: "relative", left: "-20px" }}
+          <CheckBox2
+            name="keyControl"
+            innerRef={register}
+            id="keyControlCheckbox"
           />
-          <Label
-            className="ml-2"
-            style={{ position: "relative", left: "-20px" }}
-            for="keyControlCheckbox"
-            check
-            onClick={clickButton}
-          >
+          <Label className="ml-2" for="keyControlCheckbox" check>
             Key Control
           </Label>
         </FormGroup>
