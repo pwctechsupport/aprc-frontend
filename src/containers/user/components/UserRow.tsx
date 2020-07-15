@@ -33,6 +33,7 @@ import Tooltip from "../../../shared/components/Tooltip";
 import { toast } from "react-toastify";
 import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
 import styled from "styled-components";
+import { capitalize } from "lodash";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -183,10 +184,21 @@ export default function UserRow({
         <td>{name}</td>
         <td>{oc(user).id("")}</td>
         <td>
-          {oc(user)
-            .roles([])
-            .map((r) => r.name)
-            .join(",")}
+          {user?.mainRole?.length
+            ? capitalize(
+                user.mainRole
+                  .join(",")
+                  .split("_")
+                  .join(" ")
+              )
+            : capitalize(
+                oc(user)
+                  .roles([])
+                  .map((r) => r.name)
+                  .join(",")
+                  .split("_")
+                  .join(" ")
+              )}
         </td>
         <td>{policyCategories.join(",")}</td>
         <td>{department}</td>
