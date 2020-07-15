@@ -20,6 +20,7 @@ import {
 } from "../../../shared/formatter";
 import useLazyQueryReturnPromise from "../../../shared/hooks/useLazyQueryReturnPromise";
 import styled from "styled-components";
+import { capitalize } from "lodash";
 
 const RiskForm = ({
   setModal,
@@ -77,7 +78,7 @@ const RiskForm = ({
           label="Name*"
           placeholder="Name"
           innerRef={register({ required: true })}
-          error={errors.name && errors.name.message}
+          error={errors.name && capitalize(errors.name.message)}
         />
         <AsyncSelect
           name="businessProcessIds"

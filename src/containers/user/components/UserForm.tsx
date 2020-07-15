@@ -20,6 +20,7 @@ import DialogButton from "../../../shared/components/DialogButton";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { capitalCase } from "capital-case";
+import { capitalize } from "lodash";
 
 export interface UserFormProps {
   onSubmit?: (values: UserFormValues) => void;
@@ -90,7 +91,7 @@ export default function UserForm(props: UserFormProps) {
         label="Name"
         name="name"
         innerRef={register({ required: true })}
-        error={errors?.name?.message}
+        error={capitalize(errors?.name?.message || "")}
       />
       <Input
         required
@@ -98,7 +99,7 @@ export default function UserForm(props: UserFormProps) {
         name="email"
         type="email"
         innerRef={register({ required: true })}
-        error={errors?.email?.message}
+        error={capitalize(errors?.email?.message || "")}
       />
       <Input
         required
@@ -106,7 +107,7 @@ export default function UserForm(props: UserFormProps) {
         name="password"
         type="password"
         innerRef={register({ required: true })}
-        error={errors?.password?.message}
+        error={capitalize(errors?.password?.message || "")}
       />
       {validatePassword && (
         <Fragment>
@@ -135,7 +136,7 @@ export default function UserForm(props: UserFormProps) {
         name="passwordConfirmation"
         type="password"
         innerRef={register({ required: true })}
-        error={errors?.passwordConfirmation?.message}
+        error={capitalize(errors?.passwordConfirmation?.message || "")}
       />
       <Input
         required
@@ -151,7 +152,7 @@ export default function UserForm(props: UserFormProps) {
         }
         type="number"
         innerRef={register({ required: true })}
-        error={oc(errors).phone.message("")}
+        error={capitalize(oc(errors).phone.message(""))}
       />
       <AsyncSelect
         label="User Group*"
