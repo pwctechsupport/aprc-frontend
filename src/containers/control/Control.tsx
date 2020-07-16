@@ -19,6 +19,7 @@ import {
   useCreateRequestEditMutation,
   useReviewControlDraftMutation,
   useUpdateControlMutation,
+  useBusinessProcessesQuery,
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb from "../../shared/components/BreadCrumb";
@@ -145,7 +146,13 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       notifyGraphQLErrors(error);
     }
   }
-
+  const { data: dataBps, loading: loadingBps } = useBusinessProcessesQuery({
+    variables: {
+      filter: {
+        risks_controls_id_eq: id,
+      },
+    },
+  });
   if (loading) return <LoadingSpinner centered size={30} />;
 
   const description = draft
@@ -185,7 +192,9 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     : data?.control?.keyControl || false;
   const risks = data?.control?.risks || [];
   const riskIds = risks.map((a) => a.id);
-  const businessProcesses = data?.control?.businessProcesses || [];
+
+  const businessProcesses =
+    dataBps?.navigatorBusinessProcesses?.collection || [];
   const businessProcessIds = businessProcesses.map((bp) => bp.id);
   const activityControls = data?.control?.activityControls || [];
   const createdAt = draft
@@ -341,7 +350,9 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
               <EmptyAttribute />
             )}
             <dt>Business Processes</dt>
-            {businessProcesses.length ? (
+            {loadingBps ? (
+              <LoadingSpinner centered size={20} />
+            ) : businessProcesses.length ? (
               filteredNames(businessProcesses).map((bp: any) => (
                 <dd key={bp.id}>{bp.name}</dd>
               ))
