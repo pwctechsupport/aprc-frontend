@@ -142,7 +142,7 @@ export default function HomepageSearch({
             ) : (
               <StyledSpan>
                 {inputValue
-                  ? `No Items for "${inputValue}"`
+                  ? `No results found for "${inputValue}"`
                   : "Type to start searching"}
               </StyledSpan>
             )}
