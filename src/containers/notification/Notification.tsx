@@ -312,9 +312,15 @@ const Notification = ({ history }: RouteComponentProps) => {
                                   : data.title?.includes(
                                       data.senderUserName || ""
                                     )
-                                  ? data.title.split(
-                                      data.senderUserName + " " || ""
-                                    )[1]
+                                  ? data.title
+                                      .split(data.senderUserName + " " || "")[1]
+                                      .includes("Create a User with email")
+                                    ? data.title
+                                        .split(
+                                          data.senderUserName + " " || ""
+                                        )[1]
+                                        .split("Create a User with email ")[1]
+                                    : data.title
                                   : data.title
                               }]`
                             : data.dataType === "request_edit"
