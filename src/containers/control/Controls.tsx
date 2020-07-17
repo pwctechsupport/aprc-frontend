@@ -64,7 +64,6 @@ const Controls = ({ history }: RouteComponentProps) => {
     dataAdmin?.preparerControls?.collection ||
     dataReviewer?.reviewerControlsStatus?.collection ||
     [];
-
   const [destroy, destroyM] = useDestroyControlMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
@@ -107,7 +106,14 @@ const Controls = ({ history }: RouteComponentProps) => {
       }
     );
   }
-
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) a.splice(j--, 1);
+      }
+    }
+    return a;
+  };
   return (
     <div>
       <Helmet>
@@ -211,10 +217,11 @@ const Controls = ({ history }: RouteComponentProps) => {
                     <td>{capitalCase(control.frequency || "")}</td>
                     <td>{capitalCase(control.typeOfControl || "")}</td>
                     <td>
-                      {oc(control)
-                        .risks([])
-                        .map((risk) => risk.name)
-                        .join(", ")}
+                      {dataModifier(
+                        oc(control)
+                          .risks([])
+                          .map((risk) => risk.name)
+                      ).join(", ")}
                     </td>
                     <td>{capitalCase(control.nature || "")}</td>
                     <td>{control.controlOwner}</td>
