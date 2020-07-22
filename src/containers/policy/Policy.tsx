@@ -89,6 +89,7 @@ import ResourceBox from "../resources/components/ResourceBox";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import styled from "styled-components";
 
 type TParams = { id: string };
 
@@ -804,14 +805,14 @@ export default function Policy({
           <Nav tabs className="tabs-pwc">
             {tabs.map((tab, index) => (
               <NavItem key={index}>
-                <NavLink
+                <CoolerNavLink
                   exact
                   to={tab.to}
                   className="nav-link"
                   activeClassName="active"
                 >
                   {tab.title}
-                </NavLink>
+                </CoolerNavLink>
               </NavItem>
             ))}
           </Nav>
@@ -1435,3 +1436,9 @@ export default function Policy({
     </div>
   );
 }
+export const CoolerNavLink = styled(NavLink)`
+  &:hover {
+    background-color: var(--tangerine);
+    padding-bottom: -3px;
+  }
+`;

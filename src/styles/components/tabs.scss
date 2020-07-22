@@ -11,13 +11,12 @@
     white-space: nowrap;
     font-weight: 700;
     border-bottom: 1.5px solid #bfbfbf;
-
     .nav-link {
       border: unset;
-
+      color: black;
       &.active {
         margin-bottom: -1.5px;
-        border-bottom: 4px solid #f56409;
+        border-bottom: 4px solid var(--tangerine);
       }
     }
   }

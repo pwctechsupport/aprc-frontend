@@ -89,6 +89,7 @@ import {
   AiFillEdit,
 } from "react-icons/ai";
 import CheckBox from "../../shared/components/forms/CheckBox";
+import styled from "styled-components";
 
 type TParams = { id: string };
 
@@ -1201,14 +1202,14 @@ export default function RiskAndControl({
           {!currentUrl.includes("resources/") &&
             tabs.map((tab, index) => (
               <NavItem key={index}>
-                <NavLink
+                <CoolerNavLink
                   exact
                   to={tab.to}
                   className="nav-link"
                   activeClassName="active"
                 >
                   {tab.title}
-                </NavLink>
+                </CoolerNavLink>
               </NavItem>
             ))}
         </Nav>
@@ -1518,3 +1519,9 @@ const ControlsTable = ({
     </div>
   );
 };
+export const CoolerNavLink = styled(NavLink)`
+  &:hover {
+    background-color: var(--tangerine);
+    padding-bottom: -3px;
+  }
+`;
