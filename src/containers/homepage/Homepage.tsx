@@ -59,7 +59,7 @@ export default function Homepage() {
             <HomepageBox
               list={modifiedRecentlyAddedPol.map(toLabelValue)}
               basePath="policy"
-              title="Recently Added Policies"
+              title="Recently added policies"
               boldColor="rgb(255, 180, 105)"
               // lineColor="rgba(231, 155, 86,0.4)"
               // softColor="rgb(254, 204, 148)"
@@ -69,7 +69,7 @@ export default function Homepage() {
             <HomepageBox
               list={popularPolicies.map(toLabelValue)}
               basePath="policy"
-              title="Most Popular Policies"
+              title="Most popular policies"
               // boldColor="rgb(255, 196, 79)"
               // lineColor="rgba(255, 172, 90,0.4)"
               // softColor="rgb(255, 219, 147)"
@@ -84,7 +84,7 @@ export default function Homepage() {
                 };
               })}
               basePath="policy"
-              title="My Saved Policies"
+              title="My saved policies"
               // boldColor="rgb(255, 126, 169)"
               // lineColor="rgba(255, 126, 169,0.4)"
               // softColor="rgb(251, 189, 201)"
@@ -98,7 +98,7 @@ export default function Homepage() {
             <HomepageBox
               list={popularResources.map(toLabelValue)}
               basePath="resources"
-              title="Most Popular Resources"
+              title="Most popular resources"
               // boldColor="rgb(255, 196, 79)"
               // lineColor="rgba(255, 172, 90,0.4)"
               // softColor="rgb(255, 219, 147)"
@@ -115,7 +115,7 @@ export default function Homepage() {
                   : []
               }
               basePath="policy"
-              title="My Recently Visited Policies"
+              title="My recently visited policies"
               // boldColor="rgb(255, 126, 169)"
               // lineColor="rgba(255, 126, 169,0.4)"
               // softColor="rgb(251, 189, 201)"
