@@ -35,15 +35,11 @@ export default function ResourceBar({
   rating = 0,
   visit,
   resourceId,
-  totalRating = 0
+  totalRating = 0,
 }: ResourceBarProps) {
-  const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
-    "admin",
-    "admin_preparer",
-    "admin_reviewer"
-  ]);
+  const [isAdminReviewer] = useAccessRights(["admin_reviewer"]);
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
-    refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"]
+    refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"],
   });
 
   return (
@@ -84,7 +80,7 @@ export default function ResourceBar({
             </a>
           </Tooltip>
         </Button>
-        {(isAdmin || isAdminPreparer || isAdminReviewer) && (
+        {isAdminReviewer && (
           <DialogButton color="" onConfirm={() => deleteResource(resourceId)}>
             <Tooltip
               description="Delete Resource"
@@ -127,8 +123,8 @@ const ResourceBarContainer = styled.div`
 `;
 
 const ResourceBarDivider = styled.div<{ width?: string; align?: string }>`
-  width: ${p => p.width + "%"};
-  text-align: ${p => p.align};
+  width: ${(p) => p.width + "%"};
+  text-align: ${(p) => p.align};
   margin: 0px 5px;
 `;
 
