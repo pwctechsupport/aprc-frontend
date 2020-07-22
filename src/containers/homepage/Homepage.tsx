@@ -2,7 +2,7 @@ import get from "lodash/get";
 import React from "react";
 import { Col, Container, Row } from "reactstrap";
 import styled from "styled-components";
-import backgroundImage from "../../assets/images/homepage-background.jpg";
+import backgroundImage from "../../assets/images/SignInBackground.png";
 import { useHomepageQuery, useUserPVisitQuery } from "../../generated/graphql";
 import { toLabelValue } from "../../shared/formatter";
 import { useSelector } from "../../shared/hooks/useSelector";
@@ -135,6 +135,8 @@ const Background = styled.div`
 const BackgroundImage = styled.div`
   height: calc(70vh - 63px);
   background: url(${backgroundImage});
+  background-position: center;
+  background-size: cover;
 `;
 
 const Centerer = styled.div`
