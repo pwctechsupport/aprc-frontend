@@ -37,14 +37,25 @@ export default function Homepage() {
         <title>Home - PricewaterhouseCoopers</title>
       </Helmet>
       <BackgroundImage>
-        <Greet style={{ position: "relative", top: "0.5vw", left: "2vw" }}>
-          <Row>
-            <Col lg={3}>
-              <ContentBox>Welcome, {username}</ContentBox>
-            </Col>
-            <Col></Col>
-          </Row>
-        </Greet>
+        <div
+          style={{
+            position: "relative",
+            marginLeft: "2vw",
+            top: "0.5vw",
+          }}
+        >
+          <Col lg={3}>
+            <h3
+              style={{
+                backgroundColor: "rgba(54, 48, 60, 0.6)",
+                padding: " 2rem 1rem",
+                color: "white",
+              }}
+            >
+              Welcome, {username}
+            </h3>
+          </Col>
+        </div>
         <Centerer>
           <Container>
             <ContentBox>
@@ -74,7 +85,7 @@ export default function Homepage() {
               // lineColor="rgba(255, 172, 90,0.4)"
               // softColor="rgb(255, 219, 147)"
             />
-          </Col>{" "}
+          </Col>
           <Col xs={12} md={6} lg={4}>
             <HomepageBox
               list={savedPolicies.map((a) => {
@@ -146,10 +157,10 @@ const Centerer = styled.div`
   height: 100%;
 `;
 
-const Greet = styled.h3`
-  margin-bottom: 1.5rem;
-  color: white;
-`;
+// const Greet = styled.h3`
+//   margin-bottom: 1.5rem;
+//   color: white;
+// `;
 
 const ContentBox = styled.div`
   padding: 2rem 1rem;
