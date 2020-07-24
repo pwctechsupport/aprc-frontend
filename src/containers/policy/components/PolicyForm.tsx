@@ -59,21 +59,17 @@ const PolicyForm = ({
   }
 
   function submit(values: PolicyFormValues) {
-    console.log("values:", values);
     onSubmit && onSubmit(values);
     setCreateS(true);
   }
   function submitToReviewer(values: PolicyFormValues) {
-    console.log("values:", values);
     handleSubmitToReviewer && handleSubmitToReviewer(values);
     setCreateS(false);
   }
   function submitFromDrafted(values: SubmitAsliBro) {
-    console.log("values:", values);
     submitFromDraft && submitFromDraft(values);
   }
   function submitAsDraft(values: PolicyFormValues) {
-    console.log("values:", values);
     onSubmitAsDraft && onSubmitAsDraft(values);
   }
 
@@ -126,6 +122,7 @@ const PolicyForm = ({
               onChange={onChangeEditor}
               enableToolbar={true}
               setOptions={{
+                linkProtocol: "http://",
                 height: "30vh",
                 font: [
                   "Serif",
