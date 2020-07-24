@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useForm } from "react-hook-form";
-import { Form, FormText } from "reactstrap";
+import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useBusinessProcessesQuery,
@@ -19,7 +19,7 @@ import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import SunEditor from "suneditor-react";
+import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -59,7 +59,6 @@ const SubPolicyForm = ({
   const { register, handleSubmit, setValue, errors } = useForm<
     SubPolicyFormValues
   >({ validationSchema, defaultValues });
-  console.log("errors:", errors);
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
   const references = oc(referenceData)
     .data.navigatorReferences.collection([])
@@ -81,7 +80,7 @@ const SubPolicyForm = ({
   }
 
   function onChangeEditor(data: any) {
-    setValue("description", data);
+    setValue("description", data?.level?.content);
   }
   // Functions for changing buttons
   // Functions when create
@@ -144,57 +143,7 @@ const SubPolicyForm = ({
         />
         <div className="mb-3">
           <label>Policy Description*</label>
-          <div
-            style={{
-              padding: errors.description ? 1 : 0,
-              backgroundColor: "red",
-            }}
-          >
-            <SunEditor
-              showToolbar={true}
-              enable={true}
-              disable={false}
-              show={true}
-              name="description"
-              setContents={defaultValues?.description || ""}
-              onChange={onChangeEditor}
-              enableToolbar={true}
-              setOptions={{
-                linkProtocol: "http://",
-                height: "30vh",
-                font: [
-                  "Serif",
-                  "Sans Serif",
-                  "Monospace",
-                  "Candara",
-                  "Verdana",
-                  "Arial",
-                  "Twentieth Century",
-                  "Calibri",
-                  "Georgia",
-                  "Abadi",
-                  "Helvetica",
-                  "Garamond",
-                  "Bookman",
-                  "Arial Nova Cond",
-                  "Bahnschrift",
-                  "Selawik",
-                  "Perpetua",
-                ],
-                buttonList: [
-                  ["font", "fontSize", "align"],
-                  ["fontColor", "hiliteColor", "bold", "underline", "italic"],
-                  ["image", "table", "link"],
-                ],
-              }}
-            />
-          </div>
-          {errors.description && (
-            <FormText className="text-danger " color="red">
-              Description is a required field
-            </FormText>
-          )}
-          {/* <TextEditorField
+          <TextEditorField
             name="description"
             register={register}
             onChange={onChangeEditor}
@@ -204,7 +153,7 @@ const SubPolicyForm = ({
               errors.description &&
               "Description field is too short and the field is required"
             }
-          /> */}
+          />
           {/* <TextEditor
             data={watch("description")}
             onChange={handleEditorChange}

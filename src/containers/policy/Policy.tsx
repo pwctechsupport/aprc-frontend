@@ -90,7 +90,6 @@ import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import styled from "styled-components";
-import SunEditor from "suneditor-react";
 
 type TParams = { id: string };
 
@@ -846,27 +845,16 @@ export default function Policy({
 
                 <div className="mt-1  ">Version : {trueVersion}</div>
               </div>
-              <div className="d-flex justify-content-end mb-2">
+              <div className="d-flex justify-content-end">
                 {renderPolicyAction()}
               </div>
 
-              {/* <div
+              <div
                 className="mb-3 py-3"
                 dangerouslySetInnerHTML={{
                   __html: description,
                 }}
-              /> */}
-              <SunEditor
-                showToolbar={false}
-                enable={false}
-                disable={true}
-                show={false}
-                name="description"
-                setContents={description || ""}
-                enableToolbar={false}
-                setOptions={{ height: "20vh", maxHeight: "100vh" }}
               />
-
               {policyReferences.length ? (
                 <div
                   className="d-flex"
@@ -874,7 +862,7 @@ export default function Policy({
                 >
                   <h6>
                     {policyReferences.map((reference) => (
-                      <Badge key={reference.id} className="mt-2 mx-1">
+                      <Badge key={reference.id} className="mx-1">
                         {reference.name}
                       </Badge>
                     ))}

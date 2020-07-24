@@ -1,16 +1,18 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Form, FormText } from "reactstrap";
-import styled from "styled-components";
-import SunEditor from "suneditor-react";
+import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
 import { usePolicyCategoriesQuery } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
+import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue } from "../../../shared/formatter";
+import styled from "styled-components";
+import SunEditor from "suneditor-react";
+import TextEditor from "../../../shared/components/forms/TextEditor";
 
 // import TextEditor from "../../../shared/components/forms/TextEditor";
 // import { Editor } from "@tinymce/tinymce-react";
@@ -32,7 +34,7 @@ const PolicyForm = ({
 }: PolicyFormProps) => {
   const [createS, setCreateS] = useState(false);
   const policyCategoriesState = usePolicyCategoriesQuery();
-  const { register, setValue, errors, handleSubmit } = useForm<
+  const { register, setValue, errors, handleSubmit, watch } = useForm<
     PolicyFormValues
   >({
     validationSchema,
@@ -94,6 +96,10 @@ const PolicyForm = ({
   // const imageUploadHandler = (xmlHttpRequest: any, info: any, core: any) => {
   //   console.log("xmlHttpRequest, info, core:", xmlHttpRequest, info, core);
   // };
+  const title = watch("title");
+  console.log("nvjdsa:", title);
+  const description = watch("description");
+  console.log("description:", description);
 
   if (policyCategoriesState.loading) {
     return <LoadingSpinner centered size={30} />;
@@ -110,55 +116,13 @@ const PolicyForm = ({
         />
         <div className="mb-3">
           <label>Policy Description*</label>
-          <div
-            style={{
-              padding: errors.description ? 1 : 0,
-              backgroundColor: "red",
-            }}
-          >
-            <SunEditor
-              showToolbar={true}
-              enable={true}
-              disable={false}
-              show={true}
-              name="description"
-              setContents={defaultValues?.description || ""}
-              onChange={onChangeEditor}
-              enableToolbar={true}
-              setOptions={{
-                height: "30vh",
-                font: [
-                  "Serif",
-                  "Sans Serif",
-                  "Monospace",
-                  "Candara",
-                  "Verdana",
-                  "Arial",
-                  "Twentieth Century",
-                  "Calibri",
-                  "Georgia",
-                  "Abadi",
-                  "Helvetica",
-                  "Garamond",
-                  "Bookman",
-                  "Arial Nova Cond",
-                  "Bahnschrift",
-                  "Selawik",
-                  "Perpetua",
-                ],
-                buttonList: [
-                  ["font", "fontSize", "align"],
-                  ["fontColor", "hiliteColor", "bold", "underline", "italic"],
-                  ["image", "table", "link"],
-                ],
-              }}
-            />{" "}
-          </div>
-          {errors.description && (
-            <FormText className="text-danger " color="red">
-              Description is a required field
-            </FormText>
-          )}
+          <SunEditor
+            name="description"
+            setContents={defaultValues?.description || ""}
+            onChange={onChangeEditor}
+            enableToolbar={true}
+            setOptions={{ buttonList: [["image", "align", "table"]] }}
+          />
           {/* <TextEditorField
             name="description"
             register={register}
