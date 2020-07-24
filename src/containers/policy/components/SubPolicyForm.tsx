@@ -59,6 +59,7 @@ const SubPolicyForm = ({
   const { register, handleSubmit, setValue, errors } = useForm<
     SubPolicyFormValues
   >({ validationSchema, defaultValues });
+  console.log("errors:", errors);
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
   const references = oc(referenceData)
     .data.navigatorReferences.collection([])
