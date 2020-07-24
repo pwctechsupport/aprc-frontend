@@ -11,9 +11,6 @@ import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce"
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
-import SunEditor from "suneditor-react";
-import TextEditor from "../../../shared/components/forms/TextEditor";
-
 // import TextEditor from "../../../shared/components/forms/TextEditor";
 // import { Editor } from "@tinymce/tinymce-react";
 
@@ -34,7 +31,7 @@ const PolicyForm = ({
 }: PolicyFormProps) => {
   const [createS, setCreateS] = useState(false);
   const policyCategoriesState = usePolicyCategoriesQuery();
-  const { register, setValue, errors, handleSubmit, watch } = useForm<
+  const { register, setValue, errors, handleSubmit } = useForm<
     PolicyFormValues
   >({
     validationSchema,
@@ -49,7 +46,7 @@ const PolicyForm = ({
   }, [register]);
 
   function onChangeEditor(data: any) {
-    setValue("description", data);
+    setValue("description", data?.level?.content);
   }
 
   function handleChange(name: keyof PolicyFormValues) {
@@ -61,21 +58,17 @@ const PolicyForm = ({
   }
 
   function submit(values: PolicyFormValues) {
-    console.log("values:", values);
     onSubmit && onSubmit(values);
     setCreateS(true);
   }
   function submitToReviewer(values: PolicyFormValues) {
-    console.log("values:", values);
     handleSubmitToReviewer && handleSubmitToReviewer(values);
     setCreateS(false);
   }
   function submitFromDrafted(values: SubmitAsliBro) {
-    console.log("values:", values);
     submitFromDraft && submitFromDraft(values);
   }
   function submitAsDraft(values: PolicyFormValues) {
-    console.log("values:", values);
     onSubmitAsDraft && onSubmitAsDraft(values);
   }
 
@@ -83,24 +76,6 @@ const PolicyForm = ({
     .data.navigatorPolicyCategories.collection([])
     .map(toLabelValue);
   const policyCategoryId = oc(defaultValues).policyCategoryId("");
-  // const onImageUpload = (a: any, b: any, c: any, d: any, e: any) => {
-  //   if (d.size < 4085830) {
-  //     return d.src;
-  //   }
-  //   console.log("a:", a);
-  //   console.log("b:", b);
-  //   console.log("c:", c);
-  //   console.log("d:", d);
-  //   console.log("e:", e);
-  // };
-  // const imageUploadHandler = (xmlHttpRequest: any, info: any, core: any) => {
-  //   console.log("xmlHttpRequest, info, core:", xmlHttpRequest, info, core);
-  // };
-  const title = watch("title");
-  console.log("nvjdsa:", title);
-  const description = watch("description");
-  console.log("description:", description);
-
   if (policyCategoriesState.loading) {
     return <LoadingSpinner centered size={30} />;
   }
@@ -116,14 +91,7 @@ const PolicyForm = ({
         />
         <div className="mb-3">
           <label>Policy Description*</label>
-          <SunEditor
-            name="description"
-            setContents={defaultValues?.description || ""}
-            onChange={onChangeEditor}
-            enableToolbar={true}
-            setOptions={{ buttonList: [["image", "align", "table"]] }}
-          />
-          {/* <TextEditorField
+          <TextEditorField
             name="description"
             register={register}
             defaultValue={defaultValues?.description || ""}
@@ -133,13 +101,13 @@ const PolicyForm = ({
               errors.description &&
               "Description field is too short and the field is required"
             }
-          /> */}
+          />
           {/* <TextEditor
             data={watch("description")}
             onChange={onChangeEditor}
             invalid={!!errors.description}
             error={errors.description && "Description field is too short"}
-          /> */}
+          />  */}
         </div>
         <Select
           name="policyCategoryId"
