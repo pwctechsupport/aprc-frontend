@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { Form, Label } from "reactstrap";
@@ -141,6 +141,9 @@ ResourceFormProps) {
   const handleGetBps = useLoadBps();
   const selectedCategory = watch("category");
   const selectedBusinessProcess = watch("businessProcessId");
+  useEffect(() => {
+    setTags([]);
+  }, [selectedBusinessProcess]);
   const watchresuploadBase64 = watch("resuploadBase64");
   return (
     <Form onSubmit={handleSubmit(submit)}>
@@ -325,7 +328,7 @@ ResourceFormProps) {
           {preview === `http://mandalorian.rubyh.coundefined` ? null : (
             <ImageTagger
               src={preview}
-              bpId={selectedBusinessProcess?.value || ""}
+              bpId={selectedBusinessProcess?.value || "gaada"}
               editable
               onTagsChanged={setTags}
               defaultTags={defaultValues?.tagsAttributes}

@@ -57,6 +57,9 @@ export default function ImageTagger({
 }: ImageTaggerProps) {
   const [show, setShow] = useState(true);
   const [tags, setTags] = useState(defaultTags || []);
+  useEffect(() => {
+    setTags([]);
+  }, [bpId]);
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
   const [currentTag, setCurrentTag] = useState(init);
 
