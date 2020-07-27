@@ -88,9 +88,9 @@ const References = ({ history }: RouteComponentProps) => {
       },
       {
         fileName: "Policy Reference.xlsx",
-        onStart: () => notifyInfo("Download Dimulai"),
-        onCompleted: () => notifySuccess("Download Berhasil"),
-        onError: () => notifyError("Download Gagal"),
+        onStart: () => notifyInfo("Download Started"),
+        onCompleted: () => notifySuccess("Downloaded"),
+        onError: () => notifyError("Download Failed"),
       }
     );
   }

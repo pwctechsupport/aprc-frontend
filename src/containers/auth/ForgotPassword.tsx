@@ -22,7 +22,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
   };
 
   function onCompleted() {
-    toast.success("Cek email anda untuk mengganti password");
+    toast.success("Check your email inbox to change password");
     history.push("/auth");
   }
 

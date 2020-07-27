@@ -1,7 +1,6 @@
 import startCase from "lodash/startCase";
 import React, { useState, useEffect } from "react";
 // import { FaPencilAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import { Badge } from "reactstrap";
 import {
   // LevelOfRisk,
@@ -17,6 +16,7 @@ import getRiskColor from "../utils/getRiskColor";
 import EmptyAttribute from "./EmptyAttribute";
 import { oc } from "ts-optchain";
 import useAccessRights from "../hooks/useAccessRights";
+import { PWCLink } from "./PoliciesTable";
 
 interface RisksListProps {
   // risks: Risk[];
@@ -98,12 +98,12 @@ RisksListProps) {
         <li key={risk.id}>
           <div className="mb-3 d-flex justify-content-between">
             <h6>
-              <Link
+              <PWCLink
                 to={`/policy/${policyId}/details/risk/${risk.id}`}
                 onClick={() => setRiskId(risk.id)}
               >
                 {risk.name}
-              </Link>
+              </PWCLink>
               <Badge color={`${getRiskColor(risk.levelOfRisk)} mx-3`}>
                 {startCase(risk.levelOfRisk || "")}
               </Badge>

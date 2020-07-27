@@ -1,7 +1,6 @@
 import startCase from "lodash/startCase";
 import React, { Fragment, useState, useEffect } from "react";
 // import { FaPencilAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
 import {
   // Assertion,
   // Control,
@@ -17,6 +16,7 @@ import EmptyAttribute from "./EmptyAttribute";
 import Table from "./Table";
 import { oc } from "ts-optchain";
 import useAccessRights from "../hooks/useAccessRights";
+import { PWCLink } from "./PoliciesTable";
 
 interface ControlsTableProps {
   // controls: Control[];
@@ -152,14 +152,14 @@ export default function ControlsTable({
             {dataModifier(newDataControls)?.map((control: any) => (
               <tr key={control.id}>
                 <td>
-                  <Link
+                  <PWCLink
                     to={`/policy/${policyId}/details/control/${control.id}`}
                     onClick={() => {
                       setControlId(control.id);
                     }}
                   >
                     {control.description}
-                  </Link>
+                  </PWCLink>
                 </td>
                 <td>{startCase(control.frequency || "")}</td>
                 <td>{startCase(control.typeOfControl || "")}</td>

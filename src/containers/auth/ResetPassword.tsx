@@ -51,7 +51,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
   };
 
   function onCompleted() {
-    toast.success("Password berhasil diubah");
+    toast.success("Password successfully changed");
     history.push("/auth");
   }
 

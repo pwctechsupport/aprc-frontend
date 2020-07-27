@@ -95,9 +95,9 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       },
       {
         fileName: "Business Process.xlsx",
-        onStart: () => toast.info("Download Dimulai"),
-        onCompleted: () => toast.success("Download Berhasil"),
-        onError: () => toast.error("Download Gagal"),
+        onStart: () => toast.info("Download Started"),
+        onCompleted: () => toast.success("Downloaded"),
+        onError: () => toast.error("Download Failed"),
       }
     );
   }

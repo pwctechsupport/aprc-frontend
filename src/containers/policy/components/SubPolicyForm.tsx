@@ -107,8 +107,9 @@ const SubPolicyForm = ({
       ? saveAsDraftSecond && saveAsDraftSecond({ ...values, ...attr })
       : toast.error("Insert attributes is a required field");
   }
+
   function submitSecondPhase(values: SubPolicyFormValues) {
-    statusWhenUpdate === "release" || parentStatus === "release" || !draft
+    statusWhenUpdate === "release" || parentStatus === "release"
       ? attr.businessProcessIds?.length
         ? submitSecond && submitSecond({ ...values, ...attr })
         : toast.error("Insert attributes is a required field")

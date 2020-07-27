@@ -90,6 +90,7 @@ import {
 } from "react-icons/ai";
 import CheckBox from "../../shared/components/forms/CheckBox";
 import styled from "styled-components";
+import { PWCLink } from "../../shared/components/PoliciesTable";
 
 type TParams = { id: string };
 
@@ -1244,7 +1245,7 @@ export default function RiskAndControl({
                   {modifiedRisks.map((risk) => (
                     <li key={risk?.id || ""}>
                       <div className="mb-3 d-flex justify-content-between">
-                        <Link
+                        <PWCLink
                           to={`/risk-and-control/${
                             currentUrl.split("control/")[1]
                           }/risk/${risk?.id || ""}`}
@@ -1263,7 +1264,7 @@ export default function RiskAndControl({
                               {startCase(risk?.typeOfRisk || "")}
                             </Badge>
                           </h5>
-                        </Link>
+                        </PWCLink>
 
                         {/* {(isAdmin || isAdminPreparer) &&
                           risk?.hasEditAccess &&
@@ -1460,13 +1461,13 @@ const ControlsTable = ({
             controls?.map((control) => (
               <tr key={control.id}>
                 <td>
-                  <Link
+                  <PWCLink
                     to={`/risk-and-control/${
                       history.split("control/")[1]
                     }/control/${control.id}`}
                   >
                     {control.description}
-                  </Link>
+                  </PWCLink>
                 </td>
                 <td>{startCase(control.frequency || "")}</td>
                 <td>{startCase(control.typeOfControl || "")}</td>
