@@ -224,7 +224,7 @@ const StyledNavbarBrand = styled(NavbarBrand)`
 `;
 const SearchPolicies = styled.div`
   display: none;
-  @media only screen and (max-width: 977px) {
+  @media only screen and (max-width: 1000px) {
     display: block;
   }
 `;
