@@ -72,7 +72,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   const [filter, setFilter] = useState({});
   const onSubmit = (values: any) => {
     setFilter({
-      title_or_originator_type_or_sender_user_name_cont: values.notif,
+      title_or_originator_type_or_sender_user_actual_name_cont: values.notif,
       created_at_gteq: constructDateFilter(labelTime),
     });
   };
@@ -294,7 +294,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       <td
                         className={data.isRead ? "" : "text-orange text-bold"}
                       >
-                        {data.senderUserName}
+                        {data.senderUserActualName}
                       </td>
                       <td
                         className={data.isRead ? "" : "text-orange text-bold"}
@@ -305,26 +305,28 @@ const Notification = ({ history }: RouteComponentProps) => {
                           ? data.dataType === "request_draft" ||
                             data.dataType === "request draft"
                             ? `Action required: [${
-                                data.senderUserName
+                                data.senderUserActualName
                               }] has requested for approval for [${
                                 data.title?.includes(" Has Been Submitted")
                                   ? data.title.split(" Has Been Submitted")[0]
                                   : data.title?.includes(
-                                      data.senderUserName || ""
+                                      data.senderUserActualName || ""
                                     )
                                   ? data.title
-                                      .split(data.senderUserName + " " || "")[1]
+                                      .split(
+                                        data.senderUserActualName + " " || ""
+                                      )[1]
                                       .includes("Create a User with email")
                                     ? data.title
                                         .split(
-                                          data.senderUserName + " " || ""
+                                          data.senderUserActualName + " " || ""
                                         )[1]
                                         .split("Create a User with email ")[1]
                                     : data.title
                                   : data.title
                               }]`
                             : data.dataType === "request_edit"
-                            ? `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
+                            ? `Action required: [${data.senderUserActualName}] has requested for edit for [${data.title}]`
                             : data.title
                           : null}
 
@@ -354,7 +356,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                           : null}
                         {/* {isAdminReviewer &&
                         `Action required: [${
-                          data.senderUserName
+                          data.senderUserActualName
                         }] has requested for ${
                           data.dataType !== "request_draft"
                             ? "edit"

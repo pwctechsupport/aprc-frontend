@@ -10018,24 +10018,24 @@
             "deprecationReason": null
           },
           {
-            "name": "senderUserId",
+            "name": "senderUserActualName",
             "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "ID",
+              "name": "String",
               "ofType": null
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
-            "name": "senderUserName",
+            "name": "senderUserId",
             "description": "",
             "args": [],
             "type": {
               "kind": "SCALAR",
-              "name": "String",
+              "name": "ID",
               "ofType": null
             },
             "isDeprecated": false,
