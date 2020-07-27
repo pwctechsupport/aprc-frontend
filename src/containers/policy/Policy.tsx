@@ -381,10 +381,11 @@ export default function Policy({
     ? get(data, "policy.draft.objectResult.description", "")
     : data?.policy?.description || "";
   const hasEditAccess = oc(data).policy.hasEditAccess();
-  const parentId = oc(data).policy.parentId("");
+
   const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
   const ancestry = oc(data).policy.ancestry("");
+  const parentId = ancestry.split("/").pop() || "";
   const policyReferences = data?.policy?.references || [];
   const controlCount = oc(data).policy.controlCount({});
   const riskCount = oc(data).policy.riskCount({});

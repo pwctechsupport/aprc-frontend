@@ -63,7 +63,9 @@ const SubPolicyForm = ({
   const references = oc(referenceData)
     .data.navigatorReferences.collection([])
     .map(toLabelValue);
-
+  const requestStatus = oc(data).policy.requestStatus();
+  const notRequested = !requestStatus;
+  const rejected = requestStatus === "rejected";
   useEffect(() => {
     register({ name: "parentId" });
     register({ name: "referenceIds" });
@@ -109,7 +111,9 @@ const SubPolicyForm = ({
   }
 
   function submitSecondPhase(values: SubPolicyFormValues) {
-    statusWhenUpdate === "release" || parentStatus === "release"
+    statusWhenUpdate === "release" ||
+    parentStatus === "release" ||
+    (!draft && (notRequested || rejected))
       ? attr.businessProcessIds?.length
         ? submitSecond && submitSecond({ ...values, ...attr })
         : toast.error("Insert attributes is a required field")
