@@ -126,6 +126,7 @@ const PolicyForm = ({
               onChange={onChangeEditor}
               enableToolbar={true}
               setOptions={{
+                linkProtocol: "http://",
                 height: "30vh",
                 font: [
                   "Serif",
