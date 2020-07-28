@@ -90,6 +90,7 @@ import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import styled from "styled-components";
+import BusinessProcessList from "../../shared/components/BusinessProcessList";
 
 type TParams = { id: string };
 
@@ -105,7 +106,13 @@ export default function Policy({
   const subPolicyRef = useRef<HTMLInputElement>(null);
   const riskRef = useRef<HTMLInputElement>(null);
   const controlRef = useRef<HTMLInputElement>(null);
-  const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
+  const initialCollapse = [
+    "Resources",
+    "Risks",
+    "Controls",
+    "Sub-Policies",
+    "Business Processes",
+  ];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse((p) => {
@@ -884,6 +891,15 @@ export default function Policy({
                 </div>
               )}
 
+              <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
+                <Collapsible
+                  title="Business Processes"
+                  show={collapse.includes("Business Processes")}
+                  onClick={toggleCollapse}
+                >
+                  <BusinessProcessList dataPolicy={data} />
+                </Collapsible>
+              </div>
               <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
                 <Collapsible
                   title="Risks"

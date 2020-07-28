@@ -1,6 +1,13 @@
 query businessProcesses($filter: BaseScalar = {}, $limit: Int = 1000) {
   navigatorBusinessProcesses(filter: $filter, limit: $limit) {
     collection {
+      policies {
+        id
+        title
+        status
+        hasEditAccess
+        requestStatus
+      }
       controls {
         ...businessProcessControl
       }
