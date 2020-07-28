@@ -91,6 +91,7 @@ import {
 import CheckBox from "../../shared/components/forms/CheckBox";
 import styled from "styled-components";
 import { PWCLink } from "../../shared/components/PoliciesTable";
+import PoliciesList from "../../shared/components/PoliciesList";
 
 type TParams = { id: string };
 
@@ -104,7 +105,7 @@ export default function RiskAndControl({
     "admin_preparer",
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
-  const initialCollapse = ["Risks", "Controls"];
+  const initialCollapse = ["Risks", "Controls", "Related Policies"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse((p) => {
@@ -1235,6 +1236,13 @@ export default function RiskAndControl({
             )}
           />
           <Route exact path="/risk-and-control/:id">
+            <Collapsible
+              title="Related Policies"
+              show={collapse.includes("Related Policies")}
+              onClick={toggleCollapse}
+            >
+              <PoliciesList data={dataRisksnControl || {}} />
+            </Collapsible>
             <Collapsible
               title="Risks"
               show={collapse.includes("Risks")}
