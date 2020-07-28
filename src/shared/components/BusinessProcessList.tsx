@@ -1,8 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   PolicyQuery,
-  usePoliciesQuery,
-  usePreparerPoliciesQuery,
   useBusinessProcessesQuery,
 } from "../../generated/graphql";
 import { oc } from "ts-optchain";
@@ -76,7 +74,7 @@ const BusinessProcessList = ({ dataPolicy }: props) => {
     ...policyIdFifthChild.flat(10),
   ];
 
-  const { data, loading } = useBusinessProcessesQuery({
+  const { data } = useBusinessProcessesQuery({
     variables: {
       filter: {
         policies_id_matches_any: policyIds,

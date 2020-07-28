@@ -15,11 +15,13 @@ const PoliciesList = (data: any) => {
       {policies.length ? (
         <ul>
           {policies.map((a: any) => (
-            <div className="mb-3 d-flex justify-content-between">
-              <h6>
-                <PWCLink to={`/policy/${a.id}`}>{a.title}</PWCLink>
-              </h6>
-            </div>
+            <li key={a.id}>
+              <div className="mb-3 d-flex justify-content-between">
+                <h6>
+                  <PWCLink to={`/policy/${a.id}`}>{a.title}</PWCLink>
+                </h6>
+              </div>
+            </li>
           ))}
         </ul>
       ) : null}
