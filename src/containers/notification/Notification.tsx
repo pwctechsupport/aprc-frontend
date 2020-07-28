@@ -71,10 +71,17 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   const [filter, setFilter] = useState({});
   const onSubmit = (values: any) => {
-    setFilter({
-      title_or_originator_type_or_sender_user_actual_name_cont: values.notif,
-      created_at_gteq: constructDateFilter(labelTime),
-    });
+    if (values.notif.toLowerCase() === "system") {
+      setFilter({
+        is_general_eq: true,
+        created_at_gteq: constructDateFilter(labelTime),
+      });
+    } else {
+      setFilter({
+        title_or_originator_type_or_sender_user_name_cont: values.notif,
+        created_at_gteq: constructDateFilter(labelTime),
+      });
+    }
   };
 
   const { data, loading, networkStatus } = useNotificationsQuery({
