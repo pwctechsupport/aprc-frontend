@@ -1,27 +1,34 @@
+import { capitalCase } from "capital-case";
+import get from "lodash/get";
 import startCase from "lodash/startCase";
-import React, { useState, Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import {
+  AiFillEdit,
+  AiOutlineClockCircle,
+  AiOutlineEdit,
+} from "react-icons/ai";
 import {
   FaBars,
   FaBookmark,
   FaEllipsisV,
+  FaExclamationCircle,
   FaFilePdf,
   FaMinus,
-  FaExclamationCircle,
 } from "react-icons/fa";
-import get from "lodash/get";
 import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { NavLink, Route, RouteComponentProps, Link } from "react-router-dom";
+import { Link, NavLink, Route, RouteComponentProps } from "react-router-dom";
 import {
   Badge,
+  Col,
   Nav,
   NavItem,
+  Row,
   TabContent,
   Table,
   TabPane,
-  Row,
-  Col,
 } from "reactstrap";
+import styled from "styled-components";
 import {
   Assertion,
   Control,
@@ -31,33 +38,41 @@ import {
   Nature,
   TypeOfControl,
   TypeOfRisk,
-  useBusinessProcessQuery,
-  useCreateBookmarkBusinessProcessMutation,
-  useUpdateControlMutation,
-  useUpdateRiskMutation,
-  useBookmarksQuery,
-  useResourceRatingsQuery,
-  useResourceQuery,
-  useResourcesQuery,
-  useBusinessProcessesQuery,
-  useControlQuery,
-  useRiskQuery,
   useApproveRequestEditMutation,
+  useBookmarksQuery,
+  useBusinessProcessesQuery,
+  useBusinessProcessQuery,
+  useControlQuery,
+  useCreateBookmarkBusinessProcessMutation,
   useCreateRequestEditMutation,
+  useResourceQuery,
+  useResourceRatingsQuery,
+  useResourcesQuery,
   useReviewControlDraftMutation,
   useReviewRiskDraftMutation,
+  useRiskQuery,
+  useUpdateControlMutation,
+  useUpdateRiskMutation,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
+import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import Modal from "../../shared/components/Modal";
+import PoliciesList from "../../shared/components/PoliciesList";
+import { PWCLink } from "../../shared/components/PoliciesTable";
 import ResourcesTab from "../../shared/components/ResourcesTab";
 import Tooltip from "../../shared/components/Tooltip";
 import { toLabelValue } from "../../shared/formatter";
+import useAccessRights from "../../shared/hooks/useAccessRights";
+import useEditState from "../../shared/hooks/useEditState";
+import { useSelector } from "../../shared/hooks/useSelector";
 import {
   downloadPdf,
   emailPdf,
@@ -74,24 +89,9 @@ import ControlForm, {
   ControlFormValues,
   CreateControlFormValues,
 } from "../control/components/ControlForm";
+import ResourceBox from "../resources/components/ResourceBox";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
-import useAccessRights from "../../shared/hooks/useAccessRights";
-import { useSelector } from "../../shared/hooks/useSelector";
-import { APP_ROOT_URL } from "../../settings";
-import ResourceBox from "../resources/components/ResourceBox";
-import { capitalCase } from "capital-case";
-import useEditState from "../../shared/hooks/useEditState";
-import DialogButton from "../../shared/components/DialogButton";
-import {
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-  AiFillEdit,
-} from "react-icons/ai";
-import CheckBox from "../../shared/components/forms/CheckBox";
-import styled from "styled-components";
-import { PWCLink } from "../../shared/components/PoliciesTable";
-import PoliciesList from "../../shared/components/PoliciesList";
 
 type TParams = { id: string };
 
@@ -1454,14 +1454,14 @@ const ControlsTable = ({
       <Table>
         <thead>
           <tr>
-            <th>Description</th>
-            <th>Frequency</th>
-            <th>Type of Control</th>
-            <th>Nature</th>
-            <th>Assertion</th>
-            <th>IPO</th>
-            <th>Control Owner</th>
-            <th />
+            <th style={{ width: "12.5%" }}>Description</th>
+            <th style={{ width: "12.5%" }}>Frequency</th>
+            <th style={{ width: "12.5%" }}>Type of Control</th>
+            <th style={{ width: "12.5%" }}>Nature</th>
+            <th style={{ width: "12.5%" }}>Assertion</th>
+            <th style={{ width: "12.5%" }}>IPO</th>
+            <th style={{ width: "12.5%" }}>Control Owner</th>
+            <th style={{ width: "12.5%" }} />
           </tr>
         </thead>
         <tbody>
@@ -1477,9 +1477,9 @@ const ControlsTable = ({
                     {control.description}
                   </PWCLink>
                 </td>
-                <td>{startCase(control.frequency || "")}</td>
-                <td>{startCase(control.typeOfControl || "")}</td>
-                <td>{startCase(control.nature || "")}</td>
+                <td>{control.frequency || ""}</td>
+                <td>{control.typeOfControl || ""}</td>
+                <td>{control.nature || ""}</td>
                 <td>{assertionAndIpoModifier(control.assertion)}</td>
                 <td>{assertionAndIpoModifier(control.ipo)}</td>
                 <td>{control.controlOwner?.join(", ")}</td>

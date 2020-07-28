@@ -1,4 +1,3 @@
-import startCase from "lodash/startCase";
 import React, { Fragment, useState, useEffect } from "react";
 // import { FaPencilAlt } from "react-icons/fa";
 import {
@@ -136,13 +135,13 @@ export default function ControlsTable({
     <Table responsive>
       <thead>
         <tr>
-          <th>Description</th>
-          <th>Frequency</th>
-          <th>Type of Control</th>
-          <th>Nature</th>
-          <th>Assertion</th>
-          <th>IPO</th>
-          <th>Control Owner</th>
+          <th style={{ width: "14.28%" }}>Description</th>
+          <th style={{ width: "14.28%" }}>Frequency</th>
+          <th style={{ width: "14.28%" }}>Type of Control</th>
+          <th style={{ width: "14.28%" }}>Nature</th>
+          <th style={{ width: "14.28%" }}>Assertion</th>
+          <th style={{ width: "14.28%" }}>IPO</th>
+          <th style={{ width: "14.28%" }}>Control Owner</th>
           {/* {editControl && <th />} */}
         </tr>
       </thead>
@@ -161,9 +160,9 @@ export default function ControlsTable({
                     {control.description}
                   </PWCLink>
                 </td>
-                <td>{startCase(control.frequency || "")}</td>
-                <td>{startCase(control.typeOfControl || "")}</td>
-                <td>{startCase(control.nature || "")}</td>
+                <td>{control.frequency || ""}</td>
+                <td>{control.typeOfControl || ""}</td>
+                <td>{control.nature || ""}</td>
                 <td>{assertionAndIpoModifier(control.assertion)}</td>
                 <td>{assertionAndIpoModifier(control.ipo)}</td>
                 <td>{control.controlOwner?.join(", ")}</td>
