@@ -100,10 +100,10 @@ export default function Login({ history }: RouteComponentProps) {
           </Helmet>
           <div
             style={{
-              border: "1px solid rgba(0,0,0,0.5)",
+              border: "1px solid rgba(0,0,0,0.2)",
               padding: "1vw",
               borderRadius: "3px",
-              backgroundColor: "white",
+              backgroundColor: "rgba(255,255,255,.7)",
             }}
           >
             <H1>Welcome, Please Sign in Here</H1>

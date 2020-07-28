@@ -354,7 +354,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
               <LoadingSpinner centered size={20} />
             ) : businessProcesses.length ? (
               filteredNames(businessProcesses).map((bp: any) => (
-                <dd key={bp.id}>{bp.name}</dd>
+                <li key={bp.id}>{bp.name}</li>
               ))
             ) : (
               <EmptyAttribute />
@@ -397,7 +397,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                     <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                       {activity.guidance ? (
                         activity.guidance
-                      ) : (
+                      ) : activity.guidanceFileName ? (
                         <div className="d-flex align-items-center ">
                           <Button color="" className="soft orange">
                             <a
@@ -414,6 +414,8 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                             </a>
                           </Button>
                         </div>
+                      ) : (
+                        "N/A"
                       )}
                     </td>
                   </tr>

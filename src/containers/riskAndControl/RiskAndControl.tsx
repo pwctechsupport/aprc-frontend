@@ -1447,7 +1447,7 @@ const ControlsTable = ({
         <thead>
           <tr>
             <th>Description</th>
-            <th>Freq</th>
+            <th>Frequency</th>
             <th>Type of Control</th>
             <th>Nature</th>
             <th>Assertion</th>
@@ -1474,7 +1474,7 @@ const ControlsTable = ({
                 <td>{startCase(control.nature || "")}</td>
                 <td>{assertionAndIpoModifier(control.assertion)}</td>
                 <td>{assertionAndIpoModifier(control.ipo)}</td>
-                <td>{control.controlOwner}</td>
+                <td>{control.controlOwner?.join(", ")}</td>
                 {/* <td>
                   {(isAdmin || isAdminPreparer) &&
                     control.hasEditAccess &&

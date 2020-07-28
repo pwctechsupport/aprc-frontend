@@ -182,7 +182,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                 ) : null}
 
                 <th>Description</th>
-                <th>Freq</th>
+                <th>Frequency</th>
                 <th style={{ width: "10%" }}>Type</th>
                 <th style={{ width: "15%" }}>Ass. Risk</th>
                 <th style={{ width: "9%" }}>Nature</th>

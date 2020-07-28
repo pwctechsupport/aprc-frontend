@@ -137,7 +137,7 @@ export default function ControlsTable({
       <thead>
         <tr>
           <th>Description</th>
-          <th>Freq</th>
+          <th>Frequency</th>
           <th>Type of Control</th>
           <th>Nature</th>
           <th>Assertion</th>
@@ -166,7 +166,7 @@ export default function ControlsTable({
                 <td>{startCase(control.nature || "")}</td>
                 <td>{assertionAndIpoModifier(control.assertion)}</td>
                 <td>{assertionAndIpoModifier(control.ipo)}</td>
-                <td>{control.controlOwner}</td>
+                <td>{control.controlOwner?.join(", ")}</td>
               </tr>
             ))}
           </Fragment>

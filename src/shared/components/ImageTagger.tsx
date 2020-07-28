@@ -160,17 +160,19 @@ export default function ImageTagger({
 
   return (
     <div className={className}>
-      <div className="d-flex align-items-center justify-content-start">
-        <h5>Show Tag</h5>
-        &nbsp;
-        <Switch
-          checked={show}
-          width={50}
-          height={25}
-          onChange={setShow}
-          className="mb-2"
-        />
-      </div>
+      <CoolDiv>
+        <div className="d-flex align-items-center justify-content-start">
+          <h5>Show Tag</h5>
+          &nbsp;
+          <Switch
+            checked={show}
+            width={50}
+            height={25}
+            onChange={setShow}
+            className="mb-2"
+          />
+        </div>
+      </CoolDiv>
       <Row>
         <Col lg={6}>
           <ImageTaggerWrapper onClick={editable ? handleClick : undefined}>
@@ -280,7 +282,11 @@ export default function ImageTagger({
     </div>
   );
 }
-
+const CoolDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`;
 export const ImageTaggerWrapper = styled.div`
   position: relative;
 `;

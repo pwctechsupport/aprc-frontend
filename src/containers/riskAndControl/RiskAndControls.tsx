@@ -49,7 +49,7 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Business Process</th>
             <th>Risks</th>
           </tr>
         </thead>
