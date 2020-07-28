@@ -201,8 +201,9 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     ? get(data, "control.draft.objectResult.createdAt", "")
     : data?.control?.createdAt || "";
   const controlOwners = draft
-    ? get(data, "control.draft.objectResult.controlOwner", "")
-    : data?.control?.controlOwner || "";
+    ? get(data, "control.draft.objectResult.controlOwner", [])
+    : data?.control?.controlOwner || [];
+
   const filteredNames = (names: any) =>
     names.filter((v: any, i: any) => names.indexOf(v) === i);
   const renderControlAction = () => {
@@ -309,7 +310,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
       {
         label: "Control Owner",
-        value: controlOwners,
+        value: controlOwners.join(", "),
       },
       {
         label: "Key Control",

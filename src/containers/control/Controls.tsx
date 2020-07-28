@@ -224,7 +224,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                       ).join(", ")}
                     </td>
                     <td>{capitalCase(control.nature || "")}</td>
-                    <td>{control.controlOwner}</td>
+                    <td>{control.controlOwner?.join(", ")}</td>
                     <td>{control.draft ? "Waiting for review" : "Release"}</td>
                     <td>
                       {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}
