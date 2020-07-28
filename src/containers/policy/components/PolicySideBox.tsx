@@ -222,7 +222,7 @@ const PolicyBranch = ({
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className="text-grey"
+                    className={isActive ? "text-white" : "text-orange"}
                     size={14}
                   />
                 </SideBoxBranchIconContainer>
@@ -276,7 +276,7 @@ const PolicyBranch = ({
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className="text-grey"
+                    className={isActive ? "text-white" : "text-orange"}
                     size={14}
                   />
                 </SideBoxBranchIconContainer>
@@ -327,7 +327,7 @@ const PolicyBranch = ({
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className="text-grey"
+                    className={isActive ? "text-white" : "text-orange"}
                     size={14}
                   />
                 </SideBoxBranchIconContainer>
