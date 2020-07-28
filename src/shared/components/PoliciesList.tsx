@@ -1,5 +1,6 @@
 import React from "react";
 import { PWCLink } from "./PoliciesTable";
+import EmptyAttribute from "./EmptyAttribute";
 const PoliciesList = (data: any) => {
   const newData = data?.data?.navigatorBusinessProcesses?.collection || [];
   const policies =
@@ -24,7 +25,9 @@ const PoliciesList = (data: any) => {
             </li>
           ))}
         </ul>
-      ) : null}
+      ) : (
+        <EmptyAttribute />
+      )}
     </>
   );
 };
