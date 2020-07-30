@@ -869,7 +869,7 @@ export default function RiskAndControl({
                         <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                           {activity.guidance ? (
                             activity.guidance
-                          ) : (
+                          ) : activity.guidanceFileName ? (
                             <div className="d-flex align-items-center ">
                               <Button color="" className="soft orange">
                                 <a
@@ -886,6 +886,8 @@ export default function RiskAndControl({
                                 </a>
                               </Button>
                             </div>
+                          ) : (
+                            "N/A"
                           )}
                         </td>
                       </tr>
