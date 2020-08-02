@@ -8,6 +8,7 @@ import DateHover from "../../../shared/components/DateHover";
 import { Row, Col, Badge } from "reactstrap";
 import { FaSpinner } from "react-icons/fa";
 import BreadCrumb, { CrumbItem } from "../../../shared/components/BreadCrumb";
+import { PWCLink } from "../../../shared/components/PoliciesTable";
 
 interface PolicySearchItemProps {
   policy: Omit<Policy, "createdAt">;
@@ -122,11 +123,11 @@ export default function PolicySearchItem({
             ).length ? (
             <Col>
               {referencesPolicy?.map((reference) => (
-                <Link to={`/policy/${id}/details/#references`}>
+                <PWCLink to={`/policy/${id}/details/#references`}>
                   <Badge className="mx-1" key={reference.id}>
                     {reference.name}
                   </Badge>
-                </Link>
+                </PWCLink>
               ))}
             </Col>
           ) : null}
@@ -148,9 +149,9 @@ export default function PolicySearchItem({
                           .includes(homepageSearch.toLowerCase()) && (
                           <li>
                             <StyledTdMini key={resource.id}>
-                              <Link to={`/policy/${id}/resources`}>
+                              <PWCLink to={`/policy/${id}/resources`}>
                                 {resource.name}
-                              </Link>
+                              </PWCLink>
                             </StyledTdMini>
                           </li>
                         )
@@ -172,9 +173,9 @@ export default function PolicySearchItem({
                       {resourcesPolicy?.map((resource) => (
                         <li>
                           <StyledTdMini key={resource.id}>
-                            <Link to={`/policy/${id}/details/#references`}>
+                            <PWCLink to={`/policy/${id}/details/#references`}>
                               {resource.name}
-                            </Link>
+                            </PWCLink>
                           </StyledTdMini>
                         </li>
                       ))}
@@ -197,9 +198,9 @@ export default function PolicySearchItem({
                         .includes(homepageSearch.toLowerCase()) && (
                         <li>
                           <StyledTdMini key={risk.id}>
-                            <Link to={`/policy/${id}/details/#risks`}>
+                            <PWCLink to={`/policy/${id}/details/#risks`}>
                               {risk.name}
-                            </Link>
+                            </PWCLink>
                           </StyledTdMini>
                         </li>
                       )
@@ -220,9 +221,9 @@ export default function PolicySearchItem({
                       {risksPolicy?.map((jay) => (
                         <li>
                           <StyledTdMini key={jay.id}>
-                            <Link to={`/policy/${id}/details/#risks`}>
+                            <PWCLink to={`/policy/${id}/details/#risks`}>
                               {jay.name}
-                            </Link>
+                            </PWCLink>
                           </StyledTdMini>
                         </li>
                       ))}
@@ -246,9 +247,9 @@ export default function PolicySearchItem({
                           .includes(homepageSearch.toLowerCase()) && (
                           <li>
                             <StyledTdMini key={control.id}>
-                              <Link to={`/policy/${id}/details/#risks`}>
+                              <PWCLink to={`/policy/${id}/details/#risks`}>
                                 {control.description}
-                              </Link>
+                              </PWCLink>
                             </StyledTdMini>
                           </li>
                         )
@@ -270,9 +271,9 @@ export default function PolicySearchItem({
                       {controlsPolicy?.map((jay) => (
                         <li>
                           <StyledTdMini key={jay.id}>
-                            <Link to={`control/${jay.id}`}>
+                            <PWCLink to={`control/${jay.id}`}>
                               {jay.description}
-                            </Link>
+                            </PWCLink>
                           </StyledTdMini>
                         </li>
                       ))}
@@ -292,9 +293,9 @@ export default function PolicySearchItem({
                   <ul className="mt-1">
                     <li>
                       <StyledTdMini>
-                        <Link to={`/policy-category/${polcatPolicy.id}`}>
+                        <PWCLink to={`/policy-category/${polcatPolicy.id}`}>
                           {polcatPolicy.name}
-                        </Link>
+                        </PWCLink>
                       </StyledTdMini>
                     </li>
                   </ul>
