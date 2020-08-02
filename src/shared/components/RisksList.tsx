@@ -97,20 +97,19 @@ RisksListProps) {
       {dataModifier(newDataRisks).map((risk: any) => (
         <li key={risk.id}>
           <div className="mb-3 d-flex justify-content-between">
-            <h6>
-              <PWCLink
-                to={`/policy/${policyId}/details/risk/${risk.id}`}
-                onClick={() => setRiskId(risk.id)}
-              >
-                {risk.name}
-              </PWCLink>
+            <PWCLink
+              to={`/policy/${policyId}/details/risk/${risk.id}`}
+              onClick={() => setRiskId(risk.id)}
+              style={{ fontSize: "14px" }}
+            >
+              {risk.name}
               <Badge color={`${getRiskColor(risk.levelOfRisk)} mx-3`}>
                 {startCase(risk.levelOfRisk || "")}
               </Badge>
               <Badge color="secondary">
                 {startCase(risk.typeOfRisk || "")}
               </Badge>
-            </h6>
+            </PWCLink>
           </div>
         </li>
       ))}

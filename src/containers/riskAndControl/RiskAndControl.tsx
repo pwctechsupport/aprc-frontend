@@ -1262,18 +1262,17 @@ export default function RiskAndControl({
                           onClick={() => {
                             setRiskId(risk?.id || "");
                           }}
+                          style={{ fontSize: "14px" }}
                         >
-                          <h5>
-                            {risk?.name}
-                            <Badge
-                              color={`${getRiskColor(risk?.levelOfRisk)} mx-3`}
-                            >
-                              {startCase(risk?.levelOfRisk || "")}
-                            </Badge>
-                            <Badge color="secondary">
-                              {startCase(risk?.typeOfRisk || "")}
-                            </Badge>
-                          </h5>
+                          {startCase(risk?.name || "")}
+                          <Badge
+                            color={`${getRiskColor(risk?.levelOfRisk)} mx-3`}
+                          >
+                            {startCase(risk?.levelOfRisk || "")}
+                          </Badge>
+                          <Badge color="secondary">
+                            {startCase(risk?.typeOfRisk || "")}
+                          </Badge>
                         </PWCLink>
 
                         {/* {(isAdmin || isAdminPreparer) &&
@@ -1479,9 +1478,9 @@ const ControlsTable = ({
                     {control.description}
                   </PWCLink>
                 </td>
-                <td>{control.frequency || ""}</td>
-                <td>{control.typeOfControl || ""}</td>
-                <td>{control.nature || ""}</td>
+                <td>{startCase(control.frequency || "")}</td>
+                <td>{startCase(control.typeOfControl || "")}</td>
+                <td>{startCase(control.nature || "")}</td>
                 <td>{assertionAndIpoModifier(control.assertion)}</td>
                 <td>{assertionAndIpoModifier(control.ipo)}</td>
                 <td>{control.controlOwner?.join(", ")}</td>

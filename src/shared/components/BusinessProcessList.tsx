@@ -89,9 +89,12 @@ const BusinessProcessList = ({ dataPolicy }: props) => {
         getBps.map((bp) => (
           <li key={bp.id}>
             <div className="mb-3 d-flex justify-content-between">
-              <h6>
-                <PWCLink to={`/risk-and-control/${bp.id}`}>{bp.name}</PWCLink>
-              </h6>
+              <PWCLink
+                style={{ fontSize: "14px" }}
+                to={`/risk-and-control/${bp.id}`}
+              >
+                {bp.name}
+              </PWCLink>
             </div>
           </li>
         ))
