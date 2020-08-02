@@ -162,15 +162,9 @@ export default function ImageTagger({
     <div className={className}>
       <CoolDiv>
         <div className="d-flex align-items-center justify-content-start">
-          <h5>Show Tag</h5>
-          &nbsp;
-          <Switch
-            checked={show}
-            width={50}
-            height={25}
-            onChange={setShow}
-            className="mb-2"
-          />
+          <span>Show Tag</span>
+          &nbsp; &nbsp;
+          <Switch checked={show} width={50} height={25} onChange={setShow} />
         </div>
       </CoolDiv>
       <Row>
