@@ -204,9 +204,11 @@ const PolicyBranch = ({
     "admin_reviewer",
     "admin_preparer",
   ]);
-  const childrenHasChild = originalData?.children
+  const childrenHasChildWhenUser = originalData?.children
     ?.map((a: any) => a.status)
     .includes("release");
+  const reviewerHasChild =
+    originalData?.children?.filter((a: any) => a.status !== "draft") || [];
   const grandpa = children?.map((a) => a.children).flat().length || 0;
 
   return (
@@ -221,10 +223,12 @@ const PolicyBranch = ({
               })}
               padLeft={level ? level * 10 : 0}
               isLastChild={
-                (!hasChild || !childrenHasChild) && parentId && !myBroHasChild
+                (!hasChild || !childrenHasChildWhenUser) &&
+                parentId &&
+                !myBroHasChild
               }
             >
-              {hasChild && childrenHasChild ? (
+              {hasChild && childrenHasChildWhenUser ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
@@ -332,7 +336,7 @@ const PolicyBranch = ({
               padLeft={level ? level * 10 : 0}
               isLastChild={!hasChild && parentId && !myBroHasChild}
             >
-              {hasChild ? (
+              {reviewerHasChild.length ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
