@@ -23,11 +23,11 @@ import CheckBox from "../../shared/components/forms/CheckBox";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
-  const [labelTime, setLabelTime] = useState("Date Added...");
+  const [labelTime, setLabelTime] = useState("Date added...");
   const [checked, setChecked] = useState<string[]>([]);
 
   const time = [
-    { label: "All Time" || "Date Added...", value: 1 },
+    { label: "All Time" || "Date added...", value: 1 },
     { label: "Today", value: 2 },
     { label: "In 7 days", value: 3 },
     { label: "In a month", value: 4 },
@@ -41,7 +41,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const aYear = 31536000000;
 
   function constructDateFilter(input: any) {
-    if (!input || input === "All Time" || input === "Date Added...")
+    if (!input || input === "All Time" || input === "Date added...")
       return null;
     const presentDate = new Date().getTime();
     const subtractor =
@@ -138,7 +138,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   };
   const isDataExist = data?.bookmarks?.collection.length;
   const handleReset = () => {
-    setLabelTime("Date Added...");
+    setLabelTime("Date added...");
   };
   return (
     <div>
@@ -146,7 +146,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
         <title>Bookmarks - PricewaterhouseCoopers</title>
       </Helmet>
       <Container style={{ minHeight: "80vh" }} fluid className="p-md-5">
-        <h2>Bookmarks Manager</h2>
+        <h2>Bookmarks manager</h2>
 
         <Row>
           <Col>
@@ -155,7 +155,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                 <Col xs={12} md={4} className="mb-1">
                   {" "}
                   <Input
-                    placeholder="Search Title..."
+                    placeholder="Search title..."
                     name="title"
                     innerRef={bookmarkForm.register}
                   />
@@ -165,7 +165,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                     options={time}
                     name="date"
                     onChange={handleChange}
-                    placeholder={"Date Added..."}
+                    placeholder={"Date added..."}
                     value={[{ label: labelTime, value: 1 }]}
                   />
                 </Col>
@@ -229,9 +229,9 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                     }}
                   />
                 </th>
-                <th>Bookmarks Category</th>
+                <th>Bookmarks category</th>
                 <th>Title</th>
-                <th>Date Added</th>
+                <th>Date added</th>
               </tr>
             </thead>
             <tbody>

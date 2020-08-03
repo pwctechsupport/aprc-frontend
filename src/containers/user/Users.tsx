@@ -78,7 +78,7 @@ const Users = () => {
       </Helmet>
 
       <Container fluid className="p-0 pt-3 px-4">
-        <h2>User Management</h2>
+        <h2>User management</h2>
 
         <Row>
           <Col lg={4}>
@@ -118,12 +118,12 @@ const Users = () => {
                 <th style={admins ? { width: "17.5%" } : { width: "19.2%" }}>
                   Name
                 </th>
-                <th style={admins ? { width: "5%" } : { width: "5%" }}>ID</th>
+                <th style={admins ? { width: "5%" } : { width: "5%" }}>Id</th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
-                  User Group
+                  User group
                 </th>
                 <th style={admins ? { width: "17%" } : { width: "17%" }}>
-                  Policy Category
+                  Policy category
                 </th>
                 <th style={admins ? { width: "10%" } : { width: "14.2%" }}>
                   Department
@@ -132,10 +132,10 @@ const Users = () => {
                   Status
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
-                  Created At
+                  Created at
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
-                  Last Updated
+                  Last updated
                 </th>
 
                 {admins ? <th>Action</th> : <th></th>}

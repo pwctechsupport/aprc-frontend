@@ -143,7 +143,7 @@ const References = ({ history }: RouteComponentProps) => {
           ) : null}
           {(isAdmin || isAdminPreparer) && (
             <Button tag={Link} to="/references/create" className="pwc">
-              + Add Reference
+              + Add reference
             </Button>
           )}
         </div>
@@ -165,10 +165,10 @@ const References = ({ history }: RouteComponentProps) => {
 
             <th style={{ width: "5%" }}>Name</th>
             <th style={{ width: "30%" }}>Policy</th>
-            <th style={{ width: "10%" }}>Last Updated</th>
-            <th style={{ width: "10%" }}>Last Updated By</th>
-            <th style={{ width: "10%" }}>Created At</th>
-            <th style={{ width: "10%" }}>Created By</th>
+            <th style={{ width: "10%" }}>Last updated</th>
+            <th style={{ width: "10%" }}>Last updated by</th>
+            <th style={{ width: "10%" }}>Created at</th>
+            <th style={{ width: "10%" }}>Created by</th>
 
             <th></th>
           </tr>

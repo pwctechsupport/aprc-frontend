@@ -39,7 +39,7 @@ const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
     >
       <Input
         name="name"
-        placeholder="Sub Business Process Name*"
+        placeholder="Sub business process name*"
         innerRef={register}
         required
       />

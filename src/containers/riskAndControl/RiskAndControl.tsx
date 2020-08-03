@@ -105,7 +105,7 @@ export default function RiskAndControl({
     "admin_preparer",
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
-  const initialCollapse = ["Risks", "Controls", "Related Policies"];
+  const initialCollapse = ["Risks", "Controls", "Related policies"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse((p) => {
@@ -955,7 +955,7 @@ export default function RiskAndControl({
                     </h5>
                     {category === "Flowchart" ? (
                       <>
-                        <h5 className="mt-5">Business Process:</h5>
+                        <h5 className="mt-5">Business process:</h5>
                         <Link to={`/risk-and-control/${businessProcess?.id}`}>
                           {businessProcess?.name}
                         </Link>
@@ -963,7 +963,7 @@ export default function RiskAndControl({
                     ) : (
                       <>
                         <div>
-                          <h5 className="mt-5">Related Business Process:</h5>
+                          <h5 className="mt-5">Related business process:</h5>
                           {bps ? (
                             <ul>
                               <li>{bps.name}</li>
@@ -973,7 +973,7 @@ export default function RiskAndControl({
                           )}
                         </div>
                         <div>
-                          <h5 className="mt-5">Related Policies:</h5>
+                          <h5 className="mt-5">Related policies:</h5>
                           {policies.length ? (
                             <ul>
                               {policies.map((policy) => (
@@ -1239,8 +1239,8 @@ export default function RiskAndControl({
           />
           <Route exact path="/risk-and-control/:id">
             <Collapsible
-              title="Related Policies"
-              show={collapse.includes("Related Policies")}
+              title="Related policies"
+              show={collapse.includes("Related policies")}
               onClick={toggleCollapse}
             >
               <PoliciesList data={dataRisksnControl || {}} />

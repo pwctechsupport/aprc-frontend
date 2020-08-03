@@ -250,7 +250,7 @@ export default function ResourcesTab({
         <SearchInput
           search={search}
           setSearch={setSearch}
-          placeholder="Search Resources..."
+          placeholder="Search resources..."
           loading={loading}
         />
         {isDraft === null && (isAdmin || isAdminPreparer || isUser) && (

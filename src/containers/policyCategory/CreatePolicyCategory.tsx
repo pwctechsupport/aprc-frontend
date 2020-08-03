@@ -38,10 +38,10 @@ const CreatePolicyCategory = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/policy-category", "Policy Category"],
-          ["/policy-category/create", "Create Policy Category"],
+          ["/policy-category/create", "Create policy category"],
         ]}
       />
-      <h4 className="mb-3">Create Policy Category</h4>
+      <h4 className="mb-3">Create policy category</h4>
       <PolicyCategoryForm
         onSubmit={handleCreate}
         submitting={loading}

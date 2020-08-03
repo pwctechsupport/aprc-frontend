@@ -121,7 +121,7 @@ export default function Policies({ history }: RouteComponentProps) {
         </OpacityButton>
         {(isAdmin || isAdminPreparer) && (
           <Button to="/policy/create" tag={Link} className="pwc">
-            + Add Policy
+            + Add policy
           </Button>
         )}
       </div>
@@ -136,7 +136,7 @@ export default function Policies({ history }: RouteComponentProps) {
       <SearchBar
         search={search}
         setSearch={setSearch}
-        placeholder="Search Policies"
+        placeholder="Search policies"
         loading={loadingPreparer || loadingReviewer}
       />
       <Table reloading={loadingPreparer || loadingReviewer} responsive>
@@ -145,8 +145,8 @@ export default function Policies({ history }: RouteComponentProps) {
             <th className="w-40">Title</th>
             <th>Category</th>
             <th>Status</th>
-            <th>Last Updated</th>
-            <th>Last Updated By</th>
+            <th>Last updated</th>
+            <th>Last updated by</th>
             <th></th>
           </tr>
         </thead>

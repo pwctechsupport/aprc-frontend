@@ -189,7 +189,7 @@ ResourceFormProps) {
           </div>
           <AsyncSelect
             name="policyIds"
-            label="Related Policies*"
+            label="Related policies*"
             register={register}
             setValue={setValue}
             cacheOptions
@@ -217,7 +217,7 @@ ResourceFormProps) {
           /> */}
           <AsyncSelect
             name="businessProcessIdNotFlowchart"
-            label="Related Sub-business Process*"
+            label="Related sub-business process*"
             register={register}
             setValue={setValue}
             cacheOptions

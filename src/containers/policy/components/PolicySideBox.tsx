@@ -99,7 +99,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Policies Admin"
+            ? "Policies admin"
             : "Policies"}
         </div>
       </SideBoxTitle>
@@ -107,7 +107,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
         search={search}
         setSearch={setSearch}
         loading={loading}
-        placeholder="Search Policies..."
+        placeholder="Search policies..."
       />
       <div>
         {policiesReal.length ? (

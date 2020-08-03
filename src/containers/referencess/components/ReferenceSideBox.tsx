@@ -48,14 +48,14 @@ const ReferenceSideBox = () => {
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Policy Reference Admin"
-            : "Policy Reference"}
+            ? "Policy reference admin"
+            : "Policy reference"}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
         search={search}
         setSearch={setSearch}
-        placeholder="Search Policy Reference..."
+        placeholder="Search policy reference..."
         loading={loading}
       />
       {references.map((reference) => {

@@ -151,7 +151,7 @@ const Resources = ({ history }: RouteComponentProps) => {
         ) : null}
         {isAdmin || isAdminPreparer ? (
           <Button tag={Link} to="/resources/create" className="pwc">
-            + Add Resource
+            + Add resource
           </Button>
         ) : null}
       </div>
@@ -171,12 +171,12 @@ const Resources = ({ history }: RouteComponentProps) => {
             ) : null}
 
             <th style={{ width: "12%" }}>Name</th>
-            <th style={{ width: "10%" }}>File Type</th>
+            <th style={{ width: "10%" }}>File type</th>
             <th style={{ width: "10%" }}>Category</th>
-            <th style={{ width: "16%" }}>Related Policy</th>
-            <th style={{ width: "16%" }}>Related Business Process</th>
-            <th style={{ width: "10%" }}>Last Updated</th>
-            <th style={{ width: "10%" }}>Created By</th>
+            <th style={{ width: "16%" }}>Related policy</th>
+            <th style={{ width: "16%" }}>Related business process</th>
+            <th style={{ width: "10%" }}>Last updated</th>
+            <th style={{ width: "10%" }}>Created by</th>
 
             <th></th>
           </tr>

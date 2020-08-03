@@ -110,8 +110,8 @@ export default function Policy({
     "Resources",
     "Risks",
     "Controls",
-    "Sub-Policies",
-    "Business Processes",
+    "Sub-policies",
+    "Business processes",
   ];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
@@ -705,7 +705,7 @@ export default function Policy({
                 ) : (
                   <EmptyAttribute />
                 )}
-                <dt>Business Processes</dt>
+                <dt>Business processes</dt>
                 {businessProcesses.length ? (
                   filteredNames(businessProcesses).map((bp: any) => (
                     <dd key={bp.id}>{bp.name}</dd>
@@ -895,8 +895,8 @@ export default function Policy({
 
               <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
                 <Collapsible
-                  title="Business Processes"
-                  show={collapse.includes("Business Processes")}
+                  title="Business processes"
+                  show={collapse.includes("Business processes")}
                   onClick={toggleCollapse}
                 >
                   <BusinessProcessList dataPolicy={data} />
@@ -927,8 +927,8 @@ export default function Policy({
 
               <div ref={subPolicyRef}>
                 <Collapsible
-                  title="Sub-Policies"
-                  show={collapse.includes("Sub-Policies")}
+                  title="Sub-policies"
+                  show={collapse.includes("Sub-policies")}
                   onClick={toggleCollapse}
                 >
                   <PoliciesTable

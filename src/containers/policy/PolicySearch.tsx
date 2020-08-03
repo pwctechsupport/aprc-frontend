@@ -98,7 +98,7 @@ export default function PolicySearch({
           <SideBox>
             <SideBoxTitle>
               <div className="d-flex justify-content-between">
-                Search Policies
+                Search policies
               </div>
             </SideBoxTitle>
             <PolicySearchForm
@@ -109,7 +109,7 @@ export default function PolicySearch({
           </SideBox>
         </Col>
         <Col md={9} className="p-4">
-          <BreadCrumb crumbs={[["/policy", "Search Policies"]]} />
+          <BreadCrumb crumbs={[["/policy", "Search policies"]]} />
           <div style={{ minHeight: "80vh" }}>
             <div className="d-block d-md-none">
               <OpacityButton className="mb-1" onClick={toggleShowDashboard}>

@@ -305,18 +305,18 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
   const renderControlNonEditable = () => {
     const details = [
-      { label: "Control ID", value: id },
+      { label: "Control id", value: id },
       { label: "Description", value: description },
 
       {
-        label: "Control Owner",
+        label: "Control owner",
         value: controlOwners.join(", "),
       },
       {
-        label: "Key Control",
+        label: "Key control",
         value: <CheckBox checked={keyControl} />,
       },
-      { label: "Type of Control", value: capitalCase(typeOfControl) },
+      { label: "Type of control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
         value: assertion.map((x: any) => capitalCase(x)).join(", "),
@@ -327,10 +327,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       },
       { label: "Frequency", value: capitalCase(frequency) },
       // { label: "Status", value: capitalCase(status) },
-      { label: "Last Updated", value: updatedAt },
-      { label: "Last Updated By", value: lastUpdatedBy },
-      { label: "Created At", value: createdAt.split(" ")[0] },
-      { label: "Created By", value: createdBy },
+      { label: "Last updated", value: updatedAt },
+      { label: "Last updated by", value: lastUpdatedBy },
+      { label: "Created at", value: createdAt.split(" ")[0] },
+      { label: "Created by", value: createdBy },
     ];
     return (
       <Row>
@@ -350,7 +350,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
             ) : (
               <EmptyAttribute />
             )}
-            <dt>Business Processes</dt>
+            <dt>Business processes</dt>
             {loadingBps ? (
               <LoadingSpinner centered size={20} />
             ) : businessProcesses.length ? (
@@ -377,12 +377,12 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
         {activityControls.length > 0 ? (
           <Col xs={7} className="mt-2">
-            <dt className="mb-1">Control Activities</dt>
+            <dt className="mb-1">Control activities</dt>
             <Table>
               <thead>
                 <tr>
                   <th style={{ fontSize: "13px", fontWeight: "normal" }}>
-                    Control Activity
+                    Control activity
                   </th>
                   <th style={{ fontSize: "13px", fontWeight: "normal" }}>
                     Guidance

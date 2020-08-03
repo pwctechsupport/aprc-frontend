@@ -7,7 +7,7 @@ const CreateSubBusinessProcess = ({ match }: RouteComponentProps) => {
   const id = get(match, "params.id", "");
   return (
     <div>
-      <h5>Sub Business Process</h5>
+      <h5>Sub business process</h5>
       <SubBusinessProcessForm parentId={id} />
     </div>
   );

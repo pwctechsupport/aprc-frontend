@@ -55,14 +55,14 @@ const ControlSideBox = () => {
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminPreparer || isAdminReviewer
-            ? "Control Admin"
+            ? "Control admin"
             : "Control"}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
         search={search}
         setSearch={setSearch}
-        placeholder="Search Controls..."
+        placeholder="Search controls..."
         loading={loading}
       />
       {controls.map((control) => {

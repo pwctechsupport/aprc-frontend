@@ -42,10 +42,10 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/risk", "Risks"],
-          ["/risk/create", "Create Risk"],
+          ["/risk/create", "Create risk"],
         ]}
       />
-      <HeaderWithBackButton heading="Create Risk" />
+      <HeaderWithBackButton heading="Create risk" />
       <RiskForm
         onSubmit={handleSubmit}
         submitting={loading}

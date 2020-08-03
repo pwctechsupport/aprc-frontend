@@ -82,7 +82,7 @@ const RiskForm = ({
         />
         <AsyncSelect
           name="businessProcessIds"
-          label="Business Process"
+          label="Business process"
           register={register}
           setValue={setValue}
           cacheOptions
@@ -93,8 +93,8 @@ const RiskForm = ({
         />
         <Select
           name="levelOfRisk"
-          placeholder="Level of Risk"
-          label="Level of Risk*"
+          placeholder="Level of risk"
+          label="Level of risk*"
           options={levelOfRisks}
           onChange={handleChange("levelOfRisk")}
           error={errors.levelOfRisk && errors.levelOfRisk.message}
@@ -104,8 +104,8 @@ const RiskForm = ({
         />
         <Select
           name="typeOfRisk"
-          placeholder="Type of Risk"
-          label={"Type of Risk*"}
+          placeholder="Type of risk"
+          label={"Type of risk*"}
           options={typeOfRisks}
           onChange={handleChange("typeOfRisk")}
           error={errors?.typeOfRisk?.message || ""}

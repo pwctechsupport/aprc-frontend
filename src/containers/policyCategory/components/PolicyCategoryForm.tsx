@@ -69,7 +69,7 @@ const PolicyCategoryForm = ({
       />
       <AsyncSelect
         name="policyIds"
-        label="Related Policies"
+        label="Related policies"
         register={register}
         setValue={setValue}
         cacheOptions

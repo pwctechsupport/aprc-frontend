@@ -39,13 +39,13 @@ export default function RiskAndControlSideBox({
   const businessProcesses = data?.navigatorBusinessProcesses?.collection || [];
   return (
     <SideBox>
-      <SideBoxTitle>Risk & Control</SideBoxTitle>
+      <SideBoxTitle>Risk & control</SideBoxTitle>
 
       <SideBoxSearch
         search={search}
         setSearch={setSearch}
         loading={loading}
-        placeholder="Search Business Process..."
+        placeholder="Search business process..."
       />
 
       {businessProcesses.map((businessProcess) => {

@@ -56,7 +56,7 @@ const RiskSideBox = () => {
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Risk Admin"
+            ? "Risk admin"
             : "Risk"}
         </div>
       </SideBoxTitle>

@@ -141,13 +141,13 @@ const SubPolicyForm = ({
       <Form>
         <Input
           name="title"
-          label="Sub-Policy Title*"
-          placeholder="Sub-Policy Title"
+          label="Sub-policy title*"
+          placeholder="Sub-policy title"
           innerRef={register({ required: true })}
           error={errors.title && "Sub policy title is a required field"}
         />
         <div className="mb-3">
-          <label>Policy Description*</label>
+          <label>Policy description*</label>
           <TextEditorField
             name="description"
             register={register}
@@ -168,8 +168,8 @@ const SubPolicyForm = ({
         </div>
         <Select
           name="referenceIds"
-          label="Sub-Policy Reference*"
-          placeholder="Sub-Policy Reference"
+          label="Sub-policy reference*"
+          placeholder="Sub-policy reference"
           loading={referenceData.loading}
           onChange={handleReferenceChange}
           options={references}
@@ -186,7 +186,7 @@ const SubPolicyForm = ({
             onClick={() => setShowAttrs(true)}
             className="pwc mr-2"
           >
-            Insert Attributes
+            Insert attributes
           </Button>
           {premise ? (
             //ini yang kedua
@@ -199,10 +199,10 @@ const SubPolicyForm = ({
                 message={
                   defaultValues.title
                     ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
+                    : "Create sub-policy?"
                 }
               >
-                Save As Draft
+                Save As draft
               </DialogButton>
               <DialogButton
                 color="primary"
@@ -212,7 +212,7 @@ const SubPolicyForm = ({
                 message={
                   defaultValues.title
                     ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
+                    : "Create sub-policy?"
                 }
               >
                 Submit
@@ -229,10 +229,10 @@ const SubPolicyForm = ({
                 message={
                   defaultValues.title
                     ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
+                    : "Create sub-policy?"
                 }
               >
-                Save As Draft
+                Save as draft
               </DialogButton>
               <DialogButton
                 color="primary"
@@ -242,7 +242,7 @@ const SubPolicyForm = ({
                 message={
                   defaultValues.title
                     ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
+                    : "Create sub-policy?"
                 }
               >
                 Submit

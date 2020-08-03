@@ -90,7 +90,7 @@ const PolicyForm = ({
           error={errors.title && "Policy title is a required field"}
         />
         <div className="mb-3">
-          <label>Policy Description*</label>
+          <label>Policy description*</label>
           <TextEditorField
             name="description"
             register={register}
@@ -111,9 +111,9 @@ const PolicyForm = ({
         </div>
         <Select
           name="policyCategoryId"
-          label="Policy Category*"
+          label="Policy category*"
           loading={policyCategoriesState.loading}
-          placeholder="Policy Category"
+          placeholder="Policy category"
           options={options}
           onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(
@@ -131,10 +131,10 @@ const PolicyForm = ({
                 color="primary"
                 loading={submittingAsDraft}
                 className="pwc mr-2 px-5"
-                message="Save Policy as Draft?"
+                message="Save Policy as draft?"
                 onConfirm={handleSubmit(submitAsDraft)}
               >
-                Save As Draft
+                Save as draft
               </DialogButton>
               <DialogButton
                 color="primary"
@@ -151,11 +151,11 @@ const PolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={createS ? submitting : false}
-                message="Save Policy as Draft?"
+                message="Save Policy as draft?"
                 className="pwc mr-2 px-5"
                 onConfirm={handleSubmit(submit)}
               >
-                Save As Draft
+                Save as draft
               </DialogButton>
 
               <DialogButton

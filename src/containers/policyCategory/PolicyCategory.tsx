@@ -74,7 +74,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   });
   // Update handlers
   const [updateMutation, updateInfo] = useUpdatePolicyCategoryMutation({
-    onCompleted: () => notifySuccess("Policy Category Updated"),
+    onCompleted: () => notifySuccess("Policy category updated"),
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
     refetchQueries: ["policyCategory"],
@@ -234,7 +234,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
           >
             <FaTrash />
           </DialogButton> */}
-          <Tooltip description="Edit Policy Category">
+          <Tooltip description="Edit policy category">
             {policiesDataRaw.loading ? (
               <LoadingSpinner size={10} centered />
             ) : (
@@ -312,7 +312,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       </Helmet>
       <BreadCrumb
         crumbs={[
-          ["/policy-category", "Policy Category"],
+          ["/policy-category", "Policy category"],
           ["/policy-category/" + id, name],
         ]}
       />

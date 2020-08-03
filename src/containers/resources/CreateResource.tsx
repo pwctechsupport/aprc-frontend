@@ -51,10 +51,10 @@ const CreateResource = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/resources", "Resources"],
-          ["/resources/create", "Create Resource"],
+          ["/resources/create", "Create resource"],
         ]}
       />
-      <HeaderWithBackButton heading="Create Resource" />
+      <HeaderWithBackButton heading="Create resource" />
       <ResourceForm
         onSubmit={handleSubmit}
         submitting={createResourceM.loading}

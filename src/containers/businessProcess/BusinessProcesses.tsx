@@ -104,18 +104,18 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 
   return (
     <div>
-      <BreadCrumb crumbs={[["/business-process", "Business Processes"]]} />
+      <BreadCrumb crumbs={[["/business-process", "Business processes"]]} />
       <div className="d-flex">
         <Helmet>
           <title>Business Process - PricewaterhouseCoopers</title>
         </Helmet>
         <div className="w-100">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h4>Business Process</h4>
+            <h4>Business process</h4>
             {isAdmin || isAdminPreparer ? (
-              <Tooltip description="Create Business Process">
+              <Tooltip description="Create business process">
                 <Button onClick={toggleCreateBpModal} className="pwc">
-                  + Add Business Process
+                  + Add business process
                 </Button>
               </Tooltip>
             ) : null}
@@ -162,7 +162,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           <Modal
             isOpen={createBpModal}
             toggle={toggleCreateBpModal}
-            title="Create Business Process"
+            title="Create business process"
           >
             <CreateBusinessProcess createBpModal={setCreateBpModal} />
           </Modal>
@@ -181,11 +181,11 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                   </th>
                 ) : null}
 
-                <th>Business Process</th>
-                <th>Last Updated</th>
-                <th>Last Updated By</th>
-                <th>Created At</th>
-                <th>Created By</th>
+                <th>Business process</th>
+                <th>Last updated</th>
+                <th>Last updated by</th>
+                <th>Created at</th>
+                <th>Created by</th>
 
                 <th></th>
               </tr>

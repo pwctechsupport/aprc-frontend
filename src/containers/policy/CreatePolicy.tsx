@@ -45,15 +45,15 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
           isAdmin
             ? [
                 ["/policy-admin", "Policies"],
-                ["/policy-admin/create", "Create Policy"],
+                ["/policy-admin/create", "Create policy"],
               ]
             : [
                 ["/policy", "Policies"],
-                ["/policy/create", "Create Policy"],
+                ["/policy/create", "Create policy"],
               ]
         }
       />
-      <HeaderWithBackButton heading="Create Policy" />
+      <HeaderWithBackButton heading="Create policy" />
       <PolicyForm
         onSubmit={handleSubmit}
         handleSubmitToReviewer={handleSubmitToReviewer}
