@@ -49,11 +49,13 @@ export async function previewPdf(url: string, option: FileOption) {
   }
 }
 
-export async function emailPdf(fileName: string) {
+export async function emailPdf(fileName: string, id: number, policy?: boolean) {
   try {
     const link = document.createElement("a");
     link.target = "_blank";
-    link.href = `mailto:?subject=${fileName}`;
+    link.href = policy
+      ? `mailto:?subject=${fileName}&body=http://skywalker.rubyh.co/policy/${id}`
+      : `mailto:?subject=${fileName}&body=http://skywalker.rubyh.co/risk-and-control/${id}`;
     document.body.appendChild(link);
     link.click();
     link.parentNode && link.parentNode.removeChild(link);

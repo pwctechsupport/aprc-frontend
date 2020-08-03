@@ -1096,7 +1096,7 @@ export default function Policy({
                 <MdEmail /> Mail
               </div>
             ),
-            onClick: () => emailPdf(title),
+            onClick: () => emailPdf(title, Number(id), true),
           },
         ]
       : [
@@ -1135,7 +1135,7 @@ export default function Policy({
                 <MdEmail /> Mail
               </div>
             ),
-            onClick: () => emailPdf(title),
+            onClick: () => emailPdf(title, Number(id), true),
           },
           {
             label: (

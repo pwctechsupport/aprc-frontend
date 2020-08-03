@@ -1080,7 +1080,7 @@ export default function RiskAndControl({
                         <MdEmail /> Mail
                       </div>
                     ),
-                    onClick: () => emailPdf(name),
+                    onClick: () => emailPdf(name, Number(id), false),
                   },
                 ]
               : [
@@ -1126,7 +1126,7 @@ export default function RiskAndControl({
                         <MdEmail /> Mail
                       </div>
                     ),
-                    onClick: () => emailPdf(name),
+                    onClick: () => emailPdf(name, Number(id), false),
                   },
                 ]
           }
