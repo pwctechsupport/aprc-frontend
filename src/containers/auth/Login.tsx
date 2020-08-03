@@ -89,7 +89,7 @@ export default function Login({ history }: RouteComponentProps) {
       <div>
         <Image className="mt-0 ml-5" src={pwcLogoOutline} alt="pwc-logo" />
       </div>
-      {screenSize.width > 850 ? <Col></Col> : null}
+      {screenSize.width > 1200 ? <Col></Col> : null}
       <Col
         style={{ marginTop: `${screenSize.width < 491 ? "0vh" : "30vh"}` }}
         className="ml-3"
