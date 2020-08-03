@@ -85,13 +85,16 @@ export default function Login({ history }: RouteComponentProps) {
   const screenSize = useWindowSize();
 
   return (
-    <Row className="login-background" style={{ height: "101vh" }}>
+    <Row
+      className="login-background"
+      style={{ minHeight: "100vh", maxWidth: "102%" }}
+    >
       <div>
         <Image className="mt-0 ml-5" src={pwcLogoOutline} alt="pwc-logo" />
       </div>
       {screenSize.width > 1200 ? <Col></Col> : null}
       <Col
-        style={{ marginTop: `${screenSize.width < 491 ? "0vh" : "30vh"}` }}
+        style={{ marginTop: `${screenSize.width < 600 ? "0vh" : "30vh"}` }}
         className="ml-3"
       >
         <Container>
