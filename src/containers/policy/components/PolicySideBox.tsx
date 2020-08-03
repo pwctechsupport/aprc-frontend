@@ -169,6 +169,7 @@ interface PolicyBranchProps {
   parentId?: any;
   status?: any;
   originalData?: any;
+  myBroHasChild?: boolean;
 }
 
 const PolicyBranch = ({
@@ -181,6 +182,7 @@ const PolicyBranch = ({
   level,
   originalData,
   status,
+  myBroHasChild,
   isAdmin,
 }: PolicyBranchProps) => {
   const modifiedChildren =
@@ -205,6 +207,8 @@ const PolicyBranch = ({
   const childrenHasChild = originalData?.children
     ?.map((a: any) => a.status)
     .includes("release");
+  const grandpa = children?.map((a) => a.children).flat().length || 0;
+
   return (
     <div>
       <Fragment>
@@ -216,7 +220,9 @@ const PolicyBranch = ({
                 active: isActive,
               })}
               padLeft={level ? level * 10 : 0}
-              isLastChild={(!hasChild || !childrenHasChild) && parentId}
+              isLastChild={
+                (!hasChild || !childrenHasChild) && parentId && !myBroHasChild
+              }
             >
               {hasChild && childrenHasChild ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
@@ -251,6 +257,7 @@ const PolicyBranch = ({
                     parentId={child.parentId}
                     {...child}
                     activeId={activeId}
+                    myBroHasChild={grandpa ? true : false}
                     originalData={child}
                     status={child.status}
                     activeMode={activeMode}
@@ -270,7 +277,7 @@ const PolicyBranch = ({
                 active: isActive,
               })}
               padLeft={level ? level * 10 : 0}
-              isLastChild={!hasChild && parentId}
+              isLastChild={!hasChild && parentId && !myBroHasChild}
             >
               {hasChild ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
@@ -303,6 +310,8 @@ const PolicyBranch = ({
                   <PolicyBranch
                     key={child.id}
                     parentId={child.parentId}
+                    originalData={child}
+                    myBroHasChild={grandpa ? true : false}
                     {...child}
                     activeId={activeId}
                     activeMode={activeMode}
@@ -321,7 +330,7 @@ const PolicyBranch = ({
                 active: isActive,
               })}
               padLeft={level ? level * 10 : 0}
-              isLastChild={!hasChild && parentId}
+              isLastChild={!hasChild && parentId && !myBroHasChild}
             >
               {hasChild ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
@@ -358,6 +367,7 @@ const PolicyBranch = ({
                       parentId={child.parentId}
                       {...child}
                       activeId={activeId}
+                      myBroHasChild={grandpa ? true : false}
                       activeMode={activeMode}
                       status={child.status}
                       level={Number(level) + 1}
