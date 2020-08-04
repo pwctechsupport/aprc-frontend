@@ -57,6 +57,9 @@ const ImportModal = ({
         );
       } else {
         notifySuccess(`${title} Success`);
+        setInterval(function() {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error) {
       setError("Error uploading document");
