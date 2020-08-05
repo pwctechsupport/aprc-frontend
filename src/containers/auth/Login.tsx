@@ -106,7 +106,7 @@ export default function Login({ history }: RouteComponentProps) {
               backgroundColor: "rgba(255,255,255,.7)",
             }}
           >
-            <H1>Welcome, Please Sign in Here</H1>
+            <H1>Welcome, please sign in here</H1>
             <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
               <Label>Email</Label>
               <br />
