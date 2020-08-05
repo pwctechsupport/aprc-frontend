@@ -27,7 +27,7 @@ export const date = (
     minute: "numeric",
   };
   return new Intl.DateTimeFormat(
-    ["ban", "id"],
+    ["ban", "eng"],
     options || defaultOptions
   ).format(input);
 };
