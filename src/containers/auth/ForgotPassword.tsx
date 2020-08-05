@@ -71,7 +71,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
             block
             loading={loading}
           >
-            Confirm Email
+            Confirm email
           </Button>
         </Form>
         <div className="text-center my-4">

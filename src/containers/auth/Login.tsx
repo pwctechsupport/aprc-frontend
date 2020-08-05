@@ -149,7 +149,7 @@ export default function Login({ history }: RouteComponentProps) {
               </Button>
               <div className="text-center my-4">
                 <Link to="/forgot-password" className="link-pwc">
-                  Forgot Password?
+                  Forgot password?
                 </Link>
               </div>
             </Form>
