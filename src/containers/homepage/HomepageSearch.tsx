@@ -115,7 +115,7 @@ export default function HomepageSearch({
                     bottom: "3px",
                   }}
                 />
-                Full Search
+                Full search
               </StyledButton>
             </Link>
           ) : null}
