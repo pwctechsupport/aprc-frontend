@@ -116,9 +116,11 @@ const Users = () => {
             <thead>
               <tr>
                 <th style={admins ? { width: "17.5%" } : { width: "19.2%" }}>
-                  Name
+                  Username
                 </th>
-                <th style={admins ? { width: "5%" } : { width: "5%" }}>Id</th>
+                <th style={admins ? { width: "5%" } : { width: "5%" }}>
+                  User ID
+                </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
                   User group
                 </th>
