@@ -181,8 +181,8 @@ export default function UserRow({
   if (!isEdit) {
     return (
       <tr>
-        <td>{name}</td>
         <td>{oc(user).id("")}</td>
+        <td>{name}</td>
         <td>
           {user?.mainRole?.length
             ? capitalize(
@@ -200,7 +200,7 @@ export default function UserRow({
                   .join(" ")
               )}
         </td>
-        <td>{policyCategories.join(",")}</td>
+        <td>{policyCategories.join(", ")}</td>
         <td>{department}</td>
         <td>
           {draft ? (

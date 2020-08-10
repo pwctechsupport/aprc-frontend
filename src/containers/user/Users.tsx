@@ -115,11 +115,11 @@ const Users = () => {
           >
             <thead>
               <tr>
+                <th style={admins ? { width: "6%" } : { width: "6%" }}>
+                  User ID
+                </th>
                 <th style={admins ? { width: "17.5%" } : { width: "19.2%" }}>
                   Username
-                </th>
-                <th style={admins ? { width: "5%" } : { width: "5%" }}>
-                  User ID
                 </th>
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
                   User group
@@ -139,7 +139,6 @@ const Users = () => {
                 <th style={admins ? { width: "12.5%" } : { width: "14.2%" }}>
                   Last updated
                 </th>
-
                 {admins ? <th>Action</th> : <th></th>}
               </tr>
             </thead>

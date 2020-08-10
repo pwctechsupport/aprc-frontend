@@ -30,6 +30,7 @@ import { toBase64, toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
 import { PwcRadioInput } from "../../report/Report";
 import CheckBox2 from "../../../shared/components/forms/TestNewCheckBox";
+import { startCase } from "lodash";
 
 const ControlForm = ({
   onSubmit,
@@ -608,24 +609,11 @@ const natures = Object.entries(Nature).map(([label, value]) => ({
 }));
 
 const ipos = Object.entries(Ipo).map(([label, value]) => ({
-  label: value.split("")[0].toUpperCase(),
+  label: startCase(value.split("_").join(" ")),
   value,
 }));
 const assertions = Object.entries(Assertion).map(([label, value]) => {
-  if (value === "cut_over") {
-    return { label: "CO", value };
-  }
-  if (value === "rights_and_obligation") {
-    return { label: "R&O", value };
-  }
-  if (value === "presentation_and_disclosure") {
-    return { label: "P&D", value };
-  }
-  if (value === "existence_and_occurence") {
-    return { label: "E/O", value };
-  } else {
-    return { label: value.split("")[0].toUpperCase(), value };
-  }
+  return { label: startCase(value.split("_").join(" ")), value };
 });
 
 const StyledDialogButton = styled(DialogButton)`
