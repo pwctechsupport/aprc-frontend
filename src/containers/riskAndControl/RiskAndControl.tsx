@@ -140,7 +140,7 @@ export default function RiskAndControl({
         input: {
           id: risk?.id || "",
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
+          businessProcessIds: values.businessProcessIds || [],
           levelOfRisk: values.levelOfRisk,
           typeOfRisk: values.typeOfRisk,
         },
@@ -1245,6 +1245,7 @@ export default function RiskAndControl({
             >
               <PoliciesList data={dataRisksnControl || {}} />
             </Collapsible>
+            <div style={{ borderBottom: " 1px solid #d85604" }}></div>
             <Collapsible
               title="Risks"
               show={collapse.includes("Risks")}
@@ -1302,7 +1303,7 @@ export default function RiskAndControl({
                           risk?.controls?.filter((a: any) => a.draft === null)
                         ).length ? (
                           <>
-                            <h6>Control</h6>
+                            <h6 style={{ fontWeight: "bold" }}>Control</h6>
                             <ControlsTable
                               history={history.location.pathname}
                               controls={dataModifier(
@@ -1316,7 +1317,7 @@ export default function RiskAndControl({
                         ) : null
                       ) : dataModifier(risk?.controls).length ? (
                         <>
-                          <h6>Control</h6>
+                          <h6 style={{ fontWeight: "bold" }}>Control</h6>
                           <ControlsTable
                             history={history.location.pathname}
                             controls={dataModifier(risk?.controls)}

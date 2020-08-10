@@ -313,7 +313,9 @@ const SubPolicyAttributeForm = ({
     .navigatorResources.collection([])
     .map(toLabelValue);
 
-  const businessProcessesQ = useBusinessProcessesQuery();
+  const businessProcessesQ = useBusinessProcessesQuery({
+    variables: { filter: { ancestry_null: false } },
+  });
   const businessProcessesOptions = oc(businessProcessesQ.data)
     .navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
@@ -425,6 +427,37 @@ const SubPolicyAttributeForm = ({
   const controlDefaultValues = controlsOptions.filter((a) =>
     controlValue.includes(a.value)
   );
+  const getBps =
+    businessProcessesQ.data?.navigatorBusinessProcesses?.collection || [];
+  const getBpsParent = getBps.map((a) => {
+    return {
+      id: a.id,
+      parent: a.parent?.parent?.name,
+      name: a.parent?.name,
+    };
+  });
+
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i].name === a[j].name) a.splice(j--, 1);
+      }
+    }
+
+    return a;
+  };
+  const handleGetBps = dataModifier(
+    getBpsParent.sort((a, b) =>
+      b.id && a.id ? (a.id > b.id ? 1 : b.id > a.id ? -1 : 0) : 0
+    )
+  ).map((a: any) => {
+    return {
+      label: a.parent ? `${a.parent} > ${a.name}` : a.name,
+      options: getBps
+        .filter((b) => b.parent?.name?.includes(a.name))
+        .map(toLabelValue),
+    };
+  });
   return (
     <Form>
       <FormSelect
@@ -442,15 +475,16 @@ const SubPolicyAttributeForm = ({
         )}
         error={formModal.errors.resourceIds && "Resources is a required field"}
       />
+
       <FormSelect
         isMulti
         isLoading={businessProcessesQ.loading}
         name="businessProcessIds"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Business Processes*"
-        placeholder="Business Processes"
-        options={businessProcessesOptions}
+        label="Business processes*"
+        placeholder="Business processes"
+        options={handleGetBps}
         defaultValue={businessProcessesOptions.filter((res) =>
           oc(defaultValues)
             .businessProcessIds([])

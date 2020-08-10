@@ -97,7 +97,7 @@ export default function Risk({
         input: {
           id,
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
+          businessProcessIds: values.businessProcessIds || [],
           levelOfRisk: values.levelOfRisk,
           typeOfRisk: values.typeOfRisk,
         },

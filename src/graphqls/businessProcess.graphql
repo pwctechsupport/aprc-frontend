@@ -8,6 +8,14 @@ query businessProcesses($filter: BaseScalar = {}, $limit: Int = 1000) {
         hasEditAccess
         requestStatus
       }
+      parent {
+        parent {
+          id
+          name
+        }
+        id
+        name
+      }
       controls {
         ...businessProcessControl
       }
