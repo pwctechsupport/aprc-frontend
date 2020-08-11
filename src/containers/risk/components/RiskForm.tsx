@@ -1,6 +1,6 @@
 import { capitalCase } from "capital-case";
 import { capitalize } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import styled from "styled-components";
@@ -30,7 +30,6 @@ const RiskForm = ({
     validationSchema,
     defaultValues,
   });
-  console.log("defaultValues:", defaultValues);
   useEffect(() => {
     register({ name: "levelOfRisk", required: true });
     register({ name: "typeOfRisk" });
@@ -178,7 +177,6 @@ const RiskForm = ({
     .map((b) => {
       return { value: b.id, label: b.name || "" };
     });
-  console.log("handleGetDefaultValueBps:", handleGetDefaultValueBps);
   return (
     <div>
       <Form onSubmit={handleSubmit(submit)}>
