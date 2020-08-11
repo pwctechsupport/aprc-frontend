@@ -1,6 +1,6 @@
 import { capitalCase } from "capital-case";
 import { capitalize } from "lodash";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import styled from "styled-components";
@@ -30,7 +30,7 @@ const RiskForm = ({
     validationSchema,
     defaultValues,
   });
-
+  console.log("defaultValues:", defaultValues);
   useEffect(() => {
     register({ name: "levelOfRisk", required: true });
     register({ name: "typeOfRisk" });
@@ -41,7 +41,13 @@ const RiskForm = ({
   };
 
   const submit = (values: RiskFormValues) => {
-    onSubmit && onSubmit(values);
+    onSubmit &&
+      onSubmit({
+        ...values,
+        businessProcessIds: handleGetDefaultValueBps.length
+          ? handleGetDefaultValueBps.map((a) => a.value).flat(5)
+          : undefined,
+      });
   };
 
   const name = defaultValues?.name;
@@ -50,31 +56,55 @@ const RiskForm = ({
   const typeOfRisk = defaultValues?.typeOfRisk;
 
   // Business Process Bar
+
+  const mainBpIds = watch("businessProcessMain") || [];
+  const firstBpIds = watch("businessProcessFirst") || [];
+  const secondBpIds = watch("businessProcessSecond") || [];
+  // @ts-ignore
+  const checkMainBpIds = mainBpIds.length;
+  // @ts-ignore
+  const checkFirstBpIds = firstBpIds.length;
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) a.splice(j--, 1);
+      }
+    }
+
+    return a;
+  };
+  const GlobalBps = useBusinessProcessesQuery({
+    variables: { filter: { ancestry_null: false } },
+  });
   const mainBps = useBusinessProcessesQuery({
     variables: { filter: { ancestry_null: true } },
   });
   const getBps = mainBps.data?.navigatorBusinessProcesses?.collection || [];
   const handleGetMainBps = getBps.map(toLabelValue);
-  const mainBpIds = watch("businessProcessMain");
 
   const firstBps = useBusinessProcessesQuery({
-    skip: !mainBpIds,
+    skip: !checkMainBpIds,
     variables: { filter: { ancestry_in: mainBpIds } },
   });
 
   const getFirstBps =
     firstBps.data?.navigatorBusinessProcesses?.collection || [];
 
-  const handleGetFirstBps = getFirstBps.map(toLabelValue);
+  const getFirstBpsParent = getFirstBps.map((a) => a.parent?.name);
+  const handleGetFirstBps = dataModifier(getFirstBpsParent).map((a: any) => {
+    return {
+      label: a,
+      options: getFirstBps
+        .filter((b) => a.includes(b.parent?.name))
+        .map(toLabelValue),
+    };
+  });
 
   const getFirstBpsChild = getFirstBps
     .map((a) => a.children)
     .flat(2)
     .map((b) => b?.ancestry);
 
-  const firstBpIds = watch("businessProcessFirst") || [];
-  const secondBpIds = watch("businessProcessSecond") || [];
-  const firstBpIdsWatch = watch("businessProcessFirst");
   const filteredGetFirstBpsChild = getFirstBpsChild.filter((a) => {
     // @ts-ignore
     return firstBpIds.includes(a?.split("/")[1]);
@@ -93,19 +123,62 @@ const RiskForm = ({
 
   const getSecondBps =
     secondBps.data?.navigatorBusinessProcesses?.collection || [];
-  const handleGetSecondBps = getSecondBps.map(toLabelValue);
+  const getSecondBpsParent = getSecondBps.map((a) => a.parent?.name);
+
+  const handleGetSecondBps = dataModifier(getSecondBpsParent).map((a: any) => {
+    return {
+      label: a,
+      options: getSecondBps
+        .filter((b) => a.includes(b.parent?.name))
+        .map(toLabelValue),
+    };
+  });
+  // bps values
+
+  const suspectedParentChildId = getFirstBps
+    .map((a) =>
+      a.children?.map((b) => {
+        return { childrenId: b.id, parentId: a.id };
+      })
+    )
+    .flat(2);
 
   // @ts-ignore
-  const getBpsValues = [...firstBpIds, ...secondBpIds];
-  console.log("getBpsValues:", getBpsValues);
-  const hasChild = filteredGetFirstBpsChild
-    .map((a) => a?.split("/")[1])
-    .flat(2);
-  console.log("hasChild:", hasChild);
-  console.log(
-    "getBpsValues:",
-    getBpsValues.filter((a) => !hasChild.includes(a))
-  );
+  const bpsValues = [...firstBpIds, ...secondBpIds];
+
+  const problematicChild = bpsValues
+    .map((a) => {
+      if (suspectedParentChildId.map((b) => b?.childrenId).includes(a)) {
+        return a;
+      } else {
+        return;
+      }
+    })
+    .filter((a) => a !== undefined);
+
+  const getBannedFirstBpsParents = useBusinessProcessesQuery({
+    skip: !problematicChild.length,
+    variables: { filter: { id_matches_any: problematicChild } },
+  });
+
+  const getBannedFirstBps =
+    getBannedFirstBpsParents.data?.navigatorBusinessProcesses?.collection || [];
+
+  const getBannedFirstBpsIds = getBannedFirstBps.map((a) => a.parent?.id);
+
+  const bpsFinalValues =
+    //@ts-ignore
+    firstBpIds.length
+      ? bpsValues.filter((a) => !getBannedFirstBpsIds.includes(a))
+      : [];
+  const getValueFormBpsData =
+    GlobalBps.data?.navigatorBusinessProcesses?.collection || [];
+  const handleGetDefaultValueBps = getValueFormBpsData
+    .filter((a) => bpsFinalValues.includes(a.id))
+    .map((b) => {
+      return { value: b.id, label: b.name || "" };
+    });
+  console.log("handleGetDefaultValueBps:", handleGetDefaultValueBps);
   return (
     <div>
       <Form onSubmit={handleSubmit(submit)}>
@@ -125,9 +198,8 @@ const RiskForm = ({
           label="Main Business Process"
           placeholder="Main Business Process"
           options={handleGetMainBps}
-          // defaultValue={businessProcesses}
         />
-        {mainBpIds && (
+        {checkMainBpIds ? (
           <FormSelect
             isMulti
             isLoading={firstBps.loading}
@@ -137,11 +209,10 @@ const RiskForm = ({
             label="First Business Process"
             placeholder="First Business Process"
             options={handleGetFirstBps}
-            // defaultValue={businessProcesses}
           />
-        )}
+        ) : null}
 
-        {firstBpIdsWatch && (
+        {checkFirstBpIds && checkMainBpIds ? (
           <FormSelect
             isMulti
             isLoading={secondBps.loading}
@@ -151,23 +222,25 @@ const RiskForm = ({
             label="Second Business Process"
             placeholder="Second Business Process"
             options={handleGetSecondBps}
-            // defaultValue={businessProcesses}
+            // value={}
           />
-        )}
-        {firstBpIdsWatch && (
-          <FormSelect
-            isMulti
-            isLoading={mainBps.loading}
-            name="businessProcessIds"
-            register={register}
-            isDisabled={true}
-            setValue={setValue}
-            label="Selected Business Process"
-            placeholder="Selected Business Process"
-            options={handleGetMainBps}
-            defaultValue={businessProcesses}
-          />
-        )}
+        ) : null}
+        <FormSelect
+          isMulti
+          isLoading={GlobalBps.loading}
+          name="businessProcessIds"
+          register={register}
+          isDisabled={true}
+          value={
+            businessProcesses.length && !checkMainBpIds
+              ? businessProcesses
+              : handleGetDefaultValueBps
+          }
+          setValue={setValue}
+          label="Selected Business Process"
+          placeholder="Selected Business Process"
+          options={handleGetMainBps}
+        />
         <Select
           name="levelOfRisk"
           placeholder="Level of risk"
