@@ -102,8 +102,8 @@ export default function Risk({
       };
     } else {
       return {
-        value: a.id || "",
-        label: a.name || "",
+        parentValue: a.id || "",
+        parentLabel: a.name || "",
         grandParentLabel: a.parent?.name || "",
         grandParentValue: a.parent?.id || "",
       };
