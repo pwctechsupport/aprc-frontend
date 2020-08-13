@@ -409,17 +409,20 @@ const SubPolicyAttributeForm = ({
     if (checkMainBp !== undefined) {
       setMainBpIds(mainBpIdsWatch);
     }
-  }, [checkMainBp]);
+  }, [checkMainBp, mainBpIdsWatch]);
+
   useEffect(() => {
     if (checkFirstBp !== undefined) {
       setFirstBpIds(firstBpIdsWatch);
     }
-  }, [checkFirstBp]);
+  }, [checkFirstBp, firstBpIdsWatch]);
+
   useEffect(() => {
     if (checkSecondBp !== undefined) {
       setSecondBpIds(secondBpIdsWatch);
     }
-  }, [checkSecondBp]);
+  }, [checkSecondBp, secondBpIdsWatch]);
+
   const mainBps = useBusinessProcessesQuery({
     variables: { filter: { ancestry_null: true } },
   });
@@ -719,6 +722,7 @@ const SubPolicyAttributeForm = ({
         name="businessProcessFirst"
         register={formModal.register}
         value={getFirstBpsValues}
+        isDisabled={mainBpIds.length ? false : true}
         setValue={formModal.setValue}
         label="First Business Process"
         placeholder="First Business Process"
@@ -731,6 +735,7 @@ const SubPolicyAttributeForm = ({
         name="businessProcessSecond"
         register={formModal.register}
         setValue={formModal.setValue}
+        isDisabled={!firstBpIds.length ? true : mainBpIds.length ? false : true}
         value={getSecondBpsValues}
         label="Second Business Process"
         placeholder="Second Business Process"

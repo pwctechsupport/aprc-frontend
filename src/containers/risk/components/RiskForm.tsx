@@ -105,6 +105,7 @@ const RiskForm = ({
   const checkSecondBp = watch("businessProcessSecond");
 
   const [mainBpIds, setMainBpIds] = useState([...defValMainBps]);
+  console.log("mainBpIds:", mainBpIds);
   const [firstBpIds, setFirstBpIds] = useState([...defValFirstBps]);
   const [secondBpIds, setSecondBpIds] = useState([...defValSecondBps]);
 
@@ -112,17 +113,17 @@ const RiskForm = ({
     if (checkMainBp !== undefined) {
       setMainBpIds(mainBpIdsWatch);
     }
-  }, [checkMainBp]);
+  }, [checkMainBp, mainBpIdsWatch]);
   useEffect(() => {
     if (checkFirstBp !== undefined) {
       setFirstBpIds(firstBpIdsWatch);
     }
-  }, [checkFirstBp]);
+  }, [checkFirstBp, firstBpIdsWatch]);
   useEffect(() => {
     if (checkSecondBp !== undefined) {
       setSecondBpIds(secondBpIdsWatch);
     }
-  }, [checkSecondBp]);
+  }, [checkSecondBp, secondBpIdsWatch]);
 
   const mainBps = useBusinessProcessesQuery({
     variables: { filter: { ancestry_null: true } },
@@ -277,7 +278,10 @@ const RiskForm = ({
   const getFirstBpsValues = getFirstBps
     .map(toLabelValue)
     .filter((b) => firstBpIds.includes(b.value));
-
+  console.log(
+    "cek nih:",
+    !firstBpIds.length ? true : mainBpIds.length ? true : false
+  );
   return (
     <div>
       <Form onSubmit={handleSubmit(submit)}>
@@ -307,6 +311,7 @@ const RiskForm = ({
           register={register}
           value={getFirstBpsValues}
           setValue={setValue}
+          isDisabled={mainBpIds.length ? false : true}
           label="First Business Process"
           placeholder="First Business Process"
           options={handleGetFirstBps}
@@ -318,6 +323,9 @@ const RiskForm = ({
           name="businessProcessSecond"
           register={register}
           setValue={setValue}
+          isDisabled={
+            !firstBpIds.length ? true : mainBpIds.length ? false : true
+          }
           value={getSecondBpsValues}
           label="Second Business Process"
           placeholder="Second Business Process"
