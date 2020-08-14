@@ -121,7 +121,7 @@ export default function Policies({ history }: RouteComponentProps) {
         </OpacityButton>
         {(isAdmin || isAdminPreparer) && (
           <Button to="/policy/create" tag={Link} className="pwc">
-            + Add Policy
+            + Add policy
           </Button>
         )}
       </div>
@@ -136,7 +136,7 @@ export default function Policies({ history }: RouteComponentProps) {
       <SearchBar
         search={search}
         setSearch={setSearch}
-        placeholder="Search Policies"
+        placeholder="Search policies"
         loading={loadingPreparer || loadingReviewer}
       />
       <Table reloading={loadingPreparer || loadingReviewer} responsive>
@@ -145,8 +145,8 @@ export default function Policies({ history }: RouteComponentProps) {
             <th className="w-40">Title</th>
             <th>Category</th>
             <th>Status</th>
-            <th>Last Updated</th>
-            <th>Last Updated By</th>
+            <th>Last updated</th>
+            <th>Last updated by</th>
             <th></th>
           </tr>
         </thead>
@@ -219,7 +219,6 @@ const PolicyTableRow = ({
           <td>{policy.policyCategory?.name || ""}</td>
           <td>{capitalCase(policy.status || "")}</td>
           <td>
-            {" "}
             <DateHover>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
@@ -257,7 +256,9 @@ const PolicyTableRow = ({
           </td>
           <td>{policy.policyCategory?.name || ""}</td>
           <td>
-            {policy.status === "waiting_for_review" && !policy.isSubmitted
+            {policy.status === "waiting_for_review" &&
+            !policy.isSubmitted &&
+            policy.draft
               ? "Draft"
               : policy.status === "draft"
               ? "Draft"
@@ -308,8 +309,12 @@ const PolicyTableRow = ({
           </td>
           <td>{policy.policyCategory?.name || ""}</td>
           <td>
-            {policy.status === "waiting_for_review" && !policy.isSubmitted
+            {policy.status === "waiting_for_review" &&
+            !policy.isSubmitted &&
+            policy.draft
               ? "Draft"
+              : policy.status === "waiting_for_review" && !policy.isSubmitted
+              ? "Release"
               : capitalCase(policy.status || "")}
           </td>
           <td>

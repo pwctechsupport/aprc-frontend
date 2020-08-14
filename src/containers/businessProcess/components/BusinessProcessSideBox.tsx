@@ -47,13 +47,13 @@ const BusinessProcessSideBox = () => {
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         {isAdmin || isAdminReviewer || isAdminPreparer
-          ? "Business Process Admin"
-          : "Business Process"}
+          ? "Business process admin"
+          : "Business process"}
       </SideBoxTitle>
       <SideBoxSearch
         search={searchValue}
         setSearch={setSearchValue}
-        placeholder="Search Business Process..."
+        placeholder="Search business process..."
         loading={loading}
       />
       <div>

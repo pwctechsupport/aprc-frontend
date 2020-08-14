@@ -15,6 +15,7 @@ query policyCategories(
       draft {
         event
       }
+      policy
       policies {
         id
         title
@@ -35,6 +36,7 @@ query adminPolicyCategories(
       createdAt
       lastUpdatedBy
       createdBy
+      policy
       status
       draft {
         event
@@ -69,6 +71,7 @@ query reviewerPolicyCategoriesStatus(
       draft {
         event
       }
+      policy
       policies {
         id
         title
@@ -89,6 +92,7 @@ query policyCategory($id: ID!) {
     requestStatus
     createdBy
     policy
+    lastUpdatedBy
     requestEdit {
       id
       state

@@ -1,6 +1,6 @@
 .button.pwc {
-  background: linear-gradient(180deg, #e3721c 0%, #c14303 100%);
-  border-radius: 10px;
+  background: $pwc-orange;
+  border-radius: 3px;
   border: 0;
   opacity: 0.9;
   &:hover {
@@ -20,8 +20,8 @@
 }
 
 .button.cancel {
-  background: linear-gradient(180deg, darkgrey 0%, grey 100%);
-  border-radius: 10px;
+  background: $soft-grey;
+  border-radius: 3px;
   border: 0;
   opacity: 0.9;
   &:hover {
@@ -34,8 +34,8 @@
 }
 
 .button.btn-danger {
-  background: linear-gradient(180deg, red 0%, darkred 100%);
-  border-radius: 10px;
+  background: $red;
+  border-radius: 3px;
   border: 0;
   opacity: 0.9;
   &:hover {
@@ -44,7 +44,7 @@
 }
 
 .button.soft {
-  border-radius: 10px;
+  border-radius: 3px;
   border: unset;
   color: $pwc-orange;
 

@@ -30,15 +30,22 @@ export default function AsyncCreatableSelect({
   }
   const Select = (
     <Fragment>
-      <AsyncCreatable
-        {...rest}
-        closeMenuOnSelect={!rest.isMulti}
-        className={classnames(error ? "invalid" : undefined)}
-        onChange={handleChange}
-      />
+      <div
+        style={{
+          border: `${error ? "1px solid red" : ""}`,
+          borderRadius: "6px",
+        }}
+      >
+        <AsyncCreatable
+          {...rest}
+          closeMenuOnSelect={!rest.isMulti}
+          className={classnames(error ? "invalid" : undefined)}
+          onChange={handleChange}
+        />
+      </div>
       <FormText>{formText}</FormText>
       {error && (
-        <FormText className="text-danger pl-3" color="red">
+        <FormText className="text-danger " color="red">
           {error}
         </FormText>
       )}

@@ -9,8 +9,8 @@ import {
 const settingsMenus = [
   { label: "Profile", path: "/settings/update-profile" },
   // { label: "Notifications", path: "/settings/notifications" },
-  { label: "History", path: "/settings/history" },
-  { label: "User Manual", path: "/settings/user-manual" },
+  { label: "User activity log", path: "/settings/history" },
+  { label: "User manual", path: "/settings/user-manual" },
 ];
 
 const SettingsSideBox = () => {

@@ -37,6 +37,7 @@ import { RouteComponentProps, Link } from "react-router-dom";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
+import CheckBox from "../../shared/components/forms/CheckBox";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -68,14 +69,17 @@ const References = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
+  const [clicked, setClicked] = useState(true);
+  const clickButton = () => setClicked((p) => !p);
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(references.map((n) => n.id));
     } else {
       setSelected([]);
     }
   }
+
   function handleExport() {
     downloadXls(
       "/prints/reference_excel.xlsx",
@@ -84,9 +88,9 @@ const References = ({ history }: RouteComponentProps) => {
       },
       {
         fileName: "Policy Reference.xlsx",
-        onStart: () => notifyInfo("Download Dimulai"),
-        onCompleted: () => notifySuccess("Download Berhasil"),
-        onError: () => notifyError("Download Gagal"),
+        onStart: () => notifyInfo("Download Started"),
+        onCompleted: () => notifySuccess("Downloaded"),
+        onError: () => notifyError("Download Failed"),
       }
     );
   }
@@ -139,7 +143,7 @@ const References = ({ history }: RouteComponentProps) => {
           ) : null}
           {(isAdmin || isAdminPreparer) && (
             <Button tag={Link} to="/references/create" className="pwc">
-              + Add Reference
+              + Add reference
             </Button>
           )}
         </div>
@@ -149,20 +153,22 @@ const References = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
-                <input
-                  type="checkbox"
+                <CheckBox
                   checked={selected.length === references.length}
-                  onChange={toggleCheckAll}
+                  onClick={() => {
+                    clickButton();
+                    toggleCheckAll();
+                  }}
                 />
               </th>
             ) : null}
 
             <th style={{ width: "5%" }}>Name</th>
             <th style={{ width: "30%" }}>Policy</th>
-            <th style={{ width: "10%" }}>Last Updated</th>
-            <th style={{ width: "10%" }}>Last Updated By</th>
-            <th style={{ width: "10%" }}>Created At</th>
-            <th style={{ width: "10%" }}>Created By</th>
+            <th style={{ width: "10%" }}>Last updated</th>
+            <th style={{ width: "10%" }}>Last updated by</th>
+            <th style={{ width: "10%" }}>Created at</th>
+            <th style={{ width: "10%" }}>Created by</th>
 
             <th></th>
           </tr>
@@ -263,11 +269,12 @@ const ReferenceRow = ({
     >
       {isAdminReviewer ? (
         <td>
-          <input
-            type="checkbox"
+          <CheckBox
             checked={selected}
-            onClick={(e) => e.stopPropagation()}
-            onChange={toggleCheck}
+            onClick={(e: any) => {
+              e.stopPropagation();
+              toggleCheck();
+            }}
           />
         </td>
       ) : null}

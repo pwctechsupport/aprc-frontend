@@ -115,7 +115,7 @@ export default function HomepageSearch({
                     bottom: "3px",
                   }}
                 />
-                Full Search
+                Full search
               </StyledButton>
             </Link>
           ) : null}
@@ -142,7 +142,7 @@ export default function HomepageSearch({
             ) : (
               <StyledSpan>
                 {inputValue
-                  ? `No Items for "${inputValue}"`
+                  ? `No results found for "${inputValue}"`
                   : "Type to start searching"}
               </StyledSpan>
             )}
@@ -162,7 +162,7 @@ const InputWrapper = styled.div<{ isNavBar?: boolean }>`
   margin-right: ${(p) => (p.isNavBar ? "90px" : "0px")};
   margin-left: ${(p) => (p.isNavBar ? "-35px" : "0px")};
 
-  @media screen and (max-width: 1325px) {
+  @media screen and (max-width: 1093px) {
     margin-left: 0px;
   }
 `;
@@ -194,7 +194,7 @@ const StyledUl = styled.ul<{ width?: number }>`
   padding: 20px;
   color: black;
   list-style-type: none;
-  border-radius: 10px;
+  border-radius: 3px;
   z-index: 100;
   overflow-y: scroll;
   width: ${(p) => (p.width ? p.width + "px" : "100%")};
@@ -213,9 +213,10 @@ const ToggleButton = styled(FaSearch)`
 const StyledButton = styled(Button)`
   cursor: pointer;
   font-size: 14px;
-  padding-bottom: 9px;
+  padding-top: 8px;
+  padding-bottom: 7px;
   position: absolute;
-  /* width: 115px; */
+  width: 120px;
   right: -105px;
   top: 0px;
   color: white;

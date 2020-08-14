@@ -106,7 +106,7 @@ export default function BusinessProcess({
       </Helmet>
       <BreadCrumb
         crumbs={[
-          ["/business-process", "Business Processes"],
+          ["/business-process", "Business processes"],
           ...breadcrumb,
           ["/business-process/" + id, name],
         ]}
@@ -157,8 +157,8 @@ export default function BusinessProcess({
       <Table reloading={loading} className="mt-5">
         <thead>
           <tr>
-            <th>Business Process</th>
-            <th>Business Process ID</th>
+            <th>Business process</th>
+            <th>Business process Id</th>
             <th></th>
           </tr>
         </thead>

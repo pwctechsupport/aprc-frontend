@@ -15,6 +15,7 @@ import Input from "../../shared/components/forms/Input";
 import { useSelector } from "../../shared/hooks/useSelector";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import { toast } from "react-toastify";
+import Footer from "../../shared/components/Footer";
 
 export default function UpdateProfile() {
   const user = useSelector((state) => state.auth.user);
@@ -108,7 +109,7 @@ const UpdateProfileForm = ({
       <h4>Profile</h4>
       <Input
         name="name"
-        label="First name"
+        label="Full name"
         innerRef={register({ required: true })}
         error={errors.name && errors.name.message}
       />
@@ -147,7 +148,7 @@ const UpdateProfileForm = ({
           className="soft orange"
           color=""
         >
-          Save Profile
+          Save profile
         </Button>
       </div>
     </Form>
@@ -176,7 +177,6 @@ const UpdatePasswordForm = ({
     UpdatePasswordFormValues
   >();
   const checkPassword = watch("password")?.split("") || [""];
-  console.log("checkPassword", checkPassword);
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
   const numbers = "1234567890".split("");
@@ -200,7 +200,6 @@ const UpdatePasswordForm = ({
     noCapitalPassword ||
     noNumberPassword ||
     falsePasswordLength;
-  console.log("noCapitalPassword", noCapitalPassword);
   const submit = (data: UpdatePasswordFormValues) => {
     if (!validatePassword) {
       onSubmit(data);
@@ -214,10 +213,10 @@ const UpdatePasswordForm = ({
   };
   return (
     <Form onSubmit={handleSubmit(submit)}>
-      <h4>Update Password</h4>
+      <h4>Update password</h4>
       <Input
         name="oldPassword"
-        label="Current Password"
+        label="Current password"
         type="password"
         innerRef={register({ required: true })}
         error={errors.oldPassword?.message}
@@ -225,7 +224,7 @@ const UpdatePasswordForm = ({
       />
       <Input
         name="password"
-        label="New Password"
+        label="New password"
         type="password"
         innerRef={register({ required: true })}
         error={errors.password?.message}
@@ -254,7 +253,7 @@ const UpdatePasswordForm = ({
       )}
       <Input
         name="passwordConfirmation"
-        label="New Password Confirmation"
+        label="New password confirmation"
         type="password"
         innerRef={register({ required: true })}
         error={errors.passwordConfirmation?.message}
@@ -267,9 +266,10 @@ const UpdatePasswordForm = ({
           color=""
           loading={submitting}
         >
-          Update Password
+          Update password
         </Button>
       </div>
+      <Footer />
     </Form>
   );
 };

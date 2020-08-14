@@ -87,17 +87,20 @@ const PolicyForm = ({
           label="Title*"
           placeholder="Title"
           innerRef={register({ required: true })}
-          error={errors.title && errors.title.message}
+          error={errors.title && "Policy title is a required field"}
         />
         <div className="mb-3">
-          <label>Policy Description*</label>
+          <label>Policy description*</label>
           <TextEditorField
             name="description"
             register={register}
             defaultValue={defaultValues?.description || ""}
             onChange={onChangeEditor}
             invalid={!!errors.description}
-            error={errors.description && "Description field is too short"}
+            error={
+              errors.description &&
+              "Description field is too short and the field is required"
+            }
           />
           {/* <TextEditor
             data={watch("description")}
@@ -108,16 +111,19 @@ const PolicyForm = ({
         </div>
         <Select
           name="policyCategoryId"
-          label="Policy Category*"
+          label="Policy category*"
           loading={policyCategoriesState.loading}
-          placeholder="Policy Category"
+          placeholder="Policy category"
           options={options}
           onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(
             (option) => option.value === policyCategoryId
           )}
-          error={errors.policyCategoryId && errors.policyCategoryId.message}
+          error={
+            errors.policyCategoryId && "Policy category is a required field"
+          }
         />
+
         <div className="d-flex justify-content-end mt-3">
           {premise ? (
             <Fragment>
@@ -125,10 +131,10 @@ const PolicyForm = ({
                 color="primary"
                 loading={submittingAsDraft}
                 className="pwc mr-2 px-5"
-                message="Save Policy as Draft?"
+                message="Save Policy as draft?"
                 onConfirm={handleSubmit(submitAsDraft)}
               >
-                Save As Draft
+                Save as draft
               </DialogButton>
               <DialogButton
                 color="primary"
@@ -145,11 +151,11 @@ const PolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={createS ? submitting : false}
-                message="Save Policy as Draft?"
+                message="Save Policy as draft?"
                 className="pwc mr-2 px-5"
                 onConfirm={handleSubmit(submit)}
               >
-                Save As Draft
+                Save as draft
               </DialogButton>
 
               <DialogButton

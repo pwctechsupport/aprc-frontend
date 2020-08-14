@@ -13,6 +13,7 @@ import Pagination from "../../shared/components/Pagination";
 import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
 import useListState from "../../shared/hooks/useList";
+import { MdSubdirectoryArrowRight } from "react-icons/md";
 
 const RiskAndControls = ({ history }: RouteComponentProps) => {
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
@@ -38,18 +39,18 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Risk and Controls - PricewaterhouseCoopers</title>
       </Helmet>
-      <BreadCrumb crumbs={[["/risk-and-control", "Risk and Controls"]]} />
+      <BreadCrumb crumbs={[["/risk-and-control", "Risk and controls"]]} />
       <div className="d-flex justify-content-end align-items-center"></div>
       <SearchBar
         search={search}
         setSearch={setSearch}
-        placeholder="Search Business Processes"
+        placeholder="Search business processes"
         loading={loading}
       />
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Business process</th>
             <th>Risks</th>
           </tr>
         </thead>
@@ -94,8 +95,12 @@ const RiskAndControlTableRow = ({
     <>
       <tr key={businessProcess.id} onClick={() => onClick(businessProcess.id)}>
         <td>
-          {level ? <span style={{ marginLeft: level * 20 }} /> : null}
-          {businessProcess.name}
+          <div>
+            {level ? (
+              <MdSubdirectoryArrowRight color="grey" className="mr-1" />
+            ) : null}
+            {businessProcess.name}
+          </div>
         </td>
         <td>
           {businessProcess?.risks

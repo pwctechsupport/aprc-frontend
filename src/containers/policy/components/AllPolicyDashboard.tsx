@@ -4,11 +4,17 @@ import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
 import { usePolicyDashboardQuery } from "../../../generated/graphql";
 import PolicyChart from "./PolicyChart";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const AllPolicyDashboard = () => {
   const { data, loading } = usePolicyDashboardQuery();
-  if (loading) return null;
 
+  const [isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdminReviewer || isAdminPreparer);
+  if (loading) return null;
   // reviewed:
   const reviewedPolicies = oc(data).reviewedPolicies.metadata.totalCount(0);
   const reviewedRisks = oc(data).reviewedRisks.metadata.totalCount(0);
@@ -42,35 +48,47 @@ const AllPolicyDashboard = () => {
     },
   ];
 
-  const tableData = [
-    {
-      label: "Reviewed",
-      subPolicy: reviewedPolicies,
-      risk: reviewedRisks,
-      control: reviewedControls,
-      sum() {
-        return this.subPolicy + this.risk + this.control;
-      },
-    },
-    {
-      label: "Prepared",
-      subPolicy: preparedPolicies,
-      risk: preparedRisks,
-      control: preparedControls,
-      sum() {
-        return this.subPolicy + this.risk + this.control;
-      },
-    },
-    {
-      label: "Total",
-      subPolicy: totalPolicies,
-      risk: totalRisks,
-      control: totalControls,
-      sum() {
-        return this.subPolicy + this.risk + this.control;
-      },
-    },
-  ];
+  const tableData = isUser
+    ? [
+        {
+          label: "Total",
+          subPolicy: totalPolicies,
+          risk: totalRisks,
+          control: totalControls,
+          sum() {
+            return this.subPolicy + this.risk + this.control;
+          },
+        },
+      ]
+    : [
+        {
+          label: "Reviewed",
+          subPolicy: reviewedPolicies,
+          risk: reviewedRisks,
+          control: reviewedControls,
+          sum() {
+            return this.subPolicy + this.risk + this.control;
+          },
+        },
+        {
+          label: "Prepared",
+          subPolicy: preparedPolicies,
+          risk: preparedRisks,
+          control: preparedControls,
+          sum() {
+            return this.subPolicy + this.risk + this.control;
+          },
+        },
+        {
+          label: "Total",
+          subPolicy: totalPolicies,
+          risk: totalRisks,
+          control: totalControls,
+          sum() {
+            return this.subPolicy + this.risk + this.control;
+          },
+        },
+      ];
 
   return (
     <div>

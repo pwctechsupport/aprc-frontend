@@ -17,7 +17,10 @@ const validationSchema = yup.object().shape({
     .string()
     .trim()
     .required(required)
-    .oneOf([yup.ref("password")], "Password tidak sama")
+    .oneOf(
+      [yup.ref("password")],
+      "Password confirmation does not match new password"
+    ),
 });
 interface ResetPasswordFormValues {
   password: string;
@@ -28,11 +31,11 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
   const token = searhParams.get("reset_password_token");
 
   const { register, handleSubmit, errors } = useForm<ResetPasswordFormValues>({
-    validationSchema
+    validationSchema,
   });
   const [updatePassword, { loading }] = useUpdatePasswordMutation({
     onCompleted,
-    onError
+    onError,
   });
 
   const onSubmit = (data: any) => {
@@ -41,14 +44,14 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
         input: {
           password: data.password,
           passwordConfirmation: data.passwordConfirmation,
-          resetPasswordToken: token
-        }
-      }
+          resetPasswordToken: token,
+        },
+      },
     });
   };
 
   function onCompleted() {
-    toast.success("Password berhasil diubah");
+    toast.success("Password successfully changed");
     history.push("/auth");
   }
 
@@ -56,7 +59,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
     toast.error(
       <div>
         <h5>Error!</h5>
-        <div>Mohon coba lagi</div>
+        <div>Please try again</div>
       </div>
     );
   }
@@ -69,7 +72,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
       <H1>Change Password</H1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <div className="my-5">
-          <Label>Password Baru</Label>
+          <Label>New Password</Label>
           <br />
           <Input
             type="password"
@@ -81,7 +84,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
           <br />
           <br />
 
-          <Label>Konfirmasi Password</Label>
+          <Label>Password Confirmation</Label>
           <br />
           <Input
             type="password"

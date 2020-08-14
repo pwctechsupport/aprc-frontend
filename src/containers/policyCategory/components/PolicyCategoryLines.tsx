@@ -1,28 +1,30 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
+import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { Link, RouteComponentProps } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Input } from "reactstrap";
+import styled from "styled-components";
 import {
-  useDestroyPolicyCategoriesMutation,
   useAdminPolicyCategoriesQuery,
+  useDestroyPolicyCategoriesMutation,
   useReviewerPolicyCategoriesStatusQuery,
 } from "../../../generated/graphql";
-import Table from "../../../shared/components/Table";
-import { RouteComponentProps, Link } from "react-router-dom";
-import { oc } from "ts-optchain";
 import BreadCrumb from "../../../shared/components/BreadCrumb";
-import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
-import ImportModal from "../../../shared/components/ImportModal";
-import {
-  notifySuccess,
-  notifyGraphQLErrors,
-} from "../../../shared/utils/notif";
-import { toast } from "react-toastify";
-import downloadXls from "../../../shared/utils/downloadXls";
 import DialogButton from "../../../shared/components/DialogButton";
-import useAccessRights from "../../../shared/hooks/useAccessRights";
+import CheckBox from "../../../shared/components/forms/CheckBox";
+import ImportModal from "../../../shared/components/ImportModal";
 import Pagination from "../../../shared/components/Pagination";
+import Table from "../../../shared/components/Table";
+import Tooltip from "../../../shared/components/Tooltip";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 import useListState from "../../../shared/hooks/useList";
+import downloadXls from "../../../shared/utils/downloadXls";
+import {
+  notifyGraphQLErrors,
+  notifySuccess,
+} from "../../../shared/utils/notif";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -95,9 +97,10 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
-
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  const [clicked, setClicked] = useState(true);
+  const clickButton = () => setClicked((p) => !p);
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(policyCategories.map((n) => n.id));
     } else {
       setSelected([]);
@@ -124,9 +127,9 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
         <title>Policy Category - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="w-100">
-        <BreadCrumb crumbs={[["/policyCategory", "Policy Category"]]} />
+        <BreadCrumb crumbs={[["/policyCategory", "Policy category"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4>Policy Category</h4>
+          <h4>Policy category</h4>
           {isAdminReviewer ? (
             <div className="d-flex">
               <Tooltip
@@ -165,7 +168,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           ) : null}
           {isAdminPreparer ? (
             <Button tag={Link} to="/policy-category/create" className="pwc">
-              + Add Policy Category
+              + Add policy category
             </Button>
           ) : null}
         </div>
@@ -175,19 +178,21 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
-                <input
-                  type="checkbox"
+                <CheckBox
                   checked={selected.length === policyCategories.length}
-                  onChange={toggleCheckAll}
+                  onClick={() => {
+                    clickButton();
+                    toggleCheckAll();
+                  }}
                 />
               </th>
             ) : null}
 
-            <th style={{ width: "10%" }}>Category Name</th>
-            <th style={{ width: "45%" }}>Related Policies</th>
+            <th style={{ width: "10%" }}>Category name</th>
+            <th style={{ width: "45%" }}>Related policies</th>
             <th style={{ width: "15%" }}>Status</th>
-            <th style={{ width: "12%" }}>Last Updated</th>
-            <th style={{ width: "12%" }}>Last Updated By</th>
+            <th style={{ width: "12%" }}>Last updated</th>
+            <th style={{ width: "12%" }}>Last updated by</th>
 
             <th></th>
           </tr>
@@ -203,30 +208,29 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
               >
                 {isAdminReviewer ? (
                   <td>
-                    <input
-                      type="checkbox"
+                    <CheckBox
                       checked={selected.includes(policyCategory.id)}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={() => toggleCheck(policyCategory.id)}
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        toggleCheck(policyCategory.id);
+                      }}
                     />
                   </td>
                 ) : null}
 
                 <td>{policyCategory.name}</td>
+                <td>{policyCategory.policy?.join(", ")}</td>
                 <td>
-                  {oc(policyCategory)
-                    .policies([])
-                    .map((policy) => policy.title)
-                    .join(", ")}
-                </td>
-                <td>
-                  {policyCategory.draft ? "Waiting for review" : "Release"}
+                  {policyCategory.draft ||
+                  policyCategory.status === "waiting_for_approval"
+                    ? "Waiting for review"
+                    : "Release"}
                 </td>
                 <td>{policyCategory.updatedAt.split(" ")[0]}</td>
                 <td>{policyCategory.lastUpdatedBy}</td>
                 {isAdminReviewer ? (
                   <td className="action">
-                    <Tooltip description="Delete Policy Category">
+                    <Tooltip description="Delete policy category">
                       <DialogButton
                         onConfirm={() => handleDelete(policyCategory.id)}
                         loading={destroyM.loading}
@@ -255,3 +259,31 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
 };
 
 export default PolicyCategoryLines;
+
+export const PwcCheckInput = styled(Input)`
+  &:after {
+    width: 15px;
+    height: 15px;
+
+    top: -2px;
+    left: -1px;
+    position: relative;
+    visibility: hidden;
+    background-color: var(--primary-grey);
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid var(--primary-grey);
+  }
+  &:checked::after {
+    width: 15px;
+    height: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: white;
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid var(--tangerine);
+  }
+`;

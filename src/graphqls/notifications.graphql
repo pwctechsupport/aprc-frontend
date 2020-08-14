@@ -40,7 +40,7 @@ query notifications($filter: BaseScalar = {}, $limit: Int = 1000, $page: Int) {
         ...riskNotifs
         ...userNotifs
       }
-      senderUserName
+      senderUserActualName
     }
     metadata {
       totalCount

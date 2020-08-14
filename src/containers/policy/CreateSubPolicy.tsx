@@ -24,10 +24,10 @@ const CreateSubPolicy = ({ match, history, location }: RouteComponentProps) => {
   // Create sub-policy handler
   const [create] = useCreateSubPolicyMutation({
     onCompleted: () => {
-      toast.success("Berhasil");
+      toast.success("Success");
       history.goBack();
     },
-    onError: () => toast.error("Gagal"),
+    onError: () => toast.error("Failed"),
     // refetchQueries: [{ query: PreparerPoliciesDocument, variables: { id } }],
     refetchQueries: ["sideboxPolicy", "references", "adminReferences"],
     awaitRefetchQueries: true,

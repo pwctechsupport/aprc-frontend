@@ -56,7 +56,7 @@ export default function NewNavbar() {
   const showNotif = data?.me?.notifShow || false;
 
   return (
-    <Navbar fixed="top" color="light" light expand="md">
+    <NavbarWithColor fixed="top" light expand="md">
       <StyledNavbarBrand tag={Link} to="/">
         <Image src={pwcLogo} alt="PwC" />
       </StyledNavbarBrand>
@@ -82,7 +82,11 @@ export default function NewNavbar() {
               if (dropdown) {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
-                    <StyledDropdownToggle nav caret>
+                    <StyledDropdownToggle
+                      style={{ fontSize: "15px" }}
+                      nav
+                      caret
+                    >
                       {label}
                     </StyledDropdownToggle>
                     <StyledDropdownMenu right className="p-0">
@@ -111,6 +115,7 @@ export default function NewNavbar() {
                     to={path}
                     exact={path === "/"}
                     activeClassName="active"
+                    style={{ fontSize: "15px" }}
                   >
                     {label}
                   </StyledNavLink>
@@ -152,7 +157,7 @@ export default function NewNavbar() {
           </div>
         </NavbarText>
       </Collapse>
-    </Navbar>
+    </NavbarWithColor>
   );
 }
 
@@ -171,11 +176,11 @@ const userMenus = [
     path: "/",
     children: [
       { label: "Policy", path: "/policy" },
-      { label: "Policy Category", path: "/policy-category" },
-      { label: "Policy Reference", path: "/references" },
+      { label: "Policy category", path: "/policy-category" },
+      { label: "Policy reference", path: "/references" },
       { label: "Control", path: "/control" },
       { label: "User", path: "/user" },
-      { label: "Business Process", path: "/business-process" },
+      { label: "Business process", path: "/business-process" },
       { label: "Resources", path: "/resources" },
       { label: "Risks", path: "/risk" },
     ],
@@ -196,7 +201,9 @@ const userMenus = [
 // =============================================
 // Styled Components
 // =============================================
-
+const NavbarWithColor = styled(Navbar)`
+  background-color: var(--darker-grey-2);
+`;
 const Image = styled.img`
   width: 50px;
   height: auto;
@@ -204,20 +211,20 @@ const Image = styled.img`
 
 const SearchBar = styled.div`
   width: 15em;
-  @media only screen and (max-width: 977px) {
+  @media only screen and (max-width: 1002px) {
     display: none;
   }
 `;
 
 const StyledNavbarBrand = styled(NavbarBrand)`
   width: calc(25vw - 20px);
-  @media only screen and (max-width: 977px) {
+  @media only screen and (max-width: 1400px) {
     width: unset;
   }
 `;
 const SearchPolicies = styled.div`
   display: none;
-  @media only screen and (max-width: 977px) {
+  @media only screen and (max-width: 1000px) {
     display: block;
   }
 `;
@@ -227,7 +234,7 @@ const StyledNavLink = styled(NavLink)`
   letter-spacing: 1px;
   transition: 0.15s ease-in-out;
   &:hover {
-    color: var(--primary-color) !important;
+    color: var(--tangerine) !important;
   }
   &::after {
     content: "";
@@ -238,15 +245,15 @@ const StyledNavLink = styled(NavLink)`
   }
   &.active {
     &::after {
-      background: var(--primary-color);
+      background: var(--tangerine);
     }
   }
-  @media only screen and (min-width: 1027px) {
+  @media only screen and (min-width: 1081px) {
     margin: 0px 0.5rem;
   }
   @media only screen and (max-width: 767px) {
     &.active {
-      color: var(--primary-color) !important;
+      color: var(--tangerine) !important;
     }
   }
 `;
@@ -261,12 +268,12 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   transition: 0.15s ease-in-out;
   font-weight: bold;
   &:hover {
-    color: var(--primary-color) !important;
+    color: var(--tangerine) !important;
   }
 `;
 
 const StyledDropdownNavLink = styled(NavLink)`
-  color: var(--primary-color) !important;
+  color: var(--tangerine) !important;
   &:hover {
     background: var(--pale-primary-color) !important;
   }
@@ -275,10 +282,10 @@ const StyledDropdownNavLink = styled(NavLink)`
     color: unset;
   }
   &.active {
-    background: var(--primary-color) !important;
+    background: var(--tangerine) !important;
     color: white !important;
     &:hover {
-      background: var(--primary-color) !important;
+      background: var(--tangerine) !important;
     }
   }
 `;

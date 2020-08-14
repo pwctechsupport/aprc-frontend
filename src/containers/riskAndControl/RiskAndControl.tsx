@@ -1,26 +1,34 @@
+import { capitalCase } from "capital-case";
+import get from "lodash/get";
 import startCase from "lodash/startCase";
-import React, { useState, Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import {
+  AiFillEdit,
+  AiOutlineClockCircle,
+  AiOutlineEdit,
+} from "react-icons/ai";
 import {
   FaBars,
   FaBookmark,
   FaEllipsisV,
+  FaExclamationCircle,
   FaFilePdf,
   FaMinus,
-  FaPencilAlt,
 } from "react-icons/fa";
 import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { NavLink, Route, RouteComponentProps, Link } from "react-router-dom";
+import { Link, NavLink, Route, RouteComponentProps } from "react-router-dom";
 import {
   Badge,
+  Col,
   Nav,
   NavItem,
+  Row,
   TabContent,
   Table,
   TabPane,
-  Row,
-  Col,
 } from "reactstrap";
+import styled from "styled-components";
 import {
   Assertion,
   Control,
@@ -28,32 +36,43 @@ import {
   Ipo,
   LevelOfRisk,
   Nature,
-  Status,
   TypeOfControl,
   TypeOfRisk,
+  useApproveRequestEditMutation,
+  useBookmarksQuery,
+  useBusinessProcessesQuery,
   useBusinessProcessQuery,
+  useControlQuery,
   useCreateBookmarkBusinessProcessMutation,
+  useCreateRequestEditMutation,
+  useResourceQuery,
+  useResourceRatingsQuery,
+  useResourcesQuery,
+  useReviewControlDraftMutation,
+  useReviewRiskDraftMutation,
+  useRiskQuery,
   useUpdateControlMutation,
   useUpdateRiskMutation,
-  useBookmarksQuery,
-  useResourceRatingsQuery,
-  useResourceQuery,
-  useResourcesQuery,
-  useBusinessProcessesQuery,
-  useControlQuery,
-  useRiskQuery,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
+import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import Modal from "../../shared/components/Modal";
+import PoliciesList from "../../shared/components/PoliciesList";
+import { PWCLink } from "../../shared/components/PoliciesTable";
 import ResourcesTab from "../../shared/components/ResourcesTab";
 import Tooltip from "../../shared/components/Tooltip";
 import { toLabelValue } from "../../shared/formatter";
+import useAccessRights from "../../shared/hooks/useAccessRights";
+import useEditState from "../../shared/hooks/useEditState";
+import { useSelector } from "../../shared/hooks/useSelector";
 import {
   downloadPdf,
   emailPdf,
@@ -70,13 +89,9 @@ import ControlForm, {
   ControlFormValues,
   CreateControlFormValues,
 } from "../control/components/ControlForm";
+import ResourceBox from "../resources/components/ResourceBox";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
-import useAccessRights from "../../shared/hooks/useAccessRights";
-import { useSelector } from "../../shared/hooks/useSelector";
-import { APP_ROOT_URL } from "../../settings";
-import ResourceBox from "../resources/components/ResourceBox";
-import { capitalCase } from "capital-case";
 
 type TParams = { id: string };
 
@@ -90,7 +105,7 @@ export default function RiskAndControl({
     "admin_preparer",
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
-  const initialCollapse = ["Risks", "Controls"];
+  const initialCollapse = ["Risks", "Controls", "Related policies"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse((p) => {
@@ -117,7 +132,7 @@ export default function RiskAndControl({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"],
+    refetchQueries: ["businessProcess", "risk"],
   });
   const handleUpdateRisk = (values: RiskFormValues) => {
     updateRisk({
@@ -125,7 +140,7 @@ export default function RiskAndControl({
         input: {
           id: risk?.id || "",
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
+          businessProcessIds: values.businessProcessIds || [],
           levelOfRisk: values.levelOfRisk,
           typeOfRisk: values.typeOfRisk,
         },
@@ -148,7 +163,7 @@ export default function RiskAndControl({
     },
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
-    refetchQueries: ["businessProcess"],
+    refetchQueries: ["businessProcess", "control"],
   });
   const handleUpdateControl = (values: CreateControlFormValues) => {
     updateControl({
@@ -238,6 +253,17 @@ export default function RiskAndControl({
     dataRisksnControl?.navigatorBusinessProcesses?.collection
       .map((a) => a.risks)
       .flat(10) || [];
+  const modifiedRisks = !isUser
+    ? risks
+    : risks.filter((a) => a?.draft === null);
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) a.splice(j--, 1);
+      }
+    }
+    return a;
+  };
   // const controls =
   //   dataRisksnControl?.navigatorBusinessProcesses?.collection
   //     .map((a) => a.controls)
@@ -285,8 +311,161 @@ export default function RiskAndControl({
     variables: { id: riskId },
     fetchPolicy: "network-only",
   });
-  const riskName = dataRisk?.risk?.name || "";
+
+  // Welcome to risk administrative
+
   const draftRisk = dataRisk?.risk?.draft;
+  const hasEditAccessRisk = dataRisk?.risk?.hasEditAccess || false;
+  const requestStatusRisk = dataRisk?.risk?.requestStatus;
+  const requestEditState = dataRisk?.risk?.requestEdit?.state;
+
+  const premiseRisk = useEditState({
+    draft: draftRisk,
+    hasEditAccess: hasEditAccessRisk,
+    requestStatus: requestStatusRisk,
+    requestEditState: requestEditState,
+  });
+  async function handleApproveRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: true } });
+      notifySuccess("You Gave Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  async function handleRejectRequest(id: string) {
+    try {
+      await approveEditMutation({ variables: { id, approve: false } });
+      notifySuccess("You Restrict Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  const [
+    requestEditMutation,
+    requestEditMutationInfo,
+  ] = useCreateRequestEditMutation({
+    variables: { id: riskId, type: "Risk" },
+    onError: notifyGraphQLErrors,
+    onCompleted: () => notifyInfo("Edit access requested"),
+    refetchQueries: ["risk"],
+  });
+  const [reviewMutation, reviewMutationInfo] = useReviewRiskDraftMutation({
+    refetchQueries: ["risk"],
+    // onCompleted: () => {
+    //   window.location.reload();
+    // },
+  });
+  async function reviewRisk({ publish }: { publish: boolean }) {
+    try {
+      await reviewMutation({ variables: { id: riskId, publish } });
+      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  const renderRiskAction = () => {
+    if (premiseRisk === 6) {
+      return (
+        <Tooltip description="Accept edit request">
+          <DialogButton
+            title={`Accept request to edit?`}
+            message={`Request by ${dataRisk?.risk?.requestEdit?.user?.name}`}
+            className="soft red mr-2"
+            data={dataRisk?.risk?.requestEdit?.id}
+            onConfirm={handleApproveRequest}
+            onReject={handleRejectRequest}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
+          >
+            <FaExclamationCircle />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premiseRisk === 5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
+        >
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+    if (premiseRisk === 4) {
+      return (
+        <Tooltip description="Request edit access">
+          <DialogButton
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutation()}
+            loading={requestEditMutationInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatusRisk === "requested"}
+          >
+            <AiOutlineEdit />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premiseRisk === 3) {
+      if (riskModal) {
+        return null;
+      }
+      return (
+        <div className="d-flex">
+          <Tooltip description="Edit Risk">
+            <Button
+              onClick={() =>
+                editRisk({
+                  id: dataRisk?.risk?.id || "",
+                  name: dataRisk?.risk?.name || "",
+                  businessProcessIds:
+                    dataRisk?.risk?.businessProcesses?.map(toLabelValue) || [],
+                  levelOfRisk: dataRisk?.risk?.levelOfRisk as LevelOfRisk,
+                  typeOfRisk: dataRisk?.risk?.typeOfRisk as TypeOfRisk,
+                })
+              }
+              color=""
+              className="soft orange"
+            >
+              <AiFillEdit />
+            </Button>
+          </Tooltip>
+        </div>
+      );
+    }
+    if (premiseRisk === 2) {
+      return (
+        <div className="d-flex">
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => reviewRisk({ publish: false })}
+            loading={reviewMutationInfo.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => reviewRisk({ publish: true })}
+            loading={reviewMutationInfo.loading}
+          >
+            Approve
+          </DialogButton>
+        </div>
+      );
+    }
+    return null;
+  };
+  const draftRiskReal = dataRisk?.risk?.draft?.objectResult;
+  const riskName = draftRiskReal
+    ? get(dataRisk, "risk.draft.objectResult.name")
+    : dataRisk?.risk?.name || "";
+
   const renderRiskDetails = () => {
     const levelOfRisk = dataRisk?.risk?.levelOfRisk || "";
     const typeOfRisk = dataRisk?.risk?.typeOfRisk || "";
@@ -297,7 +476,7 @@ export default function RiskAndControl({
     const createdAt = dataRisk?.risk?.createdAt;
 
     const details1 = [
-      { label: "Risk Id", value: id },
+      { label: "Risk Id", value: riskId },
       { label: "Name", value: riskName },
       {
         label: "Business Process",
@@ -381,28 +560,218 @@ export default function RiskAndControl({
     fetchPolicy: "network-only",
     variables: { id: controlId },
   });
-  const descriptionControl = dataControl?.control?.description || "";
+  const draftControlReal = dataControl?.control?.draft?.objectResult;
   const draftControl = dataControl?.control?.draft;
+
+  const descriptionControl = draftControlReal
+    ? get(dataControl, "control.draft.objectResult.description", "")
+    : dataControl?.control?.description || "";
+  const hasEditAccessControl = dataControl?.control?.hasEditAccess || false;
+  const requestStatusControl = dataControl?.control?.requestStatus;
+  const requestEditStateControl = dataControl?.control?.requestEdit?.state;
+
+  // welcome to administrative control
+
+  const premiseControl = useEditState({
+    draft: draftControl,
+    hasEditAccess: hasEditAccessControl,
+    requestStatus: requestStatusControl,
+    requestEditState: requestEditStateControl,
+  });
+  const [
+    approveEditMutation,
+    approveEditMutationResult,
+  ] = useApproveRequestEditMutation({
+    refetchQueries: ["control", "risk"],
+    onError: notifyGraphQLErrors,
+  });
+  async function handleApproveRequestControl(id: string) {
+    try {
+      await approveEditMutation({
+        variables: { id, approve: true },
+      });
+      notifySuccess("You Gave Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  async function handleRejectRequestControl(id: string) {
+    try {
+      await approveEditMutation({
+        variables: { id, approve: false },
+      });
+      notifySuccess("You Restrict Permission");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  const [
+    requestEditMutationControl,
+    requestEditMutationControlInfo,
+  ] = useCreateRequestEditMutation({
+    variables: { id: controlId, type: "Control" },
+    onError: notifyGraphQLErrors,
+    onCompleted: () => notifyInfo("Edit access requested"),
+    refetchQueries: ["control"],
+  });
+  const [
+    reviewMutationControl,
+    reviewMutationControlInfo,
+  ] = useReviewControlDraftMutation({
+    refetchQueries: ["control"],
+    awaitRefetchQueries: true,
+  });
+  async function review({ publish }: { publish: boolean }) {
+    try {
+      await reviewMutationControl({ variables: { id: controlId, publish } });
+      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+    } catch (error) {
+      notifyGraphQLErrors(error);
+    }
+  }
+  const renderControlAction = () => {
+    if (premiseControl === 6) {
+      return (
+        <Tooltip description="Accept edit request">
+          <DialogButton
+            title={`Accept request to edit?`}
+            message={`Request by ${dataControl?.control?.requestEdit?.user?.name}`}
+            className="soft red mr-2"
+            data={dataControl?.control?.requestEdit?.id}
+            onConfirm={handleApproveRequestControl}
+            onReject={handleRejectRequestControl}
+            actions={{ no: "Reject", yes: "Approve" }}
+            loading={approveEditMutationResult.loading}
+          >
+            <FaExclamationCircle />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premiseControl === 5) {
+      return (
+        <Tooltip
+          description="Waiting approval"
+          subtitle="You will be able to edit as soon as Admin gave you permission"
+        >
+          <Button disabled className="soft orange mr-2">
+            <AiOutlineClockCircle />
+          </Button>
+        </Tooltip>
+      );
+    }
+    if (premiseControl === 4) {
+      return (
+        <Tooltip description="Request edit access">
+          <DialogButton
+            title="Request access to edit?"
+            onConfirm={() => requestEditMutationControl()}
+            loading={requestEditMutationControlInfo.loading}
+            className="soft red mr-2"
+            disabled={requestStatusControl === "requested"}
+          >
+            <AiOutlineEdit />
+          </DialogButton>
+        </Tooltip>
+      );
+    }
+    if (premiseControl === 3) {
+      if (controlModal) {
+        return null;
+      }
+      return (
+        <div className="d-flex">
+          <Tooltip description="Edit Control">
+            <Button
+              onClick={() =>
+                editControl({
+                  id: dataControl?.control?.id || "",
+                  assertion: dataControl?.control?.assertion as Assertion[],
+                  controlOwner:
+                    dataControl?.control?.departments?.map((a) => a.id) || [],
+                  description: dataControl?.control?.description || "",
+                  typeOfControl: dataControl?.control
+                    ?.typeOfControl as TypeOfControl,
+                  nature: dataControl?.control?.nature as Nature,
+                  ipo: dataControl?.control?.ipo as Ipo[],
+                  businessProcessIds:
+                    dataControl?.control?.businessProcesses?.map(
+                      ({ id }) => id
+                    ) || [],
+                  frequency: dataControl?.control?.frequency as Frequency,
+                  keyControl: dataControl?.control?.keyControl || false,
+                  riskIds:
+                    dataControl?.control?.risks?.map(({ id }) => id) || [],
+                  activityControls: dataControl?.control?.activityControls,
+                })
+              }
+              color=""
+              className="soft orange"
+            >
+              <AiFillEdit />
+            </Button>
+          </Tooltip>
+        </div>
+      );
+    }
+    if (premiseControl === 2) {
+      return (
+        <div className="d-flex">
+          <DialogButton
+            color="danger"
+            className="mr-2"
+            onConfirm={() => review({ publish: false })}
+            loading={reviewMutationControlInfo.loading}
+          >
+            Reject
+          </DialogButton>
+          <DialogButton
+            color="primary"
+            className="pwc"
+            onConfirm={() => review({ publish: true })}
+            loading={reviewMutationControlInfo.loading}
+          >
+            Approve
+          </DialogButton>
+        </div>
+      );
+    }
+    return null;
+  };
   const renderControlDetails = () => {
-    const updatedAt = dataControl?.control?.updatedAt
-      ? dataControl?.control?.updatedAt.split(" ")[0]
-      : "";
-    const lastUpdatedBy = dataControl?.control?.lastUpdatedBy || "";
-    const createdBy = dataControl?.control?.createdBy || "";
-    const assertion = dataControl?.control?.assertion || [];
-    const frequency = dataControl?.control?.frequency || "";
-    const ipo = dataControl?.control?.ipo || [];
-    const typeOfControl = dataControl?.control?.typeOfControl || "";
     const keyControl = dataControl?.control?.keyControl || false;
     const risks = dataControl?.control?.risks || [];
     const businessProcesses = dataControl?.control?.businessProcesses || [];
     const activityControls = dataControl?.control?.activityControls || [];
     const createdAt = dataControl?.control?.createdAt || "";
     const departments = dataControl?.control?.departments || [];
+
+    const updatedAt = draftControlReal
+      ? get(dataControl, "control.draft.objectResult.updatedAt", "")
+      : dataControl?.control?.updatedAt?.split(" ")[0] || "";
+    const lastUpdatedBy = draftControlReal
+      ? get(dataControl, "control.draft.objectResult.lastUpdatedBy", "")
+      : dataControl?.control?.lastUpdatedBy || "";
+    const createdBy = draftControlReal
+      ? get(dataControl, "control.draft.objectResult.createdBy", "")
+      : dataControl?.control?.createdBy || "";
+    const assertion = draftControlReal
+      ? get(dataControl, "control.draft.objectResult.assertion", [])
+      : dataControl?.control?.assertion || [];
+    const frequency = draftControlReal
+      ? get(dataControl, "control.draft.objectResult.frequency", "")
+      : dataControl?.control?.frequency || "";
+    const ipo = draftControlReal
+      ? get(dataControl, "control.draft.objectResult.ipo", [])
+      : dataControl?.control?.ipo || [];
+    const typeOfControl = draftControlReal
+      ? get(dataControl, "control.draft.objectResult.typeOfControl", "")
+      : dataControl?.control?.typeOfControl || "";
     const filteredNames = (names: any) =>
       names.filter((v: any, i: any) => names.indexOf(v) === i);
+
     const details = [
-      { label: "Control ID", value: id },
+      { label: "Control ID", value: controlId },
       { label: "Description", value: descriptionControl },
 
       {
@@ -411,18 +780,16 @@ export default function RiskAndControl({
       },
       {
         label: "Key Control",
-        value: (
-          <input type="checkbox" checked={keyControl} onChange={() => {}} />
-        ),
+        value: <CheckBox checked={keyControl} />,
       },
       { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
-        value: assertion.map((x) => capitalCase(x)).join(", "),
+        value: assertion.map((x: any) => capitalCase(x)).join(", "),
       },
       {
         label: "IPO",
-        value: ipo.map((x) => capitalCase(x)).join(", "),
+        value: ipo.map((x: any) => capitalCase(x)).join(", "),
       },
       { label: "Frequency", value: capitalCase(frequency) },
       {
@@ -502,7 +869,7 @@ export default function RiskAndControl({
                         <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                           {activity.guidance ? (
                             activity.guidance
-                          ) : (
+                          ) : activity.guidanceFileName ? (
                             <div className="d-flex align-items-center ">
                               <Button color="" className="soft orange">
                                 <a
@@ -519,6 +886,8 @@ export default function RiskAndControl({
                                 </a>
                               </Button>
                             </div>
+                          ) : (
+                            "N/A"
                           )}
                         </td>
                       </tr>
@@ -550,7 +919,7 @@ export default function RiskAndControl({
     const category = dataResource?.resource?.category;
     const resuploadLink = dataResource?.resource?.resuploadLink;
     const policies = dataResource?.resource?.policies || [];
-    const controls = dataResource?.resource?.controls || [];
+    const bps = dataResource?.resource?.businessProcess;
     const base64File = dataResource?.resource?.base64File;
     const rating =
       dataRating?.resourceRatings?.collection.map((a) => a.rating).pop() || 0;
@@ -559,6 +928,7 @@ export default function RiskAndControl({
       : resuploadUrl && !resuploadLink?.includes("original/missing.png")
       ? `${APP_ROOT_URL}${resuploadUrl}`
       : undefined;
+
     return (
       <Route exact path="/risk-and-control/:id/resources/:id">
         <div>
@@ -585,7 +955,7 @@ export default function RiskAndControl({
                     </h5>
                     {category === "Flowchart" ? (
                       <>
-                        <h5 className="mt-5">Business Process:</h5>
+                        <h5 className="mt-5">Business process:</h5>
                         <Link to={`/risk-and-control/${businessProcess?.id}`}>
                           {businessProcess?.name}
                         </Link>
@@ -593,19 +963,17 @@ export default function RiskAndControl({
                     ) : (
                       <>
                         <div>
-                          <h5 className="mt-5">Related Controls:</h5>
-                          {controls.length ? (
+                          <h5 className="mt-5">Related business process:</h5>
+                          {bps ? (
                             <ul>
-                              {controls.map((control) => (
-                                <li key={control.id}>{control.description}</li>
-                              ))}
+                              <li>{bps.name}</li>
                             </ul>
                           ) : (
                             <EmptyAttribute centered={false} />
                           )}
                         </div>
                         <div>
-                          <h5 className="mt-5">Related Policies:</h5>
+                          <h5 className="mt-5">Related policies:</h5>
                           {policies.length ? (
                             <ul>
                               {policies.map((policy) => (
@@ -712,7 +1080,7 @@ export default function RiskAndControl({
                         <MdEmail /> Mail
                       </div>
                     ),
-                    onClick: () => emailPdf(name),
+                    onClick: () => emailPdf(name, Number(id), false),
                   },
                 ]
               : [
@@ -758,7 +1126,7 @@ export default function RiskAndControl({
                         <MdEmail /> Mail
                       </div>
                     ),
-                    onClick: () => emailPdf(name),
+                    onClick: () => emailPdf(name, Number(id), false),
                   },
                 ]
           }
@@ -801,7 +1169,7 @@ export default function RiskAndControl({
               ]
         }
       />
-      <div className="d-flex justify-content-between">
+      <div className="d-flex justify-content-between align-items-center">
         <HeaderWithBackButton
           heading={
             currentUrl.includes("resources/")
@@ -822,7 +1190,12 @@ export default function RiskAndControl({
               : undefined
           }
         />
-        {currentUrl.includes("resources/") || currentUrl.includes("risk/")
+
+        {currentUrl.includes("/control/")
+          ? renderControlAction()
+          : currentUrl.includes("risk/")
+          ? renderRiskAction()
+          : currentUrl.includes("resources/")
           ? null
           : renderActions()}
       </div>
@@ -833,14 +1206,14 @@ export default function RiskAndControl({
           {!currentUrl.includes("resources/") &&
             tabs.map((tab, index) => (
               <NavItem key={index}>
-                <NavLink
+                <CoolerNavLink
                   exact
                   to={tab.to}
                   className="nav-link"
                   activeClassName="active"
                 >
                   {tab.title}
-                </NavLink>
+                </CoolerNavLink>
               </NavItem>
             ))}
         </Nav>
@@ -866,39 +1239,47 @@ export default function RiskAndControl({
           />
           <Route exact path="/risk-and-control/:id">
             <Collapsible
+              title="Related policies"
+              show={collapse.includes("Related policies")}
+              onClick={toggleCollapse}
+            >
+              <PoliciesList data={dataRisksnControl || {}} />
+            </Collapsible>
+            <div style={{ borderBottom: " 1px solid #d85604" }}></div>
+            <Collapsible
               title="Risks"
               show={collapse.includes("Risks")}
               onClick={toggleCollapse}
             >
               {risks.length ? (
                 <ul>
-                  {risks
-                    .filter((a) => a?.draft === null)
-                    .map((risk) => (
-                      <li key={risk.id}>
-                        <div className="mb-3 d-flex justify-content-between">
-                          <Link
-                            to={`/risk-and-control/${
-                              currentUrl.split("control/")[1]
-                            }/risk/${risk.id}`}
-                            onClick={() => {
-                              setRiskId(risk.id);
-                            }}
+                  {modifiedRisks.map((risk) => (
+                    <li key={risk?.id || ""}>
+                      <div className="mb-3 d-flex justify-content-between">
+                        <PWCLink
+                          to={`/risk-and-control/${
+                            currentUrl.split("control/")[1]
+                          }/risk/${risk?.id || ""}`}
+                          onClick={() => {
+                            setRiskId(risk?.id || "");
+                          }}
+                          style={{ fontSize: "14px" }}
+                        >
+                          {startCase(risk?.name || "")}
+                          <Badge
+                            color={`${getRiskColor(risk?.levelOfRisk)} mx-3`}
                           >
-                            <h5>
-                              {risk.name}
-                              <Badge
-                                color={`${getRiskColor(risk.levelOfRisk)} mx-3`}
-                              >
-                                {startCase(risk.levelOfRisk || "")}
-                              </Badge>
-                              <Badge color="secondary">
-                                {startCase(risk.typeOfRisk || "")}
-                              </Badge>
-                            </h5>
-                          </Link>
+                            {startCase(risk?.levelOfRisk || "")}
+                          </Badge>
+                          <Badge color="secondary">
+                            {startCase(risk?.typeOfRisk || "")}
+                          </Badge>
+                        </PWCLink>
 
-                          {(isAdmin || isAdminPreparer) && (
+                        {/* {(isAdmin || isAdminPreparer) &&
+                          risk?.hasEditAccess &&
+                          !risk.draft &&
+                          isAdminPreparer && (
                             <Button
                               onClick={() =>
                                 editRisk({
@@ -915,39 +1296,42 @@ export default function RiskAndControl({
                             >
                               <FaPencilAlt />
                             </Button>
-                          )}
-                        </div>
-                        {isUser ? (
+                          )} */}
+                      </div>
+                      {isUser ? (
+                        dataModifier(
                           risk?.controls?.filter((a: any) => a.draft === null)
-                            .length ? (
-                            <>
-                              <h6>Control</h6>
-                              <ControlsTable
-                                history={history.location.pathname}
-                                controls={risk.controls.filter(
-                                  (a: any) => a.draft === null
-                                )}
-                                editControl={editControl}
-                              />
-                            </>
-                          ) : null
-                        ) : risk?.controls?.length ? (
+                        ).length ? (
                           <>
-                            <h6>Control</h6>
+                            <h6 style={{ fontWeight: "bold" }}>Control</h6>
                             <ControlsTable
                               history={history.location.pathname}
-                              controls={risk.controls}
+                              controls={dataModifier(
+                                risk?.controls?.filter(
+                                  (a: any) => a.draft === null
+                                )
+                              )}
                               editControl={editControl}
                             />
                           </>
-                        ) : null}
-                      </li>
-                    ))}
+                        ) : null
+                      ) : dataModifier(risk?.controls).length ? (
+                        <>
+                          <h6 style={{ fontWeight: "bold" }}>Control</h6>
+                          <ControlsTable
+                            history={history.location.pathname}
+                            controls={dataModifier(risk?.controls)}
+                            editControl={editControl}
+                          />
+                        </>
+                      ) : null}
+                    </li>
+                  ))}
                 </ul>
               ) : (
                 <EmptyAttribute />
               )}
-            </Collapsible>{" "}
+            </Collapsible>
             {/* <Collapsible
               title="Controls"
               show={collapse.includes("Controls")}
@@ -964,7 +1348,7 @@ export default function RiskAndControl({
             <ResourcesTab
               setResourceId={setResourceId}
               bPId={id}
-              risksnControls
+              // risksnControls
               isDraft={null}
               formDefaultValues={{
                 category: { label: "Flowchart", value: "Flowchart" },
@@ -1020,66 +1404,23 @@ const ControlsTable = ({
   editControl: Function;
   history?: any;
 }) => {
-  const assertionAndIpoModifier = (data: any) => {
-    let finalData: any = data;
-    const existence_and_occurence = finalData.findIndex(
-      (a: any) => a === "existence_and_occurence"
-    );
-    const cut_over = finalData.findIndex((a: any) => a === "cut_over");
-    const rights_and_obligation = finalData.findIndex(
-      (a: any) => a === "rights_and_obligation"
-    );
-    const presentation_and_disclosure = finalData.findIndex(
-      (a: any) => a === "presentation_and_disclosure"
-    );
-    const accuracy = finalData.findIndex((a: any) => a === "accuracy");
-    const completeness = finalData.findIndex((a: any) => a === "completeness");
-    const validation = finalData.findIndex((a: any) => a === "validation");
-    const restriction = finalData.findIndex((a: any) => a === "restriction");
-
-    if (existence_and_occurence !== -1) {
-      finalData[existence_and_occurence] = "E/O ";
-    }
-    if (cut_over !== -1) {
-      finalData[cut_over] = "CO";
-    }
-    if (rights_and_obligation !== -1) {
-      finalData[rights_and_obligation] = "R&O";
-    }
-    if (presentation_and_disclosure !== -1) {
-      finalData[presentation_and_disclosure] = "P&D";
-    }
-    if (accuracy !== -1) {
-      finalData[accuracy] = "A";
-    }
-    if (completeness !== -1) {
-      finalData[completeness] = "C";
-    }
-    if (validation !== -1) {
-      finalData[validation] = "V";
-    }
-    if (restriction !== -1) {
-      finalData[restriction] = "R";
-    }
-    return finalData.join(", ");
-  };
-  const [isAdmin, isAdminPreparer] = useAccessRights([
-    "admin",
-    "admin_preparer",
-  ]);
+  // const [isAdmin, isAdminPreparer] = useAccessRights([
+  //   "admin",
+  //   "admin_preparer",
+  // ]);
   return (
     <div className="table-responsive">
       <Table>
         <thead>
           <tr>
-            <th>Description</th>
-            <th>Freq</th>
-            <th>Type of Control</th>
-            <th>Nature</th>
-            <th>Assertion</th>
-            <th>IPO</th>
-            <th>Control Owner</th>
-            <th />
+            <th style={{ width: "12.5%" }}>Description</th>
+            <th style={{ width: "12.5%" }}>Frequency</th>
+            <th style={{ width: "12.5%" }}>Type of Control</th>
+            <th style={{ width: "12.5%" }}>Nature</th>
+            <th style={{ width: "12.5%" }}>Assertion</th>
+            <th style={{ width: "12.5%" }}>IPO</th>
+            <th style={{ width: "12.5%" }}>Control Owner</th>
+            <th style={{ width: "12.5%" }} />
           </tr>
         </thead>
         <tbody>
@@ -1087,48 +1428,59 @@ const ControlsTable = ({
             controls?.map((control) => (
               <tr key={control.id}>
                 <td>
-                  <Link
+                  <PWCLink
                     to={`/risk-and-control/${
                       history.split("control/")[1]
                     }/control/${control.id}`}
                   >
                     {control.description}
-                  </Link>
+                  </PWCLink>
                 </td>
                 <td>{startCase(control.frequency || "")}</td>
                 <td>{startCase(control.typeOfControl || "")}</td>
                 <td>{startCase(control.nature || "")}</td>
-                <td>{assertionAndIpoModifier(control.assertion)}</td>
-                <td>{assertionAndIpoModifier(control.ipo)}</td>
-                <td>{control.controlOwner}</td>
                 <td>
-                  {(isAdmin || isAdminPreparer) && (
-                    <Button
-                      onClick={() =>
-                        editControl({
-                          id: control.id,
-                          assertion: control.assertion as Assertion[],
-                          controlOwner: control.controlOwner || "",
-                          description: control.description || "",
-                          status: control.status as Status,
-                          typeOfControl: control.typeOfControl as TypeOfControl,
-                          nature: control.nature as Nature,
-                          ipo: control.ipo as Ipo[],
-                          businessProcessIds:
-                            control?.businessProcesses?.map(({ id }) => id) ||
-                            [],
-                          frequency: control.frequency as Frequency,
-                          keyControl: control.keyControl || false,
-                          riskIds: control?.risks?.map(({ id }) => id) || [],
-                          activityControls: control.activityControls,
-                        })
-                      }
-                      color=""
-                    >
-                      <FaPencilAlt />
-                    </Button>
-                  )}
+                  {(control.assertion &&
+                    control.assertion.map((a) => startCase(a)).join(", ")) ||
+                    ""}
                 </td>
+                <td>
+                  {(control.ipo &&
+                    control.ipo.map((a) => startCase(a)).join(", ")) ||
+                    ""}
+                </td>
+                <td>{control.controlOwner?.join(", ")}</td>
+                {/* <td>
+                  {(isAdmin || isAdminPreparer) &&
+                    control.hasEditAccess &&
+                    !control.draft &&
+                    isAdminPreparer && (
+                      <Button
+                        onClick={() =>
+                          editControl({
+                            id: control.id,
+                            assertion: control.assertion as Assertion[],
+                            controlOwner: control.controlOwner || "",
+                            description: control.description || "",
+                            status: control.status as Status,
+                            typeOfControl: control.typeOfControl as TypeOfControl,
+                            nature: control.nature as Nature,
+                            ipo: control.ipo as Ipo[],
+                            businessProcessIds:
+                              control?.businessProcesses?.map(({ id }) => id) ||
+                              [],
+                            frequency: control.frequency as Frequency,
+                            keyControl: control.keyControl || false,
+                            riskIds: control?.risks?.map(({ id }) => id) || [],
+                            activityControls: control.activityControls,
+                          })
+                        }
+                        color=""
+                      >
+                        <FaPencilAlt />
+                      </Button>
+                    )}
+                </td> */}
               </tr>
             ))
           ) : (
@@ -1143,3 +1495,9 @@ const ControlsTable = ({
     </div>
   );
 };
+export const CoolerNavLink = styled(NavLink)`
+  &:hover {
+    background-color: var(--tangerine);
+    padding-bottom: -3px;
+  }
+`;

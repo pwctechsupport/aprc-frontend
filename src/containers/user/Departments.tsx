@@ -99,16 +99,15 @@ const Departments = ({ history }: RouteComponentProps) => {
         <title>Department - PricewaterhouseCoopers</title>
       </Helmet>
       <Container fluid className="p-0 pt-3 px-4">
-        <h2>Departments Management</h2>
+        <h2>Departments management</h2>
 
         <Row className="mb-5">
           <Col lg={4}>
-            <Input placeholder="Search Department..." onChange={handleSearch} />
+            <Input placeholder="Search department..." onChange={handleSearch} />
           </Col>
           <Col className="text-right">
             <Link to="/user">
               <Button outline color="pwc" className="pwc mr-1">
-                {" "}
                 Users
               </Button>
             </Link>

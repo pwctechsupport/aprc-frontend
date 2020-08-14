@@ -30,7 +30,7 @@ export default function HomepageBox({
       style={{
         backgroundColor: "rgb(255,255,255)",
         boxShadow: "3px 6px 20px 0px rgba(0,0,0,0.3)",
-        borderRadius: "0.3rem",
+        borderRadius: "3px",
       }}
     >
       <div className="d-flex justify-content-between align-items-center ">
@@ -121,7 +121,7 @@ const Circle = styled.div`
 const BoxHeader = styled.div`
   padding: 5px 7px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 3px;
   transition: 0.15s ease-in-out;
   &:hover {
     background: rgba(0, 0, 0, 0.1);

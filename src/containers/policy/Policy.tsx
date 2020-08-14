@@ -1,11 +1,13 @@
+import { capitalCase } from "capital-case";
 import get from "lodash/get";
+import startCase from "lodash/startCase";
 import React, {
+  Fragment,
   useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
   useState,
-  Fragment,
 } from "react";
 import Helmet from "react-helmet";
 import {
@@ -23,48 +25,52 @@ import {
   FaPlus,
   FaTrash,
 } from "react-icons/fa";
-import Table from "../../shared/components/Table";
 import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
-import { Badge, Nav, NavItem, TabContent, TabPane, Row, Col } from "reactstrap";
+import { Badge, Col, Nav, NavItem, Row, TabContent, TabPane } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useApproveRequestEditMutation,
+  useBookmarksQuery,
+  useControlQuery,
   useCreateBookmarkPolicyMutation,
   useCreateRequestEditMutation,
+  useCreateUserPVisitMutation,
   useDestroyPolicyMutation,
-  usePolicyQuery,
-  useReviewPolicyDraftMutation,
-  useSubmitPolicyMutation,
-  useUpdateDraftPolicyMutation,
-  useReferencesQuery,
   usePolicyCategoriesQuery,
-  useBookmarksQuery,
+  usePolicyQuery,
+  useReferencesQuery,
   useResourceQuery,
   useResourceRatingsQuery,
+  useReviewPolicyDraftMutation,
   useRiskQuery,
-  useControlQuery,
-  useCreateUserPVisitMutation,
+  useSubmitPolicyMutation,
+  useUpdateDraftPolicyMutation,
   useUpdatePolicyVisitMutation,
-  // useUpdatePolicyMutation,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import ControlsTable from "../../shared/components/ControlsTable";
 import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu, { MenuData } from "../../shared/components/Menu";
 import PoliciesTable from "../../shared/components/PoliciesTable";
 import ResourcesTab from "../../shared/components/ResourcesTab";
 import RisksList from "../../shared/components/RisksList";
+import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
+import { toLabelValue } from "../../shared/formatter";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useDialogBox from "../../shared/hooks/useDialogBox";
+import { useSelector } from "../../shared/hooks/useSelector";
 import useWindowSize from "../../shared/hooks/useWindowSize";
 import {
   downloadPdf,
@@ -72,23 +78,19 @@ import {
   previewPdf,
 } from "../../shared/utils/accessGeneratedPdf";
 import { formatPolicyChart } from "../../shared/utils/formatPolicy";
+import getRiskColor from "../../shared/utils/getRiskColor";
 import {
   notifyError,
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
 } from "../../shared/utils/notif";
+import ResourceBox from "../resources/components/ResourceBox";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import { toLabelValue } from "../../shared/formatter";
-import ResourceBox from "../resources/components/ResourceBox";
-import { useSelector } from "../../shared/hooks/useSelector";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import { APP_ROOT_URL } from "../../settings";
-import getRiskColor from "../../shared/utils/getRiskColor";
-import startCase from "lodash/startCase";
-import { capitalCase } from "capital-case";
+import styled from "styled-components";
+import BusinessProcessList from "../../shared/components/BusinessProcessList";
 
 type TParams = { id: string };
 
@@ -104,7 +106,13 @@ export default function Policy({
   const subPolicyRef = useRef<HTMLInputElement>(null);
   const riskRef = useRef<HTMLInputElement>(null);
   const controlRef = useRef<HTMLInputElement>(null);
-  const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
+  const initialCollapse = [
+    "Resources",
+    "Risks",
+    "Controls",
+    "Sub-policies",
+    "Business processes",
+  ];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse((p) => {
@@ -380,10 +388,11 @@ export default function Policy({
     ? get(data, "policy.draft.objectResult.description", "")
     : data?.policy?.description || "";
   const hasEditAccess = oc(data).policy.hasEditAccess();
-  const parentId = oc(data).policy.parentId("");
+
   const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
   const ancestry = oc(data).policy.ancestry("");
+  const parentId = ancestry.split("/").pop() || "";
   const policyReferences = data?.policy?.references || [];
   const controlCount = oc(data).policy.controlCount({});
   const riskCount = oc(data).policy.riskCount({});
@@ -425,7 +434,7 @@ export default function Policy({
     const category = dataResource?.resource?.category;
     const resuploadLink = dataResource?.resource?.resuploadLink;
     const policies = dataResource?.resource?.policies || [];
-    const controls = dataResource?.resource?.controls || [];
+    const bps = dataResource?.resource?.businessProcess;
     const base64File = dataResource?.resource?.base64File;
 
     const rating =
@@ -472,14 +481,14 @@ export default function Policy({
                       ) : (
                         <>
                           <div>
-                            <h5 className="mt-5">Related Controls:</h5>
-                            {controls.length ? (
+                            <h5 className="mt-5">Related Business Process:</h5>
+                            {bps ? (
                               <ul>
-                                {controls.map((control) => (
-                                  <li key={control.id}>
-                                    {control.description}
-                                  </li>
-                                ))}
+                                <li>
+                                  <Link to={`/risk-and-control/${bps.id}`}>
+                                    {bps.name}
+                                  </Link>
+                                </li>
                               </ul>
                             ) : (
                               <EmptyAttribute centered={false} />
@@ -653,9 +662,7 @@ export default function Policy({
       },
       {
         label: "Key Control",
-        value: (
-          <input type="checkbox" checked={keyControl} onChange={() => {}} />
-        ),
+        value: <CheckBox checked={keyControl} />,
       },
       { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
@@ -698,7 +705,7 @@ export default function Policy({
                 ) : (
                   <EmptyAttribute />
                 )}
-                <dt>Business Processes</dt>
+                <dt>Business processes</dt>
                 {businessProcesses.length ? (
                   filteredNames(businessProcesses).map((bp: any) => (
                     <dd key={bp.id}>{bp.name}</dd>
@@ -744,7 +751,7 @@ export default function Policy({
                         <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                           {activity.guidance ? (
                             activity.guidance
-                          ) : (
+                          ) : activity.guidanceFileName ? (
                             <div className="d-flex align-items-center ">
                               <Button color="" className="soft orange">
                                 <a
@@ -761,6 +768,8 @@ export default function Policy({
                                 </a>
                               </Button>
                             </div>
+                          ) : (
+                            "N/A"
                           )}
                         </td>
                       </tr>
@@ -806,14 +815,14 @@ export default function Policy({
           <Nav tabs className="tabs-pwc">
             {tabs.map((tab, index) => (
               <NavItem key={index}>
-                <NavLink
+                <CoolerNavLink
                   exact
                   to={tab.to}
                   className="nav-link"
                   activeClassName="active"
                 >
                   {tab.title}
-                </NavLink>
+                </CoolerNavLink>
               </NavItem>
             ))}
           </Nav>
@@ -886,6 +895,15 @@ export default function Policy({
 
               <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
                 <Collapsible
+                  title="Business processes"
+                  show={collapse.includes("Business processes")}
+                  onClick={toggleCollapse}
+                >
+                  <BusinessProcessList dataPolicy={data} />
+                </Collapsible>
+              </div>
+              <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
+                <Collapsible
                   title="Risks"
                   show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
@@ -909,8 +927,8 @@ export default function Policy({
 
               <div ref={subPolicyRef}>
                 <Collapsible
-                  title="Sub-Policies"
-                  show={collapse.includes("Sub-Policies")}
+                  title="Sub-policies"
+                  show={collapse.includes("Sub-policies")}
                   onClick={toggleCollapse}
                 >
                   <PoliciesTable
@@ -1078,7 +1096,7 @@ export default function Policy({
                 <MdEmail /> Mail
               </div>
             ),
-            onClick: () => emailPdf(title),
+            onClick: () => emailPdf(title, Number(id), true),
           },
         ]
       : [
@@ -1117,7 +1135,7 @@ export default function Policy({
                 <MdEmail /> Mail
               </div>
             ),
-            onClick: () => emailPdf(title),
+            onClick: () => emailPdf(title, Number(id), true),
           },
           {
             label: (
@@ -1437,3 +1455,9 @@ export default function Policy({
     </div>
   );
 }
+export const CoolerNavLink = styled(NavLink)`
+  &:hover {
+    background-color: var(--tangerine);
+    padding-bottom: -3px;
+  }
+`;

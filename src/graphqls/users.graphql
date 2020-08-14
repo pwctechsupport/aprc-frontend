@@ -66,6 +66,7 @@ fragment userRowFragment on User {
   ...userFragment
   hasEditAccess
   requestStatus
+  mainRole
   department {
     id
     name

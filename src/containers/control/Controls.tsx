@@ -2,25 +2,26 @@ import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  useDestroyControlMutation,
   useAdminControlsQuery,
+  useDestroyControlMutation,
   useReviewerControlsStatusQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import ImportModal from "../../shared/components/ImportModal";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
-import downloadXls from "../../shared/utils/downloadXls";
-import { notifySuccess } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
+import downloadXls from "../../shared/utils/downloadXls";
+import { notifySuccess } from "../../shared/utils/notif";
 
 const Controls = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -63,7 +64,6 @@ const Controls = ({ history }: RouteComponentProps) => {
     dataAdmin?.preparerControls?.collection ||
     dataReviewer?.reviewerControlsStatus?.collection ||
     [];
-
   const [destroy, destroyM] = useDestroyControlMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
@@ -81,8 +81,11 @@ const Controls = ({ history }: RouteComponentProps) => {
     }
   }
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  const [clicked, setClicked] = useState(true);
+  const clickButton = () => setClicked((p) => !p);
+
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(controls.map((n) => n.id));
     } else {
       setSelected([]);
@@ -103,7 +106,14 @@ const Controls = ({ history }: RouteComponentProps) => {
       }
     );
   }
-
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) a.splice(j--, 1);
+      }
+    }
+    return a;
+  };
   return (
     <div>
       <Helmet>
@@ -151,7 +161,7 @@ const Controls = ({ history }: RouteComponentProps) => {
           ) : null}
           {isAdminPreparer ? (
             <Button tag={Link} to="/control/create" className="pwc">
-              + Add Control
+              + Add control
             </Button>
           ) : null}
         </div>
@@ -161,23 +171,25 @@ const Controls = ({ history }: RouteComponentProps) => {
               <tr>
                 {isAdminReviewer ? (
                   <th>
-                    <input
-                      type="checkbox"
+                    <CheckBox
                       checked={selected.length === controls.length}
-                      onChange={toggleCheckAll}
+                      onClick={() => {
+                        clickButton();
+                        toggleCheckAll();
+                      }}
                     />
                   </th>
                 ) : null}
 
                 <th>Description</th>
-                <th>Freq</th>
+                <th>Frequency</th>
                 <th style={{ width: "10%" }}>Type</th>
-                <th style={{ width: "15%" }}>Ass. Risk</th>
+                <th style={{ width: "15%" }}>Ass. risk</th>
                 <th style={{ width: "9%" }}>Nature</th>
                 <th style={{ width: "9%" }}>Owner</th>
-                <th style={{ width: "9%" }}>status</th>
-                <th style={{ width: "10%" }}>Last Updated</th>
-                <th style={{ width: "10%" }}>Last Updated By</th>
+                <th style={{ width: "9%" }}>Status</th>
+                <th style={{ width: "10%" }}>Last updated</th>
+                <th style={{ width: "10%" }}>Last updated by</th>
 
                 <th></th>
               </tr>
@@ -191,11 +203,12 @@ const Controls = ({ history }: RouteComponentProps) => {
                   >
                     {isAdminReviewer ? (
                       <td>
-                        <input
-                          type="checkbox"
+                        <CheckBox
                           checked={selected.includes(control.id)}
-                          onClick={(e) => e.stopPropagation()}
-                          onChange={() => toggleCheck(control.id)}
+                          onClick={(e: any) => {
+                            e.stopPropagation();
+                            toggleCheck(control.id);
+                          }}
                         />
                       </td>
                     ) : null}
@@ -204,13 +217,14 @@ const Controls = ({ history }: RouteComponentProps) => {
                     <td>{capitalCase(control.frequency || "")}</td>
                     <td>{capitalCase(control.typeOfControl || "")}</td>
                     <td>
-                      {oc(control)
-                        .risks([])
-                        .map((risk) => risk.name)
-                        .join(", ")}
+                      {dataModifier(
+                        oc(control)
+                          .risks([])
+                          .map((risk) => risk.name)
+                      ).join(", ")}
                     </td>
                     <td>{capitalCase(control.nature || "")}</td>
-                    <td>{control.controlOwner}</td>
+                    <td>{control.controlOwner?.join(", ")}</td>
                     <td>{control.draft ? "Waiting for review" : "Release"}</td>
                     <td>
                       {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}

@@ -59,8 +59,10 @@ export default function Resource({
     variables: { id },
     fetchPolicy: "network-only",
   });
+  const category = data?.resource?.category;
 
   const { data: dataRating } = useResourceRatingsQuery({
+    skip: category === "Flowchart",
     variables: { filter: { user_id_eq: userId, resource_id_eq: id } },
     fetchPolicy: "network-only",
   });
@@ -70,10 +72,9 @@ export default function Resource({
   const resourceFileType = data?.resource?.resourceFileType;
   const businessProcess = data?.resource?.businessProcess;
   const resuploadUrl = data?.resource?.resuploadUrl;
-  const category = data?.resource?.category;
   const resuploadLink = data?.resource?.resuploadLink;
   const policies = data?.resource?.policies || [];
-  const controls = data?.resource?.controls || [];
+  const bps = data?.resource?.businessProcess;
   const draft = data?.resource?.draft?.objectResult;
   const hasEditAccess = data?.resource?.hasEditAccess || false;
   const requestStatus = data?.resource?.requestStatus;
@@ -238,9 +239,10 @@ export default function Resource({
     return (
       <div>
         <Row>
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={5}>
             <ResourceBox
               base64File={base64File}
+              flowchart={category === "Flowchart"}
               id={id}
               name={name}
               rating={rating}
@@ -250,7 +252,7 @@ export default function Resource({
               resourceFileType={resourceFileType}
             />
           </Col>
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={7}>
             <div className="mt-5 mt-lg-0">
               <h5>
                 Category:&nbsp;
@@ -266,16 +268,16 @@ export default function Resource({
               ) : (
                 <>
                   <div>
-                    <h5 className="mt-5">Related Controls:</h5>
-                    {controls.length ? (
+                    <h5 className="mt-5">Related Business Process:</h5>
+                    {bps ? (
                       <ul>
-                        {filteredNames(controls).map((control: any) => (
-                          <li key={control.id}>
-                            <Link to={`/control/${control.id}`}>
-                              {control.description}
+                        {
+                          <li>
+                            <Link to={`/risk-and-control/${bps.id}`}>
+                              {bps.name}
                             </Link>
                           </li>
-                        ))}
+                        }
                       </ul>
                     ) : (
                       <EmptyAttribute centered={false} />

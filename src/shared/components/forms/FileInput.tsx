@@ -21,6 +21,11 @@ const defaultSupportedFileTypes = [
   "application/pdf",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "application/msword",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+  "text/plain",
 ];
 const flowchartSupportedFileTypes = ["image/jpeg", "image/png"];
 export default function FileInput({
@@ -34,7 +39,7 @@ export default function FileInput({
   onFileSelect,
 }: FileInputProps) {
   const fileTypeErrorMsg = !flowchart
-    ? "File type not supported. Supported types are PDF, Docs, PNG and JPG/JPEG."
+    ? "File type not supported. Supported types are PDF, PPT, PNG, XLS/XLXS, DOC/DOCX, JPG/JPEG and TXT."
     : "File type not supported. Supported types are PNG and JPG/JPEG.";
 
   const [dragging, setDragging] = useState(false);
@@ -140,14 +145,19 @@ export default function FileInput({
       >
         {preview?.includes("image/jpeg") || preview?.includes("image/png") ? (
           <PreviewImg src={preview} alt={"preview-img"} />
-        ) : preview?.includes("application/pdf") ||
+        ) : targetFile &&
+          targetFile[0] === undefined ? null : preview?.includes(
+            "application/pdf"
+          ) ||
           preview?.includes(
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
           ) ? (
-          `${targetFile && targetFile[0].name} `
+          `${(targetFile && targetFile[0].name) || ""} `
         ) : flowchart ? (
           <PreviewImg src={preview} />
-        ) : null}
+        ) : (
+          `${(targetFile && targetFile[0].name) || ""} `
+        )}
         {dragging ? "Release File" : "Drag File Here"}
         {!dragging && <span className="mx-2">Or</span>}
         <UploadButton hidden={dragging} className="custom-file-upload">
@@ -179,7 +189,7 @@ const UploadButton = styled.label`
   margin-bottom: unset;
   padding: 5px;
   margin: 0px 4px;
-  border-radius: 2px;
+  border-radius: 3px;
   transition: background 0.1s ease-out 0s;
   background: none rgb(244, 245, 247);
   &:hover {
@@ -195,7 +205,7 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
   margin: 0.5rem 0;
   padding: 20px;
   border: 1px dashed grey;
-  border-radius: 5px;
+  border-radius: 3px;
   transition: 0.5s cubic-bezier(0.455, 0.03, 0.515, 0.955);
   font-size: big;
   font-weight: bold;

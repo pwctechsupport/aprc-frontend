@@ -19,6 +19,7 @@ import {
   useCreateRequestEditMutation,
   useReviewControlDraftMutation,
   useUpdateControlMutation,
+  useBusinessProcessesQuery,
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb from "../../shared/components/BreadCrumb";
@@ -36,6 +37,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
+import CheckBox from "../../shared/components/forms/CheckBox";
 // import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
@@ -144,7 +146,13 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       notifyGraphQLErrors(error);
     }
   }
-
+  const { data: dataBps, loading: loadingBps } = useBusinessProcessesQuery({
+    variables: {
+      filter: {
+        risks_controls_id_eq: id,
+      },
+    },
+  });
   if (loading) return <LoadingSpinner centered size={30} />;
 
   const description = draft
@@ -184,15 +192,18 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
     : data?.control?.keyControl || false;
   const risks = data?.control?.risks || [];
   const riskIds = risks.map((a) => a.id);
-  const businessProcesses = data?.control?.businessProcesses || [];
+
+  const businessProcesses =
+    dataBps?.navigatorBusinessProcesses?.collection || [];
   const businessProcessIds = businessProcesses.map((bp) => bp.id);
   const activityControls = data?.control?.activityControls || [];
   const createdAt = draft
     ? get(data, "control.draft.objectResult.createdAt", "")
     : data?.control?.createdAt || "";
   const controlOwners = draft
-    ? get(data, "control.draft.objectResult.controlOwner", "")
-    : data?.control?.controlOwner || "";
+    ? get(data, "control.draft.objectResult.controlOwner", [])
+    : data?.control?.controlOwner || [];
+
   const filteredNames = (names: any) =>
     names.filter((v: any, i: any) => names.indexOf(v) === i);
   const renderControlAction = () => {
@@ -294,20 +305,18 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
   const renderControlNonEditable = () => {
     const details = [
-      { label: "Control ID", value: id },
+      { label: "Control id", value: id },
       { label: "Description", value: description },
 
       {
-        label: "Control Owner",
-        value: controlOwners,
+        label: "Control owner",
+        value: controlOwners.join(", "),
       },
       {
-        label: "Key Control",
-        value: (
-          <input type="checkbox" checked={keyControl} onChange={() => {}} />
-        ),
+        label: "Key control",
+        value: <CheckBox checked={keyControl} />,
       },
-      { label: "Type of Control", value: capitalCase(typeOfControl) },
+      { label: "Type of control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
         value: assertion.map((x: any) => capitalCase(x)).join(", "),
@@ -318,10 +327,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       },
       { label: "Frequency", value: capitalCase(frequency) },
       // { label: "Status", value: capitalCase(status) },
-      { label: "Last Updated", value: updatedAt },
-      { label: "Last Updated By", value: lastUpdatedBy },
-      { label: "Created At", value: createdAt.split(" ")[0] },
-      { label: "Created By", value: createdBy },
+      { label: "Last updated", value: updatedAt },
+      { label: "Last updated by", value: lastUpdatedBy },
+      { label: "Created at", value: createdAt.split(" ")[0] },
+      { label: "Created by", value: createdBy },
     ];
     return (
       <Row>
@@ -341,10 +350,12 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
             ) : (
               <EmptyAttribute />
             )}
-            <dt>Business Processes</dt>
-            {businessProcesses.length ? (
+            <dt>Business processes</dt>
+            {loadingBps ? (
+              <LoadingSpinner centered size={20} />
+            ) : businessProcesses.length ? (
               filteredNames(businessProcesses).map((bp: any) => (
-                <dd key={bp.id}>{bp.name}</dd>
+                <li key={bp.id}>{bp.name}</li>
               ))
             ) : (
               <EmptyAttribute />
@@ -366,12 +377,12 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
         {activityControls.length > 0 ? (
           <Col xs={7} className="mt-2">
-            <dt className="mb-1">Control Activities</dt>
+            <dt className="mb-1">Control activities</dt>
             <Table>
               <thead>
                 <tr>
                   <th style={{ fontSize: "13px", fontWeight: "normal" }}>
-                    Control Activity
+                    Control activity
                   </th>
                   <th style={{ fontSize: "13px", fontWeight: "normal" }}>
                     Guidance
@@ -387,7 +398,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                     <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                       {activity.guidance ? (
                         activity.guidance
-                      ) : (
+                      ) : activity.guidanceFileName ? (
                         <div className="d-flex align-items-center ">
                           <Button color="" className="soft orange">
                             <a
@@ -404,6 +415,8 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
                             </a>
                           </Button>
                         </div>
+                      ) : (
+                        "N/A"
                       )}
                     </td>
                   </tr>

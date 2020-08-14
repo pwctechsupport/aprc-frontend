@@ -160,17 +160,13 @@ export default function ImageTagger({
 
   return (
     <div className={className}>
-      <div className="d-flex align-items-center justify-content-start">
-        <h5>Show Tag</h5>
-        &nbsp;
-        <Switch
-          checked={show}
-          width={50}
-          height={25}
-          onChange={setShow}
-          className="mb-2"
-        />
-      </div>
+      <CoolDiv>
+        <div className="d-flex align-items-center justify-content-start">
+          <span>Show Tag</span>
+          &nbsp; &nbsp;
+          <Switch checked={show} width={50} height={25} onChange={setShow} />
+        </div>
+      </CoolDiv>
       <Row>
         <Col lg={6}>
           <ImageTaggerWrapper onClick={editable ? handleClick : undefined}>
@@ -280,7 +276,11 @@ export default function ImageTagger({
     </div>
   );
 }
-
+const CoolDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+`;
 export const ImageTaggerWrapper = styled.div`
   position: relative;
 `;
@@ -312,7 +312,7 @@ export const PreviewTag = styled.div<PreviewTagProps>`
   left: ${(p) => p.x - 50}px;
   background-color: ${(p) => p.background || "rgba(0, 0, 0, 0.85)"};
   width: 100px;
-  border-radius: 4px;
+  border-radius: 3px;
   text-align: center;
   vertical-align: middle;
   z-index: 10;
@@ -373,7 +373,7 @@ const TaggerBox = styled.div<{ x: number; y: number }>`
   background-color: rgba(233, 236, 239, 1);
   width: 300px;
   height: 120px;
-  border-radius: 5px;
+  border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   z-index: 1000000;
   &::before {

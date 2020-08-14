@@ -39,13 +39,13 @@ export default function RiskAndControlSideBox({
   const businessProcesses = data?.navigatorBusinessProcesses?.collection || [];
   return (
     <SideBox>
-      <SideBoxTitle>Risk & Control</SideBoxTitle>
+      <SideBoxTitle>Risk & control</SideBoxTitle>
 
       <SideBoxSearch
         search={search}
         setSearch={setSearch}
         loading={loading}
-        placeholder="Search Business Process..."
+        placeholder="Search business process..."
       />
 
       {businessProcesses.map((businessProcess) => {
@@ -77,6 +77,7 @@ interface BusinessBranchProps {
   children?: Array<BusinessBranchProps> | null | undefined;
   level?: number;
   parentId?: string | null | undefined;
+  myBroHasChild?: boolean;
 }
 
 const BusinessProcessBranch = ({
@@ -85,9 +86,12 @@ const BusinessProcessBranch = ({
   activeMode,
   name,
   parentId,
+  myBroHasChild,
   children = [],
   level,
 }: BusinessBranchProps) => {
+  const grandpa =
+    children?.map((a) => a.children?.map((b) => b.id)).flat().length || 0;
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const isActive = id === activeId;
@@ -100,7 +104,7 @@ const BusinessProcessBranch = ({
           active: isActive,
         })}
         padLeft={level ? level * 10 : 0}
-        isLastChild={lastChild}
+        isLastChild={lastChild && !myBroHasChild}
       >
         {hasChild ? (
           <SideBoxBranchIconContainer onClick={toggle}>
@@ -133,6 +137,7 @@ const BusinessProcessBranch = ({
             children.map((child: BusinessBranchProps) => (
               <BusinessProcessBranch
                 parentId={child.parentId}
+                myBroHasChild={grandpa ? true : false}
                 key={child.id}
                 {...child}
                 activeId={activeId}

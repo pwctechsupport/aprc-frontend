@@ -12,7 +12,7 @@ import {
 } from "../../generated/graphql";
 import Button from "./Button";
 import EmptyAttribute from "./EmptyAttribute";
-import Modal from "./Modal";
+import { LargeModal } from "./Modal";
 import Pagination from "./Pagination";
 import ResourceBar from "./ResourceBar";
 import SearchInput from "./SearchInput";
@@ -152,6 +152,7 @@ export default function ResourcesTab({
               business_process_id_matches_any: bpIds,
               name_cont: searchQuery,
               draft_id_null: true,
+              category_not_eq: "Flowchart",
             }
         : policy
         ? {
@@ -159,8 +160,8 @@ export default function ResourcesTab({
             name_cont: searchQuery,
           }
         : {
+            category_not_eq: "Flowchart",
             business_process_id_matches_any: bpIds,
-
             name_cont: searchQuery,
           },
       limit,
@@ -249,7 +250,7 @@ export default function ResourcesTab({
         <SearchInput
           search={search}
           setSearch={setSearch}
-          placeholder="Search Resources..."
+          placeholder="Search resources..."
           loading={loading}
         />
         {isDraft === null && (isAdmin || isAdminPreparer || isUser) && (
@@ -290,7 +291,7 @@ export default function ResourcesTab({
         onPageChange={handlePageChange}
       />
 
-      <Modal
+      <LargeModal
         isOpen={addResourceModal}
         toggle={toggleAddResourceModal}
         title="Create Resource"
@@ -303,7 +304,7 @@ export default function ResourcesTab({
           submitting={createResourceM.loading}
           policy={policy}
         />
-      </Modal>
+      </LargeModal>
     </div>
   );
 }

@@ -1,13 +1,8 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import {
-  FaDownload,
-  FaFileExport,
-  FaFileImport,
-  FaTrash,
-} from "react-icons/fa";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { FaDownload, FaFileExport, FaTrash } from "react-icons/fa";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
@@ -15,19 +10,19 @@ import {
   useRecentResourcesQuery,
   useReviewerResourcesStatusQuery,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
-import ImportModal from "../../shared/components/ImportModal";
+import CheckBox from "../../shared/components/forms/CheckBox";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
-import { APP_ROOT_URL } from "../../settings";
-import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -73,8 +68,8 @@ const Resources = ({ history }: RouteComponentProps) => {
     adminData?.recentResources?.collection ||
     dataReviewer?.reviewerResourcesStatus?.collection ||
     [];
-  const [modal, setModal] = useState(false);
-  const toggleImportModal = () => setModal((p) => !p);
+  // const [modal, setModal] = useState(false);
+  // const toggleImportModal = () => setModal((p) => !p);
   function toggleCheck(id: string) {
     if (selected.includes(id)) {
       setSelected(selected.filter((i) => i !== id));
@@ -83,13 +78,17 @@ const Resources = ({ history }: RouteComponentProps) => {
     }
   }
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  const [clicked, setClicked] = useState(true);
+  const clickButton = () => setClicked((p) => !p);
+
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(resources.map((n) => n.id));
     } else {
       setSelected([]);
     }
   }
+
   function handleExport() {
     downloadXls(
       "/prints/resource_excel.xlsx",
@@ -133,7 +132,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                 <FaFileExport />
               </Button>
             </Tooltip>
-            <Tooltip description="Import Resource">
+            {/* <Tooltip description="Import Resource">
               <Button
                 color=""
                 className="soft orange mr-2"
@@ -141,18 +140,18 @@ const Resources = ({ history }: RouteComponentProps) => {
               >
                 <FaFileImport />
               </Button>
-            </Tooltip>
-            <ImportModal
+            </Tooltip> */}
+            {/* <ImportModal
               title="Import Resources"
               endpoint="/resources/import"
               isOpen={modal}
               toggle={toggleImportModal}
-            />
+            /> */}
           </div>
         ) : null}
         {isAdmin || isAdminPreparer ? (
           <Button tag={Link} to="/resources/create" className="pwc">
-            + Add Resource
+            + Add resource
           </Button>
         ) : null}
       </div>
@@ -161,22 +160,23 @@ const Resources = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th>
-                <input
-                  type="checkbox"
+                <CheckBox
                   checked={selected.length === resources.length}
-                  onChange={toggleCheckAll}
+                  onClick={() => {
+                    clickButton();
+                    toggleCheckAll();
+                  }}
                 />
               </th>
             ) : null}
 
-            <th style={{ width: "10%" }}>Name</th>
-            <th style={{ width: "8%" }}>File Type</th>
-            <th style={{ width: "8%" }}>Category</th>
-            <th style={{ width: "14%" }}>Related Controls</th>
-            <th style={{ width: "14%" }}>Related Policy</th>
-            <th style={{ width: "14%" }}>Related Business Process</th>
-            <th style={{ width: "8%" }}>Last Updated</th>
-            <th style={{ width: "8%" }}>Created By</th>
+            <th style={{ width: "12%" }}>Name</th>
+            <th style={{ width: "10%" }}>File type</th>
+            <th style={{ width: "10%" }}>Category</th>
+            <th style={{ width: "16%" }}>Related policy</th>
+            <th style={{ width: "16%" }}>Related business process</th>
+            <th style={{ width: "10%" }}>Last updated</th>
+            <th style={{ width: "10%" }}>Created by</th>
 
             <th></th>
           </tr>
@@ -190,23 +190,19 @@ const Resources = ({ history }: RouteComponentProps) => {
               >
                 {isAdminReviewer ? (
                   <td>
-                    <input
-                      type="checkbox"
+                    <CheckBox
                       checked={selected.includes(resource.id)}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={() => toggleCheck(resource.id)}
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        toggleCheck(resource.id);
+                      }}
                     />
                   </td>
                 ) : null}
                 <td>{resource.name}</td>
                 <td>{resource.resourceFileType}</td>
                 <td>{capitalCase(resource.category || "")}</td>
-                <td>
-                  {oc(resource)
-                    .controls([])
-                    .map((c) => c.description)
-                    .join(", ")}
-                </td>
+
                 <td>
                   {oc(resource)
                     .policies([])

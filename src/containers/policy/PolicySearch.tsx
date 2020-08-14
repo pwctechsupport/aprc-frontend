@@ -20,6 +20,7 @@ import PolicySearchItem from "./policySearch/PolicySearchItem";
 import OpacityButton from "../../shared/components/OpacityButton";
 import { RouteComponentProps } from "react-router-dom";
 import useAccessRights from "../../shared/hooks/useAccessRights";
+import Footer from "../../shared/components/Footer";
 
 interface PolicySearchFilter {
   title_cont?: string;
@@ -97,7 +98,7 @@ export default function PolicySearch({
           <SideBox>
             <SideBoxTitle>
               <div className="d-flex justify-content-between">
-                Search Policies
+                Search policies
               </div>
             </SideBoxTitle>
             <PolicySearchForm
@@ -108,53 +109,59 @@ export default function PolicySearch({
           </SideBox>
         </Col>
         <Col md={9} className="p-4">
-          <BreadCrumb crumbs={[["/policy", "Search Policies"]]} />
-          <div className="d-block d-md-none">
-            <OpacityButton className="mb-1" onClick={toggleShowDashboard}>
-              {showDashboard ? " Hide" : "Show"} Filter
-            </OpacityButton>
-            <Collapse isOpen={showDashboard}>
-              <div className="py-3 bg-light rounded">
-                <PolicySearchForm
-                  onSubmit={handleFormSubmit}
-                  submitting={loading}
-                  defaultValues={defaultValues}
-                />
-              </div>
-            </Collapse>
-          </div>
-          <Pagination
-            totalCount={totalCount}
-            perPage={limit}
-            onPageChange={handlePageChange}
-          />
-          {isUser &&
-          history.location.search.includes("status_eq=release") &&
-          policies.length ? (
-            policies.map((policy) => (
-              <PolicySearchItem
-                key={policy.id}
-                policy={policy}
-                homepageSearch={"thisIsForSearchPolicy"}
-                filter={filter}
-              />
-            ))
-          ) : !isUser && policies.length ? (
-            policies.map((policy) => (
-              <PolicySearchItem
-                key={policy.id}
-                policy={policy}
-                homepageSearch={"thisIsForSearchPolicy"}
-                filter={filter}
-              />
-            ))
-          ) : loading ? (
-            <div className={"text-center"}>
-              <FaSpinner className="icon-spin" size={40} />
+          <BreadCrumb crumbs={[["/policy", "Search policies"]]} />
+          <div style={{ minHeight: "80vh" }}>
+            <div className="d-block d-md-none">
+              <OpacityButton className="mb-1" onClick={toggleShowDashboard}>
+                {showDashboard ? " Hide" : "Show"} Filter
+              </OpacityButton>
+              <Collapse isOpen={showDashboard}>
+                <div className="py-3 bg-light rounded">
+                  <PolicySearchForm
+                    onSubmit={handleFormSubmit}
+                    submitting={loading}
+                    defaultValues={defaultValues}
+                  />
+                </div>
+              </Collapse>
             </div>
-          ) : (
-            <div className="text-center p-2 text-orange">Policy not found</div>
-          )}
+            <Pagination
+              totalCount={totalCount}
+              perPage={limit}
+              onPageChange={handlePageChange}
+            />
+            {isUser &&
+            history.location.search.includes("status_eq=release") &&
+            policies.length ? (
+              policies.map((policy) => (
+                <PolicySearchItem
+                  key={policy.id}
+                  policy={policy}
+                  homepageSearch={"thisIsForSearchPolicy"}
+                  filter={filter}
+                />
+              ))
+            ) : !isUser && policies.length ? (
+              policies.map((policy) => (
+                <PolicySearchItem
+                  key={policy.id}
+                  policy={policy}
+                  homepageSearch={"thisIsForSearchPolicy"}
+                  filter={filter}
+                />
+              ))
+            ) : loading ? (
+              <div className={"text-center"}>
+                <FaSpinner className="icon-spin" size={40} />
+              </div>
+            ) : (
+              <div className="text-center p-2 text-orange">
+                Policy not found
+              </div>
+            )}
+          </div>
+
+          <Footer />
         </Col>
       </Row>
     </Container>

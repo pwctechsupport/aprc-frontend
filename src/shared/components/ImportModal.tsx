@@ -11,7 +11,7 @@ const ImportModal = ({
   title,
   endpoint,
   onCompleted,
-  onError
+  onError,
 }: ImportModalProps) => {
   const [file, setFile] = useState();
   const [error, setError] = useState<null | string>(null);
@@ -37,10 +37,30 @@ const ImportModal = ({
     formData.append("file", file);
     try {
       setLoading(true);
-      await MyApi.put(endpoint, formData);
-      notifySuccess(`${title} Success`);
+      const rawData = await MyApi.put(endpoint, formData);
       toggle();
       onCompleted && onCompleted();
+      if (
+        rawData.data.error_data !== undefined &&
+        rawData.data.error_data.length !== 0
+      ) {
+        return notifyError(
+          rawData.data.error_data
+            .slice(0, 4)
+            .map(
+              (a: any) =>
+                `Error in line ${a.line}, Error message: ${a.message} `
+            ),
+          {
+            autoClose: 10000,
+          }
+        );
+      } else {
+        notifySuccess(`${title} Success`);
+        setInterval(function() {
+          window.location.reload();
+        }, 3000);
+      }
     } catch (error) {
       setError("Error uploading document");
       notifyError(`${title} Failed`);

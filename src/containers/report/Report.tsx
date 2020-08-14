@@ -13,6 +13,8 @@ import {
 } from "../../shared/utils/accessGeneratedPdf";
 import { notifyError, notifyInfo } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
+import Footer from "../../shared/components/Footer";
+import styled from "styled-components";
 
 const reportOptions = [
   {
@@ -22,7 +24,7 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description: "List of reviewed risks that are not mapped to any policies",
   },
   {
     name: "Risk Without Control",
@@ -31,17 +33,18 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description: "List of reviewed risks that are not mapped with any control",
   },
-  {
-    name: "Control Without Risk",
-    id: "report_control_policy",
-    formats: [
-      { id: "jangan masuk", name: "PDF" },
-      { id: "jangan masuk", name: "Excel" },
-    ],
-    description: "",
-  },
+  // {
+  //   name: "Control Without Risk",
+  //   id: "report_control_policy",
+  //   formats: [
+  //     { id: "jangan masuk", name: "PDF" },
+  //     { id: "jangan masuk", name: "Excel" },
+  //   ],
+  //   description:
+  //     "List of reviewed control(s) that are not mapped with any control",
+  // },
   {
     name: "Resources with rating",
     id: "report_resource_rating",
@@ -49,7 +52,8 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description:
+      "Report that summarizes resources (SOP) with highest utilisation",
   },
   {
     name: "Unmapped Risk",
@@ -58,7 +62,8 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description:
+      "List of reviewed risks that have been mapped into sub-business process but not yet tagged in flowchart",
   },
   {
     name: "Unmapped Control",
@@ -67,7 +72,8 @@ const reportOptions = [
       { id: "pdf", name: "PDF" },
       { id: "xlsx", name: "Excel" },
     ],
-    description: "",
+    description:
+      "List of reviewed controls that have been mapped into sub-business process but not yet tagged in flowchart",
   },
 ];
 
@@ -165,6 +171,7 @@ export default function Report() {
       setDownloading(false);
     }
   }
+  const [text, sText] = useState("");
   const reportRisk = watch("report_risk");
   const reportRiskPolicy = watch("report_risk_policy");
   const reportControlPolicy = watch("report_control_policy");
@@ -174,96 +181,154 @@ export default function Report() {
   const [checked, setChecked] = useState(true);
   return (
     <Container fluid className="p-0 pt-3 px-4">
-      <h4>Exception Report</h4>
+      <h4>Exception report</h4>
+      <div style={{ minHeight: "60vh" }}>
+        <Form>
+          <Table>
+            <thead>
+              <tr>
+                <th>Number</th>
+                <th>Report name</th>
+                <th>Report description</th>
+                <th>Format</th>
+              </tr>
+            </thead>
+            <tbody>
+              {reportOptions.map((option, index) => {
+                return (
+                  <tr key={option.id}>
+                    <td>{index + 1}</td>
+                    <td>{capitalize(option.name)}</td>
+                    <td>{option.description || "-"}</td>
+                    <td>
+                      <FormGroup tag="fieldset">
+                        {option.formats.map((format) => (
+                          <FormGroup key={format.id} check>
+                            <Label check>
+                              <PwcRadioInput
+                                type="radio"
+                                name={option.id}
+                                defaultChecked={
+                                  option.id === "report_risk" &&
+                                  format.id === "pdf" &&
+                                  checked
+                                }
+                                disabled={
+                                  // 1
+                                  !reportRisk &&
+                                  checked &&
+                                  [
+                                    "report_risk_policy",
+                                    "report_control_policy",
+                                    "report_resource_rating",
+                                    "unmapped_risk",
+                                    "unmapped_control",
+                                  ].includes(option.id)
+                                    ? true
+                                    : !checked &&
+                                      text !== "" &&
+                                      [
+                                        "report_risk",
+                                        "report_risk_policy",
+                                        "report_control_policy",
+                                        "report_resource_rating",
+                                        "unmapped_risk",
+                                        "unmapped_control",
+                                      ]
+                                        .filter((a) => a !== text)
+                                        .includes(option.id)
+                                    ? true
+                                    : checked &&
+                                      text === "report_risk" &&
+                                      [
+                                        "report_risk",
+                                        "report_risk_policy",
+                                        "report_control_policy",
+                                        "report_resource_rating",
+                                        "unmapped_risk",
+                                        "unmapped_control",
+                                      ]
+                                        .filter((a) => a !== text)
+                                        .includes(option.id)
+                                    ? true
+                                    : text === "" &&
+                                      checked &&
+                                      reportRisk === "pdf"
+                                    ? [
+                                        "report_risk_policy",
+                                        "report_control_policy",
+                                        "report_resource_rating",
+                                        "unmapped_risk",
+                                        "unmapped_control",
+                                      ].includes(option.id)
+                                    : false
+                                }
+                                onClick={(e: any) =>
+                                  sText(e.currentTarget.name)
+                                }
+                                value={format.id}
+                                innerRef={register}
+                              />
+                              {format.name}
+                            </Label>
+                          </FormGroup>
+                        ))}
+                      </FormGroup>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+          <div className="text-center mt-3 mb-5">
+            {reportRisk === "pdf" ||
+            reportRiskPolicy === "pdf" ||
+            reportControlPolicy === "pdf" ||
+            reportResourceRating === "pdf" ||
+            unmappedRisk === "pdf" ||
+            unmappedControl === "pdf" ||
+            (!reportRisk &&
+              !reportRiskPolicy &&
+              !reportControlPolicy &&
+              !reportResourceRating &&
+              !unmappedRisk &&
+              !unmappedControl) ? (
+              <Button
+                onClick={handleSubmit(handlePreview)}
+                type="button"
+                color="transparent"
+                className="mr-3"
+                loading={previewing}
+              >
+                <FaFile /> Preview
+              </Button>
+            ) : null}
 
-      <Form>
-        <Table>
-          <thead>
-            <tr>
-              <th>Number</th>
-              <th>Report Name</th>
-              <th>Report Description</th>
-              <th>Format</th>
-            </tr>
-          </thead>
-          <tbody>
-            {reportOptions.map((option, index) => {
-              return (
-                <tr key={option.id}>
-                  <td>{index + 1}</td>
-                  <td>{capitalize(option.name)}</td>
-                  <td>{option.description || "-"}</td>
-                  <td>
-                    <FormGroup tag="fieldset">
-                      {option.formats.map((format) => (
-                        <FormGroup key={format.id} check>
-                          <Label check>
-                            <Input
-                              type="radio"
-                              name={option.id}
-                              defaultChecked={
-                                option.id === "report_risk" &&
-                                format.id === "pdf" &&
-                                checked
-                              }
-                              value={format.id}
-                              innerRef={register}
-                            />{" "}
-                            {format.name}
-                          </Label>
-                        </FormGroup>
-                      ))}
-                    </FormGroup>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </Table>
-        <div className="text-center mt-3 mb-5">
-          {reportRisk === "pdf" ||
-          reportRiskPolicy === "pdf" ||
-          reportControlPolicy === "pdf" ||
-          reportResourceRating === "pdf" ||
-          unmappedRisk === "pdf" ||
-          unmappedControl === "pdf" ||
-          (!reportRisk &&
-            !reportRiskPolicy &&
-            !reportControlPolicy &&
-            !reportResourceRating &&
-            !unmappedRisk &&
-            !unmappedControl) ? (
             <Button
-              onClick={handleSubmit(handlePreview)}
-              type="button"
-              color="transparent"
-              className="mr-3"
-              loading={previewing}
+              color="secondary"
+              onClick={handleSubmit(handleDownload)}
+              loading={downloading}
             >
-              <FaFile /> Preview
+              <FaDownload /> Download
             </Button>
-          ) : null}
+            <Tooltip description="Reset Selected Format">
+              <Button
+                onClick={() => {
+                  setChecked(false);
+                  sText("");
+                }}
+                type="reset"
+                className="black ml-5"
+              >
+                <FaUndo />
+              </Button>
+            </Tooltip>
+          </div>
+        </Form>
+      </div>
 
-          <Button
-            color="secondary"
-            onClick={handleSubmit(handleDownload)}
-            loading={downloading}
-          >
-            <FaDownload /> Download
-          </Button>
-          <Tooltip description="Reset Selected Format">
-            <Button
-              onClick={() => {
-                setChecked(false);
-              }}
-              type="reset"
-              className="black ml-5"
-            >
-              <FaUndo />
-            </Button>
-          </Tooltip>
-        </div>
-      </Form>
+      <Footer />
+
       <Helmet>
         <title>Reports - PricewaterhouseCoopers</title>
       </Helmet>
@@ -272,7 +337,37 @@ export default function Report() {
 }
 
 type Key = keyof ReportFormValues;
-
+interface Props {
+  disabled?: boolean;
+}
+export const PwcRadioInput = styled(Input)<Props>`
+  &:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: ${(p) => (p.disabled ? `var(--primary-grey)` : "white")};
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid var(--primary-grey);
+  }
+  &:checked:after {
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: white;
+    content: "";
+    display: inline-block;
+    visibility: visible;
+    border: 5px solid var(--tangerine);
+  }
+`;
 interface ReportFormValues {
   report_risk?: string;
   report_risk_policy?: string;

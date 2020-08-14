@@ -33,6 +33,7 @@ import Tooltip from "../../../shared/components/Tooltip";
 import { toast } from "react-toastify";
 import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
 import styled from "styled-components";
+import { capitalize } from "lodash";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -180,15 +181,26 @@ export default function UserRow({
   if (!isEdit) {
     return (
       <tr>
-        <td>{name}</td>
         <td>{oc(user).id("")}</td>
+        <td>{name}</td>
         <td>
-          {oc(user)
-            .roles([])
-            .map((r) => r.name)
-            .join(",")}
+          {user?.mainRole?.length
+            ? capitalize(
+                user.mainRole
+                  .join(",")
+                  .split("_")
+                  .join(" ")
+              )
+            : capitalize(
+                oc(user)
+                  .roles([])
+                  .map((r) => r.name)
+                  .join(",")
+                  .split("_")
+                  .join(" ")
+              )}
         </td>
-        <td>{policyCategories.join(",")}</td>
+        <td>{policyCategories.join(", ")}</td>
         <td>{department}</td>
         <td>
           {draft ? (
@@ -206,7 +218,7 @@ export default function UserRow({
 
           {/* premis 2 Approve */}
           {draft && (isAdminReviewer || isAdmin) && (
-            <Fragment>
+            <div className="d-flex">
               <DialogButton
                 title="Approve"
                 data={oc(user).id()}
@@ -229,7 +241,7 @@ export default function UserRow({
                   <FaTimes />
                 </Tooltip>
               </DialogButton>
-            </Fragment>
+            </div>
           )}
 
           {/* premis 3 Edit */}
@@ -270,35 +282,50 @@ export default function UserRow({
           {/* premis 6 Accept request to edit */}
           {oc(user).requestEdit.state() === "requested" &&
             (isAdminReviewer || isAdmin) && (
+              <div className="d-flex">
+                <DialogButton
+                  title={`Accept request to edit?`}
+                  message={`Request by ${oc(user).requestEdit.user.name()}`}
+                  className="soft red mr-2"
+                  data={oc(user).requestEdit.id()}
+                  onConfirm={handleApproveRequest}
+                  onReject={handleRejectRequest}
+                  actions={{ no: "Reject", yes: "Approve" }}
+                  loading={approveEditM.loading}
+                >
+                  <Tooltip description="Accept Request To Edit">
+                    <FaExclamationCircle />
+                  </Tooltip>
+                </DialogButton>
+                <DialogButton
+                  title="Delete"
+                  data={oc(user).id()}
+                  loading={destroyM.loading}
+                  className="soft red"
+                  onConfirm={handleDestroy}
+                >
+                  <Tooltip description="Delete User">
+                    <FaTrash />
+                  </Tooltip>
+                </DialogButton>
+              </div>
+            )}
+
+          {!(oc(user).requestEdit.state() === "requested") &&
+            !draft &&
+            isAdminReviewer && (
               <DialogButton
-                title={`Accept request to edit?`}
-                message={`Request by ${oc(user).requestEdit.user.name()}`}
-                className="soft red mr-2"
-                data={oc(user).requestEdit.id()}
-                onConfirm={handleApproveRequest}
-                onReject={handleRejectRequest}
-                actions={{ no: "Reject", yes: "Approve" }}
-                loading={approveEditM.loading}
+                title="Delete"
+                data={oc(user).id()}
+                loading={destroyM.loading}
+                className="soft red"
+                onConfirm={handleDestroy}
               >
-                <Tooltip description="Accept Request To Edit">
-                  <FaExclamationCircle />
+                <Tooltip description="Delete User">
+                  <FaTrash />
                 </Tooltip>
               </DialogButton>
             )}
-
-          {!draft && isAdminReviewer && (
-            <DialogButton
-              title="Delete"
-              data={oc(user).id()}
-              loading={destroyM.loading}
-              className="soft red"
-              onConfirm={handleDestroy}
-            >
-              <Tooltip description="Delete User">
-                <FaTrash />
-              </Tooltip>
-            </DialogButton>
-          )}
         </td>
       </tr>
     );

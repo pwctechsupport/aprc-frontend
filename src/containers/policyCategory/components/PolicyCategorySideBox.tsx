@@ -57,8 +57,8 @@ const PolicyCategorySideBox = () => {
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Policy Category Admin"
-            : "Policy Category"}
+            ? "Policy category admin"
+            : "Policy category"}
           {/* {isAdminPreparer || isAdmin ? (
             <Tooltip description="Create Policy Category">
               <Button
@@ -73,7 +73,12 @@ const PolicyCategorySideBox = () => {
           ) : null} */}
         </div>
       </SideBoxTitle>
-      <SideBoxSearch search={search} setSearch={setSearch} loading={loading} />
+      <SideBoxSearch
+        placeholder="Search policy category..."
+        search={search}
+        setSearch={setSearch}
+        loading={loading}
+      />
       <Fragment>
         {policyCategories.map((policyCateg) => (
           <SideBoxItem

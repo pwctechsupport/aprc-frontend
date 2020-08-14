@@ -11,6 +11,7 @@ import EmptyAttribute from "./EmptyAttribute";
 import Table from "./Table";
 import Tooltip from "./Tooltip";
 import useAccessRights from "../hooks/useAccessRights";
+import styled from "styled-components";
 
 interface PoliciesTableProps {
   policies: Policy[];
@@ -108,11 +109,11 @@ const PolicyTableRow = ({
             {level > 0 && (
               <MdSubdirectoryArrowRight color="grey" className="mr-1" />
             )}
-            <Link
+            <PWCLink
               to={isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`}
             >
               {policy.title}
-            </Link>
+            </PWCLink>
           </div>
         </td>
 
@@ -156,3 +157,9 @@ const PolicyTableRow = ({
     </>
   );
 };
+export const PWCLink = styled(Link)`
+  color: var(--tangerine);
+  &:hover {
+    color: var(--tangerine);
+  }
+`;

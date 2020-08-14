@@ -3,25 +3,25 @@ import Helmet from "react-helmet";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
 import {
-  useDestroyBusinessProcessMutation,
   useAdminBusinessProcessTreeQuery,
+  useDestroyBusinessProcessMutation,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import CheckBox from "../../shared/components/forms/CheckBox";
+import ImportModal from "../../shared/components/ImportModal";
 import Modal from "../../shared/components/Modal";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
-import MyApi from "../../shared/utils/api";
-import downloadXls from "../../shared/utils/downloadXls";
-import CreateBusinessProcess from "./CreateBusinessProcess";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
+import downloadXls from "../../shared/utils/downloadXls";
+import CreateBusinessProcess from "./CreateBusinessProcess";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -76,8 +76,11 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
     }
   }
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  const [clicked, setClicked] = useState(true);
+  const clickButton = () => setClicked((p) => !p);
+
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(bps.map((n) => n.id));
     } else {
       setSelected([]);
@@ -92,27 +95,27 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       },
       {
         fileName: "Business Process.xlsx",
-        onStart: () => toast.info("Download Dimulai"),
-        onCompleted: () => toast.success("Download Berhasil"),
-        onError: () => toast.error("Download Gagal"),
+        onStart: () => toast.info("Download Started"),
+        onCompleted: () => toast.success("Downloaded"),
+        onError: () => toast.error("Download Failed"),
       }
     );
   }
 
   return (
     <div>
-      <BreadCrumb crumbs={[["/business-process", "Business Processes"]]} />
+      <BreadCrumb crumbs={[["/business-process", "Business processes"]]} />
       <div className="d-flex">
         <Helmet>
           <title>Business Process - PricewaterhouseCoopers</title>
         </Helmet>
         <div className="w-100">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h4>Business Process</h4>
+            <h4>Business process</h4>
             {isAdmin || isAdminPreparer ? (
-              <Tooltip description="Create Business Process">
+              <Tooltip description="Create business process">
                 <Button onClick={toggleCreateBpModal} className="pwc">
-                  + Add Business Process
+                  + Add business process
                 </Button>
               </Tooltip>
             ) : null}
@@ -148,7 +151,9 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
             ) : null}
 
             {isAdminReviewer ? (
-              <ImportBusinessProcessModal
+              <ImportModal
+                title="Import Business Process"
+                endpoint="/business_processes/import"
                 isOpen={modal}
                 toggle={toggleImportModal}
               />
@@ -157,7 +162,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           <Modal
             isOpen={createBpModal}
             toggle={toggleCreateBpModal}
-            title="Create Business Process"
+            title="Create business process"
           >
             <CreateBusinessProcess createBpModal={setCreateBpModal} />
           </Modal>
@@ -166,19 +171,21 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
               <tr>
                 {isAdminReviewer ? (
                   <th>
-                    <input
-                      type="checkbox"
+                    <CheckBox
                       checked={selected.length === bps.length}
-                      onChange={toggleCheckAll}
+                      onClick={() => {
+                        clickButton();
+                        toggleCheckAll();
+                      }}
                     />
                   </th>
                 ) : null}
 
-                <th>Business Process</th>
-                <th>Last Updated</th>
-                <th>Last Updated By</th>
-                <th>Created At</th>
-                <th>Created By</th>
+                <th>Business process</th>
+                <th>Last updated</th>
+                <th>Last updated by</th>
+                <th>Created at</th>
+                <th>Created by</th>
 
                 <th></th>
               </tr>
@@ -191,11 +198,12 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                 >
                   {isAdminReviewer ? (
                     <td>
-                      <input
-                        type="checkbox"
+                      <CheckBox
                         checked={selected.includes(item.id)}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={() => toggleCheck(item.id)}
+                        onClick={(e: any) => {
+                          e.stopPropagation();
+                          toggleCheck(item.id);
+                        }}
                       />
                     </td>
                   ) : null}
@@ -237,65 +245,3 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 };
 
 export default BusinessProcesses;
-
-const ImportBusinessProcessModal = ({
-  isOpen,
-  toggle,
-}: ImportBusinessProcessModalProps) => {
-  const [file, setFile] = useState();
-  const [error, setError] = useState<null | string>(null);
-  const [loading, setLoading] = useState(false);
-
-  function handleSetFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files && e.target.files[0];
-    if (file) {
-      if (
-        file.type !==
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ) {
-        setError("File type not supported. Allowed type are: .xls, .xlsx");
-      } else {
-        setError(null);
-        setFile(file);
-      }
-    }
-  }
-
-  async function handleImport() {
-    const formData = new FormData();
-
-    formData.append("file", file);
-    try {
-      setLoading(true);
-      await MyApi.put("/business_processes/import", formData);
-      toast.success("Import Business Process Berhasil");
-      toggle();
-    } catch (error) {
-      setError(error);
-      toast.error("Import Business Process Gagal");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <Modal isOpen={isOpen} title="Import Business Process" toggle={toggle}>
-      <Input type="file" onChange={handleSetFile} />
-      {error && <h6 className="text-red mt-2">{error}</h6>}
-      <div className="d-flex justify-content-end mt-3">
-        <Button
-          className="pwc"
-          onClick={handleImport}
-          disabled={!file || !!error}
-          loading={loading}
-        >
-          Import
-        </Button>
-      </div>
-    </Modal>
-  );
-};
-interface ImportBusinessProcessModalProps {
-  isOpen: boolean;
-  toggle: () => void;
-}

@@ -2,13 +2,14 @@ import get from "lodash/get";
 import React from "react";
 import { Col, Container, Row } from "reactstrap";
 import styled from "styled-components";
-import backgroundImage from "../../assets/images/homepage-background.jpg";
+import backgroundImage from "../../assets/images/SignInBackground.png";
 import { useHomepageQuery, useUserPVisitQuery } from "../../generated/graphql";
 import { toLabelValue } from "../../shared/formatter";
 import { useSelector } from "../../shared/hooks/useSelector";
 import HomepageBox from "./HomepageBox";
 import HomepageSearch from "./HomepageSearch";
 import Helmet from "react-helmet";
+import Footer from "../../shared/components/Footer";
 
 export default function Homepage() {
   const username = useSelector((state) => state.auth.user?.name);
@@ -36,14 +37,25 @@ export default function Homepage() {
         <title>Home - PricewaterhouseCoopers</title>
       </Helmet>
       <BackgroundImage>
-        <Greet style={{ position: "relative", top: "0.5vw", left: "2vw" }}>
-          <Row>
-            <Col lg={3}>
-              <ContentBox>Welcome, {username}</ContentBox>
-            </Col>
-            <Col></Col>
-          </Row>
-        </Greet>
+        <div
+          style={{
+            position: "relative",
+            marginLeft: "2vw",
+            top: "0.5vw",
+          }}
+        >
+          <Col lg={3}>
+            <h3
+              style={{
+                backgroundColor: "rgba(54, 48, 60, 0.6)",
+                padding: " 2rem 1rem",
+                color: "white",
+              }}
+            >
+              Welcome, {username}
+            </h3>
+          </Col>
+        </div>
         <Centerer>
           <Container>
             <ContentBox>
@@ -52,13 +64,13 @@ export default function Homepage() {
           </Container>
         </Centerer>
       </BackgroundImage>
-      <Container className="mt-5 pb-5">
+      <Container className="mt-5 pb-5" style={{ minHeight: "50vh" }}>
         <Row>
           <Col xs={12} md={6} lg={4}>
             <HomepageBox
               list={modifiedRecentlyAddedPol.map(toLabelValue)}
               basePath="policy"
-              title="Recently Added Policies"
+              title="Recently added policies"
               boldColor="rgb(255, 180, 105)"
               // lineColor="rgba(231, 155, 86,0.4)"
               // softColor="rgb(254, 204, 148)"
@@ -68,12 +80,12 @@ export default function Homepage() {
             <HomepageBox
               list={popularPolicies.map(toLabelValue)}
               basePath="policy"
-              title="Most Popular Policies"
+              title="Most popular policies"
               // boldColor="rgb(255, 196, 79)"
               // lineColor="rgba(255, 172, 90,0.4)"
               // softColor="rgb(255, 219, 147)"
             />
-          </Col>{" "}
+          </Col>
           <Col xs={12} md={6} lg={4}>
             <HomepageBox
               list={savedPolicies.map((a) => {
@@ -83,7 +95,7 @@ export default function Homepage() {
                 };
               })}
               basePath="policy"
-              title="My Saved Policies"
+              title="My saved policies"
               // boldColor="rgb(255, 126, 169)"
               // lineColor="rgba(255, 126, 169,0.4)"
               // softColor="rgb(251, 189, 201)"
@@ -97,7 +109,7 @@ export default function Homepage() {
             <HomepageBox
               list={popularResources.map(toLabelValue)}
               basePath="resources"
-              title="Most Popular Resources"
+              title="Most popular resources"
               // boldColor="rgb(255, 196, 79)"
               // lineColor="rgba(255, 172, 90,0.4)"
               // softColor="rgb(255, 219, 147)"
@@ -114,7 +126,7 @@ export default function Homepage() {
                   : []
               }
               basePath="policy"
-              title="My Recently Visited Policies"
+              title="My recently visited policies"
               // boldColor="rgb(255, 126, 169)"
               // lineColor="rgba(255, 126, 169,0.4)"
               // softColor="rgb(251, 189, 201)"
@@ -122,6 +134,7 @@ export default function Homepage() {
           </Col>
         </Row>
       </Container>
+      <Footer />
     </Background>
   );
 }
@@ -133,6 +146,8 @@ const Background = styled.div`
 const BackgroundImage = styled.div`
   height: calc(70vh - 63px);
   background: url(${backgroundImage});
+  background-position: center;
+  background-size: cover;
 `;
 
 const Centerer = styled.div`
@@ -142,14 +157,14 @@ const Centerer = styled.div`
   height: 100%;
 `;
 
-const Greet = styled.h3`
-  margin-bottom: 1.5rem;
-  color: white;
-`;
+// const Greet = styled.h3`
+//   margin-bottom: 1.5rem;
+//   color: white;
+// `;
 
 const ContentBox = styled.div`
   padding: 2rem 1rem;
   margin-bottom: 2rem;
   background-color: rgba(54, 48, 60, 0.6);
-  border-radius: 0.3rem;
+  border-radius: 3px;
 `;

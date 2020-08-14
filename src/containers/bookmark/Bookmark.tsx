@@ -11,26 +11,28 @@ import { oc } from "ts-optchain";
 import Button from "../../shared/components/Button";
 import {
   useBookmarksQuery,
-  useDestroyBookmarkMutation
+  useDestroyBookmarkMutation,
 } from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
 import Table from "../../shared/components/Table";
 import { date } from "../../shared/formatter";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
+import Footer from "../../shared/components/Footer";
+import CheckBox from "../../shared/components/forms/CheckBox";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
-  const [labelTime, setLabelTime] = useState("Date Added...");
+  const [labelTime, setLabelTime] = useState("Date added...");
   const [checked, setChecked] = useState<string[]>([]);
 
   const time = [
-    { label: "All Time" || "Date Added...", value: 1 },
+    { label: "All Time" || "Date added...", value: 1 },
     { label: "Today", value: 2 },
     { label: "In 7 days", value: 3 },
     { label: "In a month", value: 4 },
     { label: "In 90 days", value: 5 },
-    { label: "In a year", value: 6 }
+    { label: "In a year", value: 6 },
   ];
   const aDay = 86400000;
   const aWeek = 604800000;
@@ -39,7 +41,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const aYear = 31536000000;
 
   function constructDateFilter(input: any) {
-    if (!input || input === "All Time" || input === "Date Added...")
+    if (!input || input === "All Time" || input === "Date added...")
       return null;
     const presentDate = new Date().getTime();
     const subtractor =
@@ -59,30 +61,31 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   const [filter, setFilter] = useState({});
   const { data, networkStatus, loading } = useBookmarksQuery({
     variables: {
-      filter
+      filter,
     },
-    fetchPolicy: "network-only"
+    fetchPolicy: "network-only",
   });
   const [deleteBookmarks, deleteBookmarksM] = useDestroyBookmarkMutation({
     refetchQueries: ["bookmarks"],
     onError: notifyGraphQLErrors,
-    onCompleted: onDeleteComplete
+    onCompleted: onDeleteComplete,
   });
 
   function toggleCheck(id: string) {
     if (checked.includes(id)) {
-      setChecked(checked.filter(i => i !== id));
+      setChecked(checked.filter((i) => i !== id));
     } else {
       setChecked(checked.concat(id));
     }
   }
-
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  const [clicked, setClicked] = useState(true);
+  const clickButton = () => setClicked((p) => !p);
+  function toggleCheckAll() {
+    if (clicked) {
       setChecked(
         oc(data)
           .bookmarks.collection([])
-          .map(b => b.id)
+          .map((b) => b.id)
       );
     } else {
       setChecked([]);
@@ -100,7 +103,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
 
   function handleClickRow({
     id,
-    type
+    type,
   }: {
     id?: string | null;
     type: OriginatorType;
@@ -127,7 +130,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
     setFilter({
       originator_of_Policy_type_title_or_originator_of_BusinessProcess_type_name_or_originator_of_Control_type_description_or_originator_of_Risk_type_name_or_originator_type_cont:
         values.title,
-      created_at_gteq: constructDateFilter(labelTime)
+      created_at_gteq: constructDateFilter(labelTime),
     });
   };
   const handleChange = (props: any) => {
@@ -135,16 +138,15 @@ const Bookmark = ({ history }: RouteComponentProps) => {
   };
   const isDataExist = data?.bookmarks?.collection.length;
   const handleReset = () => {
-    setLabelTime("Date Added...");
+    setLabelTime("Date added...");
   };
   return (
     <div>
       <Helmet>
         <title>Bookmarks - PricewaterhouseCoopers</title>
       </Helmet>
-
-      <Container fluid className="p-md-5">
-        <h2>Bookmarks Manager</h2>
+      <Container style={{ minHeight: "80vh" }} fluid className="p-md-5">
+        <h2>Bookmarks manager</h2>
 
         <Row>
           <Col>
@@ -153,17 +155,17 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                 <Col xs={12} md={4} className="mb-1">
                   {" "}
                   <Input
-                    placeholder="Search Title..."
+                    placeholder="Search title..."
                     name="title"
                     innerRef={bookmarkForm.register}
                   />
                 </Col>
-                <Col xs={12} md={4} className="mb-1">
+                <Col xs={12} md={2} className="mb-1">
                   <Select
                     options={time}
                     name="date"
                     onChange={handleChange}
-                    placeholder={"Date Added..."}
+                    placeholder={"Date added..."}
                     value={[{ label: labelTime, value: 1 }]}
                   />
                 </Col>
@@ -205,7 +207,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
             </div>
           </Col>
         </Row>
-        <div className="table-responsive mt-1">
+        <div className="table-responsive mt-1" style={{ minHeight: "70vh" }}>
           <Table
             loading={networkStatus === NetworkStatus.loading}
             reloading={networkStatus === NetworkStatus.setVariables}
@@ -213,8 +215,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
             <thead>
               <tr>
                 <th>
-                  <input
-                    type="checkbox"
+                  <CheckBox
                     checked={
                       checked.length &&
                       checked.length ===
@@ -222,35 +223,39 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                         ? true
                         : false
                     }
-                    onChange={toggleCheckAll}
+                    onClick={() => {
+                      clickButton();
+                      toggleCheckAll();
+                    }}
                   />
                 </th>
-                <th>Bookmarks Category</th>
+                <th>Bookmarks category</th>
                 <th>Title</th>
-                <th>Date Added</th>
+                <th>Date added</th>
               </tr>
             </thead>
             <tbody>
               {isDataExist ? (
                 oc(data)
                   .bookmarks.collection([])
-                  .map(bookmark => {
+                  .map((bookmark) => {
                     return (
                       <tr
                         key={bookmark.id}
                         onClick={() =>
                           handleClickRow({
                             id: bookmark.originatorId,
-                            type: bookmark.originatorType as OriginatorType
+                            type: bookmark.originatorType as OriginatorType,
                           })
                         }
                       >
                         <td>
-                          <input
-                            type="checkbox"
+                          <CheckBox
                             checked={checked.includes(bookmark.id)}
-                            onChange={e => toggleCheck(bookmark.id)}
-                            onClick={e => e.stopPropagation()}
+                            onClick={(e: any) => {
+                              e.stopPropagation();
+                              toggleCheck(bookmark.id);
+                            }}
                           />
                         </td>
                         <td>{bookmark.originatorType}</td>
@@ -275,6 +280,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
           </Table>
         </div>
       </Container>
+      <Footer />
     </div>
   );
 };

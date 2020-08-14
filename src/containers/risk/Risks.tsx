@@ -2,26 +2,26 @@ import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import {
-  RisksDocument,
-  useDestroyRiskMutation,
   useAdminRisksQuery,
+  useDestroyRiskMutation,
   useReviewerRisksStatusQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import ImportModal from "../../shared/components/ImportModal";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
-import downloadXls from "../../shared/utils/downloadXls";
-import { notifySuccess } from "../../shared/utils/notif";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
+import downloadXls from "../../shared/utils/downloadXls";
+import { notifySuccess } from "../../shared/utils/notif";
 
 const Risks = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -64,12 +64,8 @@ const Risks = ({ history }: RouteComponentProps) => {
   const [destroy, destroyM] = useDestroyRiskMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
-    refetchQueries: [
-      {
-        query: RisksDocument,
-        variables: { filter: {} },
-      },
-    ],
+    refetchQueries: ["reviewerRisksStatus", "adminRisks", "risks"],
+    awaitRefetchQueries: true,
   });
 
   const risks =
@@ -88,9 +84,11 @@ const Risks = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
+  const [clicked, setClicked] = useState(true);
+  const clickButton = () => setClicked((p) => !p);
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(risks.map((r) => r.id));
     } else {
       setSelected([]);
@@ -156,7 +154,7 @@ const Risks = ({ history }: RouteComponentProps) => {
         ) : null}
         {isAdmin || isAdminPreparer ? (
           <Button tag={Link} to="/risk/create" className="pwc">
-            + Add Risk
+            + Add risk
           </Button>
         ) : null}
       </div>
@@ -165,21 +163,23 @@ const Risks = ({ history }: RouteComponentProps) => {
           <tr>
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
-                <input
-                  type="checkbox"
+                <CheckBox
                   checked={selected.length === risks.length}
-                  onChange={toggleCheckAll}
+                  onClick={() => {
+                    clickButton();
+                    toggleCheckAll();
+                  }}
                 />
               </th>
             ) : null}
 
             <th style={{ width: "13%" }}>Risk</th>
 
-            <th style={{ width: "13%" }}>Risk Level</th>
-            <th style={{ width: "13%" }}>Type of Risk</th>
-            <th style={{ width: "13%" }}>Business Process</th>
-            <th style={{ width: "13%" }}>Last Updated</th>
-            <th style={{ width: "13%" }}>Last Updated By</th>
+            <th style={{ width: "13%" }}>Risk level</th>
+            <th style={{ width: "13%" }}>Type of risk</th>
+            <th style={{ width: "13%" }}>Business process</th>
+            <th style={{ width: "13%" }}>Last updated</th>
+            <th style={{ width: "13%" }}>Last updated by</th>
 
             <th style={{ width: "13%" }}>Status</th>
 
@@ -197,15 +197,15 @@ const Risks = ({ history }: RouteComponentProps) => {
               >
                 {isAdminReviewer ? (
                   <td>
-                    <input
-                      type="checkbox"
+                    <CheckBox
                       checked={selected.includes(risk.id)}
-                      onClick={(e) => e.stopPropagation()}
-                      onChange={() => toggleCheck(risk.id)}
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        toggleCheck(risk.id);
+                      }}
                     />
                   </td>
                 ) : null}
-
                 <td>{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                 <td>

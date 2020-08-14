@@ -6,7 +6,7 @@ const OpacityButton = styled.button`
   margin-bottom: unset;
   padding: 5px;
   margin: 0px 4px;
-  border-radius: 2px;
+  border-radius: 3px;
   transition: background 0.1s ease-out 0s;
   background: none rgb(244, 245, 247);
   &:hover {

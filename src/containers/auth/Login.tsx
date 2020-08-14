@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
-import pwcLogo from "../../assets/images/pwc-logo.png";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline.png";
 import {
   useLoginMutation,
   LoginMutationVariables,
@@ -17,14 +17,22 @@ import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
 import Captcha from "react-numeric-captcha";
-
+import useWindowSize from "../../shared/hooks/useWindowSize";
+import { Container as BsContainer, Row, Col } from "reactstrap";
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  const { data, loading: loadingUsers } = useUsersQuery();
+  const [mail, sMail] = useState("");
+  const { data, loading: loadingUsers } = useUsersQuery({
+    variables: { filter: { email_cont: mail } },
+  });
   const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
   const checkEmail = watch("email");
+  useEffect(() => {
+    sMail(checkEmail);
+  }, [checkEmail]);
+
   //refreshes Captcha when error
   const email = data?.users?.collection.map((a) => a.email);
   const [t, st] = useState({
@@ -74,63 +82,79 @@ export default function Login({ history }: RouteComponentProps) {
       }
     }
   }
+  const screenSize = useWindowSize();
 
   return (
-    <Container>
-      <Helmet>
-        <title>Login - PricewaterhouseCoopers</title>
-      </Helmet>
-      <Image src={pwcLogo} alt="pwc-logo" />
-      <H1>Welcome, Please Sign in Here</H1>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Label>Email</Label>
-        <br />
-        <Input
-          name="email"
-          placeholder="Enter email address"
-          required
-          ref={register({ required: true })}
-        />
-        <br />
-        <br />
-        <Label>Password</Label>
-        <br />
-        <Input
-          name="password"
-          type="password"
-          placeholder="Enter password"
-          required
-          ref={register({ required: true })}
-        />
-        <br />
-        <br />
+    <BsContainer fluid className="login-background pt-md-5">
+      <Row>
+        <Col sm={12} md={7}>
+          <Image className="mt-0 ml-5" src={pwcLogoOutline} alt="pwc-logo" />
+        </Col>
+        <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
+          <BsContainer className="px-0">
+            <Helmet>
+              <title>Login - PricewaterhouseCoopers</title>
+            </Helmet>
+            <div
+              style={{
+                border: "1px solid rgba(0,0,0,0.2)",
+                padding: "1vw",
+                borderRadius: "3px",
+                backgroundColor: "rgba(255,255,255,.7)",
+              }}
+            >
+              <H1>Welcome,<br/> please sign in here</H1>
+              <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+                <Label>Email</Label>
+                <br />
+                <Input
+                  name="email"
+                  placeholder="Enter email address"
+                  required
+                  ref={register({ required: true })}
+                />
+                <br />
+                <br />
+                <Label>Password</Label>
+                <br />
+                <Input
+                  name="password"
+                  type="password"
+                  placeholder="Enter password"
+                  required
+                  ref={register({ required: true })}
+                />
+                <br />
+                <br />
+                <Captcha
+                  ref={(e: any) => st(e)}
+                  onChange={setCaptcha}
+                  placeholder="Insert captcha"
+                />
+                <br />
+                <br />
 
-        <Captcha
-          ref={(e: any) => st(e)}
-          onChange={setCaptcha}
-          placeholder="Insert captcha"
-        />
-
-        <br />
-        <br />
-
-        <Button
-          className="pwc"
-          color="primary"
-          type="submit"
-          block
-          loading={loading||loadingUsers}
-          disabled={!captcha}
-        >
-          Login
-        </Button>
-        <div className="text-center my-4">
-          <Link to="/forgot-password" className="link-pwc">
-            Forgot Password?
-          </Link>
-        </div>
-      </Form>
-    </Container>
+                <Button
+                  className="pwc"
+                  color="primary"
+                  type="submit"
+                  block
+                  loading={loading || loadingUsers}
+                  disabled={!captcha}
+                >
+                  Login
+              </Button>
+                <div className="text-center my-4">
+                  <Link to="/forgot-password" className="link-pwc">
+                    Forgot password?
+                </Link>
+                </div>
+              </Form>
+            </div>
+          </BsContainer>
+        </Col>
+      </Row>
+    </BsContainer>
   );
 }
 
@@ -146,7 +170,7 @@ export const Form = styled.form`
 `;
 
 export const Image = styled.img`
-  width: 90px;
+  width: 200px;
   height: auto;
   margin: 70px;
 `;
@@ -166,7 +190,7 @@ export const Label = styled.label`
 export const Input = styled.input`
   border: 1px solid #c4c4c4;
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: 3px;
   height: 38px;
   width: 100%;
   padding: 5px 10px 5px 10px;

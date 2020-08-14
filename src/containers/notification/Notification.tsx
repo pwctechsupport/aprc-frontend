@@ -24,12 +24,14 @@ import { useForm } from "react-hook-form";
 import Select from "react-select";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import NotificationSettings from "../settings/NotificationSettings";
+import Footer from "../../shared/components/Footer";
+import CheckBox from "../../shared/components/forms/CheckBox";
 
 const Notification = ({ history }: RouteComponentProps) => {
-  const [labelTime, setLabelTime] = useState("Date Added...");
+  const [labelTime, setLabelTime] = useState("Date added...");
 
   const time = [
-    { label: "All Time" || "Date Added...", value: 1 },
+    { label: "All Time" || "Date added...", value: 1 },
     { label: "Today", value: 2 },
     { label: "In 7 days", value: 3 },
     { label: "In a month", value: 4 },
@@ -43,7 +45,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   const aYear = 31536000000;
 
   function constructDateFilter(input: any) {
-    if (!input || input === "All Time" || input === "Date Added...")
+    if (!input || input === "All Time" || input === "Date added...")
       return null;
     const presentDate = new Date().getTime();
     const subtractor =
@@ -69,10 +71,17 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   const [filter, setFilter] = useState({});
   const onSubmit = (values: any) => {
-    setFilter({
-      title_or_originator_type_or_sender_user_name_cont: values.notif,
-      created_at_gteq: constructDateFilter(labelTime),
-    });
+    if (values.notif.toLowerCase() === "system") {
+      setFilter({
+        is_general_eq: true,
+        created_at_gteq: constructDateFilter(labelTime),
+      });
+    } else {
+      setFilter({
+        title_or_originator_type_or_sender_user_name_cont: values.notif,
+        created_at_gteq: constructDateFilter(labelTime),
+      });
+    }
   };
 
   const { data, loading, networkStatus } = useNotificationsQuery({
@@ -85,7 +94,6 @@ const Notification = ({ history }: RouteComponentProps) => {
   });
   const notifications = data?.notifications?.collection || [];
   const totalCount = data?.notifications?.metadata?.totalCount || 0;
-  console.log("notifications", notifications);
   const [destroyNotifs, destroyNotifsM] = useDestroyBulkNotificationMutation({
     onCompleted: () => {
       toast.success("Delete Success");
@@ -138,9 +146,11 @@ const Notification = ({ history }: RouteComponentProps) => {
       setSelected(selected.concat(id));
     }
   }
+  const [clicked, setClicked] = useState(true);
+  const clickButton = () => setClicked((p) => !p);
 
-  function toggleCheckAll(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.checked) {
+  function toggleCheckAll() {
+    if (clicked) {
       setSelected(notifications.map((n) => String(n.id)));
     } else {
       setSelected([]);
@@ -150,7 +160,7 @@ const Notification = ({ history }: RouteComponentProps) => {
     setLabelTime(props.label);
   };
   const handleReset = () => {
-    setLabelTime("Date Added...");
+    setLabelTime("Date added...");
   };
   const [isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin_reviewer",
@@ -172,17 +182,17 @@ const Notification = ({ history }: RouteComponentProps) => {
               <Row>
                 <Col xs={12} md={4} className="mb-1">
                   <Input
-                    placeholder="Search Notifications..."
+                    placeholder="Search notifications..."
                     name="notif"
                     innerRef={notificationForm.register}
                   />
                 </Col>
-                <Col xs={12} md={4} className="mb-1">
+                <Col xs={12} md={2} className="mb-1">
                   <Select
                     options={time}
                     name="date"
                     onChange={handleChange}
-                    placeholder={"Date Added..."}
+                    placeholder={"Date added..."}
                     value={[{ label: labelTime, value: 1 }]}
                   />
                 </Col>
@@ -227,106 +237,133 @@ const Notification = ({ history }: RouteComponentProps) => {
             </div>
           </Col>
         </Row>
+        <div style={{ minHeight: "70vh" }}>
+          <div className="table-responsive mt-1">
+            <Table
+              loading={networkStatus === NetworkStatus.loading}
+              reloading={networkStatus === NetworkStatus.setVariables}
+            >
+              <thead>
+                <tr>
+                  <th>
+                    <CheckBox
+                      checked={
+                        selected.length === notifications.length ? true : false
+                      }
+                      onClick={() => {
+                        clickButton();
+                        toggleCheckAll();
+                      }}
+                    />
+                  </th>
+                  <th>Name</th>
+                  <th>Subject</th>
+                  <th style={{ width: "10%" }}>Date added</th>
+                </tr>
+              </thead>
+              <tbody>
+                {notifications.map((data) => {
+                  let dataType: string = "";
 
-        <div className="table-responsive mt-1">
-          <Table
-            loading={networkStatus === NetworkStatus.loading}
-            reloading={networkStatus === NetworkStatus.setVariables}
-          >
-            <thead>
-              <tr>
-                <th>
-                  <input
-                    type="checkbox"
-                    checked={
-                      selected.length === notifications.length ? true : false
-                    }
-                    onChange={toggleCheckAll}
-                  />
-                </th>
-                <th>Name</th>
-                <th>Subject</th>
-                <th style={{ width: "10%" }}>Date Added</th>
-              </tr>
-            </thead>
-            <tbody>
-              {notifications.map((data) => {
-                let dataType: string = "";
+                  switch (data.dataType) {
+                    case "request_edit":
+                      dataType = "edit";
+                      break;
+                    case "request_draft":
+                      dataType = "approve";
+                      break;
+                    default:
+                      break;
+                  }
 
-                switch (data.dataType) {
-                  case "request_edit":
-                    dataType = "edit";
-                    break;
-                  case "request_draft":
-                    dataType = "approve";
-                    break;
-                  default:
-                    break;
-                }
+                  return data ? (
+                    <tr
+                      key={String(data.id)}
+                      onClick={() =>
+                        data.originatorType
+                          ? redirect(
+                              data.originatorType,
+                              data.originatorId || "",
+                              data.id || ""
+                            )
+                          : null
+                      }
+                    >
+                      <td>
+                        <CheckBox
+                          checked={selected.includes(String(data.id))}
+                          onClick={(e: any) => {
+                            e.stopPropagation();
+                            toggleCheck(String(data.id));
+                          }}
+                        />
+                      </td>
+                      <td
+                        className={data.isRead ? "" : "text-orange text-bold"}
+                      >
+                        {data.senderUserActualName}
+                      </td>
+                      <td
+                        className={data.isRead ? "" : "text-orange text-bold"}
+                      >
+                        {/* isAdminReviewer */}
 
-                return data ? (
-                  <tr
-                    key={String(data.id)}
-                    onClick={() =>
-                      data.originatorType
-                        ? redirect(
-                            data.originatorType,
-                            data.originatorId || "",
-                            data.id || ""
-                          )
-                        : null
-                    }
-                  >
-                    <td>
-                      <input
-                        type="checkbox"
-                        checked={selected.includes(String(data.id))}
-                        onClick={(e) => e.stopPropagation()}
-                        onChange={() => toggleCheck(String(data.id))}
-                      />
-                    </td>
-                    <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {data.senderUserName}
-                    </td>
-                    <td className={data.isRead ? "" : "text-orange text-bold"}>
-                      {/* isAdminReviewer */}
+                        {isAdminReviewer
+                          ? data.dataType === "request_draft" ||
+                            data.dataType === "request draft"
+                            ? `Action required: [${
+                                data.senderUserActualName
+                              }] has requested for approval for [${
+                                data.title?.includes(" Has Been Submitted")
+                                  ? data.title.split(" Has Been Submitted")[0]
+                                  : data.title?.includes(
+                                      data.senderUserActualName || ""
+                                    )
+                                  ? data.title
+                                      .split(
+                                        data.senderUserActualName + " " || ""
+                                      )[1]
+                                      .includes("Create a User with email")
+                                    ? data.title
+                                        .split(
+                                          data.senderUserActualName + " " || ""
+                                        )[1]
+                                        .split("Create a User with email ")[1]
+                                    : data.title
+                                  : data.title
+                              }]`
+                            : data.dataType === "request_edit"
+                            ? `Action required: [${data.senderUserActualName}] has requested for edit for [${data.title}]`
+                            : data.title
+                          : null}
 
-                      {isAdminReviewer
-                        ? data.dataType === "request_draft" ||
-                          data.dataType === "request draft"
-                          ? `Action required: [${data.senderUserName}] has requested for approval for [${data.title}]`
-                          : data.dataType === "request_edit"
-                          ? `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
-                          : data.title
-                        : null}
-
-                      {/* isAdminPreparer */}
-                      {isAdminPreparer || isUser
-                        ? data.dataType === "request_draft_approved" ||
-                          data.dataType === "request_draft_rejected"
-                          ? `Notification: [${
-                              data.dataType === "request_draft_approved"
-                                ? data.title?.split(" Approved")[0]
-                                : data.title?.split(" Rejected")[0]
-                            }] has been [${
-                              data.dataType === "request_draft_approved"
-                                ? `Approved`
-                                : `Rejected`
-                            }]`
-                          : data.dataType === "request_edit_approved" ||
-                            data.dataType === "request_edit_rejected"
-                          ? `Notification: your request for edit has been [${
-                              data.dataType === "request_edit_approved"
-                                ? "Approved"
-                                : "Rejected"
-                            }]`
-                          : data.dataType === "related_reference"
-                          ? data.title
-                          : data.title
-                        : null}
-                      {/* {isAdminReviewer &&
+                        {/* isAdminPreparer */}
+                        {isAdminPreparer || isUser
+                          ? data.dataType === "request_draft_approved" ||
+                            data.dataType === "request_draft_rejected"
+                            ? `[${
+                                data.dataType === "request_draft_approved"
+                                  ? data.title?.split(" Approved")[0]
+                                  : data.title?.split(" Rejected")[0]
+                              }] has been [${
+                                data.dataType === "request_draft_approved"
+                                  ? `Approved`
+                                  : `Rejected`
+                              }]`
+                            : data.dataType === "request_edit_approved" ||
+                              data.dataType === "request_edit_rejected"
+                            ? `Your request for edit has been [${
+                                data.dataType === "request_edit_approved"
+                                  ? "Approved"
+                                  : "Rejected"
+                              }]`
+                            : data.dataType === "related_reference"
+                            ? data.title
+                            : data.title
+                          : null}
+                        {/* {isAdminReviewer &&
                         `Action required: [${
-                          data.senderUserName
+                          data.senderUserActualName
                         }] has requested for ${
                           data.dataType !== "request_draft"
                             ? "edit"
@@ -363,25 +400,26 @@ const Notification = ({ history }: RouteComponentProps) => {
                               `${data.title.split("with")[1].split(" ")[1]}`,
                               `[${data.title.split("with")[1].split(" ")[1]}]`
                             )}`} */}
-                    </td>
-                    <td className={data.isRead ? "" : "text-orang text-bold"}>
-                      <div>{humanizeDate(data.createdAt)}</div>
-                      <span className="text-secondary">
-                        {formatDate(data.createdAt)}
-                      </span>
-                    </td>
-                  </tr>
-                ) : null;
-              })}
-            </tbody>
-          </Table>
+                      </td>
+                      <td className={data.isRead ? "" : "text-orang text-bold"}>
+                        <div>{humanizeDate(data.createdAt)}</div>
+                        <span className="text-secondary">
+                          {formatDate(data.createdAt)}
+                        </span>
+                      </td>
+                    </tr>
+                  ) : null;
+                })}
+              </tbody>
+            </Table>
+          </div>
+          <Pagination
+            totalCount={totalCount}
+            perPage={limit}
+            onPageChange={handlePageChange}
+          />
         </div>
-
-        <Pagination
-          totalCount={totalCount}
-          perPage={limit}
-          onPageChange={handlePageChange}
-        />
+        <Footer />
       </Container>
     </div>
   );

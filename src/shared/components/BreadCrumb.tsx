@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Breadcrumb, BreadcrumbItem } from "reactstrap";
+import styled from "styled-components";
 
 type PathType = string;
 type LabelType = string;
@@ -29,7 +30,7 @@ const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
           <Fragment key={i}>
             {i !== crumbs.length - 1 ? (
               <BreadcrumbItem>
-                <Link to={crumb[0]}>{crumb[1]}</Link>
+                <StyledLink to={crumb[0]}>{crumb[1]}</StyledLink>
               </BreadcrumbItem>
             ) : (
               <BreadcrumbItem>{crumb[1]}</BreadcrumbItem>
@@ -42,3 +43,9 @@ const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
 };
 
 export default BreadCrumb;
+const StyledLink = styled(Link)`
+  color: var(--tangerine);
+  &:hover {
+    color: var(--tangerine);
+  }
+`;

@@ -47,22 +47,30 @@ export default function AsyncSelect({
         defaultValue.find((a: any) => a.value === state.data.value)
         ? { ...base, display: "none" }
         : base;
-    }
+    },
   };
   const Select = (
     <Fragment>
-      <AsyncReactSelect
-        {...rest}
-        closeMenuOnSelect={rest.closeMenuOnSelect ?? !rest.isMulti}
-        className={classnames(error ? "invalid" : undefined)}
-        onChange={handleChange}
-        classNamePrefix="select"
-        isClearable={!isResourcePolicy}
-        defaultValue={defaultValue}
-        styles={styles}
-      />
+      <div
+        style={{
+          border: `${error ? "1px solid red" : ""} `,
+          borderRadius: "6px",
+        }}
+      >
+        <AsyncReactSelect
+          {...rest}
+          closeMenuOnSelect={rest.closeMenuOnSelect ?? !rest.isMulti}
+          className={classnames(error ? "invalid" : undefined)}
+          onChange={handleChange}
+          classNamePrefix="select"
+          isClearable={!isResourcePolicy}
+          defaultValue={defaultValue}
+          styles={styles}
+        />
+      </div>
+
       {error && (
-        <FormText className="text-danger pl-3" color="red">
+        <FormText className="text-danger " color="red">
           {error}
         </FormText>
       )}

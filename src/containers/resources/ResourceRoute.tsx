@@ -5,6 +5,7 @@ import Resource from "./Resource";
 import CreateResource from "./CreateResource";
 import ResourceSideBox from "./components/ResourceSideBox";
 import { Row, Col, Container } from "reactstrap";
+import Footer from "../../shared/components/Footer";
 
 const ResourceRoute = () => {
   return (
@@ -14,11 +15,18 @@ const ResourceRoute = () => {
           <Route path="/resources" component={ResourceSideBox} />
         </Col>
         <Col md={9} className="p-4">
-          <Route exact path="/resources" component={Resources} />
-          <Switch>
-            <Route exact path="/resources/create" component={CreateResource} />
-            <Route exact path="/resources/:id" component={Resource} />
-          </Switch>
+          <div style={{ minHeight: "80vh" }}>
+            <Route exact path="/resources" component={Resources} />
+            <Switch>
+              <Route
+                exact
+                path="/resources/create"
+                component={CreateResource}
+              />
+              <Route exact path="/resources/:id" component={Resource} />
+            </Switch>
+          </div>
+          <Footer />
         </Col>
       </Row>
     </Container>
