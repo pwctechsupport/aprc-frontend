@@ -91,6 +91,7 @@ import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import styled from "styled-components";
 import BusinessProcessList from "../../shared/components/BusinessProcessList";
+import SunEditor from "suneditor-react";
 
 type TParams = { id: string };
 
@@ -859,15 +860,31 @@ export default function Policy({
                 {renderPolicyAction()}
               </div>
 
-              <div
+              {/* <div
                 className="mb-3 py-3"
                 dangerouslySetInnerHTML={{
                   __html: description,
                 }}
-              />
+              /> */}
+              <div className="mt-2">
+                <SunEditor
+                  showToolbar={false}
+                  disable={true}
+                  show={true}
+                  name="description"
+                  setContents={description || ""}
+                  hide={true}
+                  enableToolbar={true}
+                  setOptions={{
+                    showPathLabel: false,
+                    minHeight: "30vh",
+                    height: "auto",
+                  }}
+                />
+              </div>
               {policyReferences.length ? (
                 <div
-                  className="d-flex"
+                  className="mt-3 d-flex"
                   style={{ borderBottom: " 1px solid #d85604" }}
                 >
                   <h6>

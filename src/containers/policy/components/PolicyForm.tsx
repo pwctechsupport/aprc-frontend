@@ -13,6 +13,8 @@ import { toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
 // import TextEditor from "../../../shared/components/forms/TextEditor";
 // import { Editor } from "@tinymce/tinymce-react";
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
 
 const PolicyForm = ({
   submitFromDraft,
@@ -31,7 +33,7 @@ const PolicyForm = ({
 }: PolicyFormProps) => {
   const [createS, setCreateS] = useState(false);
   const policyCategoriesState = usePolicyCategoriesQuery();
-  const { register, setValue, errors, handleSubmit } = useForm<
+  const { register, setValue, errors, handleSubmit, watch } = useForm<
     PolicyFormValues
   >({
     validationSchema,
@@ -46,7 +48,7 @@ const PolicyForm = ({
   }, [register]);
 
   function onChangeEditor(data: any) {
-    setValue("description", data?.level?.content);
+    setValue("description", data);
   }
 
   function handleChange(name: keyof PolicyFormValues) {
@@ -79,6 +81,7 @@ const PolicyForm = ({
   if (policyCategoriesState.loading) {
     return <LoadingSpinner centered size={30} />;
   }
+
   return (
     <div>
       <Form>
@@ -100,15 +103,17 @@ const PolicyForm = ({
             <SunEditor
               showToolbar={true}
               enable={true}
-              disable={false}
               show={true}
               name="description"
               setContents={defaultValues?.description || ""}
               onChange={onChangeEditor}
               enableToolbar={true}
               setOptions={{
+                showPathLabel: false,
+                imageUploadSizeLimit: 10485760,
                 linkProtocol: "http://",
-                height: "30vh",
+                minHeight: "30vh",
+                height: "auto",
                 font: [
                   "Serif",
                   "Sans Serif",
@@ -134,7 +139,7 @@ const PolicyForm = ({
                   ["image", "table", "link"],
                 ],
               }}
-            />{" "}
+            />
           </div>
           {errors.description && (
             <FormText className="text-danger " color="red">

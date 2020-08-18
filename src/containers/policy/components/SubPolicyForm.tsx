@@ -19,7 +19,8 @@ import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -108,9 +109,6 @@ const SubPolicyForm = ({
     }
   }
 
-  function onChangeEditor(data: any) {
-    setValue("description", data?.level?.content);
-  }
   // Functions for changing buttons
   // Functions when create
   function saveAsDraftFirstPhase(values: SubPolicyFormValues) {
@@ -153,7 +151,7 @@ const SubPolicyForm = ({
     setAttr(values);
     setShowAttrs(false);
   }
-  if (referenceData.loading || getBisproDefValQ.loading) {
+  if (referenceData.loading) {
     return <LoadingSpinner centered size={30} />;
   }
 
@@ -162,6 +160,10 @@ const SubPolicyForm = ({
       .referenceIds([])
       .includes(reference.value);
   });
+
+  function onChangeEditor(data: any) {
+    setValue("description", data);
+  }
   return (
     <div>
       <Form>
@@ -174,7 +176,55 @@ const SubPolicyForm = ({
         />
         <div className="mb-3">
           <label>Policy description*</label>
-          <TextEditorField
+
+          <div
+            style={{
+              padding: errors.description ? 1 : 0,
+              backgroundColor: "red",
+            }}
+          >
+            <SunEditor
+              showToolbar={true}
+              enable={true}
+              show={true}
+              name="description"
+              setContents={defaultValues?.description || ""}
+              onChange={onChangeEditor}
+              enableToolbar={true}
+              setOptions={{
+                showPathLabel: false,
+                imageUploadSizeLimit: 10485760,
+                linkProtocol: "http://",
+                minHeight: "30vh",
+                height: "auto",
+                font: [
+                  "Serif",
+                  "Sans Serif",
+                  "Monospace",
+                  "Candara",
+                  "Verdana",
+                  "Arial",
+                  "Twentieth Century",
+                  "Calibri",
+                  "Georgia",
+                  "Abadi",
+                  "Helvetica",
+                  "Garamond",
+                  "Bookman",
+                  "Arial Nova Cond",
+                  "Bahnschrift",
+                  "Selawik",
+                  "Perpetua",
+                ],
+                buttonList: [
+                  ["font", "fontSize", "align"],
+                  ["fontColor", "hiliteColor", "bold", "underline", "italic"],
+                  ["image", "table", "link"],
+                ],
+              }}
+            />
+          </div>
+          {/* <TextEditorField
             name="description"
             register={register}
             onChange={onChangeEditor}
@@ -184,7 +234,7 @@ const SubPolicyForm = ({
               errors.description &&
               "Description field is too short and the field is required"
             }
-          />
+          /> */}
           {/* <TextEditor
             data={watch("description")}
             onChange={handleEditorChange}
@@ -211,6 +261,7 @@ const SubPolicyForm = ({
             type="button"
             onClick={() => setShowAttrs(true)}
             className="pwc mr-2"
+            loading={getBisproDefValQ.loading}
           >
             Insert attributes
           </Button>
