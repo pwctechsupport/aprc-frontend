@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useForm } from "react-hook-form";
-import { Form } from "reactstrap";
+import { Form, FormText } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useBusinessProcessesQuery,
@@ -224,6 +224,11 @@ const SubPolicyForm = ({
               }}
             />
           </div>
+          {errors.description && (
+            <FormText className="text-danger " color="red">
+              Policy description is a required field
+            </FormText>
+          )}
           {/* <TextEditorField
             name="description"
             register={register}
@@ -863,7 +868,7 @@ const SubPolicyAttributeForm = ({
           className="pwc px-4"
           onClick={formModal.handleSubmit(submit)}
         >
-          Save Attribute
+          Save attribute
         </Button>
       </div>
     </Form>
