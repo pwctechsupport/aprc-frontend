@@ -90,7 +90,7 @@ import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import styled from "styled-components";
-import SunEditor from "suneditor-react";
+import BusinessProcessList from "../../shared/components/BusinessProcessList";
 
 type TParams = { id: string };
 
@@ -106,7 +106,13 @@ export default function Policy({
   const subPolicyRef = useRef<HTMLInputElement>(null);
   const riskRef = useRef<HTMLInputElement>(null);
   const controlRef = useRef<HTMLInputElement>(null);
-  const initialCollapse = ["Resources", "Risks", "Controls", "Sub-Policies"];
+  const initialCollapse = [
+    "Resources",
+    "Risks",
+    "Controls",
+    "Sub-policies",
+    "Business processes",
+  ];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse((p) => {
@@ -382,10 +388,11 @@ export default function Policy({
     ? get(data, "policy.draft.objectResult.description", "")
     : data?.policy?.description || "";
   const hasEditAccess = oc(data).policy.hasEditAccess();
-  const parentId = oc(data).policy.parentId("");
+
   const children = oc(data).policy.children([]);
   const isSubPolicy: boolean = !!oc(data).policy.ancestry();
   const ancestry = oc(data).policy.ancestry("");
+  const parentId = ancestry.split("/").pop() || "";
   const policyReferences = data?.policy?.references || [];
   const controlCount = oc(data).policy.controlCount({});
   const riskCount = oc(data).policy.riskCount({});
@@ -698,7 +705,7 @@ export default function Policy({
                 ) : (
                   <EmptyAttribute />
                 )}
-                <dt>Business Processes</dt>
+                <dt>Business processes</dt>
                 {businessProcesses.length ? (
                   filteredNames(businessProcesses).map((bp: any) => (
                     <dd key={bp.id}>{bp.name}</dd>
@@ -744,7 +751,7 @@ export default function Policy({
                         <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                           {activity.guidance ? (
                             activity.guidance
-                          ) : (
+                          ) : activity.guidanceFileName ? (
                             <div className="d-flex align-items-center ">
                               <Button color="" className="soft orange">
                                 <a
@@ -761,6 +768,8 @@ export default function Policy({
                                 </a>
                               </Button>
                             </div>
+                          ) : (
+                            "N/A"
                           )}
                         </td>
                       </tr>
@@ -846,27 +855,16 @@ export default function Policy({
 
                 <div className="mt-1  ">Version : {trueVersion}</div>
               </div>
-              <div className="d-flex justify-content-end mb-2">
+              <div className="d-flex justify-content-end">
                 {renderPolicyAction()}
               </div>
 
-              {/* <div
+              <div
                 className="mb-3 py-3"
                 dangerouslySetInnerHTML={{
                   __html: description,
                 }}
-              /> */}
-              <SunEditor
-                showToolbar={false}
-                enable={false}
-                disable={true}
-                show={false}
-                name="description"
-                setContents={description || ""}
-                enableToolbar={false}
-                setOptions={{ height: "20vh", maxHeight: "100vh" }}
               />
-
               {policyReferences.length ? (
                 <div
                   className="d-flex"
@@ -874,7 +872,7 @@ export default function Policy({
                 >
                   <h6>
                     {policyReferences.map((reference) => (
-                      <Badge key={reference.id} className="mt-2 mx-1">
+                      <Badge key={reference.id} className="mx-1">
                         {reference.name}
                       </Badge>
                     ))}
@@ -895,6 +893,15 @@ export default function Policy({
                 </div>
               )}
 
+              <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
+                <Collapsible
+                  title="Business processes"
+                  show={collapse.includes("Business processes")}
+                  onClick={toggleCollapse}
+                >
+                  <BusinessProcessList dataPolicy={data} />
+                </Collapsible>
+              </div>
               <div ref={riskRef} style={{ borderBottom: " 1px solid #d85604" }}>
                 <Collapsible
                   title="Risks"
@@ -920,8 +927,8 @@ export default function Policy({
 
               <div ref={subPolicyRef}>
                 <Collapsible
-                  title="Sub-Policies"
-                  show={collapse.includes("Sub-Policies")}
+                  title="Sub-policies"
+                  show={collapse.includes("Sub-policies")}
                   onClick={toggleCollapse}
                 >
                   <PoliciesTable
@@ -1089,7 +1096,7 @@ export default function Policy({
                 <MdEmail /> Mail
               </div>
             ),
-            onClick: () => emailPdf(title),
+            onClick: () => emailPdf(title, Number(id), true),
           },
         ]
       : [
@@ -1128,7 +1135,7 @@ export default function Policy({
                 <MdEmail /> Mail
               </div>
             ),
-            onClick: () => emailPdf(title),
+            onClick: () => emailPdf(title, Number(id), true),
           },
           {
             label: (

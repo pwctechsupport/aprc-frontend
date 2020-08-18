@@ -74,7 +74,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   });
   // Update handlers
   const [updateMutation, updateInfo] = useUpdatePolicyCategoryMutation({
-    onCompleted: () => notifySuccess("Policy Category Updated"),
+    onCompleted: () => notifySuccess("Policy category updated"),
     onError: notifyGraphQLErrors,
     awaitRefetchQueries: true,
     refetchQueries: ["policyCategory"],
@@ -234,7 +234,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
           >
             <FaTrash />
           </DialogButton> */}
-          <Tooltip description="Edit Policy Category">
+          <Tooltip description="Edit policy category">
             {policiesDataRaw.loading ? (
               <LoadingSpinner size={10} centered />
             ) : (
@@ -275,20 +275,20 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
     return (
       <div>
         <Fragment>
-          <dt>Created At</dt>
+          <dt>Created at</dt>
           <dd>{createdAt}</dd>
         </Fragment>
         <Fragment>
-          <dt>Created By</dt>
+          <dt>Created by</dt>
           <dd> {createdBy ? createdBy : "-"}</dd>
         </Fragment>
         <Fragment>
-          <dt>Last Updated By</dt>
+          <dt>Last updated by</dt>
           <dd> {lastUpdatedBy ? lastUpdatedBy : "-"}</dd>
         </Fragment>
         {/* <h6 className="mt-4"> </h6> */}
         <Fragment>
-          <dt>Related Policies</dt>
+          <dt>Related policies</dt>
           {policiesData.length ? (
             <ul>
               {policiesData.map((policy) => (
@@ -312,7 +312,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       </Helmet>
       <BreadCrumb
         crumbs={[
-          ["/policy-category", "Policy Category"],
+          ["/policy-category", "Policy category"],
           ["/policy-category/" + id, name],
         ]}
       />

@@ -33,7 +33,7 @@ const BusinessProcessForm = ({
             <div style={{ border: `${errors.name ? "1px solid red" : ""}` }}>
               <Input
                 name="name"
-                placeholder="Business Process Name*"
+                placeholder="Business process name*"
                 innerRef={register}
                 required
               />

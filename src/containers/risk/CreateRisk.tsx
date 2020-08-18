@@ -27,7 +27,7 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
       variables: {
         input: {
           name: values.name || "",
-          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
+          businessProcessIds: values.businessProcessIds || [],
           levelOfRisk: values.levelOfRisk || LevelOfRisk.Low,
           typeOfRisk: values.typeOfRisk || TypeOfRisk.BusinessRisk,
         },
@@ -42,10 +42,10 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/risk", "Risks"],
-          ["/risk/create", "Create Risk"],
+          ["/risk/create", "Create risk"],
         ]}
       />
-      <HeaderWithBackButton heading="Create Risk" />
+      <HeaderWithBackButton heading="Create risk" />
       <RiskForm
         onSubmit={handleSubmit}
         submitting={loading}

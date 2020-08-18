@@ -312,7 +312,10 @@ fragment policyFragment on Policy {
   status
   createdAt
   updatedAt
-
+  draft {
+    id
+  }
+  requestStatus
   policyCategory {
     id
     name

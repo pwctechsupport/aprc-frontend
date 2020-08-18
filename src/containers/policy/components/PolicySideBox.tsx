@@ -99,7 +99,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Policies Admin"
+            ? "Policies admin"
             : "Policies"}
         </div>
       </SideBoxTitle>
@@ -107,7 +107,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
         search={search}
         setSearch={setSearch}
         loading={loading}
-        placeholder="Search Policies..."
+        placeholder="Search policies..."
       />
       <div>
         {policiesReal.length ? (
@@ -169,6 +169,7 @@ interface PolicyBranchProps {
   parentId?: any;
   status?: any;
   originalData?: any;
+  myBroHasChild?: boolean;
 }
 
 const PolicyBranch = ({
@@ -181,6 +182,7 @@ const PolicyBranch = ({
   level,
   originalData,
   status,
+  myBroHasChild,
   isAdmin,
 }: PolicyBranchProps) => {
   const modifiedChildren =
@@ -202,9 +204,13 @@ const PolicyBranch = ({
     "admin_reviewer",
     "admin_preparer",
   ]);
-  const childrenHasChild = originalData?.children
+  const childrenHasChildWhenUser = originalData?.children
     ?.map((a: any) => a.status)
     .includes("release");
+  const reviewerHasChild =
+    originalData?.children?.filter((a: any) => a.status !== "draft") || [];
+  const grandpa = children?.map((a) => a.children).flat().length || 0;
+
   return (
     <div>
       <Fragment>
@@ -216,13 +222,17 @@ const PolicyBranch = ({
                 active: isActive,
               })}
               padLeft={level ? level * 10 : 0}
-              isLastChild={(!hasChild || !childrenHasChild) && parentId}
+              isLastChild={
+                (!hasChild || !childrenHasChildWhenUser) &&
+                parentId &&
+                !myBroHasChild
+              }
             >
-              {hasChild && childrenHasChild ? (
+              {hasChild && childrenHasChildWhenUser ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className="text-grey"
+                    className={isActive ? "text-white" : "text-orange"}
                     size={14}
                   />
                 </SideBoxBranchIconContainer>
@@ -251,6 +261,7 @@ const PolicyBranch = ({
                     parentId={child.parentId}
                     {...child}
                     activeId={activeId}
+                    myBroHasChild={grandpa ? true : false}
                     originalData={child}
                     status={child.status}
                     activeMode={activeMode}
@@ -270,13 +281,13 @@ const PolicyBranch = ({
                 active: isActive,
               })}
               padLeft={level ? level * 10 : 0}
-              isLastChild={!hasChild && parentId}
+              isLastChild={!hasChild && parentId && !myBroHasChild}
             >
               {hasChild ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className="text-grey"
+                    className={isActive ? "text-white" : "text-orange"}
                     size={14}
                   />
                 </SideBoxBranchIconContainer>
@@ -303,6 +314,8 @@ const PolicyBranch = ({
                   <PolicyBranch
                     key={child.id}
                     parentId={child.parentId}
+                    originalData={child}
+                    myBroHasChild={grandpa ? true : false}
                     {...child}
                     activeId={activeId}
                     activeMode={activeMode}
@@ -321,13 +334,13 @@ const PolicyBranch = ({
                 active: isActive,
               })}
               padLeft={level ? level * 10 : 0}
-              isLastChild={!hasChild && parentId}
+              isLastChild={!hasChild && parentId && !myBroHasChild}
             >
-              {hasChild ? (
+              {reviewerHasChild.length ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
-                    className="text-grey"
+                    className={isActive ? "text-white" : "text-orange"}
                     size={14}
                   />
                 </SideBoxBranchIconContainer>
@@ -358,6 +371,7 @@ const PolicyBranch = ({
                       parentId={child.parentId}
                       {...child}
                       activeId={activeId}
+                      myBroHasChild={grandpa ? true : false}
                       activeMode={activeMode}
                       status={child.status}
                       level={Number(level) + 1}

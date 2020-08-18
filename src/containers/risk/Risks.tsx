@@ -154,7 +154,7 @@ const Risks = ({ history }: RouteComponentProps) => {
         ) : null}
         {isAdmin || isAdminPreparer ? (
           <Button tag={Link} to="/risk/create" className="pwc">
-            + Add Risk
+            + Add risk
           </Button>
         ) : null}
       </div>
@@ -175,11 +175,11 @@ const Risks = ({ history }: RouteComponentProps) => {
 
             <th style={{ width: "13%" }}>Risk</th>
 
-            <th style={{ width: "13%" }}>Risk Level</th>
-            <th style={{ width: "13%" }}>Type of Risk</th>
-            <th style={{ width: "13%" }}>Business Process</th>
-            <th style={{ width: "13%" }}>Last Updated</th>
-            <th style={{ width: "13%" }}>Last Updated By</th>
+            <th style={{ width: "13%" }}>Risk level</th>
+            <th style={{ width: "13%" }}>Type of risk</th>
+            <th style={{ width: "13%" }}>Business process</th>
+            <th style={{ width: "13%" }}>Last updated</th>
+            <th style={{ width: "13%" }}>Last updated by</th>
 
             <th style={{ width: "13%" }}>Status</th>
 

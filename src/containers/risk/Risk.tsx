@@ -17,6 +17,7 @@ import {
   useReviewRiskDraftMutation,
   useRiskQuery,
   useUpdateRiskMutation,
+  useBusinessProcessesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -65,18 +66,53 @@ export default function Risk({
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
   const requestEditState = data?.risk?.requestEdit?.state;
+
   const premise = useEditState({
     draft,
     hasEditAccess,
     requestStatus,
     requestEditState,
   });
+
+  const businessProcesses =
+    data?.risk?.businessProcesses
+      ?.filter((a) => bps.includes(a.name || ""))
+      .map(toLabelValue) || [];
+
+  const globalBps = useBusinessProcessesQuery({
+    skip: premise !== 3,
+    variables: { filter: { ancestry_null: false } },
+  });
+
+  const getValueFormBpsData =
+    globalBps.data?.navigatorBusinessProcesses?.collection || [];
+
+  const prepareBpsDefaultValue = getValueFormBpsData.filter((a) =>
+    businessProcesses.map((b: any) => b.value).includes(a.id)
+  );
+  const getParentOrGrandParent = prepareBpsDefaultValue.map((a) => {
+    if (a.parent?.parent?.id) {
+      return {
+        value: a.id || "",
+        label: a.name || "",
+        grandParentLabel: a.parent.parent.name || "",
+        grandParentValue: a.parent.parent.id || "",
+        parentLabel: a.parent.name || "",
+        parentValue: a.parent.id || "",
+      };
+    } else {
+      return {
+        parentValue: a.id || "",
+        parentLabel: a.name || "",
+        grandParentLabel: a.parent?.name || "",
+        grandParentValue: a.parent?.id || "",
+      };
+    }
+  });
+
   const defaultValues: RiskFormValues = {
     name,
-    businessProcessIds:
-      data?.risk?.businessProcesses
-        ?.filter((a) => bps.includes(a.name || ""))
-        .map(toLabelValue) || [],
+    businessProcessIds: getParentOrGrandParent,
     levelOfRisk: levelOfRisk as LevelOfRisk,
     typeOfRisk: typeOfRisk as TypeOfRisk,
   };
@@ -97,7 +133,7 @@ export default function Risk({
         input: {
           id,
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
+          businessProcessIds: values.businessProcessIds || [],
           levelOfRisk: values.levelOfRisk,
           typeOfRisk: values.typeOfRisk,
         },
@@ -165,7 +201,8 @@ export default function Risk({
     }
   }
 
-  if (loading) return <LoadingSpinner centered size={30} />;
+  if (loading || globalBps.loading)
+    return <LoadingSpinner centered size={30} />;
 
   const renderRiskAction = () => {
     if (premise === 6) {

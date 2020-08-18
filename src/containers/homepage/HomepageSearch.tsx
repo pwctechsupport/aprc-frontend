@@ -115,7 +115,7 @@ export default function HomepageSearch({
                     bottom: "3px",
                   }}
                 />
-                Full Search
+                Full search
               </StyledButton>
             </Link>
           ) : null}
@@ -162,7 +162,7 @@ const InputWrapper = styled.div<{ isNavBar?: boolean }>`
   margin-right: ${(p) => (p.isNavBar ? "90px" : "0px")};
   margin-left: ${(p) => (p.isNavBar ? "-35px" : "0px")};
 
-  @media screen and (max-width: 1325px) {
+  @media screen and (max-width: 1093px) {
     margin-left: 0px;
   }
 `;
@@ -216,7 +216,7 @@ const StyledButton = styled(Button)`
   padding-top: 8px;
   padding-bottom: 7px;
   position: absolute;
-  /* width: 115px; */
+  width: 120px;
   right: -105px;
   top: 0px;
   color: white;

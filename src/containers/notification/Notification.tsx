@@ -28,10 +28,10 @@ import Footer from "../../shared/components/Footer";
 import CheckBox from "../../shared/components/forms/CheckBox";
 
 const Notification = ({ history }: RouteComponentProps) => {
-  const [labelTime, setLabelTime] = useState("Date Added...");
+  const [labelTime, setLabelTime] = useState("Date added...");
 
   const time = [
-    { label: "All Time" || "Date Added...", value: 1 },
+    { label: "All Time" || "Date added...", value: 1 },
     { label: "Today", value: 2 },
     { label: "In 7 days", value: 3 },
     { label: "In a month", value: 4 },
@@ -45,7 +45,7 @@ const Notification = ({ history }: RouteComponentProps) => {
   const aYear = 31536000000;
 
   function constructDateFilter(input: any) {
-    if (!input || input === "All Time" || input === "Date Added...")
+    if (!input || input === "All Time" || input === "Date added...")
       return null;
     const presentDate = new Date().getTime();
     const subtractor =
@@ -71,10 +71,17 @@ const Notification = ({ history }: RouteComponentProps) => {
 
   const [filter, setFilter] = useState({});
   const onSubmit = (values: any) => {
-    setFilter({
-      title_or_originator_type_or_sender_user_name_cont: values.notif,
-      created_at_gteq: constructDateFilter(labelTime),
-    });
+    if (values.notif.toLowerCase() === "system") {
+      setFilter({
+        is_general_eq: true,
+        created_at_gteq: constructDateFilter(labelTime),
+      });
+    } else {
+      setFilter({
+        title_or_originator_type_or_sender_user_name_cont: values.notif,
+        created_at_gteq: constructDateFilter(labelTime),
+      });
+    }
   };
 
   const { data, loading, networkStatus } = useNotificationsQuery({
@@ -153,7 +160,7 @@ const Notification = ({ history }: RouteComponentProps) => {
     setLabelTime(props.label);
   };
   const handleReset = () => {
-    setLabelTime("Date Added...");
+    setLabelTime("Date added...");
   };
   const [isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin_reviewer",
@@ -175,7 +182,7 @@ const Notification = ({ history }: RouteComponentProps) => {
               <Row>
                 <Col xs={12} md={4} className="mb-1">
                   <Input
-                    placeholder="Search Notifications..."
+                    placeholder="Search notifications..."
                     name="notif"
                     innerRef={notificationForm.register}
                   />
@@ -185,7 +192,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                     options={time}
                     name="date"
                     onChange={handleChange}
-                    placeholder={"Date Added..."}
+                    placeholder={"Date added..."}
                     value={[{ label: labelTime, value: 1 }]}
                   />
                 </Col>
@@ -251,7 +258,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                   </th>
                   <th>Name</th>
                   <th>Subject</th>
-                  <th style={{ width: "10%" }}>Date Added</th>
+                  <th style={{ width: "10%" }}>Date added</th>
                 </tr>
               </thead>
               <tbody>
@@ -294,7 +301,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       <td
                         className={data.isRead ? "" : "text-orange text-bold"}
                       >
-                        {data.senderUserName}
+                        {data.senderUserActualName}
                       </td>
                       <td
                         className={data.isRead ? "" : "text-orange text-bold"}
@@ -305,26 +312,28 @@ const Notification = ({ history }: RouteComponentProps) => {
                           ? data.dataType === "request_draft" ||
                             data.dataType === "request draft"
                             ? `Action required: [${
-                                data.senderUserName
+                                data.senderUserActualName
                               }] has requested for approval for [${
                                 data.title?.includes(" Has Been Submitted")
                                   ? data.title.split(" Has Been Submitted")[0]
                                   : data.title?.includes(
-                                      data.senderUserName || ""
+                                      data.senderUserActualName || ""
                                     )
                                   ? data.title
-                                      .split(data.senderUserName + " " || "")[1]
+                                      .split(
+                                        data.senderUserActualName + " " || ""
+                                      )[1]
                                       .includes("Create a User with email")
                                     ? data.title
                                         .split(
-                                          data.senderUserName + " " || ""
+                                          data.senderUserActualName + " " || ""
                                         )[1]
                                         .split("Create a User with email ")[1]
                                     : data.title
                                   : data.title
                               }]`
                             : data.dataType === "request_edit"
-                            ? `Action required: [${data.senderUserName}] has requested for edit for [${data.title}]`
+                            ? `Action required: [${data.senderUserActualName}] has requested for edit for [${data.title}]`
                             : data.title
                           : null}
 
@@ -354,7 +363,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                           : null}
                         {/* {isAdminReviewer &&
                         `Action required: [${
-                          data.senderUserName
+                          data.senderUserActualName
                         }] has requested for ${
                           data.dataType !== "request_draft"
                             ? "edit"

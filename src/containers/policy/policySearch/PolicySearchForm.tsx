@@ -59,11 +59,11 @@ export default function PolicySearchForm({
   const loadPolicyReferences = useLoadPolicyReferences();
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="mx-3">
-      <Input innerRef={register} name="title" placeholder="By Title..." />
+      <Input innerRef={register} name="title" placeholder="By title..." />
       <Input
         innerRef={register}
         name="description"
-        placeholder="By Description..."
+        placeholder="By description..."
       />
       <AsyncSelect
         name="risks"
@@ -73,7 +73,7 @@ export default function PolicySearchForm({
         loadOptions={loadRisks}
         defaultOptions
         isMulti
-        placeholder="By Risks..."
+        placeholder="By risks..."
       />
       <AsyncSelect
         name="controls"
@@ -83,7 +83,7 @@ export default function PolicySearchForm({
         loadOptions={loadControls}
         defaultOptions
         isMulti
-        placeholder="By Controls..."
+        placeholder="By controls..."
       />
       <AsyncSelect
         name="resources"
@@ -93,7 +93,7 @@ export default function PolicySearchForm({
         loadOptions={loadResources}
         defaultOptions
         isMulti
-        placeholder="By Resources..."
+        placeholder="By resources..."
       />
       <AsyncSelect
         name="policyCategories"
@@ -102,7 +102,7 @@ export default function PolicySearchForm({
         setValue={setValue}
         loadOptions={loadPolicyCategories}
         defaultOptions
-        placeholder="By Categories..."
+        placeholder="By categories..."
       />
       <AsyncSelect
         name="policyReferences"
@@ -112,7 +112,7 @@ export default function PolicySearchForm({
         loadOptions={loadPolicyReferences}
         defaultOptions
         isMulti
-        placeholder="By References..."
+        placeholder="By references..."
       />
       <Label>Last updated in:</Label>
       <FormGroup tag="fieldset">

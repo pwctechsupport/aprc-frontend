@@ -68,10 +68,10 @@ const CreateReference = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/references", "Reference"],
-          ["/reference/create", "Create Reference"],
+          ["/reference/create", "Create reference"],
         ]}
       />
-      <h4>Create Reference</h4>
+      <h4>Create reference</h4>
       <Form onSubmit={handleSubmit(submit)} className="mb-4">
         <Row>
           <Col className="mt-3">
@@ -89,7 +89,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
           <Col>
             <AsyncSelect
               name="policyIds"
-              label="Related Policies"
+              label="Related policies"
               placeholder="Select"
               register={register}
               setValue={setValue}

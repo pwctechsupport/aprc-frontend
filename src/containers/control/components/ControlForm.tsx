@@ -30,6 +30,7 @@ import { toBase64, toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
 import { PwcRadioInput } from "../../report/Report";
 import CheckBox2 from "../../../shared/components/forms/TestNewCheckBox";
+import { startCase } from "lodash";
 
 const ControlForm = ({
   onSubmit,
@@ -281,15 +282,15 @@ const ControlForm = ({
             id="keyControlCheckbox"
           />
           <Label className="ml-2" for="keyControlCheckbox" check>
-            Key Control
+            Key control
           </Label>
         </FormGroup>
 
         <Select
           options={typeOfControls}
           onChange={handleSelectChange("typeOfControl")}
-          label="Type of Controls*"
-          placeholder="Type of Controls"
+          label="Type of controls*"
+          placeholder="Type of controls"
           defaultValue={pDefVal(typeOfControl, typeOfControls)}
           error={errors.typeOfControl && "Type of Controls is a required field"}
         />
@@ -298,8 +299,8 @@ const ControlForm = ({
           isMulti
           isDisabled={checkRisk.length ? false : true}
           name="businessProcessIds"
-          label="Business Processes*"
-          placeholder="Business Processes"
+          label="Business processes*"
+          placeholder="Business processes"
           isLoading={bpsQ.loading}
           register={register}
           setValue={setValue}
@@ -368,8 +369,8 @@ const ControlForm = ({
         <FormSelect
           isMulti
           name="controlOwner"
-          label="Control Owner*"
-          placeholder="Control Owner"
+          label="Control owner*"
+          placeholder="Control owner"
           register={register}
           setValue={setValue}
           options={controlOwnerOptions}
@@ -379,7 +380,7 @@ const ControlForm = ({
           loading={departments.loading}
           error={errors.controlOwner && "Control owner is a required field"}
         />
-        <span>Control Activites</span>
+        <span>Control activites</span>
         <div className="mt-2">
           <Button
             type="button"
@@ -387,7 +388,7 @@ const ControlForm = ({
             onClick={toogleModal}
             color=""
           >
-            Add Control Activity
+            Add control activity
           </Button>
         </div>
         {cool.length === 0 ? null : (
@@ -430,7 +431,7 @@ const ControlForm = ({
         )}
         {renderSubmit()}
       </Form>
-      <Modal isOpen={isOpen} toggle={closeModal} title="Add Control Activity">
+      <Modal isOpen={isOpen} toggle={closeModal} title="Add control activity">
         <ActivityModalForm
           activityDefaultValue={cool.find(
             (c) => String(c.id) === selectActivity
@@ -532,13 +533,13 @@ const ActivityModalForm = ({
     <Form onSubmit={handleSubmit(handleSaveActivity)}>
       <Input
         name="activity"
-        label="Control Activity Title"
+        label="Control activity title"
         required
         placeholder="Title..."
         innerRef={register}
         error={errors.activity && "Activity is a required field"}
       />
-      <span className="mt-2 mb-3">Control Activity Guidance</span>
+      <span className="mt-2 mb-3">Control activity guidance</span>
       <div className="d-flex ml-3">
         <Label check className="d-flex align-items-center pr-4">
           <PwcRadioInput
@@ -608,24 +609,11 @@ const natures = Object.entries(Nature).map(([label, value]) => ({
 }));
 
 const ipos = Object.entries(Ipo).map(([label, value]) => ({
-  label: value.split("")[0].toUpperCase(),
+  label: startCase(value.split("_").join(" ")),
   value,
 }));
 const assertions = Object.entries(Assertion).map(([label, value]) => {
-  if (value === "cut_over") {
-    return { label: "CO", value };
-  }
-  if (value === "rights_and_obligation") {
-    return { label: "R&O", value };
-  }
-  if (value === "presentation_and_disclosure") {
-    return { label: "P&D", value };
-  }
-  if (value === "existence_and_occurence") {
-    return { label: "E/O", value };
-  } else {
-    return { label: value.split("")[0].toUpperCase(), value };
-  }
+  return { label: startCase(value.split("_").join(" ")), value };
 });
 
 const StyledDialogButton = styled(DialogButton)`

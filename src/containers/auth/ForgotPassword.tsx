@@ -22,7 +22,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
   };
 
   function onCompleted() {
-    toast.success("Cek email anda untuk mengganti password");
+    toast.success("Check your email inbox to change password");
     history.push("/auth");
   }
 
@@ -30,7 +30,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
     toast.error(
       <div>
         <h5>Error!</h5>
-        <div>Mohon coba lagi</div>
+        <div>Please try again</div>
       </div>
     );
   }
@@ -71,7 +71,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
             block
             loading={loading}
           >
-            Confirm Email
+            Confirm email
           </Button>
         </Form>
         <div className="text-center my-4">

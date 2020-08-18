@@ -127,9 +127,9 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
         <title>Policy Category - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="w-100">
-        <BreadCrumb crumbs={[["/policyCategory", "Policy Category"]]} />
+        <BreadCrumb crumbs={[["/policyCategory", "Policy category"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4>Policy Category</h4>
+          <h4>Policy category</h4>
           {isAdminReviewer ? (
             <div className="d-flex">
               <Tooltip
@@ -168,7 +168,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           ) : null}
           {isAdminPreparer ? (
             <Button tag={Link} to="/policy-category/create" className="pwc">
-              + Add Policy Category
+              + Add policy category
             </Button>
           ) : null}
         </div>
@@ -188,11 +188,11 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "10%" }}>Category Name</th>
-            <th style={{ width: "45%" }}>Related Policies</th>
+            <th style={{ width: "10%" }}>Category name</th>
+            <th style={{ width: "45%" }}>Related policies</th>
             <th style={{ width: "15%" }}>Status</th>
-            <th style={{ width: "12%" }}>Last Updated</th>
-            <th style={{ width: "12%" }}>Last Updated By</th>
+            <th style={{ width: "12%" }}>Last updated</th>
+            <th style={{ width: "12%" }}>Last updated by</th>
 
             <th></th>
           </tr>
@@ -230,7 +230,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                 <td>{policyCategory.lastUpdatedBy}</td>
                 {isAdminReviewer ? (
                   <td className="action">
-                    <Tooltip description="Delete Policy Category">
+                    <Tooltip description="Delete policy category">
                       <DialogButton
                         onConfirm={() => handleDelete(policyCategory.id)}
                         loading={destroyM.loading}

@@ -2,40 +2,58 @@ import React from "react";
 import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
 import PolicyChart, { PolicyChartProps } from "./PolicyChart";
+import useAccessRights from "../../../shared/hooks/useAccessRights";
 
 const PolicyDashboard = ({ data }: PolicyChartProps) => {
+  const [isAdminReviewer, isAdminPreparer] = useAccessRights([
+    "admin_reviewer",
+    "admin_preparer",
+  ]);
+  const isUser = !(isAdminReviewer || isAdminPreparer);
   const subPolicy = data.find((item) => item.label.match(/polic/gi));
   const control = data.find((item) => item.label.match(/control/gi));
   const risk = data.find((item) => item.label.match(/risk/gi));
-  const tableData = [
-    {
-      label: "Reviewed",
-      subPolicy: oc(subPolicy).reviewed(0),
-      control: oc(control).reviewed(0),
-      risk: oc(risk).reviewed(0),
-      sum() {
-        return this.subPolicy + this.control + this.risk;
-      },
-    },
-    {
-      label: "Prepared",
-      subPolicy: oc(subPolicy).prepared(0) + oc(subPolicy).addToPrepare(0),
-      control: oc(control).prepared(0) + oc(control).addToPrepare(0),
-      risk: oc(risk).prepared(0) + oc(risk).addToPrepare(0),
-      sum() {
-        return this.subPolicy + this.control + this.risk;
-      },
-    },
-    {
-      label: "Total",
-      subPolicy: oc(subPolicy).total(0),
-      control: oc(control).total(0),
-      risk: oc(risk).total(0),
-      sum() {
-        return this.subPolicy + this.control + this.risk;
-      },
-    },
-  ];
+  const tableData = isUser
+    ? [
+        {
+          label: "Total",
+          subPolicy: oc(subPolicy).total(0),
+          control: oc(control).total(0),
+          risk: oc(risk).total(0),
+          sum() {
+            return this.subPolicy + this.control + this.risk;
+          },
+        },
+      ]
+    : [
+        {
+          label: "Reviewed",
+          subPolicy: oc(subPolicy).reviewed(0),
+          control: oc(control).reviewed(0),
+          risk: oc(risk).reviewed(0),
+          sum() {
+            return this.subPolicy + this.control + this.risk;
+          },
+        },
+        {
+          label: "Prepared",
+          subPolicy: oc(subPolicy).prepared(0) + oc(subPolicy).addToPrepare(0),
+          control: oc(control).prepared(0) + oc(control).addToPrepare(0),
+          risk: oc(risk).prepared(0) + oc(risk).addToPrepare(0),
+          sum() {
+            return this.subPolicy + this.control + this.risk;
+          },
+        },
+        {
+          label: "Total",
+          subPolicy: oc(subPolicy).total(0),
+          control: oc(control).total(0),
+          risk: oc(risk).total(0),
+          sum() {
+            return this.subPolicy + this.control + this.risk;
+          },
+        },
+      ];
   return (
     <div>
       <PolicyChart data={data} />

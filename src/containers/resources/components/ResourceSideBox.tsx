@@ -56,14 +56,14 @@ const ResourceSideBox = () => {
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
           {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Resources Admin"
+            ? "Resources admin"
             : "Resources"}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
         search={search}
         setSearch={setSearch}
-        placeholder="Search Resources..."
+        placeholder="Search resources..."
         loading={loading}
       />
       {resources.map((resource) => (

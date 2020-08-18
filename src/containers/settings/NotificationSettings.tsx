@@ -7,7 +7,7 @@ import {
   useNotificationsCountQuery,
 } from "../../generated/graphql";
 
-const settings = [{ name: "iconBadges", label: "Notifications Icon Badges" }];
+const settings = [{ name: "iconBadges", label: "Notifications icon badges" }];
 
 export default function NotificationSettings() {
   const [show, setShow] = useState(false);

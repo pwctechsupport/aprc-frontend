@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useForm } from "react-hook-form";
-import { Form, FormText } from "reactstrap";
+import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useBusinessProcessesQuery,
@@ -19,7 +19,7 @@ import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import SunEditor from "suneditor-react";
+import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -50,6 +50,33 @@ const SubPolicyForm = ({
     controlIds,
     riskIds,
   });
+  const skipBispro = attr.businessProcessIds || [];
+  const getBisproDefValQ = useBusinessProcessesQuery({
+    skip: !skipBispro.length,
+    variables: { filter: { id_matches_any: attr.businessProcessIds } },
+  });
+  const getValueFormBpsData =
+    getBisproDefValQ.data?.navigatorBusinessProcesses?.collection || [];
+
+  const getParentOrGrandParentBps = getValueFormBpsData.map((a) => {
+    if (a.parent?.parent?.id) {
+      return {
+        value: a.id || "",
+        label: a.name || "",
+        grandParentLabel: a.parent.parent.name || "",
+        grandParentValue: a.parent.parent.id || "",
+        parentLabel: a.parent.name || "",
+        parentValue: a.parent.id || "",
+      };
+    } else {
+      return {
+        parentValue: a.id || "",
+        parentLabel: a.name || "",
+        grandParentLabel: a.parent?.name || "",
+        grandParentValue: a.parent?.id || "",
+      };
+    }
+  });
   const { data } = usePolicyQuery({
     variables: { id: defaultValues.parentId },
     fetchPolicy: "network-only",
@@ -59,12 +86,13 @@ const SubPolicyForm = ({
   const { register, handleSubmit, setValue, errors } = useForm<
     SubPolicyFormValues
   >({ validationSchema, defaultValues });
-  console.log("errors:", errors);
   const referenceData = useReferencesQuery({ variables: { filter: {} } });
   const references = oc(referenceData)
     .data.navigatorReferences.collection([])
     .map(toLabelValue);
-
+  const requestStatus = oc(data).policy.requestStatus();
+  const notRequested = !requestStatus;
+  const rejected = requestStatus === "rejected";
   useEffect(() => {
     register({ name: "parentId" });
     register({ name: "referenceIds" });
@@ -81,7 +109,7 @@ const SubPolicyForm = ({
   }
 
   function onChangeEditor(data: any) {
-    setValue("description", data);
+    setValue("description", data?.level?.content);
   }
   // Functions for changing buttons
   // Functions when create
@@ -108,8 +136,11 @@ const SubPolicyForm = ({
       ? saveAsDraftSecond && saveAsDraftSecond({ ...values, ...attr })
       : toast.error("Insert attributes is a required field");
   }
+
   function submitSecondPhase(values: SubPolicyFormValues) {
-    statusWhenUpdate === "release" || parentStatus === "release" || !draft
+    statusWhenUpdate === "release" ||
+    parentStatus === "release" ||
+    (!draft && (notRequested || rejected))
       ? attr.businessProcessIds?.length
         ? submitSecond && submitSecond({ ...values, ...attr })
         : toast.error("Insert attributes is a required field")
@@ -122,8 +153,7 @@ const SubPolicyForm = ({
     setAttr(values);
     setShowAttrs(false);
   }
-
-  if (referenceData.loading) {
+  if (referenceData.loading || getBisproDefValQ.loading) {
     return <LoadingSpinner centered size={30} />;
   }
 
@@ -137,64 +167,14 @@ const SubPolicyForm = ({
       <Form>
         <Input
           name="title"
-          label="Sub-Policy Title*"
-          placeholder="Sub-Policy Title"
+          label="Sub-policy title*"
+          placeholder="Sub-policy title"
           innerRef={register({ required: true })}
           error={errors.title && "Sub policy title is a required field"}
         />
         <div className="mb-3">
-          <label>Policy Description*</label>
-          <div
-            style={{
-              padding: errors.description ? 1 : 0,
-              backgroundColor: "red",
-            }}
-          >
-            <SunEditor
-              showToolbar={true}
-              enable={true}
-              disable={false}
-              show={true}
-              name="description"
-              setContents={defaultValues?.description || ""}
-              onChange={onChangeEditor}
-              enableToolbar={true}
-              setOptions={{
-                linkProtocol: "http://",
-                height: "30vh",
-                font: [
-                  "Serif",
-                  "Sans Serif",
-                  "Monospace",
-                  "Candara",
-                  "Verdana",
-                  "Arial",
-                  "Twentieth Century",
-                  "Calibri",
-                  "Georgia",
-                  "Abadi",
-                  "Helvetica",
-                  "Garamond",
-                  "Bookman",
-                  "Arial Nova Cond",
-                  "Bahnschrift",
-                  "Selawik",
-                  "Perpetua",
-                ],
-                buttonList: [
-                  ["font", "fontSize", "align"],
-                  ["fontColor", "hiliteColor", "bold", "underline", "italic"],
-                  ["image", "table", "link"],
-                ],
-              }}
-            />
-          </div>
-          {errors.description && (
-            <FormText className="text-danger " color="red">
-              Description is a required field
-            </FormText>
-          )}
-          {/* <TextEditorField
+          <label>Policy description*</label>
+          <TextEditorField
             name="description"
             register={register}
             onChange={onChangeEditor}
@@ -204,7 +184,7 @@ const SubPolicyForm = ({
               errors.description &&
               "Description field is too short and the field is required"
             }
-          /> */}
+          />
           {/* <TextEditor
             data={watch("description")}
             onChange={handleEditorChange}
@@ -214,8 +194,8 @@ const SubPolicyForm = ({
         </div>
         <Select
           name="referenceIds"
-          label="Sub-Policy Reference*"
-          placeholder="Sub-Policy Reference"
+          label="Sub-policy reference*"
+          placeholder="Sub-policy reference"
           loading={referenceData.loading}
           onChange={handleReferenceChange}
           options={references}
@@ -232,7 +212,7 @@ const SubPolicyForm = ({
             onClick={() => setShowAttrs(true)}
             className="pwc mr-2"
           >
-            Insert Attributes
+            Insert attributes
           </Button>
           {premise ? (
             //ini yang kedua
@@ -245,10 +225,10 @@ const SubPolicyForm = ({
                 message={
                   defaultValues.title
                     ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
+                    : "Create sub-policy?"
                 }
               >
-                Save As Draft
+                Save As draft
               </DialogButton>
               <DialogButton
                 color="primary"
@@ -258,7 +238,7 @@ const SubPolicyForm = ({
                 message={
                   defaultValues.title
                     ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
+                    : "Create sub-policy?"
                 }
               >
                 Submit
@@ -275,10 +255,10 @@ const SubPolicyForm = ({
                 message={
                   defaultValues.title
                     ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
+                    : "Create sub-policy?"
                 }
               >
-                Save As Draft
+                Save as draft
               </DialogButton>
               <DialogButton
                 color="primary"
@@ -288,7 +268,7 @@ const SubPolicyForm = ({
                 message={
                   defaultValues.title
                     ? `Save your change on "${defaultValues.title}"?`
-                    : "Create Sub-Policy?"
+                    : "Create sub-policy?"
                 }
               >
                 Submit
@@ -326,6 +306,7 @@ const SubPolicyForm = ({
       >
         <SubPolicyAttributeForm
           defaultValues={attr}
+          bpsDefaultValue={getParentOrGrandParentBps}
           onSubmit={onSubmitModal}
           onCancel={() => setShowAttrs(false)}
         />
@@ -344,51 +325,282 @@ const SubPolicyAttributeForm = ({
   defaultValues,
   onSubmit,
   onCancel,
+  bpsDefaultValue,
 }: {
+  bpsDefaultValue: any;
   defaultValues: SubPolicyModalFormValues;
   onCancel: () => void;
   onSubmit: (v: SubPolicyModalFormValues) => void;
 }) => {
   const formModal = useForm<SubPolicyModalFormValues>({
     defaultValues,
-    validationSchema: validationSchemaAttributes,
+    // validationSchema: validationSchemaAttributes,
   });
-
   const resourceQ = useResourcesQuery();
   const resourceOptions = oc(resourceQ.data)
     .navigatorResources.collection([])
     .map(toLabelValue);
 
-  const businessProcessesQ = useBusinessProcessesQuery();
-  const businessProcessesOptions = oc(businessProcessesQ.data)
+  const checkRisk = formModal.watch("riskIds") || [];
+  const checkControl = formModal.watch("controlIds") || [];
+  // Business Process Bar
+
+  const globalBps = useBusinessProcessesQuery({
+    variables: { filter: { ancestry_null: false } },
+  });
+  const businessProcessesOptions = oc(globalBps.data)
     .navigatorBusinessProcesses.collection([])
     .map(toLabelValue);
 
-  const checkBp = formModal.watch("businessProcessIds") || [];
-  const checkRisk = formModal.watch("riskIds") || [];
-  const checkControl = formModal.watch("controlIds") || [];
+  // defaultValues Bps
 
-  const [filter, setFilter] = useState({});
-  const [filterControl, setFilterControl] = useState({});
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i] === a[j]) a.splice(j--, 1);
+      }
+    }
+
+    return a;
+  };
+  const dataModifierCustom = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i].value === a[j].value) a.splice(j--, 1);
+      }
+    }
+
+    return a;
+  };
+
+  const mainBpsDefaultValue = dataModifierCustom(
+    bpsDefaultValue.map((a: any) => {
+      return { label: a.grandParentLabel, value: a.grandParentValue };
+    })
+  );
+  const defValMainBps = dataModifier(
+    bpsDefaultValue.map((a: any) => a.grandParentValue).flat(10)
+  );
+  const defValFirstBps = dataModifier(
+    bpsDefaultValue.map((a: any) => a.parentValue).flat(10)
+  );
+  const defValSecondBps = dataModifier(
+    bpsDefaultValue.map((a: any) => a.value).flat(10)
+  );
+
+  const mainBpIdsWatch = formModal.watch("businessProcessMain") || [];
+  const firstBpIdsWatch = formModal.watch("businessProcessFirst") || [];
+  const secondBpIdsWatch = formModal.watch("businessProcessSecond") || [];
+
+  const checkMainBp = formModal.watch("businessProcessMain");
+  const checkFirstBp = formModal.watch("businessProcessFirst");
+  const checkSecondBp = formModal.watch("businessProcessSecond");
+
+  const [mainBpIds, setMainBpIds] = useState([...defValMainBps]);
+  const [firstBpIds, setFirstBpIds] = useState([...defValFirstBps]);
+  const [secondBpIds, setSecondBpIds] = useState([...defValSecondBps]);
+
+  const [stopMain, setStopMain] = useState(false);
+  const [stopFirst, setStopFirst] = useState(false);
+  const [stopSecond, setStopSecond] = useState(false);
+
   useEffect(() => {
-    setFilter({ business_processes_id_in: checkBp });
-    setFilterControl({ risks_id_in: checkRisk });
-  }, [checkBp, checkRisk]);
+    if (checkMainBp !== undefined && checkMainBp !== null) {
+      setMainBpIds(mainBpIdsWatch);
+      setStopMain(false);
+    } else if (checkMainBp === null && !stopMain) {
+      setMainBpIds(mainBpIdsWatch);
+      setStopMain(true);
+    }
+  }, [checkMainBp, mainBpIdsWatch, stopMain]);
+  useEffect(() => {
+    if (checkFirstBp !== undefined && checkFirstBp !== null) {
+      setFirstBpIds(firstBpIdsWatch);
+      setStopFirst(false);
+    } else if (checkFirstBp === null && !stopFirst) {
+      setFirstBpIds(firstBpIdsWatch);
+      setStopFirst(true);
+    }
+  }, [checkFirstBp, firstBpIdsWatch, stopFirst]);
+  useEffect(() => {
+    if (checkSecondBp !== undefined && checkSecondBp !== null) {
+      setSecondBpIds(secondBpIdsWatch);
+      setStopSecond(false);
+    } else if (checkSecondBp === null && !stopSecond) {
+      setSecondBpIds(secondBpIdsWatch);
+      setStopSecond(true);
+    }
+  }, [checkSecondBp, secondBpIdsWatch, stopSecond]);
+
+  const mainBps = useBusinessProcessesQuery({
+    variables: { filter: { ancestry_null: true } },
+  });
+  const getBps = mainBps.data?.navigatorBusinessProcesses?.collection || [];
+
+  const handleGetMainBps = getBps.map(toLabelValue);
+
+  const firstBps = useBusinessProcessesQuery({
+    skip: !mainBpIds.length,
+    variables: { filter: { ancestry_in: mainBpIds } },
+  });
+
+  const getFirstBps =
+    firstBps.data?.navigatorBusinessProcesses?.collection || [];
+  const getFirstBpsParent = getFirstBps.map((a) => a.parent?.name);
+  const handleGetFirstBps = dataModifier(getFirstBpsParent).map((a: any) => {
+    return {
+      label: a,
+      options: getFirstBps
+        .filter((b) => a.includes(b.parent?.name))
+        .map(toLabelValue),
+    };
+  });
+
+  const getFirstBpsChild = getFirstBps
+    .map((a) => a.children)
+    .flat(2)
+    .map((b) => b?.ancestry);
+
+  const filteredGetFirstBpsChild = getFirstBpsChild.filter((a) => {
+    return firstBpIds.includes(a ? a.split("/")[1] : "");
+  });
+  const secondBps = useBusinessProcessesQuery({
+    skip: !firstBpIds.length,
+    variables: {
+      filter: {
+        ancestry_in: filteredGetFirstBpsChild.length
+          ? filteredGetFirstBpsChild
+          : [0],
+      },
+    },
+  });
+
+  const getSecondBps =
+    secondBps.data?.navigatorBusinessProcesses?.collection || [];
+  const getSecondBpsParent = getSecondBps.map((a) => a.parent?.name);
+
+  const handleGetSecondBps = dataModifier(getSecondBpsParent).map((a: any) => {
+    return {
+      label: a,
+      options: getSecondBps
+        .filter((b) => a.includes(b.parent?.name))
+        .map(toLabelValue),
+    };
+  });
+
+  // bps values
+
+  const suspectedParentChildId = getFirstBps
+    .map((a) =>
+      a.children?.map((b) => {
+        return { childrenId: b.id, parentId: a.id };
+      })
+    )
+    .flat(2);
+  const bpsValues = [...firstBpIds, ...secondBpIds];
+
+  const bpsValuesParent = [...mainBpIds, ...firstBpIds];
+  const mainBpsParentChild = getBps
+    .map((a) =>
+      a.children?.map((b) => {
+        return { parentId: a.id, childId: b.id };
+      })
+    )
+    .flat(1)
+    .filter((c) => firstBpIds.includes(c?.childId || ""));
+
+  const getRemovedFirstId = mainBpsParentChild
+    .map((a) => {
+      if (bpsValuesParent.includes(a?.parentId || "")) {
+        return undefined;
+      } else {
+        return a?.childId;
+      }
+    })
+    .filter((a) => a !== undefined);
+
+  const problematicChild = bpsValues
+    .map((a) => {
+      if (suspectedParentChildId.map((b) => b?.childrenId).includes(a)) {
+        return a;
+      } else {
+        return undefined;
+      }
+    })
+    .filter((a) => a !== undefined);
+
+  const getBannedFirstBpsIds = getBps
+    .map((a) =>
+      a.children?.map((b) =>
+        b.children?.map((c) => {
+          return { childId: c.id, parentId: b.id };
+        })
+      )
+    )
+    .flat(2)
+    .filter((d) => problematicChild.includes(d?.childId))
+    .map((a) => a?.parentId);
+  const getBannedParentandChildIds = getBps
+    .map((a) =>
+      a.children?.map((b) =>
+        b.children?.map((c) => {
+          return { childId: c.id, parentId: b.id };
+        })
+      )
+    )
+    .flat(2)
+    .filter((d) => secondBpIds.includes(d?.childId || ""));
+
+  const getRemovedId = getBannedParentandChildIds
+    .map((a) => {
+      if (
+        bpsValues
+          .filter((b) => !getRemovedFirstId.includes(b))
+          .includes(a?.parentId || "")
+      ) {
+        return undefined;
+      } else {
+        return a?.childId;
+      }
+    })
+    .filter((a) => a !== undefined);
+
+  const bpsFinalValues = bpsValues
+    .filter((a) => !getBannedFirstBpsIds.includes(a))
+    .filter((b) => !getRemovedFirstId.includes(b))
+    .filter((c) => !getRemovedId.includes(c))
+    .filter((d) => d !== undefined);
+
+  const getValueFormBpsData =
+    globalBps.data?.navigatorBusinessProcesses?.collection || [];
+  const handleGetValueBps = getValueFormBpsData
+    .filter((a) => bpsFinalValues.includes(a.id))
+    .map((b) => {
+      return { value: b.id, label: b.name || "" };
+    });
+  // bps Values
+  const getSecondBpsValues = getSecondBps
+    .map(toLabelValue)
+    .filter((b) => secondBpIds.includes(b.value));
+  const getFirstBpsValues = getFirstBps
+    .map(toLabelValue)
+    .filter((b) => firstBpIds.includes(b.value));
 
   const risksQ = useRisksQuery({
-    skip: checkBp.length ? false : true,
+    skip: bpsFinalValues.length ? false : true,
     variables: {
-      filter,
+      filter: { business_processes_id_in: bpsFinalValues },
     },
     fetchPolicy: "network-only",
   });
-  const riskOption = businessProcessesOptions.filter((a) =>
-    checkBp.includes(a.value)
+  const riskHeader = businessProcessesOptions.filter((a) =>
+    bpsFinalValues.includes(a.value)
   );
   const risksOptions = oc(risksQ.data)
     .navigatorRisks.collection([])
     .map(toLabelValue);
-  const groupedRiskOptions = riskOption.map((a) => {
+
+  const groupedRiskOptions = riskHeader.map((a) => {
     return {
       label: a.label,
       options: oc(risksQ.data)
@@ -401,14 +613,16 @@ const SubPolicyAttributeForm = ({
   const controlsQ = useControlsQuery({
     skip: checkRisk.length ? false : true,
     variables: {
-      filter: filterControl,
+      filter: { risks_id_in: checkRisk },
     },
     fetchPolicy: "network-only",
   });
   const controlOption = risksOptions.filter((a) => checkRisk.includes(a.value));
+
   const controlsOptions = oc(controlsQ.data)
     .navigatorControls.collection([])
     .map(({ id, description }) => ({ label: description || "", value: id }));
+
   const groupedControlOptions = controlOption.map((a) => {
     return {
       label: a.label,
@@ -433,6 +647,7 @@ const SubPolicyAttributeForm = ({
         }),
     };
   });
+
   //risk modified default Values
 
   const riskDefaultValuesOrigin = risksOptions
@@ -471,6 +686,23 @@ const SubPolicyAttributeForm = ({
   const controlDefaultValues = controlsOptions.filter((a) =>
     controlValue.includes(a.value)
   );
+  const [error, setError] = useState(false);
+
+  const submit = (values: SubPolicyModalFormValues) => {
+    if (handleGetValueBps.length) {
+      onSubmit &&
+        onSubmit({
+          controlIds: values.controlIds,
+          resourceIds: values.resourceIds,
+          riskIds: values.riskIds,
+          businessProcessIds: handleGetValueBps.length
+            ? handleGetValueBps.map((a) => a.value).flat(5)
+            : undefined,
+        });
+    } else {
+      setError(true);
+    }
+  };
   return (
     <Form>
       <FormSelect
@@ -490,23 +722,56 @@ const SubPolicyAttributeForm = ({
       />
       <FormSelect
         isMulti
-        isLoading={businessProcessesQ.loading}
-        name="businessProcessIds"
+        isLoading={mainBps.loading}
+        name="businessProcessMain"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Business Processes*"
-        placeholder="Business Processes"
-        options={businessProcessesOptions}
-        defaultValue={businessProcessesOptions.filter((res) =>
-          oc(defaultValues)
-            .businessProcessIds([])
-            .includes(res.value)
-        )}
-        error={
-          formModal.errors.businessProcessIds &&
-          "Business processes is a required field"
-        }
+        label="Main Business Process"
+        placeholder="Main Business Process"
+        options={handleGetMainBps}
+        defaultValue={mainBpsDefaultValue}
       />
+
+      <FormSelect
+        isMulti
+        isLoading={firstBps.loading}
+        name="businessProcessFirst"
+        register={formModal.register}
+        value={getFirstBpsValues}
+        isDisabled={mainBpIds.length ? false : true}
+        setValue={formModal.setValue}
+        label="First Business Process"
+        placeholder="First Business Process"
+        options={handleGetFirstBps}
+      />
+
+      <FormSelect
+        isMulti
+        isLoading={secondBps.loading}
+        name="businessProcessSecond"
+        register={formModal.register}
+        setValue={formModal.setValue}
+        isDisabled={!firstBpIds.length ? true : mainBpIds.length ? false : true}
+        value={getSecondBpsValues}
+        label="Second Business Process"
+        placeholder="Second Business Process"
+        options={handleGetSecondBps}
+      />
+      <FormSelect
+        isMulti
+        isLoading={globalBps.loading}
+        name="businessProcessIds"
+        register={formModal.register}
+        isDisabled={true}
+        required
+        value={handleGetValueBps}
+        setValue={formModal.setValue}
+        label="Selected Business Process"
+        placeholder="Selected Business Process"
+        options={handleGetMainBps}
+        error={error ? "Business process is a required field" : undefined}
+      />
+
       <FormSelect
         isMulti
         loading={risksQ.loading}
@@ -515,9 +780,9 @@ const SubPolicyAttributeForm = ({
         setValue={formModal.setValue}
         placeholder="Risk"
         label="Risk"
-        isDisabled={checkBp?.length ? false : true}
+        isDisabled={bpsFinalValues?.length ? false : true}
         options={groupedRiskOptions}
-        defaultValue={riskDefaultValues}
+        defaultValue={mainBpIds.length ? riskDefaultValues : []}
         error={formModal.errors.riskIds && "Risk is a required field"}
       />
       <FormSelect
@@ -545,7 +810,7 @@ const SubPolicyAttributeForm = ({
         <Button
           type="button"
           className="pwc px-4"
-          onClick={formModal.handleSubmit(onSubmit)}
+          onClick={formModal.handleSubmit(submit)}
         >
           Save Attribute
         </Button>
@@ -565,12 +830,12 @@ const validationSchema = yup.object().shape({
     .required(),
   referenceIds: yup.array().required(),
 });
-const validationSchemaAttributes = yup.object().shape({
-  businessProcessIds: yup.array().required(),
-  // controlIds: yup.array().required(),
-  // resourceIds: yup.array().required(),
-  // riskIds: yup.array().required(),
-});
+// const validationSchemaAttributes = yup.object().shape({
+//   // businessProcessFirst: yup.array().required(),
+//   // controlIds: yup.array().required(),
+//   // resourceIds: yup.array().required(),
+//   // riskIds: yup.array().required(),
+// });
 // -------------------------------------------------------------------------
 // Type Definitions
 // -------------------------------------------------------------------------
@@ -601,9 +866,18 @@ export interface SubPolicyFormValues {
   businessProcessIds?: string[];
   controlIds?: string[];
   riskIds?: string[];
+  businessProcessMain?: string[];
+  businessProcessFirst?: string[];
+  businessProcessSecond?: string[];
 }
 
 type SubPolicyModalFormValues = Pick<
   SubPolicyFormValues,
-  "resourceIds" | "businessProcessIds" | "controlIds" | "riskIds"
+  | "resourceIds"
+  | "businessProcessIds"
+  | "controlIds"
+  | "riskIds"
+  | "businessProcessMain"
+  | "businessProcessFirst"
+  | "businessProcessSecond"
 >;

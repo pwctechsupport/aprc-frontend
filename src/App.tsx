@@ -5,7 +5,7 @@ import store from "./redux";
 import {
   IntrospectionFragmentMatcher,
   InMemoryCache,
-  ApolloClient,
+  ApolloClient
 } from "apollo-boost";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
@@ -13,7 +13,6 @@ import { ApolloProvider } from "@apollo/react-hooks";
 import { ToastContainer, Slide } from "react-toastify";
 import { hot } from "react-hot-loader/root";
 import "react-toastify/dist/ReactToastify.css";
-import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/app.scss";
 import fragmentTypes from "./generated/fragmentTypes.json";
@@ -27,20 +26,20 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : "",
-    },
+      Authorization: token ? `Bearer ${token}` : ""
+    }
   };
 });
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData: fragmentTypes,
+  introspectionQueryResultData: fragmentTypes
 });
 
 const cache = new InMemoryCache({ fragmentMatcher });
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache,
+  cache
 });
 
 const App: React.FC = () => {

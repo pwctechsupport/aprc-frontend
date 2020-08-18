@@ -35,16 +35,16 @@ const reportOptions = [
     ],
     description: "List of reviewed risks that are not mapped with any control",
   },
-  {
-    name: "Control Without Risk",
-    id: "report_control_policy",
-    formats: [
-      { id: "jangan masuk", name: "PDF" },
-      { id: "jangan masuk", name: "Excel" },
-    ],
-    description:
-      "List of reviewed control(s) that are not mapped with any control",
-  },
+  // {
+  //   name: "Control Without Risk",
+  //   id: "report_control_policy",
+  //   formats: [
+  //     { id: "jangan masuk", name: "PDF" },
+  //     { id: "jangan masuk", name: "Excel" },
+  //   ],
+  //   description:
+  //     "List of reviewed control(s) that are not mapped with any control",
+  // },
   {
     name: "Resources with rating",
     id: "report_resource_rating",
@@ -181,15 +181,15 @@ export default function Report() {
   const [checked, setChecked] = useState(true);
   return (
     <Container fluid className="p-0 pt-3 px-4">
-      <h4>Exception Report</h4>
+      <h4>Exception report</h4>
       <div style={{ minHeight: "60vh" }}>
         <Form>
           <Table>
             <thead>
               <tr>
                 <th>Number</th>
-                <th>Report Name</th>
-                <th>Report Description</th>
+                <th>Report name</th>
+                <th>Report description</th>
                 <th>Format</th>
               </tr>
             </thead>
@@ -251,6 +251,16 @@ export default function Report() {
                                         .filter((a) => a !== text)
                                         .includes(option.id)
                                     ? true
+                                    : text === "" &&
+                                      checked &&
+                                      reportRisk === "pdf"
+                                    ? [
+                                        "report_risk_policy",
+                                        "report_control_policy",
+                                        "report_resource_rating",
+                                        "unmapped_risk",
+                                        "unmapped_control",
+                                      ].includes(option.id)
                                     : false
                                 }
                                 onClick={(e: any) =>

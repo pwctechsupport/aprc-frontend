@@ -75,7 +75,7 @@ const History = () => {
       <div style={{ minHeight: "80vh" }}>
         <Form onSubmit={handleSubmit(handleDelete)}>
           <div className="d-flex flex-row justify-content-between">
-            <h4>User Activity Log</h4>
+            <h4>User activity log</h4>
           </div>
           <div className="d-flex justify-content-end">
             <Tooltip description="Delete Selected History">

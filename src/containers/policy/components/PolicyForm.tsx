@@ -1,17 +1,16 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form, FormText } from "reactstrap";
-import styled from "styled-components";
-import SunEditor from "suneditor-react";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
 import { usePolicyCategoriesQuery } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
+import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue } from "../../../shared/formatter";
-
+import styled from "styled-components";
 // import TextEditor from "../../../shared/components/forms/TextEditor";
 // import { Editor } from "@tinymce/tinymce-react";
 
@@ -47,7 +46,7 @@ const PolicyForm = ({
   }, [register]);
 
   function onChangeEditor(data: any) {
-    setValue("description", data);
+    setValue("description", data?.level?.content);
   }
 
   function handleChange(name: keyof PolicyFormValues) {
@@ -59,21 +58,17 @@ const PolicyForm = ({
   }
 
   function submit(values: PolicyFormValues) {
-    console.log("values:", values);
     onSubmit && onSubmit(values);
     setCreateS(true);
   }
   function submitToReviewer(values: PolicyFormValues) {
-    console.log("values:", values);
     handleSubmitToReviewer && handleSubmitToReviewer(values);
     setCreateS(false);
   }
   function submitFromDrafted(values: SubmitAsliBro) {
-    console.log("values:", values);
     submitFromDraft && submitFromDraft(values);
   }
   function submitAsDraft(values: PolicyFormValues) {
-    console.log("values:", values);
     onSubmitAsDraft && onSubmitAsDraft(values);
   }
 
@@ -81,20 +76,6 @@ const PolicyForm = ({
     .data.navigatorPolicyCategories.collection([])
     .map(toLabelValue);
   const policyCategoryId = oc(defaultValues).policyCategoryId("");
-  // const onImageUpload = (a: any, b: any, c: any, d: any, e: any) => {
-  //   if (d.size < 4085830) {
-  //     return d.src;
-  //   }
-  //   console.log("a:", a);
-  //   console.log("b:", b);
-  //   console.log("c:", c);
-  //   console.log("d:", d);
-  //   console.log("e:", e);
-  // };
-  // const imageUploadHandler = (xmlHttpRequest: any, info: any, core: any) => {
-  //   console.log("xmlHttpRequest, info, core:", xmlHttpRequest, info, core);
-  // };
-
   if (policyCategoriesState.loading) {
     return <LoadingSpinner centered size={30} />;
   }
@@ -170,19 +151,19 @@ const PolicyForm = ({
               errors.description &&
               "Description field is too short and the field is required"
             }
-          /> */}
+          />
           {/* <TextEditor
             data={watch("description")}
             onChange={onChangeEditor}
             invalid={!!errors.description}
             error={errors.description && "Description field is too short"}
-          /> */}
+          />  */}
         </div>
         <Select
           name="policyCategoryId"
-          label="Policy Category*"
+          label="Policy category*"
           loading={policyCategoriesState.loading}
-          placeholder="Policy Category"
+          placeholder="Policy category"
           options={options}
           onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(
@@ -200,10 +181,10 @@ const PolicyForm = ({
                 color="primary"
                 loading={submittingAsDraft}
                 className="pwc mr-2 px-5"
-                message="Save Policy as Draft?"
+                message="Save Policy as draft?"
                 onConfirm={handleSubmit(submitAsDraft)}
               >
-                Save As Draft
+                Save as draft
               </DialogButton>
               <DialogButton
                 color="primary"
@@ -220,11 +201,11 @@ const PolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={createS ? submitting : false}
-                message="Save Policy as Draft?"
+                message="Save Policy as draft?"
                 className="pwc mr-2 px-5"
                 onConfirm={handleSubmit(submit)}
               >
-                Save As Draft
+                Save as draft
               </DialogButton>
 
               <DialogButton

@@ -42,10 +42,10 @@ const CreateControl = ({ history }: RouteComponentProps) => {
       <BreadCrumb
         crumbs={[
           ["/control", "Controls"],
-          ["/control/create", "Create Control"],
+          ["/control/create", "Create control"],
         ]}
       />
-      <HeaderWithBackButton heading="Create Control" />
+      <HeaderWithBackButton heading="Create control" />
       <ControlForm
         onSubmit={submit}
         submitting={loading}

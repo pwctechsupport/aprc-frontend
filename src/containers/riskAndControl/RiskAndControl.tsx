@@ -1,27 +1,34 @@
+import { capitalCase } from "capital-case";
+import get from "lodash/get";
 import startCase from "lodash/startCase";
-import React, { useState, Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import {
+  AiFillEdit,
+  AiOutlineClockCircle,
+  AiOutlineEdit,
+} from "react-icons/ai";
 import {
   FaBars,
   FaBookmark,
   FaEllipsisV,
+  FaExclamationCircle,
   FaFilePdf,
   FaMinus,
-  FaExclamationCircle,
 } from "react-icons/fa";
-import get from "lodash/get";
 import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
-import { NavLink, Route, RouteComponentProps, Link } from "react-router-dom";
+import { Link, NavLink, Route, RouteComponentProps } from "react-router-dom";
 import {
   Badge,
+  Col,
   Nav,
   NavItem,
+  Row,
   TabContent,
   Table,
   TabPane,
-  Row,
-  Col,
 } from "reactstrap";
+import styled from "styled-components";
 import {
   Assertion,
   Control,
@@ -31,33 +38,41 @@ import {
   Nature,
   TypeOfControl,
   TypeOfRisk,
-  useBusinessProcessQuery,
-  useCreateBookmarkBusinessProcessMutation,
-  useUpdateControlMutation,
-  useUpdateRiskMutation,
-  useBookmarksQuery,
-  useResourceRatingsQuery,
-  useResourceQuery,
-  useResourcesQuery,
-  useBusinessProcessesQuery,
-  useControlQuery,
-  useRiskQuery,
   useApproveRequestEditMutation,
+  useBookmarksQuery,
+  useBusinessProcessesQuery,
+  useBusinessProcessQuery,
+  useControlQuery,
+  useCreateBookmarkBusinessProcessMutation,
   useCreateRequestEditMutation,
+  useResourceQuery,
+  useResourceRatingsQuery,
+  useResourcesQuery,
   useReviewControlDraftMutation,
   useReviewRiskDraftMutation,
+  useRiskQuery,
+  useUpdateControlMutation,
+  useUpdateRiskMutation,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
+import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import HeaderWithBackButton from "../../shared/components/Header";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Menu from "../../shared/components/Menu";
 import Modal from "../../shared/components/Modal";
+import PoliciesList from "../../shared/components/PoliciesList";
+import { PWCLink } from "../../shared/components/PoliciesTable";
 import ResourcesTab from "../../shared/components/ResourcesTab";
 import Tooltip from "../../shared/components/Tooltip";
 import { toLabelValue } from "../../shared/formatter";
+import useAccessRights from "../../shared/hooks/useAccessRights";
+import useEditState from "../../shared/hooks/useEditState";
+import { useSelector } from "../../shared/hooks/useSelector";
 import {
   downloadPdf,
   emailPdf,
@@ -74,22 +89,9 @@ import ControlForm, {
   ControlFormValues,
   CreateControlFormValues,
 } from "../control/components/ControlForm";
+import ResourceBox from "../resources/components/ResourceBox";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
-import useAccessRights from "../../shared/hooks/useAccessRights";
-import { useSelector } from "../../shared/hooks/useSelector";
-import { APP_ROOT_URL } from "../../settings";
-import ResourceBox from "../resources/components/ResourceBox";
-import { capitalCase } from "capital-case";
-import useEditState from "../../shared/hooks/useEditState";
-import DialogButton from "../../shared/components/DialogButton";
-import {
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-  AiFillEdit,
-} from "react-icons/ai";
-import CheckBox from "../../shared/components/forms/CheckBox";
-import styled from "styled-components";
 
 type TParams = { id: string };
 
@@ -103,7 +105,7 @@ export default function RiskAndControl({
     "admin_preparer",
   ]);
   const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
-  const initialCollapse = ["Risks", "Controls"];
+  const initialCollapse = ["Risks", "Controls", "Related policies"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
     setCollapse((p) => {
@@ -138,7 +140,7 @@ export default function RiskAndControl({
         input: {
           id: risk?.id || "",
           name: values.name,
-          businessProcessIds: values.businessProcessIds?.map((a) => a.value),
+          businessProcessIds: values.businessProcessIds || [],
           levelOfRisk: values.levelOfRisk,
           typeOfRisk: values.typeOfRisk,
         },
@@ -867,7 +869,7 @@ export default function RiskAndControl({
                         <td style={{ fontSize: "13px", fontWeight: "normal" }}>
                           {activity.guidance ? (
                             activity.guidance
-                          ) : (
+                          ) : activity.guidanceFileName ? (
                             <div className="d-flex align-items-center ">
                               <Button color="" className="soft orange">
                                 <a
@@ -884,6 +886,8 @@ export default function RiskAndControl({
                                 </a>
                               </Button>
                             </div>
+                          ) : (
+                            "N/A"
                           )}
                         </td>
                       </tr>
@@ -951,7 +955,7 @@ export default function RiskAndControl({
                     </h5>
                     {category === "Flowchart" ? (
                       <>
-                        <h5 className="mt-5">Business Process:</h5>
+                        <h5 className="mt-5">Business process:</h5>
                         <Link to={`/risk-and-control/${businessProcess?.id}`}>
                           {businessProcess?.name}
                         </Link>
@@ -959,7 +963,7 @@ export default function RiskAndControl({
                     ) : (
                       <>
                         <div>
-                          <h5 className="mt-5">Related Business Process:</h5>
+                          <h5 className="mt-5">Related business process:</h5>
                           {bps ? (
                             <ul>
                               <li>{bps.name}</li>
@@ -969,7 +973,7 @@ export default function RiskAndControl({
                           )}
                         </div>
                         <div>
-                          <h5 className="mt-5">Related Policies:</h5>
+                          <h5 className="mt-5">Related policies:</h5>
                           {policies.length ? (
                             <ul>
                               {policies.map((policy) => (
@@ -1076,7 +1080,7 @@ export default function RiskAndControl({
                         <MdEmail /> Mail
                       </div>
                     ),
-                    onClick: () => emailPdf(name),
+                    onClick: () => emailPdf(name, Number(id), false),
                   },
                 ]
               : [
@@ -1122,7 +1126,7 @@ export default function RiskAndControl({
                         <MdEmail /> Mail
                       </div>
                     ),
-                    onClick: () => emailPdf(name),
+                    onClick: () => emailPdf(name, Number(id), false),
                   },
                 ]
           }
@@ -1235,6 +1239,14 @@ export default function RiskAndControl({
           />
           <Route exact path="/risk-and-control/:id">
             <Collapsible
+              title="Related policies"
+              show={collapse.includes("Related policies")}
+              onClick={toggleCollapse}
+            >
+              <PoliciesList data={dataRisksnControl || {}} />
+            </Collapsible>
+            <div style={{ borderBottom: " 1px solid #d85604" }}></div>
+            <Collapsible
               title="Risks"
               show={collapse.includes("Risks")}
               onClick={toggleCollapse}
@@ -1244,26 +1256,25 @@ export default function RiskAndControl({
                   {modifiedRisks.map((risk) => (
                     <li key={risk?.id || ""}>
                       <div className="mb-3 d-flex justify-content-between">
-                        <Link
+                        <PWCLink
                           to={`/risk-and-control/${
                             currentUrl.split("control/")[1]
                           }/risk/${risk?.id || ""}`}
                           onClick={() => {
                             setRiskId(risk?.id || "");
                           }}
+                          style={{ fontSize: "14px" }}
                         >
-                          <h5>
-                            {risk?.name}
-                            <Badge
-                              color={`${getRiskColor(risk?.levelOfRisk)} mx-3`}
-                            >
-                              {startCase(risk?.levelOfRisk || "")}
-                            </Badge>
-                            <Badge color="secondary">
-                              {startCase(risk?.typeOfRisk || "")}
-                            </Badge>
-                          </h5>
-                        </Link>
+                          {startCase(risk?.name || "")}
+                          <Badge
+                            color={`${getRiskColor(risk?.levelOfRisk)} mx-3`}
+                          >
+                            {startCase(risk?.levelOfRisk || "")}
+                          </Badge>
+                          <Badge color="secondary">
+                            {startCase(risk?.typeOfRisk || "")}
+                          </Badge>
+                        </PWCLink>
 
                         {/* {(isAdmin || isAdminPreparer) &&
                           risk?.hasEditAccess &&
@@ -1292,7 +1303,7 @@ export default function RiskAndControl({
                           risk?.controls?.filter((a: any) => a.draft === null)
                         ).length ? (
                           <>
-                            <h6>Control</h6>
+                            <h6 style={{ fontWeight: "bold" }}>Control</h6>
                             <ControlsTable
                               history={history.location.pathname}
                               controls={dataModifier(
@@ -1306,7 +1317,7 @@ export default function RiskAndControl({
                         ) : null
                       ) : dataModifier(risk?.controls).length ? (
                         <>
-                          <h6>Control</h6>
+                          <h6 style={{ fontWeight: "bold" }}>Control</h6>
                           <ControlsTable
                             history={history.location.pathname}
                             controls={dataModifier(risk?.controls)}
@@ -1393,49 +1404,6 @@ const ControlsTable = ({
   editControl: Function;
   history?: any;
 }) => {
-  const assertionAndIpoModifier = (data: any) => {
-    let finalData: any = data;
-    const existence_and_occurence = finalData.findIndex(
-      (a: any) => a === "existence_and_occurence"
-    );
-    const cut_over = finalData.findIndex((a: any) => a === "cut_over");
-    const rights_and_obligation = finalData.findIndex(
-      (a: any) => a === "rights_and_obligation"
-    );
-    const presentation_and_disclosure = finalData.findIndex(
-      (a: any) => a === "presentation_and_disclosure"
-    );
-    const accuracy = finalData.findIndex((a: any) => a === "accuracy");
-    const completeness = finalData.findIndex((a: any) => a === "completeness");
-    const validation = finalData.findIndex((a: any) => a === "validation");
-    const restriction = finalData.findIndex((a: any) => a === "restriction");
-
-    if (existence_and_occurence !== -1) {
-      finalData[existence_and_occurence] = "E/O ";
-    }
-    if (cut_over !== -1) {
-      finalData[cut_over] = "CO";
-    }
-    if (rights_and_obligation !== -1) {
-      finalData[rights_and_obligation] = "R&O";
-    }
-    if (presentation_and_disclosure !== -1) {
-      finalData[presentation_and_disclosure] = "P&D";
-    }
-    if (accuracy !== -1) {
-      finalData[accuracy] = "A";
-    }
-    if (completeness !== -1) {
-      finalData[completeness] = "C";
-    }
-    if (validation !== -1) {
-      finalData[validation] = "V";
-    }
-    if (restriction !== -1) {
-      finalData[restriction] = "R";
-    }
-    return finalData.join(", ");
-  };
   // const [isAdmin, isAdminPreparer] = useAccessRights([
   //   "admin",
   //   "admin_preparer",
@@ -1445,14 +1413,14 @@ const ControlsTable = ({
       <Table>
         <thead>
           <tr>
-            <th>Description</th>
-            <th>Freq</th>
-            <th>Type of Control</th>
-            <th>Nature</th>
-            <th>Assertion</th>
-            <th>IPO</th>
-            <th>Control Owner</th>
-            <th />
+            <th style={{ width: "12.5%" }}>Description</th>
+            <th style={{ width: "12.5%" }}>Frequency</th>
+            <th style={{ width: "12.5%" }}>Type of Control</th>
+            <th style={{ width: "12.5%" }}>Nature</th>
+            <th style={{ width: "12.5%" }}>Assertion</th>
+            <th style={{ width: "12.5%" }}>IPO</th>
+            <th style={{ width: "12.5%" }}>Control Owner</th>
+            <th style={{ width: "12.5%" }} />
           </tr>
         </thead>
         <tbody>
@@ -1460,20 +1428,28 @@ const ControlsTable = ({
             controls?.map((control) => (
               <tr key={control.id}>
                 <td>
-                  <Link
+                  <PWCLink
                     to={`/risk-and-control/${
                       history.split("control/")[1]
                     }/control/${control.id}`}
                   >
                     {control.description}
-                  </Link>
+                  </PWCLink>
                 </td>
                 <td>{startCase(control.frequency || "")}</td>
                 <td>{startCase(control.typeOfControl || "")}</td>
                 <td>{startCase(control.nature || "")}</td>
-                <td>{assertionAndIpoModifier(control.assertion)}</td>
-                <td>{assertionAndIpoModifier(control.ipo)}</td>
-                <td>{control.controlOwner}</td>
+                <td>
+                  {(control.assertion &&
+                    control.assertion.map((a) => startCase(a)).join(", ")) ||
+                    ""}
+                </td>
+                <td>
+                  {(control.ipo &&
+                    control.ipo.map((a) => startCase(a)).join(", ")) ||
+                    ""}
+                </td>
+                <td>{control.controlOwner?.join(", ")}</td>
                 {/* <td>
                   {(isAdmin || isAdminPreparer) &&
                     control.hasEditAccess &&

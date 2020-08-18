@@ -176,11 +176,11 @@ const userMenus = [
     path: "/",
     children: [
       { label: "Policy", path: "/policy" },
-      { label: "Policy Category", path: "/policy-category" },
-      { label: "Policy Reference", path: "/references" },
+      { label: "Policy category", path: "/policy-category" },
+      { label: "Policy reference", path: "/references" },
       { label: "Control", path: "/control" },
       { label: "User", path: "/user" },
-      { label: "Business Process", path: "/business-process" },
+      { label: "Business process", path: "/business-process" },
       { label: "Resources", path: "/resources" },
       { label: "Risks", path: "/risk" },
     ],
@@ -224,7 +224,7 @@ const StyledNavbarBrand = styled(NavbarBrand)`
 `;
 const SearchPolicies = styled.div`
   display: none;
-  @media only screen and (max-width: 977px) {
+  @media only screen and (max-width: 1000px) {
     display: block;
   }
 `;
