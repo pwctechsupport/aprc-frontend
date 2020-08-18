@@ -395,27 +395,42 @@ const SubPolicyAttributeForm = ({
   const checkMainBp = formModal.watch("businessProcessMain");
   const checkFirstBp = formModal.watch("businessProcessFirst");
   const checkSecondBp = formModal.watch("businessProcessSecond");
+
   const [mainBpIds, setMainBpIds] = useState([...defValMainBps]);
   const [firstBpIds, setFirstBpIds] = useState([...defValFirstBps]);
   const [secondBpIds, setSecondBpIds] = useState([...defValSecondBps]);
 
+  const [stopMain, setStopMain] = useState(false);
+  const [stopFirst, setStopFirst] = useState(false);
+  const [stopSecond, setStopSecond] = useState(false);
+
   useEffect(() => {
-    if (checkMainBp !== undefined) {
+    if (checkMainBp !== undefined && checkMainBp !== null) {
       setMainBpIds(mainBpIdsWatch);
+      setStopMain(false);
+    } else if (checkMainBp === null && !stopMain) {
+      setMainBpIds(mainBpIdsWatch);
+      setStopMain(true);
     }
-  }, [checkMainBp, mainBpIdsWatch]);
-
+  }, [checkMainBp, mainBpIdsWatch, stopMain]);
   useEffect(() => {
-    if (checkFirstBp !== undefined) {
+    if (checkFirstBp !== undefined && checkFirstBp !== null) {
       setFirstBpIds(firstBpIdsWatch);
+      setStopFirst(false);
+    } else if (checkFirstBp === null && !stopFirst) {
+      setFirstBpIds(firstBpIdsWatch);
+      setStopFirst(true);
     }
-  }, [checkFirstBp, firstBpIdsWatch]);
-
+  }, [checkFirstBp, firstBpIdsWatch, stopFirst]);
   useEffect(() => {
-    if (checkSecondBp !== undefined) {
+    if (checkSecondBp !== undefined && checkSecondBp !== null) {
       setSecondBpIds(secondBpIdsWatch);
+      setStopSecond(false);
+    } else if (checkSecondBp === null && !stopSecond) {
+      setSecondBpIds(secondBpIdsWatch);
+      setStopSecond(true);
     }
-  }, [checkSecondBp, secondBpIdsWatch]);
+  }, [checkSecondBp, secondBpIdsWatch, stopSecond]);
 
   const mainBps = useBusinessProcessesQuery({
     variables: { filter: { ancestry_null: true } },
