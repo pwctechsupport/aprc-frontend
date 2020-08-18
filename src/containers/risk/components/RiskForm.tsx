@@ -105,7 +105,6 @@ const RiskForm = ({
   const checkSecondBp = watch("businessProcessSecond");
 
   const [mainBpIds, setMainBpIds] = useState([...defValMainBps]);
-  console.log("mainBpIds:", mainBpIds);
   const [firstBpIds, setFirstBpIds] = useState([...defValFirstBps]);
   const [secondBpIds, setSecondBpIds] = useState([...defValSecondBps]);
 
@@ -278,10 +277,7 @@ const RiskForm = ({
   const getFirstBpsValues = getFirstBps
     .map(toLabelValue)
     .filter((b) => firstBpIds.includes(b.value));
-  console.log(
-    "cek nih:",
-    !firstBpIds.length ? true : mainBpIds.length ? true : false
-  );
+
   return (
     <div>
       <Form onSubmit={handleSubmit(submit)}>

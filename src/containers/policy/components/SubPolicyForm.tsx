@@ -334,21 +334,13 @@ const SubPolicyAttributeForm = ({
 }) => {
   const formModal = useForm<SubPolicyModalFormValues>({
     defaultValues,
-    validationSchema: validationSchemaAttributes,
+    // validationSchema: validationSchemaAttributes,
   });
   const resourceQ = useResourcesQuery();
   const resourceOptions = oc(resourceQ.data)
     .navigatorResources.collection([])
     .map(toLabelValue);
 
-  const businessProcessesQ = useBusinessProcessesQuery({
-    variables: { filter: { ancestry_null: false } },
-  });
-  const businessProcessesOptions = oc(businessProcessesQ.data)
-    .navigatorBusinessProcesses.collection([])
-    .map(toLabelValue);
-
-  // const bpsFinalValues = formModal.watch("businessProcessIds") || [];
   const checkRisk = formModal.watch("riskIds") || [];
   const checkControl = formModal.watch("controlIds") || [];
   // Business Process Bar
@@ -356,6 +348,9 @@ const SubPolicyAttributeForm = ({
   const globalBps = useBusinessProcessesQuery({
     variables: { filter: { ancestry_null: false } },
   });
+  const businessProcessesOptions = oc(globalBps.data)
+    .navigatorBusinessProcesses.collection([])
+    .map(toLabelValue);
 
   // defaultValues Bps
 
@@ -400,7 +395,6 @@ const SubPolicyAttributeForm = ({
   const checkMainBp = formModal.watch("businessProcessMain");
   const checkFirstBp = formModal.watch("businessProcessFirst");
   const checkSecondBp = formModal.watch("businessProcessSecond");
-
   const [mainBpIds, setMainBpIds] = useState([...defValMainBps]);
   const [firstBpIds, setFirstBpIds] = useState([...defValFirstBps]);
   const [secondBpIds, setSecondBpIds] = useState([...defValSecondBps]);
@@ -559,9 +553,9 @@ const SubPolicyAttributeForm = ({
   const bpsFinalValues = bpsValues
     .filter((a) => !getBannedFirstBpsIds.includes(a))
     .filter((b) => !getRemovedFirstId.includes(b))
-    .filter((c) => {
-      return !getRemovedId.includes(c);
-    });
+    .filter((c) => !getRemovedId.includes(c))
+    .filter((d) => d !== undefined);
+
   const getValueFormBpsData =
     globalBps.data?.navigatorBusinessProcesses?.collection || [];
   const handleGetValueBps = getValueFormBpsData
@@ -676,16 +670,22 @@ const SubPolicyAttributeForm = ({
   const controlDefaultValues = controlsOptions.filter((a) =>
     controlValue.includes(a.value)
   );
+  const [error, setError] = useState(false);
+
   const submit = (values: SubPolicyModalFormValues) => {
-    onSubmit &&
-      onSubmit({
-        controlIds: values.controlIds,
-        resourceIds: values.resourceIds,
-        riskIds: values.riskIds,
-        businessProcessIds: handleGetValueBps.length
-          ? handleGetValueBps.map((a) => a.value).flat(5)
-          : undefined,
-      });
+    if (handleGetValueBps.length) {
+      onSubmit &&
+        onSubmit({
+          controlIds: values.controlIds,
+          resourceIds: values.resourceIds,
+          riskIds: values.riskIds,
+          businessProcessIds: handleGetValueBps.length
+            ? handleGetValueBps.map((a) => a.value).flat(5)
+            : undefined,
+        });
+    } else {
+      setError(true);
+    }
   };
   return (
     <Form>
@@ -747,11 +747,13 @@ const SubPolicyAttributeForm = ({
         name="businessProcessIds"
         register={formModal.register}
         isDisabled={true}
+        required
         value={handleGetValueBps}
         setValue={formModal.setValue}
         label="Selected Business Process"
         placeholder="Selected Business Process"
         options={handleGetMainBps}
+        error={error ? "Business process is a required field" : undefined}
       />
 
       <FormSelect
@@ -813,7 +815,7 @@ const validationSchema = yup.object().shape({
   referenceIds: yup.array().required(),
 });
 const validationSchemaAttributes = yup.object().shape({
-  businessProcessIds: yup.array().required(),
+  // businessProcessFirst: yup.array().required(),
   // controlIds: yup.array().required(),
   // resourceIds: yup.array().required(),
   // riskIds: yup.array().required(),
