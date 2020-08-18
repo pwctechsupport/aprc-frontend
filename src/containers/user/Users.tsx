@@ -78,7 +78,9 @@ const Users = () => {
       </Helmet>
 
       <Container fluid className="p-0 pt-3 px-4">
-        <h2>User management</h2>
+        <h2 style={{ fontSize: "23px" }} className="mt-2">
+          User management
+        </h2>
 
         <Row>
           <Col lg={4}>

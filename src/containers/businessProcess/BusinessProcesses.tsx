@@ -111,7 +111,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
         </Helmet>
         <div className="w-100">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h4>Business process</h4>
+            <h4 style={{ fontSize: "23px" }}>Business process</h4>
             {isAdmin || isAdminPreparer ? (
               <Tooltip description="Create business process">
                 <Button onClick={toggleCreateBpModal} className="pwc">

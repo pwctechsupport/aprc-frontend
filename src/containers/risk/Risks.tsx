@@ -117,7 +117,7 @@ const Risks = ({ history }: RouteComponentProps) => {
       </Helmet>
       <BreadCrumb crumbs={[["/risk", "Risks"]]} />
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Risks</h4>
+        <h4 style={{ fontSize: "23px" }}>Risks</h4>
         {isAdminReviewer ? (
           <div className="d-flex">
             <Tooltip

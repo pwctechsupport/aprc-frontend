@@ -50,6 +50,7 @@ export default function Homepage() {
                 backgroundColor: "rgba(54, 48, 60, 0.6)",
                 padding: " 2rem 1rem",
                 color: "white",
+                fontSize: "23px",
               }}
             >
               Welcome, {username}

@@ -99,7 +99,9 @@ const Departments = ({ history }: RouteComponentProps) => {
         <title>Department - PricewaterhouseCoopers</title>
       </Helmet>
       <Container fluid className="p-0 pt-3 px-4">
-        <h2>Departments management</h2>
+        <h2 style={{ fontSize: "23px" }} className="mt-2">
+          Departments management
+        </h2>
 
         <Row className="mb-5">
           <Col lg={4}>

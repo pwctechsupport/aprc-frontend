@@ -103,7 +103,7 @@ const References = ({ history }: RouteComponentProps) => {
       <div className="w-100">
         <BreadCrumb crumbs={[["/references", "References"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4>References</h4>
+          <h4 style={{ fontSize: "23px" }}>References</h4>
 
           {isAdminReviewer ? (
             <div className="mb-3 d-flex justify-content-end">

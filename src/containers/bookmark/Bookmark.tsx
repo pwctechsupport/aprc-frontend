@@ -146,7 +146,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
         <title>Bookmarks - PricewaterhouseCoopers</title>
       </Helmet>
       <Container style={{ minHeight: "80vh" }} fluid className="p-md-5">
-        <h2>Bookmarks manager</h2>
+        <h2 style={{ fontSize: "23px" }}>Bookmarks manager</h2>
 
         <Row>
           <Col>

@@ -106,7 +106,7 @@ const UpdateProfileForm = ({
   });
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <h4>Profile</h4>
+      <h4 style={{ fontSize: "23px" }}>Profile</h4>
       <Input
         name="name"
         label="Full name"
@@ -213,7 +213,7 @@ const UpdatePasswordForm = ({
   };
   return (
     <Form onSubmit={handleSubmit(submit)}>
-      <h4>Update password</h4>
+      <h4 style={{ fontSize: "23px" }}>Update password</h4>
       <Input
         name="oldPassword"
         label="Current password"

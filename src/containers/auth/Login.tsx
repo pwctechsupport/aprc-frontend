@@ -103,7 +103,7 @@ export default function Login({ history }: RouteComponentProps) {
                 backgroundColor: "rgba(255,255,255,.7)",
               }}
             >
-              <H1>Welcome,<br/> please sign in here</H1>
+              <H1>Welcome, please sign in here</H1>
               <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
                 <Label>Email</Label>
                 <br />
@@ -143,11 +143,11 @@ export default function Login({ history }: RouteComponentProps) {
                   disabled={!captcha}
                 >
                   Login
-              </Button>
+                </Button>
                 <div className="text-center my-4">
                   <Link to="/forgot-password" className="link-pwc">
                     Forgot password?
-                </Link>
+                  </Link>
                 </div>
               </Form>
             </div>
@@ -175,8 +175,9 @@ export const Image = styled.img`
   margin: 70px;
 `;
 
-export const H1 = styled.h1`
-  margin-bottom: 30px;
+export const H1 = styled.h3`
+  margin-bottom: 15px;
+  font-size: 23px;
 `;
 
 export const Label = styled.label`
