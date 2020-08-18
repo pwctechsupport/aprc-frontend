@@ -814,12 +814,12 @@ const validationSchema = yup.object().shape({
     .required(),
   referenceIds: yup.array().required(),
 });
-const validationSchemaAttributes = yup.object().shape({
-  // businessProcessFirst: yup.array().required(),
-  // controlIds: yup.array().required(),
-  // resourceIds: yup.array().required(),
-  // riskIds: yup.array().required(),
-});
+// const validationSchemaAttributes = yup.object().shape({
+//   // businessProcessFirst: yup.array().required(),
+//   // controlIds: yup.array().required(),
+//   // resourceIds: yup.array().required(),
+//   // riskIds: yup.array().required(),
+// });
 // -------------------------------------------------------------------------
 // Type Definitions
 // -------------------------------------------------------------------------
