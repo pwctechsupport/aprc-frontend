@@ -796,8 +796,8 @@ const SubPolicyAttributeForm = ({
         value={getFirstBpsValues}
         isDisabled={mainBpIds.length ? false : true}
         setValue={formModal.setValue}
-        label="First Business Process"
-        placeholder="First Business Process"
+        label="Sub Business Process Level 1"
+        placeholder="Sub Business Process Level 1"
         options={handleGetFirstBps}
       />
 
@@ -809,8 +809,8 @@ const SubPolicyAttributeForm = ({
         setValue={formModal.setValue}
         isDisabled={!firstBpIds.length ? true : mainBpIds.length ? false : true}
         value={getSecondBpsValues}
-        label="Second Business Process"
-        placeholder="Second Business Process"
+        label="Sub Business Process Level 2"
+        placeholder="Sub Business Process Level 2"
         options={handleGetSecondBps}
       />
       <FormSelect
