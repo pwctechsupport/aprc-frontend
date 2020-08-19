@@ -253,9 +253,6 @@ export default function RiskAndControl({
     dataRisksnControl?.navigatorBusinessProcesses?.collection
       .map((a) => a.risks)
       .flat(10) || [];
-  const modifiedRisks = !isUser
-    ? risks
-    : risks.filter((a) => a?.draft === null);
   const dataModifier = (a: any) => {
     for (let i = 0; i < a.length; ++i) {
       for (let j = i + 1; j < a.length; ++j) {
@@ -264,6 +261,10 @@ export default function RiskAndControl({
     }
     return a;
   };
+  const modifiedRisks = dataModifier(
+    !isUser ? risks : risks.filter((a) => a?.draft === null)
+  );
+
   // const controls =
   //   dataRisksnControl?.navigatorBusinessProcesses?.collection
   //     .map((a) => a.controls)
@@ -1253,7 +1254,7 @@ export default function RiskAndControl({
             >
               {risks.length ? (
                 <ul>
-                  {modifiedRisks.map((risk) => (
+                  {modifiedRisks.map((risk: any) => (
                     <li key={risk?.id || ""}>
                       <div className="mb-3 d-flex justify-content-between">
                         <PWCLink
