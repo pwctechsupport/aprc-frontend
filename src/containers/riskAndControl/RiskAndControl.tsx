@@ -224,7 +224,7 @@ export default function RiskAndControl({
     ...bpIds5.flat(10),
     ...bpIds6.flat(10),
   ];
-
+  const bpIdsTotalWithoutCurrent = bpIdsTotal.filter((a) => a !== id);
   // bookmark Query
   const { data: bookmarkData, loading: bookmarkLoading } = useBookmarksQuery({
     fetchPolicy: "network-only",
@@ -264,6 +264,16 @@ export default function RiskAndControl({
   const modifiedRisks = dataModifier(
     !isUser ? risks : risks.filter((a) => a?.draft === null)
   );
+  // console.log(
+  //   "modifiedRisks:",
+  //   dataModifier(
+  //     modifiedRisks
+  //       .map((a: any) =>
+  //         a.businessProcesses.filter((b: any) => bpIdsTotal.includes(b.id))
+  //       )
+  //       .flat(5)
+  //   )
+  // );
 
   // const controls =
   //   dataRisksnControl?.navigatorBusinessProcesses?.collection
@@ -1257,6 +1267,12 @@ export default function RiskAndControl({
                   {modifiedRisks.map((risk: any) => (
                     <li key={risk?.id || ""}>
                       <div className="mb-3 d-flex justify-content-between">
+                        {console.log(
+                          "msk",
+                          risk.businessProcesses.filter((a: any) =>
+                            bpIdsTotalWithoutCurrent.includes(a.id)
+                          )
+                        )}
                         <PWCLink
                           to={`/risk-and-control/${
                             currentUrl.split("control/")[1]
@@ -1276,7 +1292,6 @@ export default function RiskAndControl({
                             {startCase(risk?.typeOfRisk || "")}
                           </Badge>
                         </PWCLink>
-
                         {/* {(isAdmin || isAdminPreparer) &&
                           risk?.hasEditAccess &&
                           !risk.draft &&
@@ -1299,6 +1314,25 @@ export default function RiskAndControl({
                             </Button>
                           )} */}
                       </div>
+                      <h6>Business Process </h6>
+                      <ul>
+                        {risk.businessProcesses
+                          .filter((a: any) =>
+                            bpIdsTotalWithoutCurrent.includes(a.id)
+                          )
+                          .map((b: any) => (
+                            <li key={b.id}>
+                              <div className="mb-3 d-flex justify-content-between">
+                                <PWCLink
+                                  style={{ fontSize: "14px" }}
+                                  to={`/risk-and-control/${b.id}`}
+                                >
+                                  {b.name}
+                                </PWCLink>
+                              </div>
+                            </li>
+                          ))}
+                      </ul>
                       {isUser ? (
                         dataModifier(
                           risk?.controls?.filter((a: any) => a.draft === null)
