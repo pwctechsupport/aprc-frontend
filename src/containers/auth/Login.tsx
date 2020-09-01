@@ -17,7 +17,7 @@ import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
 import Captcha from "react-numeric-captcha";
-import useWindowSize from "../../shared/hooks/useWindowSize";
+// import useWindowSize from "../../shared/hooks/useWindowSize";
 import { Container as BsContainer, Row, Col } from "reactstrap";
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
@@ -82,7 +82,7 @@ export default function Login({ history }: RouteComponentProps) {
       }
     }
   }
-  const screenSize = useWindowSize();
+  // const screenSize = useWindowSize();
 
   return (
     <BsContainer fluid className="login-background pt-md-5">

@@ -7,7 +7,6 @@ import { usePolicyCategoriesQuery } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select from "../../../shared/components/forms/Select";
-import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
@@ -33,7 +32,7 @@ const PolicyForm = ({
 }: PolicyFormProps) => {
   const [createS, setCreateS] = useState(false);
   const policyCategoriesState = usePolicyCategoriesQuery();
-  const { register, setValue, errors, handleSubmit, watch } = useForm<
+  const { register, setValue, errors, handleSubmit } = useForm<
     PolicyFormValues
   >({
     validationSchema,

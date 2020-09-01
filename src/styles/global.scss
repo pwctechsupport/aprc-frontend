@@ -80,12 +80,15 @@ input[type="number"]::-webkit-outer-spin-button {
 .link-pwc {
   color: $pwc-orange;
   font-weight: 700;
-  border-bottom: 1.5px solid $pwc-orange;
+  text-decoration: underline;
+  // border-bottom: 1.5px solid $pwc-orange;
   padding: 0px 20px;
 
   &:hover {
     text-decoration: none;
+    text-decoration: underline;
+
     color: darken($pwc-orange, 10);
-    border-bottom: 1.5px solid $pwc-orange;
+    // border-bottom: 1.5px solid $pwc-orange;
   }
 }
