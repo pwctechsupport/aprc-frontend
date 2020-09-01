@@ -65,9 +65,14 @@ export default function Homepage() {
           </Container>
         </Centerer>
       </BackgroundImage>
-      <Container className="mt-5 pb-5" style={{ minHeight: "50vh" }}>
+      <Container
+        className="mt-5 pb-5"
+        style={{ minHeight: "50vh", minWidth: "90vw" }}
+      >
         <Row>
-          <Col xs={12} md={6} lg={4}>
+          <Col xs={0} md={0} lg={1}></Col>
+
+          <Col xs={12} md={6} lg={2}>
             <HomepageBox
               list={modifiedRecentlyAddedPol.map(toLabelValue)}
               basePath="policy"
@@ -77,7 +82,7 @@ export default function Homepage() {
               // softColor="rgb(254, 204, 148)"
             />
           </Col>
-          <Col xs={12} md={6} lg={4}>
+          <Col xs={12} md={6} lg={2}>
             <HomepageBox
               list={popularPolicies.map(toLabelValue)}
               basePath="policy"
@@ -87,7 +92,7 @@ export default function Homepage() {
               // softColor="rgb(255, 219, 147)"
             />
           </Col>
-          <Col xs={12} md={6} lg={4}>
+          <Col xs={12} md={6} lg={2}>
             <HomepageBox
               list={savedPolicies.map((a) => {
                 return {
@@ -102,11 +107,7 @@ export default function Homepage() {
               // softColor="rgb(251, 189, 201)"
             />
           </Col>
-        </Row>
-        <Row className="mt-3">
-          <Col xs={12} md={6} lg={4}></Col>
-
-          <Col xs={12} md={6} lg={4}>
+          <Col xs={12} md={6} lg={2}>
             <HomepageBox
               list={popularResources.map(toLabelValue)}
               basePath="resources"
@@ -116,7 +117,7 @@ export default function Homepage() {
               // softColor="rgb(255, 219, 147)"
             />
           </Col>
-          <Col xs={12} md={6} lg={4}>
+          <Col xs={12} md={6} lg={2}>
             <HomepageBox
               list={
                 recentlyVisitedPolicies.length
@@ -133,6 +134,10 @@ export default function Homepage() {
               // softColor="rgb(251, 189, 201)"
             />
           </Col>
+          <Col xs={12} md={6} lg={1}></Col>
+        </Row>
+        <Row className="mt-3">
+          <Col xs={0} md={0} lg={4}></Col>
         </Row>
       </Container>
       <Footer />
