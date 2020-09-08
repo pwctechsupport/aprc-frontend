@@ -42,7 +42,7 @@ const fragmentMatcher = new IntrospectionFragmentMatcher({
 const cache = new InMemoryCache({ fragmentMatcher });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink).concat(uploadLink),
+  link: authLink.concat(uploadLink).concat(httpLink),
   cache,
 });
 const App: React.FC = () => {
