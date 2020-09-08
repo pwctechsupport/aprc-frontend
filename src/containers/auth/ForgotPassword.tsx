@@ -54,7 +54,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
         </h4>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <div className="my-5">
-            <Label>Email</Label>
+            <Label>Your Email</Label>
             <br />
             <Input
               name="email"
@@ -71,12 +71,12 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
             block
             loading={loading}
           >
-            Confirm email
+            Reset Password
           </Button>
         </Form>
         <div className="text-center my-4">
           <Link to="/auth" className="link-pwc">
-            Back to log in page
+            Cancel
           </Link>
         </div>
       </Container>

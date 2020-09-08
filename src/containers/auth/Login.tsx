@@ -86,10 +86,20 @@ export default function Login({ history }: RouteComponentProps) {
 
   return (
     <BsContainer fluid className="login-background pt-md-5">
+      <Image
+        style={{
+          position: "absolute",
+          top: "10px",
+          left: 0,
+          height: "150px",
+          width: "150px",
+        }}
+        className="mt-0 ml-5"
+        src={pwcLogoOutline}
+        alt="pwc-logo"
+      />
       <Row>
-        <Col sm={12} md={7}>
-          <Image className="mt-0 ml-5" src={pwcLogoOutline} alt="pwc-logo" />
-        </Col>
+        <Col sm={12} md={7}></Col>
         <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
           <BsContainer className="px-0">
             <Helmet>
@@ -103,7 +113,9 @@ export default function Login({ history }: RouteComponentProps) {
                 backgroundColor: "rgba(255,255,255,.7)",
               }}
             >
-              <H1>Welcome, please sign in here</H1>
+              <H1>Welcome to Egrc</H1>
+              {/* <H1>Egrc</H1> */}
+
               <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
                 <Label>Email</Label>
                 <br />

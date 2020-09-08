@@ -87,6 +87,8 @@ body {
   --primary-side-box: #dedede;
   --darker-grey: #808080;
   --tangerine: #eb8c00;
+  --orange: #d04a02;
+
   /* only in sidebox */
   --soft-black: rgba(0, 0, 0, 0.2);
   --item-title-side-box: rgba(0, 0, 0, 0.7);

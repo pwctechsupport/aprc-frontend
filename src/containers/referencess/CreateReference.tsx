@@ -117,7 +117,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
               Submit
             </DialogButton>
             <StyledDialogButton
-              className="black px-5 ml-2"
+              className="cancel px-5 ml-2"
               onConfirm={() => history.replace(`/references`)}
               isCreate
             >

@@ -333,7 +333,7 @@ const SubPolicyForm = ({
           )}{" "}
           {isCreate ? (
             <DialogButton
-              className="black px-5 ml-2"
+              className="cancel px-5 ml-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={() => history.replace(`/policy`)}
               isCreate
@@ -342,7 +342,7 @@ const SubPolicyForm = ({
             </DialogButton>
           ) : (
             <DialogButton
-              className="black px-5 ml-2"
+              className="cancel px-5 ml-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={toggleEditMode}
               isEdit
@@ -857,7 +857,7 @@ const SubPolicyAttributeForm = ({
       <div className=" d-flex justify-content-end">
         <Button
           type="button"
-          className="mr-2 cancel"
+          className="cancel mr-2"
           onClick={() => onCancel()}
         >
           Cancel

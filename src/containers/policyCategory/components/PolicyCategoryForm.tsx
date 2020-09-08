@@ -39,7 +39,7 @@ const PolicyCategoryForm = ({
           </Button>
           {isCreate ? (
             <StyledDialogButton
-              className="black ml-2"
+              className="cancel px-5 ml-2"
               onConfirm={() => history.replace(`/policy-category`)}
               isCreate
             >
@@ -47,7 +47,7 @@ const PolicyCategoryForm = ({
             </StyledDialogButton>
           ) : (
             <StyledDialogButton
-              className="black ml-2"
+              className="cancel px-5 ml-2"
               onConfirm={toggleEditMode}
               isEdit
             >
