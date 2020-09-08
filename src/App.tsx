@@ -5,7 +5,7 @@ import store from "./redux";
 import {
   IntrospectionFragmentMatcher,
   InMemoryCache,
-  ApolloClient
+  ApolloClient,
 } from "apollo-boost";
 import { createHttpLink } from "apollo-link-http";
 import { setContext } from "apollo-link-context";
@@ -17,6 +17,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./styles/app.scss";
 import fragmentTypes from "./generated/fragmentTypes.json";
 import { APP_GRAPHQL_URL } from "./settings";
+import { createUploadLink } from "apollo-upload-client";
 
 const graphqlUri = APP_GRAPHQL_URL;
 const httpLink = createHttpLink({ uri: graphqlUri });
@@ -26,22 +27,24 @@ const authLink = setContext((_, { headers }) => {
   return {
     headers: {
       ...headers,
-      Authorization: token ? `Bearer ${token}` : ""
-    }
+      Authorization: token ? `Bearer ${token}` : "",
+    },
   };
+});
+const uploadLink = createUploadLink({
+  uri: graphqlUri,
 });
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData: fragmentTypes
+  introspectionQueryResultData: fragmentTypes,
 });
 
 const cache = new InMemoryCache({ fragmentMatcher });
 
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache
+  link: authLink.concat(httpLink).concat(uploadLink),
+  cache,
 });
-
 const App: React.FC = () => {
   return (
     <Provider store={store}>
