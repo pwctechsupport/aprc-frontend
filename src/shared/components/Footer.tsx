@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-const Footer = () => {
+interface FooterProps {
+  fontColor?: string;
+}
+const Footer = ({ fontColor = "" }: FooterProps) => {
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return {
@@ -30,7 +33,6 @@ const Footer = () => {
       className="mt-3"
       style={{
         display: "block",
-        // padding: "20px",
         height: "60px",
         width: "100%",
         marginTop: "auto",
@@ -50,7 +52,7 @@ const Footer = () => {
         <p
           style={{
             textAlign: "center",
-            color: "rgba(0,0,0,.5)",
+            color: fontColor ? fontColor : "rgba(0,0,0,.5)",
           }}
         >
           &copy; 2020 PwC. PwC all rights reserved. PwC refers to the PwC

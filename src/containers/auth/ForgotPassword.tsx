@@ -9,6 +9,7 @@ import { Container, Form, H1, Image, Input, Label } from "./Login";
 import Helmet from "react-helmet";
 import { Link } from "react-router-dom";
 import useWindowSize from "../../shared/hooks/useWindowSize";
+import Footer from "../../shared/components/Footer";
 
 const ForgotPassword = ({ history }: RouteComponentProps) => {
   const { register, handleSubmit } = useForm();
@@ -37,51 +38,60 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
   const screenSize = useWindowSize();
 
   return (
-    <Container>
-      <Helmet>
-        <title>Forgot Password - PricewaterhouseCoopers</title>
-      </Helmet>
+    <>
       <Container
-        style={{ width: `${screenSize.width < 768 ? "100%" : "30%"}` }}
+        style={{
+          minHeight: "90vh",
+        }}
       >
-        <Image src={pwcLogo} alt="pwc-logo" />
-        <H1 style={{ fontSize: "16px", textAlign: "center" }}>eGRC</H1>
-        <H1 style={{ fontSize: "16px", textAlign: "center" }}>
-          Password recovery
-        </H1>
-        <h4 style={{ fontSize: "14px", textAlign: "center" }}>
-          Enter the email address for your account and we'll send you
-          instructions to reset your password.
-        </h4>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <div className="my-5">
-            <Label>Your Email</Label>
-            <br />
-            <Input
-              name="email"
-              placeholder="Enter email address"
-              required
-              ref={register({ required: true })}
-            />
-          </div>
+        <Helmet>
+          <title>Forgot Password - PricewaterhouseCoopers</title>
+        </Helmet>
+        <Container
+          style={{
+            width: `${screenSize.width < 768 ? "100%" : "30%"}`,
+          }}
+        >
+          <Image src={pwcLogo} alt="pwc-logo" />
+          <H1 style={{ fontSize: "16px", textAlign: "center" }}>eGRC</H1>
+          <H1 style={{ fontSize: "16px", textAlign: "center" }}>
+            Password recovery
+          </H1>
+          <h4 style={{ fontSize: "14px", textAlign: "center" }}>
+            Enter the email address for your account and we'll send you
+            instructions to reset your password.
+          </h4>
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <div className="my-5">
+              <Label>Your Email</Label>
+              <br />
+              <Input
+                name="email"
+                placeholder="Enter email address"
+                required
+                ref={register({ required: true })}
+              />
+            </div>
 
-          <Button
-            className="pwc"
-            color="primary"
-            type="submit"
-            block
-            loading={loading}
-          >
-            Reset Password
-          </Button>
-        </Form>
-        <div className="text-center my-4">
-          <Link to="/auth" className="link-pwc">
-            Cancel
-          </Link>
-        </div>
+            <Button
+              className="pwc"
+              color="primary"
+              type="submit"
+              block
+              loading={loading}
+            >
+              Reset Password
+            </Button>
+          </Form>
+          <div className="text-center my-4">
+            <Link to="/auth" className="link-pwc">
+              Cancel
+            </Link>
+          </div>
+        </Container>
       </Container>
-    </Container>
+      <Footer />
+    </>
   );
 };
 
