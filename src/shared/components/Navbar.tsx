@@ -28,6 +28,7 @@ import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
 import useAccessRights from "../hooks/useAccessRights";
 import { H1 } from "../../containers/auth/Login";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline.png";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
@@ -63,11 +64,18 @@ export default function NewNavbar() {
       <Row>
         <Col lg={3}>
           <StyledNavbarBrand tag={Link} to="/">
-            <Image src={pwcLogo} alt="PwC" />
+            <Image
+              style={{
+                position: "absolute",
+                bottom: 4,
+              }}
+              src={pwcLogoOutline}
+              alt="PwC"
+            />
           </StyledNavbarBrand>
         </Col>
         <Col>
-          <H1 style={{ paddingTop: "10px" }}>eGRC</H1>
+          <H1 style={{ paddingTop: "15px" }}>eGRC</H1>
         </Col>
       </Row>
       <NavbarToggler onClick={toggle} />
@@ -208,7 +216,7 @@ const NavbarWithColor = styled(Navbar)`
   background-color: var(--darker-grey-2);
 `;
 const Image = styled.img`
-  width: 50px;
+  width: 70px;
   height: auto;
 `;
 
