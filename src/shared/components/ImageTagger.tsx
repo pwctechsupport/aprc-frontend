@@ -175,11 +175,9 @@ export default function ImageTagger({
               const id = tag.risk?.id || tag.control?.id;
               const type = tag.risk?.id ? "Risk" : "Control";
               const name = tag.risk?.name || tag.control?.description;
-              const background = tag.risk?.id
-                ? "orange"
-                : tag.control?.id
-                ? "#810001"
-                : undefined;
+              const background = tag.risk?.id ? "#ffb600" : "rgb(217,57,84)";
+              const fontColor = tag.risk?.id ? "black" : "white";
+
               const to = tag.risk?.id
                 ? `/risk/${tag.risk?.id}`
                 : `/control/${tag.control?.id}`;
@@ -194,7 +192,9 @@ export default function ImageTagger({
                     y={tag.yCoordinates || 0}
                     background={background}
                   >
-                    <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
+                    <PreviewTagText
+                      fontColor={fontColor}
+                    >{`${type}: (${id}) ${name}`}</PreviewTagText>
                   </PreviewTag>
                 );
               }
@@ -208,7 +208,9 @@ export default function ImageTagger({
                   to={to}
                   background={background}
                 >
-                  <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
+                  <PreviewTagText
+                    fontColor={fontColor}
+                  >{`${type}: (${id}) ${name}`}</PreviewTagText>
                 </PreviewTag>
               );
             })}
@@ -354,8 +356,8 @@ export const PreviewTag = styled.div<PreviewTagProps>`
   }
 `;
 
-export const PreviewTagText = styled.div`
-  color: white;
+export const PreviewTagText = styled.div<{ fontColor?: string }>`
+  color: ${(p) => p.fontColor};
   font-size: smaller;
   font-weight: bold;
   text-overflow: ellipsis;
