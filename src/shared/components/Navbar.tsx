@@ -94,7 +94,7 @@ export default function NewNavbar() {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
                     <StyledDropdownToggle
-                      style={{ fontSize: "15px", paddingTop: "10px" }}
+                      style={{ fontSize: "15px", paddingTop: "15px" }}
                       nav
                       caret
                     >
@@ -128,7 +128,7 @@ export default function NewNavbar() {
                     activeClassName="active"
                     style={{
                       fontSize: "15px",
-                      paddingTop: "10px",
+                      paddingTop: "15px",
                     }}
                   >
                     {label}
@@ -226,7 +226,7 @@ const Underline = styled.div`
   position: relative;
   height: 5px;
   background-color: var(--orange);
-  top: 13px;
+  top: 10px;
   left: 0;
 `;
 const Image = styled.img`
