@@ -178,13 +178,13 @@ const PolicyForm = ({
           }
         />
 
-        <div className="d-flex justify-content-end mt-3">
+        <div className="text-right">
           {premise ? (
             <Fragment>
               <DialogButton
                 color="primary"
                 loading={submittingAsDraft}
-                className="pwc mr-2 px-5"
+                className="pwc mr-2 px-5 btn-sm-block mb-1 mb-sm-0"
                 message="Save Policy as draft?"
                 onConfirm={handleSubmit(submitAsDraft)}
               >
@@ -193,7 +193,7 @@ const PolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={loadingSubmit}
-                className="pwc px-5"
+                className="pwc px-5 btn-sm-block mb-1 mb-sm-0"
                 message="Submit Policy?"
                 onConfirm={handleSubmit(submitFromDrafted)}
               >
@@ -206,7 +206,7 @@ const PolicyForm = ({
                 color="primary"
                 loading={createS ? submitting : false}
                 message="Save Policy as draft?"
-                className="pwc mr-2 px-5"
+                className="pwc mr-2 px-5 btn-sm-block mb-1 mb-sm-0"
                 onConfirm={handleSubmit(submit)}
               >
                 Save as draft
@@ -215,7 +215,7 @@ const PolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={createS ? false : loadingSubmit || submitting}
-                className="pwc px-5"
+                className="pwc px-5 btn-sm-block mb-1 mb-sm-0"
                 message="Submit Policy?"
                 onConfirm={handleSubmit(submitToReviewer)}
               >
@@ -225,7 +225,7 @@ const PolicyForm = ({
           )}
           {isCreate ? (
             <StyledDialogButton
-              className="black px-5 ml-2"
+              className="black px-5 ml-sm-2 btn-sm-block"
               onConfirm={() => history.replace(`/policy`)}
               isCreate
             >
@@ -233,7 +233,7 @@ const PolicyForm = ({
             </StyledDialogButton>
           ) : (
             <StyledDialogButton
-              className="black px-5 ml-2"
+              className="black px-5 ml-sm-2 btn-sm-block"
               onConfirm={toggleEditMode}
               isEdit
             >

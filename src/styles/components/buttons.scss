@@ -56,3 +56,7 @@
     background-color: $soft-red;
   }
 }
+
+@media all and (max-width: $sm) {
+   .btn-sm-block { width: 100%; display:block; }
+}
