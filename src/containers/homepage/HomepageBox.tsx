@@ -25,7 +25,7 @@ export default function HomepageBox({
   const [open, setOpen] = useState(true);
   const [textHeight, setTextHeight] = useState(0);
   const { height } = useWindowSize();
-  const heigthAdjustment = `${(height * 40) / 100 - textHeight}px`;
+  const heigthAdjustment = `${(height * 50) / 100 - textHeight}px`;
   return (
     <div
       className="my-2"
@@ -81,9 +81,12 @@ export default function HomepageBox({
   );
 }
 const StyledSpan = styled.span`
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 3.6em;
 `;
 
 const StyledLink = styled(Link)`

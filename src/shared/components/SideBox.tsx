@@ -171,9 +171,6 @@ export const SideBoxBranchTitle = styled.div`
   padding: 10px 10px 10px 0px;
   text-decoration: none;
   width: 75%;
-  /* overflow: hidden; */
-  /* white-space: nowrap; */
-  /* text-overflow: ellipsis; */
   color: var(--item-title-side-box);
   font-weight: bold;
   overflow: hidden;
@@ -181,9 +178,7 @@ export const SideBoxBranchTitle = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  /* line-height: 1.2em; */
   max-height: 3.6em;
-  /* font-size: 18px; */
   &.active {
     color: var(--item-title-side-box);
   }
