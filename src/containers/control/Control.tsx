@@ -282,8 +282,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       return (
         <div className="d-flex">
           <DialogButton
-            color="danger"
-            className="mr-2"
+            className="mr-2 button cancel"
             onConfirm={() => review({ publish: false })}
             loading={reviewMutationInfo.loading}
           >

@@ -296,8 +296,8 @@ export default function Report() {
               <Button
                 onClick={handleSubmit(handlePreview)}
                 type="button"
-                color="transparent"
-                className="mr-3"
+                // color="transparent"
+                className="button pwc mr-3"
                 loading={previewing}
               >
                 <FaFile /> Preview
@@ -305,7 +305,8 @@ export default function Report() {
             ) : null}
 
             <Button
-              color="secondary"
+              // color="secondary"
+              className="pwc"
               onClick={handleSubmit(handleDownload)}
               loading={downloading}
             >
@@ -318,7 +319,7 @@ export default function Report() {
                   sText("");
                 }}
                 type="reset"
-                className="black ml-5"
+                className="button cancel ml-5"
               >
                 <FaUndo />
               </Button>

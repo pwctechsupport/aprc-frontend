@@ -19,7 +19,6 @@ import {
   Col,
 } from "reactstrap";
 import styled from "styled-components";
-import pwcLogo from "../../assets/images/pwc-logo.png";
 import HomepageSearch from "../../containers/homepage/HomepageSearch";
 import { useNotificationsCountQuery } from "../../generated/graphql";
 import { unauthorize } from "../../redux/auth";
