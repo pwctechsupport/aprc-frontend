@@ -21,6 +21,7 @@ import * as yup from "yup";
 import { toast } from "react-toastify";
 import SunEditor from "suneditor-react";
 import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
+import styled from "styled-components";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -332,23 +333,23 @@ const SubPolicyForm = ({
             </Fragment>
           )}{" "}
           {isCreate ? (
-            <DialogButton
+            <StyledDialogButton
               className="cancel px-5 ml-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={() => history.replace(`/policy`)}
               isCreate
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           ) : (
-            <DialogButton
+            <StyledDialogButton
               className="cancel px-5 ml-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={toggleEditMode}
               isEdit
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           )}
         </div>
       </Form>
@@ -373,6 +374,9 @@ const SubPolicyForm = ({
 
 export default SubPolicyForm;
 
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 // -------------------------------------------------------------------------
 // Construct Modal Form Component
 // -------------------------------------------------------------------------
@@ -857,7 +861,7 @@ const SubPolicyAttributeForm = ({
       <div className=" d-flex justify-content-end">
         <Button
           type="button"
-          className="cancel mr-2"
+          className="button cancel mr-2"
           onClick={() => onCancel()}
         >
           Cancel

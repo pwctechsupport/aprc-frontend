@@ -133,6 +133,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
 export default CreateReference;
 const StyledDialogButton = styled(DialogButton)`
   background: var(--soft-grey);
+  color: white;
 `;
 interface CreateReferenceFormValues {
   name: string;

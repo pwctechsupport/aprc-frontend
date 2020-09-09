@@ -22,6 +22,7 @@
 .button.cancel {
   background: $soft-grey;
   border-radius: 3px;
+  color: black;
   border: 0;
   opacity: 0.9;
   &:hover {
@@ -54,5 +55,12 @@
 
   &.red {
     background-color: $soft-red;
+  }
+}
+
+@media all and (max-width: $sm) {
+  .btn-sm-block {
+    width: 100%;
+    display: block;
   }
 }

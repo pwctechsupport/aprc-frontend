@@ -1286,8 +1286,8 @@ export default function Policy({
       actions = (
         <div>
           <Button
-            color="danger"
-            className="mr-2"
+            // color="danger"
+            className="mr-2 button cancel"
             onClick={() =>
               dialogBox({
                 callback: () => review({ publish: false }),
