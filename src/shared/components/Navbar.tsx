@@ -133,8 +133,13 @@ export default function NewNavbar() {
                   >
                     {label}
                   </StyledNavLink>
-                  {path === currentUrl && (
+                  {path !== "/" && currentUrl.includes(path) ? (
                     <Underline className="mx-2"></Underline>
+                  ) : (
+                    path === "/" &&
+                    currentUrl === path && (
+                      <Underline className="mx-2"></Underline>
+                    )
                   )}
                 </NavItem>
               );
