@@ -45,6 +45,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
         style={{ width: `${screenSize.width < 768 ? "100%" : "30%"}` }}
       >
         <Image src={pwcLogo} alt="pwc-logo" />
+        <H1 style={{ fontSize: "16px", textAlign: "center" }}>eGRC</H1>
         <H1 style={{ fontSize: "16px", textAlign: "center" }}>
           Password recovery
         </H1>
