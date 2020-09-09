@@ -5,6 +5,7 @@ import { Collapse } from "reactstrap";
 import styled, { css } from "styled-components";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import { Suggestions } from "../../shared/formatter";
+import useWindowSize from "../../shared/hooks/useWindowSize";
 
 interface HomepageBoxProps {
   list: Suggestions;
@@ -22,6 +23,9 @@ export default function HomepageBox({
   fontColor = "white",
 }: HomepageBoxProps) {
   const [open, setOpen] = useState(true);
+  const [textHeight, setTextHeight] = useState(0);
+  const { height } = useWindowSize();
+  const heigthAdjustment = `${(height * 40) / 100 - textHeight}px`;
   return (
     <div
       className="my-2"
@@ -37,6 +41,7 @@ export default function HomepageBox({
         style={{
           borderBottom: "1px solid rgba(0,0,0,0.3)",
         }}
+        ref={(ref) => setTextHeight(ref?.clientHeight || 0)}
       >
         <h5 style={{ color: fontColor }}>{title}</h5>
         <BoxHeader onClick={() => setOpen((p) => !p)}>
@@ -44,12 +49,7 @@ export default function HomepageBox({
         </BoxHeader>
       </div>
       <Collapse isOpen={open}>
-        <div
-          className="p-2"
-          style={{
-            minHeight: "30vh",
-          }}
-        >
+        <div className="p-2" style={{ minHeight: heigthAdjustment }}>
           {list.length ? (
             list.map((item) => (
               <StyledLink
@@ -80,7 +80,6 @@ export default function HomepageBox({
     </div>
   );
 }
-
 const StyledSpan = styled.span`
   white-space: nowrap;
   overflow: hidden;
