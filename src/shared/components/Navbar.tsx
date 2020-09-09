@@ -27,11 +27,12 @@ import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
 import useAccessRights from "../hooks/useAccessRights";
 import { H1 } from "../../containers/auth/Login";
-import pwcLogoOutline from "../../assets/images/pwc-logo-outline.png";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
   const location = useLocation();
+  const currentUrl = location.pathname;
   const rolesArray = useAccessRights([
     "admin",
     "admin_preparer",
@@ -93,7 +94,7 @@ export default function NewNavbar() {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
                     <StyledDropdownToggle
-                      style={{ fontSize: "15px" }}
+                      style={{ fontSize: "15px", paddingTop: "10px" }}
                       nav
                       caret
                     >
@@ -125,10 +126,16 @@ export default function NewNavbar() {
                     to={path}
                     exact={path === "/"}
                     activeClassName="active"
-                    style={{ fontSize: "15px" }}
+                    style={{
+                      fontSize: "15px",
+                      paddingTop: "10px",
+                    }}
                   >
                     {label}
                   </StyledNavLink>
+                  {path === currentUrl && (
+                    <Underline className="mx-2"></Underline>
+                  )}
                 </NavItem>
               );
             })}
@@ -212,7 +219,15 @@ const userMenus = [
 // Styled Components
 // =============================================
 const NavbarWithColor = styled(Navbar)`
-  background-color: var(--darker-grey-2);
+  background-color: white;
+  border-bottom: 1px solid var(--soft-grey);
+`;
+const Underline = styled.div`
+  position: relative;
+  height: 5px;
+  background-color: var(--orange);
+  top: 13px;
+  left: 0;
 `;
 const Image = styled.img`
   width: 70px;
@@ -244,7 +259,7 @@ const StyledNavLink = styled(NavLink)`
   letter-spacing: 1px;
   transition: 0.15s ease-in-out;
   &:hover {
-    color: var(--tangerine) !important;
+    color: var(--orange) !important;
   }
   &::after {
     content: "";
@@ -253,17 +268,17 @@ const StyledNavLink = styled(NavLink)`
     height: 2px;
     width: 100%;
   }
-  &.active {
+  /* &.active {
     &::after {
-      background: var(--tangerine);
+      background: var(--orange);
     }
-  }
+  } */
   @media only screen and (min-width: 1081px) {
     margin: 0px 0.5rem;
   }
   @media only screen and (max-width: 767px) {
     &.active {
-      color: var(--tangerine) !important;
+      color: var(--orange) !important;
     }
   }
 `;
@@ -278,12 +293,12 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   transition: 0.15s ease-in-out;
   font-weight: bold;
   &:hover {
-    color: var(--tangerine) !important;
+    color: var(--orange) !important;
   }
 `;
 
 const StyledDropdownNavLink = styled(NavLink)`
-  color: var(--tangerine) !important;
+  color: var(--orange) !important;
   &:hover {
     background: var(--pale-primary-color) !important;
   }
@@ -292,10 +307,10 @@ const StyledDropdownNavLink = styled(NavLink)`
     color: unset;
   }
   &.active {
-    background: var(--tangerine) !important;
+    background: var(--orange) !important;
     color: white !important;
     &:hover {
-      background: var(--tangerine) !important;
+      background: var(--orange) !important;
     }
   }
 `;
