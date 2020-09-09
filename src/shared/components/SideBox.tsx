@@ -30,7 +30,7 @@ export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
 
 // SideBoxTitle, the wrapper for the header. Better name should be SideBoxHeader.
 export const SideBoxTitle = styled.h4.attrs(() => ({
-  className: "text-grey",
+  className: "black",
 }))`
   font-size: 23px;
   padding: 1.5rem 1rem 0.5rem 1rem;

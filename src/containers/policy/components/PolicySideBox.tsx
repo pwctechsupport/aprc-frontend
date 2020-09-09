@@ -98,9 +98,10 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Policies admin"
-            : "Policies"}
+          Policiy master list
+          {/* {isAdmin || isAdminReviewer || isAdminPreparer
+            ? ""
+            : "Policies"} */}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
