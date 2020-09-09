@@ -186,6 +186,8 @@ const PolicyBranch = ({
   myBroHasChild,
   isAdmin,
 }: PolicyBranchProps) => {
+  const [getWidth, setGetWidth] = useState(0);
+
   const modifiedChildren =
     children &&
     children.sort((a, b) =>
@@ -211,7 +213,6 @@ const PolicyBranch = ({
   const reviewerHasChild =
     originalData?.children?.filter((a: any) => a.status !== "draft") || [];
   const grandpa = children?.map((a) => a.children).flat().length || 0;
-
   return (
     <div>
       <Fragment>
@@ -230,19 +231,14 @@ const PolicyBranch = ({
               }
             >
               {hasChild && childrenHasChildWhenUser ? (
-                <SideBoxBranchIconContainer onClick={toggle}>
-                  <SideBoxBranchIcon
-                    open={isOpen}
-                    className={isActive ? "text-white" : "text-orange"}
-                    size={14}
-                  />
-                </SideBoxBranchIconContainer>
+                <div style={{ width: 20 }} />
               ) : (
                 <div style={{ width: 34 }} />
               )}
               <SideBoxBranchTitle
                 as={Link}
                 className={classnames({ active: isActive })}
+                style={{ width: getWidth }}
                 to={
                   isAdmin
                     ? `/policy-admin/${id}/details`
@@ -253,6 +249,15 @@ const PolicyBranch = ({
               >
                 {title}
               </SideBoxBranchTitle>
+              {hasChild ? (
+                <SideBoxBranchIconContainer onClick={toggle}>
+                  <SideBoxBranchIcon
+                    open={isOpen}
+                    className={isActive ? "text-white" : "text-orange"}
+                    size={14}
+                  />
+                </SideBoxBranchIconContainer>
+              ) : null}
             </SideBoxBranch>
             {hasChild && (
               <Collapse isOpen={isOpen}>
@@ -283,19 +288,15 @@ const PolicyBranch = ({
               })}
               padLeft={level ? level * 10 : 0}
               isLastChild={!hasChild && parentId && !myBroHasChild}
+              ref={(ref) => setGetWidth(ref?.clientWidth || 0)}
             >
               {hasChild ? (
-                <SideBoxBranchIconContainer onClick={toggle}>
-                  <SideBoxBranchIcon
-                    open={isOpen}
-                    className={isActive ? "text-white" : "text-orange"}
-                    size={14}
-                  />
-                </SideBoxBranchIconContainer>
+                <div style={{ width: 20 }} />
               ) : (
                 <div style={{ width: 34 }} />
               )}
               <SideBoxBranchTitle
+                style={{ width: getWidth }}
                 as={Link}
                 className={classnames({ active: isActive })}
                 to={
@@ -308,6 +309,15 @@ const PolicyBranch = ({
               >
                 {title}
               </SideBoxBranchTitle>
+              {hasChild ? (
+                <SideBoxBranchIconContainer onClick={toggle}>
+                  <SideBoxBranchIcon
+                    open={isOpen}
+                    className={isActive ? "text-white" : "text-orange"}
+                    size={14}
+                  />
+                </SideBoxBranchIconContainer>
+              ) : null}
             </SideBoxBranch>
             {hasChild && (
               <Collapse isOpen={isOpen}>
@@ -336,19 +346,15 @@ const PolicyBranch = ({
               })}
               padLeft={level ? level * 10 : 0}
               isLastChild={!hasChild && parentId && !myBroHasChild}
+              ref={(ref) => setGetWidth(ref?.clientWidth || 0)}
             >
               {reviewerHasChild.length ? (
-                <SideBoxBranchIconContainer onClick={toggle}>
-                  <SideBoxBranchIcon
-                    open={isOpen}
-                    className={isActive ? "text-white" : "text-orange"}
-                    size={14}
-                  />
-                </SideBoxBranchIconContainer>
+                <div style={{ width: 20 }} />
               ) : (
                 <div style={{ width: 34 }} />
               )}
               <SideBoxBranchTitle
+                style={{ width: getWidth }}
                 as={Link}
                 className={classnames({ active: isActive })}
                 to={
@@ -361,6 +367,16 @@ const PolicyBranch = ({
               >
                 {title}
               </SideBoxBranchTitle>
+
+              {reviewerHasChild.length ? (
+                <SideBoxBranchIconContainer onClick={toggle}>
+                  <SideBoxBranchIcon
+                    open={isOpen}
+                    className={isActive ? "text-white" : "text-orange"}
+                    size={14}
+                  />
+                </SideBoxBranchIconContainer>
+              ) : null}
             </SideBoxBranch>
             {hasChild && (
               <Collapse isOpen={isOpen}>
