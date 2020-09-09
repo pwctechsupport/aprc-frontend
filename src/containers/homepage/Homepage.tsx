@@ -10,8 +10,16 @@ import HomepageBox from "./HomepageBox";
 import HomepageSearch from "./HomepageSearch";
 import Helmet from "react-helmet";
 import Footer from "../../shared/components/Footer";
+import useWindowSize from "../../shared/hooks/useWindowSize";
 
 export default function Homepage() {
+  const colors = {
+    tangerine: "#eb8c00",
+    orange: "#d04a02",
+    yellow: "#ffb600",
+    pink: "#db536a",
+    softPink: "#d93954",
+  };
   const username = useSelector((state) => state.auth.user?.name);
   const { data } = useHomepageQuery({ fetchPolicy: "network-only" });
   const { data: dataRP } = useUserPVisitQuery({ fetchPolicy: "network-only" });
@@ -27,6 +35,7 @@ export default function Homepage() {
       : { label: "", value: "" };
     return safetyNet;
   };
+  const { width } = useWindowSize();
   const recentlyVisitedPolicies = dataRP?.userPolicyVisits?.collection || [];
 
   const popularResources = data?.popularResources?.collection || [];
@@ -65,81 +74,142 @@ export default function Homepage() {
           </Container>
         </Centerer>
       </BackgroundImage>
-      <Container
-        className="mt-5 pb-5"
-        style={{ minHeight: "50vh", minWidth: "90vw" }}
-      >
-        <Row>
-          <Col xs={0} md={0} lg={1}></Col>
 
-          <Col xs={12} md={6} lg={2}>
-            <HomepageBox
-              list={modifiedRecentlyAddedPol.map(toLabelValue)}
-              basePath="policy"
-              title="Recently added policies"
-              boldColor="rgb(255, 180, 105)"
-              // lineColor="rgba(231, 155, 86,0.4)"
-              // softColor="rgb(254, 204, 148)"
-            />
-          </Col>
-          <Col xs={12} md={6} lg={2}>
-            <HomepageBox
-              list={popularPolicies.map(toLabelValue)}
-              basePath="policy"
-              title="Most popular policies"
-              // boldColor="rgb(255, 196, 79)"
-              // lineColor="rgba(255, 172, 90,0.4)"
-              // softColor="rgb(255, 219, 147)"
-            />
-          </Col>
-          <Col xs={12} md={6} lg={2}>
-            <HomepageBox
-              list={savedPolicies.map((a) => {
-                return {
-                  label: get(a, "originator.title"),
-                  value: get(a, "originator.id"),
-                };
-              })}
-              basePath="policy"
-              title="My saved policies"
-              // boldColor="rgb(255, 126, 169)"
-              // lineColor="rgba(255, 126, 169,0.4)"
-              // softColor="rgb(251, 189, 201)"
-            />
-          </Col>
-          <Col xs={12} md={6} lg={2}>
-            <HomepageBox
-              list={popularResources.map(toLabelValue)}
-              basePath="resources"
-              title="Most popular resources"
-              // boldColor="rgb(255, 196, 79)"
-              // lineColor="rgba(255, 172, 90,0.4)"
-              // softColor="rgb(255, 219, 147)"
-            />
-          </Col>
-          <Col xs={12} md={6} lg={2}>
-            <HomepageBox
-              list={
-                recentlyVisitedPolicies.length
-                  ? recentlyVisitedPolicies
-                      .map((a) => a.policy)
-                      .filter((b) => b !== null)
-                      .map(customModifier)
-                  : []
-              }
-              basePath="policy"
-              title="My recently visited policies"
-              // boldColor="rgb(255, 126, 169)"
-              // lineColor="rgba(255, 126, 169,0.4)"
-              // softColor="rgb(251, 189, 201)"
-            />
-          </Col>
-          <Col xs={12} md={6} lg={1}></Col>
-        </Row>
-        <Row className="mt-3">
-          <Col xs={0} md={0} lg={4}></Col>
-        </Row>
-      </Container>
+      {width > 991 ? (
+        <Container
+          className="mt-5 pb-5"
+          style={{ minHeight: "50vh", minWidth: "98vw" }}
+        >
+          <Row>
+            <div style={{ width: "18vw", marginRight: "1vw" }}>
+              <HomepageBox
+                list={modifiedRecentlyAddedPol.map(toLabelValue)}
+                basePath="policy"
+                title="Recently added policies"
+                themeColor={colors.tangerine}
+                fontColor="black"
+              />
+            </div>
+            <div
+              style={{ width: "18vw", marginLeft: "1vw", marginRight: "1vw" }}
+            >
+              <HomepageBox
+                list={popularPolicies.map(toLabelValue)}
+                basePath="policy"
+                title="Most popular policies"
+                themeColor={colors.orange}
+              />
+            </div>
+            <div
+              style={{ width: "18vw", marginLeft: "1vw", marginRight: "1vw" }}
+            >
+              <HomepageBox
+                list={savedPolicies.map((a) => {
+                  return {
+                    label: get(a, "originator.title"),
+                    value: get(a, "originator.id"),
+                  };
+                })}
+                basePath="policy"
+                title="My saved policies"
+                fontColor="black"
+                themeColor={colors.yellow}
+              />
+            </div>
+            <div
+              style={{ width: "18vw", marginLeft: "1vw", marginRight: "1vw" }}
+            >
+              <HomepageBox
+                list={popularResources.map(toLabelValue)}
+                basePath="resources"
+                title="Most popular resources"
+                themeColor={colors.pink}
+              />
+            </div>
+            <div
+              style={{
+                width: "18vw",
+                marginLeft: "1vw",
+              }}
+            >
+              <HomepageBox
+                list={
+                  recentlyVisitedPolicies.length
+                    ? recentlyVisitedPolicies
+                        .map((a) => a.policy)
+                        .filter((b) => b !== null)
+                        .map(customModifier)
+                    : []
+                }
+                basePath="policy"
+                title="My recently visited policies"
+                themeColor={colors.softPink}
+              />
+            </div>
+          </Row>
+        </Container>
+      ) : (
+        <Container
+          className="mt-5 pb-5"
+          style={{ minHeight: "50vh", minWidth: "90vw" }}
+        >
+          <Row>
+            <Col xs={12} md={6} lg={2}>
+              <HomepageBox
+                list={modifiedRecentlyAddedPol.map(toLabelValue)}
+                basePath="policy"
+                title="Recently added policies"
+                themeColor={colors.tangerine}
+              />
+            </Col>
+            <Col xs={12} md={6} lg={2}>
+              <HomepageBox
+                list={popularPolicies.map(toLabelValue)}
+                basePath="policy"
+                themeColor={colors.orange}
+                title="Most popular policies"
+              />
+            </Col>
+            <Col xs={12} md={6} lg={2}>
+              <HomepageBox
+                list={savedPolicies.map((a) => {
+                  return {
+                    label: get(a, "originator.title"),
+                    value: get(a, "originator.id"),
+                  };
+                })}
+                basePath="policy"
+                themeColor={colors.yellow}
+                title="My saved policies"
+              />
+            </Col>
+            <Col xs={12} md={6} lg={2}>
+              <HomepageBox
+                list={popularResources.map(toLabelValue)}
+                basePath="resources"
+                themeColor={colors.pink}
+                title="Most popular resources"
+              />
+            </Col>
+            <Col xs={12} md={6} lg={2}>
+              <HomepageBox
+                list={
+                  recentlyVisitedPolicies.length
+                    ? recentlyVisitedPolicies
+                        .map((a) => a.policy)
+                        .filter((b) => b !== null)
+                        .map(customModifier)
+                    : []
+                }
+                basePath="policy"
+                themeColor={colors.softPink}
+                title="My recently visited policies"
+              />
+            </Col>
+          </Row>
+        </Container>
+      )}
+
       <Footer />
     </Background>
   );

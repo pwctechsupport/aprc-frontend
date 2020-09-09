@@ -113,7 +113,7 @@ export default function Login({ history }: RouteComponentProps) {
                 backgroundColor: "rgba(255,255,255,.7)",
               }}
             >
-              <H1>Welcome to Egrc</H1>
+              <H1>Welcome to eGRC</H1>
               {/* <H1>Egrc</H1> */}
 
               <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
