@@ -36,6 +36,7 @@ export default function FileInputPdf({
 
     if (e.target.files && e.target.files[0]) {
       if (supportedFileTypes.includes(e.target.files[0].type)) {
+        setPreview(e.target.files[0].name);
         setValue(name, e.target.files[0]);
         setError(null);
       } else {
@@ -51,18 +52,10 @@ export default function FileInputPdf({
     setDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       if (supportedFileTypes.includes(e.dataTransfer.files[0].type)) {
-        const data = e.dataTransfer.files[0].name
-          ? e.dataTransfer.files[0].name
-          : "";
+        setPreview(e.dataTransfer.files[0].name);
 
-        const reader = new FileReader();
-        reader.onload = () => {
-          setPreview(data);
-          onFileSelect?.(reader.result as string);
-        };
-        reader.readAsDataURL(e.dataTransfer.files[0]);
+        setValue(name, e.dataTransfer.files[0]);
         setError(null);
-        setValue(name, String(await toBase64(e.dataTransfer.files[0])), true);
       } else {
         setError(fileTypeErrorMsg);
       }
