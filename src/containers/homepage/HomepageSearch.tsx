@@ -16,12 +16,14 @@ interface HomepageSearchProps {
   placeholder?: string | null;
   maxMenuWidth?: number;
   navBar?: boolean;
+  inputStyle?: any;
 }
 
 export default function HomepageSearch({
   placeholder = "Search policies by title, content, related resource, and attributes (Risk, Control, Reference)...",
   maxMenuWidth,
   navBar,
+  inputStyle,
 }: HomepageSearchProps) {
   const history = useHistory();
 
@@ -92,6 +94,7 @@ export default function HomepageSearch({
             {...getInputProps()}
             placeholder={placeholder}
             onClick={handleInputClick}
+            style={inputStyle}
           />
           {navBar ? null : (
             <ToggleButton
@@ -206,7 +209,7 @@ const ToggleButton = styled(FaSearch)`
   cursor: pointer;
   position: absolute;
   right: 8px;
-  top: 10px;
+  top: 15px;
   color: var(--darker-grey);
   background: white;
 `;

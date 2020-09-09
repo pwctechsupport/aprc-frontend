@@ -2,7 +2,7 @@ import get from "lodash/get";
 import React from "react";
 import { Col, Container, Row } from "reactstrap";
 import styled from "styled-components";
-import backgroundImage from "../../assets/images/SignInBackground.png";
+import backgroundImage from "../../assets/images/SignInBackground.jpg";
 import { useHomepageQuery, useUserPVisitQuery } from "../../generated/graphql";
 import { toLabelValue } from "../../shared/formatter";
 import { useSelector } from "../../shared/hooks/useSelector";
@@ -46,14 +46,8 @@ export default function Homepage() {
         <title>Home - PricewaterhouseCoopers</title>
       </Helmet>
       <BackgroundImage>
-        <div
-          style={{
-            position: "relative",
-            marginLeft: "2vw",
-            top: "0.5vw",
-          }}
-        >
-          <Col lg={3}>
+        <Row style={{ paddingTop: width > 991 ? "25vh" : 0 }}>
+          <Col lg={4}>
             <h3
               style={{
                 backgroundColor: "rgba(54, 48, 60, 0.6)",
@@ -65,20 +59,34 @@ export default function Homepage() {
               Welcome, {username}
             </h3>
           </Col>
-        </div>
-        <Centerer>
-          <Container>
-            <ContentBox>
-              <HomepageSearch />
-            </ContentBox>
-          </Container>
-        </Centerer>
+        </Row>
+        {width > 991 ? (
+          <Row>
+            <Col lg={9}>
+              <ContentBox>
+                <HomepageSearch inputStyle={{ height: 50 }} />
+              </ContentBox>
+            </Col>
+            <Col lg={3}></Col>
+          </Row>
+        ) : (
+          <Centerer>
+            <Container>
+              <ContentBox>
+                <HomepageSearch inputStyle={{ height: 50 }} />
+              </ContentBox>
+            </Container>
+          </Centerer>
+        )}
       </BackgroundImage>
 
       {width > 991 ? (
         <Container
           className="mt-5 pb-5"
-          style={{ minHeight: "50vh", minWidth: "98vw" }}
+          style={{
+            minHeight: "50vh",
+            minWidth: "98vw",
+          }}
         >
           <Row>
             <div style={{ width: "18vw", marginRight: "1vw" }}>

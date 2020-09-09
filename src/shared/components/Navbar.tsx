@@ -15,6 +15,8 @@ import {
   NavItem,
   NavLink,
   UncontrolledDropdown,
+  Row,
+  Col,
 } from "reactstrap";
 import styled from "styled-components";
 import pwcLogo from "../../assets/images/pwc-logo.png";
@@ -25,6 +27,7 @@ import useWindowSize from "../hooks/useWindowSize";
 import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
 import useAccessRights from "../hooks/useAccessRights";
+import { H1 } from "../../containers/auth/Login";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
@@ -57,20 +60,20 @@ export default function NewNavbar() {
 
   return (
     <NavbarWithColor fixed="top" light expand="md">
-      <StyledNavbarBrand tag={Link} to="/">
-        <Image src={pwcLogo} alt="PwC" />
-      </StyledNavbarBrand>
+      <Row>
+        <Col lg={3}>
+          <StyledNavbarBrand tag={Link} to="/">
+            <Image src={pwcLogo} alt="PwC" />
+          </StyledNavbarBrand>
+        </Col>
+        <Col>
+          <H1 style={{ paddingTop: "10px" }}>eGRC</H1>
+        </Col>
+      </Row>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
           {userMenus
-            // If the current user role is a 'mere' user,
-            // don't let him access 'Administrative' menu.
-            // .filter(menu =>
-            //   isMereUser ? menu.label !== "Administrative" : true
-            // )
-            // If the screen is big, remove 'Settings', as it is
-            // redundant; already available through side-navigator.
             .filter((menu) =>
               isBigScreen
                 ? isMereUser
