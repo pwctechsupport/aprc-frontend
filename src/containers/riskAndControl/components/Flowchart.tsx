@@ -65,11 +65,9 @@ export default function Flowchart({
           const id = tag.risk?.id || tag.control?.id;
           const type = tag.risk?.id ? "Risk" : "Control";
           const name = tag.risk?.name || tag.control?.description;
-          const background = tag.risk?.id
-            ? "orange"
-            : tag.control?.id
-            ? "#810001"
-            : undefined;
+          const background = tag.risk?.id ? "#ffb600" : "rgb(217,57,84)";
+          const fontColor = tag.risk?.id ? "black" : "white";
+
           const to = tag.risk?.id
             ? `${history.split("flowchart")[0]}risk/${tag.risk?.id}`
             : `${history.split("flowchart")[0]}control/${tag.control?.id}`;
@@ -83,7 +81,9 @@ export default function Flowchart({
               to={to}
               background={background}
             >
-              <PreviewTagText>{`${type}: (${id}) ${name}`}</PreviewTagText>
+              <PreviewTagText
+                fontColor={fontColor}
+              >{`${type}: (${id}) ${name}`}</PreviewTagText>
             </PreviewTag>
           );
         })}
