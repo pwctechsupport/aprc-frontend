@@ -2,7 +2,7 @@ import get from "lodash/get";
 import React from "react";
 import { Col, Container, Row } from "reactstrap";
 import styled from "styled-components";
-import backgroundImage from "../../assets/images/SignInBackground.jpg";
+import backgroundImage from "../../assets/images/background-homepage.png";
 import { useHomepageQuery, useUserPVisitQuery } from "../../generated/graphql";
 import { toLabelValue } from "../../shared/formatter";
 import { useSelector } from "../../shared/hooks/useSelector";
@@ -46,7 +46,8 @@ export default function Homepage() {
         <title>Home - PricewaterhouseCoopers</title>
       </Helmet>
       <BackgroundImage>
-        <Row style={{ paddingTop: width > 991 ? "25vh" : 0 }}>
+        <div style={{ height: width > 991 ? "25vh" : 0 }}></div>
+        <Row style={{ width: "80vw" }}>
           <Col lg={4}>
             <h3
               style={{
@@ -61,7 +62,7 @@ export default function Homepage() {
           </Col>
         </Row>
         {width > 991 ? (
-          <Row>
+          <Row style={{ width: "80vw" }}>
             <Col lg={9}>
               <ContentBox>
                 <HomepageSearch inputStyle={{ height: 50 }} />
@@ -85,11 +86,11 @@ export default function Homepage() {
           className="mt-5 pb-5"
           style={{
             minHeight: "50vh",
-            minWidth: "98vw",
+            minWidth: "95vw",
           }}
         >
           <Row>
-            <div style={{ width: "18vw", marginRight: "1vw" }}>
+            <Col>
               <HomepageBox
                 list={modifiedRecentlyAddedPol.map(toLabelValue)}
                 basePath="policy"
@@ -97,20 +98,16 @@ export default function Homepage() {
                 themeColor={colors.tangerine}
                 fontColor="black"
               />
-            </div>
-            <div
-              style={{ width: "18vw", marginLeft: "1vw", marginRight: "1vw" }}
-            >
+            </Col>
+            <Col>
               <HomepageBox
                 list={popularPolicies.map(toLabelValue)}
                 basePath="policy"
                 title="Most popular policies"
                 themeColor={colors.orange}
               />
-            </div>
-            <div
-              style={{ width: "18vw", marginLeft: "1vw", marginRight: "1vw" }}
-            >
+            </Col>
+            <Col>
               <HomepageBox
                 list={savedPolicies.map((a) => {
                   return {
@@ -123,23 +120,16 @@ export default function Homepage() {
                 fontColor="black"
                 themeColor={colors.yellow}
               />
-            </div>
-            <div
-              style={{ width: "18vw", marginLeft: "1vw", marginRight: "1vw" }}
-            >
+            </Col>
+            <Col>
               <HomepageBox
                 list={popularResources.map(toLabelValue)}
                 basePath="resources"
                 title="Most popular resources"
                 themeColor={colors.pink}
               />
-            </div>
-            <div
-              style={{
-                width: "18vw",
-                marginLeft: "1vw",
-              }}
-            >
+            </Col>
+            <Col>
               <HomepageBox
                 list={
                   recentlyVisitedPolicies.length
@@ -153,7 +143,7 @@ export default function Homepage() {
                 title="My recently visited policies"
                 themeColor={colors.softPink}
               />
-            </div>
+            </Col>
           </Row>
         </Container>
       ) : (
