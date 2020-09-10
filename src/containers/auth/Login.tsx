@@ -166,7 +166,7 @@ export default function Login({ history }: RouteComponentProps) {
           </BsContainer>
         </Col>
       </Row>
-      <Footer fontColor={"white"} />
+      <Footer fontColor={"white"} linebreak />
     </BsContainer>
   );
 }

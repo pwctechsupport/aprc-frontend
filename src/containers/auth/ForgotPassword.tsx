@@ -2,7 +2,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
-import pwcLogo from "../../assets/images/pwc-logo.png";
 import { useForgotPasswordMutation } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import { Container, Form, H1, Image, Input, Label } from "./Login";
@@ -10,6 +9,7 @@ import Helmet from "react-helmet";
 import { Link } from "react-router-dom";
 import useWindowSize from "../../shared/hooks/useWindowSize";
 import Footer from "../../shared/components/Footer";
+import pwcLogo from "../../assets/images/pwc-logo-outline-black.png";
 
 const ForgotPassword = ({ history }: RouteComponentProps) => {
   const { register, handleSubmit } = useForm();
@@ -90,7 +90,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
           </div>
         </Container>
       </Container>
-      <Footer />
+      <Footer linebreak />
     </>
   );
 };

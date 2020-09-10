@@ -15,7 +15,7 @@ import { notifyError, notifyInfo } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
 import Footer from "../../shared/components/Footer";
 import styled from "styled-components";
-import PickIcon from "../../assets/icons/PickIcon";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const reportOptions = [
   {
