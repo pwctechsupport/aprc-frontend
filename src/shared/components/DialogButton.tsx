@@ -49,18 +49,35 @@ const DialogButton = ({
     onReject && onReject(data);
     _toggle();
   }
-
+  const buttonDecider = () => {
+    if (btnProps.className?.includes("pwc")) {
+      return (
+        <Button
+          loading={loading}
+          onClick={_onClick}
+          style={{ borderRadius: "3px" }}
+          {...btnProps}
+        >
+          {children}
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          loading={loading}
+          color={color}
+          onClick={_onClick}
+          style={{ borderRadius: "3px" }}
+          {...btnProps}
+        >
+          {children}
+        </Button>
+      );
+    }
+  };
   return (
     <Fragment>
-      <Button
-        {...btnProps}
-        loading={loading}
-        color={color}
-        onClick={_onClick}
-        style={{ borderRadius: "3px" }}
-      >
-        {children}
-      </Button>
+      {buttonDecider()}
       <ModalDialog
         isCreate={isCreate}
         isEdit={isEdit}

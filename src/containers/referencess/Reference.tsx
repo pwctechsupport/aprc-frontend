@@ -3,10 +3,11 @@ import Helmet from "react-helmet";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import HeaderWithBackButton from "../../shared/components/Header";
 import { useReferenceQuery } from "../../generated/graphql";
-import { RouteComponentProps, Link } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { previewHtml } from "../../shared/formatter";
 import { Row, Col } from "reactstrap";
+import TangerineLink from "../../shared/components/Link";
 
 type TParams = { id: string };
 
@@ -60,9 +61,9 @@ const Reference = ({
               <ul>
                 {policies?.map((policy) => (
                   <li key={policy.id}>
-                    <Link to={`/policy/${policy.id}`}>
+                    <TangerineLink to={`/policy/${policy.id}`}>
                       {previewHtml(policy.title || "")}
-                    </Link>
+                    </TangerineLink>
                   </li>
                 ))}
               </ul>

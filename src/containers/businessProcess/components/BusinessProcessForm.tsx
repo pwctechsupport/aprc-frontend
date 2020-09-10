@@ -39,17 +39,17 @@ const BusinessProcessForm = ({
               />
             </div>
           </Col>
-          {onCancel && (
-            <Button onClick={onCancel} className="ml-3" color="grey">
-              Cancel
-            </Button>
-          )}
+
           <Col lg={2}>
+            {onCancel && (
+              <Button onClick={onCancel} className="mr-3" color="grey">
+                Cancel
+              </Button>
+            )}
             <DialogButton
               onConfirm={handleSubmit(submit)}
-              className="soft orange ml-0"
+              className="pwc ml-0"
               type="button"
-              color=""
               message={`${submitButtonName} business process?`}
             >
               {submitButtonName}

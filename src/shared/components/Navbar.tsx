@@ -32,12 +32,12 @@ import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
 export default function NewNavbar() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const currentUrl = location.pathname;
   const rolesArray = useAccessRights([
     "admin",
     "admin_preparer",
     "admin_reviewer",
   ]);
+  const currentUrl = location.pathname;
   const isMereUser = rolesArray.every((a) => !a);
   const size = useWindowSize();
   const isBigScreen = size.width > 767;
@@ -58,7 +58,11 @@ export default function NewNavbar() {
 
   const unreadCount = data?.notifications?.metadata.totalCount || 0;
   const showNotif = data?.me?.notifShow || false;
-
+  const underlineDecider = (path: any) => {
+    if (path === currentUrl) {
+      return <Underline className="mx-2"></Underline>;
+    }
+  };
   return (
     <NavbarWithColor fixed="top" light expand="md">
       <Row>
@@ -133,14 +137,7 @@ export default function NewNavbar() {
                   >
                     {label}
                   </StyledNavLink>
-                  {path !== "/" && currentUrl.includes(path) ? (
-                    <Underline className="mx-2"></Underline>
-                  ) : (
-                    path === "/" &&
-                    currentUrl === path && (
-                      <Underline className="mx-2"></Underline>
-                    )
-                  )}
+                  {underlineDecider(path)}
                 </NavItem>
               );
             })}
