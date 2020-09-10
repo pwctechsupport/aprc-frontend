@@ -15,6 +15,7 @@ import { notifyError, notifyInfo } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
 import Footer from "../../shared/components/Footer";
 import styled from "styled-components";
+import PickIcon from "../../assets/icons/PickIcon";
 
 const reportOptions = [
   {
@@ -310,7 +311,7 @@ export default function Report() {
               onClick={handleSubmit(handleDownload)}
               loading={downloading}
             >
-              <FaDownload /> Download
+              <PickIcon name="download white" /> Download
             </Button>
             <Tooltip description="Reset Selected Format">
               <Button
@@ -321,7 +322,7 @@ export default function Report() {
                 type="reset"
                 className="button cancel ml-5"
               >
-                <FaUndo />
+                <PickIcon name="reload" />
               </Button>
             </Tooltip>
           </div>
