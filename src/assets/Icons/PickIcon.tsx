@@ -14,14 +14,15 @@ import trash from "./trash.svg";
 import upload from "./upload.svg";
 import xIcon from "./x-icon.svg";
 import printer from "./printer.svg";
-import checkmark from "./checkmark.svg";
+import checkmark from "./checkMark.svg";
+import downloadWhite from "./download-white.svg";
 
 const PickIcon = ({ name, style, ...props }: PickIconProps) => {
   if (name === "comment") {
     return (
       <img
         src={comment}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -29,7 +30,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={minus}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -37,7 +38,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={addUser}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -45,7 +46,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={avatar}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -53,7 +54,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={bookmark}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -61,7 +62,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={chart}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -69,7 +70,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={check}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -77,7 +78,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={download}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -85,7 +86,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={notif}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -93,7 +94,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={reload}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -101,7 +102,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={threeDots}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -109,7 +110,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={trash}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -117,7 +118,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={upload}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -125,7 +126,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={xIcon}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -133,7 +134,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={printer}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -141,7 +142,15 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={checkmark}
-        style={{ width: "30px", height: "auto", ...style }}
+        style={{ width: "25px", height: "auto", ...style }}
+        {...props}
+      />
+    );
+  } else if (name === "download white") {
+    return (
+      <img
+        src={downloadWhite}
+        style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
     );

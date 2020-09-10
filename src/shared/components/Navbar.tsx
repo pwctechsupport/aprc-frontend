@@ -28,6 +28,7 @@ import NotificationBadge from "./NotificationBadge";
 import useAccessRights from "../hooks/useAccessRights";
 import { H1 } from "../../containers/auth/Login";
 import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
+import PickIcon from "../../assets/icons/PickIcon";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
@@ -164,12 +165,14 @@ export default function NewNavbar() {
               </Link>
             </SearchPolicies>
             <Link to="/bookmark" className="text-dark ml-2">
-              <FaBookmark className="clickable" size={22} />
+              <PickIcon name="bookmark" style={{ width: "35px" }} />
             </Link>
             <div className="ml-4 mr-4">
               <Link to="/notifications" className="text-dark">
                 {showNotif && <NotificationBadge count={unreadCount} />}
-                <FaBell size={22} />
+                <PickIcon name="notif" style={{ width: "32px" }} />
+
+                {/* <FaBell size={22} /> */}
               </Link>
             </div>
             <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
