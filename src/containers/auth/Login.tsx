@@ -99,7 +99,7 @@ export default function Login({ history }: RouteComponentProps) {
         src={pwcLogoOutline}
         alt="pwc-logo"
       />
-      <Row style={{ minHeight: "85vh" }}>
+      <Row style={{ minHeight: "80vh" }}>
         <Col sm={12} md={7}></Col>
         <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
           <BsContainer className="px-0">

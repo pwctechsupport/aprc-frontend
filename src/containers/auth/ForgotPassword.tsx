@@ -41,7 +41,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
     <>
       <Container
         style={{
-          minHeight: "90vh",
+          minHeight: "85vh",
         }}
       >
         <Helmet>
