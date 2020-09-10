@@ -235,7 +235,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                             event.stopPropagation();
                           }}
                         >
-                          <FaDownload />
+                          <PickIcon name="downloadOrange" />
                         </a>
                       </Tooltip>
                     </Button>

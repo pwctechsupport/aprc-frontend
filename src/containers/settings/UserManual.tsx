@@ -114,7 +114,7 @@ export default function UserManual() {
                         )
                       }
                     >
-                      <FaDownload />
+                      <PickIcon name="downloadOrange" />
                     </Button>
                   </Tooltip>
                 </div>

@@ -36,6 +36,7 @@ import {
 } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 type TParams = { id: string };
 
@@ -351,7 +352,7 @@ export default function Resource({
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -376,7 +377,7 @@ export default function Resource({
           </DialogButton> */}
           <Tooltip description="Edit Resource">
             <Button onClick={toggleEditMode} color="" className="soft orange">
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>

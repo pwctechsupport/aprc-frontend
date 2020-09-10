@@ -15,6 +15,8 @@ import xIcon from "./x-icon.svg";
 import printer from "./printer.svg";
 import checkmark from "./checkMark.svg";
 import downloadWhite from "./download-white.svg";
+import download from "./download.svg";
+import reloadOrange from "./reload-orange.svg";
 import pencilFill from "./pencil-fill.svg";
 import pencilO from "./pencil-outline.svg";
 
@@ -103,6 +105,16 @@ const PickIcon = ({ name, style, className, ...props }: PickIconProps) => {
         {...props}
       />
     );
+  } else if (name === "downloadOrange") {
+    return (
+      <img
+        className={className}
+        src={download}
+        alt="icon"
+        style={{ width: "25px", height: "auto", ...style }}
+        {...props}
+      />
+    );
   } else if (name === "notif") {
     return (
       <img
@@ -118,6 +130,16 @@ const PickIcon = ({ name, style, className, ...props }: PickIconProps) => {
       <img
         className={className}
         src={reload}
+        alt="icon"
+        style={{ width: "25px", height: "auto", ...style }}
+        {...props}
+      />
+    );
+  } else if (name === "reloadOrange") {
+    return (
+      <img
+        className={className}
+        src={reloadOrange}
         alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
@@ -189,7 +211,7 @@ const PickIcon = ({ name, style, className, ...props }: PickIconProps) => {
         className={className}
         src={pencilFill}
         alt="icon"
-        style={{ width: "20px", height: "auto", fill: "blue", ...style }}
+        style={{ width: "18px", height: "auto", ...style }}
         {...props}
       />
     );
@@ -199,7 +221,7 @@ const PickIcon = ({ name, style, className, ...props }: PickIconProps) => {
         className={className}
         src={pencilO}
         alt="icon"
-        style={{ width: "25px", height: "auto", fill: "blue", ...style }}
+        style={{ width: "15px", height: "auto", ...style }}
         {...props}
       />
     );

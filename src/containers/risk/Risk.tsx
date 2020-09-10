@@ -34,6 +34,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
+import PickIcon from "../../assets/Icons/PickIcon";
 // import styled from "styled-components";
 
 export default function Risk({
@@ -245,7 +246,7 @@ export default function Risk({
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -270,7 +271,7 @@ export default function Risk({
           </DialogButton> */}
           <Tooltip description="Edit Risk">
             <Button onClick={toggleEditMode} color="" className="soft orange">
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>

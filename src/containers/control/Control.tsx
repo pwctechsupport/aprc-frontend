@@ -38,6 +38,7 @@ import {
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import CheckBox from "../../shared/components/forms/CheckBox";
+import PickIcon from "../../assets/Icons/PickIcon";
 // import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
@@ -247,7 +248,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -272,7 +273,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
           </DialogButton> */}
           <Tooltip description="Edit Control">
             <Button onClick={toggleEditMode} color="" className="soft orange">
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>

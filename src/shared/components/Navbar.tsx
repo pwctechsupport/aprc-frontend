@@ -163,7 +163,7 @@ export default function NewNavbar() {
             <div className="ml-4 mr-4">
               <Link to="/notifications" className="text-dark">
                 {showNotif && <NotificationBadge count={unreadCount} />}
-                <PickIcon name="notif" style={{ width: "32px" }} />
+                <PickIcon name="notif" style={{ width: "35px" }} />
               </Link>
             </div>
             <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />

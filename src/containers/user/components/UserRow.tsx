@@ -123,6 +123,7 @@ export default function UserRow({
   const requestStatus = oc(user).requestStatus();
   const notRequested = !requestStatus;
   const requested = requestStatus === "requested";
+  console.log("requested:", requested);
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
   const department = user?.department?.name || "";
@@ -251,7 +252,7 @@ export default function UserRow({
             <Fragment>
               <Button onClick={toggleEdit} className="soft orange mr-2">
                 <Tooltip description="Edit User">
-                  <AiFillEdit />
+                  <PickIcon name="pencilFill" style={{ width: "15px" }} />
                 </Tooltip>
               </Button>
             </Fragment>
@@ -262,13 +263,19 @@ export default function UserRow({
             <DialogButton
               title="Request access to edit?"
               onConfirm={confirmRequestEdit}
-              onClick={requested ? () => {} : undefined}
+              onClick={
+                requested
+                  ? () => {}
+                  : () => {
+                      requestEdit();
+                    }
+              }
               loading={requestEditM.loading}
               className="soft red mr-2"
               disabled={requestStatus === "requested"}
             >
               <Tooltip description="Request To Edit">
-                <AiOutlineEdit />
+                <PickIcon name="pencilO" />
               </Tooltip>
             </DialogButton>
           )}

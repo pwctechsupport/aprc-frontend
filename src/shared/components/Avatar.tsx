@@ -4,6 +4,7 @@ import { Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import styled from "styled-components";
 import { useSelector } from "../hooks/useSelector";
 import Button from "./Button";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 interface DataType {
   onClick?: () => void;
@@ -25,7 +26,9 @@ export default function Avatar({ data }: AvatarProps) {
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
       <DropdownToggle tag="div">
-        <AvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
+        <PickIcon name="avatar" style={{ width: "40px" }} />
+
+        {/* <AvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" /> */}
       </DropdownToggle>
       <DropdownMenu right className="mr-3 mt-3">
         {data.map((item, index) => (

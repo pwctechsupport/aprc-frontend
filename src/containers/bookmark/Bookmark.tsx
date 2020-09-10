@@ -177,7 +177,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                       color=""
                       onClick={handleReset}
                     >
-                      <FaUndo />
+                      <PickIcon name="reloadOrange" />
                     </Button>
                   </Tooltip>
                   <Button

@@ -1326,7 +1326,7 @@ export default function Policy({
                 color=""
                 className="soft orange mr-2"
               >
-                <AiFillEdit />
+                <PickIcon name="pencilFill" style={{ width: "15px" }} />
               </Button>
             </Tooltip>
           ) : // </div>
@@ -1337,7 +1337,7 @@ export default function Policy({
       actions = inEditMode ? null : (
         <Tooltip description="Edit Policy">
           <Button onClick={toggleEditMode} color="" className="soft orange">
-            <AiFillEdit />
+            <PickIcon name="pencilFill" style={{ width: "15px" }} />
           </Button>
         </Tooltip>
       );
@@ -1358,7 +1358,7 @@ export default function Policy({
             color=""
             disabled={requested}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </Button>
         </Tooltip>
       );

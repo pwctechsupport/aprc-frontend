@@ -15,6 +15,7 @@ import Button from "../../../shared/components/Button";
 import { FaUndo } from "react-icons/fa";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
+import PickIcon from "../../../assets/Icons/PickIcon";
 
 const ResourceSideBox = () => {
   const [condition, setCondition] = useState(false);
@@ -84,7 +85,7 @@ const ResourceSideBox = () => {
               color=""
               onClick={() => setLimit(limit + 25)}
             >
-              <FaUndo />
+              <PickIcon name="reloadOrange" />
             </Button>
           </Tooltip>
         </div>

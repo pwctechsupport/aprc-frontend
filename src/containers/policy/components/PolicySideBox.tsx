@@ -19,6 +19,7 @@ import Tooltip from "../../../shared/components/Tooltip";
 import { getPathnameParams } from "../../../shared/formatter";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
+import PickIcon from "../../../assets/Icons/PickIcon";
 
 export default function PolicySideBox({ location }: RouteComponentProps) {
   const [activeId, activeMode] = getPathnameParams(location.pathname, "policy");
@@ -140,7 +141,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
                 color=""
                 onClick={() => setLimit(limit + 25)}
               >
-                <FaUndo />
+                <PickIcon name="reloadOrange" />
               </Button>
             </Tooltip>
           </div>

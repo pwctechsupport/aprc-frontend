@@ -215,7 +215,10 @@ const Departments = ({ history }: RouteComponentProps) => {
                             className="soft orange mr-2"
                           >
                             <Tooltip description="Edit User">
-                              <AiFillEdit />
+                              <PickIcon
+                                name="pencilFill"
+                                style={{ width: "15px" }}
+                              />
                             </Tooltip>
                           </Button>
                         )}

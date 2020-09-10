@@ -92,6 +92,7 @@ import ControlForm, {
 import ResourceBox from "../resources/components/ResourceBox";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 type TParams = { id: string };
 
@@ -406,7 +407,7 @@ export default function RiskAndControl({
             className="soft red mr-2"
             disabled={requestStatusRisk === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -432,7 +433,7 @@ export default function RiskAndControl({
               color=""
               className="soft orange"
             >
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>
@@ -671,7 +672,7 @@ export default function RiskAndControl({
             className="soft red mr-2"
             disabled={requestStatusControl === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -709,7 +710,7 @@ export default function RiskAndControl({
               color=""
               className="soft orange"
             >
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>

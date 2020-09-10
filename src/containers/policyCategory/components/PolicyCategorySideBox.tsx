@@ -13,6 +13,7 @@ import Tooltip from "../../../shared/components/Tooltip";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { FaUndo } from "react-icons/fa";
+import PickIcon from "../../../assets/Icons/PickIcon";
 
 const PolicyCategorySideBox = () => {
   const [limit, setLimit] = useState(25);
@@ -96,7 +97,7 @@ const PolicyCategorySideBox = () => {
                 color=""
                 onClick={() => setLimit(limit + 25)}
               >
-                <FaUndo />
+                <PickIcon name="reloadOrange" />
               </Button>
             </Tooltip>
           </div>

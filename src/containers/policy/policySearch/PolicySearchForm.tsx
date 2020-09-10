@@ -15,6 +15,7 @@ import {
 import { useLoadPolicyCategories } from "../../user/components/UserForm";
 import { Suggestions } from "../../../shared/formatter";
 import { PwcRadioInput } from "../../report/Report";
+import PickIcon from "../../../assets/Icons/PickIcon";
 
 export interface PolicySearchFormValues {
   title?: string;
@@ -134,7 +135,7 @@ export default function PolicySearchForm({
       <div className="d-flex justify-content-end">
         <Tooltip description="Reset Search">
           <Button type="reset" className="soft red" color="">
-            <FaUndo />
+            <PickIcon name="reloadOrange" />
           </Button>
         </Tooltip>
         <Button

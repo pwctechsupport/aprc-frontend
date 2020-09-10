@@ -415,7 +415,7 @@ const ControlForm = ({
                       onClick={() => handleEdit(activity.id)}
                       className="soft red mr-2"
                     >
-                      <AiFillEdit />
+                      <PickIcon name="pencilFill" style={{ width: "15px" }} />
                     </Button>
                     <DialogButton
                       onConfirm={() => handleDelete(activity.id)}

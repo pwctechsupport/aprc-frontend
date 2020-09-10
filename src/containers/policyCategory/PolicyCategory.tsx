@@ -212,8 +212,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <PickIcon name="pencilO" style={{ width: "15px" }} />
-            {/* <AiOutlineEdit /> */}
+            <PickIcon name="pencilO" style={{ width: "18px" }} />
           </DialogButton>
         </Tooltip>
       );
@@ -241,7 +240,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
               <LoadingSpinner size={10} centered />
             ) : (
               <Button onClick={toggleEditMode} color="" className="soft orange">
-                <AiFillEdit />
+                <PickIcon name="pencilFill" style={{ width: "15px" }} />
               </Button>
             )}
           </Tooltip>

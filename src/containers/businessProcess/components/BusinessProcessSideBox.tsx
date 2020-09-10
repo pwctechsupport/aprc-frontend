@@ -15,6 +15,7 @@ import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
 import { FaUndo } from "react-icons/fa";
+import PickIcon from "../../../assets/Icons/PickIcon";
 
 const BusinessProcessSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -75,7 +76,7 @@ const BusinessProcessSideBox = () => {
                 color=""
                 onClick={() => setLimit(limit + 25)}
               >
-                <FaUndo />
+                <PickIcon name="reloadOrange" />
               </Button>
             </Tooltip>
           </div>

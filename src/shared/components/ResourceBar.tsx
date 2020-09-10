@@ -77,7 +77,7 @@ export default function ResourceBar({
               download={`Pwc-Resource ${name}`}
               onClick={() => updateResourceVisit({ variables: { id } })}
             >
-              <FaDownload />
+              <PickIcon name="downloadOrange" />
             </a>
           </Tooltip>
         </Button>
