@@ -25,6 +25,7 @@ import AllPolicyDashboard from "./components/AllPolicyDashboard";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Tooltip from "../../shared/components/Tooltip";
 import DateHover from "../../shared/components/DateHover";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 export default function Policies({ history }: RouteComponentProps) {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
@@ -233,7 +234,7 @@ const PolicyTableRow = ({
                   className="soft red"
                   color=""
                 >
-                  <FaTrash />
+                  <PickIcon name="trash" className="clickable" />
                 </DialogButton>
               </Tooltip>
             </td>
@@ -287,7 +288,7 @@ const PolicyTableRow = ({
                   className="soft red"
                   color=""
                 >
-                  <FaTrash />
+                  <PickIcon name="trash" className="clickable" />
                 </DialogButton>
               </Tooltip>
             </td>
@@ -320,7 +321,6 @@ const PolicyTableRow = ({
               : capitalCase(policy.status || "")}
           </td>
           <td>
-            {" "}
             <DateHover>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
@@ -333,7 +333,7 @@ const PolicyTableRow = ({
                   className="soft red"
                   color=""
                 >
-                  <FaTrash />
+                  <PickIcon name="trash" />
                 </DialogButton>
               </Tooltip>
             </td>

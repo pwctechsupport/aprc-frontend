@@ -20,6 +20,7 @@ import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import Tooltip from "../../shared/components/Tooltip";
 import Footer from "../../shared/components/Footer";
 import CheckBox from "../../shared/components/forms/CheckBox";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
@@ -202,7 +203,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                 loading={deleteBookmarksM.loading}
                 onConfirm={handleDelete}
               >
-                <FaTrash />
+                <PickIcon name="trash" />
               </DialogButton>
             </div>
           </Col>

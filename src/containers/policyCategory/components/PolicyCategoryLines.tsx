@@ -25,6 +25,7 @@ import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
+import PickIcon from "../../../assets/Icons/PickIcon";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -237,7 +238,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                         message={`Delete "${policyCategory.name}"?`}
                         className="soft red"
                       >
-                        <FaTrash className="clickable" />
+                        <PickIcon name="trash" className="clickable" />
                       </DialogButton>
                     </Tooltip>
                   </td>

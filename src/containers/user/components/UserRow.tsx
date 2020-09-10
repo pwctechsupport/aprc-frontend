@@ -34,6 +34,7 @@ import { toast } from "react-toastify";
 import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
 import styled from "styled-components";
 import { capitalize } from "lodash";
+import PickIcon from "../../../assets/Icons/PickIcon";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -305,7 +306,7 @@ export default function UserRow({
                   onConfirm={handleDestroy}
                 >
                   <Tooltip description="Delete User">
-                    <FaTrash />
+                    <PickIcon name="trash" className="clickable" />
                   </Tooltip>
                 </DialogButton>
               </div>
@@ -322,7 +323,7 @@ export default function UserRow({
                 onConfirm={handleDestroy}
               >
                 <Tooltip description="Delete User">
-                  <FaTrash />
+                  <PickIcon name="trash" className="clickable" />
                 </Tooltip>
               </DialogButton>
             )}

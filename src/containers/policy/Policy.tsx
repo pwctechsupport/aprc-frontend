@@ -92,6 +92,7 @@ import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
 import styled from "styled-components";
 import BusinessProcessList from "../../shared/components/BusinessProcessList";
 import SunEditor from "suneditor-react";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 type TParams = { id: string };
 
@@ -1069,7 +1070,8 @@ export default function Policy({
       {
         label: (
           <div>
-            <FaTrash /> Delete
+            <PickIcon name="trash" className="clickable" />
+            Delete
           </div>
         ),
         onClick: handleDeleteMain,
@@ -1242,7 +1244,7 @@ export default function Policy({
                 className="mr-3"
                 color="transparent"
               >
-                <FaTrash className="text-red" />
+                <PickIcon name="trash" className="clickable" />
               </Button>
             </Tooltip>
           )}

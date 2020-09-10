@@ -22,6 +22,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const Risks = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -224,7 +225,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                       className="soft red"
                     >
                       <Tooltip description="Delete Risk">
-                        <FaTrash />
+                        <PickIcon name="trash" className="clickable" />
                       </Tooltip>
                     </DialogButton>
                   </td>

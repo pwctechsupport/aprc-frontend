@@ -23,6 +23,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -248,7 +249,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                         className="soft red"
                       >
                         <Tooltip description="Delete Resource">
-                          <FaTrash />
+                          <PickIcon name="trash" className="clickable" />
                         </Tooltip>
                       </DialogButton>
                     )}

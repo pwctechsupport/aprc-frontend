@@ -26,6 +26,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import NotificationSettings from "../settings/NotificationSettings";
 import Footer from "../../shared/components/Footer";
 import CheckBox from "../../shared/components/forms/CheckBox";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [labelTime, setLabelTime] = useState("Date added...");
@@ -233,7 +234,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                   onConfirm={() => handleDelete()}
                   disabled={!selected.length}
                 >
-                  <FaTrash />
+                  <PickIcon name="trash" className="clickable" />
                 </DialogButton>
               </Tooltip>
             </div>

@@ -31,6 +31,7 @@ import styled from "styled-components";
 import { PwcRadioInput } from "../../report/Report";
 import CheckBox2 from "../../../shared/components/forms/TestNewCheckBox";
 import { startCase } from "lodash";
+import PickIcon from "../../../assets/Icons/PickIcon";
 
 const ControlForm = ({
   onSubmit,
@@ -421,7 +422,7 @@ const ControlForm = ({
                       message={`Delete "${activity.activity}"?`}
                       className="soft red"
                     >
-                      <FaTrash className="clickable" />
+                      <PickIcon name="trash" className="clickable" />
                     </DialogButton>
                   </td>
                 </tr>

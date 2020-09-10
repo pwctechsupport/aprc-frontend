@@ -311,7 +311,7 @@ export default function Report() {
               onClick={handleSubmit(handleDownload)}
               loading={downloading}
             >
-              <PickIcon name="download white" /> Download
+              <PickIcon name="download" /> Download
             </Button>
             <Tooltip description="Reset Selected Format">
               <Button

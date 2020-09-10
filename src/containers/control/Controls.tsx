@@ -22,6 +22,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const Controls = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -239,7 +240,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                             message={`Delete "${control.description}"?`}
                             className="soft red"
                           >
-                            <FaTrash className="clickable" />
+                            <PickIcon name="trash" className="clickable" />
                           </DialogButton>
                         </Tooltip>
                       </td>

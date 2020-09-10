@@ -26,6 +26,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
 import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const Departments = ({ history }: RouteComponentProps) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -227,7 +228,7 @@ const Departments = ({ history }: RouteComponentProps) => {
                             onConfirm={handleDelete}
                           >
                             <Tooltip description="Delete User">
-                              <FaTrash />
+                              <PickIcon name="trash" className="clickable" />
                             </Tooltip>
                           </DialogButton>
                         ) : null}

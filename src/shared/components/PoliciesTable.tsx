@@ -12,6 +12,7 @@ import Table from "./Table";
 import Tooltip from "./Tooltip";
 import useAccessRights from "../hooks/useAccessRights";
 import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 interface PoliciesTableProps {
   policies: Policy[];
@@ -136,7 +137,7 @@ const PolicyTableRow = ({
           {isAdminReviewer ? (
             <Tooltip description="Delete Policy">
               <Button onClick={handleDelete} className="soft red" color="">
-                <FaTrash />
+                <PickIcon name="trash" className="clickable" />
               </Button>
             </Tooltip>
           ) : null}

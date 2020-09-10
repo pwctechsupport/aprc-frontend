@@ -18,6 +18,7 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Helmet from "react-helmet";
 import Footer from "../../shared/components/Footer";
 import CheckBox from "../../shared/components/forms/CheckBox";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const History = () => {
   const { data, loading } = useHistoryListQuery({
@@ -83,7 +84,7 @@ const History = () => {
                 onConfirm={handleSubmit(handleDelete)}
                 className="soft red"
               >
-                <FaTrash className="text-orange " />
+                <PickIcon name="trash" className="clickable" />
               </DialogButton>
             </Tooltip>
           </div>

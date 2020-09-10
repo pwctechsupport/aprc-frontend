@@ -38,6 +38,7 @@ import BreadCrumb from "../../shared/components/BreadCrumb";
 import Pagination from "../../shared/components/Pagination";
 import useListState from "../../shared/hooks/useList";
 import CheckBox from "../../shared/components/forms/CheckBox";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -367,7 +368,7 @@ const ReferenceRow = ({
                     className="soft red"
                   >
                     <Tooltip description="Delete Reference">
-                      <FaTrash />
+                      <PickIcon name="trash" className="clickable" />
                     </Tooltip>
                   </DialogButton>
                 )}

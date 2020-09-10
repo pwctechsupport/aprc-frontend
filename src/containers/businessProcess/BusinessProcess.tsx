@@ -21,6 +21,7 @@ import BusinessProcessForm, {
   BusinessProcessFormValues,
 } from "./components/BusinessProcessForm";
 import CreateSubBusinessProcess from "./CreateSubBusinessProcess";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 export default function BusinessProcess({
   match,
@@ -141,7 +142,7 @@ export default function BusinessProcess({
                 message={`Delete Business Process "${name}"?`}
                 className="soft red"
               >
-                <FaTrash />
+                <PickIcon name="trash" />
               </DialogButton>
             ) : null}
           </div>
@@ -181,7 +182,7 @@ export default function BusinessProcess({
                         className="soft orange"
                         color=""
                       >
-                        <FaTrash />
+                        <PickIcon name="trash" />
                       </DialogButton>
                     </td>
                   ) : (

@@ -22,6 +22,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import CreateBusinessProcess from "./CreateBusinessProcess";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -222,7 +223,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                         className="soft red"
                       >
                         <Tooltip description="Delete Business Process">
-                          <FaTrash className="clickable" />
+                          <PickIcon className="clickable" name="trash" />
                         </Tooltip>
                       </DialogButton>
                     </td>

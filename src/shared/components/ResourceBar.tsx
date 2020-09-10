@@ -9,6 +9,7 @@ import { useUpdateResourceVisitMutation } from "../../generated/graphql";
 import useAccessRights from "../hooks/useAccessRights";
 import DialogButton from "./DialogButton";
 import { APP_ROOT_URL } from "../../settings";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 interface ResourceBarProps {
   id: string;
@@ -86,7 +87,7 @@ export default function ResourceBar({
               description="Delete Resource"
               subtitle="Resource will be deleted from current policy"
             >
-              <FaTrash className="text-red" />
+              <PickIcon name="trash" className="clickable" />
             </Tooltip>
           </DialogButton>
         )}

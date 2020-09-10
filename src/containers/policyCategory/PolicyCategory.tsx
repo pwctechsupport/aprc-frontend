@@ -32,6 +32,7 @@ import {
 import PolicyCategoryForm, {
   PolicyCategoryFormValues,
 } from "./components/PolicyCategoryForm";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -211,7 +212,8 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" style={{ width: "15px" }} />
+            {/* <AiOutlineEdit /> */}
           </DialogButton>
         </Tooltip>
       );
