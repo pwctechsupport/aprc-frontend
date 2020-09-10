@@ -166,7 +166,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           >
             <CreateBusinessProcess createBpModal={setCreateBpModal} />
           </Modal>
-          <Table reloading={adminBusinessQuery.loading}>
+          <Table responsive reloading={adminBusinessQuery.loading}>
             <thead>
               <tr>
                 {isAdminReviewer ? (

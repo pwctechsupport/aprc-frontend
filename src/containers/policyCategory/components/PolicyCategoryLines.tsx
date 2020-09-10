@@ -173,7 +173,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           ) : null}
         </div>
       </div>
-      <Table reloading={loadingAdmin || loadingReviewer}>
+      <Table responsive reloading={loadingAdmin || loadingReviewer}>
         <thead>
           <tr>
             {isAdminReviewer ? (

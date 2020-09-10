@@ -148,7 +148,7 @@ const References = ({ history }: RouteComponentProps) => {
           )}
         </div>
       </div>
-      <Table reloading={loadingAdmin}>
+      <Table responsive reloading={loadingAdmin}>
         <thead>
           <tr>
             {isAdminReviewer ? (

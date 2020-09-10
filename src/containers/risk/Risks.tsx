@@ -158,7 +158,7 @@ const Risks = ({ history }: RouteComponentProps) => {
           </Button>
         ) : null}
       </div>
-      <Table reloading={loadingAdmin || loadingReviewer}>
+      <Table responsive reloading={loadingAdmin || loadingReviewer}>
         <thead>
           <tr>
             {isAdminReviewer ? (
