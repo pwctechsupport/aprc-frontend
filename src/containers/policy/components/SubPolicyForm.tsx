@@ -262,11 +262,11 @@ const SubPolicyForm = ({
           }
         />
 
-        <div className="d-flex justify-content-end mt-3">
+        <div className="text-right mt-3">
           <Button
             type="button"
             onClick={() => setShowAttrs(true)}
-            className="pwc mr-2"
+            className="pwc btn-sm-block mb-1 mb-sm-0 mr-2"
             loading={getBisproDefValQ.loading}
           >
             Insert attributes
@@ -277,7 +277,7 @@ const SubPolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={submittingDraft}
-                className="pwc mr-2 px-5"
+                className="pwc btn-sm-block mb-1 mb-sm-0 mr-2 px-5"
                 onConfirm={handleSubmit(saveAsDraftSecondPhase)}
                 message={
                   defaultValues.title
@@ -290,7 +290,7 @@ const SubPolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={secondDraftLoading}
-                className="pwc px-5"
+                className="pwc btn-sm-block mb-1 mb-sm-0 px-5"
                 onConfirm={handleSubmit(submitSecondPhase)}
                 message={
                   defaultValues.title
@@ -307,7 +307,7 @@ const SubPolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={submitting}
-                className="pwc mr-2 px-5"
+                className="pwc btn-sm-block mb-1 mb-sm-0 mr-2 px-5"
                 onConfirm={handleSubmit(saveAsDraftFirstPhase)}
                 message={
                   defaultValues.title
@@ -320,7 +320,7 @@ const SubPolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={submitting}
-                className="pwc px-5"
+                className="pwc btn-sm-block mb-1 mb-sm-0 px-5"
                 onConfirm={handleSubmit(submitFirstPhase)}
                 message={
                   defaultValues.title
@@ -334,7 +334,7 @@ const SubPolicyForm = ({
           )}{" "}
           {isCreate ? (
             <StyledDialogButton
-              className="cancel px-5 ml-2"
+              className="cancel btn-sm-block px-5 ml-sm-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={() => history.replace(`/policy`)}
               isCreate
@@ -343,7 +343,7 @@ const SubPolicyForm = ({
             </StyledDialogButton>
           ) : (
             <StyledDialogButton
-              className="cancel px-5 ml-2"
+              className="cancel btn-sm-block px-5 ml-sm-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={toggleEditMode}
               isEdit
