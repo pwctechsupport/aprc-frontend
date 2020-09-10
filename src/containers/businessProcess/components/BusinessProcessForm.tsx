@@ -29,7 +29,7 @@ const BusinessProcessForm = ({
         // className="d-flex align-items-center mb-1"
       >
         <Row>
-          <Col lg={10}>
+          <Col lg={9}>
             <div style={{ border: `${errors.name ? "1px solid red" : ""}` }}>
               <Input
                 name="name"
@@ -40,7 +40,7 @@ const BusinessProcessForm = ({
             </div>
           </Col>
 
-          <Col lg={2}>
+          <Col lg={3}>
             {onCancel && (
               <Button onClick={onCancel} className="mr-3" color="grey">
                 Cancel
