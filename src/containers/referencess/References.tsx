@@ -356,7 +356,7 @@ const ReferenceRow = ({
                     className="soft orange mr-2"
                   >
                     <Tooltip description="Edit Reference">
-                      <FaPencilAlt />
+                      <PickIcon name="pencilFill" />
                     </Tooltip>
                   </Button>
                 )}

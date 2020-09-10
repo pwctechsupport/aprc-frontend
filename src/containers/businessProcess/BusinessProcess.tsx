@@ -132,7 +132,7 @@ export default function BusinessProcess({
                 className="soft orange mr-3"
                 color=""
               >
-                <FaPencilAlt />
+                <PickIcon name="pencilFill" />
               </Button>
             ) : null}
             {isAdminReviewer ? (

@@ -154,7 +154,6 @@ const Bookmark = ({ history }: RouteComponentProps) => {
             <Form onSubmit={bookmarkForm.handleSubmit(onSubmit)}>
               <Row>
                 <Col xs={12} md={4} className="mb-1">
-                  {" "}
                   <Input
                     placeholder="Search title..."
                     name="title"

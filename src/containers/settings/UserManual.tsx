@@ -19,6 +19,7 @@ import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Footer from "../../shared/components/Footer";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 export default function UserManual() {
   const [currentEditId, setCurrentEditId] = useState<string | null>(null);
@@ -98,7 +99,7 @@ export default function UserManual() {
                         className="soft red mr-2"
                         color=""
                       >
-                        <FaPencilAlt />
+                        <PickIcon name="pencilFill" />
                       </Button>
                     </Tooltip>
                   )}

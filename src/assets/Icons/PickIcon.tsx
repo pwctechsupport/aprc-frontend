@@ -189,7 +189,7 @@ const PickIcon = ({ name, style, className, ...props }: PickIconProps) => {
         className={className}
         src={pencilFill}
         alt="icon"
-        style={{ width: "25px", height: "auto", fill: "blue", ...style }}
+        style={{ width: "20px", height: "auto", fill: "blue", ...style }}
         {...props}
       />
     );
