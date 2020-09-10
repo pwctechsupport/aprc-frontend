@@ -28,6 +28,8 @@ import NotificationBadge from "./NotificationBadge";
 import useAccessRights from "../hooks/useAccessRights";
 import { H1 } from "../../containers/auth/Login";
 import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
+import pwcLogo from "../../assets/images/pwc-logo.png";
+
 import PickIcon from "../../assets/icons/PickIcon";
 
 export default function NewNavbar() {
@@ -41,10 +43,9 @@ export default function NewNavbar() {
   const currentUrl = location.pathname;
   const isMereUser = rolesArray.every((a) => !a);
   const size = useWindowSize();
-  const isBigScreen = size.width > 767;
+  const isBigScreen = size.width > 896;
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen((p) => !p);
-
   function handleLogout() {
     dispatch(unauthorize());
   }
@@ -65,24 +66,15 @@ export default function NewNavbar() {
     }
   };
   return (
-    <NavbarWithColor fixed="top" light expand="md">
-      <Row>
-        <Col lg={3}>
-          <StyledNavbarBrand tag={Link} to="/">
-            <Image
-              style={{
-                position: "absolute",
-                bottom: 4,
-              }}
-              src={pwcLogoOutline}
-              alt="PwC"
-            />
-          </StyledNavbarBrand>
-        </Col>
-        <Col>
-          <H1 style={{ paddingTop: "15px" }}>eGRC</H1>
-        </Col>
-      </Row>
+    <NavbarWithColor fixed="top" light expand="lg">
+      <StyledNavbarBrand tag={Link} to="/">
+        <Row>
+          <Image src={pwcLogoOutline} alt="PwC" />
+          <H1 style={{ paddingTop: "15px" }} className="ml-4">
+            eGRC
+          </H1>
+        </Row>
+      </StyledNavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
@@ -171,8 +163,6 @@ export default function NewNavbar() {
               <Link to="/notifications" className="text-dark">
                 {showNotif && <NotificationBadge count={unreadCount} />}
                 <PickIcon name="notif" style={{ width: "32px" }} />
-
-                {/* <FaBell size={22} /> */}
               </Link>
             </div>
             <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
@@ -241,7 +231,7 @@ const Image = styled.img`
 
 const SearchBar = styled.div`
   width: 15em;
-  @media only screen and (max-width: 1002px) {
+  @media only screen and (max-width: 1142px) {
     display: none;
   }
 `;
@@ -254,7 +244,7 @@ const StyledNavbarBrand = styled(NavbarBrand)`
 `;
 const SearchPolicies = styled.div`
   display: none;
-  @media only screen and (max-width: 1000px) {
+  @media only screen and (max-width: 1142px) {
     display: block;
   }
 `;
@@ -281,7 +271,7 @@ const StyledNavLink = styled(NavLink)`
   @media only screen and (min-width: 1081px) {
     margin: 0px 0.5rem;
   }
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-width: 896px) {
     &.active {
       color: var(--orange) !important;
     }
