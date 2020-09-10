@@ -22,6 +22,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={comment}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -30,6 +31,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={minus}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -38,6 +40,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={addUser}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -46,6 +49,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={avatar}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -54,6 +58,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={bookmark}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -62,6 +67,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={chart}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -70,6 +76,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={check}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -78,6 +85,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={download}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -86,6 +94,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={notif}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -94,6 +103,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={reload}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -102,6 +112,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={threeDots}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -110,6 +121,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={trash}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -118,6 +130,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={upload}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -126,6 +139,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={xIcon}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -134,6 +148,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={printer}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -142,6 +157,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={checkmark}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />
@@ -150,6 +166,7 @@ const PickIcon = ({ name, style, ...props }: PickIconProps) => {
     return (
       <img
         src={downloadWhite}
+        alt="icon"
         style={{ width: "25px", height: "auto", ...style }}
         {...props}
       />

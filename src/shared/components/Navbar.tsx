@@ -49,7 +49,7 @@ export default function NewNavbar() {
   function handleLogout() {
     dispatch(unauthorize());
   }
-
+  const isMobile = size.width < 768;
   useEffect(() => {
     setIsOpen((p) => (p ? !p : p));
   }, [setIsOpen, location.pathname]);
@@ -70,7 +70,10 @@ export default function NewNavbar() {
       <StyledNavbarBrand tag={Link} to="/">
         <Row>
           <Image src={pwcLogoOutline} alt="PwC" />
-          <H1 style={{ paddingTop: "15px" }} className="ml-4">
+          <H1
+            style={{ paddingTop: isMobile ? "0px" : "10px", marginBottom: 0 }}
+            className="ml-4"
+          >
             eGRC
           </H1>
         </Row>
@@ -225,8 +228,11 @@ const Underline = styled.div`
   left: 0;
 `;
 const Image = styled.img`
-  width: 70px;
-  height: auto;
+  width: auto;
+  height: 50px;
+  @media only screen and (max-width: 767px) {
+    height: 30px;
+  }
 `;
 
 const SearchBar = styled.div`
