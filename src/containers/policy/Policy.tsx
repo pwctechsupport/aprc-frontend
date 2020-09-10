@@ -1134,7 +1134,7 @@ export default function Policy({
           {
             label: (
               <div>
-                <IoMdDownload /> download
+                <IoMdDownload /> Download
               </div>
             ),
             onClick: () => {

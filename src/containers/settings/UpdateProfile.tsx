@@ -142,12 +142,7 @@ const UpdateProfileForm = ({
         error={errors.phone && errors.phone.message}
       />
       <div className="d-flex justify-content-end">
-        <Button
-          type="submit"
-          loading={submitting}
-          className="soft orange"
-          color=""
-        >
+        <Button type="submit" loading={submitting} className="pwc">
           Save profile
         </Button>
       </div>
@@ -260,12 +255,7 @@ const UpdatePasswordForm = ({
         required
       />
       <div className="d-flex justify-content-end">
-        <Button
-          className="soft orange"
-          type="submit"
-          color=""
-          loading={submitting}
-        >
+        <Button className="pwc" type="submit" loading={submitting}>
           Update password
         </Button>
       </div>

@@ -384,9 +384,9 @@ const ControlForm = ({
         <div className="mt-2">
           <Button
             type="button"
-            className="soft orange mb-2"
+            className="pwc mb-2"
             onClick={toogleModal}
-            color=""
+            // color=""
           >
             Add control activity
           </Button>

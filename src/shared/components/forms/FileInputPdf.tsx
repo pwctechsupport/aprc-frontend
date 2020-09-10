@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { toBase64 } from "../../formatter";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import styled, { css } from "styled-components";
 

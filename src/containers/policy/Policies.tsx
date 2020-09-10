@@ -116,7 +116,7 @@ export default function Policies({ history }: RouteComponentProps) {
       </Helmet>
       <BreadCrumb crumbs={[["/policy", "Policies"]]} />
       <div className="d-flex justify-content-between align-items-center">
-        <OpacityButton onClick={toggleShowDashboard}>
+        <OpacityButton isActive={showDashboard} onClick={toggleShowDashboard}>
           {showDashboard ? " Hide" : "Show"} Dashboard
         </OpacityButton>
         {(isAdmin || isAdminPreparer) && (

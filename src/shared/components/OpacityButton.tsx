@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const OpacityButton = styled.button`
+const OpacityButton = styled.button<{ isActive?: boolean }>`
   border: none;
   display: unset;
   margin-bottom: unset;
@@ -8,7 +8,8 @@ const OpacityButton = styled.button`
   margin: 0px 4px;
   border-radius: 3px;
   transition: background 0.1s ease-out 0s;
-  background: none rgb(244, 245, 247);
+  background: ${(p) => (p.isActive ? "#d3d3d3" : "var(--orange)")};
+  color: ${(p) => (p.isActive ? "black" : "white")};
   &:hover {
     background-color: rgb(235, 236, 240);
   }
