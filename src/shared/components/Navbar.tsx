@@ -28,9 +28,7 @@ import NotificationBadge from "./NotificationBadge";
 import useAccessRights from "../hooks/useAccessRights";
 import { H1 } from "../../containers/auth/Login";
 import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
-import pwcLogo from "../../assets/images/pwc-logo.png";
-
-import PickIcon from "../../assets/icons/PickIcon";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
@@ -237,7 +235,7 @@ const Image = styled.img`
 
 const SearchBar = styled.div`
   width: 15em;
-  @media only screen and (max-width: 1142px) {
+  @media only screen and (max-width: 1183px) {
     display: none;
   }
 `;
@@ -247,10 +245,13 @@ const StyledNavbarBrand = styled(NavbarBrand)`
   @media only screen and (max-width: 1400px) {
     width: unset;
   }
+  @media only screen and (max-width: 1183px) {
+    width: 20vw;
+  }
 `;
 const SearchPolicies = styled.div`
   display: none;
-  @media only screen and (max-width: 1142px) {
+  @media only screen and (max-width: 1183px) {
     display: block;
   }
 `;

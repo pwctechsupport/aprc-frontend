@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 interface FooterProps {
   fontColor?: string;
+  linebreak?: boolean;
 }
-const Footer = ({ fontColor = "" }: FooterProps) => {
+const Footer = ({ fontColor = "", linebreak }: FooterProps) => {
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return {
@@ -57,8 +58,8 @@ const Footer = ({ fontColor = "" }: FooterProps) => {
         >
           &copy; 2020 PwC. PwC all rights reserved. PwC refers to the PwC
           network and/or one or more of its member firms, each of which is a
-          separate legal entity. Please see www.pwc.com/structure for further
-          details.
+          separate legal entity.{linebreak && <br />}
+          Please see www.pwc.com/structure for further details.
         </p>
       </div>
     </div>
