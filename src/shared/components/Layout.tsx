@@ -15,4 +15,7 @@ export default Layout;
 
 const DivWithPaddingTop = styled.div`
   padding-top: 63px;
-`;
+  @media (max-width: 992px) {
+    padding-top: 100px;
+  }
+`
