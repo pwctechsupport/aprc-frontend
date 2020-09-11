@@ -161,8 +161,8 @@ export const SideBoxBranch = styled.div<SideBoxBranchProps>`
   ${(p) =>
     p.isLastChild &&
     css`
-      font-style: italic;
-      font-size: 15px;
+      /* font-style: italic; */
+      /* font-size: 15px; */
     `}
 `;
 

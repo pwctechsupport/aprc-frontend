@@ -29,10 +29,8 @@ const Pagination = ({
 }: PaginationProps) => {
   const { width } = useWindowSize();
   const isMobile = width < 769;
-  const perPageDecider = isMobile ? 5 : perPage;
-  const pageCount = totalCount
-    ? Math.ceil(totalCount / perPageDecider)
-    : pCount;
+  const perPageDecider = isMobile ? 3 : perPage;
+  const pageCount = totalCount ? Math.ceil(totalCount / perPage) : pCount;
 
   const [_currentPage, setCurrentPage] = useState(currentPage - 1);
 
@@ -61,11 +59,11 @@ const Pagination = ({
 
   //additional details
   // {_currentPage * perPageDecider + 1}-{(_currentPage + 1) * perPageDecider} of{' '}
-  const startRecord = _currentPage * perPageDecider + 1;
+  const startRecord = _currentPage * perPage + 1;
   const endRecord =
-    startRecord + perPageDecider > Number(totalCount)
+    startRecord + perPage > Number(totalCount)
       ? totalCount
-      : startRecord + perPageDecider - 1;
+      : startRecord + perPage - 1;
 
   function handlePageChange(page: number) {
     setCurrentPage(page);
