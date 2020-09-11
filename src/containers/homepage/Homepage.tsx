@@ -47,7 +47,7 @@ export default function Homepage() {
       </Helmet>
       <BackgroundImage>
         <div style={{ height: width > 991 ? "25vh" : 0 }}></div>
-        <Row style={{ width: "80vw" }}>
+        <Row>
           <Col lg={4}>
             <h3
               style={{
