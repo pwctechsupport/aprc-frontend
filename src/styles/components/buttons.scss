@@ -1,4 +1,4 @@
-.button.pwc {
+@mixin button-pwc {
   background: $pwc-orange;
   border-radius: 3px;
   border: 0;
@@ -17,6 +17,10 @@
     border: 1px solid $pwc-orange;
     color: $pwc-orange;
   }
+}
+
+.button.pwc {
+  @include button-pwc;
 }
 
 .button.cancel {
