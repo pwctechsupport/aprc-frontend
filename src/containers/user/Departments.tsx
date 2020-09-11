@@ -149,6 +149,7 @@ const Departments = ({ history }: RouteComponentProps) => {
           </Row>
         </Modal>
         <Table
+          responsive
           loading={networkStatus === NetworkStatus.loading}
           reloading={networkStatus === NetworkStatus.setVariables}
         >
