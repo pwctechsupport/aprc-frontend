@@ -214,7 +214,7 @@ export default function Homepage() {
 }
 
 const Background = styled.div`
-  background: #efefef;
+  background: #ffffff;
 `;
 
 const BackgroundImage = styled.div`
