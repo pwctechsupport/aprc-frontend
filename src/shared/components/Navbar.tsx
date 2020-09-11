@@ -68,7 +68,7 @@ export default function NewNavbar() {
         <Row>
           <Image src={pwcLogoOutline} alt="PwC" />
           <H1
-            style={{ paddingTop: isMobile ? "0px" : "10px", marginBottom: 0 }}
+            style={{ paddingTop: isMobile ? "5px" : "10px", marginBottom: 0 }}
             className="ml-4"
           >
             eGRC
@@ -228,7 +228,7 @@ const Image = styled.img`
   width: auto;
   height: 50px;
   @media only screen and (max-width: 767px) {
-    height: 30px;
+    height: 35px;
   }
 `;
 
@@ -246,6 +246,9 @@ const StyledNavbarBrand = styled(NavbarBrand)`
   }
   @media only screen and (max-width: 1183px) {
     width: 20vw;
+  }
+  @media only screen and (max-width: 991px) {
+    width: unset;
   }
 `;
 const SearchPolicies = styled.div`
