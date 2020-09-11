@@ -1,10 +1,11 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useAdminRisksQuery,
   useDestroyRiskMutation,
@@ -224,7 +225,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                       className="soft red"
                     >
                       <Tooltip description="Delete Risk">
-                        <FaTrash />
+                        <PickIcon name="trash" className="clickable" />
                       </Tooltip>
                     </DialogButton>
                   </td>

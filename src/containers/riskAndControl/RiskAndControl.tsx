@@ -2,11 +2,7 @@ import { capitalCase } from "capital-case";
 import get from "lodash/get";
 import startCase from "lodash/startCase";
 import React, { Fragment, useEffect, useState } from "react";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import {
   FaBars,
   FaBookmark,
@@ -29,6 +25,7 @@ import {
   TabPane,
 } from "reactstrap";
 import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   Assertion,
   Control,
@@ -406,7 +403,7 @@ export default function RiskAndControl({
             className="soft red mr-2"
             disabled={requestStatusRisk === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -432,7 +429,7 @@ export default function RiskAndControl({
               color=""
               className="soft orange"
             >
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>
@@ -671,7 +668,7 @@ export default function RiskAndControl({
             className="soft red mr-2"
             disabled={requestStatusControl === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -709,7 +706,7 @@ export default function RiskAndControl({
               color=""
               className="soft orange"
             >
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>

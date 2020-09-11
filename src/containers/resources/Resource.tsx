@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Col, Row } from "reactstrap";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   UpdateResourceInput,
   useApproveRequestEditMutation,
@@ -351,7 +348,7 @@ export default function Resource({
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -376,7 +373,7 @@ export default function Resource({
           </DialogButton> */}
           <Tooltip description="Edit Resource">
             <Button onClick={toggleEditMode} color="" className="soft orange">
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>

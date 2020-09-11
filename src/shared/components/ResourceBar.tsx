@@ -1,14 +1,14 @@
 import React from "react";
-import { FaDownload, FaTrash } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import StarRating from "./StarRating";
-import Tooltip from "./Tooltip";
+import PickIcon from "../../assets/Icons/PickIcon";
 import { useUpdateResourceVisitMutation } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import useAccessRights from "../hooks/useAccessRights";
 import DialogButton from "./DialogButton";
-import { APP_ROOT_URL } from "../../settings";
+import StarRating from "./StarRating";
+import Tooltip from "./Tooltip";
 
 interface ResourceBarProps {
   id: string;
@@ -76,7 +76,7 @@ export default function ResourceBar({
               download={`Pwc-Resource ${name}`}
               onClick={() => updateResourceVisit({ variables: { id } })}
             >
-              <FaDownload />
+              <PickIcon name="downloadOrange" />
             </a>
           </Tooltip>
         </Button>
@@ -86,7 +86,7 @@ export default function ResourceBar({
               description="Delete Resource"
               subtitle="Resource will be deleted from current policy"
             >
-              <FaTrash className="text-red" />
+              <PickIcon name="trash" className="clickable" />
             </Tooltip>
           </DialogButton>
         )}

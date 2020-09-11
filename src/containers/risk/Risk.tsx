@@ -1,11 +1,7 @@
 import startCase from "lodash/startCase";
 import React, { Fragment, useEffect, useState } from "react";
 import Helmet from "react-helmet";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Badge, Col, Row } from "reactstrap";
@@ -34,6 +30,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
+import PickIcon from "../../assets/Icons/PickIcon";
 // import styled from "styled-components";
 
 export default function Risk({
@@ -245,7 +242,7 @@ export default function Risk({
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -270,7 +267,7 @@ export default function Risk({
           </DialogButton> */}
           <Tooltip description="Edit Risk">
             <Button onClick={toggleEditMode} color="" className="soft orange">
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>

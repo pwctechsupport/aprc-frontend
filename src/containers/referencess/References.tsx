@@ -1,30 +1,31 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import {
-  FaFileExport,
-  FaFileImport,
-  FaPencilAlt,
-  FaTimes,
-  FaTrash,
-} from "react-icons/fa";
+import { FaFileExport, FaFileImport, FaTimes } from "react-icons/fa";
+import { Link, RouteComponentProps } from "react-router-dom";
 import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   PoliciesDocument,
   Reference,
+  useAdminReferencesQuery,
   useDestroyReferenceMutation,
   useUpdateReferenceMutation,
-  useAdminReferencesQuery,
 } from "../../generated/graphql";
+import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import AsyncSelect from "../../shared/components/forms/AsyncSelect";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import ImportModal from "../../shared/components/ImportModal";
+import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import { Suggestions, toLabelValue } from "../../shared/formatter";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 import useLazyQueryReturnPromise from "../../shared/hooks/useLazyQueryReturnPromise";
+import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import {
   notifyError,
@@ -32,12 +33,6 @@ import {
   notifyInfo,
   notifySuccess,
 } from "../../shared/utils/notif";
-import useAccessRights from "../../shared/hooks/useAccessRights";
-import { RouteComponentProps, Link } from "react-router-dom";
-import BreadCrumb from "../../shared/components/BreadCrumb";
-import Pagination from "../../shared/components/Pagination";
-import useListState from "../../shared/hooks/useList";
-import CheckBox from "../../shared/components/forms/CheckBox";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -355,7 +350,7 @@ const ReferenceRow = ({
                     className="soft orange mr-2"
                   >
                     <Tooltip description="Edit Reference">
-                      <FaPencilAlt />
+                      <PickIcon name="pencilFill" />
                     </Tooltip>
                   </Button>
                 )}
@@ -367,7 +362,7 @@ const ReferenceRow = ({
                     className="soft red"
                   >
                     <Tooltip description="Delete Reference">
-                      <FaTrash />
+                      <PickIcon name="trash" className="clickable" />
                     </Tooltip>
                   </DialogButton>
                 )}

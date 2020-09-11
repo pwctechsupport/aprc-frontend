@@ -1,6 +1,9 @@
-import React, { useState, Fragment, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { oc } from "ts-optchain";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import { usePolicyCategoriesQuery } from "../../../generated/graphql";
+import Button from "../../../shared/components/Button";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import {
   SideBox,
   SideBoxItem,
@@ -8,11 +11,8 @@ import {
   SideBoxSearch,
   SideBoxTitle,
 } from "../../../shared/components/SideBox";
-import Button from "../../../shared/components/Button";
 import Tooltip from "../../../shared/components/Tooltip";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
-import LoadingSpinner from "../../../shared/components/LoadingSpinner";
-import { FaUndo } from "react-icons/fa";
 
 const PolicyCategorySideBox = () => {
   const [limit, setLimit] = useState(25);
@@ -96,7 +96,7 @@ const PolicyCategorySideBox = () => {
                 color=""
                 onClick={() => setLimit(limit + 25)}
               >
-                <FaUndo />
+                <PickIcon name="reloadOrange" />
               </Button>
             </Tooltip>
           </div>

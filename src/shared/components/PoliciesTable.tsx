@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import { FaFolder, FaFolderOpen, FaTrash } from "react-icons/fa";
+import { FaFolder, FaFolderOpen } from "react-icons/fa";
 import { MdSubdirectoryArrowRight } from "react-icons/md";
 import { Link, useHistory } from "react-router-dom";
+import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 import { Policy } from "../../generated/graphql";
 import { previewHtml } from "../formatter";
+import useAccessRights from "../hooks/useAccessRights";
 import Button from "./Button";
 import DateHover from "./DateHover";
 import DisplayStatus from "./DisplayStatus";
 import EmptyAttribute from "./EmptyAttribute";
 import Table from "./Table";
 import Tooltip from "./Tooltip";
-import useAccessRights from "../hooks/useAccessRights";
-import styled from "styled-components";
 
 interface PoliciesTableProps {
   policies: Policy[];
@@ -136,7 +137,7 @@ const PolicyTableRow = ({
           {isAdminReviewer ? (
             <Tooltip description="Delete Policy">
               <Button onClick={handleDelete} className="soft red" color="">
-                <FaTrash />
+                <PickIcon name="trash" className="clickable" />
               </Button>
             </Tooltip>
           ) : null}

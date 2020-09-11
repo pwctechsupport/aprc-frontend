@@ -1,10 +1,11 @@
 import groupBy from "lodash/groupBy";
 import React, { Fragment, useState } from "react";
+import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { Form, FormGroup, Label, Row, Col } from "reactstrap";
+import { Col, Form, FormGroup, Label, Row } from "reactstrap";
 import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   DestroyVersionInput,
   HistoryListQuery,
@@ -12,12 +13,11 @@ import {
   useHistoryListQuery,
 } from "../../generated/graphql";
 import DialogButton from "../../shared/components/DialogButton";
-import Tooltip from "../../shared/components/Tooltip";
-import { date as formatDate } from "../../shared/formatter";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import Helmet from "react-helmet";
 import Footer from "../../shared/components/Footer";
 import CheckBox from "../../shared/components/forms/CheckBox";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
+import Tooltip from "../../shared/components/Tooltip";
+import { date as formatDate } from "../../shared/formatter";
 
 const History = () => {
   const { data, loading } = useHistoryListQuery({
@@ -83,7 +83,7 @@ const History = () => {
                 onConfirm={handleSubmit(handleDelete)}
                 className="soft red"
               >
-                <FaTrash className="text-orange " />
+                <PickIcon name="trash" className="clickable" />
               </DialogButton>
             </Tooltip>
           </div>

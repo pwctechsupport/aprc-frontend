@@ -1,11 +1,12 @@
 import classnames from "classnames";
-import React, { useState, Fragment, useEffect } from "react";
-import { FaUndo } from "react-icons/fa";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { Collapse } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import { useSideboxPolicyQuery } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import {
   SideBox,
   SideBoxBranch,
@@ -18,7 +19,6 @@ import {
 import Tooltip from "../../../shared/components/Tooltip";
 import { getPathnameParams } from "../../../shared/formatter";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
-import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 export default function PolicySideBox({ location }: RouteComponentProps) {
   const [activeId, activeMode] = getPathnameParams(location.pathname, "policy");
@@ -98,7 +98,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          Policiy master list
+          Policy master list
           {/* {isAdmin || isAdminReviewer || isAdminPreparer
             ? ""
             : "Policies"} */}
@@ -140,7 +140,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
                 color=""
                 onClick={() => setLimit(limit + 25)}
               >
-                <FaUndo />
+                <PickIcon name="reloadOrange" />
               </Button>
             </Tooltip>
           </div>

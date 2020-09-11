@@ -1,10 +1,11 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useAdminControlsQuery,
   useDestroyControlMutation,
@@ -239,7 +240,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                             message={`Delete "${control.description}"?`}
                             className="soft red"
                           >
-                            <FaTrash className="clickable" />
+                            <PickIcon name="trash" className="clickable" />
                           </DialogButton>
                         </Tooltip>
                       </td>

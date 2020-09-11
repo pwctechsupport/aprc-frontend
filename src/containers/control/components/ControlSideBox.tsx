@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { FaUndo } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
 import { oc } from "ts-optchain";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import { useControlsQuery } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import {
   SideBox,
   SideBoxItem,
@@ -13,7 +14,6 @@ import {
 import Tooltip from "../../../shared/components/Tooltip";
 // import humanizeDate from "../../../shared/utils/humanizeDate";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
-import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const ControlSideBox = () => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -89,7 +89,7 @@ const ControlSideBox = () => {
               color=""
               onClick={() => setLimit(limit + 25)}
             >
-              <FaUndo />
+              <PickIcon name="reloadOrange" />
             </Button>
           </Tooltip>
         </div>

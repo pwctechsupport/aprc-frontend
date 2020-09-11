@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32px" height="32px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+ <style type="text/css">
+	.st0{fill:#d04a02;}
+</style>
+    <g id="Pencil-outline" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <path class='st0' d="M29.290487,0.585786438 L31.4146973,2.70999672 C32.1957458,3.4910453 32.1957458,4.75737526 31.4146973,5.53842384 L7.20383262,29.7492885 L-3.55271368e-15,32.0004837 L2.25119521,24.7966511 L26.4620598,0.585786438 C27.2431084,-0.195262146 28.5094384,-0.195262146 29.290487,0.585786438 Z M27.8791633,6.24553062 L30.0004837,4.12421028 L27.8762734,2 L25.7549531,4.12132034 L27.8791633,6.24553062 Z M26.4649498,7.65974419 L24.3407395,5.53553391 L4.01337486,25.8628985 L3.04782628,28.9526574 L6.13758514,27.9871088 L26.4649498,7.65974419 Z" id="Shape" fill="#2D2D2D" fill-rule="nonzero"></path>
+    </g>
+</svg>
