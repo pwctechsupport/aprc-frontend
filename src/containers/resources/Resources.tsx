@@ -1,7 +1,7 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaDownload, FaFileExport, FaTrash } from "react-icons/fa";
+import { FaFileExport } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";

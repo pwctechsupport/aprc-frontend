@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useAdminBusinessProcessTreeQuery,
   useDestroyBusinessProcessMutation,
@@ -22,7 +23,6 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import CreateBusinessProcess from "./CreateBusinessProcess";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([

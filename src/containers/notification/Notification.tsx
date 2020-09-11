@@ -1,10 +1,12 @@
 import { NetworkStatus } from "apollo-boost";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaTrash, FaUndo } from "react-icons/fa";
+import { useForm } from "react-hook-form";
 import { RouteComponentProps } from "react-router";
+import Select from "react-select";
 import { toast } from "react-toastify";
-import { Container, Input, Form, Col, Row } from "reactstrap";
+import { Col, Container, Form, Input, Row } from "reactstrap";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   DestroyBulkNotificationInput,
   useDestroyBulkNotificationMutation,
@@ -13,20 +15,17 @@ import {
 } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
+import Footer from "../../shared/components/Footer";
+import CheckBox from "../../shared/components/forms/CheckBox";
 import Pagination from "../../shared/components/Pagination";
 import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import { date as formatDate } from "../../shared/formatter";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import humanizeDate from "../../shared/utils/humanizeDate";
 import { notifyError } from "../../shared/utils/notif";
-import { useForm } from "react-hook-form";
-import Select from "react-select";
-import useAccessRights from "../../shared/hooks/useAccessRights";
 import NotificationSettings from "../settings/NotificationSettings";
-import Footer from "../../shared/components/Footer";
-import CheckBox from "../../shared/components/forms/CheckBox";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 const Notification = ({ history }: RouteComponentProps) => {
   const [labelTime, setLabelTime] = useState("Date added...");

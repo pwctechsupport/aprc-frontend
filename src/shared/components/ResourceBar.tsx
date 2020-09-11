@@ -1,15 +1,14 @@
 import React from "react";
-import { FaDownload, FaTrash } from "react-icons/fa";
 import { NavLink } from "react-router-dom";
 import { Button } from "reactstrap";
 import styled from "styled-components";
-import StarRating from "./StarRating";
-import Tooltip from "./Tooltip";
+import PickIcon from "../../assets/Icons/PickIcon";
 import { useUpdateResourceVisitMutation } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import useAccessRights from "../hooks/useAccessRights";
 import DialogButton from "./DialogButton";
-import { APP_ROOT_URL } from "../../settings";
-import PickIcon from "../../assets/Icons/PickIcon";
+import StarRating from "./StarRating";
+import Tooltip from "./Tooltip";
 
 interface ResourceBarProps {
   id: string;

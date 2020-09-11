@@ -1,10 +1,11 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaTrash } from "react-icons/fa";
 import { MdSubdirectoryArrowRight } from "react-icons/md";
 import { Link, RouteComponentProps } from "react-router-dom";
+import { Collapse } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   Policy,
   useDestroyPolicyMutation,
@@ -13,19 +14,17 @@ import {
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
+import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
+import OpacityButton from "../../shared/components/OpacityButton";
+import Pagination from "../../shared/components/Pagination";
 import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
-import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
-import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
-import OpacityButton from "../../shared/components/OpacityButton";
-import { Collapse } from "reactstrap";
-import AllPolicyDashboard from "./components/AllPolicyDashboard";
-import useAccessRights from "../../shared/hooks/useAccessRights";
 import Tooltip from "../../shared/components/Tooltip";
-import DateHover from "../../shared/components/DateHover";
-import PickIcon from "../../assets/Icons/PickIcon";
+import useAccessRights from "../../shared/hooks/useAccessRights";
+import useListState from "../../shared/hooks/useList";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import AllPolicyDashboard from "./components/AllPolicyDashboard";
 
 export default function Policies({ history }: RouteComponentProps) {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([

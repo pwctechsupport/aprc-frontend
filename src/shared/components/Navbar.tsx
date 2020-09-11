@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaBell, FaBookmark, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, NavLink as RrNavLink, useLocation } from "react-router-dom";
 import {
@@ -14,21 +14,20 @@ import {
   NavbarToggler,
   NavItem,
   NavLink,
-  UncontrolledDropdown,
   Row,
-  Col,
+  UncontrolledDropdown,
 } from "reactstrap";
 import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
+import { H1 } from "../../containers/auth/Login";
 import HomepageSearch from "../../containers/homepage/HomepageSearch";
 import { useNotificationsCountQuery } from "../../generated/graphql";
 import { unauthorize } from "../../redux/auth";
+import useAccessRights from "../hooks/useAccessRights";
 import useWindowSize from "../hooks/useWindowSize";
 import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
-import useAccessRights from "../hooks/useAccessRights";
-import { H1 } from "../../containers/auth/Login";
-import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();

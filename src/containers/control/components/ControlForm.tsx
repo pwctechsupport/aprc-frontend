@@ -1,12 +1,13 @@
 import { capitalCase } from "capital-case";
+import { startCase } from "lodash";
 import React, { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { AiFillEdit } from "react-icons/ai";
-import { FaTrash } from "react-icons/fa";
-import { Col, Form, FormGroup, Label, Row } from "reactstrap";
-import { oc } from "ts-optchain";
 import { toast } from "react-toastify";
-
+import { Col, Form, FormGroup, Label, Row } from "reactstrap";
+import styled from "styled-components";
+import { oc } from "ts-optchain";
+import * as yup from "yup";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import {
   ActivityControl,
   Assertion,
@@ -14,24 +15,20 @@ import {
   Ipo,
   Nature,
   TypeOfControl,
-  useBusinessProcessesQuery,
   useAdminRisksQuery,
-  useDepartmentsQuery,
+  useBusinessProcessesQuery,
   useControlsQuery,
+  useDepartmentsQuery,
 } from "../../../generated/graphql";
-import * as yup from "yup";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
+import CheckBox2 from "../../../shared/components/forms/TestNewCheckBox";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
-import styled from "styled-components";
 import { PwcRadioInput } from "../../report/Report";
-import CheckBox2 from "../../../shared/components/forms/TestNewCheckBox";
-import { startCase } from "lodash";
-import PickIcon from "../../../assets/Icons/PickIcon";
 
 const ControlForm = ({
   onSubmit,

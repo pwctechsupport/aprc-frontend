@@ -1,25 +1,24 @@
-import React, { useState, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaDownload, FaPencilAlt } from "react-icons/fa";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
+  useCreateManualMutation,
   useManualsQuery,
   useUpdateManualMutation,
-  useCreateManualMutation,
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
 import Button from "../../shared/components/Button";
 import DateHover from "../../shared/components/DateHover";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import Footer from "../../shared/components/Footer";
 import FileInputPdf from "../../shared/components/forms/FileInputPdf";
 import Input from "../../shared/components/forms/Input";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Modal from "../../shared/components/Modal";
 import Tooltip from "../../shared/components/Tooltip";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import Footer from "../../shared/components/Footer";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 export default function UserManual() {
   const [currentEditId, setCurrentEditId] = useState<string | null>(null);

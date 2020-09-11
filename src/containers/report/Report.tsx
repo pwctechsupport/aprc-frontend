@@ -2,20 +2,20 @@ import capitalize from "lodash/startCase";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaDownload, FaFile, FaUndo } from "react-icons/fa";
+import { FaFile } from "react-icons/fa";
 import { Container, Form, FormGroup, Input, Label } from "reactstrap";
+import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 import Button from "../../shared/components/Button";
+import Footer from "../../shared/components/Footer";
 import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
 import {
   DownloadPdfInput,
   downloadPdfs,
   previewPdfs,
 } from "../../shared/utils/accessGeneratedPdf";
 import { notifyError, notifyInfo } from "../../shared/utils/notif";
-import Tooltip from "../../shared/components/Tooltip";
-import Footer from "../../shared/components/Footer";
-import styled from "styled-components";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 const reportOptions = [
   {

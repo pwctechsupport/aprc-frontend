@@ -2,11 +2,7 @@ import { capitalCase } from "capital-case";
 import get from "lodash/get";
 import startCase from "lodash/startCase";
 import React, { Fragment, useEffect, useState } from "react";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import {
   FaBars,
   FaBookmark,
@@ -29,6 +25,7 @@ import {
   TabPane,
 } from "reactstrap";
 import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   Assertion,
   Control,
@@ -92,7 +89,6 @@ import ControlForm, {
 import ResourceBox from "../resources/components/ResourceBox";
 import RiskForm, { RiskFormValues } from "../risk/components/RiskForm";
 import Flowcharts from "./components/Flowcharts";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 type TParams = { id: string };
 

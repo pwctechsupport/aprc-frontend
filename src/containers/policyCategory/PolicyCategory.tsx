@@ -1,20 +1,17 @@
 import get from "lodash/get";
 import React, { Fragment, useEffect, useState } from "react";
 import Helmet from "react-helmet";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useApproveRequestEditMutation,
   useCreateRequestEditMutation,
   usePolicyCategoryQuery,
+  usePreparerPoliciesQuery,
   useReviewPolicyCategoryDraftMutation,
   useUpdatePolicyCategoryMutation,
-  usePreparerPoliciesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -32,7 +29,6 @@ import {
 import PolicyCategoryForm, {
   PolicyCategoryFormValues,
 } from "./components/PolicyCategoryForm";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);

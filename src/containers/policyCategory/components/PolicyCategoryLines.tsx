@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Input } from "reactstrap";
 import styled from "styled-components";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import {
   useAdminPolicyCategoriesQuery,
   useDestroyPolicyCategoriesMutation,
@@ -25,7 +26,6 @@ import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
-import PickIcon from "../../../assets/Icons/PickIcon";
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([

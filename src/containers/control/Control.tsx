@@ -1,11 +1,7 @@
 import { capitalCase } from "capital-case";
 import get from "lodash/get";
 import React, { Fragment, useEffect, useState } from "react";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { IoMdOpen } from "react-icons/io";
 import { RouteComponentProps } from "react-router";

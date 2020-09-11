@@ -11,7 +11,6 @@ import {
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import Tooltip from "../../../shared/components/Tooltip";
 import Button from "../../../shared/components/Button";
-import { FaUndo } from "react-icons/fa";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { useReferencesQuery } from "../../../generated/graphql";
 import PickIcon from "../../../assets/Icons/PickIcon";

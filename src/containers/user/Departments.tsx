@@ -1,32 +1,30 @@
-import React, { useState, Fragment } from "react";
+import { NetworkStatus } from "apollo-boost";
+import React, { Fragment, useState } from "react";
 import Helmet from "react-helmet";
-import { Container, Col, Row, Form } from "reactstrap";
-import Input from "../../shared/components/forms/Input";
-import Button from "../../shared/components/Button";
+import { useForm } from "react-hook-form";
+import { Link, RouteComponentProps } from "react-router-dom";
+import { Col, Container, Form, Row } from "reactstrap";
+import styled from "styled-components";
+import { useDebounce } from "use-debounce/lib";
+import * as yup from "yup";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
+  useCreateDepartmentMutation,
   useDepartmentsQuery,
   useDestroyDepartmentMutation,
   useUpdateDepartmentMutation,
-  useCreateDepartmentMutation,
 } from "../../generated/graphql";
-import { NetworkStatus } from "apollo-boost";
-import Modal from "../../shared/components/Modal";
-import Table from "../../shared/components/Table";
+import Button from "../../shared/components/Button";
 import DateHover from "../../shared/components/DateHover";
-import { RouteComponentProps, Link } from "react-router-dom";
-import { useDebounce } from "use-debounce/lib";
-import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
-import { useForm } from "react-hook-form";
-import Tooltip from "../../shared/components/Tooltip";
-import { AiFillEdit } from "react-icons/ai";
-import { FaTrash } from "react-icons/fa";
 import DialogButton from "../../shared/components/DialogButton";
-import * as yup from "yup";
-import useAccessRights from "../../shared/hooks/useAccessRights";
+import Input from "../../shared/components/forms/Input";
+import Modal from "../../shared/components/Modal";
 import Pagination from "../../shared/components/Pagination";
+import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
+import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
-import styled from "styled-components";
-import PickIcon from "../../assets/Icons/PickIcon";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 
 const Departments = ({ history }: RouteComponentProps) => {
   const [isEdit, setIsEdit] = useState(false);

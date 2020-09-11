@@ -1,14 +1,14 @@
+import { capitalize } from "lodash";
 import get from "lodash/get";
 import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
-import { FaCheck, FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
+import { AiOutlineClockCircle } from "react-icons/ai";
+import { FaCheck, FaExclamationCircle, FaTimes } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import {
   useAdminUpdateUserMutation,
   useApproveRequestEditMutation,
@@ -21,20 +21,16 @@ import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
+import Tooltip from "../../../shared/components/Tooltip";
 import {
+  Suggestion,
   Suggestions,
   toLabelValue,
-  Suggestion,
 } from "../../../shared/formatter";
+import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
-import Tooltip from "../../../shared/components/Tooltip";
-import { toast } from "react-toastify";
-import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
-import styled from "styled-components";
-import { capitalize } from "lodash";
-import PickIcon from "../../../assets/Icons/PickIcon";
 
 interface UserRowProps {
   isEdit?: boolean;

@@ -1,11 +1,7 @@
 import startCase from "lodash/startCase";
 import React, { Fragment, useEffect, useState } from "react";
 import Helmet from "react-helmet";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Badge, Col, Row } from "reactstrap";

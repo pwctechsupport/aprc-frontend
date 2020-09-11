@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Col, Row } from "reactstrap";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   UpdateResourceInput,
   useApproveRequestEditMutation,
@@ -36,7 +33,6 @@ import {
 } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 type TParams = { id: string };
 

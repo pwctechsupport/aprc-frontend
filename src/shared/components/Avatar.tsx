@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 import { useSelector } from "../hooks/useSelector";
 import Button from "./Button";
-import PickIcon from "../../assets/Icons/PickIcon";
 
 interface DataType {
   onClick?: () => void;
@@ -88,15 +88,15 @@ export default function Avatar({ data }: AvatarProps) {
   );
 }
 
-const AvatarIcon = styled.img`
-  display: inline-block;
-  position: relative;
-  outline: 0px;
-  height: 44px;
-  width: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-`;
+// const AvatarIcon = styled.img`
+//   display: inline-block;
+//   position: relative;
+//   outline: 0px;
+//   height: 44px;
+//   width: 44px;
+//   border-radius: 50%;
+//   cursor: pointer;
+// `;
 
 const DropdownAvatarIcon = styled.img`
   display: inline-block;
