@@ -37,18 +37,18 @@ export default function Homepage() {
   };
   const { width } = useWindowSize();
   const recentlyVisitedPolicies = dataRP?.userPolicyVisits?.collection || [];
-
+  const isLaptop = width > 991;
   const popularResources = data?.popularResources?.collection || [];
   const savedPolicies = data?.bookmarks?.collection || [];
   return (
-    <Background>
+    <Background style={{ position: "relative", top: isLaptop ? 0 : -50 }}>
       <Helmet>
         <title>Home - PricewaterhouseCoopers</title>
       </Helmet>
       <BackgroundImage>
-        <div style={{ height: width > 991 ? "25vh" : 0 }}></div>
+        <div style={{ height: isLaptop ? "25vh" : 0 }}></div>
 
-        {width > 991 ? (
+        {isLaptop ? (
           <>
             <Row style={{ width: "100vw" }}>
               <Col lg={4}>
@@ -96,7 +96,7 @@ export default function Homepage() {
         )}
       </BackgroundImage>
 
-      {width > 991 ? (
+      {isLaptop ? (
         <Container
           className="mt-5 pb-5"
           style={{
