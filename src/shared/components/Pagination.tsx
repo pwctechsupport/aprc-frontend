@@ -29,7 +29,7 @@ const Pagination = ({
 }: PaginationProps) => {
   const { width } = useWindowSize();
   const isMobile = width < 769;
-  const perPageDecider = isMobile ? 3 : perPage;
+  const perPageDecider = isMobile ? 4 : perPage;
   const pageCount = totalCount ? Math.ceil(totalCount / perPage) : pCount;
 
   const [_currentPage, setCurrentPage] = useState(currentPage - 1);
@@ -111,9 +111,11 @@ const Pagination = ({
               <PaginationItem>
                 <PaginationLink onClick={goToFirst}>1</PaginationLink>
               </PaginationItem>
-              <PaginationItem>
-                <PaginationLink next>...</PaginationLink>
-              </PaginationItem>
+              {!isMobile && (
+                <PaginationItem>
+                  <PaginationLink next>...</PaginationLink>
+                </PaginationItem>
+              )}
             </Fragment>
           )}
 
@@ -129,9 +131,11 @@ const Pagination = ({
 
           {endPage < pageCount && (
             <Fragment>
-              <PaginationItem>
-                <PaginationLink next>...</PaginationLink>
-              </PaginationItem>
+              {!isMobile && (
+                <PaginationItem>
+                  <PaginationLink next>...</PaginationLink>
+                </PaginationItem>
+              )}
               <PaginationItem>
                 <PaginationLink onClick={goToLast}>{pageCount}</PaginationLink>
               </PaginationItem>
