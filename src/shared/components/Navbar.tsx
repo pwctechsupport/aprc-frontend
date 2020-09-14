@@ -47,6 +47,7 @@ export default function NewNavbar() {
     dispatch(unauthorize());
   }
   const isMobile = size.width < 768;
+  const isLaptop = size.width > 991;
   useEffect(() => {
     setIsOpen((p) => (p ? !p : p));
   }, [setIsOpen, location.pathname]);
@@ -119,6 +120,7 @@ export default function NewNavbar() {
               return (
                 <NavItem key={label}>
                   <StyledNavLink
+                    isLaptop={isLaptop}
                     tag={RrNavLink}
                     to={path}
                     exact={path === "/"}
@@ -130,7 +132,7 @@ export default function NewNavbar() {
                   >
                     {label}
                   </StyledNavLink>
-                  {underlineDecider(path)}
+                  {isLaptop && underlineDecider(path)}
                 </NavItem>
               );
             })}
@@ -257,7 +259,7 @@ const SearchPolicies = styled.div`
     display: block;
   }
 `;
-const StyledNavLink = styled(NavLink)`
+const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
   color: rgba(0, 0, 0, 0.8) !important;
   font-weight: bold;
   letter-spacing: 1px;
@@ -272,11 +274,11 @@ const StyledNavLink = styled(NavLink)`
     height: 2px;
     width: 100%;
   }
-  /* &.active {
+  &.active {
     &::after {
-      background: var(--orange);
+      background: ${(p) => (p.isLaptop ? "" : "var(--orange)")};
     }
-  } */
+  }
   @media only screen and (min-width: 1081px) {
     margin: 0px 0.5rem;
   }
