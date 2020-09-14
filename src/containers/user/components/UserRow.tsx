@@ -119,7 +119,7 @@ export default function UserRow({
   const requestStatus = oc(user).requestStatus();
   const notRequested = !requestStatus;
   const requested = requestStatus === "requested";
-  console.log("requested:", requested);
+
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
   const department = user?.department?.name || "";

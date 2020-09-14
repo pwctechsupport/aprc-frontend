@@ -47,8 +47,34 @@ export default function Homepage() {
       </Helmet>
       <BackgroundImage>
         <div style={{ height: width > 991 ? "25vh" : 0 }}></div>
-        <Row>
-          <Col lg={4}>
+
+        {width > 991 ? (
+          <>
+            <Row style={{ width: "100vw" }}>
+              <Col lg={4}>
+                <h3
+                  style={{
+                    backgroundColor: "rgba(54, 48, 60, 0.6)",
+                    padding: " 2rem 1rem",
+                    color: "white",
+                    fontSize: "23px",
+                  }}
+                >
+                  Welcome, {username}
+                </h3>
+              </Col>
+            </Row>
+            <Row style={{ width: "80vw" }}>
+              <Col lg={9}>
+                <ContentBox>
+                  <HomepageSearch inputStyle={{ height: 50 }} />
+                </ContentBox>
+              </Col>
+              <Col lg={3}></Col>
+            </Row>
+          </>
+        ) : (
+          <>
             <h3
               style={{
                 backgroundColor: "rgba(54, 48, 60, 0.6)",
@@ -59,25 +85,14 @@ export default function Homepage() {
             >
               Welcome, {username}
             </h3>
-          </Col>
-        </Row>
-        {width > 991 ? (
-          <Row style={{ width: "80vw" }}>
-            <Col lg={9}>
-              <ContentBox>
-                <HomepageSearch inputStyle={{ height: 50 }} />
-              </ContentBox>
-            </Col>
-            <Col lg={3}></Col>
-          </Row>
-        ) : (
-          <Centerer>
-            <Container>
-              <ContentBox>
-                <HomepageSearch inputStyle={{ height: 50 }} />
-              </ContentBox>
-            </Container>
-          </Centerer>
+            <Centerer>
+              <Container>
+                <ContentBox>
+                  <HomepageSearch inputStyle={{ height: 50 }} />
+                </ContentBox>
+              </Container>
+            </Centerer>
+          </>
         )}
       </BackgroundImage>
 
