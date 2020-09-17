@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaBell, FaBookmark, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, NavLink as RrNavLink, useLocation } from "react-router-dom";
 import {
@@ -14,17 +14,20 @@ import {
   NavbarToggler,
   NavItem,
   NavLink,
+  Row,
   UncontrolledDropdown,
 } from "reactstrap";
 import styled from "styled-components";
-import pwcLogo from "../../assets/images/pwc-logo.png";
+import PickIcon from "../../assets/Icons/PickIcon";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
+import { H1 } from "../../containers/auth/Login";
 import HomepageSearch from "../../containers/homepage/HomepageSearch";
 import { useNotificationsCountQuery } from "../../generated/graphql";
 import { unauthorize } from "../../redux/auth";
+import useAccessRights from "../hooks/useAccessRights";
 import useWindowSize from "../hooks/useWindowSize";
 import Avatar from "./Avatar";
 import NotificationBadge from "./NotificationBadge";
-import useAccessRights from "../hooks/useAccessRights";
 
 export default function NewNavbar() {
   const dispatch = useDispatch();
@@ -34,16 +37,17 @@ export default function NewNavbar() {
     "admin_preparer",
     "admin_reviewer",
   ]);
+  const currentUrl = location.pathname;
   const isMereUser = rolesArray.every((a) => !a);
   const size = useWindowSize();
-  const isBigScreen = size.width > 767;
+  const isBigScreen = size.width > 896;
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen((p) => !p);
-
   function handleLogout() {
     dispatch(unauthorize());
   }
-
+  const isMobile = size.width < 768;
+  const isLaptop = size.width > 991;
   useEffect(() => {
     setIsOpen((p) => (p ? !p : p));
   }, [setIsOpen, location.pathname]);
@@ -54,23 +58,28 @@ export default function NewNavbar() {
 
   const unreadCount = data?.notifications?.metadata.totalCount || 0;
   const showNotif = data?.me?.notifShow || false;
-
+  const underlineDecider = (path: any) => {
+    if (path === currentUrl) {
+      return <Underline className="mx-2"></Underline>;
+    }
+  };
   return (
-    <NavbarWithColor fixed="top" light expand="md">
+    <NavbarWithColor fixed="top" light expand="lg">
       <StyledNavbarBrand tag={Link} to="/">
-        <Image src={pwcLogo} alt="PwC" />
+        <Row>
+          <Image src={pwcLogoOutline} alt="PwC" />
+          <H1
+            style={{ paddingTop: isMobile ? "5px" : "10px", marginBottom: 0 }}
+            className="ml-4"
+          >
+            eGRC
+          </H1>
+        </Row>
       </StyledNavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
         <Nav className="mr-auto" navbar>
           {userMenus
-            // If the current user role is a 'mere' user,
-            // don't let him access 'Administrative' menu.
-            // .filter(menu =>
-            //   isMereUser ? menu.label !== "Administrative" : true
-            // )
-            // If the screen is big, remove 'Settings', as it is
-            // redundant; already available through side-navigator.
             .filter((menu) =>
               isBigScreen
                 ? isMereUser
@@ -83,7 +92,7 @@ export default function NewNavbar() {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
                     <StyledDropdownToggle
-                      style={{ fontSize: "15px" }}
+                      style={{ fontSize: "15px", paddingTop: "15px" }}
                       nav
                       caret
                     >
@@ -111,14 +120,19 @@ export default function NewNavbar() {
               return (
                 <NavItem key={label}>
                   <StyledNavLink
+                    isLaptop={isLaptop}
                     tag={RrNavLink}
                     to={path}
                     exact={path === "/"}
                     activeClassName="active"
-                    style={{ fontSize: "15px" }}
+                    style={{
+                      fontSize: "15px",
+                      paddingTop: "15px",
+                    }}
                   >
                     {label}
                   </StyledNavLink>
+                  {isLaptop && underlineDecider(path)}
                 </NavItem>
               );
             })}
@@ -145,12 +159,12 @@ export default function NewNavbar() {
               </Link>
             </SearchPolicies>
             <Link to="/bookmark" className="text-dark ml-2">
-              <FaBookmark className="clickable" size={22} />
+              <PickIcon name="bookmark" style={{ width: "35px" }} />
             </Link>
             <div className="ml-4 mr-4">
               <Link to="/notifications" className="text-dark">
                 {showNotif && <NotificationBadge count={unreadCount} />}
-                <FaBell size={22} />
+                <PickIcon name="notif" style={{ width: "35px" }} />
               </Link>
             </div>
             <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
@@ -202,16 +216,27 @@ const userMenus = [
 // Styled Components
 // =============================================
 const NavbarWithColor = styled(Navbar)`
-  background-color: var(--darker-grey-2);
+  background-color: white;
+  border-bottom: 1px solid var(--soft-grey);
+`;
+const Underline = styled.div`
+  position: relative;
+  height: 5px;
+  background-color: var(--orange);
+  top: 10px;
+  left: 0;
 `;
 const Image = styled.img`
-  width: 50px;
-  height: auto;
+  width: auto;
+  height: 50px;
+  @media only screen and (max-width: 767px) {
+    height: 35px;
+  }
 `;
 
 const SearchBar = styled.div`
   width: 15em;
-  @media only screen and (max-width: 1002px) {
+  @media only screen and (max-width: 1183px) {
     display: none;
   }
 `;
@@ -221,20 +246,26 @@ const StyledNavbarBrand = styled(NavbarBrand)`
   @media only screen and (max-width: 1400px) {
     width: unset;
   }
+  @media only screen and (max-width: 1183px) {
+    width: 20vw;
+  }
+  @media only screen and (max-width: 991px) {
+    width: unset;
+  }
 `;
 const SearchPolicies = styled.div`
   display: none;
-  @media only screen and (max-width: 1000px) {
+  @media only screen and (max-width: 1183px) {
     display: block;
   }
 `;
-const StyledNavLink = styled(NavLink)`
+const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
   color: rgba(0, 0, 0, 0.8) !important;
   font-weight: bold;
   letter-spacing: 1px;
   transition: 0.15s ease-in-out;
   &:hover {
-    color: var(--tangerine) !important;
+    color: var(--orange) !important;
   }
   &::after {
     content: "";
@@ -245,15 +276,15 @@ const StyledNavLink = styled(NavLink)`
   }
   &.active {
     &::after {
-      background: var(--tangerine);
+      background: ${(p) => (p.isLaptop ? "" : "var(--orange)")};
     }
   }
   @media only screen and (min-width: 1081px) {
     margin: 0px 0.5rem;
   }
-  @media only screen and (max-width: 767px) {
+  @media only screen and (max-width: 896px) {
     &.active {
-      color: var(--tangerine) !important;
+      color: var(--orange) !important;
     }
   }
 `;
@@ -268,12 +299,12 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   transition: 0.15s ease-in-out;
   font-weight: bold;
   &:hover {
-    color: var(--tangerine) !important;
+    color: var(--orange) !important;
   }
 `;
 
 const StyledDropdownNavLink = styled(NavLink)`
-  color: var(--tangerine) !important;
+  color: var(--orange) !important;
   &:hover {
     background: var(--pale-primary-color) !important;
   }
@@ -282,10 +313,10 @@ const StyledDropdownNavLink = styled(NavLink)`
     color: unset;
   }
   &.active {
-    background: var(--tangerine) !important;
+    background: var(--orange) !important;
     color: white !important;
     &:hover {
-      background: var(--tangerine) !important;
+      background: var(--orange) !important;
     }
   }
 `;

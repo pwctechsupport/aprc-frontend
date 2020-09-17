@@ -5,58 +5,51 @@ import { Collapse } from "reactstrap";
 import styled, { css } from "styled-components";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import { Suggestions } from "../../shared/formatter";
+import useWindowSize from "../../shared/hooks/useWindowSize";
 
 interface HomepageBoxProps {
   list: Suggestions;
   title?: string | null;
   basePath: string;
-  boldColor?: string;
-  softColor?: string;
-  lineColor?: string;
+  themeColor?: string;
+  fontColor?: string;
 }
 
 export default function HomepageBox({
   list,
   title,
   basePath,
-  boldColor,
-  lineColor,
-  softColor = "rgb(255,255,255)",
+  themeColor,
+  fontColor = "white",
 }: HomepageBoxProps) {
   const [open, setOpen] = useState(true);
+  const [textHeight, setTextHeight] = useState(0);
+  const { height } = useWindowSize();
+  const heigthAdjustment = `${(height * 50) / 100 - textHeight}px`;
   return (
     <div
-      className="my-2 p-2"
+      className="my-2"
       style={{
-        backgroundColor: "rgb(255,255,255)",
+        backgroundColor: themeColor,
         boxShadow: "3px 6px 20px 0px rgba(0,0,0,0.3)",
         borderRadius: "3px",
+        border: "1px solid rgba(0,0,0,0.1)",
       }}
     >
-      <div className="d-flex justify-content-between align-items-center ">
-        <h5
-        // style={{
-        //   color: `${boldColor}`,
-        //   marginTop: "3px",
-        //   marginBottom: "3px",
-        //   position: "relative",
-        //   marginLeft: "3px",
-        // }}
-        >
-          {title}
-        </h5>
+      <div
+        className="d-flex justify-content-between align-items-center p-2"
+        style={{
+          borderBottom: "1px solid rgba(0,0,0,0.3)",
+        }}
+        ref={(ref) => setTextHeight(ref?.clientHeight || 0)}
+      >
+        <h5 style={{ color: fontColor }}>{title}</h5>
         <BoxHeader onClick={() => setOpen((p) => !p)}>
           <Icon open={open} />
         </BoxHeader>
       </div>
-      <Collapse
-        // style={{
-        //   backgroundColor: `${softColor}`,
-        //   borderTop: `5px solid ${boldColor}`,
-        // }}
-        isOpen={open}
-      >
-        <div>
+      <Collapse isOpen={open}>
+        <div className="p-2" style={{ minHeight: heigthAdjustment }}>
           {list.length ? (
             list.map((item) => (
               <StyledLink
@@ -66,11 +59,8 @@ export default function HomepageBox({
                     ? `/${basePath}/${item.value}/details`
                     : `/${basePath}/${item.value}`
                 }
+                style={{ color: fontColor }}
                 className="d-flex align-items-center my-2"
-                // style={{
-                //   borderBottom: `1px solid ${lineColor}`,
-                //   color: `black`,
-                // }}
               >
                 <div className="mr-3">
                   <Circle>{item.label.charAt(0).toUpperCase()}</Circle>
@@ -79,18 +69,24 @@ export default function HomepageBox({
               </StyledLink>
             ))
           ) : (
-            <EmptyAttribute>No {title}</EmptyAttribute>
+            <div style={{ paddingTop: "13vh" }}>
+              <EmptyAttribute style={{ color: fontColor }}>
+                No {title}
+              </EmptyAttribute>
+            </div>
           )}
         </div>
       </Collapse>
     </div>
   );
 }
-
 const StyledSpan = styled.span`
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  max-height: 3.6em;
 `;
 
 const StyledLink = styled(Link)`

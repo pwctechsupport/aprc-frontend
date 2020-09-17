@@ -1,7 +1,7 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaDownload, FaFileExport, FaTrash } from "react-icons/fa";
+import { FaFileExport } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
@@ -23,6 +23,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import PickIcon from "../../assets/Icons/PickIcon";
 
 const Resources = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -111,7 +112,7 @@ const Resources = ({ history }: RouteComponentProps) => {
       </Helmet>
       <BreadCrumb crumbs={[["/resources", "Resources"]]} />
       <div className="d-flex justify-content-between align-items-center mb-3">
-        <h4>Resources</h4>
+        <h4 style={{ fontSize: "23px" }}>Resources</h4>
 
         {isAdminReviewer ? (
           <div className="d-flex">
@@ -234,7 +235,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                             event.stopPropagation();
                           }}
                         >
-                          <FaDownload />
+                          <PickIcon name="downloadOrange" />
                         </a>
                       </Tooltip>
                     </Button>
@@ -248,7 +249,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                         className="soft red"
                       >
                         <Tooltip description="Delete Resource">
-                          <FaTrash />
+                          <PickIcon name="trash" className="clickable" />
                         </Tooltip>
                       </DialogButton>
                     )}

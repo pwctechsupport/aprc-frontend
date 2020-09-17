@@ -29,7 +29,7 @@ const BusinessProcessForm = ({
         // className="d-flex align-items-center mb-1"
       >
         <Row>
-          <Col lg={10}>
+          <Col lg={9}>
             <div style={{ border: `${errors.name ? "1px solid red" : ""}` }}>
               <Input
                 name="name"
@@ -39,17 +39,17 @@ const BusinessProcessForm = ({
               />
             </div>
           </Col>
-          {onCancel && (
-            <Button onClick={onCancel} className="ml-3" color="grey">
-              Cancel
-            </Button>
-          )}
-          <Col lg={2}>
+
+          <Col lg={3}>
+            {onCancel && (
+              <Button onClick={onCancel} className="button cancel mr-3">
+                Cancel
+              </Button>
+            )}
             <DialogButton
               onConfirm={handleSubmit(submit)}
-              className="soft orange ml-0"
+              className="pwc ml-0"
               type="button"
-              color=""
               message={`${submitButtonName} business process?`}
             >
               {submitButtonName}

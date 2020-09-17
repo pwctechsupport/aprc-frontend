@@ -30,8 +30,9 @@ export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
 
 // SideBoxTitle, the wrapper for the header. Better name should be SideBoxHeader.
 export const SideBoxTitle = styled.h4.attrs(() => ({
-  className: "text-grey",
+  className: "black",
 }))`
+  font-size: 23px;
   padding: 1.5rem 1rem 0.5rem 1rem;
   text-overflow: ellipsis;
   overflow-x: hidden;
@@ -160,8 +161,8 @@ export const SideBoxBranch = styled.div<SideBoxBranchProps>`
   ${(p) =>
     p.isLastChild &&
     css`
-      font-style: italic;
-      font-size: 15px;
+      /* font-style: italic; */
+      /* font-size: 15px; */
     `}
 `;
 
@@ -170,9 +171,6 @@ export const SideBoxBranchTitle = styled.div`
   padding: 10px 10px 10px 0px;
   text-decoration: none;
   width: 75%;
-  /* overflow: hidden; */
-  /* white-space: nowrap; */
-  /* text-overflow: ellipsis; */
   color: var(--item-title-side-box);
   font-weight: bold;
   overflow: hidden;
@@ -180,9 +178,7 @@ export const SideBoxBranchTitle = styled.div`
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  /* line-height: 1.2em; */
   max-height: 3.6em;
-  /* font-size: 18px; */
   &.active {
     color: var(--item-title-side-box);
   }

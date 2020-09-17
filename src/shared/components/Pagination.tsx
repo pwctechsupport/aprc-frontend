@@ -2,8 +2,9 @@ import React, { useState, Fragment, useEffect } from "react";
 import {
   Pagination as BsPagination,
   PaginationItem,
-  PaginationLink
+  PaginationLink,
 } from "reactstrap";
+import useWindowSize from "../hooks/useWindowSize";
 
 // =============================================================================
 // typedef
@@ -24,8 +25,11 @@ const Pagination = ({
   currentPage = 1,
   onPageChange,
   perPage = 8,
-  className
+  className,
 }: PaginationProps) => {
+  const { width } = useWindowSize();
+  const isMobile = width < 769;
+  const perPageDecider = isMobile ? 4 : perPage;
   const pageCount = totalCount ? Math.ceil(totalCount / perPage) : pCount;
 
   const [_currentPage, setCurrentPage] = useState(currentPage - 1);
@@ -33,14 +37,15 @@ const Pagination = ({
   useEffect(() => setCurrentPage(currentPage - 1), [currentPage]);
 
   const pages = [];
-  const threshold = Math.round(perPage / 2);
+  const threshold = Math.round(perPageDecider / 2);
 
   let startPage = _currentPage < threshold ? 0 : _currentPage - threshold;
 
-  let endPage = perPage + startPage;
+  let endPage = perPageDecider + startPage;
+
   if (pageCount < endPage) endPage = pageCount;
 
-  const diff = startPage - endPage + perPage;
+  const diff = startPage - endPage + perPageDecider;
   startPage -= startPage - diff > 0 ? diff : 0;
 
   // if on middle range
@@ -53,7 +58,7 @@ const Pagination = ({
   }
 
   //additional details
-  // {_currentPage * perPage + 1}-{(_currentPage + 1) * perPage} of{' '}
+  // {_currentPage * perPageDecider + 1}-{(_currentPage + 1) * perPageDecider} of{' '}
   const startRecord = _currentPage * perPage + 1;
   const endRecord =
     startRecord + perPage > Number(totalCount)
@@ -106,16 +111,18 @@ const Pagination = ({
               <PaginationItem>
                 <PaginationLink onClick={goToFirst}>1</PaginationLink>
               </PaginationItem>
-              <PaginationItem>
-                <PaginationLink next>...</PaginationLink>
-              </PaginationItem>
+              {!isMobile && (
+                <PaginationItem>
+                  <PaginationLink next>...</PaginationLink>
+                </PaginationItem>
+              )}
             </Fragment>
           )}
 
-          {pages.map(page => {
+          {pages.map((page) => {
             return (
               <PaginationItem key={page} active={page === _currentPage}>
-                <PaginationLink onClick={_ => handlePageChange(page)}>
+                <PaginationLink onClick={(_) => handlePageChange(page)}>
                   {page + 1}
                 </PaginationLink>
               </PaginationItem>
@@ -124,9 +131,11 @@ const Pagination = ({
 
           {endPage < pageCount && (
             <Fragment>
-              <PaginationItem>
-                <PaginationLink next>...</PaginationLink>
-              </PaginationItem>
+              {!isMobile && (
+                <PaginationItem>
+                  <PaginationLink next>...</PaginationLink>
+                </PaginationItem>
+              )}
               <PaginationItem>
                 <PaginationLink onClick={goToLast}>{pageCount}</PaginationLink>
               </PaginationItem>

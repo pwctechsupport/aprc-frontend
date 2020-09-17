@@ -1,20 +1,20 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { FaUndo } from "react-icons/fa";
 import { Form, FormGroup, Label } from "reactstrap";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import Button from "../../../shared/components/Button";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
 import Tooltip from "../../../shared/components/Tooltip";
+import { Suggestions } from "../../../shared/formatter";
 import {
   useLoadControls,
+  useLoadPolicyReferences,
   useLoadResources,
   useLoadRisks,
-  useLoadPolicyReferences,
 } from "../../../shared/hooks/suggestions";
-import { useLoadPolicyCategories } from "../../user/components/UserForm";
-import { Suggestions } from "../../../shared/formatter";
 import { PwcRadioInput } from "../../report/Report";
+import { useLoadPolicyCategories } from "../../user/components/UserForm";
 
 export interface PolicySearchFormValues {
   title?: string;
@@ -134,7 +134,7 @@ export default function PolicySearchForm({
       <div className="d-flex justify-content-end">
         <Tooltip description="Reset Search">
           <Button type="reset" className="soft red" color="">
-            <FaUndo />
+            <PickIcon name="reloadOrange" />
           </Button>
         </Tooltip>
         <Button

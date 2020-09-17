@@ -3,13 +3,18 @@ import c from "classnames";
 
 const EmptyAttribute = ({
   children,
-  centered = true
+  centered = true,
+  style,
 }: {
   children?: React.ReactNode;
   centered?: boolean;
+  style?: any;
 }) => {
   return (
-    <div className={c("text-grey", "my-2", { "text-center": centered })}>
+    <div
+      className={c("text-grey", "my-2", { "text-center": centered })}
+      style={style}
+    >
       {children || "Empty"}
     </div>
   );

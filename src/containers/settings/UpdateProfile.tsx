@@ -106,7 +106,7 @@ const UpdateProfileForm = ({
   });
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <h4>Profile</h4>
+      <h4 style={{ fontSize: "23px" }}>Profile</h4>
       <Input
         name="name"
         label="Full name"
@@ -142,12 +142,7 @@ const UpdateProfileForm = ({
         error={errors.phone && errors.phone.message}
       />
       <div className="d-flex justify-content-end">
-        <Button
-          type="submit"
-          loading={submitting}
-          className="soft orange"
-          color=""
-        >
+        <Button type="submit" loading={submitting} className="pwc">
           Save profile
         </Button>
       </div>
@@ -213,7 +208,7 @@ const UpdatePasswordForm = ({
   };
   return (
     <Form onSubmit={handleSubmit(submit)}>
-      <h4>Update password</h4>
+      <h4 style={{ fontSize: "23px" }}>Update password</h4>
       <Input
         name="oldPassword"
         label="Current password"
@@ -260,12 +255,7 @@ const UpdatePasswordForm = ({
         required
       />
       <div className="d-flex justify-content-end">
-        <Button
-          className="soft orange"
-          type="submit"
-          color=""
-          loading={submitting}
-        >
+        <Button className="pwc" type="submit" loading={submitting}>
           Update password
         </Button>
       </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Dropdown, DropdownMenu, DropdownToggle } from "reactstrap";
 import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 import { useSelector } from "../hooks/useSelector";
 import Button from "./Button";
 
@@ -25,7 +26,9 @@ export default function Avatar({ data }: AvatarProps) {
   return (
     <Dropdown isOpen={dropdownOpen} toggle={toggle}>
       <DropdownToggle tag="div">
-        <AvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" />
+        <PickIcon name="avatar" style={{ width: "40px" }} />
+
+        {/* <AvatarIcon src="https://reactnativecode.com/wp-content/uploads/2018/01/2_img.png" /> */}
       </DropdownToggle>
       <DropdownMenu right className="mr-3 mt-3">
         {data.map((item, index) => (
@@ -85,15 +88,15 @@ export default function Avatar({ data }: AvatarProps) {
   );
 }
 
-const AvatarIcon = styled.img`
-  display: inline-block;
-  position: relative;
-  outline: 0px;
-  height: 44px;
-  width: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-`;
+// const AvatarIcon = styled.img`
+//   display: inline-block;
+//   position: relative;
+//   outline: 0px;
+//   height: 44px;
+//   width: 44px;
+//   border-radius: 50%;
+//   cursor: pointer;
+// `;
 
 const DropdownAvatarIcon = styled.img`
   display: inline-block;

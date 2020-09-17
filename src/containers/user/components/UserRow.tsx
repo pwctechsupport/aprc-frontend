@@ -1,14 +1,14 @@
+import { capitalize } from "lodash";
 import get from "lodash/get";
 import React, { Fragment, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
-import { FaCheck, FaExclamationCircle, FaTimes, FaTrash } from "react-icons/fa";
+import { AiOutlineClockCircle } from "react-icons/ai";
+import { FaCheck, FaExclamationCircle, FaTimes } from "react-icons/fa";
+import { toast } from "react-toastify";
+import styled from "styled-components";
 import { oc } from "ts-optchain";
 import * as yup from "yup";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import {
   useAdminUpdateUserMutation,
   useApproveRequestEditMutation,
@@ -21,19 +21,16 @@ import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import AsyncSelect from "../../../shared/components/forms/AsyncSelect";
 import Input from "../../../shared/components/forms/Input";
+import Tooltip from "../../../shared/components/Tooltip";
 import {
+  Suggestion,
   Suggestions,
   toLabelValue,
-  Suggestion,
 } from "../../../shared/formatter";
+import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
-import Tooltip from "../../../shared/components/Tooltip";
-import { toast } from "react-toastify";
-import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
-import styled from "styled-components";
-import { capitalize } from "lodash";
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -122,6 +119,7 @@ export default function UserRow({
   const requestStatus = oc(user).requestStatus();
   const notRequested = !requestStatus;
   const requested = requestStatus === "requested";
+
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
   const department = user?.department?.name || "";
@@ -250,7 +248,7 @@ export default function UserRow({
             <Fragment>
               <Button onClick={toggleEdit} className="soft orange mr-2">
                 <Tooltip description="Edit User">
-                  <AiFillEdit />
+                  <PickIcon name="pencilFill" style={{ width: "15px" }} />
                 </Tooltip>
               </Button>
             </Fragment>
@@ -261,13 +259,19 @@ export default function UserRow({
             <DialogButton
               title="Request access to edit?"
               onConfirm={confirmRequestEdit}
-              onClick={requested ? () => {} : undefined}
+              onClick={
+                requested
+                  ? () => {}
+                  : () => {
+                      requestEdit();
+                    }
+              }
               loading={requestEditM.loading}
               className="soft red mr-2"
               disabled={requestStatus === "requested"}
             >
               <Tooltip description="Request To Edit">
-                <AiOutlineEdit />
+                <PickIcon name="pencilO" />
               </Tooltip>
             </DialogButton>
           )}
@@ -305,7 +309,7 @@ export default function UserRow({
                   onConfirm={handleDestroy}
                 >
                   <Tooltip description="Delete User">
-                    <FaTrash />
+                    <PickIcon name="trash" className="clickable" />
                   </Tooltip>
                 </DialogButton>
               </div>
@@ -322,7 +326,7 @@ export default function UserRow({
                 onConfirm={handleDestroy}
               >
                 <Tooltip description="Delete User">
-                  <FaTrash />
+                  <PickIcon name="trash" className="clickable" />
                 </Tooltip>
               </DialogButton>
             )}

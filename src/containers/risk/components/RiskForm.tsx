@@ -95,7 +95,6 @@ const RiskForm = ({
   const defValSecondBps = dataModifier(
     businessProcesses.map((a: any) => a.value).flat(10)
   );
-
   const mainBpIdsWatch = watch("businessProcessMain") || [];
   const firstBpIdsWatch = watch("businessProcessFirst") || [];
   const secondBpIdsWatch = watch("businessProcessSecond") || [];
@@ -105,25 +104,40 @@ const RiskForm = ({
   const checkSecondBp = watch("businessProcessSecond");
 
   const [mainBpIds, setMainBpIds] = useState([...defValMainBps]);
-  console.log("mainBpIds:", mainBpIds);
   const [firstBpIds, setFirstBpIds] = useState([...defValFirstBps]);
   const [secondBpIds, setSecondBpIds] = useState([...defValSecondBps]);
 
+  const [stopMain, setStopMain] = useState(false);
+  const [stopFirst, setStopFirst] = useState(false);
+  const [stopSecond, setStopSecond] = useState(false);
+
   useEffect(() => {
-    if (checkMainBp !== undefined) {
+    if (checkMainBp !== undefined && checkMainBp !== null) {
       setMainBpIds(mainBpIdsWatch);
+      setStopMain(false);
+    } else if (checkMainBp === null && !stopMain) {
+      setMainBpIds(mainBpIdsWatch);
+      setStopMain(true);
     }
-  }, [checkMainBp, mainBpIdsWatch]);
+  }, [checkMainBp, mainBpIdsWatch, stopMain]);
   useEffect(() => {
-    if (checkFirstBp !== undefined) {
+    if (checkFirstBp !== undefined && checkFirstBp !== null) {
       setFirstBpIds(firstBpIdsWatch);
+      setStopFirst(false);
+    } else if (checkFirstBp === null && !stopFirst) {
+      setFirstBpIds(firstBpIdsWatch);
+      setStopFirst(true);
     }
-  }, [checkFirstBp, firstBpIdsWatch]);
+  }, [checkFirstBp, firstBpIdsWatch, stopFirst]);
   useEffect(() => {
-    if (checkSecondBp !== undefined) {
+    if (checkSecondBp !== undefined && checkSecondBp !== null) {
       setSecondBpIds(secondBpIdsWatch);
+      setStopSecond(false);
+    } else if (checkSecondBp === null && !stopSecond) {
+      setSecondBpIds(secondBpIdsWatch);
+      setStopSecond(true);
     }
-  }, [checkSecondBp, secondBpIdsWatch]);
+  }, [checkSecondBp, secondBpIdsWatch, stopSecond]);
 
   const mainBps = useBusinessProcessesQuery({
     variables: { filter: { ancestry_null: true } },
@@ -278,10 +292,7 @@ const RiskForm = ({
   const getFirstBpsValues = getFirstBps
     .map(toLabelValue)
     .filter((b) => firstBpIds.includes(b.value));
-  console.log(
-    "cek nih:",
-    !firstBpIds.length ? true : mainBpIds.length ? true : false
-  );
+
   return (
     <div>
       <Form onSubmit={handleSubmit(submit)}>
@@ -312,8 +323,8 @@ const RiskForm = ({
           value={getFirstBpsValues}
           setValue={setValue}
           isDisabled={mainBpIds.length ? false : true}
-          label="First Business Process"
-          placeholder="First Business Process"
+          label="Sub Business Process Level 1"
+          placeholder="Sub Business Process Level 1"
           options={handleGetFirstBps}
         />
 
@@ -327,8 +338,8 @@ const RiskForm = ({
             !firstBpIds.length ? true : mainBpIds.length ? false : true
           }
           value={getSecondBpsValues}
-          label="Second Business Process"
-          placeholder="Second Business Process"
+          label="Sub Business Process Level 2"
+          placeholder="Sub Business Process Level 2"
           options={handleGetSecondBps}
         />
         <FormSelect

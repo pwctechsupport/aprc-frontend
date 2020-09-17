@@ -3,14 +3,23 @@ import { PWCLink } from "./PoliciesTable";
 import EmptyAttribute from "./EmptyAttribute";
 const PoliciesList = (data: any) => {
   const newData = data?.data?.navigatorBusinessProcesses?.collection || [];
-  const policies =
+  const dataModifier = (a: any) => {
+    for (let i = 0; i < a.length; ++i) {
+      for (let j = i + 1; j < a.length; ++j) {
+        if (a[i].id === a[j].id) a.splice(j--, 1);
+      }
+    }
+    return a;
+  };
+  const policies = dataModifier(
     newData
       .map((a: any) =>
         a.policies.map((b: any) => {
           return { id: b.id, title: b.title };
         })
       )
-      .flat(10) || [];
+      .flat(10) || []
+  );
   return (
     <>
       {policies.length ? (

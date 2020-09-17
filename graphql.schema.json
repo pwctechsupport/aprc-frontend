@@ -13658,6 +13658,16 @@
             "defaultValue": null
           },
           {
+            "name": "resupload",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Upload",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "resuploadFileName",
             "description": "",
             "type": {
@@ -13688,6 +13698,16 @@
             "defaultValue": null
           }
         ],
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Upload",
+        "description": null,
+        "fields": null,
+        "inputFields": null,
         "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
@@ -15541,6 +15561,16 @@
             "defaultValue": null
           },
           {
+            "name": "resupload",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Upload",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "resuploadFileName",
             "description": "",
             "type": {
@@ -16402,6 +16432,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "resupload",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Upload",
               "ofType": null
             },
             "defaultValue": null
@@ -22804,6 +22844,16 @@
             "defaultValue": null
           },
           {
+            "name": "resupload",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Upload",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "resuploadFileName",
             "description": "",
             "type": {
@@ -24348,6 +24398,16 @@
             "defaultValue": null
           },
           {
+            "name": "resupload",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Upload",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
             "name": "resuploadFileName",
             "description": "",
             "type": {
@@ -25419,6 +25479,16 @@
             "type": {
               "kind": "SCALAR",
               "name": "String",
+              "ofType": null
+            },
+            "defaultValue": null
+          },
+          {
+            "name": "resupload",
+            "description": "",
+            "type": {
+              "kind": "SCALAR",
+              "name": "Upload",
               "ofType": null
             },
             "defaultValue": null

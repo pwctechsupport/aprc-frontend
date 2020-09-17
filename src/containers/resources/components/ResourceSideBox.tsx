@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import { useResourcesQuery } from "../../../generated/graphql";
+import Button from "../../../shared/components/Button";
+import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import {
   SideBox,
   SideBoxItem,
@@ -11,10 +14,7 @@ import {
 } from "../../../shared/components/SideBox";
 // import humanizeDate from "../../../shared/utils/humanizeDate";
 import Tooltip from "../../../shared/components/Tooltip";
-import Button from "../../../shared/components/Button";
-import { FaUndo } from "react-icons/fa";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
-import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 
 const ResourceSideBox = () => {
   const [condition, setCondition] = useState(false);
@@ -84,7 +84,7 @@ const ResourceSideBox = () => {
               color=""
               onClick={() => setLimit(limit + 25)}
             >
-              <FaUndo />
+              <PickIcon name="reloadOrange" />
             </Button>
           </Tooltip>
         </div>

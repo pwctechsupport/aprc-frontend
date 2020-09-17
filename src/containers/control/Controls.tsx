@@ -1,10 +1,11 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useAdminControlsQuery,
   useDestroyControlMutation,
@@ -122,7 +123,7 @@ const Controls = ({ history }: RouteComponentProps) => {
       <div className="w-100">
         <BreadCrumb crumbs={[["/control", "Controls"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4>Controls</h4>
+          <h4 style={{ fontSize: "23px" }}>Controls</h4>
           {isAdminReviewer ? (
             <div className="d-flex">
               <Tooltip
@@ -239,7 +240,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                             message={`Delete "${control.description}"?`}
                             className="soft red"
                           >
-                            <FaTrash className="clickable" />
+                            <PickIcon name="trash" className="clickable" />
                           </DialogButton>
                         </Tooltip>
                       </td>

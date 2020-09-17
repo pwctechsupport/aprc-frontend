@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
 import { useDebounce } from "use-debounce/lib";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useAdminBusinessProcessTreeQuery,
   useDestroyBusinessProcessMutation,
@@ -111,7 +112,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
         </Helmet>
         <div className="w-100">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h4>Business process</h4>
+            <h4 style={{ fontSize: "23px" }}>Business process</h4>
             {isAdmin || isAdminPreparer ? (
               <Tooltip description="Create business process">
                 <Button onClick={toggleCreateBpModal} className="pwc">
@@ -166,7 +167,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
           >
             <CreateBusinessProcess createBpModal={setCreateBpModal} />
           </Modal>
-          <Table reloading={adminBusinessQuery.loading}>
+          <Table responsive reloading={adminBusinessQuery.loading}>
             <thead>
               <tr>
                 {isAdminReviewer ? (
@@ -222,7 +223,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                         className="soft red"
                       >
                         <Tooltip description="Delete Business Process">
-                          <FaTrash className="clickable" />
+                          <PickIcon className="clickable" name="trash" />
                         </Tooltip>
                       </DialogButton>
                     </td>

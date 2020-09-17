@@ -1,10 +1,11 @@
 import { capitalCase } from "capital-case";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaTrash } from "react-icons/fa";
 import { MdSubdirectoryArrowRight } from "react-icons/md";
 import { Link, RouteComponentProps } from "react-router-dom";
+import { Collapse } from "reactstrap";
 import { useDebounce } from "use-debounce/lib";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   Policy,
   useDestroyPolicyMutation,
@@ -13,18 +14,17 @@ import {
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
+import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
+import OpacityButton from "../../shared/components/OpacityButton";
+import Pagination from "../../shared/components/Pagination";
 import SearchBar from "../../shared/components/SearchBar";
 import Table from "../../shared/components/Table";
-import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
-import useListState from "../../shared/hooks/useList";
-import Pagination from "../../shared/components/Pagination";
-import OpacityButton from "../../shared/components/OpacityButton";
-import { Collapse } from "reactstrap";
-import AllPolicyDashboard from "./components/AllPolicyDashboard";
-import useAccessRights from "../../shared/hooks/useAccessRights";
 import Tooltip from "../../shared/components/Tooltip";
-import DateHover from "../../shared/components/DateHover";
+import useAccessRights from "../../shared/hooks/useAccessRights";
+import useListState from "../../shared/hooks/useList";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import AllPolicyDashboard from "./components/AllPolicyDashboard";
 
 export default function Policies({ history }: RouteComponentProps) {
   const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
@@ -116,7 +116,7 @@ export default function Policies({ history }: RouteComponentProps) {
       </Helmet>
       <BreadCrumb crumbs={[["/policy", "Policies"]]} />
       <div className="d-flex justify-content-between align-items-center">
-        <OpacityButton onClick={toggleShowDashboard}>
+        <OpacityButton isActive={showDashboard} onClick={toggleShowDashboard}>
           {showDashboard ? " Hide" : "Show"} Dashboard
         </OpacityButton>
         {(isAdmin || isAdminPreparer) && (
@@ -131,7 +131,9 @@ export default function Policies({ history }: RouteComponentProps) {
         </div>
       </Collapse>
       <div>
-        <h4 className="mt-4">Policy</h4>
+        <h4 style={{ fontSize: "23px" }} className="mt-4">
+          Policy
+        </h4>
       </div>
       <SearchBar
         search={search}
@@ -231,7 +233,7 @@ const PolicyTableRow = ({
                   className="soft red"
                   color=""
                 >
-                  <FaTrash />
+                  <PickIcon name="trash" className="clickable" />
                 </DialogButton>
               </Tooltip>
             </td>
@@ -285,7 +287,7 @@ const PolicyTableRow = ({
                   className="soft red"
                   color=""
                 >
-                  <FaTrash />
+                  <PickIcon name="trash" className="clickable" />
                 </DialogButton>
               </Tooltip>
             </td>
@@ -318,7 +320,6 @@ const PolicyTableRow = ({
               : capitalCase(policy.status || "")}
           </td>
           <td>
-            {" "}
             <DateHover>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
@@ -331,7 +332,7 @@ const PolicyTableRow = ({
                   className="soft red"
                   color=""
                 >
-                  <FaTrash />
+                  <PickIcon name="trash" />
                 </DialogButton>
               </Tooltip>
             </td>

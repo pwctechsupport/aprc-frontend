@@ -3,23 +3,23 @@ import { get } from "lodash";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaTrash, FaUndo } from "react-icons/fa";
 import { RouteComponentProps } from "react-router-dom";
 import Select from "react-select";
 import { Col, Container, Form, Input, Row } from "reactstrap";
 import { oc } from "ts-optchain";
-import Button from "../../shared/components/Button";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useBookmarksQuery,
   useDestroyBookmarkMutation,
 } from "../../generated/graphql";
+import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
-import Table from "../../shared/components/Table";
-import { date } from "../../shared/formatter";
-import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
-import Tooltip from "../../shared/components/Tooltip";
 import Footer from "../../shared/components/Footer";
 import CheckBox from "../../shared/components/forms/CheckBox";
+import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
+import { date } from "../../shared/formatter";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
@@ -146,14 +146,13 @@ const Bookmark = ({ history }: RouteComponentProps) => {
         <title>Bookmarks - PricewaterhouseCoopers</title>
       </Helmet>
       <Container style={{ minHeight: "80vh" }} fluid className="p-md-5">
-        <h2>Bookmarks manager</h2>
+        <h2 style={{ fontSize: "23px" }}>Bookmarks manager</h2>
 
         <Row>
           <Col>
             <Form onSubmit={bookmarkForm.handleSubmit(onSubmit)}>
               <Row>
                 <Col xs={12} md={4} className="mb-1">
-                  {" "}
                   <Input
                     placeholder="Search title..."
                     name="title"
@@ -177,7 +176,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                       color=""
                       onClick={handleReset}
                     >
-                      <FaUndo />
+                      <PickIcon name="reloadOrange" />
                     </Button>
                   </Tooltip>
                   <Button
@@ -202,7 +201,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                 loading={deleteBookmarksM.loading}
                 onConfirm={handleDelete}
               >
-                <FaTrash />
+                <PickIcon name="trash" />
               </DialogButton>
             </div>
           </Col>

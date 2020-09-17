@@ -4,7 +4,7 @@ import { Badge } from "reactstrap";
 
 function Header({ heading = "", children, draft, review, policy }: Header) {
   return (
-    <Heading className="text-orange">
+    <Heading className="black">
       {heading || children}
       {draft && (
         <span className="ml-2">

@@ -90,6 +90,8 @@ const BusinessProcessBranch = ({
   children = [],
   level,
 }: BusinessBranchProps) => {
+  const [getWidth, setGetWidth] = useState(0);
+
   const grandpa =
     children?.map((a) => a.children?.map((b) => b.id)).flat().length || 0;
   const [isOpen, setIsOpen] = useState(true);
@@ -105,19 +107,22 @@ const BusinessProcessBranch = ({
         })}
         padLeft={level ? level * 10 : 0}
         isLastChild={lastChild && !myBroHasChild}
+        ref={(ref) => setGetWidth(ref?.clientWidth || 0)}
       >
         {hasChild ? (
-          <SideBoxBranchIconContainer onClick={toggle}>
-            <SideBoxBranchIcon
-              open={isOpen}
-              className={isActive ? "text-white" : "text-orange"}
-              size={14}
-            />
-          </SideBoxBranchIconContainer>
+          // <SideBoxBranchIconContainer onClick={toggle}>
+          //   <SideBoxBranchIcon
+          //     open={isOpen}
+          //     className={isActive ? "text-white" : "text-orange"}
+          //     size={14}
+          //   />
+          // </SideBoxBranchIconContainer>
+          <div style={{ width: 20 }} />
         ) : (
           <div style={{ width: 34 }} />
         )}
         <SideBoxBranchTitle
+          style={{ width: getWidth }}
           as={Link}
           className={classnames("side-box__item__title", { active: isActive })}
           to={
@@ -130,6 +135,15 @@ const BusinessProcessBranch = ({
         >
           {name}
         </SideBoxBranchTitle>
+        {hasChild ? (
+          <SideBoxBranchIconContainer onClick={toggle}>
+            <SideBoxBranchIcon
+              open={isOpen}
+              className={isActive ? "text-white" : "text-orange"}
+              size={14}
+            />
+          </SideBoxBranchIconContainer>
+        ) : null}
       </SideBoxBranch>
       {hasChild && (
         <Collapse isOpen={isOpen}>

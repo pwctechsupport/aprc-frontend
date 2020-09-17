@@ -1,10 +1,10 @@
 import get from "lodash/get";
 import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
-import { FaPencilAlt, FaTrash } from "react-icons/fa";
 import { Route, RouteComponentProps } from "react-router";
 import { toast } from "react-toastify";
 import { oc } from "ts-optchain";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   BusinessProcessDocument,
   useBusinessProcessQuery,
@@ -131,7 +131,7 @@ export default function BusinessProcess({
                 className="soft orange mr-3"
                 color=""
               >
-                <FaPencilAlt />
+                <PickIcon name="pencilFill" />
               </Button>
             ) : null}
             {isAdminReviewer ? (
@@ -141,13 +141,13 @@ export default function BusinessProcess({
                 message={`Delete Business Process "${name}"?`}
                 className="soft red"
               >
-                <FaTrash />
+                <PickIcon name="trash" />
               </DialogButton>
             ) : null}
           </div>
         </div>
       )}
-      <h6>ID: {id}</h6>
+      {inEditMode ? <h6 className="mt-2">ID: {id}</h6> : <h6>ID: {id}</h6>}
       {isAdmin || isAdminPreparer ? (
         <div className="mt-5">
           {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}
@@ -181,7 +181,7 @@ export default function BusinessProcess({
                         className="soft orange"
                         color=""
                       >
-                        <FaTrash />
+                        <PickIcon name="trash" />
                       </DialogButton>
                     </td>
                   ) : (

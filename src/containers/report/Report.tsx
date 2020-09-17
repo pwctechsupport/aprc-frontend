@@ -2,19 +2,21 @@ import capitalize from "lodash/startCase";
 import React, { useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaDownload, FaFile, FaUndo } from "react-icons/fa";
+import { FaFile } from "react-icons/fa";
 import { Container, Form, FormGroup, Input, Label } from "reactstrap";
+import styled from "styled-components";
+import PickIcon from "../../assets/Icons/PickIcon";
 import Button from "../../shared/components/Button";
+import Footer from "../../shared/components/Footer";
 import Table from "../../shared/components/Table";
+import Tooltip from "../../shared/components/Tooltip";
 import {
   DownloadPdfInput,
   downloadPdfs,
   previewPdfs,
 } from "../../shared/utils/accessGeneratedPdf";
 import { notifyError, notifyInfo } from "../../shared/utils/notif";
-import Tooltip from "../../shared/components/Tooltip";
-import Footer from "../../shared/components/Footer";
-import styled from "styled-components";
+import useWindowSize from "../../shared/hooks/useWindowSize";
 
 const reportOptions = [
   {
@@ -105,7 +107,8 @@ export default function Report() {
         };
       });
   };
-
+  const { width } = useWindowSize();
+  const isMobile = width < 387;
   async function handlePreview(values: ReportFormValues) {
     if (
       values.report_control_policy === "xlsx" ||
@@ -296,8 +299,8 @@ export default function Report() {
               <Button
                 onClick={handleSubmit(handlePreview)}
                 type="button"
-                color="transparent"
-                className="mr-3"
+                // color="transparent"
+                className={isMobile ? "button pwc mr-1" : "button pwc mr-3"}
                 loading={previewing}
               >
                 <FaFile /> Preview
@@ -305,11 +308,12 @@ export default function Report() {
             ) : null}
 
             <Button
-              color="secondary"
+              // color="secondary"
+              className="pwc"
               onClick={handleSubmit(handleDownload)}
               loading={downloading}
             >
-              <FaDownload /> Download
+              <PickIcon name="download" /> Download
             </Button>
             <Tooltip description="Reset Selected Format">
               <Button
@@ -318,9 +322,11 @@ export default function Report() {
                   sText("");
                 }}
                 type="reset"
-                className="black ml-5"
+                className={
+                  isMobile ? "button cancel ml-1" : "button cancel ml-5"
+                }
               >
-                <FaUndo />
+                <PickIcon name="reload" />
               </Button>
             </Tooltip>
           </div>
@@ -342,9 +348,9 @@ interface Props {
 }
 export const PwcRadioInput = styled(Input)<Props>`
   &:after {
-    width: 15px;
-    height: 15px;
-    border-radius: 15px;
+    width: 16px;
+    height: 16px;
+    border-radius: 16px;
     top: -2px;
     left: -1px;
     position: relative;
@@ -355,9 +361,9 @@ export const PwcRadioInput = styled(Input)<Props>`
     border: 5px solid var(--primary-grey);
   }
   &:checked:after {
-    width: 15px;
-    height: 15px;
-    border-radius: 15px;
+    width: 16px;
+    height: 16px;
+    border-radius: 16px;
     top: -2px;
     left: -1px;
     position: relative;

@@ -1,20 +1,17 @@
 import get from "lodash/get";
 import React, { Fragment, useEffect, useState } from "react";
 import Helmet from "react-helmet";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useApproveRequestEditMutation,
   useCreateRequestEditMutation,
   usePolicyCategoryQuery,
+  usePreparerPoliciesQuery,
   useReviewPolicyCategoryDraftMutation,
   useUpdatePolicyCategoryMutation,
-  usePreparerPoliciesQuery,
 } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
@@ -211,7 +208,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" style={{ width: "18px" }} />
           </DialogButton>
         </Tooltip>
       );
@@ -239,7 +236,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
               <LoadingSpinner size={10} centered />
             ) : (
               <Button onClick={toggleEditMode} color="" className="soft orange">
-                <AiFillEdit />
+                <PickIcon name="pencilFill" style={{ width: "15px" }} />
               </Button>
             )}
           </Tooltip>
@@ -250,8 +247,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       return (
         <div className="d-flex">
           <DialogButton
-            color="danger"
-            className="mr-2"
+            className="mr-2 button cancel"
             onConfirm={() => review({ publish: false })}
             loading={reviewPolicyCategoryM.loading}
           >

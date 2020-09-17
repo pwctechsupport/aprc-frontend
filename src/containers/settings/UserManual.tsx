@@ -1,24 +1,24 @@
-import React, { useState, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
-import { FaDownload, FaPencilAlt } from "react-icons/fa";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
+  useCreateManualMutation,
   useManualsQuery,
   useUpdateManualMutation,
-  useCreateManualMutation,
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
 import Button from "../../shared/components/Button";
 import DateHover from "../../shared/components/DateHover";
+import EmptyAttribute from "../../shared/components/EmptyAttribute";
+import Footer from "../../shared/components/Footer";
 import FileInputPdf from "../../shared/components/forms/FileInputPdf";
 import Input from "../../shared/components/forms/Input";
+import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Modal from "../../shared/components/Modal";
 import Tooltip from "../../shared/components/Tooltip";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import LoadingSpinner from "../../shared/components/LoadingSpinner";
-import Footer from "../../shared/components/Footer";
 
 export default function UserManual() {
   const [currentEditId, setCurrentEditId] = useState<string | null>(null);
@@ -56,7 +56,11 @@ export default function UserManual() {
     setCurrentEditId(null);
   }
   function handleSubmitForm(values: UserManualFormValues) {
-    updateManual({ variables: { input: { id: currentEditId, ...values } } });
+    updateManual({
+      variables: {
+        input: { id: currentEditId, ...values },
+      },
+    });
   }
   function handleCreate(values: UserManualFormValues) {
     create({ variables: { input: values } });
@@ -83,7 +87,7 @@ export default function UserManual() {
                   <dt>File Type</dt>
                   <dd>{manual.fileType}</dd>
                   <br />
-                  <dt>Last Upadated</dt>
+                  <dt>Last Updated</dt>
                   <DateHover withIcon>{manual.updatedAt}</DateHover>
                 </div>
                 <div className="d-flex">
@@ -94,7 +98,7 @@ export default function UserManual() {
                         className="soft red mr-2"
                         color=""
                       >
-                        <FaPencilAlt />
+                        <PickIcon name="pencilFill" />
                       </Button>
                     </Tooltip>
                   )}
@@ -109,7 +113,7 @@ export default function UserManual() {
                         )
                       }
                     >
-                      <FaDownload />
+                      <PickIcon name="downloadOrange" />
                     </Button>
                   </Tooltip>
                 </div>
@@ -158,7 +162,7 @@ export default function UserManual() {
 interface UserManualFormValues {
   id: string;
   name?: string | null;
-  resuploadBase64?: string;
+  resupload?: any;
 }
 
 interface UserManualFormProps {
@@ -182,11 +186,7 @@ function UserManualForm({
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input innerRef={register} name="name" label="Name" />
-      <FileInputPdf
-        name="resuploadBase64"
-        register={register}
-        setValue={setValue}
-      />
+      <FileInputPdf name="resupload" register={register} setValue={setValue} />
       <div className="d-flex justify-content-end">
         <Button
           type="button"

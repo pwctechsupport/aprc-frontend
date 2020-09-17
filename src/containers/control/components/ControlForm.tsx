@@ -1,12 +1,13 @@
 import { capitalCase } from "capital-case";
+import { startCase } from "lodash";
 import React, { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { AiFillEdit } from "react-icons/ai";
-import { FaTrash } from "react-icons/fa";
-import { Col, Form, FormGroup, Label, Row } from "reactstrap";
-import { oc } from "ts-optchain";
 import { toast } from "react-toastify";
-
+import { Col, Form, FormGroup, Label, Row } from "reactstrap";
+import styled from "styled-components";
+import { oc } from "ts-optchain";
+import * as yup from "yup";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import {
   ActivityControl,
   Assertion,
@@ -14,23 +15,20 @@ import {
   Ipo,
   Nature,
   TypeOfControl,
-  useBusinessProcessesQuery,
   useAdminRisksQuery,
-  useDepartmentsQuery,
+  useBusinessProcessesQuery,
   useControlsQuery,
+  useDepartmentsQuery,
 } from "../../../generated/graphql";
-import * as yup from "yup";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
+import CheckBox2 from "../../../shared/components/forms/TestNewCheckBox";
 import Modal from "../../../shared/components/Modal";
 import Table from "../../../shared/components/Table";
 import { toBase64, toLabelValue } from "../../../shared/formatter";
-import styled from "styled-components";
 import { PwcRadioInput } from "../../report/Report";
-import CheckBox2 from "../../../shared/components/forms/TestNewCheckBox";
-import { startCase } from "lodash";
 
 const ControlForm = ({
   onSubmit,
@@ -384,9 +382,9 @@ const ControlForm = ({
         <div className="mt-2">
           <Button
             type="button"
-            className="soft orange mb-2"
+            className="pwc mb-2"
             onClick={toogleModal}
-            color=""
+            // color=""
           >
             Add control activity
           </Button>
@@ -414,14 +412,14 @@ const ControlForm = ({
                       onClick={() => handleEdit(activity.id)}
                       className="soft red mr-2"
                     >
-                      <AiFillEdit />
+                      <PickIcon name="pencilFill" style={{ width: "15px" }} />
                     </Button>
                     <DialogButton
                       onConfirm={() => handleDelete(activity.id)}
                       message={`Delete "${activity.activity}"?`}
                       className="soft red"
                     >
-                      <FaTrash className="clickable" />
+                      <PickIcon name="trash" className="clickable" />
                     </DialogButton>
                   </td>
                 </tr>

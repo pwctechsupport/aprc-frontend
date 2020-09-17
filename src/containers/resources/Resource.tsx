@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Helmet from "react-helmet";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
-import { Link } from "react-router-dom";
 import { Col, Row } from "reactstrap";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   UpdateResourceInput,
   useApproveRequestEditMutation,
@@ -18,15 +14,18 @@ import {
   useReviewResourceDraftMutation,
   useUpdateResourceMutation,
 } from "../../generated/graphql";
+import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import HeaderWithBackButton from "../../shared/components/Header";
+import TangerineLink from "../../shared/components/Link";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import Tooltip from "../../shared/components/Tooltip";
 import { toLabelValue } from "../../shared/formatter";
 import useEditState from "../../shared/hooks/useEditState";
+import { useSelector } from "../../shared/hooks/useSelector";
 import {
   notifyGraphQLErrors,
   notifyInfo,
@@ -34,8 +33,6 @@ import {
 } from "../../shared/utils/notif";
 import ResourceBox from "./components/ResourceBox";
 import ResourceForm, { ResourceFormValues } from "./components/ResourceForm";
-import { APP_ROOT_URL } from "../../settings";
-import { useSelector } from "../../shared/hooks/useSelector";
 
 type TParams = { id: string };
 
@@ -261,9 +258,11 @@ export default function Resource({
               {category === "Flowchart" ? (
                 <>
                   <h5 className="mt-5">Business Process:</h5>
-                  <Link to={`/business-process/${businessProcess?.id}`}>
+                  <TangerineLink
+                    to={`/business-process/${businessProcess?.id}`}
+                  >
                     {businessProcess?.name}
-                  </Link>
+                  </TangerineLink>
                 </>
               ) : (
                 <>
@@ -273,9 +272,9 @@ export default function Resource({
                       <ul>
                         {
                           <li>
-                            <Link to={`/risk-and-control/${bps.id}`}>
+                            <TangerineLink to={`/risk-and-control/${bps.id}`}>
                               {bps.name}
-                            </Link>
+                            </TangerineLink>
                           </li>
                         }
                       </ul>
@@ -289,9 +288,9 @@ export default function Resource({
                       <ul>
                         {filteredNames(policies).map((policy: any) => (
                           <li key={policy.id}>
-                            <Link to={`/policy/${policy.id}`}>
+                            <TangerineLink to={`/policy/${policy.id}`}>
                               {policy.title}
-                            </Link>
+                            </TangerineLink>
                           </li>
                         ))}
                       </ul>
@@ -349,7 +348,7 @@ export default function Resource({
             className="soft red mr-2"
             disabled={requestStatus === "requested"}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </DialogButton>
         </Tooltip>
       );
@@ -374,7 +373,7 @@ export default function Resource({
           </DialogButton> */}
           <Tooltip description="Edit Resource">
             <Button onClick={toggleEditMode} color="" className="soft orange">
-              <AiFillEdit />
+              <PickIcon name="pencilFill" style={{ width: "15px" }} />
             </Button>
           </Tooltip>
         </div>
@@ -384,8 +383,7 @@ export default function Resource({
       return (
         <div className="d-flex">
           <DialogButton
-            color="danger"
-            className="mr-2"
+            className="mr-2 button cancel"
             onConfirm={() => review({ publish: false })}
             loading={reviewResourceM.loading}
           >

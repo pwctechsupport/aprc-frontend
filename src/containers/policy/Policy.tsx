@@ -10,11 +10,7 @@ import React, {
   useState,
 } from "react";
 import Helmet from "react-helmet";
-import {
-  AiFillEdit,
-  AiOutlineClockCircle,
-  AiOutlineEdit,
-} from "react-icons/ai";
+import { AiOutlineClockCircle } from "react-icons/ai";
 import {
   FaBars,
   FaBookmark,
@@ -23,14 +19,16 @@ import {
   FaFilePdf,
   FaMinus,
   FaPlus,
-  FaTrash,
 } from "react-icons/fa";
 import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
 import { Badge, Col, Nav, NavItem, Row, TabContent, TabPane } from "reactstrap";
+import styled from "styled-components";
+import SunEditor from "suneditor-react";
 import { oc } from "ts-optchain";
+import PickIcon from "../../assets/Icons/PickIcon";
 import {
   useApproveRequestEditMutation,
   useBookmarksQuery,
@@ -52,6 +50,7 @@ import {
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
+import BusinessProcessList from "../../shared/components/BusinessProcessList";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
 import ControlsTable from "../../shared/components/ControlsTable";
@@ -89,8 +88,6 @@ import ResourceBox from "../resources/components/ResourceBox";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
-import styled from "styled-components";
-import BusinessProcessList from "../../shared/components/BusinessProcessList";
 
 type TParams = { id: string };
 
@@ -859,15 +856,31 @@ export default function Policy({
                 {renderPolicyAction()}
               </div>
 
-              <div
+              {/* <div
                 className="mb-3 py-3"
                 dangerouslySetInnerHTML={{
                   __html: description,
                 }}
-              />
+              /> */}
+              <div className="mt-2">
+                <SunEditor
+                  showToolbar={false}
+                  disable={true}
+                  show={true}
+                  name="description"
+                  setContents={description || ""}
+                  hide={true}
+                  enableToolbar={true}
+                  setOptions={{
+                    showPathLabel: false,
+                    minHeight: "30vh",
+                    height: "auto",
+                  }}
+                />
+              </div>
               {policyReferences.length ? (
                 <div
-                  className="d-flex"
+                  className="mt-3 d-flex"
                   style={{ borderBottom: " 1px solid #d85604" }}
                 >
                   <h6>
@@ -1052,7 +1065,8 @@ export default function Policy({
       {
         label: (
           <div>
-            <FaTrash /> Delete
+            <PickIcon name="trash" className="clickable" />
+            Delete
           </div>
         ),
         onClick: handleDeleteMain,
@@ -1117,7 +1131,7 @@ export default function Policy({
           {
             label: (
               <div>
-                <IoMdDownload /> download
+                <IoMdDownload /> Download
               </div>
             ),
             onClick: () => {
@@ -1225,7 +1239,7 @@ export default function Policy({
                 className="mr-3"
                 color="transparent"
               >
-                <FaTrash className="text-red" />
+                <PickIcon name="trash" className="clickable" />
               </Button>
             </Tooltip>
           )}
@@ -1269,8 +1283,8 @@ export default function Policy({
       actions = (
         <div>
           <Button
-            color="danger"
-            className="mr-2"
+            // color="danger"
+            className="mr-2 button cancel"
             onClick={() =>
               dialogBox({
                 callback: () => review({ publish: false }),
@@ -1307,7 +1321,7 @@ export default function Policy({
                 color=""
                 className="soft orange mr-2"
               >
-                <AiFillEdit />
+                <PickIcon name="pencilFill" style={{ width: "15px" }} />
               </Button>
             </Tooltip>
           ) : // </div>
@@ -1318,7 +1332,7 @@ export default function Policy({
       actions = inEditMode ? null : (
         <Tooltip description="Edit Policy">
           <Button onClick={toggleEditMode} color="" className="soft orange">
-            <AiFillEdit />
+            <PickIcon name="pencilFill" style={{ width: "15px" }} />
           </Button>
         </Tooltip>
       );
@@ -1339,7 +1353,7 @@ export default function Policy({
             color=""
             disabled={requested}
           >
-            <AiOutlineEdit />
+            <PickIcon name="pencilO" />
           </Button>
         </Tooltip>
       );

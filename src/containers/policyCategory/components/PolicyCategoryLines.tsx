@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Helmet from "react-helmet";
-import { FaFileExport, FaFileImport, FaTrash } from "react-icons/fa";
+import { FaFileExport, FaFileImport } from "react-icons/fa";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Input } from "reactstrap";
 import styled from "styled-components";
+import PickIcon from "../../../assets/Icons/PickIcon";
 import {
   useAdminPolicyCategoriesQuery,
   useDestroyPolicyCategoriesMutation,
@@ -129,7 +130,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
       <div className="w-100">
         <BreadCrumb crumbs={[["/policyCategory", "Policy category"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4>Policy category</h4>
+          <h4 style={{ fontSize: "23px" }}>Policy category</h4>
           {isAdminReviewer ? (
             <div className="d-flex">
               <Tooltip
@@ -173,7 +174,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
           ) : null}
         </div>
       </div>
-      <Table reloading={loadingAdmin || loadingReviewer}>
+      <Table responsive reloading={loadingAdmin || loadingReviewer}>
         <thead>
           <tr>
             {isAdminReviewer ? (
@@ -237,7 +238,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                         message={`Delete "${policyCategory.name}"?`}
                         className="soft red"
                       >
-                        <FaTrash className="clickable" />
+                        <PickIcon name="trash" className="clickable" />
                       </DialogButton>
                     </Tooltip>
                   </td>

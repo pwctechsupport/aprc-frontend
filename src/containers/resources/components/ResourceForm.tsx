@@ -336,8 +336,7 @@ ResourceFormProps) {
 
       <div className="d-flex justify-content-end mt-3">
         <Button
-          className="soft red px-5"
-          color=""
+          className="pwc px-5"
           loading={submitting}
           message="Create New Resource?"
         >

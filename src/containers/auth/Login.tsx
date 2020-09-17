@@ -17,8 +17,9 @@ import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
 import Captcha from "react-numeric-captcha";
-import useWindowSize from "../../shared/hooks/useWindowSize";
+// import useWindowSize from "../../shared/hooks/useWindowSize";
 import { Container as BsContainer, Row, Col } from "reactstrap";
+import Footer from "../../shared/components/Footer";
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
@@ -82,14 +83,24 @@ export default function Login({ history }: RouteComponentProps) {
       }
     }
   }
-  const screenSize = useWindowSize();
+  // const screenSize = useWindowSize();
 
   return (
     <BsContainer fluid className="login-background pt-md-5">
-      <Row>
-        <Col sm={12} md={7}>
-          <Image className="mt-0 ml-5" src={pwcLogoOutline} alt="pwc-logo" />
-        </Col>
+      <Image
+        style={{
+          position: "absolute",
+          top: "10px",
+          left: 0,
+          height: "150px",
+          width: "150px",
+        }}
+        className="mt-0 ml-5"
+        src={pwcLogoOutline}
+        alt="pwc-logo"
+      />
+      <Row style={{ minHeight: "80vh" }}>
+        <Col sm={12} md={7}></Col>
         <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
           <BsContainer className="px-0">
             <Helmet>
@@ -103,7 +114,8 @@ export default function Login({ history }: RouteComponentProps) {
                 backgroundColor: "rgba(255,255,255,.7)",
               }}
             >
-              <H1>Welcome,<br/> please sign in here</H1>
+              <H1>Welcome to eGRC</H1>
+
               <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
                 <Label>Email</Label>
                 <br />
@@ -143,17 +155,18 @@ export default function Login({ history }: RouteComponentProps) {
                   disabled={!captcha}
                 >
                   Login
-              </Button>
+                </Button>
                 <div className="text-center my-4">
                   <Link to="/forgot-password" className="link-pwc">
                     Forgot password?
-                </Link>
+                  </Link>
                 </div>
               </Form>
             </div>
           </BsContainer>
         </Col>
       </Row>
+      <Footer fontColor={"white"} linebreak />
     </BsContainer>
   );
 }
@@ -175,8 +188,9 @@ export const Image = styled.img`
   margin: 70px;
 `;
 
-export const H1 = styled.h1`
-  margin-bottom: 30px;
+export const H1 = styled.h3`
+  margin-bottom: 15px;
+  font-size: 23px;
 `;
 
 export const Label = styled.label`

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, Fragment } from "react";
 import { useForm } from "react-hook-form";
-import { Form } from "reactstrap";
+import { Form, FormText } from "reactstrap";
 import { oc } from "ts-optchain";
 import {
   useBusinessProcessesQuery,
@@ -19,7 +19,9 @@ import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import TextEditorField from "../../../shared/components/forms/TextEditorTinyMce";
+import SunEditor from "suneditor-react";
+import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
+import styled from "styled-components";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -108,9 +110,6 @@ const SubPolicyForm = ({
     }
   }
 
-  function onChangeEditor(data: any) {
-    setValue("description", data?.level?.content);
-  }
   // Functions for changing buttons
   // Functions when create
   function saveAsDraftFirstPhase(values: SubPolicyFormValues) {
@@ -153,7 +152,7 @@ const SubPolicyForm = ({
     setAttr(values);
     setShowAttrs(false);
   }
-  if (referenceData.loading || getBisproDefValQ.loading) {
+  if (referenceData.loading) {
     return <LoadingSpinner centered size={30} />;
   }
 
@@ -162,6 +161,10 @@ const SubPolicyForm = ({
       .referenceIds([])
       .includes(reference.value);
   });
+
+  function onChangeEditor(data: any) {
+    setValue("description", data);
+  }
   return (
     <div>
       <Form>
@@ -174,7 +177,60 @@ const SubPolicyForm = ({
         />
         <div className="mb-3">
           <label>Policy description*</label>
-          <TextEditorField
+
+          <div
+            style={{
+              padding: errors.description ? 1 : 0,
+              backgroundColor: "red",
+            }}
+          >
+            <SunEditor
+              showToolbar={true}
+              enable={true}
+              show={true}
+              name="description"
+              setContents={defaultValues?.description || ""}
+              onChange={onChangeEditor}
+              enableToolbar={true}
+              setOptions={{
+                showPathLabel: false,
+                imageUploadSizeLimit: 10485760,
+                linkProtocol: "http://",
+                minHeight: "30vh",
+                height: "auto",
+                font: [
+                  "Serif",
+                  "Sans Serif",
+                  "Monospace",
+                  "Candara",
+                  "Verdana",
+                  "Arial",
+                  "Twentieth Century",
+                  "Calibri",
+                  "Georgia",
+                  "Abadi",
+                  "Helvetica",
+                  "Garamond",
+                  "Bookman",
+                  "Arial Nova Cond",
+                  "Bahnschrift",
+                  "Selawik",
+                  "Perpetua",
+                ],
+                buttonList: [
+                  ["font", "fontSize", "align"],
+                  ["fontColor", "hiliteColor", "bold", "underline", "italic"],
+                  ["image", "table", "link"],
+                ],
+              }}
+            />
+          </div>
+          {errors.description && (
+            <FormText className="text-danger " color="red">
+              Policy description is a required field
+            </FormText>
+          )}
+          {/* <TextEditorField
             name="description"
             register={register}
             onChange={onChangeEditor}
@@ -184,7 +240,7 @@ const SubPolicyForm = ({
               errors.description &&
               "Description field is too short and the field is required"
             }
-          />
+          /> */}
           {/* <TextEditor
             data={watch("description")}
             onChange={handleEditorChange}
@@ -206,11 +262,12 @@ const SubPolicyForm = ({
           }
         />
 
-        <div className="d-flex justify-content-end mt-3">
+        <div className="text-right mt-3">
           <Button
             type="button"
             onClick={() => setShowAttrs(true)}
-            className="pwc mr-2"
+            className="pwc btn-sm-block mb-1 mb-sm-0 mr-2"
+            loading={getBisproDefValQ.loading}
           >
             Insert attributes
           </Button>
@@ -220,7 +277,7 @@ const SubPolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={submittingDraft}
-                className="pwc mr-2 px-5"
+                className="pwc btn-sm-block mb-1 mb-sm-0 mr-2 px-5"
                 onConfirm={handleSubmit(saveAsDraftSecondPhase)}
                 message={
                   defaultValues.title
@@ -233,7 +290,7 @@ const SubPolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={secondDraftLoading}
-                className="pwc px-5"
+                className="pwc btn-sm-block mb-1 mb-sm-0 px-5"
                 onConfirm={handleSubmit(submitSecondPhase)}
                 message={
                   defaultValues.title
@@ -250,7 +307,7 @@ const SubPolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={submitting}
-                className="pwc mr-2 px-5"
+                className="pwc btn-sm-block mb-1 mb-sm-0 mr-2 px-5"
                 onConfirm={handleSubmit(saveAsDraftFirstPhase)}
                 message={
                   defaultValues.title
@@ -263,7 +320,7 @@ const SubPolicyForm = ({
               <DialogButton
                 color="primary"
                 loading={submitting}
-                className="pwc px-5"
+                className="pwc btn-sm-block mb-1 mb-sm-0 px-5"
                 onConfirm={handleSubmit(submitFirstPhase)}
                 message={
                   defaultValues.title
@@ -276,23 +333,23 @@ const SubPolicyForm = ({
             </Fragment>
           )}{" "}
           {isCreate ? (
-            <DialogButton
-              className="black px-5 ml-2"
+            <StyledDialogButton
+              className="cancel btn-sm-block px-5 ml-sm-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={() => history.replace(`/policy`)}
               isCreate
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           ) : (
-            <DialogButton
-              className="black px-5 ml-2"
+            <StyledDialogButton
+              className="cancel btn-sm-block px-5 ml-sm-2"
               style={{ backgroundColor: "rgba(233, 236, 239, 0.8)" }}
               onConfirm={toggleEditMode}
               isEdit
             >
               Cancel
-            </DialogButton>
+            </StyledDialogButton>
           )}
         </div>
       </Form>
@@ -317,6 +374,9 @@ const SubPolicyForm = ({
 
 export default SubPolicyForm;
 
+const StyledDialogButton = styled(DialogButton)`
+  background: var(--soft-grey);
+`;
 // -------------------------------------------------------------------------
 // Construct Modal Form Component
 // -------------------------------------------------------------------------
@@ -334,21 +394,13 @@ const SubPolicyAttributeForm = ({
 }) => {
   const formModal = useForm<SubPolicyModalFormValues>({
     defaultValues,
-    validationSchema: validationSchemaAttributes,
+    // validationSchema: validationSchemaAttributes,
   });
   const resourceQ = useResourcesQuery();
   const resourceOptions = oc(resourceQ.data)
     .navigatorResources.collection([])
     .map(toLabelValue);
 
-  const businessProcessesQ = useBusinessProcessesQuery({
-    variables: { filter: { ancestry_null: false } },
-  });
-  const businessProcessesOptions = oc(businessProcessesQ.data)
-    .navigatorBusinessProcesses.collection([])
-    .map(toLabelValue);
-
-  // const bpsFinalValues = formModal.watch("businessProcessIds") || [];
   const checkRisk = formModal.watch("riskIds") || [];
   const checkControl = formModal.watch("controlIds") || [];
   // Business Process Bar
@@ -356,6 +408,9 @@ const SubPolicyAttributeForm = ({
   const globalBps = useBusinessProcessesQuery({
     variables: { filter: { ancestry_null: false } },
   });
+  const businessProcessesOptions = oc(globalBps.data)
+    .navigatorBusinessProcesses.collection([])
+    .map(toLabelValue);
 
   // defaultValues Bps
 
@@ -405,23 +460,37 @@ const SubPolicyAttributeForm = ({
   const [firstBpIds, setFirstBpIds] = useState([...defValFirstBps]);
   const [secondBpIds, setSecondBpIds] = useState([...defValSecondBps]);
 
+  const [stopMain, setStopMain] = useState(false);
+  const [stopFirst, setStopFirst] = useState(false);
+  const [stopSecond, setStopSecond] = useState(false);
+
   useEffect(() => {
-    if (checkMainBp !== undefined) {
+    if (checkMainBp !== undefined && checkMainBp !== null) {
       setMainBpIds(mainBpIdsWatch);
+      setStopMain(false);
+    } else if (checkMainBp === null && !stopMain) {
+      setMainBpIds(mainBpIdsWatch);
+      setStopMain(true);
     }
-  }, [checkMainBp, mainBpIdsWatch]);
-
+  }, [checkMainBp, mainBpIdsWatch, stopMain]);
   useEffect(() => {
-    if (checkFirstBp !== undefined) {
+    if (checkFirstBp !== undefined && checkFirstBp !== null) {
       setFirstBpIds(firstBpIdsWatch);
+      setStopFirst(false);
+    } else if (checkFirstBp === null && !stopFirst) {
+      setFirstBpIds(firstBpIdsWatch);
+      setStopFirst(true);
     }
-  }, [checkFirstBp, firstBpIdsWatch]);
-
+  }, [checkFirstBp, firstBpIdsWatch, stopFirst]);
   useEffect(() => {
-    if (checkSecondBp !== undefined) {
+    if (checkSecondBp !== undefined && checkSecondBp !== null) {
       setSecondBpIds(secondBpIdsWatch);
+      setStopSecond(false);
+    } else if (checkSecondBp === null && !stopSecond) {
+      setSecondBpIds(secondBpIdsWatch);
+      setStopSecond(true);
     }
-  }, [checkSecondBp, secondBpIdsWatch]);
+  }, [checkSecondBp, secondBpIdsWatch, stopSecond]);
 
   const mainBps = useBusinessProcessesQuery({
     variables: { filter: { ancestry_null: true } },
@@ -559,9 +628,9 @@ const SubPolicyAttributeForm = ({
   const bpsFinalValues = bpsValues
     .filter((a) => !getBannedFirstBpsIds.includes(a))
     .filter((b) => !getRemovedFirstId.includes(b))
-    .filter((c) => {
-      return !getRemovedId.includes(c);
-    });
+    .filter((c) => !getRemovedId.includes(c))
+    .filter((d) => d !== undefined);
+
   const getValueFormBpsData =
     globalBps.data?.navigatorBusinessProcesses?.collection || [];
   const handleGetValueBps = getValueFormBpsData
@@ -638,6 +707,7 @@ const SubPolicyAttributeForm = ({
         }),
     };
   });
+
   //risk modified default Values
 
   const riskDefaultValuesOrigin = risksOptions
@@ -676,16 +746,22 @@ const SubPolicyAttributeForm = ({
   const controlDefaultValues = controlsOptions.filter((a) =>
     controlValue.includes(a.value)
   );
+  const [error, setError] = useState(false);
+
   const submit = (values: SubPolicyModalFormValues) => {
-    onSubmit &&
-      onSubmit({
-        controlIds: values.controlIds,
-        resourceIds: values.resourceIds,
-        riskIds: values.riskIds,
-        businessProcessIds: handleGetValueBps.length
-          ? handleGetValueBps.map((a) => a.value).flat(5)
-          : undefined,
-      });
+    if (handleGetValueBps.length) {
+      onSubmit &&
+        onSubmit({
+          controlIds: values.controlIds,
+          resourceIds: values.resourceIds,
+          riskIds: values.riskIds,
+          businessProcessIds: handleGetValueBps.length
+            ? handleGetValueBps.map((a) => a.value).flat(5)
+            : undefined,
+        });
+    } else {
+      setError(true);
+    }
   };
   return (
     <Form>
@@ -724,8 +800,8 @@ const SubPolicyAttributeForm = ({
         value={getFirstBpsValues}
         isDisabled={mainBpIds.length ? false : true}
         setValue={formModal.setValue}
-        label="First Business Process"
-        placeholder="First Business Process"
+        label="Sub Business Process Level 1"
+        placeholder="Sub Business Process Level 1"
         options={handleGetFirstBps}
       />
 
@@ -737,8 +813,8 @@ const SubPolicyAttributeForm = ({
         setValue={formModal.setValue}
         isDisabled={!firstBpIds.length ? true : mainBpIds.length ? false : true}
         value={getSecondBpsValues}
-        label="Second Business Process"
-        placeholder="Second Business Process"
+        label="Sub Business Process Level 2"
+        placeholder="Sub Business Process Level 2"
         options={handleGetSecondBps}
       />
       <FormSelect
@@ -747,11 +823,13 @@ const SubPolicyAttributeForm = ({
         name="businessProcessIds"
         register={formModal.register}
         isDisabled={true}
+        required
         value={handleGetValueBps}
         setValue={formModal.setValue}
         label="Selected Business Process"
         placeholder="Selected Business Process"
         options={handleGetMainBps}
+        error={error ? "Business process is a required field" : undefined}
       />
 
       <FormSelect
@@ -783,7 +861,7 @@ const SubPolicyAttributeForm = ({
       <div className=" d-flex justify-content-end">
         <Button
           type="button"
-          className="mr-2 cancel"
+          className="button cancel mr-2"
           onClick={() => onCancel()}
         >
           Cancel
@@ -794,7 +872,7 @@ const SubPolicyAttributeForm = ({
           className="pwc px-4"
           onClick={formModal.handleSubmit(submit)}
         >
-          Save Attribute
+          Save attribute
         </Button>
       </div>
     </Form>
@@ -812,12 +890,12 @@ const validationSchema = yup.object().shape({
     .required(),
   referenceIds: yup.array().required(),
 });
-const validationSchemaAttributes = yup.object().shape({
-  businessProcessIds: yup.array().required(),
-  // controlIds: yup.array().required(),
-  // resourceIds: yup.array().required(),
-  // riskIds: yup.array().required(),
-});
+// const validationSchemaAttributes = yup.object().shape({
+//   // businessProcessFirst: yup.array().required(),
+//   // controlIds: yup.array().required(),
+//   // resourceIds: yup.array().required(),
+//   // riskIds: yup.array().required(),
+// });
 // -------------------------------------------------------------------------
 // Type Definitions
 // -------------------------------------------------------------------------
