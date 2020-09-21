@@ -1167,36 +1167,41 @@ export default function RiskAndControl({
               ]
         }
       />
-      <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton
-          heading={
-            currentUrl.includes("resources/")
-              ? resourceName
-              : currentUrl.includes("risk/")
-              ? riskName
-              : currentUrl.includes("/control/")
-              ? descriptionControl
-              : name
-          }
-          draft={
-            currentUrl.includes("resources/")
-              ? !!draftRes
-              : currentUrl.includes("risk/")
-              ? !!draftRisk
-              : currentUrl.includes("/control/")
-              ? !!draftControl
-              : undefined
-          }
-        />
-
-        {currentUrl.includes("/control/")
-          ? renderControlAction()
-          : currentUrl.includes("risk/")
-          ? renderRiskAction()
-          : currentUrl.includes("resources/")
-          ? null
-          : renderActions()}
-      </div>
+      <Row>
+        <Col>
+          <HeaderWithBackButton
+            heading={
+              currentUrl.includes("resources/")
+                ? resourceName
+                : currentUrl.includes("risk/")
+                ? riskName
+                : currentUrl.includes("/control/")
+                ? descriptionControl
+                : name
+            }
+            draft={
+              currentUrl.includes("resources/")
+                ? !!draftRes
+                : currentUrl.includes("risk/")
+                ? !!draftRisk
+                : currentUrl.includes("/control/")
+                ? !!draftControl
+                : undefined
+            }
+          />
+        </Col>
+        <Col>
+          <div  className="d-flex justify-content-end mb-3">
+            {currentUrl.includes("/control/")
+            ? renderControlAction()
+            : currentUrl.includes("risk/")
+            ? renderRiskAction()
+            : currentUrl.includes("resources/")
+            ? null
+            : renderActions()}
+          </div>
+        </Col>
+      </Row>
       {currentUrl.includes("resources/") ||
       currentUrl.includes("risk/") ||
       currentUrl.includes("/control/") ? null : (
