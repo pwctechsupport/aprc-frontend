@@ -86,88 +86,90 @@ export default function Login({ history }: RouteComponentProps) {
   // const screenSize = useWindowSize();
 
   return (
-    <BsContainer fluid className="login-background pt-md-5">
-      <Image
-        style={{
-          position: "absolute",
-          top: "10px",
-          left: 0,
-          height: "150px",
-          width: "150px",
-        }}
-        className="mt-0 ml-5"
-        src={pwcLogoOutline}
-        alt="pwc-logo"
-      />
-      <Row style={{ minHeight: "80vh" }}>
-        <Col sm={12} md={7}></Col>
-        <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
-          <BsContainer className="px-0">
-            <Helmet>
-              <title>Login - PricewaterhouseCoopers</title>
-            </Helmet>
-            <div
-              style={{
-                border: "1px solid rgba(0,0,0,0.2)",
-                padding: "1vw",
-                borderRadius: "3px",
-                backgroundColor: "rgba(255,255,255,.7)",
-              }}
-            >
-              <H1>Welcome to eGRC</H1>
+    <div className="login-background">
+      <BsContainer fluid className="pt-md-5">
+        <Image
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: 0,
+            height: "150px",
+            width: "150px",
+          }}
+          className="mt-0 ml-5"
+          src={pwcLogoOutline}
+          alt="pwc-logo"
+        />
+        <Row style={{ minHeight: "80vh" }}>
+          <Col sm={12} md={7}></Col>
+          <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
+            <BsContainer className="px-0">
+              <Helmet>
+                <title>Login - PricewaterhouseCoopers</title>
+              </Helmet>
+              <div
+                style={{
+                  border: "1px solid rgba(0,0,0,0.2)",
+                  padding: "1vw",
+                  borderRadius: "3px",
+                  backgroundColor: "rgba(255,255,255,.7)",
+                }}
+              >
+                <H1>Welcome to eGRC</H1>
 
-              <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-                <Label>Email</Label>
-                <br />
-                <Input
-                  name="email"
-                  placeholder="Enter email address"
-                  required
-                  ref={register({ required: true })}
-                />
-                <br />
-                <br />
-                <Label>Password</Label>
-                <br />
-                <Input
-                  name="password"
-                  type="password"
-                  placeholder="Enter password"
-                  required
-                  ref={register({ required: true })}
-                />
-                <br />
-                <br />
-                <Captcha
-                  ref={(e: any) => st(e)}
-                  onChange={setCaptcha}
-                  placeholder="Insert captcha"
-                />
-                <br />
-                <br />
+                <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
+                  <Label>Email</Label>
+                  <br />
+                  <Input
+                    name="email"
+                    placeholder="Enter email address"
+                    required
+                    ref={register({ required: true })}
+                  />
+                  <br />
+                  <br />
+                  <Label>Password</Label>
+                  <br />
+                  <Input
+                    name="password"
+                    type="password"
+                    placeholder="Enter password"
+                    required
+                    ref={register({ required: true })}
+                  />
+                  <br />
+                  <br />
+                  <Captcha
+                    ref={(e: any) => st(e)}
+                    onChange={setCaptcha}
+                    placeholder="Insert captcha"
+                  />
+                  <br />
+                  <br />
 
-                <Button
-                  className="pwc"
-                  color="primary"
-                  type="submit"
-                  block
-                  loading={loading || loadingUsers}
-                  disabled={!captcha}
-                >
-                  Login
-                </Button>
-                <div className="text-center my-4">
-                  <Link to="/forgot-password" className="link-pwc">
-                    Forgot password?
-                  </Link>
-                </div>
-              </Form>
-            </div>
-          </BsContainer>
-        </Col>
-      </Row>
-      <Footer fontColor={"white"} linebreak />
-    </BsContainer>
+                  <Button
+                    className="pwc"
+                    color="primary"
+                    type="submit"
+                    block
+                    loading={loading || loadingUsers}
+                    disabled={!captcha}
+                  >
+                    Login
+                  </Button>
+                  <div className="text-center my-4">
+                    <Link to="/forgot-password" className="link-pwc">
+                      Forgot password?
+                    </Link>
+                  </div>
+                </Form>
+              </div>
+            </BsContainer>
+          </Col>
+        </Row>
+        <Footer fontColor={"white"} linebreak />
+      </BsContainer>
+    </div>
   );
 }
 

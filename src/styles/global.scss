@@ -48,6 +48,12 @@ input[type="number"]::-webkit-outer-spin-button {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  background-attachment: fixed;
+
+  > .container-fluid {
+    min-height: 100vh;
+    overflow-y: scroll;
+  }
 }
 .text-bold {
   font-weight: bold;
