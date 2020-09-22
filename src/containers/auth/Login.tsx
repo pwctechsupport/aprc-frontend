@@ -179,7 +179,7 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.form`
-  width: 30vw;
+  width: 90%;
 `;
 
 export const Image = styled.img`

@@ -36,5 +36,6 @@ const Heading = styled.div`
   font-weight: 600;
   margin-bottom: 20px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
 `;
