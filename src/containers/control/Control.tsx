@@ -458,10 +458,16 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
           ["/control/" + id, description],
         ]}
       />
-      <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton heading={description} draft={!!draft} />
-        {renderControlAction()}
-      </div>
+      <Row>
+        <Col>
+          <HeaderWithBackButton heading={description} draft={!!draft} />
+        </Col>
+        <Col>
+          <div className="d-flex justify-content-end mb-3">
+            {renderControlAction()}
+          </div>
+        </Col>
+      </Row>
       {inEditMode ? renderControlEditable() : renderControlNonEditable()}
     </div>
   );
