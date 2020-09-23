@@ -124,7 +124,7 @@ export default function HomepageSearch({
           ) : null}
         </InputWrapper>
       </div>
-      {isOpen || true ? (
+      {isOpen ? (
         <MenuWrapper>
           <StyledUl width={maxMenuWidth} {...getMenuProps()}>
             {items.length ? (

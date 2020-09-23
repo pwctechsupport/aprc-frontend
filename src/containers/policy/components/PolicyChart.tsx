@@ -49,7 +49,7 @@ const PolicyChart = ({ data = mockupData, policies }: PolicyChartProps) => {
               </Fragment>
             )}
 
-            <ChartLabelValueWrapper>
+            <ChartLabelValueWrapper total={item.total}>
               <ChartValue color={colors[0]}>{item.total}</ChartValue>
               <ChartLabel color={colors[0]}>{item.label}</ChartLabel>
             </ChartLabelValueWrapper>
@@ -178,13 +178,16 @@ const ChartLabel = styled.div<ChartLabelProps>`
   text-align: center;
 `;
 
-const ChartLabelValueWrapper = styled.div`
+const ChartLabelValueWrapper = styled.div<ChartLabelValueWrapperProps>`
   position: absolute;
   bottom: 20px;
-  background: rgba(0, 0, 0, .15);
-  padding: 3px;
-  border-radius: 5px
-`;
+  border-radius: 5px;
+  ${p =>
+    p.total &&
+    css`
+      text-shadow: rgba(0, 0, 0, 0.8) 0px 0px 2px;
+    `}
+`
 
 // ---------------------------------------------------
 // Type Definitions
@@ -211,4 +214,8 @@ interface PolicyChartItemProps {
 
 interface ChartLabelProps {
   color: string;
+}
+
+interface ChartLabelValueWrapperProps {
+  total?: number
 }
