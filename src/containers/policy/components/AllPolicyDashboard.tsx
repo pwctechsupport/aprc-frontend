@@ -97,7 +97,7 @@ const AllPolicyDashboard = () => {
       </Helmet>
       <h2 className="mb-5">All Policy Summary</h2>
       <PolicyChart data={chartData} policies />
-      <Table className="mt-5">
+      <Table responsive className="mt-5">
         <thead>
           <tr>
             <th>Task Manager</th>

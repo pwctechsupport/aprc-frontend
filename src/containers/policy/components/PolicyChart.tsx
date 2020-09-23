@@ -181,6 +181,9 @@ const ChartLabel = styled.div<ChartLabelProps>`
 const ChartLabelValueWrapper = styled.div`
   position: absolute;
   bottom: 20px;
+  background: rgba(0, 0, 0, .15);
+  padding: 3px;
+  border-radius: 5px
 `;
 
 // ---------------------------------------------------
