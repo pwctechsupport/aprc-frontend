@@ -39,6 +39,8 @@ const SubPolicyForm = ({
   toggleEditMode,
   isAdmin = true,
 }: SubPolicyFormProps) => {
+  const resourceQ = useResourcesQuery();
+
   const {
     resourceIds,
     businessProcessIds,
@@ -52,6 +54,7 @@ const SubPolicyForm = ({
     controlIds,
     riskIds,
   });
+  console.log("attr:", attr);
   const skipBispro = attr.businessProcessIds || [];
   const getBisproDefValQ = useBusinessProcessesQuery({
     skip: !skipBispro.length,
@@ -165,6 +168,7 @@ const SubPolicyForm = ({
   function onChangeEditor(data: any) {
     setValue("description", data);
   }
+
   return (
     <div>
       <Form>
@@ -267,7 +271,7 @@ const SubPolicyForm = ({
             type="button"
             onClick={() => setShowAttrs(true)}
             className="pwc btn-sm-block mb-1 mb-sm-0 mr-2"
-            loading={getBisproDefValQ.loading}
+            loading={getBisproDefValQ.loading || resourceQ.loading}
           >
             Insert attributes
           </Button>
@@ -366,6 +370,7 @@ const SubPolicyForm = ({
           bpsDefaultValue={getParentOrGrandParentBps}
           onSubmit={onSubmitModal}
           onCancel={() => setShowAttrs(false)}
+          resourceQ={resourceQ}
         />
       </Modal>
     </div>
@@ -386,17 +391,18 @@ const SubPolicyAttributeForm = ({
   onSubmit,
   onCancel,
   bpsDefaultValue,
+  resourceQ,
 }: {
   bpsDefaultValue: any;
   defaultValues: SubPolicyModalFormValues;
   onCancel: () => void;
   onSubmit: (v: SubPolicyModalFormValues) => void;
+  resourceQ: any;
 }) => {
   const formModal = useForm<SubPolicyModalFormValues>({
     defaultValues,
     // validationSchema: validationSchemaAttributes,
   });
-  const resourceQ = useResourcesQuery();
   const resourceOptions = oc(resourceQ.data)
     .navigatorResources.collection([])
     .map(toLabelValue);
@@ -763,6 +769,7 @@ const SubPolicyAttributeForm = ({
       setError(true);
     }
   };
+
   return (
     <Form>
       <FormSelect
@@ -773,7 +780,7 @@ const SubPolicyAttributeForm = ({
         setValue={formModal.setValue}
         label="Resources"
         options={resourceOptions}
-        defaultValue={resourceOptions.filter((res) =>
+        defaultValue={resourceOptions.filter((res: any) =>
           oc(defaultValues)
             .resourceIds([])
             .includes(res.value)
