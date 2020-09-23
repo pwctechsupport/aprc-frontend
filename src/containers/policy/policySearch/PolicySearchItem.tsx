@@ -102,7 +102,7 @@ export default function PolicySearchItem({
         <Row className="mt-1">
           {!showReference?.every((a) => a === false) &&
           homepageSearch !== "" ? (
-            <Col>
+            <Col sm={12}>
               {references?.map(
                 (reference) =>
                   reference?.name
@@ -121,7 +121,7 @@ export default function PolicySearchItem({
           ) : referencesPolicy?.filter((ref) =>
               filter.references_id_in?.includes(ref.id)
             ).length ? (
-            <Col>
+            <Col sm={12}>
               {referencesPolicy?.map((reference) => (
                 <PWCLink to={`/policy/${id}/details/#references`}>
                   <Badge className="mx-1" key={reference.id}>
@@ -133,12 +133,12 @@ export default function PolicySearchItem({
           ) : null}
         </Row>
 
-        <Row style={{ marginLeft: "1vw", marginRight: "1vw" }}>
+        <Row>
           {/* Resourcess */}
 
           {(!showResource?.every((a) => a === false) &&
             homepageSearch !== "" && (
-              <Col>
+              <Col sm={12}>
                 <StyledLi>
                   <Names>Resources:</Names>
                   <ul>
@@ -166,7 +166,7 @@ export default function PolicySearchItem({
               resourcesPolicy?.filter((res) =>
                 filter.resources_id_in?.includes(res.id)
               ).length !== 0 && (
-                <Col>
+                <Col sm={12}>
                   <StyledLi>
                     <Names>Resources:</Names>
                     <ul>
@@ -187,7 +187,7 @@ export default function PolicySearchItem({
           {/* Riskss */}
 
           {(!showRisk?.every((a) => a === false) && homepageSearch !== "" && (
-            <Col>
+            <Col sm={12}>
               <StyledLi>
                 <Names>Risks:</Names>
                 <ul>
@@ -214,7 +214,7 @@ export default function PolicySearchItem({
             ) &&
               risksPolicy?.filter((jay) => filter.risks_id_in?.includes(jay.id))
                 .length !== 0 && (
-                <Col>
+                <Col sm={12}>
                   <StyledLi>
                     <Names>Risks:</Names>
                     <ul>
@@ -236,7 +236,7 @@ export default function PolicySearchItem({
 
           {(!showControl?.every((a) => a === false) &&
             homepageSearch !== "" && (
-              <Col>
+              <Col sm={12}>
                 <StyledLi>
                   <Names>Controls:</Names>
                   <ul>
@@ -264,7 +264,7 @@ export default function PolicySearchItem({
               controlsPolicy?.filter((jay) =>
                 filter.controls_id_in?.includes(jay.id)
               ).length !== 0 && (
-                <Col>
+                <Col sm={12}>
                   <StyledLi>
                     <Names>Controls:</Names>
                     <ul>
@@ -287,7 +287,7 @@ export default function PolicySearchItem({
           {polcatPolicy &&
             polcatPolicy.id === filter.policy_category_id_eq &&
             filter.policy_category_id_eq !== null && (
-              <Col>
+              <Col sm={12}>
                 <StyledLi>
                   <Names>Policy Category:</Names>
                   <ul className="mt-1">
@@ -343,7 +343,6 @@ const Names = styled.div`
 const StyledLi = styled.li`
   padding-bottom: 10px;
   padding-top: 10px;
-  position: relative;
   left: -40px;
   list-style-type: none;
 `;
