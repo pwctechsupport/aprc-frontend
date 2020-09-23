@@ -220,4 +220,10 @@ const Wrapper = styled.div<{ dragging?: boolean }>`
 const PreviewImg = styled.img`
   height: 70px;
   margin-right: 10px;
+
+  @media (max-width: 576px) {
+    height: unset;
+    width: 100%;
+    margin-bottom: 20px;
+  }
 `;
