@@ -105,7 +105,7 @@ const BusinessProcessBranch = ({
         className={classnames("d-flex align-items-center", {
           active: isActive,
         })}
-        padLeft={level ? level * 10 : 0}
+        padLeft={level ? level * 12 : 0}
         isLastChild={lastChild && !myBroHasChild}
         ref={(ref) => setGetWidth(ref?.clientWidth || 0)}
       >
@@ -119,7 +119,7 @@ const BusinessProcessBranch = ({
           // </SideBoxBranchIconContainer>
           <div style={{ width: 20 }} />
         ) : (
-          <div style={{ width: 34 }} />
+          <div style={{ width: 20 }} />
         )}
         <SideBoxBranchTitle
           style={{ width: getWidth }}

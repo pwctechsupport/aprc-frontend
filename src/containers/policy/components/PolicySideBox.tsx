@@ -223,22 +223,18 @@ const PolicyBranch = ({
               className={classnames("d-flex align-items-center", {
                 active: isActive,
               })}
-              padLeft={level ? level * 10 : 0}
-              isLastChild={
-                (!hasChild || !childrenHasChildWhenUser) &&
-                parentId &&
-                !myBroHasChild
-              }
+              padLeft={level ? level * 12 : 0}
+              ref={(ref) => setGetWidth(ref?.clientWidth || 0)}
             >
-              {hasChild && childrenHasChildWhenUser ? (
+              {childrenHasChildWhenUser ? (
                 <div style={{ width: 20 }} />
               ) : (
-                <div style={{ width: 34 }} />
+                <div style={{ width: 20 }} />
               )}
               <SideBoxBranchTitle
+                style={{ width: getWidth }}
                 as={Link}
                 className={classnames({ active: isActive })}
-                style={{ width: getWidth }}
                 to={
                   isAdmin
                     ? `/policy-admin/${id}/details`
@@ -249,7 +245,7 @@ const PolicyBranch = ({
               >
                 {title}
               </SideBoxBranchTitle>
-              {hasChild ? (
+              {childrenHasChildWhenUser ? (
                 <SideBoxBranchIconContainer onClick={toggle}>
                   <SideBoxBranchIcon
                     open={isOpen}
@@ -265,12 +261,12 @@ const PolicyBranch = ({
                   <PolicyBranch
                     key={child.id}
                     parentId={child.parentId}
+                    originalData={child}
+                    myBroHasChild={grandpa ? true : false}
                     {...child}
                     activeId={activeId}
-                    myBroHasChild={grandpa ? true : false}
-                    originalData={child}
-                    status={child.status}
                     activeMode={activeMode}
+                    status={child.status}
                     level={Number(level) + 1}
                     isAdmin={isAdmin}
                   />
@@ -286,14 +282,14 @@ const PolicyBranch = ({
               className={classnames("d-flex align-items-center", {
                 active: isActive,
               })}
-              padLeft={level ? level * 10 : 0}
+              padLeft={level ? level * 12 : 0}
               isLastChild={!hasChild && parentId && !myBroHasChild}
               ref={(ref) => setGetWidth(ref?.clientWidth || 0)}
             >
               {hasChild ? (
                 <div style={{ width: 20 }} />
               ) : (
-                <div style={{ width: 34 }} />
+                <div style={{ width: 20 }} />
               )}
               <SideBoxBranchTitle
                 style={{ width: getWidth }}
@@ -344,14 +340,14 @@ const PolicyBranch = ({
               className={classnames("d-flex align-items-center", {
                 active: isActive,
               })}
-              padLeft={level ? level * 10 : 0}
+              padLeft={level ? level * 12 : 0}
               isLastChild={!hasChild && parentId && !myBroHasChild}
               ref={(ref) => setGetWidth(ref?.clientWidth || 0)}
             >
               {reviewerHasChild.length ? (
                 <div style={{ width: 20 }} />
               ) : (
-                <div style={{ width: 34 }} />
+                <div style={{ width: 20 }} />
               )}
               <SideBoxBranchTitle
                 style={{ width: getWidth }}
