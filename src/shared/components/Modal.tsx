@@ -24,7 +24,7 @@ const Modal = ({ title, className, toggle, ...props }: ModalProps) => {
     <BsModal
       centered
       {...props}
-      className={classnames("modal-enlogy", className)}
+      className={classnames("modal-enlogy", 'w-75', className)}
     >
       <ModalHeader toggle={toggle}>{title}</ModalHeader>
       <ModalBody>{props.children}</ModalBody>
