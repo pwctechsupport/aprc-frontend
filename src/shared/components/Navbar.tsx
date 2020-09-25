@@ -81,10 +81,10 @@ export default function NewNavbar() {
         <Nav className="mr-auto" navbar>
           {userMenus
             .filter((menu) =>
-              isBigScreen
+              isBigScreen || isMobile
                 ? isMereUser
-                  ? menu.label !== "Administrative" && menu.label !== "Settings"
-                  : menu.label !== "Settings"
+                  ? menu.label !== "Administrative"
+                  : menu.label
                 : true
             )
             .map(({ label, path, children, dropdown }) => {

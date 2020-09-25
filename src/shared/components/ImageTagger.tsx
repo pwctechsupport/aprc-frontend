@@ -371,7 +371,7 @@ export const PreviewTagText = styled.div<{ fontColor?: string }>`
 const TaggerBox = styled.div<{ x: number; y: number }>`
   position: absolute;
   top: ${(p) => p.y + 10}px;
-  left: ${(p) => p.x - 50}px;
+  // left: ${(p) => p.x - 50}px;
   background-color: rgba(233, 236, 239, 1);
   width: 300px;
   height: 120px;
