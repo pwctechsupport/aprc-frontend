@@ -873,7 +873,7 @@ export default function Policy({
                   enableToolbar={true}
                   setOptions={{
                     showPathLabel: false,
-                    minHeight: "15vh",
+                    minHeight: "30vh",
                     height: "auto",
                   }}
                 />

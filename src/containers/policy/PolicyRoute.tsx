@@ -7,6 +7,7 @@ import CreateSubPolicy from "./CreateSubPolicy";
 import Policies from "./Policies";
 import Policy from "./Policy";
 import Footer from "../../shared/components/Footer";
+import ScrollToTop from "../../shared/components/ScrollToTop";
 
 const PolicyRoute = () => {
   return (
@@ -18,16 +19,18 @@ const PolicyRoute = () => {
           </Col>
           <Col md={9} className="p-4">
             <div style={{ minHeight: "85vh" }}>
-              <Switch>
-                <Route
-                  exact
-                  path="/policy/:id/create-sub-policy"
-                  component={CreateSubPolicy}
-                />
-                <Route exact path="/policy/create" component={CreatePolicy} />
-                <Route path="/policy/:id" component={Policy} />
-                <Route path="/policy" component={Policies} />
-              </Switch>
+              <ScrollToTop>
+                <Switch>
+                  <Route
+                    exact
+                    path="/policy/:id/create-sub-policy"
+                    component={CreateSubPolicy}
+                  />
+                  <Route exact path="/policy/create" component={CreatePolicy} />
+                  <Route path="/policy/:id" component={Policy} />
+                  <Route path="/policy" component={Policies} />
+                </Switch>
+              </ScrollToTop>
             </div>
             <Footer />
           </Col>
