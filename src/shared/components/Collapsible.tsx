@@ -9,7 +9,7 @@ const Collapsible = ({
   onClick
 }: CollapsibleProps) => {
   return (
-    <div className="mb-3 py-3">
+    <div className="mb-2 py-3">
       <div className="clickable" onClick={() => onClick(title)}>
         <H5 open={show}>
           <Icon open={show} /> {title}
