@@ -174,10 +174,15 @@ const UpdatePasswordForm = ({
   const checkPassword = watch("password")?.split("") || [""];
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
+  const specialsCharacters = " `!@#$%^&*()_+-{\\\"'}[/]~|?<=>:;.,".split("");
   const numbers = "1234567890".split("");
 
   const noLowerCasePassword = checkPassword
     ?.map((a) => lowerCaseWords.includes(a))
+    .every((a) => a === false);
+
+  const noSpecialCharacterPassword = checkPassword
+    ?.map((a) => specialsCharacters.includes(a))
     .every((a) => a === false);
 
   const noCapitalPassword = checkPassword
@@ -188,12 +193,13 @@ const UpdatePasswordForm = ({
     ?.map((a) => numbers.includes(a))
     .every((a) => a === false);
 
-  const falsePasswordLength = (checkPassword?.length || 0) < 8;
+  const falsePasswordLength = (checkPassword?.length || 0) < 12;
 
   const validatePassword =
     noLowerCasePassword ||
     noCapitalPassword ||
     noNumberPassword ||
+    noSpecialCharacterPassword ||
     falsePasswordLength;
   const submit = (data: UpdatePasswordFormValues) => {
     if (!validatePassword) {
@@ -232,13 +238,16 @@ const UpdatePasswordForm = ({
           </h6>
           <ul>
             {falsePasswordLength && (
-              <li style={{ color: "red" }}>At least 8 characters</li>
+              <li style={{ color: "red" }}>At least 12 characters</li>
             )}
             {noCapitalPassword && (
               <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
             )}
             {noLowerCasePassword && (
               <li style={{ color: "red" }}>Lowercase characters (a - z)</li>
+            )}
+            {noSpecialCharacterPassword && (
+              <li style={{ color: "red" }}>Special characters ({` ~!"#$%&'()*+=,-./:;<>?@[\\\`]^_{|}'`})</li>
             )}
             {noNumberPassword && (
               <li style={{ color: "red" }}>Numbers (0 - 9)</li>
