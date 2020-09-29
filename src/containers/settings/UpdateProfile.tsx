@@ -176,7 +176,6 @@ const UpdatePasswordForm = ({
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
   const specialsCharacters = " `!@#$%^&*()_+-{\\\"'}[/]~|?<=>:;.,".split("");
   const numbers = "1234567890".split("");
-  console.log('cek', checkPassword);
 
   const noLowerCasePassword = checkPassword
     ?.map((a) => lowerCaseWords.includes(a))
