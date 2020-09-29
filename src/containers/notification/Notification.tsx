@@ -265,7 +265,7 @@ const Notification = ({ history }: RouteComponentProps) => {
               </thead>
               <tbody>
                 {notifications.map((data) => {
-                  let dataType: string = "";
+                  /* let dataType: string = "";
 
                   switch (data.dataType) {
                     case "request_edit":
@@ -276,7 +276,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                       break;
                     default:
                       break;
-                  }
+                  } */
 
                   return data ? (
                     <tr

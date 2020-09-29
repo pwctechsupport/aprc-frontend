@@ -84,7 +84,7 @@ export default function ImageTagger({
     window.addEventListener('resize', handleResize);
 
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [setWindowWidth]);
 
   const restrictedControlIds = tags
     .map((a) => a.control?.id)
