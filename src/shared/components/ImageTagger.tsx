@@ -1,5 +1,5 @@
 import uniqueId from "lodash/uniqueId";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
 // import { GroupType } from "react-select";
@@ -59,6 +59,32 @@ export default function ImageTagger({
   const [tags, setTags] = useState(defaultTags || []);
   const init: CurrentTag = { id: "", active: false, x: 0, y: 0 };
   const [currentTag, setCurrentTag] = useState(init);
+  const imageRef = useRef<HTMLImageElement>(null);
+  const imageWidth = imageRef.current?.width || 0;
+  const imageHeight = imageRef.current?.height || 0;
+  const setWindowWidth = useState(window.outerWidth)[1]; //used to invalidate current layout
+
+  const taggerX = getTaggerX();
+  const taggerY = currentTag.y * imageHeight;
+
+  function getTaggerX() {
+    const xCoor = currentTag.x * imageWidth;
+    const taggerWidth = 300;
+    const taggerRight = xCoor + taggerWidth;
+
+    if (taggerRight > imageWidth) return xCoor - (taggerRight - imageWidth);
+
+    return xCoor;
+  }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.outerWidth);
+    }
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const restrictedControlIds = tags
     .map((a) => a.control?.id)
@@ -118,11 +144,14 @@ export default function ImageTagger({
     if (currentTag.active) {
       setCurrentTag(init);
     } else {
+      const x = e.nativeEvent.offsetX / (e.target as any).width
+      const y = e.nativeEvent.offsetY / (e.target as any).height
+
       setCurrentTag({
         id: "",
         active: true,
-        x: e.nativeEvent.offsetX,
-        y: e.nativeEvent.offsetY,
+        x,
+        y
       });
     }
   }
@@ -168,9 +197,9 @@ export default function ImageTagger({
         </div>
       </CoolDiv>
       <Row>
-        <Col lg={6}>
+        <Col>
           <ImageTaggerWrapper onClick={editable ? handleClick : undefined}>
-            <TargetImage src={src} editable={editable} />
+            <TargetImage src={src} editable={editable} className="img-fluid" ref={imageRef} />
             {tags.map((tag) => {
               const id = tag.risk?.id || tag.control?.id;
               const type = tag.risk?.id ? "Risk" : "Control";
@@ -182,14 +211,17 @@ export default function ImageTagger({
                 ? `/risk/${tag.risk?.id}`
                 : `/control/${tag.control?.id}`;
 
+              const xCoordinates = (tag.xCoordinates || 0) * (imageWidth || 0);
+              const yCoordinates = (tag.yCoordinates || 0) * (imageHeight || 0);
+
               if (editable) {
                 return (
                   <PreviewTag
                     key={tag.id}
                     show={show}
                     onClick={handlePreviewTagClick(tag)}
-                    x={tag.xCoordinates || 0}
-                    y={tag.yCoordinates || 0}
+                    x={xCoordinates || 0}
+                    y={yCoordinates || 0}
                     background={background}
                   >
                     <PreviewTagText
@@ -202,8 +234,8 @@ export default function ImageTagger({
                 <PreviewTag
                   key={tag.id}
                   show={show}
-                  x={tag.xCoordinates || 0}
-                  y={tag.yCoordinates || 0}
+                  x={xCoordinates || 0}
+                  y={yCoordinates || 0}
                   as={Link}
                   to={to}
                   background={background}
@@ -217,8 +249,8 @@ export default function ImageTagger({
             {currentTag.active && (
               <TaggerBox
                 onClick={(e) => e.stopPropagation()}
-                x={currentTag.x}
-                y={currentTag.y}
+                x={taggerX}
+                y={taggerY}
               >
                 <TaggerBoxInner>
                   <TaggerBoxCloseButton
@@ -289,8 +321,8 @@ export const ImageTaggerWrapper = styled.div`
 
 export const TargetImage = styled.img<{ editable: boolean }>`
   cursor: ${(p) => (p.editable ? "crosshair" : "")};
-  width: 465px;
-  max-height: 30vw;
+  // width: 465px;
+  // max-height: 30vw;
 `;
 
 const fadeIn = keyframes`
@@ -371,7 +403,7 @@ export const PreviewTagText = styled.div<{ fontColor?: string }>`
 const TaggerBox = styled.div<{ x: number; y: number }>`
   position: absolute;
   top: ${(p) => p.y + 10}px;
-  // left: ${(p) => p.x - 50}px;
+  left: ${p => p.x}px;
   background-color: rgba(233, 236, 239, 1);
   width: 300px;
   height: 120px;
