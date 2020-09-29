@@ -174,7 +174,7 @@ const UpdatePasswordForm = ({
   const checkPassword = watch("password")?.split("") || [""];
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
-  const specialsCharacters = " `!@#$%^&*()_+-{\"'}[/]~|?<=>:;.,".split("");
+  const specialsCharacters = " `!@#$%^&*()_+-{\\\"'}[/]~|?<=>:;.,".split("");
   const numbers = "1234567890".split("");
   console.log('cek', checkPassword);
 

@@ -51,7 +51,7 @@ export default function UserForm(props: UserFormProps) {
   const checkPassword = watch("password")?.split("") || [""];
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
-  const specialsCharacters = " `!@#$%^&*()_+-{\"'}[/]~|?<=>:;.,".split("");
+  const specialsCharacters = " `!@#$%^&*()_+-{\\\"'}[/]~|?<=>:;.,".split("");
   const numbers = "1234567890".split("");
 
   const noLowerCasePassword = checkPassword
