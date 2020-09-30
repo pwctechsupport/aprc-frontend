@@ -276,7 +276,7 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
   }
   &.active {
     &::after {
-      background: ${(p) => (p.isLaptop ? "" : "var(--blue)")};
+      background: ${(p) => (p.isLaptop ? "" : "var(--orange)")};
     }
   }
   @media only screen and (min-width: 1081px) {
