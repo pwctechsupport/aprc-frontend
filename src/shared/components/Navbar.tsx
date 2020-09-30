@@ -83,8 +83,8 @@ export default function NewNavbar() {
             .filter((menu) =>
               isBigScreen || isMobile
                 ? isMereUser
-                  ? menu.label !== "Administrative"
-                  : menu.label
+                  ? menu.label !== "Administrative" && menu.label !== "Settings"
+                  : menu.label !== "Settings"
                 : true
             )
             .map(({ label, path, children, dropdown }) => {
