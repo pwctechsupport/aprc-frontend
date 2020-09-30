@@ -20,6 +20,7 @@ import {
 import styled from "styled-components";
 import PickIcon from "../../assets/Icons/PickIcon";
 import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
+import vertikalLine from "../../assets/images/vertical-line.png";
 import { H1 } from "../../containers/auth/Login";
 import HomepageSearch from "../../containers/homepage/HomepageSearch";
 import { useNotificationsCountQuery } from "../../generated/graphql";
@@ -67,10 +68,11 @@ export default function NewNavbar() {
     <NavbarWithColor fixed="top" light expand="lg">
       <StyledNavbarBrand tag={Link} to="/">
         <Row>
-          <Image src={pwcLogoOutline} alt="PwC" />
+          <Image src={pwcLogoOutline} alt="PwC" className="ml-2 "/>
+          <ImageLine src={vertikalLine} alt="PwC" className=" mt-4" />
           <H1
             style={{ paddingTop: isMobile ? "5px" : "10px", marginBottom: 0 }}
-            className="ml-4"
+            className="ml-2 mt-4"
           >
             eGRC
           </H1>
@@ -216,6 +218,8 @@ const userMenus = [
 // Styled Components
 // =============================================
 const NavbarWithColor = styled(Navbar)`
+  padding-top: 25px;
+  height: 90px;
   background-color: white;
   border-bottom: 1px solid var(--soft-grey);
 `;
@@ -223,12 +227,20 @@ const Underline = styled.div`
   position: relative;
   height: 5px;
   background-color: var(--orange);
-  top: 10px;
+  top: 8px;
   left: 0;
 `;
 const Image = styled.img`
+  margin: -10px -14px 19px -20px;
   width: auto;
-  height: 50px;
+  height: 90px;
+  @media only screen and (max-width: 767px) {
+    height: 35px;
+  }
+`;
+const ImageLine = styled.img`
+  width: auto;
+  height: 40px;
   @media only screen and (max-width: 767px) {
     height: 35px;
   }
