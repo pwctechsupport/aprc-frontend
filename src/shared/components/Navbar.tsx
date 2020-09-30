@@ -276,7 +276,7 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
   }
   &.active {
     &::after {
-      background: ${(p) => (p.isLaptop ? "" : "var(--orange)")};
+      background: ${(p) => (p.isLaptop ? "" : "var(--blue)")};
     }
   }
   @media only screen and (min-width: 1081px) {
@@ -290,7 +290,7 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
 `;
 
 const StyledDropdownMenu = styled(DropdownMenu)`
-  background: var(--soft-orange) !important;
+  background: var(--soft-grey) !important;
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
@@ -304,9 +304,9 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 `;
 
 const StyledDropdownNavLink = styled(NavLink)`
-  color: var(--orange) !important;
+  color: var(--black) !important;
   &:hover {
-    background: var(--pale-primary-color) !important;
+    background: var(--orange) !important;
   }
   &:active {
     background: unset;
