@@ -109,9 +109,13 @@ export default function Login({ history }: RouteComponentProps) {
             <div
               style={{
                 border: "1px solid rgba(0,0,0,0.2)",
-                padding: "1vw",
+                padding: "2vh",
                 borderRadius: "3px",
                 backgroundColor: "rgba(255,255,255,.7)",
+                marginLeft: "100px",
+                marginTop: "60px",
+                height: "450px",
+                width: "290px",
               }}
             >
               <H1>Welcome to eGRC</H1>
@@ -146,7 +150,15 @@ export default function Login({ history }: RouteComponentProps) {
                 <br />
                 <br />
 
-                <Button
+                <Row>
+                <Col sm={6}>
+                  <h6></h6>
+                  <Link to="/forgot-password" className="link-pwc">
+                    Forgot password?
+                  </Link>
+                  </Col>
+                  <Col sm={6}>
+                  <Button
                   className="pwc"
                   color="primary"
                   type="submit"
@@ -156,10 +168,9 @@ export default function Login({ history }: RouteComponentProps) {
                 >
                   Login
                 </Button>
+                  </Col>
+                </Row>
                 <div className="text-center my-4">
-                  <Link to="/forgot-password" className="link-pwc">
-                    Forgot password?
-                  </Link>
                 </div>
               </Form>
             </div>
