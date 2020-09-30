@@ -78,7 +78,7 @@ export default function NewNavbar() {
       </StyledNavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
-        <Nav className="mr-auto" navbar>
+        <Nav className="mr-auto" navbar style={{marginLeft: "-270px"}}>
           {userMenus
             .filter((menu) =>
               isBigScreen || isMobile
