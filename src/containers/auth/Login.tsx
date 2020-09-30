@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
-import pwcLogoOutline from "../../assets/images/pwc-logo-outline.png";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
 import {
   useLoginMutation,
   LoginMutationVariables,
@@ -102,7 +102,7 @@ export default function Login({ history }: RouteComponentProps) {
       <Row style={{ minHeight: "80vh" }}>
         <Col sm={12} md={7}></Col>
         <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
-          <BsContainer className="px-0">
+          <BsContainer className="px-0 w-50 mh-75">
             <Helmet>
               <title>Login - PricewaterhouseCoopers</title>
             </Helmet>
