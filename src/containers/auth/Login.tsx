@@ -7,11 +7,11 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
-import pwcLogoOutline from "../../assets/images/pwc-logo-outline.png";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
 import {
   useLoginMutation,
   LoginMutationVariables,
-  useUsersQuery,
+  // useUsersQuery,
 } from "../../generated/graphql";
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
@@ -24,18 +24,18 @@ export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  const [mail, sMail] = useState("");
-  const { data, loading: loadingUsers } = useUsersQuery({
-    variables: { filter: { email_cont: mail } },
-  });
+  // const [mail, sMail] = useState("");
+  // const { data, loading: loadingUsers } = useUsersQuery({
+  //   variables: { filter: { email_cont: mail } },
+  // });
   const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
-  const checkEmail = watch("email");
-  useEffect(() => {
-    sMail(checkEmail);
-  }, [checkEmail]);
+  // const checkEmail = watch("email");
+  // useEffect(() => {
+  //   sMail(checkEmail);
+  // }, [checkEmail]);
 
   //refreshes Captcha when error
-  const email = data?.users?.collection.map((a) => a.email);
+  // const email = data?.users?.collection.map((a) => a.email);
   const [t, st] = useState({
     refresh: () => {},
   });
@@ -66,21 +66,12 @@ export default function Login({ history }: RouteComponentProps) {
       );
       history.push("/");
     } catch (error) {
-      if (email?.includes(checkEmail) === false) {
         toast.error(
           <div>
-            <h5>Email is not registered in database</h5>
+            <h5>Login failed</h5>
             <div>Please try again</div>
           </div>
         );
-      } else {
-        toast.error(
-          <div>
-            <h5>Wrong password</h5>
-            <div>Please try again</div>
-          </div>
-        );
-      }
     }
   }
   // const screenSize = useWindowSize();
@@ -102,7 +93,7 @@ export default function Login({ history }: RouteComponentProps) {
       <Row style={{ minHeight: "80vh" }}>
         <Col sm={12} md={7}></Col>
         <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
-          <BsContainer className="px-0">
+          <BsContainer className="px-0 w-50 mh-75">
             <Helmet>
               <title>Login - PricewaterhouseCoopers</title>
             </Helmet>
@@ -151,7 +142,7 @@ export default function Login({ history }: RouteComponentProps) {
                   color="primary"
                   type="submit"
                   block
-                  loading={loading || loadingUsers}
+                  loading={loading}
                   disabled={!captcha}
                 >
                   Login
