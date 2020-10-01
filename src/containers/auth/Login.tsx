@@ -66,21 +66,12 @@ export default function Login({ history }: RouteComponentProps) {
       );
       history.push("/");
     } catch (error) {
-      if (email?.includes(checkEmail) === false) {
         toast.error(
           <div>
-            <h5>Email is not registered in database</h5>
+            <h5>Login failed</h5>
             <div>Please try again</div>
           </div>
         );
-      } else {
-        toast.error(
-          <div>
-            <h5>Wrong password</h5>
-            <div>Please try again</div>
-          </div>
-        );
-      }
     }
   }
   // const screenSize = useWindowSize();
