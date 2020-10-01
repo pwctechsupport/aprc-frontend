@@ -11,7 +11,7 @@ import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
 import {
   useLoginMutation,
   LoginMutationVariables,
-  useUsersQuery,
+  // useUsersQuery,
 } from "../../generated/graphql";
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
@@ -24,18 +24,18 @@ export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  const [mail, sMail] = useState("");
-  const { data, loading: loadingUsers } = useUsersQuery({
-    variables: { filter: { email_cont: mail } },
-  });
+  // const [mail, sMail] = useState("");
+  // const { data, loading: loadingUsers } = useUsersQuery({
+  //   variables: { filter: { email_cont: mail } },
+  // });
   const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
-  const checkEmail = watch("email");
-  useEffect(() => {
-    sMail(checkEmail);
-  }, [checkEmail]);
+  // const checkEmail = watch("email");
+  // useEffect(() => {
+  //   sMail(checkEmail);
+  // }, [checkEmail]);
 
   //refreshes Captcha when error
-  const email = data?.users?.collection.map((a) => a.email);
+  // const email = data?.users?.collection.map((a) => a.email);
   const [t, st] = useState({
     refresh: () => {},
   });
@@ -142,7 +142,7 @@ export default function Login({ history }: RouteComponentProps) {
                   color="primary"
                   type="submit"
                   block
-                  loading={loading || loadingUsers}
+                  loading={loading}
                   disabled={!captcha}
                 >
                   Login
