@@ -69,7 +69,7 @@ export default function NewNavbar() {
       <StyledNavbarBrand tag={Link} to="/">
         <Row>
           <Image src={pwcLogoOutline} alt="PwC" className="ml-2 "/>
-          <ImageLine src={vertikalLine} alt="PwC" className=" mt-4" />
+          <P></P>
           <H1
             style={{ paddingTop: isMobile ? "5px" : "10px", marginBottom: 0 }}
             className="ml-2 mt-4"
@@ -223,6 +223,11 @@ const NavbarWithColor = styled(Navbar)`
   background-color: white;
   border-bottom: 1px solid var(--soft-grey);
 `;
+const P = styled.p`
+  border-left: 2px solid var(--darker-grey);
+  height: 30px;
+  margin: 29px 7px;
+`
 const Underline = styled.div`
   position: relative;
   height: 5px;
@@ -238,14 +243,6 @@ const Image = styled.img`
     height: 35px;
   }
 `;
-const ImageLine = styled.img`
-  width: auto;
-  height: 40px;
-  @media only screen and (max-width: 767px) {
-    height: 35px;
-  }
-`;
-
 const SearchBar = styled.div`
   width: 15em;
   @media only screen and (max-width: 1183px) {
