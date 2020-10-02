@@ -106,18 +106,7 @@ export default function Login({ history }: RouteComponentProps) {
             <Helmet>
               <title>Login - PricewaterhouseCoopers</title>
             </Helmet>
-            <div
-              style={{
-                border: "1px solid rgba(0,0,0,0.2)",
-                padding: "2vh",
-                borderRadius: "3px",
-                backgroundColor: "rgba(255,255,255,.7)",
-                marginLeft: "100px",
-                marginTop: "60px",
-                height: "450px",
-                width: "290px",
-              }}
-            >
+            <LoginBox>
               <H1>Welcome to eGRC</H1>
 
               <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
@@ -173,7 +162,7 @@ export default function Login({ history }: RouteComponentProps) {
                 <div className="text-center my-4">
                 </div>
               </Form>
-            </div>
+              </LoginBox>
           </BsContainer>
         </Col>
       </Row>
@@ -182,6 +171,17 @@ export default function Login({ history }: RouteComponentProps) {
   );
 }
 
+export const LoginBox = styled.div`
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 2vh;
+  border-radius: 3px;
+  background: rgba(255,255,255,.7);
+  @media only screen and (max-width: 768px) {
+    width: 270px;
+    margin-left: -60px;
+    margin-top: 125px;
+  }
+`
 export const Container = styled.div`
   display: flex;
   justify-content: center;
