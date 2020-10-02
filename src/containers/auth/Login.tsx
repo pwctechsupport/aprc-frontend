@@ -140,24 +140,24 @@ export default function Login({ history }: RouteComponentProps) {
                 <br />
 
                 <Row>
-                <Col sm={6}>
+                <Col>
                   <h6></h6>
                   <Link to="/forgot-password" className="link-pwc">
                     Forgot password?
                   </Link>
-                  </Col>
-                  <Col sm={6}>
+                </Col>
+                <Col>
                   <Button
-                  className="pwc"
-                  color="primary"
-                  type="submit"
-                  block
-                  loading={loading || loadingUsers}
-                  disabled={!captcha}
-                >
+                    className="pwc"
+                    color="primary"
+                    type="submit"
+                    block
+                    loading={loading || loadingUsers}
+                    disabled={!captcha}
+                  >
                   Login
-                </Button>
-                  </Col>
+                  </Button>
+                </Col>
                 </Row>
                 <div className="text-center my-4">
                 </div>
@@ -176,9 +176,14 @@ export const LoginBox = styled.div`
   padding: 2vh;
   border-radius: 3px;
   background: rgba(255,255,255,.7);
+  margin-left: 100px;
+  margin-top: 60px;
+  height: 450px;
+  width: 290px;
   @media only screen and (max-width: 768px) {
-    width: 270px;
-    margin-left: -60px;
+    width: 300px;
+    height: 470px;
+    margin-left: 40px;
     margin-top: 125px;
   }
 `
