@@ -158,14 +158,14 @@ export const LoginBox = styled.div`
   padding: 2vh;
   border-radius: 3px;
   background: rgba(255,255,255,.7);
-  margin-left: 100px;
+  margin-left: 30px;
   margin-top: 60px;
   height: 450px;
   width: 290px;
   @media only screen and (max-width: 768px) {
     width: 300px;
     height: 470px;
-    margin-left: 40px;
+    margin-left: -50px;
     margin-top: 125px;
   }
 `
