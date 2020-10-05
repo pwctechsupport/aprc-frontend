@@ -31,12 +31,11 @@ const Footer = ({ fontColor = "", linebreak }: FooterProps) => {
   const { width } = useWindowDimensions();
   return (
     <div
-      className="mt-3"
       style={{
         display: "block",
         height: "60px",
         width: "100%",
-        marginTop: "auto",
+        marginTop: "75px",
       }}
     >
       <div
