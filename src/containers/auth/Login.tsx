@@ -24,18 +24,9 @@ export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  // const [mail, sMail] = useState("");
-  // const { data, loading: loadingUsers } = useUsersQuery({
-  //   variables: { filter: { email_cont: mail } },
-  // });
   const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
-  // const checkEmail = watch("email");
-  // useEffect(() => {
-  //   sMail(checkEmail);
-  // }, [checkEmail]);
 
   //refreshes Captcha when error
-  // const email = data?.users?.collection.map((a) => a.email);
   const [t, st] = useState({
     refresh: () => {},
   });
@@ -97,14 +88,7 @@ export default function Login({ history }: RouteComponentProps) {
             <Helmet>
               <title>Login - PricewaterhouseCoopers</title>
             </Helmet>
-            <div
-              style={{
-                border: "1px solid rgba(0,0,0,0.2)",
-                padding: "1vw",
-                borderRadius: "3px",
-                backgroundColor: "rgba(255,255,255,.7)",
-              }}
-            >
+            <LoginBox>
               <H1>Welcome to eGRC</H1>
 
               <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
@@ -137,23 +121,30 @@ export default function Login({ history }: RouteComponentProps) {
                 <br />
                 <br />
 
-                <Button
-                  className="pwc"
-                  color="primary"
-                  type="submit"
-                  block
-                  loading={loading}
-                  disabled={!captcha}
-                >
-                  Login
-                </Button>
-                <div className="text-center my-4">
+                <Row>
+                <Col>
+                  <h6></h6>
                   <Link to="/forgot-password" className="link-pwc">
                     Forgot password?
                   </Link>
+                </Col>
+                <Col>
+                  <Button
+                    className="pwc"
+                    color="primary"
+                    type="submit"
+                    block
+                    loading={loading}
+                    disabled={!captcha}
+                  >
+                  Login
+                  </Button>
+                </Col>
+                </Row>
+                <div className="text-center my-4">
                 </div>
               </Form>
-            </div>
+              </LoginBox>
           </BsContainer>
         </Col>
       </Row>
@@ -162,6 +153,22 @@ export default function Login({ history }: RouteComponentProps) {
   );
 }
 
+export const LoginBox = styled.div`
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 2vh;
+  border-radius: 3px;
+  background: rgba(255,255,255,.7);
+  margin-left: 30px;
+  margin-top: 60px;
+  height: 450px;
+  width: 290px;
+  @media only screen and (max-width: 768px) {
+    width: 300px;
+    height: 470px;
+    margin-left: -50px;
+    margin-top: 125px;
+  }
+`
 export const Container = styled.div`
   display: flex;
   justify-content: center;

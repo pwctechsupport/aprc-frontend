@@ -47,9 +47,10 @@ const ReferenceSideBox = () => {
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Policy reference admin"
-            : "Policy reference"}
+          {/* {isAdmin || isAdminReviewer || isAdminPreparer */}
+            {/* ?  */}
+            Policy reference Administrative
+            {/* : "Policy reference"} */}
         </div>
       </SideBoxTitle>
       <SideBoxSearch
