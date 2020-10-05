@@ -1245,7 +1245,7 @@ export default function Policy({
           )}
         </div>
         <Menu data={theMenu}>
-          <FaEllipsisV />
+          <FaEllipsisV className="mr-3"/>
         </Menu>
       </div>
     );
