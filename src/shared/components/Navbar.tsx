@@ -20,7 +20,6 @@ import {
 import styled from "styled-components";
 import PickIcon from "../../assets/Icons/PickIcon";
 import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
-import vertikalLine from "../../assets/images/vertical-line.png";
 import { H1 } from "../../containers/auth/Login";
 import HomepageSearch from "../../containers/homepage/HomepageSearch";
 import { useNotificationsCountQuery } from "../../generated/graphql";
