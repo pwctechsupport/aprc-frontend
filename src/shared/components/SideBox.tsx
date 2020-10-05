@@ -98,7 +98,7 @@ export const SideBoxItem = styled(NavLink)`
   color: var(--item-title-side-box);
   &:hover {
     background: var(--darker-grey-2);
-    color: var(--hover-item-title-side-box);
+    color: var(--white);
     text-decoration: none;
   }
   &.active {
@@ -184,7 +184,7 @@ export const SideBoxBranchTitle = styled.div`
   }
   &:hover {
     text-decoration: none;
-    color: var(--hover-item-title-side-box);
+    color: var(--white);
     &.active {
       color: var(--hover-item-title-side-box);
     }

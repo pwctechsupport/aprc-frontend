@@ -2,7 +2,7 @@ import get from "lodash/get";
 import React from "react";
 import { Col, Container, Row } from "reactstrap";
 import styled from "styled-components";
-import backgroundImage from "../../assets/images/background-homepage.png";
+import backgroundImage from "../../assets/images/background-homepage.jpg";
 import { useHomepageQuery, useUserPVisitQuery } from "../../generated/graphql";
 import { toLabelValue } from "../../shared/formatter";
 import { useSelector } from "../../shared/hooks/useSelector";
@@ -50,23 +50,19 @@ export default function Homepage() {
 
         {isLaptop ? (
           <>
-            <Row style={{ width: "100vw" }}>
-              <Col lg={4}>
-                <h3
-                  style={{
-                    backgroundColor: "rgba(54, 48, 60, 0.6)",
-                    padding: " 2rem 1rem",
-                    color: "white",
-                    fontSize: "23px",
-                  }}
-                >
-                  Welcome, {username}
-                </h3>
-              </Col>
-            </Row>
             <Row style={{ width: "80vw" }}>
               <Col lg={9}>
                 <ContentBox>
+                  <h3
+                    style={{
+                      // backgroundColor: "rgba(54, 48, 60, 0.6)",
+                      // padding: " 2rem 1rem",
+                      color: "white",
+                      fontSize: "23px",
+                    }}
+                  >
+                  Welcome, {username}
+                  </h3>
                   <HomepageSearch inputStyle={{ height: 50 }} />
                 </ContentBox>
               </Col>
@@ -75,19 +71,19 @@ export default function Homepage() {
           </>
         ) : (
           <>
-            <h3
-              style={{
-                backgroundColor: "rgba(54, 48, 60, 0.6)",
-                padding: " 2rem 1rem",
-                color: "white",
-                fontSize: "23px",
-              }}
-            >
-              Welcome, {username}
-            </h3>
             <Centerer>
               <Container>
                 <ContentBox>
+                  <h3
+                    style={{
+                      // backgroundColor: "rgba(54, 48, 60, 0.6)",
+                      // padding: " 2rem 1rem",
+                      color: "white",
+                      fontSize: "23px",
+                    }}
+                  >
+              Welcome, {username}
+            </h3>
                   <HomepageSearch inputStyle={{ height: 50 }} />
                 </ContentBox>
               </Container>
@@ -252,8 +248,8 @@ const Centerer = styled.div`
 // `;
 
 const ContentBox = styled.div`
-  padding: 2rem 1rem;
+  padding: .5rem 2rem;
   margin-bottom: 2rem;
-  background-color: rgba(54, 48, 60, 0.6);
+  // background-color: rgba(54, 48, 60, 0.6);
   border-radius: 3px;
 `;
