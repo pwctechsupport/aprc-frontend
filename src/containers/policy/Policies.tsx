@@ -114,7 +114,7 @@ export default function Policies({ history }: RouteComponentProps) {
       <Helmet>
         <title>Policies - PricewaterhouseCoopers</title>
       </Helmet>
-      <BreadCrumb crumbs={[["/policy", "Policies"]]} />
+      <BreadCrumb crumbs={[["/policy", "Policies /"]]} />
       <div className="d-flex justify-content-between align-items-center">
         <OpacityButton isActive={showDashboard} onClick={toggleShowDashboard}>
           {showDashboard ? " Hide" : "Show"} Dashboard
