@@ -69,7 +69,7 @@ export default function NewNavbar() {
       <StyledNavbarBrand tag={Link} to="/">
         <Row>
           <Image src={pwcLogoOutline} alt="PwC" className="ml-2 "/>
-          <P></P>
+          <Strightline></Strightline>
           <H1
             style={{ paddingTop: isMobile ? "5px" : "10px", marginBottom: 0 }}
             className="ml-2 mt-4"
@@ -223,7 +223,7 @@ const NavbarWithColor = styled(Navbar)`
   background-color: white;
   border-bottom: 1px solid var(--soft-grey);
 `;
-const P = styled.p`
+const Strightline = styled.p`
   border-left: 2px solid var(--darker-grey);
   height: 30px;
   margin: 29px 7px;
