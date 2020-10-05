@@ -414,10 +414,16 @@ export default function Resource({
           ["/resources/" + id, name],
         ]}
       />
-      <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton heading={name} draft={!!draft} />
-        {renderResourceAction()}
-      </div>
+      <Row>
+        <Col>
+          <HeaderWithBackButton heading={name} draft={!!draft} />
+        </Col>
+        <Col>
+          <div className="d-flex justify-content-end mb-3">
+            {renderResourceAction()}
+          </div>
+        </Col>
+      </Row>
       {inEditMode ? renderResourceInEditMode() : renderResource()}
     </div>
   );

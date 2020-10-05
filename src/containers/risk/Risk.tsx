@@ -375,10 +375,16 @@ export default function Risk({
           ["/risk/" + id, name],
         ]}
       />
-      <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton heading={name} draft={!!draft} />
-        {renderRiskAction()}
-      </div>
+      <Row>
+        <Col>
+          <HeaderWithBackButton heading={name} draft={!!draft} />
+        </Col>
+        <Col>
+          <div  className="d-flex justify-content-end mb-3">
+            {renderRiskAction()}
+          </div>
+        </Col>
+      </Row>
       {inEditMode ? (
         <RiskForm
           defaultValues={defaultValues}

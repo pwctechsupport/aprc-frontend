@@ -29,6 +29,7 @@ import {
 import PolicyCategoryForm, {
   PolicyCategoryFormValues,
 } from "./components/PolicyCategoryForm";
+import { Row, Col } from "reactstrap";
 
 const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -312,10 +313,16 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
           ["/policy-category/" + id, name],
         ]}
       />
-      <div className="d-flex justify-content-between align-items-center">
-        <HeaderWithBackButton draft={!!draft}>{name}</HeaderWithBackButton>
-        {renderPolicyCategoryAction()}
-      </div>
+      <Row>
+        <Col>
+          <HeaderWithBackButton draft={!!draft}>{name}</HeaderWithBackButton>
+        </Col>
+        <Col>
+          <div className="d-flex justify-content-end mb-3">
+            {renderPolicyCategoryAction()}
+          </div>
+        </Col>
+      </Row>
       {inEditMode ? (
         <PolicyCategoryForm
           onSubmit={handleUpdate}

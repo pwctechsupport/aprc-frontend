@@ -81,7 +81,7 @@ export default function NewNavbar() {
         <Nav className="mr-auto" navbar>
           {userMenus
             .filter((menu) =>
-              isBigScreen
+              isBigScreen || isMobile
                 ? isMereUser
                   ? menu.label !== "Administrative" && menu.label !== "Settings"
                   : menu.label !== "Settings"
@@ -290,7 +290,7 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
 `;
 
 const StyledDropdownMenu = styled(DropdownMenu)`
-  background: var(--soft-orange) !important;
+  background: var(--soft-grey) !important;
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
@@ -304,9 +304,9 @@ const StyledDropdownToggle = styled(DropdownToggle)`
 `;
 
 const StyledDropdownNavLink = styled(NavLink)`
-  color: var(--orange) !important;
+  color: var(--black) !important;
   &:hover {
-    background: var(--pale-primary-color) !important;
+    background: var(--orange) !important;
   }
   &:active {
     background: unset;

@@ -51,6 +51,7 @@ export default function UserForm(props: UserFormProps) {
   const checkPassword = watch("password")?.split("") || [""];
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
+  const specialsCharacters = " `!@#$%^&*()_+-{\\\"'}[/]~|?<=>:;.,".split("");
   const numbers = "1234567890".split("");
 
   const noLowerCasePassword = checkPassword
@@ -61,16 +62,21 @@ export default function UserForm(props: UserFormProps) {
     ?.map((a) => capitalWords.includes(a))
     .every((a) => a === false);
 
+  const noSpecialCharacterPassword = checkPassword
+    ?.map((a) => specialsCharacters.includes(a))
+    .every((a) => a === false);
+
   const noNumberPassword = checkPassword
     ?.map((a) => numbers.includes(a))
     .every((a) => a === false);
 
-  const falsePasswordLength = (checkPassword?.length || 0) < 8;
+  const falsePasswordLength = (checkPassword?.length || 0) < 12;
 
   const validatePassword =
     noLowerCasePassword ||
     noCapitalPassword ||
     noNumberPassword ||
+    noSpecialCharacterPassword ||
     falsePasswordLength;
   function onSubmit(data: UserFormValues) {
     if (!props.submitting && !validatePassword) {
@@ -123,6 +129,9 @@ export default function UserForm(props: UserFormProps) {
             )}
             {noLowerCasePassword && (
               <li style={{ color: "red" }}>Lowercase characters (a - z)</li>
+            )}
+            {noSpecialCharacterPassword && (
+              <li style={{ color: "red" }}>Special characters ({` ~!"#$%&'()*+=,-./:;<>?@[\\\`]^_{|}'`})</li>
             )}
             {noNumberPassword && (
               <li style={{ color: "red" }}>Numbers (0 - 9)</li>
