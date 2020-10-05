@@ -177,7 +177,7 @@ const Notification = ({ history }: RouteComponentProps) => {
         <h2 style={{ fontSize: "23px" }} className="mb-5">
           Notifications Manager
         </h2>
-        {NotificationSettings()}
+        {/* {NotificationSettings()} */}
         <Row className="mt-3">
           <Col xs={12} lg={12}>
             <Form onSubmit={notificationForm.handleSubmit(onSubmit)}>
