@@ -56,9 +56,10 @@ const PolicyCategorySideBox = () => {
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Policy category admin"
-            : "Policy category"}
+          {/* {isAdmin || isAdminReviewer || isAdminPreparer */}
+             {/* ?  */}
+            Policy category Administrative
+             {/* : "Policy category"} */}
           {/* {isAdminPreparer || isAdmin ? (
             <Tooltip description="Create Policy Category">
               <Button
