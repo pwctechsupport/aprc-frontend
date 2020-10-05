@@ -132,7 +132,7 @@ export default function Policies({ history }: RouteComponentProps) {
       </Collapse>
       <div>
         <h4 style={{ fontSize: "23px" }} className="mt-4">
-          Policy
+          List of Policy
         </h4>
       </div>
       <SearchBar
