@@ -242,7 +242,7 @@ const SearchBar = styled.div`
 `;
 
 const StyledNavbarBrand = styled(NavbarBrand)`
-  width: calc(25vw - 20px);
+  width: calc(10vw - 20px);
   @media only screen and (max-width: 1400px) {
     width: unset;
   }
