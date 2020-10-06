@@ -67,10 +67,11 @@ export default function NewNavbar() {
     <NavbarWithColor fixed="top" light expand="lg">
       <StyledNavbarBrand tag={Link} to="/">
         <Row>
-          <Image src={pwcLogoOutline} alt="PwC" />
+          <Image src={pwcLogoOutline} alt="PwC" className="ml-2 "/>
+          <Straightline/>
           <H1
             style={{ paddingTop: isMobile ? "5px" : "10px", marginBottom: 0 }}
-            className="ml-4"
+            className="ml-2 mt-4"
           >
             eGRC
           </H1>
@@ -216,24 +217,31 @@ const userMenus = [
 // Styled Components
 // =============================================
 const NavbarWithColor = styled(Navbar)`
+  padding-top: 25px;
+  height: 90px;
   background-color: white;
   border-bottom: 1px solid var(--soft-grey);
 `;
+const Straightline = styled.p`
+  border-left: 2px solid var(--darker-grey);
+  height: 30px;
+  margin: 29px 7px;
+`
 const Underline = styled.div`
   position: relative;
   height: 5px;
   background-color: var(--orange);
-  top: 10px;
+  top: 8px;
   left: 0;
 `;
 const Image = styled.img`
+  margin: -10px -14px 19px -20px;
   width: auto;
-  height: 50px;
+  height: 90px;
   @media only screen and (max-width: 767px) {
     height: 35px;
   }
 `;
-
 const SearchBar = styled.div`
   width: 15em;
   @media only screen and (max-width: 1183px) {
