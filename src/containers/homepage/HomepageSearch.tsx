@@ -188,12 +188,12 @@ const MenuWrapper = styled.div`
 
 const StyledSpan = styled.span`
   text-align: right;
-  color: white;
+  color: dark;
 `;
 
 const StyledUl = styled.ul<{ width?: number }>`
   position: absolute;
-  background-color: var(--darker-grey);
+  background-color: var(--soft-grey);
   padding: 20px;
   color: black;
   list-style-type: none;
