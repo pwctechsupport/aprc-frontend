@@ -1,6 +1,30 @@
 @mixin button-pwc {
   background: $pwc-orange;
   border-radius: 3px;
+  width: 200px;
+  border: 0;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &.btn-outline-pwc {
+    background: transparent;
+    border: 1px solid $pwc-orange;
+    color: $pwc-orange;
+  }
+}
+
+.button.add {
+  background: $pwc-orange;
+  border-radius: 3px;
+  width: 95px;
+  color: white;
   border: 0;
   opacity: 0.9;
   &:hover {
@@ -26,7 +50,53 @@
 .button.cancel {
   background: $soft-grey;
   border-radius: 3px;
+  width: 200px;
   color: black;
+  border: 0;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.button.reset {
+  background: $soft-grey;
+  border-radius: 3px;
+  color: black;
+  border: 0;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.button.confirmNo {
+  background: $soft-grey;
+  border-radius: 3px;
+  color: black;
+  border: 0;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
+.button.confirmYes {
+  background: $pwc-orange;
+  border-radius: 3px;
+  color: white;
   border: 0;
   opacity: 0.9;
   &:hover {

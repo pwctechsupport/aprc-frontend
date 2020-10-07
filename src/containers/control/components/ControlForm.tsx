@@ -220,7 +220,7 @@ const ControlForm = ({
           </DialogButton>
           {isCreate ? (
             <StyledDialogButton
-              className="black px-5 ml-2 mb-3"
+              className="cancel black px-5 ml-2 mb-3"
               onConfirm={
                 setModal
                   ? () => setModal(false)
@@ -232,7 +232,7 @@ const ControlForm = ({
             </StyledDialogButton>
           ) : (
             <StyledDialogButton
-              className="black px-5 ml-2 mb-3"
+              className="cancel black px-5 ml-2 mb-3"
               onConfirm={setModal ? () => setModal(false) : toggleEditMode}
               isEdit
             >
