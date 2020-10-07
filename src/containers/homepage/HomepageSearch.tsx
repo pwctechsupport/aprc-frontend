@@ -117,7 +117,7 @@ export default function HomepageSearch({
                   style={{
                     position: "relative",
                     fontSize: "150%",
-                    left: "200px",
+                    left: "185px",
                     bottom: "-1px",
                   }}
                 />
