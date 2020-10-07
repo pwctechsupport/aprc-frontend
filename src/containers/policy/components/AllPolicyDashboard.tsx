@@ -5,6 +5,7 @@ import { oc } from "ts-optchain";
 import { usePolicyDashboardQuery } from "../../../generated/graphql";
 import PolicyChart from "./PolicyChart";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import styled from "styled-components";
 
 const AllPolicyDashboard = () => {
   const { data, loading } = usePolicyDashboardQuery();
@@ -80,7 +81,7 @@ const AllPolicyDashboard = () => {
           },
         },
         {
-          label: "Total",
+          label: <strong>Total</strong>,
           subPolicy: totalPolicies,
           risk: totalRisks,
           control: totalControls,
@@ -97,10 +98,11 @@ const AllPolicyDashboard = () => {
       </Helmet>
       <h2 className="mb-5">All Policy Summary</h2>
       <PolicyChart data={chartData} policies />
-      <Table responsive className="mt-5">
+      <TableTitle>Task Manager</TableTitle>
+      <Table responsive className="mt-2">
         <thead>
           <tr>
-            <th>Task Manager</th>
+            <th>Status</th>
             <th>Policies</th>
             <th>Risks</th>
             <th>Controls</th>
@@ -126,3 +128,8 @@ const AllPolicyDashboard = () => {
 };
 
 export default AllPolicyDashboard;
+
+const TableTitle = styled.h6`
+  font-weight: bold;
+  margin-top: 50px;
+`

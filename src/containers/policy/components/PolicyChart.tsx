@@ -82,10 +82,10 @@ const colors = {
   policy: "white",
   lightpolicy: "#D04A02",
   palepolicy: "#E45C2B ",
-  risk: "white ",
+  risk: "dark ",
   lightrisk: "#EB8C00",
   palerisk: "#EFA333",
-  control: "white",
+  control: "dark",
   lightcontrol: "#FFB600",
   palecontrol: "#FFBD26 ",
   red: "#F56476",
@@ -185,7 +185,7 @@ const ChartLabelValueWrapper = styled.div<ChartLabelValueWrapperProps>`
   ${p =>
     p.total &&
     css`
-      text-shadow: rgba(0, 0, 0, 0.8) 0px 0px 2px;
+      text-shadow: rgba(0, 0, 0, 0.8) 0px 0px 1px;
     `}
 `
 
