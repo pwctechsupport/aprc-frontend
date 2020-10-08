@@ -44,8 +44,8 @@ const BreadCrumb = ({ crumbs }: BreadCrumbProps) => {
 
 export default BreadCrumb;
 const StyledLink = styled(Link)`
-  color: var(--tangerine);
+  color: var(--orange);
   &:hover {
-    color: var(--tangerine);
+    color: var(--orange);
   }
 `;
