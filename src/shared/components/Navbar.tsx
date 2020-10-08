@@ -299,8 +299,8 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
 
 const StyledDropdownMenu = styled(DropdownMenu)`
   background: var(--soft-grey) !important;
-  margin-top: -15px;
-  right: -12px;
+  margin-top: 7px;
+  right: -30px;
 `;
 
 const StyledDropdownToggle = styled(DropdownToggle)`
