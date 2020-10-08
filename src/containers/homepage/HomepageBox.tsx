@@ -25,7 +25,7 @@ export default function HomepageBox({
   const [open, setOpen] = useState(true);
   const [textHeight, setTextHeight] = useState(0);
   const { height } = useWindowSize();
-  const heigthAdjustment = `${(height * 50) / 100 - textHeight}px`;
+  const heigthAdjustment = open ? `${(height * 50) / 100 - textHeight}px` : undefined;
   return (
     <div
       className="my-2"
@@ -37,7 +37,7 @@ export default function HomepageBox({
       }}
     >
       <div
-        className="d-flex justify-content-between align-items-center p-2"
+        className="d-flex justify-content-between align-items-flex-start p-2 pt-3"
         style={{
           borderBottom: "1px solid rgba(0,0,0,0.3)",
         }}
@@ -48,10 +48,10 @@ export default function HomepageBox({
           <Icon open={open} />
         </BoxHeader>
       </div>
-      <Collapse isOpen={open}>
+      {/* <Collapse isOpen={open}> */}
         <div className="p-2" style={{ minHeight: heigthAdjustment }}>
           {list.length ? (
-            list.map((item) => (
+            list.slice(0, open ? 7 : 3).map((item) => (
               <StyledLink
                 key={item.value}
                 to={
@@ -76,7 +76,7 @@ export default function HomepageBox({
             </div>
           )}
         </div>
-      </Collapse>
+      {/* </Collapse> */}
     </div>
   );
 }

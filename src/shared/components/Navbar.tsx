@@ -218,7 +218,7 @@ const userMenus = [
 // =============================================
 const NavbarWithColor = styled(Navbar)`
   padding-top: 25px;
-  height: 90px;
+  height: 70px;
   background-color: white;
   border-bottom: 1px solid var(--soft-grey);
 `;
@@ -231,7 +231,7 @@ const Underline = styled.div`
   position: relative;
   height: 5px;
   background-color: var(--orange);
-  top: 8px;
+  top: 1px;
   left: 0;
 `;
 const Image = styled.img`

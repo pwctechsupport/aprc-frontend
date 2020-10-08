@@ -387,7 +387,7 @@ const RiskForm = ({
           </DialogButton>
           {isCreate ? (
             <StyledDialogButton
-              className="black px-5 ml-2"
+              className="cancel black px-5 ml-2"
               onConfirm={
                 setModal
                   ? () => setModal(false)
@@ -399,7 +399,7 @@ const RiskForm = ({
             </StyledDialogButton>
           ) : (
             <StyledDialogButton
-              className="black px-5 ml-2"
+              className="cancel black px-5 ml-2"
               onConfirm={setModal ? () => setModal(false) : toggleEditMode}
               isEdit
             >

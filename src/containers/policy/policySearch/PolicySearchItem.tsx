@@ -65,16 +65,6 @@ export default function PolicySearchItem({
     <Fragment>
       {/* homepageSearchs is a string for search */}
       <PolicySearchItemContainerMini>
-        <div>
-          {loading ? (
-            <div className={"text-center"}>
-              <FaSpinner className="icon-spin" size={20} />
-            </div>
-          ) : parentTitle.length ? (
-            <BreadCrumb crumbs={[...breadcrumb]} />
-          ) : null}
-        </div>
-
         <Row>
           <StyledLink to={`/policy/${id}/details`}>
             <div className="ml-2">
@@ -85,7 +75,7 @@ export default function PolicySearchItem({
             <div className="mb-2 ml-2">
               <DateHover withIcon>{updatedAt}</DateHover>
             </div>
-            <div className="text-secondary ml-2">
+            <div className="text-secondary ml-2 text-justify">
               {(description
                 ?.toLowerCase()
                 .includes(homepageSearch.toLowerCase()) &&
@@ -303,6 +293,15 @@ export default function PolicySearchItem({
               </Col>
             )}
         </Row>
+        <div>
+          {loading ? (
+            <div className={"text-center"}>
+              <FaSpinner className="icon-spin" size={20} />
+            </div>
+          ) : parentTitle.length ? (
+            <BreadCrumb crumbs={[...breadcrumb]} />
+          ) : null}
+        </div>
       </PolicySearchItemContainerMini>
     </Fragment>
   );
