@@ -48,7 +48,7 @@ const BusinessProcessForm = ({
             )}
             <DialogButton
               onConfirm={handleSubmit(submit)}
-              className="pwc ml-0"
+              className="add ml-0"
               type="button"
               message={`${submitButtonName} business process?`}
             >

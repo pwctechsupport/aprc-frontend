@@ -139,7 +139,7 @@ const Departments = ({ history }: RouteComponentProps) => {
                     />
                   </Col>
                   <Col>
-                    <Button loading={createM.loading} className="pwc px-5">
+                    <Button loading={createM.loading} className="add px-3">
                       Add
                     </Button>
                   </Col>

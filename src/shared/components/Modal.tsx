@@ -74,14 +74,14 @@ const ModalDialog = ({
       footer={
         <Fragment>
           <Button
-            className="button cancel"
+            className="button confirmNo"
             onClick={functions.onNo}
             disabled={disabled}
           >
             {actions.no}
           </Button>
           <Button
-            className="button pwc"
+            className="button confirmYes"
             onClick={functions.onYes}
             disabled={disabled}
           >

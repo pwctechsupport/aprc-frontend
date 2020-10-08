@@ -345,7 +345,7 @@ ResourceFormProps) {
         </Button>
         {isCreate ? (
           <StyledDialogButton
-            className="black px-5 ml-2"
+            className="cancel black px-5 ml-2"
             style={{ backgroundColor: "rgba(233, 236, 239, 0.5)" }}
             onConfirm={
               setModal
