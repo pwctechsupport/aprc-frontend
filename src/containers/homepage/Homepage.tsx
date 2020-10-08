@@ -26,9 +26,7 @@ export default function Homepage() {
   const popularPolicies = data?.popularPolicies?.collection || [];
   const recentlyAddedPolicies = data?.recentlyAddedPolicies?.collection || [];
   const modifiedRecentlyAddedPol = recentlyAddedPolicies
-    .filter((a) => a.draft === null)
-    .slice(0, 5);
-
+    .filter((a) => a.draft === null);
   const customModifier = (data: any) => {
     const safetyNet = data
       ? { label: data.title, value: data.id }
