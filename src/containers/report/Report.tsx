@@ -351,7 +351,7 @@ const TitleStyle = styled.h4`
 border-top: 1px solid var(--primary-side-box);
 border-bottom: 1px solid var(--primary-side-box);
 padding: 5px;
-margin-right: 1200px;
+width: 200px;
 margin-top: 16px;
 margin-bottom: -11px;
 }
