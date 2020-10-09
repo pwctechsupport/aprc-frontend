@@ -130,6 +130,11 @@
   &.red {
     background-color: $soft-red;
   }
+
+  &.dark {
+    background-color: $pwc-orange;
+    color: white;
+  }
 }
 
 @media all and (max-width: $sm) {
