@@ -32,18 +32,19 @@ const Footer = ({ fontColor = "", linebreak }: FooterProps) => {
   return (
     <div
       style={{
-        display: "block",
-        height: "60px",
+        display: "flex",
+        alignItems: "flex-end",
+        height: "137px",
         width: "100%",
-        marginTop: "75px",
+        marginTop: "auto",
       }}
     >
       <div
-        className="justify-content-center   "
         style={{
           borderTop: "1px solid #E7E7E7",
           padding: "5px",
           bottom: "-5px",
+          width: "100%",
           height: `${
             475 < width && width < 936 ? "80px" : width < 475 ? "100px" : "60px"
           }`,
