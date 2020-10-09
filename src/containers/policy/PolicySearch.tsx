@@ -22,6 +22,7 @@ import { RouteComponentProps } from "react-router-dom";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Footer from "../../shared/components/Footer";
 import styled from "styled-components";
+import { isEmpty } from "lodash";
 
 interface PolicySearchFilter {
   title_cont?: string;
@@ -128,7 +129,7 @@ export default function PolicySearch({
                 </div>
               </Collapse>
             </div>
-            {filters.length === 0 || (filters[0][1] === "" && filters[1][1] === "" && filters.length === 2)  ? (
+            {isEmpty(filter) || (filters[0][1] === "" && filters[1][1] === "" && filters.length === 2)  ? (
               <div>
                 <BreadCrumb crumbs={[["/policy", "Search policies"]]} />
                 <StyleH5>
