@@ -202,7 +202,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                   <Tooltip description="Reset Search">
                     <Button
                       type="reset"
-                      className="soft red"
+                      className="soft red mr-4"
                       color=""
                       onClick={handleReset}
                     >
@@ -212,7 +212,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                   <Button
                     loading={loading}
                     type="submit"
-                    className="pwc ml-4"
+                    className="pwc ml-2"
                     color="primary"
                   >
                     Search

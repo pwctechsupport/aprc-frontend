@@ -323,7 +323,7 @@ export default function Report() {
                 }}
                 type="reset"
                 className={
-                  isMobile ? "button reset ml-1" : "button reset ml-5"
+                  isMobile ? "button reset ml-1" : "button reset ml-3"
                 }
               >
                 <PickIcon name="reload" />

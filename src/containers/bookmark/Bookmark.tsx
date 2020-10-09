@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { RouteComponentProps } from "react-router-dom";
 import Select from "react-select";
 import { Col, Container, Form, Input, Row } from "reactstrap";
+import styled from "styled-components";
 import { oc } from "ts-optchain";
 import PickIcon from "../../assets/Icons/PickIcon";
 import {
@@ -172,7 +173,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                   <Tooltip description="Reset Search">
                     <Button
                       type="reset"
-                      className="soft red"
+                      className="soft red ml-0 mr-4"
                       color=""
                       onClick={handleReset}
                     >
@@ -182,28 +183,26 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                   <Button
                     loading={loading}
                     type="submit"
-                    className="pwc ml-1"
+                    className="pwc ml-2"
                     color="primary"
                   >
                     Search
                   </Button>
                 </Col>
+                <Col>
+                  <div className="text-right">
+                    <DialogButton
+                      className="soft red"
+                      disabled={!checked.length}
+                      loading={deleteBookmarksM.loading}
+                      onConfirm={handleDelete}
+                    >
+                      <PickIcon name="trash" />
+                    </DialogButton>
+                  </div>
+                </Col>
               </Row>
             </Form>
-          </Col>
-        </Row>
-        <Row className="mt-4 mt-md-1">
-          <Col>
-            <div className="text-right">
-              <DialogButton
-                className="soft red"
-                disabled={!checked.length}
-                loading={deleteBookmarksM.loading}
-                onConfirm={handleDelete}
-              >
-                <PickIcon name="trash" />
-              </DialogButton>
-            </div>
           </Col>
         </Row>
         <div className="table-responsive mt-1" style={{ minHeight: "70vh" }}>
