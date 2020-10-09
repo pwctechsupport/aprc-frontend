@@ -74,7 +74,7 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
             </div>
 
             <Button
-              className="pwc"
+              className="pwc mx-auto"
               color="primary"
               type="submit"
               block
