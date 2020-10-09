@@ -78,7 +78,7 @@ export default function Avatar({ data }: AvatarProps) {
             >
               Settings
             </Button>
-            <Button onClick={item.onClick} color="primary" className="pwc mt-2">
+            <Button onClick={item.onClick} color="white" className="soft dark mt-2">
               Log out
             </Button>
           </div>
