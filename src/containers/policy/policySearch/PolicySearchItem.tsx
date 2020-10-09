@@ -316,7 +316,7 @@ const PolicySearchItemContainerMini = styled.div`
   background: #f7f7f7;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 25px;
+  padding: 10px 15px;
   margin-bottom: 10px;
   margin-top: 20px;
   &:last-child {
