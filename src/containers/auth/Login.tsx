@@ -130,7 +130,7 @@ export default function Login({ history }: RouteComponentProps) {
                 </Col>
                 <Col>
                   <Button
-                    className="pwc"
+                    className="confirmYes"
                     color="primary"
                     type="submit"
                     block
