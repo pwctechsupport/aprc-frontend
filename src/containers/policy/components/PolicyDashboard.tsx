@@ -3,6 +3,7 @@ import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
 import PolicyChart, { PolicyChartProps } from "./PolicyChart";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
+import styled from "styled-components";
 
 const PolicyDashboard = ({ data }: PolicyChartProps) => {
   const [isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -45,7 +46,7 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
           },
         },
         {
-          label: "Total",
+          label: <strong>Total</strong>,
           subPolicy: oc(subPolicy).total(0),
           control: oc(control).total(0),
           risk: oc(risk).total(0),
@@ -57,7 +58,8 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
   return (
     <div>
       <PolicyChart data={data} />
-      <Table className="mt-5" responsive>
+      <TableTitle>Task Manager</TableTitle>
+      <Table className="mt-2" responsive>
         <thead>
           <tr>
             <th>Task Manager</th>
@@ -86,3 +88,8 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
 };
 
 export default PolicyDashboard;
+
+const TableTitle = styled.h6`
+  font-weight: bold;
+  margin-top: 50px;
+`
