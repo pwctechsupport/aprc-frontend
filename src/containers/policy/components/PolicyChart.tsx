@@ -96,6 +96,8 @@ const colors = {
   controlText: "#FFB600",
 };
 
+const minHeight = (p: PolicyChartItemProps) => p.height ? '70px' : 'unset';
+
 const PolicyChartContainer = styled.div`
   display: flex;
 `;
@@ -114,7 +116,8 @@ const PolicyChartItemWrapper = styled.div`
 `;
 
 const PolicyChartItem = styled.div<PolicyChartItemProps>`
-  height: ${(p: PolicyChartItemProps) => p.height + "px"};
+  height: ${(p: PolicyChartItemProps) => p.height + 'px'};
+  min-height: ${minHeight};
   position: absolute;
   width: 100%;
   bottom: 0;
@@ -135,11 +138,13 @@ const PolicyChartItem = styled.div<PolicyChartItemProps>`
     css`
       width: 98%;
       bottom: 3px;
-      height: ${(p: PolicyChartItemProps) => p.height - 6 + "px"};
+      height: ${(p: PolicyChartItemProps) => p.height - 6 + 'px'};
+      min-height: ${minHeight};
     `};
-`;
+`
 const PolicyChartItemPolicies = styled.div<PolicyChartItemProps>`
-height: ${(p: PolicyChartItemProps) => p.height + "px"};
+height: ${(p: PolicyChartItemProps) => p.height + 'px'};
+min-height: ${minHeight};
 position: absolute;
 width: 100%;
 bottom: 0;
@@ -182,11 +187,6 @@ const ChartLabelValueWrapper = styled.div<ChartLabelValueWrapperProps>`
   position: absolute;
   bottom: 20px;
   border-radius: 5px;
-  ${p =>
-    p.total &&
-    css`
-      text-shadow: rgba(0, 0, 0, 0.8) 0px 0px 1px;
-    `}
 `
 
 // ---------------------------------------------------
