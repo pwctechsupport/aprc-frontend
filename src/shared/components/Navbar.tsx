@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { Link, NavLink as RrNavLink, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from 'react'
+import { FaSearch } from 'react-icons/fa'
+import { useDispatch } from 'react-redux'
+import { Link, NavLink as RrNavLink, useLocation } from 'react-router-dom'
 import {
   Collapse,
   DropdownItem,
@@ -16,66 +16,59 @@ import {
   NavLink,
   Row,
   UncontrolledDropdown,
-} from "reactstrap";
-import styled from "styled-components";
-import PickIcon from "../../assets/Icons/PickIcon";
-import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
-import { H1 } from "../../containers/auth/Login";
-import HomepageSearch from "../../containers/homepage/HomepageSearch";
-import { useNotificationsCountQuery } from "../../generated/graphql";
-import { unauthorize } from "../../redux/auth";
-import useAccessRights from "../hooks/useAccessRights";
-import useWindowSize from "../hooks/useWindowSize";
-import Avatar from "./Avatar";
-import NotificationBadge from "./NotificationBadge";
+} from 'reactstrap'
+import styled from 'styled-components'
+import PickIcon from '../../assets/Icons/PickIcon'
+import pwcLogo from '../../assets/images/pwc-logo-navbar.png'
+import { H1 } from '../../containers/auth/Login'
+import HomepageSearch from '../../containers/homepage/HomepageSearch'
+import { useNotificationsCountQuery } from '../../generated/graphql'
+import { unauthorize } from '../../redux/auth'
+import useAccessRights from '../hooks/useAccessRights'
+import useWindowSize from '../hooks/useWindowSize'
+import Avatar from './Avatar'
+import NotificationBadge from './NotificationBadge'
 
 export default function NewNavbar() {
-  const dispatch = useDispatch();
-  const location = useLocation();
+  const dispatch = useDispatch()
+  const location = useLocation()
   const rolesArray = useAccessRights([
-    "admin",
-    "admin_preparer",
-    "admin_reviewer",
-  ]);
-  const currentUrl = location.pathname;
-  const isMereUser = rolesArray.every((a) => !a);
-  const size = useWindowSize();
-  const isBigScreen = size.width > 896;
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen((p) => !p);
+    'admin',
+    'admin_preparer',
+    'admin_reviewer',
+  ])
+  const currentUrl = location.pathname
+  const isMereUser = rolesArray.every((a) => !a)
+  const size = useWindowSize()
+  const isBigScreen = size.width > 896
+  const [isOpen, setIsOpen] = useState(false)
+  const toggle = () => setIsOpen((p) => !p)
   function handleLogout() {
-    dispatch(unauthorize());
+    dispatch(unauthorize())
   }
-  const isMobile = size.width < 768;
-  const isLaptop = size.width > 991;
+  const isMobile = size.width < 768
+  const isLaptop = size.width > 991
   useEffect(() => {
-    setIsOpen((p) => (p ? !p : p));
-  }, [setIsOpen, location.pathname]);
+    setIsOpen((p) => (p ? !p : p))
+  }, [setIsOpen, location.pathname])
 
   const { data } = useNotificationsCountQuery({
-    fetchPolicy: "network-only",
-  });
+    fetchPolicy: 'network-only',
+  })
 
-  const unreadCount = data?.notifications?.metadata.totalCount || 0;
-  const showNotif = data?.me?.notifShow || false;
+  const unreadCount = data?.notifications?.metadata.totalCount || 0
+  const showNotif = data?.me?.notifShow || false
   const underlineDecider = (path: any) => {
     if (path === currentUrl) {
-      return <Underline className="mx-2"></Underline>;
+      return <Underline />
     }
-  };
+  }
   return (
     <NavbarWithColor fixed="top" light expand="lg">
       <StyledNavbarBrand tag={Link} to="/">
-        <Row>
-          <Image src={pwcLogoOutline} alt="PwC" className="ml-2 "/>
-          <Straightline/>
-          <H1
-            style={{ paddingTop: isMobile ? "5px" : "10px", marginBottom: 0 }}
-            className="ml-2 mt-4"
-          >
-            eGRC
-          </H1>
-        </Row>
+        <Image src={pwcLogo} alt="PwC" />
+        <StraightLine />
+        <div>eGRC</div>
       </StyledNavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
@@ -84,8 +77,8 @@ export default function NewNavbar() {
             .filter((menu) =>
               isBigScreen || isMobile
                 ? isMereUser
-                  ? menu.label !== "Administrative" && menu.label !== "Settings"
-                  : menu.label !== "Settings"
+                  ? menu.label !== 'Administrative' && menu.label !== 'Settings'
+                  : menu.label !== 'Settings'
                 : true
             )
             .map(({ label, path, children, dropdown }) => {
@@ -93,30 +86,30 @@ export default function NewNavbar() {
                 return (
                   <UncontrolledDropdown key={label} nav inNavbar>
                     <StyledDropdownToggle
-                      style={{ fontSize: "15px", paddingTop: "15px" }}
+                      style={{ fontSize: '15px', paddingTop: '15px' }}
                       nav
                       caret
                     >
                       {label}
+                      <StyledDropdownMenu right className="p-0">
+                        {children?.map((childMenu) => (
+                          <DropdownItem key={childMenu.label} className="p-0">
+                            <NavItem key={childMenu.label}>
+                              <StyledDropdownNavLink
+                                tag={RrNavLink}
+                                to={childMenu.path}
+                                className="px-2 py-1 py-md-2"
+                                activeClassName="active"
+                              >
+                                {childMenu.label}
+                              </StyledDropdownNavLink>
+                            </NavItem>
+                          </DropdownItem>
+                        ))}
+                      </StyledDropdownMenu>
                     </StyledDropdownToggle>
-                    <StyledDropdownMenu right className="p-0">
-                      {children?.map((childMenu) => (
-                        <DropdownItem key={childMenu.label} className="p-0">
-                          <NavItem key={childMenu.label}>
-                            <StyledDropdownNavLink
-                              tag={RrNavLink}
-                              to={childMenu.path}
-                              className="px-2 py-1 py-md-2"
-                              activeClassName="active"
-                            >
-                              {childMenu.label}
-                            </StyledDropdownNavLink>
-                          </NavItem>
-                        </DropdownItem>
-                      ))}
-                    </StyledDropdownMenu>
                   </UncontrolledDropdown>
-                );
+                )
               }
               return (
                 <NavItem key={label}>
@@ -124,18 +117,19 @@ export default function NewNavbar() {
                     isLaptop={isLaptop}
                     tag={RrNavLink}
                     to={path}
-                    exact={path === "/"}
+                    exact={path === '/'}
                     activeClassName="active"
                     style={{
-                      fontSize: "15px",
-                      paddingTop: "15px",
+                      fontSize: '15px',
+                      paddingTop: '15px',
+                      position: 'relative',
                     }}
                   >
                     {label}
+                    {isLaptop && underlineDecider(path)}
                   </StyledNavLink>
-                  {isLaptop && underlineDecider(path)}
                 </NavItem>
-              );
+              )
             })}
         </Nav>
         <NavbarText>
@@ -151,8 +145,8 @@ export default function NewNavbar() {
               <Link
                 to={`${
                   rolesArray.every((a) => a === false)
-                    ? "/search-policy?status_eq=release"
-                    : "/search-policy"
+                    ? '/search-policy?status_eq=release'
+                    : '/search-policy'
                 }`}
                 className="text-dark mr-4"
               >
@@ -160,20 +154,20 @@ export default function NewNavbar() {
               </Link>
             </SearchPolicies>
             <Link to="/bookmark" className="text-dark ml-2">
-              <PickIcon name="bookmark" style={{ width: "35px" }} />
+              <PickIcon name="bookmark" style={{ width: '35px' }} />
             </Link>
             <div className="ml-4 mr-4">
               <Link to="/notifications" className="text-dark">
                 {showNotif && <NotificationBadge count={unreadCount} />}
-                <PickIcon name="notif" style={{ width: "35px" }} />
+                <PickIcon name="notif" style={{ width: '35px' }} />
               </Link>
             </div>
-            <Avatar data={[{ label: "Logout", onClick: handleLogout }]} />
+            <Avatar data={[{ label: 'Logout', onClick: handleLogout }]} />
           </div>
         </NavbarText>
       </Collapse>
     </NavbarWithColor>
-  );
+  )
 }
 
 // =============================================
@@ -181,76 +175,78 @@ export default function NewNavbar() {
 // =============================================
 
 const userMenus = [
-  { label: "Home", path: "/" },
-  { label: "Policy", path: "/policy" },
-  { label: "Risk & Control", path: "/risk-and-control" },
-  { label: "Exception Report", path: "/report" },
+  { label: 'Home', path: '/' },
+  { label: 'Policy', path: '/policy' },
+  { label: 'Risk & Control', path: '/risk-and-control' },
+  { label: 'Exception Report', path: '/report' },
   {
-    label: "Administrative",
+    label: 'Administrative',
     dropdown: true,
-    path: "/",
+    path: '/',
     children: [
-      { label: "Policy", path: "/policy" },
-      { label: "Policy category", path: "/policy-category" },
-      { label: "Policy reference", path: "/references" },
-      { label: "Control", path: "/control" },
-      { label: "User", path: "/user" },
-      { label: "Business process", path: "/business-process" },
-      { label: "Resources", path: "/resources" },
-      { label: "Risks", path: "/risk" },
+      { label: 'Policy', path: '/policy' },
+      { label: 'Policy category', path: '/policy-category' },
+      { label: 'Policy reference', path: '/references' },
+      { label: 'Control', path: '/control' },
+      { label: 'User', path: '/user' },
+      { label: 'Business process', path: '/business-process' },
+      { label: 'Resources', path: '/resources' },
+      { label: 'Risks', path: '/risk' },
     ],
   },
   {
-    label: "Settings",
+    label: 'Settings',
     dropdown: true,
-    path: "/",
+    path: '/',
     children: [
-      { label: "Profile", path: "/settings/update-profile" },
+      { label: 'Profile', path: '/settings/update-profile' },
       // { label: "Notifications", path: "/settings/notifications" },
-      { label: "History", path: "/settings/history" },
-      { label: "User Manual", path: "/settings/user-manual" },
+      { label: 'History', path: '/settings/history' },
+      { label: 'User Manual', path: '/settings/user-manual' },
     ],
   },
-];
+]
 
 // =============================================
 // Styled Components
 // =============================================
 const NavbarWithColor = styled(Navbar)`
-  padding-top: 25px;
-  height: 70px;
   background-color: white;
   border-bottom: 1px solid var(--soft-grey);
-`;
-const Straightline = styled.p`
-  border-left: 2px solid var(--darker-grey);
+  padding-bottom: 0px;
+`
+const StraightLine = styled.div`
+  border-left: 1.7px solid var(--darker-grey);
   height: 30px;
-  margin: 29px 7px;
+  margin-right: 15px;
 `
 const Underline = styled.div`
-  position: relative;
+  position: absolute;
   height: 5px;
+  width: 100%;
   background-color: var(--orange);
-  top: 1px;
-  left: 0;
-`;
+  bottom: -5px;
+  left: 0px;
+`
 const Image = styled.img`
-  margin: -10px -14px 19px -20px;
   width: auto;
-  height: 90px;
+  height: 50px;
+  margin-right: 15px;
   @media only screen and (max-width: 767px) {
     height: 35px;
   }
-`;
+`
 const SearchBar = styled.div`
   width: 15em;
   @media only screen and (max-width: 1183px) {
     display: none;
   }
-`;
+`
 
 const StyledNavbarBrand = styled(NavbarBrand)`
-  width: calc(10vw - 20px);
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
   @media only screen and (max-width: 1400px) {
     width: unset;
   }
@@ -260,13 +256,13 @@ const StyledNavbarBrand = styled(NavbarBrand)`
   @media only screen and (max-width: 991px) {
     width: unset;
   }
-`;
+`
 const SearchPolicies = styled.div`
   display: none;
   @media only screen and (max-width: 1183px) {
     display: block;
   }
-`;
+`
 const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
   color: rgba(0, 0, 0, 0.8) !important;
   font-weight: bold;
@@ -276,7 +272,7 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
     color: var(--orange) !important;
   }
   &::after {
-    content: "";
+    content: '';
     display: block;
     margin-top: 5px;
     height: 2px;
@@ -284,7 +280,7 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
   }
   &.active {
     &::after {
-      background: ${(p) => (p.isLaptop ? "" : "var(--orange)")};
+      background: ${(p) => (p.isLaptop ? '' : 'var(--orange)')};
     }
   }
   @media only screen and (min-width: 1081px) {
@@ -295,13 +291,14 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
       color: var(--orange) !important;
     }
   }
-`;
+`
 
 const StyledDropdownMenu = styled(DropdownMenu)`
   background: var(--soft-grey) !important;
   margin-top: 7px;
-  right: -30px;
-`;
+  left: 0px;
+  overflow-x: hidden;
+`
 
 const StyledDropdownToggle = styled(DropdownToggle)`
   color: rgba(0, 0, 0, 0.8) !important;
@@ -311,7 +308,7 @@ const StyledDropdownToggle = styled(DropdownToggle)`
   &:hover {
     color: var(--orange) !important;
   }
-`;
+`
 
 const StyledDropdownNavLink = styled(NavLink)`
   color: var(--black) !important;
@@ -329,4 +326,4 @@ const StyledDropdownNavLink = styled(NavLink)`
       background: var(--orange) !important;
     }
   }
-`;
+`
