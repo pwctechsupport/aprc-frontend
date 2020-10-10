@@ -19,7 +19,7 @@ import {
 } from 'reactstrap'
 import styled from 'styled-components'
 import PickIcon from '../../assets/Icons/PickIcon'
-import pwcLogoOutline from '../../assets/images/pwc-logo-outline-black.png'
+import pwcLogo from '../../assets/images/pwc-logo-navbar.png'
 import { H1 } from '../../containers/auth/Login'
 import HomepageSearch from '../../containers/homepage/HomepageSearch'
 import { useNotificationsCountQuery } from '../../generated/graphql'
@@ -66,16 +66,9 @@ export default function NewNavbar() {
   return (
     <NavbarWithColor fixed="top" light expand="lg">
       <StyledNavbarBrand tag={Link} to="/">
-        <Row>
-          <Image src={pwcLogoOutline} alt="PwC" className="ml-2 " />
-          <Straightline />
-          <H1
-            style={{ paddingTop: isMobile ? '5px' : '10px', marginBottom: 0 }}
-            className="ml-2 mt-4"
-          >
-            eGRC
-          </H1>
-        </Row>
+        <Image src={pwcLogo} alt="PwC" />
+        <StraightLine />
+        <div>eGRC</div>
       </StyledNavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>
@@ -217,15 +210,14 @@ const userMenus = [
 // Styled Components
 // =============================================
 const NavbarWithColor = styled(Navbar)`
-  padding-top: 25px;
-  height: 70px;
   background-color: white;
   border-bottom: 1px solid var(--soft-grey);
+  padding-bottom: 0px;
 `
-const Straightline = styled.p`
-  border-left: 2px solid var(--darker-grey);
+const StraightLine = styled.div`
+  border-left: 1.7px solid var(--darker-grey);
   height: 30px;
-  margin: 29px 7px;
+  margin-right: 15px;
 `
 const Underline = styled.div`
   position: relative;
@@ -235,9 +227,9 @@ const Underline = styled.div`
   left: 0;
 `
 const Image = styled.img`
-  margin: -10px -14px 19px -20px;
   width: auto;
-  height: 90px;
+  height: 50px;
+  margin-right: 15px;
   @media only screen and (max-width: 767px) {
     height: 35px;
   }
@@ -250,7 +242,9 @@ const SearchBar = styled.div`
 `
 
 const StyledNavbarBrand = styled(NavbarBrand)`
-  width: calc(10vw - 20px);
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
   @media only screen and (max-width: 1400px) {
     width: unset;
   }

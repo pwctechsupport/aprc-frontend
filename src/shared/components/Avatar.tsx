@@ -24,7 +24,7 @@ export default function Avatar({ data }: AvatarProps) {
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   return (
-    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+    <Dropdown isOpen={dropdownOpen} toggle={toggle} className="clickable">
       <DropdownToggle tag="div">
         <PickIcon name="avatar" style={{ width: "40px" }} />
 
