@@ -68,60 +68,53 @@ export default function Login({ history }: RouteComponentProps) {
   // const screenSize = useWindowSize();
 
   return (
-    <BsContainer fluid className="login-background pt-md-5">
-      <Image
-        style={{
-          position: "absolute",
-          top: "10px",
-          left: 0,
-          height: "150px",
-          width: "150px",
-        }}
-        className="mt-0 ml-5"
-        src={pwcLogoOutline}
-        alt="pwc-logo"
-      />
-      <Row style={{ minHeight: "80vh" }}>
-        <Col sm={12} md={7}></Col>
-        <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
-          <BsContainer className="px-0 w-50 mh-75">
-            <Helmet>
-              <title>Login - PricewaterhouseCoopers</title>
-            </Helmet>
-            <LoginBox>
-              <H1>Welcome to eGRC</H1>
+    <BsContainer fluid className="login-background">
+      <Row>
+        <Col>
+          <Image
+            className="mt-0"
+            src={pwcLogoOutline}
+            alt="pwc-logo"
+          />
+        </Col>
+        <Col className="login-wrapper">
+          <Helmet>
+            <title>Login - PricewaterhouseCoopers</title>
+          </Helmet>
+          <LoginBox>
+            <H1>Welcome to eGRC</H1>
 
-              <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-                <Label>Email</Label>
-                <br />
-                <Input
-                  name="email"
-                  placeholder="Enter email address"
-                  required
-                  ref={register({ required: true })}
-                />
-                <br />
-                <br />
-                <Label>Password</Label>
-                <br />
-                <Input
-                  name="password"
-                  type="password"
-                  placeholder="Enter password"
-                  required
-                  ref={register({ required: true })}
-                />
-                <br />
-                <br />
-                <Captcha
-                  ref={(e: any) => st(e)}
-                  onChange={setCaptcha}
-                  placeholder="Insert captcha"
-                />
-                <br />
-                <br />
+            <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+              <Label>Email</Label>
+              <br />
+              <Input
+                name="email"
+                placeholder="Enter email address"
+                required
+                ref={register({ required: true })}
+              />
+              <br />
+              <br />
+              <Label>Password</Label>
+              <br />
+              <Input
+                name="password"
+                type="password"
+                placeholder="Enter password"
+                required
+                ref={register({ required: true })}
+              />
+              <br />
+              <br />
+              <Captcha
+                ref={(e: any) => st(e)}
+                onChange={setCaptcha}
+                placeholder="Insert captcha"
+              />
+              <br />
+              <br />
 
-                <Row>
+              <Row>
                 <Col>
                   <h6></h6>
                   <Link to="/forgot-password" className="link-pwc">
@@ -137,37 +130,25 @@ export default function Login({ history }: RouteComponentProps) {
                     loading={loading}
                     disabled={!captcha}
                   >
-                  Login
+                    Login
                   </Button>
                 </Col>
-                </Row>
-                <div className="text-center my-4">
-                </div>
-              </Form>
-              </LoginBox>
-          </BsContainer>
+              </Row>
+              <div className="text-center my-4"></div>
+            </Form>
+          </LoginBox>
         </Col>
       </Row>
-      <Footer fontColor={"white"} linebreak />
+      <Footer fontColor={'white'} linebreak />
     </BsContainer>
-  );
+  )
 }
 
 export const LoginBox = styled.div`
   border: 1px solid rgba(0,0,0,0.2);
-  padding: 2vh;
+  padding: 10px;
   border-radius: 3px;
   background: rgba(255,255,255,.7);
-  margin-left: 30px;
-  margin-top: 60px;
-  height: 450px;
-  width: 290px;
-  @media only screen and (max-width: 768px) {
-    width: 300px;
-    height: 470px;
-    margin-left: -50px;
-    margin-top: 125px;
-  }
 `
 export const Container = styled.div`
   display: flex;
@@ -183,7 +164,9 @@ export const Form = styled.form`
 export const Image = styled.img`
   width: 200px;
   height: auto;
-  margin: 70px;
+  @media (max-width: 760px) {
+    width: 100px;
+  }
 `;
 
 export const H1 = styled.h3`
