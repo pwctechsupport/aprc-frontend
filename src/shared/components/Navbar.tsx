@@ -60,7 +60,7 @@ export default function NewNavbar() {
   const showNotif = data?.me?.notifShow || false
   const underlineDecider = (path: any) => {
     if (path === currentUrl) {
-      return <Underline className="mx-2"></Underline>
+      return <Underline />
     }
   }
   return (
@@ -91,23 +91,23 @@ export default function NewNavbar() {
                       caret
                     >
                       {label}
+                      <StyledDropdownMenu right className="p-0">
+                        {children?.map((childMenu) => (
+                          <DropdownItem key={childMenu.label} className="p-0">
+                            <NavItem key={childMenu.label}>
+                              <StyledDropdownNavLink
+                                tag={RrNavLink}
+                                to={childMenu.path}
+                                className="px-2 py-1 py-md-2"
+                                activeClassName="active"
+                              >
+                                {childMenu.label}
+                              </StyledDropdownNavLink>
+                            </NavItem>
+                          </DropdownItem>
+                        ))}
+                      </StyledDropdownMenu>
                     </StyledDropdownToggle>
-                    <StyledDropdownMenu right className="p-0">
-                      {children?.map((childMenu) => (
-                        <DropdownItem key={childMenu.label} className="p-0">
-                          <NavItem key={childMenu.label}>
-                            <StyledDropdownNavLink
-                              tag={RrNavLink}
-                              to={childMenu.path}
-                              className="px-2 py-1 py-md-2"
-                              activeClassName="active"
-                            >
-                              {childMenu.label}
-                            </StyledDropdownNavLink>
-                          </NavItem>
-                        </DropdownItem>
-                      ))}
-                    </StyledDropdownMenu>
                   </UncontrolledDropdown>
                 )
               }
@@ -122,11 +122,12 @@ export default function NewNavbar() {
                     style={{
                       fontSize: '15px',
                       paddingTop: '15px',
+                      position: 'relative',
                     }}
                   >
                     {label}
+                    {isLaptop && underlineDecider(path)}
                   </StyledNavLink>
-                  {isLaptop && underlineDecider(path)}
                 </NavItem>
               )
             })}
@@ -220,11 +221,12 @@ const StraightLine = styled.div`
   margin-right: 15px;
 `
 const Underline = styled.div`
-  position: relative;
+  position: absolute;
   height: 5px;
+  width: 100%;
   background-color: var(--orange);
-  top: 1px;
-  left: 0;
+  bottom: -5px;
+  left: 0px;
 `
 const Image = styled.img`
   width: auto;
@@ -294,7 +296,8 @@ const StyledNavLink = styled(NavLink)<{ isLaptop?: boolean }>`
 const StyledDropdownMenu = styled(DropdownMenu)`
   background: var(--soft-grey) !important;
   margin-top: 7px;
-  right: -30px;
+  left: 0px;
+  overflow-x: hidden;
 `
 
 const StyledDropdownToggle = styled(DropdownToggle)`
