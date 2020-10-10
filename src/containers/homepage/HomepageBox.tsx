@@ -46,9 +46,11 @@ export default function HomepageBox({
         ref={(ref) => setTextHeight(ref?.clientHeight || 0)}
       >
         <h5 style={{ color: fontColor }}>{title}</h5>
-        <BoxHeader onClick={() => setOpen((p) => !p)}>
-          <Icon open={open} />
-        </BoxHeader>
+        <div>
+          <BoxHeader onClick={() => setOpen((p) => !p)}>
+            <Icon open={open} />
+          </BoxHeader>
+        </div>
       </div>
       {/* <Collapse isOpen={open}> */}
       <div className="p-2" style={{ minHeight: heigthAdjustment }}>
