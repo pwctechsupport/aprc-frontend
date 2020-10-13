@@ -1,5 +1,5 @@
 query homepage {
-  popularPolicies(filter: {}, limit: 5) {
+  popularPolicies(filter: {}, limit: 7) {
     collection {
       id
       title
@@ -15,19 +15,19 @@ query homepage {
       }
     }
   }
-  recentlyVisitedPolicies(filter: {}, limit: 5) {
+  recentlyVisitedPolicies(filter: {}, limit: 7) {
     collection {
       id
       title
     }
   }
-  popularResources(filter: {}, limit: 5) {
+  popularResources(filter: {}, limit: 7) {
     collection {
       id
       name
     }
   }
-  bookmarks(filter: { originator_type_eq: "policy" }, limit: 5) {
+  bookmarks(filter: { originator_type_eq: "policy" }, limit: 7) {
     collection {
       originatorId
       name
@@ -38,7 +38,7 @@ query homepage {
   }
 }
 query UserPVisit {
-  userPolicyVisits(filter: {}, limit: 5) {
+  userPolicyVisits(filter: {}, limit: 7) {
     collection {
       id
       policy {
