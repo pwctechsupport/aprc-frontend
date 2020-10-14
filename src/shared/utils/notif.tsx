@@ -52,6 +52,6 @@ function composeMessage(messages: any) {
 export const notifyGraphQLErrors = (errors: ApolloError) => {
   const messages = errors.graphQLErrors.map(err => err.message);
   notifyError(messages.length ? messages : "Whoops, Something went wrong...", {
-    autoClose: 5000
+    autoClose: 8000
   });
 };
