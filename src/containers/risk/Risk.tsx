@@ -126,11 +126,9 @@ export default function Risk({
     awaitRefetchQueries: true,
   });
   function handleUpdate(values: RiskFormValues) {
-    if(values.businessProcessIds.length > defaultValues.businessProcessIds.length
-      || values.levelOfRisk !== defaultValues.levelOfRisk
-      || values.name !== defaultValues.name
-      || values.typeOfRisk !== defaultValues.typeOfRisk
-      || values.businessProcessMain === undefined ){
+    if(values.businessProcessFirst === undefined && values.businessProcessSecond === undefined && values.businessProcessMain !== undefined ){
+      notifyError("The main business process must have at least 1 sub business process level and that sub business  process must be selected")
+    } else{
       update({
         variables: {
           input: {
@@ -142,8 +140,6 @@ export default function Risk({
           },
         },
       });
-    }else if(values.businessProcessFirst === undefined && values.businessProcessSecond === undefined){
-      notifyError("The main business process must have at least 1 sub business process level and that sub business  process must be selected")
     }
   }
 
