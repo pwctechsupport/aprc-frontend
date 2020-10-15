@@ -10,6 +10,7 @@ import {
 import HeaderWithBackButton from "../../shared/components/Header";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import { notifyError } from "../../shared/utils/notif";
 
 const CreateRisk = ({ history }: RouteComponentProps) => {
   const [createRisk, { loading }] = useCreateRiskMutation({
@@ -23,6 +24,9 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
   });
 
   function handleSubmit(values: RiskFormValues) {
+    if(values.businessProcessFirst === undefined && values.businessProcessSecond === undefined && values.businessProcessMain !== undefined ){
+      notifyError("The main business process must have at least 1 sub business process level and that sub business  process must be selected")
+    } else{
     createRisk({
       variables: {
         input: {
@@ -32,7 +36,7 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
           typeOfRisk: values.typeOfRisk || TypeOfRisk.BusinessRisk,
         },
       },
-    });
+    })};
   }
   return (
     <div>
