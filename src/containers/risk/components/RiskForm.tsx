@@ -45,12 +45,12 @@ const RiskForm = ({
    */
   function validateMainBps() {
     const invalidMainBp: typeof getBps = [];
-    const firstIds: any[] = getFirstBps.filter(b => firstBpIds.includes(b.id)).map(b => b.parentId)
+    const firstBpsParentIds: any[] = getFirstBps.filter(b => firstBpIds.includes(b.id)).map(b => b.parentId)
 
     mainBpIdsWatch?.forEach((bpMain) => {
       const bp = getBps.find((bp) => bp.id === bpMain)
 
-      if (bp?.children?.length && !firstIds.includes(bpMain)) {
+      if (bp && !firstBpsParentIds.includes(bpMain)) {
         invalidMainBp.push(bp)
       }
     })
