@@ -28,6 +28,7 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyError
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import PickIcon from "../../assets/Icons/PickIcon";
@@ -125,17 +126,21 @@ export default function Risk({
     awaitRefetchQueries: true,
   });
   function handleUpdate(values: RiskFormValues) {
-    update({
-      variables: {
-        input: {
-          id,
-          name: values.name,
-          businessProcessIds: values.businessProcessIds || [],
-          levelOfRisk: values.levelOfRisk,
-          typeOfRisk: values.typeOfRisk,
+    if(values.businessProcessFirst === undefined && values.businessProcessSecond === undefined && values.businessProcessMain !== undefined ){
+      notifyError("The main business process must have at least 1 sub business process level and that sub business  process must be selected")
+    } else{
+      update({
+        variables: {
+          input: {
+            id,
+            name: values.name,
+            businessProcessIds: values.businessProcessIds || [],
+            levelOfRisk: values.levelOfRisk,
+            typeOfRisk: values.typeOfRisk,
+          },
         },
-      },
-    });
+      });
+    }
   }
 
   // Delete hanlders
