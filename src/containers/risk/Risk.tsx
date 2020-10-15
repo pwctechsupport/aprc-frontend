@@ -135,7 +135,7 @@ export default function Risk({
           typeOfRisk: values.typeOfRisk,
         },
       },
-    });
+    })
   }
 
   // Delete hanlders
