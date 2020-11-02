@@ -122,7 +122,7 @@ export default function UserForm(props: UserFormProps) {
           </h6>
           <ul>
             {falsePasswordLength && (
-              <li style={{ color: "red" }}>At least 8 characters</li>
+              <li style={{ color: "red" }}>At least 12 characters</li>
             )}
             {noCapitalPassword && (
               <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
