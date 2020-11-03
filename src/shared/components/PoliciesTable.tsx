@@ -159,8 +159,8 @@ const PolicyTableRow = ({
   );
 };
 export const PWCLink = styled(Link)`
-  color: var(--tangerine);
+  color: var(--orange);
   &:hover {
-    color: var(--tangerine);
+    color: var(--orange);
   }
 `;

@@ -381,7 +381,7 @@ export const PwcRadioInput = styled(Input)<Props>`
     content: "";
     display: inline-block;
     visibility: visible;
-    border: 5px solid var(--tangerine);
+    border: 5px solid var(--orange);
   }
 `;
 interface ReportFormValues {
