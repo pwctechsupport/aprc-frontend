@@ -133,6 +133,14 @@ export default function Homepage() {
             </Col>
             <Col>
               <HomepageBox
+                list={popularResources.map(toLabelValue)}
+                basePath="resources"
+                title="Most popular resources"
+                themeColor={colors.mediumGrey}
+              />
+            </Col>
+            <Col>
+              <HomepageBox
                 list={
                   recentlyVisitedPolicies.length
                     ? recentlyVisitedPolicies
@@ -144,14 +152,6 @@ export default function Homepage() {
                 basePath="policy"
                 title="My recently visited policies"
                 themeColor={colors.softPink}
-              />
-            </Col>
-            <Col>
-              <HomepageBox
-                list={popularResources.map(toLabelValue)}
-                basePath="resources"
-                title="Most popular resources"
-                themeColor={colors.mediumGrey}
               />
             </Col>
           </Row>
