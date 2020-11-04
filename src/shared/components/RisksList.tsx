@@ -103,10 +103,10 @@ RisksListProps) {
               style={{ fontSize: "14px" }}
             >
               {risk.name}
-              <Badge color={`${getRiskColor(risk.levelOfRisk)} mx-3`}>
+              <Badge color="secondary mx-3" style={{fontSize: '13px'}}>
                 {startCase(risk.levelOfRisk || "")}
               </Badge>
-              <Badge color="secondary">
+              <Badge color="secondary" style={{fontSize: '13px'}}>
                 {startCase(risk.typeOfRisk || "")}
               </Badge>
             </PWCLink>
