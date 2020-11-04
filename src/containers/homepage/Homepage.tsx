@@ -19,6 +19,7 @@ export default function Homepage() {
     yellow: "#ffb600",
     pink: "#db536a",
     softPink: "#d93954",
+    mediumGrey: "#464646"
   };
   const username = useSelector((state) => state.auth.user?.name);
   const { data } = useHomepageQuery({ fetchPolicy: "network-only" });
@@ -135,7 +136,7 @@ export default function Homepage() {
                 list={popularResources.map(toLabelValue)}
                 basePath="resources"
                 title="Most popular resources"
-                themeColor={colors.pink}
+                themeColor={colors.mediumGrey}
               />
             </Col>
             <Col>

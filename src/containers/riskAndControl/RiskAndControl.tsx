@@ -483,14 +483,14 @@ export default function RiskAndControl({
       {
         label: "Level of Risk",
         value: (
-          <Badge color={getRiskColor(levelOfRisk)}>
+          <Badge color="secondary" style={{fontSize: "12px"}}>
             {startCase(levelOfRisk)}
           </Badge>
         ),
       },
       {
         label: "Type of Risk",
-        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
+        value: <Badge color="secondary" style={{fontSize: "12px"}}>{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [
@@ -1270,11 +1270,12 @@ export default function RiskAndControl({
                         >
                           {startCase(risk?.name || "")}
                           <Badge
-                            color={`${getRiskColor(risk?.levelOfRisk)} mx-3`}
+                            color= "secondary mx-3"
+                            style={{fontSize: "13px"}}
                           >
                             {startCase(risk?.levelOfRisk || "")}
                           </Badge>
-                          <Badge color="secondary">
+                          <Badge color="secondary" style={{fontSize: "13px"}}>
                             {startCase(risk?.typeOfRisk || "")}
                           </Badge>
                         </PWCLink>

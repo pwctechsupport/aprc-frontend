@@ -162,7 +162,7 @@ export const Form = styled.form`
 `;
 
 export const Image = styled.img`
-  width: 200px;
+  width: 300px;
   height: auto;
   @media (max-width: 760px) {
     width: 100px;
