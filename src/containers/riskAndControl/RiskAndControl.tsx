@@ -1271,11 +1271,11 @@ export default function RiskAndControl({
                           {startCase(risk?.name || "")}
                           <Badge
                             color= "secondary mx-3"
-                            style={{fontSize: "13px"}}
+                            style={{fontSize: "13px", borderRadius: '0px'}}
                           >
                             {startCase(risk?.levelOfRisk || "")}
                           </Badge>
-                          <Badge color="secondary" style={{fontSize: "13px"}}>
+                          <Badge color="secondary" style={{fontSize: "13px", borderRadius: '0px'}}>
                             {startCase(risk?.typeOfRisk || "")}
                           </Badge>
                         </PWCLink>

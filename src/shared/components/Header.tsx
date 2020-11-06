@@ -9,11 +9,11 @@ function Header({ heading = "", children, draft, review, policy }: Header) {
       {draft && (
         <span className="ml-2">
           {policy && review ? (
-            <Badge>Waiting For Review</Badge>
+            <Badge style={{borderRadius: '0px'}} >Waiting For Review</Badge>
           ) : policy && !review ? (
-            <Badge>Draft</Badge>
+            <Badge style={{borderRadius: '0px'}}>Draft</Badge>
           ) : (
-            <Badge>Waiting For Review</Badge>
+            <Badge style={{borderRadius: '0px'}}>Waiting For Review</Badge>
           )}
         </span>
       )}

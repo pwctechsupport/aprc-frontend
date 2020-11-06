@@ -308,14 +308,14 @@ export default function Risk({
       {
         label: "Level of Risk",
         value: (
-          <Badge color="secondary" style={{fontSize: "13px"}}>
+          <Badge color="secondary" style={{fontSize: '13px', borderRadius: '0px'}}>
             {startCase(levelOfRisk)}
           </Badge>
         ),
       },
       {
         label: "Type of Risk",
-        value: <Badge color="secondary" style={{fontSize: "13px"}}>{startCase(typeOfRisk)}</Badge>,
+        value: <Badge color="secondary" style={{fontSize: '13px', borderRadius: '0px'}}>{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [
