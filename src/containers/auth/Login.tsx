@@ -139,7 +139,7 @@ export default function Login({ history }: RouteComponentProps) {
           </LoginBox>
         </Col>
       </Row>
-      <Footer fontColor={'white'} linebreak origin={'login'} />
+      <Footer fontColor={'white'} linebreak origin="login" />
     </BsContainer>
   )
 }
