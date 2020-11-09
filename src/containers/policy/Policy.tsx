@@ -24,7 +24,7 @@ import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
-import { Badge, Col, Nav, NavItem, Row, TabContent, TabPane } from "reactstrap";
+import { Col, Nav, NavItem, Row, TabContent, TabPane } from "reactstrap";
 import styled from "styled-components";
 import SunEditor from "suneditor-react";
 import { oc } from "ts-optchain";
@@ -49,6 +49,7 @@ import {
   useUpdatePolicyVisitMutation,
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
+import { Badge } from "../../shared/components/Badge";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import BusinessProcessList from "../../shared/components/BusinessProcessList";
 import Button from "../../shared/components/Button";

@@ -4,7 +4,7 @@ import Helmet from "react-helmet";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
-import { Badge, Col, Row } from "reactstrap";
+import { Col, Row } from "reactstrap";
 import {
   LevelOfRisk,
   TypeOfRisk,
@@ -31,6 +31,7 @@ import {
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import PickIcon from "../../assets/Icons/PickIcon";
+import { Badge } from "../../shared/components/Badge";
 // import styled from "styled-components";
 
 export default function Risk({
@@ -308,14 +309,14 @@ export default function Risk({
       {
         label: "Level of Risk",
         value: (
-          <Badge color="secondary" style={{fontSize: "13px"}}>
+          <Badge color="secondary">
             {startCase(levelOfRisk)}
           </Badge>
         ),
       },
       {
         label: "Type of Risk",
-        value: <Badge color="secondary" style={{fontSize: "13px"}}>{startCase(typeOfRisk)}</Badge>,
+        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [

@@ -139,7 +139,7 @@ export default function Login({ history }: RouteComponentProps) {
           </LoginBox>
         </Col>
       </Row>
-      <Footer fontColor={'white'} linebreak />
+      <Footer fontColor={'white'} linebreak origin="login" />
     </BsContainer>
   )
 }
@@ -162,7 +162,7 @@ export const Form = styled.form`
 `;
 
 export const Image = styled.img`
-  width: 300px;
+  width: 230px;
   height: auto;
   @media (max-width: 760px) {
     width: 100px;
