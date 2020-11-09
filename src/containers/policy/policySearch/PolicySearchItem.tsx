@@ -5,10 +5,11 @@ import { Policy, usePreparerPoliciesQuery } from "../../../generated/graphql";
 // import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import { previewHtml } from "../../../shared/formatter";
 import DateHover from "../../../shared/components/DateHover";
-import { Row, Col, Badge } from "reactstrap";
+import { Row, Col} from "reactstrap";
 import { FaSpinner } from "react-icons/fa";
 import BreadCrumb, { CrumbItem } from "../../../shared/components/BreadCrumb";
 import { PWCLink } from "../../../shared/components/PoliciesTable";
+import { Badge } from "../../../shared/components/Badge";
 
 interface PolicySearchItemProps {
   policy: Omit<Policy, "createdAt">;
@@ -65,16 +66,6 @@ export default function PolicySearchItem({
     <Fragment>
       {/* homepageSearchs is a string for search */}
       <PolicySearchItemContainerMini>
-        <div>
-          {loading ? (
-            <div className={"text-center"}>
-              <FaSpinner className="icon-spin" size={20} />
-            </div>
-          ) : parentTitle.length ? (
-            <BreadCrumb crumbs={[...breadcrumb]} />
-          ) : null}
-        </div>
-
         <Row>
           <StyledLink to={`/policy/${id}/details`}>
             <div className="ml-2">
@@ -85,7 +76,7 @@ export default function PolicySearchItem({
             <div className="mb-2 ml-2">
               <DateHover withIcon>{updatedAt}</DateHover>
             </div>
-            <div className="text-secondary ml-2">
+            <div className="text-secondary ml-2 text-justify">
               {(description
                 ?.toLowerCase()
                 .includes(homepageSearch.toLowerCase()) &&
@@ -303,6 +294,15 @@ export default function PolicySearchItem({
               </Col>
             )}
         </Row>
+        <div>
+          {loading ? (
+            <div className={"text-center"}>
+              <FaSpinner className="icon-spin" size={20} />
+            </div>
+          ) : parentTitle.length ? (
+            <BreadCrumb crumbs={[...breadcrumb]} />
+          ) : null}
+        </div>
       </PolicySearchItemContainerMini>
     </Fragment>
   );
@@ -316,7 +316,7 @@ const PolicySearchItemContainerMini = styled.div`
   background: #f7f7f7;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 15px;
+  padding: 10px 25px;
   margin-bottom: 10px;
   margin-top: 20px;
   &:last-child {

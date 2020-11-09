@@ -54,9 +54,10 @@ const ControlSideBox = () => {
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          {isAdmin || isAdminPreparer || isAdminReviewer
-            ? "Control admin"
-            : "Control"}
+          {/* {isAdmin || isAdminPreparer || isAdminReviewer */}
+            {/* ?  */}
+            Control Administrative
+            {/* : "Control"} */}
         </div>
       </SideBoxTitle>
       <SideBoxSearch

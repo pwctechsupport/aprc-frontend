@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import { FaCaretRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { Collapse } from "reactstrap";
-import styled, { css } from "styled-components";
-import EmptyAttribute from "../../shared/components/EmptyAttribute";
-import { Suggestions } from "../../shared/formatter";
-import useWindowSize from "../../shared/hooks/useWindowSize";
+import React, { useState } from 'react'
+import { FaCaretRight } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import { Collapse } from 'reactstrap'
+import styled, { css } from 'styled-components'
+import EmptyAttribute from '../../shared/components/EmptyAttribute'
+import { Suggestions } from '../../shared/formatter'
+import useWindowSize from '../../shared/hooks/useWindowSize'
 
 interface HomepageBoxProps {
-  list: Suggestions;
-  title?: string | null;
-  basePath: string;
-  themeColor?: string;
-  fontColor?: string;
+  list: Suggestions
+  title?: string | null
+  basePath: string
+  themeColor?: string
+  fontColor?: string
 }
 
 export default function HomepageBox({
@@ -20,65 +20,69 @@ export default function HomepageBox({
   title,
   basePath,
   themeColor,
-  fontColor = "white",
+  fontColor = 'white',
 }: HomepageBoxProps) {
-  const [open, setOpen] = useState(true);
-  const [textHeight, setTextHeight] = useState(0);
-  const { height } = useWindowSize();
-  const heigthAdjustment = `${(height * 50) / 100 - textHeight}px`;
+  const [open, setOpen] = useState(true)
+  const [textHeight, setTextHeight] = useState(0)
+  const { height } = useWindowSize()
+  const heigthAdjustment = open
+    ? `${(height * 58) / 100 - textHeight}px`
+    : undefined
   return (
     <div
       className="my-2"
       style={{
         backgroundColor: themeColor,
-        boxShadow: "3px 6px 20px 0px rgba(0,0,0,0.3)",
-        borderRadius: "3px",
-        border: "1px solid rgba(0,0,0,0.1)",
+        boxShadow: '3px 6px 20px 0px rgba(0,0,0,0.3)',
+        borderRadius: '3px',
+        border: '1px solid rgba(0,0,0,0.1)',
       }}
     >
       <div
-        className="d-flex justify-content-between align-items-center p-2"
+        className="d-flex justify-content-between align-items-flex-start p-2 pt-3"
         style={{
-          borderBottom: "1px solid rgba(0,0,0,0.3)",
+          borderBottom: '1px solid rgba(0,0,0,0.3)',
         }}
         ref={(ref) => setTextHeight(ref?.clientHeight || 0)}
       >
         <h5 style={{ color: fontColor }}>{title}</h5>
-        <BoxHeader onClick={() => setOpen((p) => !p)}>
-          <Icon open={open} />
-        </BoxHeader>
-      </div>
-      <Collapse isOpen={open}>
-        <div className="p-2" style={{ minHeight: heigthAdjustment }}>
-          {list.length ? (
-            list.map((item) => (
-              <StyledLink
-                key={item.value}
-                to={
-                  basePath === "policy"
-                    ? `/${basePath}/${item.value}/details`
-                    : `/${basePath}/${item.value}`
-                }
-                style={{ color: fontColor }}
-                className="d-flex align-items-center my-2"
-              >
-                <div className="mr-3">
-                  <Circle>{item.label.charAt(0).toUpperCase()}</Circle>
-                </div>
-                <StyledSpan>{item.label}</StyledSpan>
-              </StyledLink>
-            ))
-          ) : (
-            <div style={{ paddingTop: "13vh" }}>
-              <EmptyAttribute style={{ color: fontColor }}>
-                No {title}
-              </EmptyAttribute>
-            </div>
-          )}
+        <div>
+          <BoxHeader onClick={() => setOpen((p) => !p)}>
+            <Icon open={open} />
+          </BoxHeader>
         </div>
-      </Collapse>
+      </div>
+      {/* <Collapse isOpen={open}> */}
+      <div className="p-2" style={{ minHeight: heigthAdjustment }}>
+        {list.length ? (
+          list.slice(0, open ? 7 : 3).map((item) => (
+            <StyledLink
+              key={item.value}
+              to={
+                basePath === 'policy'
+                  ? `/${basePath}/${item.value}/details`
+                  : `/${basePath}/${item.value}`
+              }
+              style={{ color: fontColor }}
+              className="d-flex align-items-center my-2"
+            >
+              <div className="mr-3">
+                <Circle>{item.label.charAt(0).toUpperCase()}</Circle>
+              </div>
+              <StyledSpan>{item.label}</StyledSpan>
+            </StyledLink>
+          ))
+        ) : (
+          <div style={{ paddingTop: '13vh' }}>
+            <EmptyAttribute style={{ color: fontColor }}>
+              No {title}
+            </EmptyAttribute>
+          </div>
+        )}
+      </div>
+      {/* </Collapse> */}
     </div>
-  );
+  )
 }
 const StyledSpan = styled.span`
   overflow: hidden;
@@ -87,7 +91,7 @@ const StyledSpan = styled.span`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   max-height: 3.6em;
-`;
+`
 
 const StyledLink = styled(Link)`
   color: rgba(0, 0, 0, 0.5);
@@ -98,7 +102,7 @@ const StyledLink = styled(Link)`
     color: rgba(0, 0, 0, 0.8);
   }
   padding: 5px;
-`;
+`
 
 const Circle = styled.div`
   width: 30px;
@@ -112,7 +116,7 @@ const Circle = styled.div`
   ${StyledLink}:hover & {
     background: rgba(0, 0, 0, 0.8);
   }
-`;
+`
 
 const BoxHeader = styled.div`
   padding: 5px 7px;
@@ -122,7 +126,7 @@ const BoxHeader = styled.div`
   &:hover {
     background: rgba(0, 0, 0, 0.1);
   }
-`;
+`
 
 const Icon = styled(FaCaretRight)<{ open: boolean }>`
   transition: 0.15s ease-in-out;
@@ -131,4 +135,4 @@ const Icon = styled(FaCaretRight)<{ open: boolean }>`
     css`
       transform: rotate(90deg);
     `};
-`;
+`

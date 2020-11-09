@@ -33,7 +33,7 @@ export default function Flowcharts({
     return <FaSpinner className="icon-spin" size={40} />;
   }
   return (
-    <div className="mt-3">
+    <div className="mt-3" style={{marginBottom: "140px"}}>
       <Flowchart
         history={history}
         img={APP_ROOT_URL + currentResource?.resuploadUrl || ""}

@@ -2,7 +2,7 @@ import get from "lodash/get";
 import React from "react";
 import { Col, Container, Row } from "reactstrap";
 import styled from "styled-components";
-import backgroundImage from "../../assets/images/background-homepage.png";
+import backgroundImage from "../../assets/images/background-homepage.jpg";
 import { useHomepageQuery, useUserPVisitQuery } from "../../generated/graphql";
 import { toLabelValue } from "../../shared/formatter";
 import { useSelector } from "../../shared/hooks/useSelector";
@@ -19,6 +19,7 @@ export default function Homepage() {
     yellow: "#ffb600",
     pink: "#db536a",
     softPink: "#d93954",
+    mediumGrey: "#464646"
   };
   const username = useSelector((state) => state.auth.user?.name);
   const { data } = useHomepageQuery({ fetchPolicy: "network-only" });
@@ -26,9 +27,7 @@ export default function Homepage() {
   const popularPolicies = data?.popularPolicies?.collection || [];
   const recentlyAddedPolicies = data?.recentlyAddedPolicies?.collection || [];
   const modifiedRecentlyAddedPol = recentlyAddedPolicies
-    .filter((a) => a.draft === null)
-    .slice(0, 5);
-
+    .filter((a) => a.draft === null);
   const customModifier = (data: any) => {
     const safetyNet = data
       ? { label: data.title, value: data.id }
@@ -50,23 +49,19 @@ export default function Homepage() {
 
         {isLaptop ? (
           <>
-            <Row style={{ width: "100vw" }}>
-              <Col lg={4}>
-                <h3
-                  style={{
-                    backgroundColor: "rgba(54, 48, 60, 0.6)",
-                    padding: " 2rem 1rem",
-                    color: "white",
-                    fontSize: "23px",
-                  }}
-                >
-                  Welcome, {username}
-                </h3>
-              </Col>
-            </Row>
             <Row style={{ width: "80vw" }}>
               <Col lg={9}>
                 <ContentBox>
+                  <h3
+                    style={{
+                      // backgroundColor: "rgba(54, 48, 60, 0.6)",
+                      // padding: " 2rem 1rem",
+                      color: "white",
+                      fontSize: "23px",
+                    }}
+                  >
+                  Welcome, {username}
+                  </h3>
                   <HomepageSearch inputStyle={{ height: 50 }} />
                 </ContentBox>
               </Col>
@@ -75,19 +70,19 @@ export default function Homepage() {
           </>
         ) : (
           <>
-            <h3
-              style={{
-                backgroundColor: "rgba(54, 48, 60, 0.6)",
-                padding: " 2rem 1rem",
-                color: "white",
-                fontSize: "23px",
-              }}
-            >
-              Welcome, {username}
-            </h3>
             <Centerer>
               <Container>
                 <ContentBox>
+                  <h3
+                    style={{
+                      // backgroundColor: "rgba(54, 48, 60, 0.6)",
+                      // padding: " 2rem 1rem",
+                      color: "white",
+                      fontSize: "23px",
+                    }}
+                  >
+              Welcome, {username}
+            </h3>
                   <HomepageSearch inputStyle={{ height: 50 }} />
                 </ContentBox>
               </Container>
@@ -138,14 +133,6 @@ export default function Homepage() {
             </Col>
             <Col>
               <HomepageBox
-                list={popularResources.map(toLabelValue)}
-                basePath="resources"
-                title="Most popular resources"
-                themeColor={colors.pink}
-              />
-            </Col>
-            <Col>
-              <HomepageBox
                 list={
                   recentlyVisitedPolicies.length
                     ? recentlyVisitedPolicies
@@ -157,6 +144,14 @@ export default function Homepage() {
                 basePath="policy"
                 title="My recently visited policies"
                 themeColor={colors.softPink}
+              />
+            </Col>
+            <Col>
+              <HomepageBox
+                list={popularResources.map(toLabelValue)}
+                basePath="resources"
+                title="Most popular resources"
+                themeColor={colors.mediumGrey}
               />
             </Col>
           </Row>
@@ -252,8 +247,8 @@ const Centerer = styled.div`
 // `;
 
 const ContentBox = styled.div`
-  padding: 2rem 1rem;
+  padding: .5rem 2rem;
   margin-bottom: 2rem;
-  background-color: rgba(54, 48, 60, 0.6);
+  // background-color: rgba(54, 48, 60, 0.6);
   border-radius: 3px;
 `;

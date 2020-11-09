@@ -2,9 +2,9 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const TangerineLink = styled(Link)`
-  color: var(--tangerine);
+  color: var(--orange);
   :hover {
-    color: var(--tangerine);
+    color: var(--orange);
   }
 `;
 export default TangerineLink;

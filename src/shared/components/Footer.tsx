@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 interface FooterProps {
   fontColor?: string;
   linebreak?: boolean;
+  origin?: string;
 }
-const Footer = ({ fontColor = "", linebreak }: FooterProps) => {
+const Footer = ({ fontColor = "", linebreak, origin }: FooterProps) => {
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return {
@@ -30,39 +31,20 @@ const Footer = ({ fontColor = "", linebreak }: FooterProps) => {
   }
   const { width } = useWindowDimensions();
   return (
-    <div
-      className="mt-3"
-      style={{
-        display: "block",
-        height: "60px",
-        width: "100%",
-        marginTop: "auto",
-      }}
-    >
-      <div
-        className="justify-content-center   "
+    <div className="footer">
+      <p
         style={{
-          borderTop: "1px solid #E7E7E7",
-          padding: "5px",
-          bottom: "-5px",
-          height: `${
-            475 < width && width < 936 ? "80px" : width < 475 ? "100px" : "60px"
-          }`,
+          textAlign: origin === 'login' ? 'center' : 'left',
+          color: fontColor ? fontColor : 'rgba(0,0,0,.5)',
+          marginLeft: origin === 'login' ? 0 : '7px',
         }}
       >
-        <p
-          style={{
-            textAlign: "center",
-            color: fontColor ? fontColor : "rgba(0,0,0,.5)",
-          }}
-        >
-          &copy; 2020 PwC. PwC all rights reserved. PwC refers to the PwC
-          network and/or one or more of its member firms, each of which is a
-          separate legal entity.{linebreak && <br />}
-          Please see www.pwc.com/structure for further details.
-        </p>
-      </div>
+        &copy; 2020 PwC. PwC all rights reserved. PwC refers to the PwC network
+        and/or one or more of its member firms, each of which is a separate
+        legal entity.{linebreak && <br />}
+        Please see www.pwc.com/structure for further details.
+      </p>
     </div>
-  );
+  )
 };
 export default Footer;

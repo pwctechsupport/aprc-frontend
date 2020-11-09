@@ -14,6 +14,7 @@ import DialogButton from "../../../shared/components/DialogButton";
 import Input from "../../../shared/components/forms/Input";
 import Select, { FormSelect } from "../../../shared/components/forms/Select";
 import { prepDefaultValue, toLabelValue } from "../../../shared/formatter";
+import { notifyError } from "../../../shared/utils/notif";
 
 const RiskForm = ({
   setModal,
@@ -39,7 +40,39 @@ const RiskForm = ({
     setValue(name, value);
   };
 
+  /**
+   * @description if there are any main bp with no child selected
+   */
+  function validateMainBps() {
+    const invalidMainBp: typeof getBps = [];
+    const firstBpsParentIds: any[] = getFirstBps.filter(b => firstBpIds.includes(b.id)).map(b => b.parentId)
+
+    mainBpIdsWatch?.forEach((bpMain) => {
+      const bp = getBps.find((bp) => bp.id === bpMain)
+
+      if (bp && !firstBpsParentIds.includes(bpMain)) {
+        invalidMainBp.push(bp)
+      }
+    })
+
+    setMainBpError('')
+
+    if (invalidMainBp.length) {
+      const message = `${invalidMainBp
+        .map((bp) => bp.name)
+        .join(', ')} require at least 1 sub business process selected`
+      setMainBpError(message)
+      notifyError(message, { autoClose: 10000 })
+
+      return false
+    }
+
+    return true
+  }
+
   const submit = (values: RiskFormValues) => {
+    if (!validateMainBps()) return
+
     onSubmit &&
       onSubmit({
         ...values,
@@ -104,6 +137,7 @@ const RiskForm = ({
   const checkSecondBp = watch("businessProcessSecond");
 
   const [mainBpIds, setMainBpIds] = useState([...defValMainBps]);
+  const [mainBpError, setMainBpError] = useState('');
   const [firstBpIds, setFirstBpIds] = useState([...defValFirstBps]);
   const [secondBpIds, setSecondBpIds] = useState([...defValSecondBps]);
 
@@ -313,6 +347,7 @@ const RiskForm = ({
           placeholder="Main Business Process"
           options={handleGetMainBps}
           defaultValue={mainBpsDefaultValue}
+          error={mainBpError}
         />
 
         <FormSelect
@@ -387,7 +422,7 @@ const RiskForm = ({
           </DialogButton>
           {isCreate ? (
             <StyledDialogButton
-              className="black px-5 ml-2"
+              className="cancel black px-5 ml-2"
               onConfirm={
                 setModal
                   ? () => setModal(false)
@@ -399,7 +434,7 @@ const RiskForm = ({
             </StyledDialogButton>
           ) : (
             <StyledDialogButton
-              className="black px-5 ml-2"
+              className="cancel black px-5 ml-2"
               onConfirm={setModal ? () => setModal(false) : toggleEditMode}
               isEdit
             >

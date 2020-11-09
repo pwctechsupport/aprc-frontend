@@ -15,7 +15,6 @@ import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Link, NavLink, Route, RouteComponentProps } from "react-router-dom";
 import {
-  Badge,
   Col,
   Nav,
   NavItem,
@@ -52,6 +51,7 @@ import {
   useUpdateRiskMutation,
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
+import { Badge } from "../../shared/components/Badge";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
@@ -483,7 +483,7 @@ export default function RiskAndControl({
       {
         label: "Level of Risk",
         value: (
-          <Badge color={getRiskColor(levelOfRisk)}>
+          <Badge color="secondary">
             {startCase(levelOfRisk)}
           </Badge>
         ),
@@ -1270,7 +1270,7 @@ export default function RiskAndControl({
                         >
                           {startCase(risk?.name || "")}
                           <Badge
-                            color={`${getRiskColor(risk?.levelOfRisk)} mx-3`}
+                            color= "secondary mx-3"
                           >
                             {startCase(risk?.levelOfRisk || "")}
                           </Badge>

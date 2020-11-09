@@ -26,13 +26,13 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
     createRisk({
       variables: {
         input: {
-          name: values.name || "",
+          name: values.name || '',
           businessProcessIds: values.businessProcessIds || [],
           levelOfRisk: values.levelOfRisk || LevelOfRisk.Low,
           typeOfRisk: values.typeOfRisk || TypeOfRisk.BusinessRisk,
         },
       },
-    });
+    })
   }
   return (
     <div>

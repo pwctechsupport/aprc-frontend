@@ -24,18 +24,9 @@ export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  // const [mail, sMail] = useState("");
-  // const { data, loading: loadingUsers } = useUsersQuery({
-  //   variables: { filter: { email_cont: mail } },
-  // });
   const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
-  // const checkEmail = watch("email");
-  // useEffect(() => {
-  //   sMail(checkEmail);
-  // }, [checkEmail]);
 
   //refreshes Captcha when error
-  // const email = data?.users?.collection.map((a) => a.email);
   const [t, st] = useState({
     refresh: () => {},
   });
@@ -77,91 +68,88 @@ export default function Login({ history }: RouteComponentProps) {
   // const screenSize = useWindowSize();
 
   return (
-    <BsContainer fluid className="login-background pt-md-5">
-      <Image
-        style={{
-          position: "absolute",
-          top: "10px",
-          left: 0,
-          height: "150px",
-          width: "150px",
-        }}
-        className="mt-0 ml-5"
-        src={pwcLogoOutline}
-        alt="pwc-logo"
-      />
-      <Row style={{ minHeight: "80vh" }}>
-        <Col sm={12} md={7}></Col>
-        <Col sm={12} md={5} className="px-0 px-md-2 pr-md-5">
-          <BsContainer className="px-0 w-50 mh-75">
-            <Helmet>
-              <title>Login - PricewaterhouseCoopers</title>
-            </Helmet>
-            <div
-              style={{
-                border: "1px solid rgba(0,0,0,0.2)",
-                padding: "1vw",
-                borderRadius: "3px",
-                backgroundColor: "rgba(255,255,255,.7)",
-              }}
-            >
-              <H1>Welcome to eGRC</H1>
+    <BsContainer fluid className="login-background">
+      <Row>
+        <Col>
+          <Image
+            className="mt-0"
+            src={pwcLogoOutline}
+            alt="pwc-logo"
+          />
+        </Col>
+        <Col className="login-wrapper">
+          <Helmet>
+            <title>Login - PricewaterhouseCoopers</title>
+          </Helmet>
+          <LoginBox>
+            <H1>Welcome to eGRC</H1>
 
-              <Form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
-                <Label>Email</Label>
-                <br />
-                <Input
-                  name="email"
-                  placeholder="Enter email address"
-                  required
-                  ref={register({ required: true })}
-                />
-                <br />
-                <br />
-                <Label>Password</Label>
-                <br />
-                <Input
-                  name="password"
-                  type="password"
-                  placeholder="Enter password"
-                  required
-                  ref={register({ required: true })}
-                />
-                <br />
-                <br />
-                <Captcha
-                  ref={(e: any) => st(e)}
-                  onChange={setCaptcha}
-                  placeholder="Insert captcha"
-                />
-                <br />
-                <br />
+            <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+              <Label>Email</Label>
+              <br />
+              <Input
+                name="email"
+                placeholder="Enter email address"
+                required
+                ref={register({ required: true })}
+              />
+              <br />
+              <br />
+              <Label>Password</Label>
+              <br />
+              <Input
+                name="password"
+                type="password"
+                placeholder="Enter password"
+                required
+                ref={register({ required: true })}
+              />
+              <br />
+              <br />
+              <Captcha
+                ref={(e: any) => st(e)}
+                onChange={setCaptcha}
+                placeholder="Insert captcha"
+              />
+              <br />
+              <br />
 
-                <Button
-                  className="pwc"
-                  color="primary"
-                  type="submit"
-                  block
-                  loading={loading}
-                  disabled={!captcha}
-                >
-                  Login
-                </Button>
-                <div className="text-center my-4">
+              <Row>
+                <Col>
+                  <h6></h6>
                   <Link to="/forgot-password" className="link-pwc">
                     Forgot password?
                   </Link>
-                </div>
-              </Form>
-            </div>
-          </BsContainer>
+                </Col>
+                <Col>
+                  <Button
+                    className="confirmYes"
+                    color="primary"
+                    type="submit"
+                    block
+                    loading={loading}
+                    disabled={!captcha}
+                  >
+                    Login
+                  </Button>
+                </Col>
+              </Row>
+              <div className="text-center my-4"></div>
+            </Form>
+          </LoginBox>
         </Col>
       </Row>
-      <Footer fontColor={"white"} linebreak />
+      <Footer fontColor={'white'} linebreak origin="login" />
     </BsContainer>
-  );
+  )
 }
 
+export const LoginBox = styled.div`
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 10px;
+  border-radius: 3px;
+  background: rgba(255,255,255,.7);
+`
 export const Container = styled.div`
   display: flex;
   justify-content: center;
@@ -174,9 +162,11 @@ export const Form = styled.form`
 `;
 
 export const Image = styled.img`
-  width: 200px;
+  width: 230px;
   height: auto;
-  margin: 70px;
+  @media (max-width: 760px) {
+    width: 100px;
+  }
 `;
 
 export const H1 = styled.h3`

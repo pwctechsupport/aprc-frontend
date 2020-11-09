@@ -89,13 +89,15 @@ export default function HomepageSearch({
   return (
     <div>
       <div {...getComboboxProps()}>
-        <InputWrapper isNavBar={navBar} ref={inputRef} className="d-flex">
-          <Input
-            {...getInputProps()}
-            placeholder={placeholder}
-            onClick={handleInputClick}
-            style={inputStyle}
-          />
+        <InputWrapper ref={inputRef} className="d-flex">
+          {navBar ? null : (
+            <Input
+              {...getInputProps()}
+              placeholder={placeholder}
+              onClick={handleInputClick}
+              style={inputStyle}
+            />
+          )}
           {navBar ? null : (
             <ToggleButton
               {...getToggleButtonProps()}
@@ -110,16 +112,16 @@ export default function HomepageSearch({
                 isUser ? "/search-policy?status_eq=release" : "/search-policy"
               }`}
             >
-              <StyledButton>
+              {/* <StyledButton> */}
                 <FaSearch
                   style={{
                     position: "relative",
-                    marginRight: "5px",
-                    bottom: "3px",
+                    fontSize: "150%",
+                    left: "185px",
+                    bottom: "-1px",
                   }}
                 />
-                Full search
-              </StyledButton>
+              {/* </StyledButton> */}
             </Link>
           ) : null}
         </InputWrapper>
@@ -188,12 +190,12 @@ const MenuWrapper = styled.div`
 
 const StyledSpan = styled.span`
   text-align: right;
-  color: white;
+  color: dark;
 `;
 
 const StyledUl = styled.ul<{ width?: number }>`
   position: absolute;
-  background-color: var(--darker-grey);
+  background-color: var(--soft-grey);
   padding: 20px;
   color: black;
   list-style-type: none;

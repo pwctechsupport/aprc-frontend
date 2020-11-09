@@ -24,7 +24,7 @@ export default function Avatar({ data }: AvatarProps) {
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   return (
-    <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+    <Dropdown isOpen={dropdownOpen} toggle={toggle} className="clickable">
       <DropdownToggle tag="div">
         <PickIcon name="avatar" style={{ width: "40px" }} />
 
@@ -78,7 +78,7 @@ export default function Avatar({ data }: AvatarProps) {
             >
               Settings
             </Button>
-            <Button onClick={item.onClick} color="primary" className="pwc mt-2">
+            <Button onClick={item.onClick} color="primary" className="soft dark mt-2">
               Log out
             </Button>
           </div>

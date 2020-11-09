@@ -177,7 +177,7 @@ const Notification = ({ history }: RouteComponentProps) => {
         <h2 style={{ fontSize: "23px" }} className="mb-5">
           Notifications Manager
         </h2>
-        {NotificationSettings()}
+        {/* {NotificationSettings()} */}
         <Row className="mt-3">
           <Col xs={12} lg={12}>
             <Form onSubmit={notificationForm.handleSubmit(onSubmit)}>
@@ -202,7 +202,7 @@ const Notification = ({ history }: RouteComponentProps) => {
                   <Tooltip description="Reset Search">
                     <Button
                       type="reset"
-                      className="soft red"
+                      className="soft red mr-4"
                       color=""
                       onClick={handleReset}
                     >
@@ -212,31 +212,28 @@ const Notification = ({ history }: RouteComponentProps) => {
                   <Button
                     loading={loading}
                     type="submit"
-                    className="pwc ml-1"
+                    className="pwc ml-2"
                     color="primary"
                   >
                     Search
                   </Button>
                 </Col>
+                <Col>
+                  <div className="text-right">
+                    <Tooltip description="Delete Selected Notification(s)">
+                      <DialogButton
+                        className="soft red"
+                        loading={destroyNotifsM.loading}
+                        onConfirm={() => handleDelete()}
+                        disabled={!selected.length}
+                      >
+                        <PickIcon name="trash" className="clickable" />
+                      </DialogButton>
+                    </Tooltip>
+                  </div>
+                </Col>
               </Row>
             </Form>
-          </Col>
-        </Row>
-
-        <Row className="mt-4 mt-md-1">
-          <Col>
-            <div className="text-right">
-              <Tooltip description="Delete Selected Notification(s)">
-                <DialogButton
-                  className="soft red"
-                  loading={destroyNotifsM.loading}
-                  onConfirm={() => handleDelete()}
-                  disabled={!selected.length}
-                >
-                  <PickIcon name="trash" className="clickable" />
-                </DialogButton>
-              </Tooltip>
-            </div>
           </Col>
         </Row>
         <div style={{ minHeight: "70vh" }}>

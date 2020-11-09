@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaSpinner } from "react-icons/fa";
+import { FaInfoCircle, FaSpinner } from "react-icons/fa";
 import { Col, Container, Row, Collapse } from "reactstrap";
 import { useSearchPoliciesQuery } from "../../generated/graphql";
 import BreadCrumb from "../../shared/components/BreadCrumb";
@@ -21,6 +21,8 @@ import OpacityButton from "../../shared/components/OpacityButton";
 import { RouteComponentProps } from "react-router-dom";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Footer from "../../shared/components/Footer";
+import styled from "styled-components";
+import { isEmpty } from "lodash";
 
 interface PolicySearchFilter {
   title_cont?: string;
@@ -91,6 +93,8 @@ export default function PolicySearch({
     title: filter.title_cont,
     description: filter.description_cont,
   };
+
+  const filters = Object.entries(filter)
   return (
     <Container fluid className="p-0">
       <Row noGutters>
@@ -109,7 +113,7 @@ export default function PolicySearch({
           </SideBox>
         </Col>
         <Col md={9} className="p-4">
-          <BreadCrumb crumbs={[["/policy", "Search policies"]]} />
+          {/* <BreadCrumb crumbs={[["/policy", "Search policies"]]} /> */}
           <div style={{ minHeight: "80vh" }}>
             <div className="d-block d-md-none">
               <OpacityButton className="mb-1" onClick={toggleShowDashboard}>
@@ -125,7 +129,17 @@ export default function PolicySearch({
                 </div>
               </Collapse>
             </div>
-            <Pagination
+            {isEmpty(filter) || (filters[0][1] === "" && filters[1][1] === "" && filters.length === 2)  ? (
+              <div>
+                <BreadCrumb crumbs={[["/policy", "Search policies"]]} />
+                <StyleH5>
+                  <FaInfoCircle className="mr-3"/>
+                  There were no results for your search</StyleH5>
+              </div>
+            ) :
+            (
+              <div>
+                <Pagination
               totalCount={totalCount}
               perPage={limit}
               onPageChange={handlePageChange}
@@ -159,6 +173,11 @@ export default function PolicySearch({
                 Policy not found
               </div>
             )}
+              </div>
+              
+            )
+            }
+            
           </div>
 
           <Footer />
@@ -192,3 +211,10 @@ function constructDateFilter(input?: DateFilter): string | null {
       : 0;
   return new Date(presentDate - subtractor).toUTCString();
 }
+
+const StyleH5 = styled.h5`
+  background: var(--soft-grey);
+  padding: 15px 15px;
+  margin-top: 50px;
+  border-radius: 4px;
+`

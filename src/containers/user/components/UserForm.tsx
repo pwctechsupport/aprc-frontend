@@ -122,7 +122,7 @@ export default function UserForm(props: UserFormProps) {
           </h6>
           <ul>
             {falsePasswordLength && (
-              <li style={{ color: "red" }}>At least 8 characters</li>
+              <li style={{ color: "red" }}>At least 12 characters</li>
             )}
             {noCapitalPassword && (
               <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
@@ -203,7 +203,7 @@ export default function UserForm(props: UserFormProps) {
         </Button>
         {props.isCreate && (
           <StyledDialogButton
-            className="black px-5 ml-2"
+            className="cancel black px-5 ml-2"
             onConfirm={() => props.history.replace(`/user`)}
             isCreate
           >

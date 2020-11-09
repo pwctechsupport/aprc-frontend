@@ -55,9 +55,10 @@ const ResourceSideBox = () => {
     <SideBox onScroll={onScroll}>
       <SideBoxTitle>
         <div className="d-flex justify-content-between">
-          {isAdmin || isAdminReviewer || isAdminPreparer
-            ? "Resources admin"
-            : "Resources"}
+          {/* {isAdmin || isAdminReviewer || isAdminPreparer */}
+            {/* ?  */}
+            Resources Administrative
+            {/* : "Resources"} */}
         </div>
       </SideBoxTitle>
       <SideBoxSearch

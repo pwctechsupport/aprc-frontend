@@ -183,12 +183,12 @@ export default function Report() {
   const unmappedControl = watch("unmapped_control");
   const [checked, setChecked] = useState(true);
   return (
-    <Container fluid className="p-0 pt-3 px-4">
-      <h4>Exception report</h4>
-      <div style={{ minHeight: "60vh" }}>
+    <Container fluid className="p-0 pt-3 px-4 pl-5">
+      <TitleStyle>Exception report</TitleStyle>
+      <div style={{ minHeight: "60vh", marginTop: "30px" }}>
         <Form>
           <Table>
-            <thead>
+            <thead style={{borderTop: "none"}}>
               <tr>
                 <th>Number</th>
                 <th>Report name</th>
@@ -323,7 +323,7 @@ export default function Report() {
                 }}
                 type="reset"
                 className={
-                  isMobile ? "button cancel ml-1" : "button cancel ml-5"
+                  isMobile ? "button reset ml-1" : "button reset ml-3"
                 }
               >
                 <PickIcon name="reload" />
@@ -346,6 +346,16 @@ type Key = keyof ReportFormValues;
 interface Props {
   disabled?: boolean;
 }
+
+const TitleStyle = styled.h4`
+border-top: 1px solid var(--primary-side-box);
+border-bottom: 1px solid var(--primary-side-box);
+padding: 5px;
+width: 200px;
+margin-top: 16px;
+margin-bottom: -11px;
+}
+`
 export const PwcRadioInput = styled(Input)<Props>`
   &:after {
     width: 16px;
@@ -371,7 +381,7 @@ export const PwcRadioInput = styled(Input)<Props>`
     content: "";
     display: inline-block;
     visibility: visible;
-    border: 5px solid var(--tangerine);
+    border: 5px solid var(--orange);
   }
 `;
 interface ReportFormValues {
