@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Badge } from "reactstrap";
+import { Badge } from "./Badge";
 
 function Header({ heading = "", children, draft, review, policy }: Header) {
   return (

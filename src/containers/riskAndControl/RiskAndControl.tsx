@@ -15,7 +15,6 @@ import { IoMdDownload, IoMdOpen } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
 import { Link, NavLink, Route, RouteComponentProps } from "react-router-dom";
 import {
-  Badge,
   Col,
   Nav,
   NavItem,
@@ -52,6 +51,7 @@ import {
   useUpdateRiskMutation,
 } from "../../generated/graphql";
 import { APP_ROOT_URL } from "../../settings";
+import { Badge } from "../../shared/components/Badge";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
@@ -483,14 +483,14 @@ export default function RiskAndControl({
       {
         label: "Level of Risk",
         value: (
-          <Badge color="secondary" style={{fontSize: "12px"}}>
+          <Badge color="secondary">
             {startCase(levelOfRisk)}
           </Badge>
         ),
       },
       {
         label: "Type of Risk",
-        value: <Badge color="secondary" style={{fontSize: "12px"}}>{startCase(typeOfRisk)}</Badge>,
+        value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [
@@ -1271,11 +1271,10 @@ export default function RiskAndControl({
                           {startCase(risk?.name || "")}
                           <Badge
                             color= "secondary mx-3"
-                            style={{fontSize: "13px", borderRadius: '0px'}}
                           >
                             {startCase(risk?.levelOfRisk || "")}
                           </Badge>
-                          <Badge color="secondary" style={{fontSize: "13px", borderRadius: '0px'}}>
+                          <Badge color="secondary">
                             {startCase(risk?.typeOfRisk || "")}
                           </Badge>
                         </PWCLink>

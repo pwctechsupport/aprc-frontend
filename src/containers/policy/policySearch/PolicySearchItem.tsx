@@ -5,10 +5,11 @@ import { Policy, usePreparerPoliciesQuery } from "../../../generated/graphql";
 // import EmptyAttribute from "../../../shared/components/EmptyAttribute";
 import { previewHtml } from "../../../shared/formatter";
 import DateHover from "../../../shared/components/DateHover";
-import { Row, Col, Badge } from "reactstrap";
+import { Row, Col} from "reactstrap";
 import { FaSpinner } from "react-icons/fa";
 import BreadCrumb, { CrumbItem } from "../../../shared/components/BreadCrumb";
 import { PWCLink } from "../../../shared/components/PoliciesTable";
+import { Badge } from "../../../shared/components/Badge";
 
 interface PolicySearchItemProps {
   policy: Omit<Policy, "createdAt">;

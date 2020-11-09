@@ -1,7 +1,6 @@
 import startCase from "lodash/startCase";
 import React, { useState, useEffect } from "react";
 // import { FaPencilAlt } from "react-icons/fa";
-import { Badge } from "reactstrap";
 import {
   // LevelOfRisk,
   // Risk,
@@ -17,6 +16,7 @@ import EmptyAttribute from "./EmptyAttribute";
 import { oc } from "ts-optchain";
 import useAccessRights from "../hooks/useAccessRights";
 import { PWCLink } from "./PoliciesTable";
+import { Badge } from "./Badge";
 
 interface RisksListProps {
   // risks: Risk[];
@@ -103,10 +103,10 @@ RisksListProps) {
               style={{ fontSize: "14px" }}
             >
               {risk.name}
-              <Badge color="secondary mx-3" style={{fontSize: '13px', borderRadius: '0px'}}>
+              <Badge color="secondary mx-3">
                 {startCase(risk.levelOfRisk || "")}
               </Badge>
-              <Badge color="secondary" style={{fontSize: '13px', borderRadius: '0px'}}>
+              <Badge color="secondary">
                 {startCase(risk.typeOfRisk || "")}
               </Badge>
             </PWCLink>
