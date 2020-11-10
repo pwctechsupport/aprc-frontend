@@ -34,7 +34,7 @@ const Footer = ({ fontColor = "", linebreak, origin }: FooterProps) => {
     <div className="footer">
       <p
         style={{
-          textAlign: origin === 'login' ? 'center' : 'left',
+          textAlign: 'left',
           color: fontColor ? fontColor : 'rgba(0,0,0,.5)',
           marginLeft: origin === 'login' ? 0 : '7px',
         }}
