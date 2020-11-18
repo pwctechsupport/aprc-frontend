@@ -293,6 +293,7 @@ const ReferenceRow = ({
         {edit ? (
           <AsyncSelect
             row
+            fgclass="mb-0"
             isMulti
             cacheOptions
             defaultOptions
