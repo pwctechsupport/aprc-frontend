@@ -275,7 +275,7 @@ const ReferenceRow = ({
       ) : null}
       <td
         className="align-middle"
-        // style={{ width: "20%" }}
+        style={{ width: "20%" }}
       >
         {edit ? (
           <Input
@@ -315,7 +315,7 @@ const ReferenceRow = ({
       {isAdmin || isAdminReviewer || isAdminPreparer ? (
         <td
           className="align-middle text-right action"
-          // style={{ width: "30%" }}
+          style={{ width: "30%" }}
         >
           <div className="d-flex align-items-center justify-content-end">
             {edit ? (
@@ -330,7 +330,7 @@ const ReferenceRow = ({
                 </Button>
                 <DialogButton
                   onConfirm={handleSubmit(updateReference)}
-                  className="pwc"
+                  className="add"
                   loading={updateM.loading}
                   color="primary"
                   message="Save reference?"
