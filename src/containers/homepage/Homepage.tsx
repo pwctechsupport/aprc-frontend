@@ -210,7 +210,7 @@ export default function Homepage() {
                     : []
                 }
                 basePath="policy"
-                themeColor={colors.softPink}
+                themeColor={colors.mediumGrey}
                 title="My recently visited policies"
               />
             </Col>
