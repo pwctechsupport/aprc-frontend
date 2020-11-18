@@ -7,8 +7,10 @@ import { get } from "lodash";
 import pwcLogo from "../../assets/images/pwc-logo.png";
 import { useUpdatePasswordMutation } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
-import { Container, Form, H1, Image, Input, Label } from "./Login";
+import {  H1, Image, Label } from "./Login";
 import { FieldError } from "react-hook-form/dist/types";
+import { Col, Container, Row, Form } from "reactstrap";
+import Input  from '../../shared/components/forms/Input'
 
 const required = "Wajib diisi";
 const validationSchema = yup.object().shape({
@@ -67,45 +69,48 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
   console.log({ errors });
 
   return (
-    <Container>
-      <Image src={pwcLogo} alt="pwc-logo" />
-      <H1>Change Password</H1>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <div className="my-5">
-          <Label>New Password</Label>
-          <br />
-          <Input
-            type="password"
-            name="password"
-            placeholder="Password"
-            required
-            ref={register({ required: true })}
-          />
-          <br />
-          <br />
-
-          <Label>Password Confirmation</Label>
-          <br />
-          <Input
-            type="password"
-            name="passwordConfirmation"
-            placeholder="Password Confirmation"
-            required
-            ref={register({ required: true })}
-          />
-          <FormError error={get(errors, "passwordConfirmation.message")} />
-        </div>
-
-        <Button
-          className="pwc"
-          color="primary"
-          type="submit"
-          block
-          loading={loading}
-        >
-          Change Password
-        </Button>
-      </Form>
+    <Container fluid>
+      <Row className="d-flex justify-content-center">
+        <Col xs={12} md={2} >
+            <div className="text-center">
+              <Image src={pwcLogo} alt="pwc-logo" />
+              <H1>Change Password</H1>
+            </div>
+            <Form onSubmit={handleSubmit(onSubmit)}>
+              <div className="my-5">
+                <Label>New Password</Label>
+                <Input
+                  fgclass="mb-4"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                  ref={register({ required: true })}
+                />
+                <Label>Password Confirmation</Label>
+                <Input
+                  type="password"
+                  name="passwordConfirmation"
+                  placeholder="Password Confirmation"
+                  required
+                  ref={register({ required: true })}
+                />
+                <FormError error={get(errors, "passwordConfirmation.message")} />
+              </div>
+              <div>
+              <Button
+                className="button-base"
+                color="primary"
+                type="submit"
+                block
+                loading={loading}
+                >
+                Change Password
+              </Button>
+              </div>
+            </Form>
+        </Col>
+      </Row>
     </Container>
   );
 };
