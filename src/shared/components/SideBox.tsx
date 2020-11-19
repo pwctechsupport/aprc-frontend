@@ -6,7 +6,7 @@ import styled, { css } from "styled-components";
 import LoadingSpinner from "./LoadingSpinner";
 
 // SideBox is the main wrapper to use side box.
-export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
+export const SideBox= styled.div<{responsive?: boolean}>`
   background: var(--soft-grey);
   width: 25vw;
   position: fixed;
@@ -15,16 +15,11 @@ export const SideBox = styled.div.attrs({ className: "d-none d-md-block" })`
   z-index: 100;
   transition: 0.7s cubic-bezier(0.075, 0.82, 0.165, 1);
 
-  @media (max-width: 940px) {
-    width: 20vw;
-    &:hover {
-      width: 50vw;
-      box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.38);
-      -webkit-box-shadow: 0px 0px 50px 2px rgba(0, 0, 0, 0.38);
-    }
-  }
-  @media (max-width: 767px) {
-    width: 0px;
+  @media (max-width: 769px) {
+    position: relative;
+    width: ${(p) => p.responsive ? 'unset !important' : '0px'};
+    height: unset !important;
+    box-shadow: unset !important;
   }
 `;
 

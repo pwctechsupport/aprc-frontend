@@ -15,7 +15,7 @@ const settingsMenus = [
 
 const SettingsSideBox = () => {
   return (
-    <SideBox>
+    <SideBox responsive>
       <SideBoxTitle>Menu</SideBoxTitle>
       {settingsMenus.map((menu) => (
         <SideBoxItem key={menu.path} to={menu.path}>
