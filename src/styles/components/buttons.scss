@@ -26,7 +26,6 @@
 
 @mixin button-pwc {
   @include button-base;
-  width: 200px;
 
   @media (min-width: $sm) {
     width: 200px;
