@@ -10,6 +10,7 @@ export default function AsyncSelect({
   setValue,
   error,
   row,
+  formGroupClassName,
   label,
   required,
   defaultValue,
@@ -77,7 +78,7 @@ export default function AsyncSelect({
     </Fragment>
   );
   return (
-    <FormGroup row={row}>
+    <FormGroup row={row} className={formGroupClassName}>
       {label ? (
         <Label required={required} sm={row ? 3 : undefined}>
           {label}

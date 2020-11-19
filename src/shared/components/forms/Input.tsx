@@ -19,6 +19,7 @@ const Input = ({
   required,
   error,
   row,
+  formGroupclassName,
   formText,
   type,
   ...inputProps
@@ -38,7 +39,7 @@ const Input = ({
   );
 
   return (
-    <FormGroup row={row}>
+    <FormGroup row={row} className={formGroupclassName}>
       {label ? (
         <Label required={required} sm={row ? 3 : undefined}>
           {label}
