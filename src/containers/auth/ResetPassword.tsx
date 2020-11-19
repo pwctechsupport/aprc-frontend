@@ -74,7 +74,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
         <Col xs={12} md={2} >
             <div className="text-center">
               <Image src={pwcLogo} alt="pwc-logo" className="mt-3" />
-              <H1 className="mt-2">Change Password</H1>
+              <H1 className="mt-4">Change Password</H1>
             </div>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <div className="my-5">
