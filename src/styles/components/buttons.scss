@@ -1,9 +1,21 @@
-@mixin button-pwc {
+@mixin button-base {
   background: $pwc-orange;
   border-radius: 3px;
-  width: 200px;
   border: 0;
   opacity: 0.9;
+}
+
+.button-base {
+  @include button-base;
+}
+
+@mixin button-pwc {
+  @include button-base;
+
+  @media (min-width: $sm) {
+    width: 200px;
+  }
+
   &:hover {
     opacity: 1;
   }
