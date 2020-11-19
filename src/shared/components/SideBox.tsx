@@ -18,7 +18,7 @@ export const SideBox= styled.div<{responsive?: boolean}>`
   @media (max-width: 769px) {
     position: relative;
     width: ${(p) => p.responsive ? 'unset !important' : '0px'};
-    height: unset !important;
+    height: ${(p) => p.responsive ? 'unset !important' : '0px'};
     box-shadow: unset !important;
   }
 `;
