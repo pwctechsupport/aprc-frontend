@@ -162,7 +162,6 @@ export const Form = styled.form`
 `;
 
 export const Image = styled.img`
-  margin-top: 5px;
   width: 230px;
   height: auto;
   @media (max-width: 760px) {
@@ -171,7 +170,6 @@ export const Image = styled.img`
 `;
 
 export const H1 = styled.h3`
-  margin-top: 10px;
   margin-bottom: 15px;
   font-size: 23px;
 `;

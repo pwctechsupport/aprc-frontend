@@ -73,14 +73,14 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
       <Row className="d-flex justify-content-center">
         <Col xs={12} md={2} >
             <div className="text-center">
-              <Image src={pwcLogo} alt="pwc-logo" />
-              <H1>Change Password</H1>
+              <Image src={pwcLogo} alt="pwc-logo" className="mt-3" />
+              <H1 className="mt-2">Change Password</H1>
             </div>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <div className="my-5">
                 <Label>New Password</Label>
                 <Input
-                  fgclass="mb-4"
+                  formGroupclassName="mb-4"
                   type="password"
                   name="password"
                   placeholder="Password"
@@ -99,7 +99,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
               </div>
               <div>
               <Button
-                className="button-base"
+                className="base"
                 color="primary"
                 type="submit"
                 block
