@@ -244,6 +244,7 @@ fragment policyBranch on Policy {
 
 query policy($id: ID!, $withChild: Boolean = false) {
   policy(id: $id) {
+    description
     ...policyFragment
     children @include(if: $withChild) {
       ...policyFragment
@@ -316,12 +317,12 @@ fragment policyFragment on Policy {
     id
   }
   requestStatus
-  policyCategory {
-    id
-    name
-  }
+  # policyCategory {
+  #   id
+  #   name
+  # }
   ancestry
-  description
+  # description
   parentId
   references {
     id

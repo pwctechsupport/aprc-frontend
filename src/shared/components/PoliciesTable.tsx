@@ -32,8 +32,8 @@ export default function PoliciesTable({
         <tr>
           <th />
           <th>Title</th>
-          <th>Description</th>
-          <th>Categories</th>
+          {/* <th>Description</th>
+          <th>Categories</th> */}
           <th>References</th>
           <th>Status</th>
           <th>Updated</th>
@@ -118,14 +118,14 @@ const PolicyTableRow = ({
           </div>
         </td>
 
-        <td>
+        {/* <td>
           <div
             dangerouslySetInnerHTML={{
               __html: previewHtml(policy.description || "", 200),
             }}
           />
-        </td>
-        <td>{policy.policyCategory?.name || ""}</td>
+        </td> */}
+        {/* <td>{policy.policyCategory?.name || ""}</td> */}
         <td>{policy.references?.map((item) => item.name).join(", ")}</td>
         <td>
           <DisplayStatus>{policy.status}</DisplayStatus>
