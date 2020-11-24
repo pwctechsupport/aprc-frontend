@@ -254,16 +254,16 @@ const SubPolicyForm = ({
         </div>
         <Select
           name="referenceIds"
-          label="Sub-policy reference*"
+          label="Sub-policy reference"
           placeholder="Sub-policy reference"
           loading={referenceData.loading}
           onChange={handleReferenceChange}
           options={references}
           isMulti
           defaultValue={defaultReference}
-          error={
-            errors.referenceIds && "Sub-policy reference is a required field"
-          }
+          // error={
+          //   errors.referenceIds && "Sub-policy reference is a required field"
+          // }
         />
 
         <div className="text-right mt-3">
@@ -895,7 +895,7 @@ const validationSchema = yup.object().shape({
     .string()
     .min(11)
     .required(),
-  referenceIds: yup.array().required(),
+  // referenceIds: yup.array().required(),
 });
 // const validationSchemaAttributes = yup.object().shape({
 //   // businessProcessFirst: yup.array().required(),
