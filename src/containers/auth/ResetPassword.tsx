@@ -109,7 +109,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
   return (
     <Container fluid>
       <Row className="d-flex justify-content-center">
-        <Col xs={12} md={2} >
+        <Col xs={12} md={4} >
             <div className="text-center">
               <Image src={pwcLogo} alt="pwc-logo" className="mt-3" />
               <H1 className="mt-4">Change Password</H1>
