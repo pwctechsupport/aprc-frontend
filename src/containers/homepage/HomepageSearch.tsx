@@ -7,7 +7,7 @@ import { useDebouncedCallback } from "use-debounce/lib";
 import { usePoliciesLazyQuery } from "../../generated/graphql";
 import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import useKeyDetection from "../../shared/hooks/useKeyDetection";
-import { Input } from "../auth/Login";
+import { InputLogin } from "../auth/Login";
 import PolicySearchItem from "../policy/policySearch/PolicySearchItem";
 import useAccessRights from "../../shared/hooks/useAccessRights";
 import Button from "../../shared/components/Button";
@@ -91,7 +91,7 @@ export default function HomepageSearch({
       <div {...getComboboxProps()}>
         <InputWrapper ref={inputRef} className="d-flex">
           {navBar ? null : (
-            <Input
+            <InputLogin
               {...getInputProps()}
               placeholder={placeholder}
               onClick={handleInputClick}

@@ -18,13 +18,18 @@ import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
 import Captcha from "react-numeric-captcha";
 // import useWindowSize from "../../shared/hooks/useWindowSize";
-import { Container as BsContainer, Row, Col } from "reactstrap";
+import { Container as BsContainer, Row, Col, FormText, Input as InputRS } from "reactstrap";
 import Footer from "../../shared/components/Footer";
+import * as yup from "yup";
+import Input from '../../shared/components/forms/Input';
+
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
+  const { register, handleSubmit, watch, errors } = useForm<LoginMutationVariables>({
+    validationSchema,
+  });
 
   //refreshes Captcha when error
   const [t, st] = useState({
@@ -91,27 +96,26 @@ export default function Login({ history }: RouteComponentProps) {
                 name="email"
                 placeholder="Enter email address"
                 required
-                ref={register({ required: true })}
+                innerRef={register}
+                error={errors.email?.message}
               />
-              <br />
-              <br />
               <Label>Password</Label>
               <br />
               <Input
+                formGroupclassName="mb-0"
                 name="password"
                 type="password"
                 placeholder="Enter password"
                 required
-                ref={register({ required: true })}
+                innerRef={register}
+                error={errors.password?.message}
               />
-              <br />
               <br />
               <Captcha
                 ref={(e: any) => st(e)}
                 onChange={setCaptcha}
                 placeholder="Insert captcha"
               />
-              <br />
               <br />
 
               <Row>
@@ -143,6 +147,11 @@ export default function Login({ history }: RouteComponentProps) {
     </BsContainer>
   )
 }
+
+const validationSchema = yup.object().shape({
+  email: yup.string().required("Email is a required field"),
+  password: yup.string().required("Password is a required field"),
+})
 
 export const LoginBox = styled.div`
   border: 1px solid rgba(0,0,0,0.2);
@@ -182,7 +191,7 @@ export const Label = styled.label`
   margin-bottom: 10px;
 `;
 
-export const Input = styled.input`
+export const InputLogin = styled.input`
   border: 1px solid #c4c4c4;
   box-sizing: border-box;
   border-radius: 3px;
