@@ -16,6 +16,7 @@ import { useSelector } from "../../shared/hooks/useSelector";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import { toast } from "react-toastify";
 import Footer from "../../shared/components/Footer";
+import { PasswordRequirements } from "../../shared/components/forms/PasswordRequirements";
 
 export default function UpdateProfile() {
   const user = useSelector((state) => state.auth.user);
@@ -212,6 +213,7 @@ const UpdatePasswordForm = ({
       toast.error("Password doesn't fullfill requirement(s)");
     }
   };
+
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <h4 style={{ fontSize: "23px" }}>Update password</h4>
@@ -232,28 +234,7 @@ const UpdatePasswordForm = ({
         required
       />{" "}
       {validatePassword && (
-        <Fragment>
-          <h6 style={{ fontSize: "14px", color: "red" }}>
-            Password requirements:
-          </h6>
-          <ul>
-            {falsePasswordLength && (
-              <li style={{ color: "red" }}>At least 12 characters</li>
-            )}
-            {noCapitalPassword && (
-              <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
-            )}
-            {noLowerCasePassword && (
-              <li style={{ color: "red" }}>Lowercase characters (a - z)</li>
-            )}
-            {noSpecialCharacterPassword && (
-              <li style={{ color: "red" }}>Special characters ({` ~!"#$%&'()*+=,-./:;<>?@[\\\`]^_{|}'`})</li>
-            )}
-            {noNumberPassword && (
-              <li style={{ color: "red" }}>Numbers (0 - 9)</li>
-            )}
-          </ul>
-        </Fragment>
+        <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
       )}
       <Input
         name="passwordConfirmation"
