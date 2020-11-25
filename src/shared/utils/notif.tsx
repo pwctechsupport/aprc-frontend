@@ -38,7 +38,7 @@ export const notifyInfo = (message: ToastContent, options?: ToastOptions) => {
 function composeMessage(messages: any) {
   if (messages instanceof Array) {
     return (
-      <ul style={{ marginLeft: '-5%'}}>
+      <ul style={{ marginLeft: '-1.5rem'}}>
         {messages.map((message, index) => {
           return <li key={index}>{message}</li>;
         })}
@@ -52,6 +52,6 @@ function composeMessage(messages: any) {
 export const notifyGraphQLErrors = (errors: ApolloError) => {
   const messages = errors.graphQLErrors.map(err => err.message);
   notifyError(messages.length ? messages : "Whoops, Something went wrong...", {
-    autoClose: 50000000
+    autoClose: 5000
   });
 };
