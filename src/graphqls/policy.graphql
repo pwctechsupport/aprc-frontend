@@ -317,12 +317,7 @@ fragment policyFragment on Policy {
     id
   }
   requestStatus
-  # policyCategory {
-  #   id
-  #   name
-  # }
   ancestry
-  # description
   parentId
   references {
     id
