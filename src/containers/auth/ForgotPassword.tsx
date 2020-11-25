@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useForgotPasswordMutation } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
-import { Container, Form, H1, Image, Input, Label } from "./Login";
+import { Container, Form, H1, Image, Input, Label } from "../auth/Login";
 import Helmet from "react-helmet";
 import { Link } from "react-router-dom";
 import useWindowSize from "../../shared/hooks/useWindowSize";
