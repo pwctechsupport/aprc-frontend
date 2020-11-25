@@ -38,7 +38,7 @@ export const notifyInfo = (message: ToastContent, options?: ToastOptions) => {
 function composeMessage(messages: any) {
   if (messages instanceof Array) {
     return (
-      <ul>
+      <ul style={{ marginLeft: '-1.5rem'}}>
         {messages.map((message, index) => {
           return <li key={index}>{message}</li>;
         })}

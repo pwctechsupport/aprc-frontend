@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { capitalCase } from "capital-case";
 import { capitalize } from "lodash";
+import { PasswordRequirements } from '../../../shared/components/forms/PasswordRequirements';
 
 export interface UserFormProps {
   onSubmit?: (values: UserFormValues) => void;
@@ -116,28 +117,7 @@ export default function UserForm(props: UserFormProps) {
         error={capitalize(errors?.password?.message || "")}
       />
       {validatePassword && (
-        <Fragment>
-          <h6 style={{ fontSize: "14px", color: "red" }}>
-            Password requirements:
-          </h6>
-          <ul>
-            {falsePasswordLength && (
-              <li style={{ color: "red" }}>At least 12 characters</li>
-            )}
-            {noCapitalPassword && (
-              <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
-            )}
-            {noLowerCasePassword && (
-              <li style={{ color: "red" }}>Lowercase characters (a - z)</li>
-            )}
-            {noSpecialCharacterPassword && (
-              <li style={{ color: "red" }}>Special characters ({` ~!"#$%&'()*+=,-./:;<>?@[\\\`]^_{|}'`})</li>
-            )}
-            {noNumberPassword && (
-              <li style={{ color: "red" }}>Numbers (0 - 9)</li>
-            )}
-          </ul>
-        </Fragment>
+        <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
       )}
       <Input
         required
