@@ -18,10 +18,10 @@ import Button from "../../shared/components/Button";
 import { notifySuccess } from "../../shared/utils/notif";
 import Captcha from "react-numeric-captcha";
 // import useWindowSize from "../../shared/hooks/useWindowSize";
-import { Container as BsContainer, Row, Col, FormText, Input as InputRS } from "reactstrap";
+import { Container as BsContainer, Row, Col } from "reactstrap";
 import Footer from "../../shared/components/Footer";
 import * as yup from "yup";
-import Input from '../../shared/components/forms/Input';
+import FormInput from '../../shared/components/forms/Input';
 
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
@@ -92,7 +92,7 @@ export default function Login({ history }: RouteComponentProps) {
             <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
               <Label>Email</Label>
               <br />
-              <Input
+              <FormInput
                 name="email"
                 placeholder="Enter email address"
                 required
@@ -101,7 +101,7 @@ export default function Login({ history }: RouteComponentProps) {
               />
               <Label>Password</Label>
               <br />
-              <Input
+              <FormInput
                 formGroupclassName="mb-0"
                 name="password"
                 type="password"
@@ -191,7 +191,7 @@ export const Label = styled.label`
   margin-bottom: 10px;
 `;
 
-export const InputLogin = styled.input`
+export const Input = styled.input`
   border: 1px solid #c4c4c4;
   box-sizing: border-box;
   border-radius: 3px;
