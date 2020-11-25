@@ -793,7 +793,7 @@ const SubPolicyAttributeForm = ({
         name="businessProcessMain"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Main Business Process"
+        label="Main Business Process*"
         placeholder="Main Business Process"
         options={handleGetMainBps}
         defaultValue={mainBpsDefaultValue}
@@ -807,7 +807,7 @@ const SubPolicyAttributeForm = ({
         value={getFirstBpsValues}
         isDisabled={mainBpIds.length ? false : true}
         setValue={formModal.setValue}
-        label="Sub Business Process Level 1"
+        label="Sub Business Process Level 1*"
         placeholder="Sub Business Process Level 1"
         options={handleGetFirstBps}
       />
@@ -836,7 +836,7 @@ const SubPolicyAttributeForm = ({
         label="Selected Business Process"
         placeholder="Selected Business Process"
         options={handleGetMainBps}
-        error={error ? "Business process is a required field" : undefined}
+        error={error ? "Selected business process is a required field" : undefined}
       />
 
       <FormSelect
