@@ -7,14 +7,15 @@ import { AiOutlineClockCircle } from "react-icons/ai";
 interface DateHoverProps {
   children: Date | number | string | null | undefined;
   withIcon?: boolean;
+  humanize?: boolean;
 }
 
-export default function DateHover({ children, withIcon }: DateHoverProps) {
+export default function DateHover({ children, withIcon, humanize=true }: DateHoverProps) {
   return (
     <Tooltip description={date(children)}>
       <span className="text-secondary">
         {withIcon && <AiOutlineClockCircle className="mr-1" />}
-        {humanizeDate(children)}
+        {humanize ? humanizeDate(children) : date(children)}
       </span>
     </Tooltip>
   );
