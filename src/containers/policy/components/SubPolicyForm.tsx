@@ -764,6 +764,8 @@ const SubPolicyAttributeForm = ({
           businessProcessIds: handleGetValueBps.length
             ? handleGetValueBps.map((a) => a.value).flat(5)
             : undefined,
+            businessProcessMain: values.businessProcessMain,
+            businessProcessFirst: values.businessProcessFirst,
         });
     } else {
       setError(true);
@@ -797,6 +799,7 @@ const SubPolicyAttributeForm = ({
         placeholder="Main Business Process"
         options={handleGetMainBps}
         defaultValue={mainBpsDefaultValue}
+        error={error ? "Main business process is a required field" : undefined }
       />
 
       <FormSelect
@@ -810,6 +813,7 @@ const SubPolicyAttributeForm = ({
         label="Sub Business Process Level 1*"
         placeholder="Sub Business Process Level 1"
         options={handleGetFirstBps}
+        error={error ? "Sub business process level 1 is a required field" : undefined }
       />
 
       <FormSelect
