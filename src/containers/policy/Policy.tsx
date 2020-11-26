@@ -844,10 +844,10 @@ export default function Policy({
               <div className="text-right my-2 text-secondary">
                 <div className="mb-1  ">Created By : {createdBy}</div>
                 {lastUpdatedAt ? (
-                  <DateHover withIcon>{lastUpdatedAt}</DateHover>
+                  <DateHover withIcon humanize={false}>{lastUpdatedAt}</DateHover>
                 ) : (
                   <div className="text-secondary">
-                    <DateHover withIcon>{createdAt}</DateHover>
+                    <DateHover withIcon humanize={false}>{createdAt}</DateHover>
                   </div>
                 )}
 
