@@ -105,6 +105,21 @@
   }
 }
 
+.button.reset-95px {
+  background: $soft-grey;
+  border-radius: 3px;
+  color: black;
+  border: 0;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+  &.disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+}
+
 .button.confirmNo {
   background: $soft-grey;
   border-radius: 3px;
