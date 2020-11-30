@@ -256,7 +256,7 @@ export default function ImageTagger({
                   <TaggerBoxCloseButton
                     onClick={handleClose}
                     size={13}
-                    color="red"
+                    color="#3a3838"
                   />
                   <Async
                     loadOptions={handleLoadOptions}
@@ -278,28 +278,33 @@ export default function ImageTagger({
                         : undefined
                     }
                   />
-                  <div className="d-flex justify-content-end">
-                    {currentTag.id ? (
+                  <div className="no-gutters row">
+                    <div className="col-sm-5">
+                      {currentTag.id ? (
+                        <Button
+                          onClick={() => handleDelete(currentTag.id)}
+                          size="sm"
+                          className="reset btn-block"
+                          // color="danger"
+                        >
+                          Delete
+                        </Button>
+                      ) : null}
+                    </div>
+                    <div className="col-sm-2"></div>
+                    <div className="col-sm-5">
                       <Button
-                        onClick={() => handleDelete(currentTag.id)}
+                        onClick={() =>
+                          currentTag.id
+                            ? handleUpdate(currentTag.id)
+                            : handleCreate(currentTag.x, currentTag.y)
+                        }
                         size="sm"
-                        className="mr-1 pwc cancel"
-                        color="danger"
+                        className="base btn-block"
                       >
-                        Delete
+                        Save
                       </Button>
-                    ) : null}
-                    <Button
-                      onClick={() =>
-                        currentTag.id
-                          ? handleUpdate(currentTag.id)
-                          : handleCreate(currentTag.x, currentTag.y)
-                      }
-                      size="sm"
-                      className="pwc"
-                    >
-                      Save
-                    </Button>
+                    </div>
                   </div>
                 </TaggerBoxInner>
               </TaggerBox>
