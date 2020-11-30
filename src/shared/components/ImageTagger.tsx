@@ -278,33 +278,27 @@ export default function ImageTagger({
                         : undefined
                     }
                   />
-                  <div className="no-gutters row">
-                    <div className="col-sm-5">
-                      {currentTag.id ? (
-                        <Button
-                          onClick={() => handleDelete(currentTag.id)}
-                          size="sm"
-                          className="reset btn-block"
-                          // color="danger"
-                        >
-                          Delete
-                        </Button>
-                      ) : null}
-                    </div>
-                    <div className="col-sm-2"></div>
-                    <div className="col-sm-5">
+                  <div className="d-flex justify-content-end">
+                    {currentTag.id ? (
                       <Button
-                        onClick={() =>
-                          currentTag.id
-                            ? handleUpdate(currentTag.id)
-                            : handleCreate(currentTag.x, currentTag.y)
-                        }
+                        onClick={() => handleDelete(currentTag.id)}
                         size="sm"
-                        className="base btn-block"
+                        className="mr-1 reset flex-fill"
                       >
-                        Save
+                        Delete
                       </Button>
-                    </div>
+                    ) : <div className="flex-fill mr-5" />}
+                    <Button
+                      onClick={() =>
+                        currentTag.id
+                          ? handleUpdate(currentTag.id)
+                          : handleCreate(currentTag.x, currentTag.y)
+                      }
+                      size="sm"
+                      className="base flex-fill"
+                    >
+                      Save
+                    </Button>
                   </div>
                 </TaggerBoxInner>
               </TaggerBox>
