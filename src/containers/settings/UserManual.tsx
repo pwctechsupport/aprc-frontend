@@ -187,6 +187,12 @@ function UserManualForm({
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input innerRef={register} name="name" label="Name" />
       <FileInputPdf name="resupload" register={register} setValue={setValue} />
+      <div
+        style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
+        className="mt-lg-n2 mb-3"
+      >
+        Note: Maximum attachment file size 50 Mb
+      </div>
       <div className="d-flex justify-content-end">
         <Button
           type="button"

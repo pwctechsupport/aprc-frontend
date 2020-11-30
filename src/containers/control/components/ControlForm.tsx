@@ -569,10 +569,18 @@ const ActivityModalForm = ({
             placeholder="Description..."
           />
         ) : (
-          <Input
-            type="file"
-            onChange={activityType === "attachment" ? handleSetFile : () => {}}
-          />
+          <Fragment>
+            <Input
+              type="file"
+              onChange={activityType === "attachment" ? handleSetFile : () => {}}
+            />
+            <div
+              style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
+              className="mt-lg-n2"
+            >
+              Note: Maximum attachment file size 50 Mb
+            </div>
+          </Fragment>
         )}
       </div>
       {error && <h6 className="text-red mt-2">{error}</h6>}

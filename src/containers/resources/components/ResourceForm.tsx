@@ -264,13 +264,21 @@ ResourceFormProps) {
 
       <div className="mt-1">
         {selectedCategory?.value !== 'Flowchart' && activityType === 'text' ? (
-          <Input
-            type="text"
-            name="resuploadLink"
-            placeholder="Type image URL..."
-            innerRef={register}
-            error={errors.resuploadLink && errors.resuploadLink.message}
-          />
+          <Fragment>
+            <Input
+              type="text"
+              name="resuploadLink"
+              placeholder="Type image URL..."
+              innerRef={register}
+              error={errors.resuploadLink && errors.resuploadLink.message}
+            />
+            <div
+              style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
+              className="mt-lg-n3"
+            >
+              Note: Maximum attachment file size 50 Mb
+            </div>
+          </Fragment>
         ) : selectedCategory?.value !== 'Flowchart' &&
           activityType !== 'text' ? (
           <Fragment>
@@ -303,6 +311,12 @@ ResourceFormProps) {
             ) ? (
               <div>{defaultValues.name}.doc</div>
             ) : null}
+            <div
+              style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
+              className="mt-lg-n2"
+            >
+              Note: Maximum attachment file size 50 Mb
+            </div>
           </Fragment>
         ) : (
           <FileInput
