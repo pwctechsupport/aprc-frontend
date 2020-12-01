@@ -16,6 +16,7 @@ import Table from "./Table";
 import { oc } from "ts-optchain";
 import useAccessRights from "../hooks/useAccessRights";
 import { PWCLink } from "./PoliciesTable";
+import { capitalCase } from "capital-case";
 
 interface ControlsTableProps {
   // controls: Control[];
@@ -117,11 +118,11 @@ export default function ControlsTable({
                     {control.description}
                   </PWCLink>
                 </td>
-                <td>{control.frequency || ""}</td>
-                <td>{control.typeOfControl || ""}</td>
-                <td>{control.nature || ""}</td>
-                <td>{control.assertion.join(", ") || ""}</td>
-                <td>{control.ipo.join(", ") || ""}</td>
+                <td>{capitalCase(control.frequency) || ""}</td>
+                <td>{capitalCase(control.typeOfControl) || ""}</td>
+                <td>{capitalCase(control.nature) || ""}</td>
+                <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
+                <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
                 <td>{control.controlOwner?.join(", ")}</td>
               </tr>
             ))}
