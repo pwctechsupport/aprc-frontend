@@ -34,7 +34,7 @@ export default function PoliciesTable({
           <th>Title</th>
           <th>References</th>
           <th>Status</th>
-          <th>Updated</th>
+          <th>Last Updated</th>
           <th />
         </tr>
       </thead>
