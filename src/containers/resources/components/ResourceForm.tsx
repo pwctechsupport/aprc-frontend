@@ -182,8 +182,8 @@ ResourceFormProps) {
       ) : (
         <Fragment>
           <div
-            style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
-            className="mb-1"
+            style={{ fontSize: '12px' }}
+            className="mb-1 font-italic text-danger"
           >
             Note: Please select related policies or related sub-business process
           </div>
@@ -264,13 +264,21 @@ ResourceFormProps) {
 
       <div className="mt-1">
         {selectedCategory?.value !== 'Flowchart' && activityType === 'text' ? (
-          <Input
-            type="text"
-            name="resuploadLink"
-            placeholder="Type image URL..."
-            innerRef={register}
-            error={errors.resuploadLink && errors.resuploadLink.message}
-          />
+          <Fragment>
+            <Input
+              type="text"
+              name="resuploadLink"
+              placeholder="Type image URL..."
+              innerRef={register}
+              error={errors.resuploadLink && errors.resuploadLink.message}
+            />
+            <div
+              style={{ fontSize: '12px' }}
+              className="mt-lg-n3 font-italic text-danger"
+            >
+              Note: Maximum attachment file size 50 Mb
+            </div>
+          </Fragment>
         ) : selectedCategory?.value !== 'Flowchart' &&
           activityType !== 'text' ? (
           <Fragment>
@@ -303,6 +311,12 @@ ResourceFormProps) {
             ) ? (
               <div>{defaultValues.name}.doc</div>
             ) : null}
+            <div
+              style={{ fontSize: '12px' }}
+              className="mt-lg-n2 font-italic text-danger"
+            >
+              Note: Maximum attachment file size 50 Mb
+            </div>
           </Fragment>
         ) : (
           <FileInput
