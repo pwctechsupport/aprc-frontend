@@ -749,10 +749,21 @@ const SubPolicyAttributeForm = ({
   const controlDefaultValues = controlsOptions.filter((a) =>
     controlValue.includes(a.value)
   );
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<{
+    businessProcessMain?: string,
+    businessProcessFirst?: string,
+    businessProcessIds?: string,
+  }>({});
 
   const submit = (values: SubPolicyModalFormValues) => {
-    if (handleGetValueBps.length) {
+    const checkMain = checkMainBp?.length === undefined || checkMainBp?.length === 0
+    const checkFirst = checkFirstBp?.length === undefined || checkFirstBp?.length === 0
+
+    let errors: any = {}
+    if (checkMain) { errors.businessProcessMain = "Main business process is a required field" }
+    if (checkFirst) { errors.businessProcessFirst = "Sub business process level 1 is a required field" }
+    if (!handleGetValueBps.length) { errors.businessProcessIds = "Selected business process is a required field" }
+    if (!checkMain && !checkFirst && handleGetValueBps.length) {
       onSubmit &&
         onSubmit({
           controlIds: values.controlIds,
@@ -761,9 +772,15 @@ const SubPolicyAttributeForm = ({
           businessProcessIds: handleGetValueBps.length
             ? handleGetValueBps.map((a) => a.value).flat(5)
             : undefined,
+            businessProcessMain: values.businessProcessMain,
+            businessProcessFirst: values.businessProcessFirst,
         });
     } else {
-      setError(true);
+      setError({
+        businessProcessMain: errors.businessProcessMain,
+        businessProcessFirst: errors.businessProcessFirst,
+        businessProcessIds: errors.businessProcessIds,
+      });
     }
   };
 
@@ -790,10 +807,11 @@ const SubPolicyAttributeForm = ({
         name="businessProcessMain"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Main Business Process"
+        label="Main Business Process*"
         placeholder="Main Business Process"
         options={handleGetMainBps}
         defaultValue={mainBpsDefaultValue}
+        error={error.businessProcessMain}
       />
 
       <FormSelect
@@ -804,9 +822,10 @@ const SubPolicyAttributeForm = ({
         value={getFirstBpsValues}
         isDisabled={mainBpIds.length ? false : true}
         setValue={formModal.setValue}
-        label="Sub Business Process Level 1"
+        label="Sub Business Process Level 1*"
         placeholder="Sub Business Process Level 1"
         options={handleGetFirstBps}
+        error={error.businessProcessFirst}
       />
 
       <FormSelect
@@ -833,7 +852,7 @@ const SubPolicyAttributeForm = ({
         label="Selected Business Process"
         placeholder="Selected Business Process"
         options={handleGetMainBps}
-        error={error ? "Business process is a required field" : undefined}
+        error={error.businessProcessIds}
       />
 
       <FormSelect
