@@ -182,8 +182,8 @@ ResourceFormProps) {
       ) : (
         <Fragment>
           <div
-            style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
-            className="mb-1"
+            style={{ fontSize: '12px' }}
+            className="mb-1 font-italic text-danger"
           >
             Note: Please select related policies or related sub-business process
           </div>
@@ -273,8 +273,8 @@ ResourceFormProps) {
               error={errors.resuploadLink && errors.resuploadLink.message}
             />
             <div
-              style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
-              className="mt-lg-n3"
+              style={{ fontSize: '12px' }}
+              className="mt-lg-n3 font-italic text-danger"
             >
               Note: Maximum attachment file size 50 Mb
             </div>
@@ -312,8 +312,8 @@ ResourceFormProps) {
               <div>{defaultValues.name}.doc</div>
             ) : null}
             <div
-              style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
-              className="mt-lg-n2"
+              style={{ fontSize: '12px' }}
+              className="mt-lg-n2 font-italic text-danger"
             >
               Note: Maximum attachment file size 50 Mb
             </div>

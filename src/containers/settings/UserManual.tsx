@@ -188,8 +188,8 @@ function UserManualForm({
       <Input innerRef={register} name="name" label="Name" />
       <FileInputPdf name="resupload" register={register} setValue={setValue} />
       <div
-        style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
-        className="mt-lg-n2 mb-3"
+        style={{ fontSize: '12px' }}
+        className="mt-lg-n2 mb-3 font-italic text-danger"
       >
         Note: Maximum attachment file size 50 Mb
       </div>

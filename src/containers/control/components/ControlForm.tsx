@@ -575,8 +575,8 @@ const ActivityModalForm = ({
               onChange={activityType === "attachment" ? handleSetFile : () => {}}
             />
             <div
-              style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
-              className="mt-lg-n2"
+              style={{ fontSize: '12px' }}
+              className="mt-lg-n2 font-italic text-danger"
             >
               Note: Maximum attachment file size 50 Mb
             </div>
