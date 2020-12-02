@@ -513,8 +513,10 @@ const ActivityModalForm = ({
     if (file) {
       if (
         ![
+          'application/vnd.ms-excel',
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "application/pdf",
+          'application/msword',
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         ].includes(file.type)
       ) {
