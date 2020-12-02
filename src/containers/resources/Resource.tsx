@@ -177,8 +177,8 @@ export default function Resource({
       controlIds: data.controlIds?.map((a) => a.value),
       businessProcessId: data.businessProcessId?.value,
       resuploadLink: data.resuploadLink,
-      ...(data.resuploadBase64 && {
-        resuploadBase64: data.resuploadBase64,
+      ...(data.resupload && {
+        resupload: data.resupload,
       }),
       tagsAttributes: data.tagsAttributes?.map((tag) => {
         const { id, risk, control, yCoordinates, xCoordinates, ...rest } = tag;

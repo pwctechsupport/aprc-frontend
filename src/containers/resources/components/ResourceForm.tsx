@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Form, Label, Col, Row } from 'reactstrap'
@@ -57,6 +57,7 @@ export interface ResourceFormValues {
   businessProcessId?: Suggestion
   businessProcessIdNotFlowchart?: Suggestion
   resuploadBase64?: any
+  resupload?: any
   resuploadUrl?: string
   resuploadLink?: string
   tagsAttributes?: Omit<Tag, 'createdAt' | 'updatedAt'>[]
@@ -91,6 +92,15 @@ ResourceFormProps) {
   const [preview, setPreview] = useState<string | null>(
     defaultValues ? `${APP_ROOT_URL}${defaultValues.resuploadUrl}` : ''
   )
+
+  const handleSetFile = (name: string, base64: string, shouldValidate: boolean, file: any) => {
+    setValue(name, base64, shouldValidate)
+    setValue('resupload', file, shouldValidate)
+  }
+
+  useEffect(() => {
+    register({ name: 'resupload' })
+  }, [])
 
   function submit(data: ResourceFormValues) {
     if (data.resuploadBase64) {
@@ -285,7 +295,7 @@ ResourceFormProps) {
             <FileInput
               name="resuploadBase64"
               register={register}
-              setValue={setValue}
+              setValue={handleSetFile}
               onFileSelect={setPreview}
               errorForm={errors.resuploadLink && errors.resuploadLink.message}
             />
@@ -323,7 +333,7 @@ ResourceFormProps) {
             name="resuploadBase64"
             flowchart
             register={register}
-            setValue={setValue}
+            setValue={handleSetFile}
             onFileSelect={setPreview}
             errorForm={
               selectedCategory?.value === 'Flowchart'
