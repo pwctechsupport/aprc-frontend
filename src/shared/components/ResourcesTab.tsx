@@ -190,7 +190,7 @@ export default function ResourcesTab({
     const input: CreateResourceInput = {
       name: values.name || "",
       category: values.category?.value || "",
-      resuploadBase64: values.resuploadBase64,
+      resupload: values.resupload,
       policyIds: values.policyIds?.map((a) => a.value),
       controlIds: values.controlIds?.map((a) => a.value),
       businessProcessId: values.businessProcessId?.value,
