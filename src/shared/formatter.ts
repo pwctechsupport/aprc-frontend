@@ -39,9 +39,9 @@ export const dateFormatter = (
     return "";
   }
   input = new Date(input);
-  var dd = String(input.getDate()).padStart(2, '0');
-  var mm = String(input.getMonth() + 1).padStart(2, '0');
-  var yyyy = String(input.getFullYear());
+  const dd = String(input.getDate()).padStart(2, '0');
+  const mm = String(input.getMonth() + 1).padStart(2, '0');
+  const yyyy = String(input.getFullYear());
 
   return (
     input = mm + '-' + dd + '-' + yyyy
