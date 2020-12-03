@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { FaFileExport, FaFileImport, FaTimes } from "react-icons/fa";
@@ -205,7 +205,7 @@ const ReferenceRow = ({
   toggleCheck,
   onClick,
 }: ReferenceRowProps) => {
-  const { register, handleSubmit, setValue } = useForm<ReferenceRowFormValues>({
+  const { register, handleSubmit, setValue, reset } = useForm<ReferenceRowFormValues>({
     defaultValues: {
       name: reference.name || "",
       policyIds: oc(reference)
@@ -213,6 +213,9 @@ const ReferenceRow = ({
         .map(toLabelValue),
     },
   });
+
+  useEffect(() => { reset({ name: reference.name || '' }) }, [reference]) //reset reference form values after update
+
   const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
   async function handleGetPolicies(input: string) {
     try {
@@ -241,7 +244,7 @@ const ReferenceRow = ({
         input: {
           id: reference.id || "",
           name: values.name,
-          policyIds: values.policyIds.map((a) => a.value),
+          policyIds: (values.policyIds || []).map((a) => a.value),
         },
       },
     });
