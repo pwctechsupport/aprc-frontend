@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import Helmet from "react-helmet";
 import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -98,31 +98,35 @@ const AllPolicyDashboard = () => {
       </Helmet>
       <h2 className="mb-5">All Policy Summary</h2>
       <PolicyChart data={chartData} policies />
-      <TableTitle>Task Manager</TableTitle>
-      <Table responsive className="mt-2">
-        <thead>
-          <tr>
-            <th>Status</th>
-            <th>Policies</th>
-            <th>Risks</th>
-            <th>Controls</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.map((item, index) => {
-            return (
-              <tr key={index}>
-                <td>{item.label}</td>
-                <td>{item.subPolicy}</td>
-                <td>{item.risk}</td>
-                <td>{item.control}</td>
-                <td>{item.sum()}</td>
+      {!isUser ? (
+        <Fragment>
+          <TableTitle>Task Manager</TableTitle>
+          <Table responsive className="mt-2">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Policies</th>
+                <th>Risks</th>
+                <th>Controls</th>
+                <th>Total</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {tableData.map((item, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{item.label}</td>
+                    <td>{item.subPolicy}</td>
+                    <td>{item.risk}</td>
+                    <td>{item.control}</td>
+                    <td>{item.sum()}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </Table>
+        </Fragment>
+      ) : null}
     </div>
   );
 };

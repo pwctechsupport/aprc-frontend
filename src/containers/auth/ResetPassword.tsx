@@ -60,7 +60,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
     ?.map((a) => numbers.includes(a))
     .every((a) => a === false);
 
-  const falsePasswordLength = (checkPassword?.length || 0) < 12;
+  const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
   const validatePassword =
     noLowerCasePassword ||
@@ -123,7 +123,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
                   name="password"
                   placeholder="Password"
                   required
-                  ref={register({ required: true })}
+                  innerRef={register({ required: true })}
                 />
                 <Label>Password Confirmation</Label>
                 <Input
@@ -131,9 +131,9 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
                   name="passwordConfirmation"
                   placeholder="Password Confirmation"
                   required
-                  ref={register({ required: true })}
+                  innerRef={register({ required: true })}
+                  error={errors && errors.passwordConfirmation?.message}
                 />
-                <FormError error={get(errors, "passwordConfirmation.message")} />
                 <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
               </div>
               <div style={{ marginBottom: '25px'}}>
@@ -152,14 +152,6 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
       </Row>
     </Container>
   );
-};
-
-const FormError = ({ error }: { error?: FieldError }) => {
-  if (error) {
-    return <span className="text-danger">{error}</span>;
-  } else {
-    return null;
-  }
 };
 
 export default ResetPassword;

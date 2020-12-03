@@ -185,12 +185,12 @@ const Controls = ({ history }: RouteComponentProps) => {
                 <th>Description</th>
                 <th>Frequency</th>
                 <th style={{ width: "10%" }}>Type</th>
-                <th style={{ width: "15%" }}>Ass. risk</th>
-                <th style={{ width: "9%" }}>Nature</th>
+                <th style={{ width: "20%" }}>Ass. risk</th>
+                {/* <th style={{ width: "9%" }}>Nature</th> */}
                 <th style={{ width: "9%" }}>Owner</th>
                 <th style={{ width: "9%" }}>Status</th>
-                <th style={{ width: "10%" }}>Last updated</th>
-                <th style={{ width: "10%" }}>Last updated by</th>
+                <th style={{ width: "15%" }}>Last updated</th>
+                {/* <th style={{ width: "10%" }}>Last updated by</th> */}
 
                 <th></th>
               </tr>
@@ -224,13 +224,13 @@ const Controls = ({ history }: RouteComponentProps) => {
                           .map((risk) => risk.name)
                       ).join(", ")}
                     </td>
-                    <td>{capitalCase(control.nature || "")}</td>
+                    {/* <td>{capitalCase(control.nature || "")}</td> */}
                     <td>{control.controlOwner?.join(", ")}</td>
                     <td>{control.draft ? "Waiting for review" : "Release"}</td>
                     <td>
                       {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}
                     </td>
-                    <td>{control.lastUpdatedBy}</td>
+                    {/* <td>{control.lastUpdatedBy}</td> */}
                     {isAdminReviewer ? (
                       <td className="action">
                         <Tooltip description="Delete Control">

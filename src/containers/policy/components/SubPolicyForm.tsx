@@ -846,10 +846,9 @@ const SubPolicyAttributeForm = ({
         name="businessProcessIds"
         register={formModal.register}
         isDisabled={true}
-        required
         value={handleGetValueBps}
         setValue={formModal.setValue}
-        label="Selected Business Process"
+        label="Selected Business Process*"
         placeholder="Selected Business Process"
         options={handleGetMainBps}
         error={error.businessProcessIds}

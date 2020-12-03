@@ -71,7 +71,7 @@ export default function UserForm(props: UserFormProps) {
     ?.map((a) => numbers.includes(a))
     .every((a) => a === false);
 
-  const falsePasswordLength = (checkPassword?.length || 0) < 12;
+  const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
   const validatePassword =
     noLowerCasePassword ||
@@ -94,23 +94,20 @@ export default function UserForm(props: UserFormProps) {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Input
-        required
-        label="Name"
+        label="Name*"
         name="name"
         innerRef={register({ required: true })}
         error={capitalize(errors?.name?.message || "")}
       />
       <Input
-        required
-        label="Email"
+        label="Email*"
         name="email"
         type="email"
         innerRef={register({ required: true })}
         error={capitalize(errors?.email?.message || "")}
       />
       <Input
-        required
-        label="Password"
+        label="Password*"
         name="password"
         type="password"
         innerRef={register({ required: true })}
@@ -120,16 +117,14 @@ export default function UserForm(props: UserFormProps) {
         <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
       )}
       <Input
-        required
-        label="Password Confirmation"
+        label="Password Confirmation*"
         name="passwordConfirmation"
         type="password"
         innerRef={register({ required: true })}
         error={capitalize(errors?.passwordConfirmation?.message || "")}
       />
       <Input
-        required
-        label="Phone"
+        label="Phone*"
         name="phone"
         onKeyDown={(e) =>
           (e.keyCode === 69 ||
