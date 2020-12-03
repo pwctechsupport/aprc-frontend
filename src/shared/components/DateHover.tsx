@@ -1,6 +1,6 @@
 import React from "react";
 import Tooltip from "./Tooltip";
-import { date } from "../formatter";
+import { date, dateFormatter } from "../formatter";
 import humanizeDate from "../utils/humanizeDate";
 import { AiOutlineClockCircle } from "react-icons/ai";
 
@@ -15,7 +15,7 @@ export default function DateHover({ children, withIcon, humanize=true }: DateHov
     <Tooltip description={date(children)}>
       <span className="text-secondary">
         {withIcon && <AiOutlineClockCircle className="mr-1" />}
-        {humanize ? humanizeDate(children) : date(children)}
+        {humanize ? humanizeDate(children) : dateFormatter(children)}
       </span>
     </Tooltip>
   );
