@@ -32,7 +32,7 @@ const PolicyRoute = () => {
                 </Switch>
               </ScrollToTop>
             </div>
-            <Footer />
+            <Footer origin="policy"/>
           </Col>
         </Row>
       </Container>

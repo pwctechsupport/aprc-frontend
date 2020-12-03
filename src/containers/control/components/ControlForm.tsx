@@ -143,14 +143,14 @@ const ControlForm = ({
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
-    if (prepare.length) {
-      onSubmit?.({
-        ...values,
-        activityControlsAttributes: prepare,
-      });
-    } else {
-      toast.error("Add Control Activity is a required field");
-    }
+    onSubmit?.({
+      ...values,
+      activityControlsAttributes: prepare,
+    });
+    // if (prepare.length) {
+    // } else {
+    //   toast.error("Add Control Activity is a required field");
+    // }
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
@@ -352,14 +352,14 @@ const ControlForm = ({
             <FormSelect
               isMulti
               name="ipo"
-              label="IPOs*"
+              label="IPOs"
               placeholder="IPOs"
               loading={controlsQ.loading}
               register={register}
               setValue={setValue}
               options={ipos}
               defaultValue={ipos.filter((res) => getIPO.includes(res.value))}
-              error={errors.ipo && "IPOs is a required field"}
+              // error={errors.ipo && "IPOs is a required field"}
             />
           </Col>
         </Row>
@@ -490,7 +490,7 @@ const ActivityModalForm = ({
   const { register, handleSubmit, setValue, errors } = useForm<
     MyCoolControlActivity
   >({
-    validationSchema: validationSchemaControlActivity,
+    // validationSchema: validationSchemaControlActivity,
     defaultValues: activityDefaultValue,
   });
 
@@ -695,16 +695,16 @@ const validationSchema = yup.object().shape({
   description: yup.string().required(),
   riskIds: yup.array().required(),
   frequency: yup.string().required(),
-  ipo: yup.array().required(),
+  // ipo: yup.array().required(),
   assertion: yup.array().required(),
   nature: yup.string().required(),
   controlOwner: yup.array().required(),
   businessProcessIds: yup.array().required(),
 });
 
-const validationSchemaControlActivity = yup.object().shape({
-  activity: yup.string().required(),
-});
+// const validationSchemaControlActivity = yup.object().shape({
+//   activity: yup.string().required(),
+// });
 // export interface CreateActivityControlFormValues {
 //   activity: string;
 //   guidance: string;
