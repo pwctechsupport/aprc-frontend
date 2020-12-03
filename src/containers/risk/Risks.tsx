@@ -189,8 +189,10 @@ const Risks = ({ history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {risks.map((risk) => {
-            const bps = risk.businessProcesses?.map((a) => `, ${a.name}`) || [];
-            bps[0] = risk.businessProcesses?.map((a) => `${a.name}`)[0] || "-";
+            const bps = risk.businessProcesses?.map(b => b.name).join(', ')
+              || risk.businessProcess?.join(', ')
+              || '-';
+
             return (
               <tr
                 key={risk.id}
