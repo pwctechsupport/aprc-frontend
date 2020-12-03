@@ -82,7 +82,7 @@ const Users = () => {
           User management
         </h2>
 
-        <Row>
+        <Row className="mt-4 mb-lg-n2">
           <Col lg={4}>
             <Input placeholder="Search Users..." onChange={handleSearch} />
           </Col>
