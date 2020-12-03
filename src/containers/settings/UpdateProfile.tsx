@@ -194,7 +194,7 @@ const UpdatePasswordForm = ({
     ?.map((a) => numbers.includes(a))
     .every((a) => a === false);
 
-  const falsePasswordLength = (checkPassword?.length || 0) < 12;
+  const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
   const validatePassword =
     noLowerCasePassword ||

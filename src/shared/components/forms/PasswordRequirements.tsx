@@ -22,7 +22,7 @@ export const PasswordRequirements = ({
       </h6>
       <ul className="text-red">
         {falsePasswordLength && (
-          <li>At least 12 characters</li>
+          <li>At least 8 characters</li>
         )}
         {noCapitalPassword && (
           <li>Uppercase characters (A - Z)</li>
