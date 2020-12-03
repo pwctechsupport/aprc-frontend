@@ -54,4 +54,4 @@ const BreadcrumbItem = styled(BsCrumbItem)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
+`;
