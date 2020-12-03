@@ -5,7 +5,6 @@ interface FooterProps {
   origin?: string;
 }
 const Footer = ({ fontColor = "", linebreak, origin }: FooterProps) => {
-  console.log('origin:', origin)
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
     return {
