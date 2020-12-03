@@ -42,7 +42,7 @@ const BusinessProcessForm = ({
 
           <Col lg={3}>
             {onCancel && (
-              <Button onClick={onCancel} className="button cancel mr-3">
+              <Button onClick={onCancel} className="button reset w-95px mr-2">
                 Cancel
               </Button>
             )}
