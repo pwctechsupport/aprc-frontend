@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { Breadcrumb, BreadcrumbItem as BsCrumbItem } from "reactstrap";
 import styled from "styled-components";
 
 type PathType = string;
@@ -48,4 +48,10 @@ const StyledLink = styled(Link)`
   &:hover {
     color: var(--orange);
   }
+`;
+
+const BreadcrumbItem = styled(BsCrumbItem)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;

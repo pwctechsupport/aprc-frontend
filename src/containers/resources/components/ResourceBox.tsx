@@ -138,8 +138,8 @@ export default function ResourceBox({
       </div>
       <ResourceBoxMeta>
         <div>{name}</div>
-        {flowchart ? null : (
-          <ResourceBoxMetaWrapper>
+        <ResourceBoxMetaWrapper>
+          {flowchart ? null : (
             <div>
               <StarRating
                 id={id}
@@ -149,36 +149,36 @@ export default function ResourceBox({
                 withoutTooltip
               />
             </div>
-            <RevenueBoxViews>Downloaded {views} times </RevenueBoxViews>
-            {/* {isAdminReviewer ? (
-            <Tooltip description="Delete resource attachment">
-              <Button
-                onClick={handleErase}
-                loading={deleteAttachmentMutationInfo.loading}
-                disabled={!imagePreviewUrl}
-                className="cancel"
-                color="primary"
-              >
-                <SmallText>&nbsp;Remove File</SmallText>
-              </Button>
-            </Tooltip>
-          ) : null} */}
+          )}
+          <RevenueBoxViews>Downloaded {views} times </RevenueBoxViews>
+          {/* {isAdminReviewer ? (
+          <Tooltip description="Delete resource attachment">
+            <Button
+              onClick={handleErase}
+              loading={deleteAttachmentMutationInfo.loading}
+              disabled={!imagePreviewUrl}
+              className="cancel"
+              color="primary"
+            >
+              <SmallText>&nbsp;Remove File</SmallText>
+            </Button>
+          </Tooltip>
+        ) : null} */}
 
-            <Tooltip description="Download resource attachment">
-              <Button
-                onClick={handleDownload}
-                disabled={!imagePreviewUrl}
-                className="pwc"
-                color="primary"
-              >
-                <SmallText>&nbsp;Download File</SmallText>
-              </Button>
-            </Tooltip>
-          </ResourceBoxMetaWrapper>
-        )}
+          <Tooltip description="Download resource attachment">
+            <Button
+              onClick={handleDownload}
+              disabled={!imagePreviewUrl}
+              className="pwc"
+              color="primary"
+            >
+              <SmallText>&nbsp;Download File</SmallText>
+            </Button>
+          </Tooltip>
+        </ResourceBoxMetaWrapper>
       </ResourceBoxMeta>
     </ResourceBoxContainer>
-  );
+  )
 }
 
 const ResourceBoxContainer = styled.div`

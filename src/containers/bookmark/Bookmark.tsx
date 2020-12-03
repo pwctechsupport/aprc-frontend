@@ -21,6 +21,7 @@ import Table from "../../shared/components/Table";
 import Tooltip from "../../shared/components/Tooltip";
 import { date } from "../../shared/formatter";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
+import { capitalCase } from "capital-case";
 
 const Bookmark = ({ history }: RouteComponentProps) => {
   const bookmarkForm = useForm();
@@ -256,7 +257,7 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                             }}
                           />
                         </td>
-                        <td>{bookmark.originatorType}</td>
+                        <td>{capitalCase(bookmark.originatorType || "")}</td>
                         <td>
                           {get(bookmark, "originator.name") ||
                             get(bookmark, "originator.processName") ||

@@ -13,7 +13,7 @@ const CreatePolicy = ({ history, location }: RouteComponentProps) => {
       notifySuccess("Create Success");
       const id = res.createPolicy?.policy?.id || "";
       history.replace(`/policy/${id}/details`);
-      window.location.reload();
+      // window.location.reload();
     },
     onError: notifyGraphQLErrors,
     refetchQueries: ["sideboxPolicy"],

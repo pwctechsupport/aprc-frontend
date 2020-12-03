@@ -26,7 +26,7 @@ const ResourceRoute = () => {
               <Route exact path="/resources/:id" component={Resource} />
             </Switch>
           </div>
-          <Footer />
+          <Footer origin="resources" />
         </Col>
       </Row>
     </Container>
