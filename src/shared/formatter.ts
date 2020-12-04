@@ -43,9 +43,7 @@ export const dateFormatter = (
   const mm = String(input.getMonth() + 1).padStart(2, '0');
   const yyyy = String(input.getFullYear());
 
-  return (
-    input = mm + '-' + dd + '-' + yyyy
-  )
+  return mm + '-' + dd + '-' + yyyy
 }
 
 export const toLabelValue = ({
