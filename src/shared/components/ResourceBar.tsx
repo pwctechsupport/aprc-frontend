@@ -104,7 +104,7 @@ export default function ResourceBar({
             totalRating={totalRating}
             // onStarClick={handleStarClick}
           />
-          <ResourceViewCount className="views">{visit} Views</ResourceViewCount>
+          <ResourceViewCount className="views">{visit} Downloads</ResourceViewCount>
         </ResourceBarDivider>
       </Col>
     </ResourceBarContainer>
