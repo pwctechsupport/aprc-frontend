@@ -155,7 +155,7 @@ const Departments = ({ history }: RouteComponentProps) => {
         >
           <thead>
             <tr>
-              <th style={{ width: "20%" }}>Department ID</th>
+              <th className="text-center" style={{ width: "10%" }}>Department ID</th>
               <th style={{ width: "20%" }}>Name</th>
               <th style={{ width: "20%" }}>Created At</th>
               <th style={{ width: "20%" }}>Last Updated</th>
@@ -165,7 +165,7 @@ const Departments = ({ history }: RouteComponentProps) => {
           <tbody>
             {departments?.map((department, index) => (
               <tr key={index}>
-                <td>{department.id}</td>
+                <td className="text-center">{department.id}</td>
                 <td>
                   {isEdit && selected === department.id ? (
                     <Input
@@ -181,10 +181,10 @@ const Departments = ({ history }: RouteComponentProps) => {
                   )}
                 </td>
                 <td>
-                  <DateHover>{department.createdAt}</DateHover>
+                  <DateHover humanize={false}>{department.createdAt}</DateHover>
                 </td>
                 <td>
-                  <DateHover>{department.updatedAt}</DateHover>
+                  <DateHover humanize={false}>{department.updatedAt}</DateHover>
                 </td>
                 <td>
                   {isEdit && selected === department.id ? (
