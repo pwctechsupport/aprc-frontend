@@ -772,8 +772,6 @@ const SubPolicyAttributeForm = ({
           businessProcessIds: handleGetValueBps.length
             ? handleGetValueBps.map((a) => a.value).flat(5)
             : undefined,
-            businessProcessMain: values.businessProcessMain,
-            businessProcessFirst: values.businessProcessFirst,
         });
     } else {
       setError({
