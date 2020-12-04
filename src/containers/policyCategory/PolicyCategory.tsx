@@ -25,6 +25,7 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import PolicyCategoryForm, {
   PolicyCategoryFormValues,
@@ -114,7 +115,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewPolicyCategory({ variables: { id, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
