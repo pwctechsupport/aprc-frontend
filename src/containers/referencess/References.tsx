@@ -323,7 +323,7 @@ const ReferenceRow = ({
         >
           <div className="d-flex align-items-center justify-content-end">
             {edit ? (
-              <div>
+              <div style={{width: 'max-content'}}>
                 <Button
                   color=""
                   onClick={toggleEdit}
