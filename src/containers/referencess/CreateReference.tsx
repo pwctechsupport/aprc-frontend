@@ -19,6 +19,7 @@ import { RouteComponentProps } from "react-router-dom";
 import DialogButton from "../../shared/components/DialogButton";
 import styled from "styled-components";
 import HeaderWithBackButton from "../../shared/components/Header";
+import { notifyGraphQLErrors } from "../../shared/utils/notif";
 
 function useLoadPolicies() {
   const query = useLazyQueryReturnPromise<PoliciesQuery>(PoliciesDocument);
@@ -48,7 +49,7 @@ const CreateReference = ({ history }: RouteComponentProps) => {
       history.replace(`/references`);
       reset();
     },
-    onError: () => toast.error("Create Failed"),
+    onError: notifyGraphQLErrors
   });
 
   function submit(values: CreateReferenceFormValues) {
