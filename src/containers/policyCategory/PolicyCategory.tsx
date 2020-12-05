@@ -56,7 +56,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       limit: 1000,
     },
   });
-  const policiesData = policiesDataRaw.data?.preparerPolicies?.collection || [];
+
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const createdBy = data?.policyCategory?.createdBy;
   const lastUpdatedBy = data?.policyCategory?.lastUpdatedBy;
@@ -165,7 +165,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
 
   const defaultValues = {
     name,
-    policies: policiesData.map(toLabelValue),
+    policies: data?.policyCategory?.policies?.map(toLabelValue),
   };
 
   const renderPolicyCategoryAction = () => {
@@ -286,9 +286,9 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
         {/* <h6 className="mt-4"> </h6> */}
         <Fragment>
           <dt>Related policies</dt>
-          {policiesData.length ? (
+          {data?.policyCategory?.policies?.length ? (
             <ul>
-              {policiesData.map((policy) => (
+              {data?.policyCategory?.policies?.map((policy) => (
                 <li key={policy.id}>
                   <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
                 </li>
