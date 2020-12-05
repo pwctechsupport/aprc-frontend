@@ -84,6 +84,7 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import ResourceBox from "../resources/components/ResourceBox";
 import PolicyDashboard from "./components/PolicyDashboard";
@@ -373,7 +374,7 @@ export default function Policy({
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewPolicy({ variables: { id, publish } });
-      notifySuccess(publish ? "Changes Accepted" : "Changes Rejected");
+      publish ? notifySuccess("Changes Accepted") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }

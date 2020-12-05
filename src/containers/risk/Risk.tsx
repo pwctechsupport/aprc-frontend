@@ -28,6 +28,7 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import PickIcon from "../../assets/Icons/PickIcon";
@@ -157,7 +158,7 @@ export default function Risk({
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewMutation({ variables: { id, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }

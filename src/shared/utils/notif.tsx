@@ -1,6 +1,6 @@
 import React from "react";
 import { toast, ToastContent, ToastOptions } from "react-toastify";
-import { FaCheckCircle, FaInfoCircle, FaExclamation } from "react-icons/fa";
+import { FaCheckCircle, FaInfoCircle, FaExclamation, FaRegTimesCircle } from "react-icons/fa";
 import { ApolloError } from "apollo-boost";
 import { IconType } from "react-icons/lib/cjs";
 
@@ -25,6 +25,10 @@ export const notifySuccess = (
   options?: ToastOptions
 ) => {
   notify(message, "success", options, FaCheckCircle);
+};
+
+export const notifyReject = (message: ToastContent, options?: ToastOptions) => {
+  notify(message, "error", options, FaRegTimesCircle);
 };
 
 export const notifyError = (message: ToastContent, options?: ToastOptions) => {

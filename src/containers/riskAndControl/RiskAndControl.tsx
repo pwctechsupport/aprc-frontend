@@ -81,6 +81,7 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import ControlForm, {
   ControlFormValues,
@@ -357,7 +358,7 @@ export default function RiskAndControl({
   async function reviewRisk({ publish }: { publish: boolean }) {
     try {
       await reviewMutation({ variables: { id: riskId, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
@@ -622,7 +623,7 @@ export default function RiskAndControl({
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewMutationControl({ variables: { id: controlId, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
