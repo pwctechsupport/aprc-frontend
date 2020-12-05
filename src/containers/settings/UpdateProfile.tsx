@@ -36,6 +36,7 @@ export default function UpdateProfile() {
         phone: oc(res).updateUser.user.phone(""),
         jobPosition: oc(res).updateUser.user.jobPosition(""),
         department: oc(res).updateUser.user.department.name(""),
+        roles: res?.updateUser?.user?.roles || [],
       };
       if (user) dispatch(updateUser(newUser));
     },
@@ -234,7 +235,13 @@ const UpdatePasswordForm = ({
         required
       />{" "}
       {validatePassword && (
-        <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
+        <PasswordRequirements
+          falsePasswordLength
+          noCapitalPassword
+          noLowerCasePassword
+          noSpecialCharacterPassword
+          noNumberPassword
+        />
       )}
       <Input
         name="passwordConfirmation"
