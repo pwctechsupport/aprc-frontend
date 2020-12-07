@@ -7,7 +7,6 @@ import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import PickIcon from "../../assets/Icons/PickIcon";
 import {
-  PoliciesDocument,
   Reference,
   useAdminReferencesQuery,
   useDestroyReferenceMutation,
@@ -33,6 +32,7 @@ import {
   notifyInfo,
   notifySuccess,
 } from "../../shared/utils/notif";
+import { gql } from "apollo-boost";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -219,7 +219,7 @@ const ReferenceRow = ({
   const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
   async function handleGetPolicies(input: string) {
     try {
-      return oc(await getPolicies({ filter: { name_cont: input } }))
+      return oc(await getPolicies({ filter: { title_cont: input } }))
         .data.policies.collection([])
         .map(toLabelValue);
     } catch (error) {
@@ -323,7 +323,7 @@ const ReferenceRow = ({
         >
           <div className="d-flex align-items-center justify-content-end">
             {edit ? (
-              <div>
+              <div style={{width: 'max-content'}}>
                 <Button
                   color=""
                   onClick={toggleEdit}
@@ -380,6 +380,26 @@ const ReferenceRow = ({
     </tr>
   );
 };
+
+const PoliciesDocument = gql`
+  query policies(
+    $filter: BaseScalar = {}
+    $limit: Int
+  ) {
+    policies(filter: $filter, limit: $limit) {
+      collection {
+        id
+        title
+      }
+      metadata {
+        totalCount
+        currentPage
+        totalPages
+        limitValue
+      }
+    }
+  }
+`;
 
 interface ReferenceRowProps {
   reference: Partial<Reference>;

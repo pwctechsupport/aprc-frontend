@@ -1,7 +1,9 @@
 import classnames from "classnames";
-import React, { useEffect, Fragment } from "react";
+import React, { useEffect, Fragment, useCallback } from "react";
 import AsyncReactSelect, { Props } from "react-select/async";
 import { Col, FormGroup, Label, FormText } from "reactstrap";
+//@ts-ignore
+import debouncePromise from 'debounce-promise';
 import { Suggestions } from "../../formatter";
 
 export default function AsyncSelect({
@@ -17,6 +19,8 @@ export default function AsyncSelect({
   isResourcePolicy,
   ...rest
 }: AsyncSelectProps) {
+  const loadOptions = useCallback(debouncePromise(rest.loadOptions, 800), [])
+
   useEffect(() => {
     register({ name });
   }, [name, register]);
@@ -67,6 +71,7 @@ export default function AsyncSelect({
           isClearable={!isResourcePolicy}
           defaultValue={defaultValue}
           styles={styles}
+          loadOptions={loadOptions}
         />
       </div>
 

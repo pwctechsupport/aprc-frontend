@@ -28,11 +28,13 @@ table.table-pwc {
           // background: rgba(0, 0, 0, 0.1);
         }
         &.action {
-          div {
-            visibility: hidden;
-          }
-          button {
-            visibility: hidden;
+          @media (min-width: $md) {
+            div {
+              visibility: hidden;
+            }
+            button {
+              visibility: hidden;
+            }
           }
         }
       }

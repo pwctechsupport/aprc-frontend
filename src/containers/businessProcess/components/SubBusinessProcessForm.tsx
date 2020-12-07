@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { Form, FormFeedback, FormText, Input } from "reactstrap";
 import { useCreateSubBusinessProcessMutation } from "../../../generated/graphql";
 import DialogButton from "../../../shared/components/DialogButton";
+import { notifyGraphQLErrors } from "../../../shared/utils/notif";
 
 const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
   const { register, handleSubmit, reset } = useForm();
@@ -13,9 +14,7 @@ const SubBusinessProcessForm = ({ parentId }: SubBusinessProcessFormProps) => {
       toast.success("Create Success");
       reset();
     },
-    onError: (error) => {
-      toast.error("Create Failed");
-    },
+    onError: notifyGraphQLErrors,
     refetchQueries: [
       "businessProcess",
       "businessProcesses",

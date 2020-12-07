@@ -46,7 +46,7 @@ export default function ResourceBar({
     <ResourceBarContainer>
       <Col xs={8} md={6}>
         <ResourceBarDivider width="40">
-          <NavLink
+          <Styled.NavLink
             exact
             to={
               policyIdsWithoutChildren
@@ -61,7 +61,7 @@ export default function ResourceBar({
             >
               {name}
             </ResourceName>
-          </NavLink>
+          </Styled.NavLink>
         </ResourceBarDivider>
       </Col>
 
@@ -104,7 +104,7 @@ export default function ResourceBar({
             totalRating={totalRating}
             // onStarClick={handleStarClick}
           />
-          <ResourceViewCount className="views">{visit} Views</ResourceViewCount>
+          <ResourceViewCount className="views">{visit} Downloads</ResourceViewCount>
         </ResourceBarDivider>
       </Col>
     </ResourceBarContainer>
@@ -134,10 +134,16 @@ const ResourceName = styled.div`
   font-weight: bold;
   font-size: 18px;
   line-height: 20px;
-  color: #d85604;
+  color: var(--primary-color);
   cursor: pointer;
-`
+`;
 
 const ResourceViewCount = styled.div`
   font-size: 12px;
 `
+
+const Styled = {
+  NavLink: styled(NavLink)`
+    color: var(--primary-color) !important;
+  `
+}
