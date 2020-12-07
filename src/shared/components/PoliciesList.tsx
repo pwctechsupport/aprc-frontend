@@ -27,7 +27,7 @@ const PoliciesList = (data: any) => {
           {policies.map((a: any) => (
             <li key={a.id}>
               <div className="mb-3 d-flex justify-content-between">
-                <PWCLink style={{ fontSize: "14px" }} to={`/policy/${a.id}`}>
+                <PWCLink style={{ fontSize: "16px" }} to={`/policy/${a.id}`}>
                   {a.title}
                 </PWCLink>
               </div>
