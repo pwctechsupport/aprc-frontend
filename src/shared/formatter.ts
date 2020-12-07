@@ -32,6 +32,20 @@ export const date = (
   ).format(input);
 };
 
+export const dateFormatter = (
+  input: Date | number | string | null | undefined
+) => {
+  if (input == null) {
+    return "";
+  }
+  input = new Date(input);
+  const dd = String(input.getDate()).padStart(2, '0');
+  const mm = String(input.getMonth() + 1).padStart(2, '0');
+  const yyyy = String(input.getFullYear());
+
+  return mm + '-' + dd + '-' + yyyy
+}
+
 export const toLabelValue = ({
   id,
   code,
