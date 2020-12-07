@@ -222,7 +222,7 @@ const SubPolicyForm = ({
                   "Perpetua",
                 ],
                 buttonList: [
-                  ["font", "fontSize", "align"],
+                  ["font", "fontSize", "align", 'list'],
                   ["fontColor", "hiliteColor", "bold", "underline", "italic"],
                   ["image", "table", "link"],
                 ],

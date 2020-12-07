@@ -137,7 +137,6 @@ export default function ResourceBox({
         {renderImage()}
       </div>
       <ResourceBoxMeta>
-        <div>{name}</div>
         <ResourceBoxMetaWrapper>
           {flowchart ? null : (
             <div>

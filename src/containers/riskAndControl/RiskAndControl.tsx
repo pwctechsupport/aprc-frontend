@@ -1267,7 +1267,7 @@ export default function RiskAndControl({
                           onClick={() => {
                             setRiskId(risk?.id || "");
                           }}
-                          style={{ fontSize: "14px" }}
+                          style={{ fontSize: "16px" }}
                         >
                           {startCase(risk?.name || "")}
                           <Badge

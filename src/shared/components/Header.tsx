@@ -5,7 +5,12 @@ import { Badge } from "./Badge";
 function Header({ heading = "", children, draft, review, policy }: Header) {
   return (
     <Heading className="black">
-      {heading || children}
+      <div style={{
+        overflow: "hidden",
+        overflowWrap: "break-word",
+      }}>
+        {heading || children}
+      </div>
       {draft && (
         <span className="ml-2">
           {policy && review ? (
