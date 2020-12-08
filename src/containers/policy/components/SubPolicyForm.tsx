@@ -19,9 +19,8 @@ import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import SunEditor from "suneditor-react";
-import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
 import styled from "styled-components";
+import SunEditorCustom from "../../../shared/components/forms/SunEditorCustom";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -188,45 +187,10 @@ const SubPolicyForm = ({
               backgroundColor: "red",
             }}
           >
-            <SunEditor
-              showToolbar={true}
-              enable={true}
-              show={true}
+            <SunEditorCustom
               name="description"
               setContents={defaultValues?.description || ""}
               onChange={onChangeEditor}
-              enableToolbar={true}
-              setOptions={{
-                showPathLabel: false,
-                imageUploadSizeLimit: 10485760,
-                linkProtocol: "http://",
-                minHeight: "30vh",
-                height: "auto",
-                font: [
-                  "Serif",
-                  "Sans Serif",
-                  "Monospace",
-                  "Candara",
-                  "Verdana",
-                  "Arial",
-                  "Twentieth Century",
-                  "Calibri",
-                  "Georgia",
-                  "Abadi",
-                  "Helvetica",
-                  "Garamond",
-                  "Bookman",
-                  "Arial Nova Cond",
-                  "Bahnschrift",
-                  "Selawik",
-                  "Perpetua",
-                ],
-                buttonList: [
-                  ["font", "fontSize", "align", 'list'],
-                  ["fontColor", "hiliteColor", "bold", "underline", "italic"],
-                  ["image", "table", "link"],
-                ],
-              }}
             />
           </div>
           {errors.description && (

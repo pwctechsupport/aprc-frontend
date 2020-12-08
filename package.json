@@ -46,7 +46,7 @@
     "redux": "^4.0.4",
     "redux-logger": "^3.0.6",
     "styled-components": "^5.0.1",
-    "suneditor-react": "^2.13.1",
+    "suneditor-react": "^2.14.9",
     "ts-optchain": "^0.1.8",
     "typescript": "3.7.2",
     "use-debounce": "^3.2.0",

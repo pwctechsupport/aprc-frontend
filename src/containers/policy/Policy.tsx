@@ -26,7 +26,6 @@ import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
 import { Col, Nav, NavItem, Row, TabContent, TabPane } from "reactstrap";
 import styled from "styled-components";
-import SunEditor from "suneditor-react";
 import { oc } from "ts-optchain";
 import PickIcon from "../../assets/Icons/PickIcon";
 import {
@@ -90,6 +89,7 @@ import ResourceBox from "../resources/components/ResourceBox";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import SunEditorCustom from "../../shared/components/forms/SunEditorCustom";
 
 type TParams = { id: string };
 
@@ -865,19 +865,12 @@ export default function Policy({
                 }}
               /> */}
               <div className="mt-2">
-                <SunEditor
+                <SunEditorCustom
+                  disable
+                  hide
                   showToolbar={false}
-                  disable={true}
-                  show={true}
                   name="description"
                   setContents={description || ""}
-                  hide={true}
-                  enableToolbar={true}
-                  setOptions={{
-                    showPathLabel: false,
-                    minHeight: "30vh",
-                    height: "auto",
-                  }}
                 />
               </div>
               {policyReferences.length ? (
