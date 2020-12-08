@@ -221,7 +221,7 @@ const PolicyTableRow = ({
           <td>{policy.policyCategory?.name || ""}</td>
           <td>{capitalCase(policy.status || "")}</td>
           <td>
-            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+            <DateHover humanize={false}>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
           {isAdminReviewer ? (
@@ -275,7 +275,7 @@ const PolicyTableRow = ({
           </td>
           <td>
             {" "}
-            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+            <DateHover humanize={false}>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
           {isAdminReviewer ? (
@@ -320,7 +320,7 @@ const PolicyTableRow = ({
               : capitalCase(policy.status || "")}
           </td>
           <td>
-            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+            <DateHover humanize={false}>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
           {isAdminReviewer ? (
