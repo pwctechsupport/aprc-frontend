@@ -123,7 +123,7 @@ export default function BusinessProcess({
         </div>
       ) : (
         <div className="d-flex justify-content-between align-items-center mt-3">
-          <h4>{name}</h4>
+          <h4 style={{overflow: "hidden", overflowWrap: "break-word"}}>{name}</h4>
           <div>
             {isAdmin || isAdminPreparer ? (
               <Button
