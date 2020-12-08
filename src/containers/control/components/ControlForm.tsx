@@ -285,7 +285,7 @@ const ControlForm = ({
         </FormGroup>
 
         <Select
-          options={typeOfControls}
+          options={newLabelTypeOfControls}
           onChange={handleSelectChange("typeOfControl")}
           label="Type of controls*"
           placeholder="Type of controls"
@@ -357,7 +357,7 @@ const ControlForm = ({
               loading={controlsQ.loading}
               register={register}
               setValue={setValue}
-              options={ipos}
+              options={newLabelIPOs}
               defaultValue={ipos.filter((res) => getIPO.includes(res.value))}
               // error={errors.ipo && "IPOs is a required field"}
             />
@@ -600,6 +600,21 @@ export default ControlForm;
 // -------------------------------------------------------------------------
 // Construct Options
 // -------------------------------------------------------------------------
+
+const newLabelTypeOfControls = [
+  {label: "Automatic", value: "automatic"},
+  {label: "Manual", value: "manual"},
+  {label: "IT Dependent Manual", value: "it_dependent_manual"},
+  {label: "Manual SSC", value: "manual_ssc"},
+  {label: "Manual SDC", value: "manual_sdc"}
+];
+
+const newLabelIPOs = [
+  {label: "Completeness", value: "completeness"},
+  {label: "Accuracy", value: "accuracy"},
+  {label: "Validation", value: "validation"},
+  {label: "Restriction Access (CAVR)", value: "restriction"}
+]
 
 const frequencies = Object.entries(Frequency).map(([label, value]) => ({
   label: capitalCase(value),
