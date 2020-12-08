@@ -117,7 +117,6 @@ export default function Login({ history }: RouteComponentProps) {
                 placeholder="Insert captcha"
               />
               <br />
-
               <Row>
                 <Col>
                   <h6></h6>
@@ -138,7 +137,7 @@ export default function Login({ history }: RouteComponentProps) {
                   </Button>
                 </Col>
               </Row>
-              <div className="text-center my-4"></div>
+              <div className="text-center my-0"></div>
             </Form>
           </LoginBox>
         </Col>
