@@ -1460,9 +1460,13 @@ export default function Policy({
               : title}
           </HeaderWithBackButton>
         </Col>
-        {currentUrl.includes("/details/") || currentUrl.includes("resources/")
-          ? null
-          : renderGeneralAction()}
+        <Col>
+          <div className="d-flex justify-content-end mb-3">
+            {currentUrl.includes("/details/") || currentUrl.includes("resources/")
+              ? null
+              : renderGeneralAction()}
+          </div>
+        </Col>
       </Row>
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
       {renderResourceDetails()}

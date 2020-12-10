@@ -40,7 +40,7 @@ const Reference = ({
           ["/references/" + id, name],
         ]}
       />
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="justify-content-between align-items-center">
         <HeaderWithBackButton>{name}</HeaderWithBackButton>
       </div>
       {loading ? (
