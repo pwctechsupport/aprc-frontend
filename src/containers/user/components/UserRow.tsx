@@ -336,21 +336,19 @@ export default function UserRow({
   } else {
     return (
       <tr>
+        <td>{oc(user).id("")}</td>
         <td>
           <Input
             required
             name="name"
-            label="Name"
             innerRef={register({ required: true })}
             defaultValue={name}
             error={get(errors, "name.message", undefined) as string | undefined}
           />
         </td>
-        <td>{oc(user).id("")}</td>
         <td>
           <AsyncSelect
             cacheOptions
-            label="User Group"
             defaultOptions
             name="roleIds"
             register={register}
@@ -364,7 +362,6 @@ export default function UserRow({
           <AsyncSelect
             isMulti
             cacheOptions
-            label="Policy Category"
             defaultOptions
             error={
               errors.policyCategoryIds && "Policy category is a required field"
@@ -380,7 +377,6 @@ export default function UserRow({
         <td>
           <AsyncSelect
             cacheOptions
-            label="Department"
             defaultOptions
             error={errors.departmentId && "Department is a required field"}
             name="departmentId"
@@ -393,21 +389,32 @@ export default function UserRow({
           />
         </td>
         <td>
-          <DialogButton
-            loading={updateM.loading}
-            className="pwc"
-            color="primary"
-            onConfirm={handleSubmit(handleSave)}
-          >
-            Save
-          </DialogButton>
-          <StyledButton
-            // loading={updateM.loading}
-            className="ml-1"
-            onConfirm={toggleEdit}
-          >
-            Cancel
-          </StyledButton>
+          {draft ? (
+            <span className="text-orange">[Waiting for review] </span>
+          ) : (
+            <span className="text-orange">[Approved] </span>
+          )}
+        </td>
+        <td>{oc(user).createdAt("").split("T")}</td>
+        <td>{oc(user).updatedAt("").split("T")}</td>
+        <td>
+          <div className="d-flex align-items-center justify-content-end">
+            <StyledButton
+              // loading={updateM.loading}
+              className="mr-1 reset w-95px"
+              onConfirm={toggleEdit}
+            >
+              Cancel
+            </StyledButton>
+            <DialogButton
+              loading={updateM.loading}
+              className="add"
+              color="primary"
+              onConfirm={handleSubmit(handleSave)}
+            >
+              Save
+            </DialogButton>
+          </div>
         </td>
       </tr>
     );
