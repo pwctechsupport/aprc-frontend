@@ -349,7 +349,11 @@ export default function Risk({
             {details1.map((item) => (
               <Fragment key={item.label}>
                 <dt>{item.label}</dt>
-                <dd>{item.value || "-"}</dd>
+                {item.label === "Name" ? (
+                  <dd style={{overflow: "hidden", overflowWrap: "break-word"}}>{item.value || "-"}</dd>
+                ) : (
+                  <dd>{item.value || "-"}</dd>
+                )}
               </Fragment>
             ))}
           </dl>

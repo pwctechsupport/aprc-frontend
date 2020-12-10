@@ -320,7 +320,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       },
       {
         label: "IPO",
-        value: ipo.map((x: any) => capitalCase(x)).join(", "),
+        value: (ipo === null || ipo.length < 1 || ipo === undefined ? '-' : ipo.map((x: any) => capitalCase(x)).join(", ")),
       },
       { label: "Frequency", value: capitalCase(frequency) },
       // { label: "Status", value: capitalCase(status) },
