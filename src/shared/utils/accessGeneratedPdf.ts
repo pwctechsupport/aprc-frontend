@@ -26,11 +26,12 @@ export async function downloadPdf(url: string, option: FileOption) {
   }
 }
 
-export async function previewPdf(url: string, option: FileOption) {
+export async function previewPdf(url: string, option: FileOption, params: any = undefined) {
   try {
     option.onStart && option.onStart();
     const res = await MyApi.get(url, {
       responseType: "blob",
+      params,
     });
     const file = new Blob([res.data], {
       type: "application/pdf",
@@ -85,4 +86,5 @@ export interface FileOption {
   onCompleted?: () => void;
   onError?: (error: any) => void;
   fileType?: string;
+  params?: any
 }
