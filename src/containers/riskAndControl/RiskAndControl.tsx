@@ -955,7 +955,7 @@ export default function RiskAndControl({
                     {category === "Flowchart" ? (
                       <>
                         <h5 className="mt-5">Business process:</h5>
-                        <Link to={`/risk-and-control/${businessProcess?.id}`}>
+                        <Link to={`/risk-and-control/${businessProcess?.id}`} className="link">
                           {businessProcess?.name}
                         </Link>
                       </>
@@ -977,7 +977,7 @@ export default function RiskAndControl({
                             <ul>
                               {policies.map((policy) => (
                                 <li key={policy.id}>
-                                  <Link to={`/policy/${policy.id}`}>
+                                  <Link to={`/policy/${policy.id}`} className="link">
                                     {policy.title}
                                   </Link>
                                 </li>

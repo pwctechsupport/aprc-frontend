@@ -473,7 +473,7 @@ export default function Policy({
                       {category === "Flowchart" ? (
                         <>
                           <h5 className="mt-5">Business Process:</h5>
-                          <Link to={`/risk-and-control/${businessProcess?.id}`}>
+                          <Link to={`/risk-and-control/${businessProcess?.id}`} className="link">
                             {businessProcess?.name}
                           </Link>
                         </>
@@ -484,7 +484,7 @@ export default function Policy({
                             {bps ? (
                               <ul>
                                 <li>
-                                  <Link to={`/risk-and-control/${bps.id}`}>
+                                  <Link to={`/risk-and-control/${bps.id}`} className="link">
                                     {bps.name}
                                   </Link>
                                 </li>
@@ -499,7 +499,7 @@ export default function Policy({
                               <ul>
                                 {policies.map((policy) => (
                                   <li key={policy.id}>
-                                    <Link to={`/policy/${policy.id}`}>
+                                    <Link to={`/policy/${policy.id}`} className="link">
                                       {policy.title}
                                     </Link>
                                   </li>

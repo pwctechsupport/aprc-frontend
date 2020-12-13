@@ -114,18 +114,20 @@ input[type="number"]::-webkit-outer-spin-button {
   height: 50px;
 }
 
-.link-pwc {
+.link {
   color: $pwc-orange;
   font-weight: 700;
-  text-decoration: underline;
-  // border-bottom: 1.5px solid $pwc-orange;
-  // padding: 0px 20px;
 
   &:hover {
+    color: darken($pwc-orange, 10);
     text-decoration: none;
+  }
+
+  &-pwc {
     text-decoration: underline;
 
-    color: darken($pwc-orange, 10);
-    // border-bottom: 1.5px solid $pwc-orange;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
