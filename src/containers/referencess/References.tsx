@@ -325,12 +325,11 @@ const ReferenceRow = ({
             {edit ? (
               <div style={{width: 'max-content'}}>
                 <Button
-                  color=""
                   onClick={toggleEdit}
                   type="button"
-                  className="mr-2"
+                  className="mr-2 button cancel w-95px"
                 >
-                  <FaTimes /> Cancel
+                  Cancel
                 </Button>
                 <DialogButton
                   onConfirm={handleSubmit(updateReference)}
