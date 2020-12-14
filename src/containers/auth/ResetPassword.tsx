@@ -105,7 +105,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
   }
 
   console.log({ errors });
-console.log(validatePassword)
+
   return (
     <Container fluid>
       <Row className="d-flex justify-content-center">
