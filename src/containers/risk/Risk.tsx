@@ -51,12 +51,12 @@ export default function Risk({
   const id = match.params && (match.params as any).id;
   const { data, loading } = useRiskQuery({
     variables: { id },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
-  const draft = data?.risk?.draft?.objectResult;
+  const draft: any = data?.risk?.draft?.objectResult;
   const name = data?.risk?.name || "";
-  const levelOfRisk = data?.risk?.levelOfRisk || "";
-  const typeOfRisk = data?.risk?.typeOfRisk || "";
+  const levelOfRisk = draft?.levelOfRisk || data?.risk?.levelOfRisk || "";
+  const typeOfRisk = draft?.typeOfRisk || data?.risk?.typeOfRisk || "";
   const bps = data?.risk?.businessProcess || [];
   const updatedAt = data?.risk?.updatedAt;
   const updatedBy = data?.risk?.lastUpdatedBy;
