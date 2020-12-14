@@ -302,7 +302,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
   const renderControlNonEditable = () => {
     const details = [
-      { label: "Control id", value: id },
+      { label: "Control ID", value: id },
       { label: "Description", value: description },
 
       {

@@ -79,7 +79,7 @@ const Users = () => {
 
       <Container fluid className="p-0 pt-3 px-4">
         <h2 style={{ fontSize: "23px" }} className="mt-2">
-          User management
+          User Management
         </h2>
 
         <Row className="mt-4 mb-lg-n2">
@@ -127,7 +127,7 @@ const Users = () => {
                   User group
                 </th>
                 <th style={admins ? { width: "17%" } : { width: "17%" }}>
-                  Policy category
+                  Policy Category
                 </th>
                 <th style={admins ? { width: "10%" } : { width: "14.2%" }}>
                   Department

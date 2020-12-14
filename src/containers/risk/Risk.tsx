@@ -301,7 +301,7 @@ export default function Risk({
 
   const renderRisk = () => {
     const details1 = [
-      { label: "Risk Id", value: id },
+      { label: "Risk ID", value: id },
       { label: "Name", value: name },
       {
         label: "Business Process",
