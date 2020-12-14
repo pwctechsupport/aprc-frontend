@@ -19,6 +19,9 @@ import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
+import {
+  previewPdf,
+} from "../../../shared/utils/accessGeneratedPdf";
 
 interface ResourceBoxProps {
   id: string;
@@ -89,7 +92,8 @@ export default function ResourceBox({
     updateResourceVisit({ variables: { id } });
     const link = document.createElement("a");
     // link.target = "_blank";
-    link.href = base64File || imagePreviewUrl || "";
+    // link.href = base64File || imagePreviewUrl || "";
+    link.href = imagePreviewUrl || "";
     // link.setAttribute("download", name || "PwC-Generated");
     link.download = name || "PwC-Generated";
     document.body.appendChild(link);
