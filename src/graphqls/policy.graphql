@@ -468,6 +468,14 @@ query policyDashboard {
   }
 }
 
+query getTotalPolicies ($filter: BaseScalar = {}) {
+  policies (filter: $filter) {
+    metadata {
+      totalCount
+    }
+  }
+}
+
 mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {
   createBookmarkPolicy(input: $input) {
     success
