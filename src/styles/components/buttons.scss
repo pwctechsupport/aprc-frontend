@@ -103,9 +103,6 @@
     opacity: 0.7;
     cursor: not-allowed;
   }
-  &.w-95px {
-    width: 95px;
-  }
 }
 
 .button.confirmNo {
@@ -171,5 +168,20 @@
   .btn-sm-block {
     width: 100%;
     display: block;
+  }
+}
+
+
+/* ========================================================================== */
+/* button width control */
+/* ========================================================================== */
+
+.button {
+  &.w-95px {
+    width: 95px;
+  }
+
+  &.w-200px {
+    width: 200px;
   }
 }

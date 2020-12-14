@@ -46,13 +46,14 @@ export default function ResourceBar({
     <ResourceBarContainer>
       <Col xs={8} md={6}>
         <ResourceBarDivider width="40">
-          <Styled.NavLink
+          <NavLink
             exact
             to={
               policyIdsWithoutChildren
                 ? `/policy/${policyIdsWithoutChildren}/resources/${id}`
                 : `/risk-and-control/${bPId}/resources/${id}`
             }
+            className="link"
           >
             <ResourceName
               onClick={() => {
@@ -61,7 +62,7 @@ export default function ResourceBar({
             >
               {name}
             </ResourceName>
-          </Styled.NavLink>
+          </NavLink>
         </ResourceBarDivider>
       </Col>
 
@@ -134,7 +135,6 @@ const ResourceName = styled.div`
   font-weight: bold;
   font-size: 18px;
   line-height: 20px;
-  color: var(--primary-color);
   cursor: pointer;
 `;
 
@@ -142,8 +142,3 @@ const ResourceViewCount = styled.div`
   font-size: 12px;
 `
 
-const Styled = {
-  NavLink: styled(NavLink)`
-    color: var(--primary-color) !important;
-  `
-}

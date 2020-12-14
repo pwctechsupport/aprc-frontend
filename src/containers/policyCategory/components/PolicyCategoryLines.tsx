@@ -220,7 +220,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                 ) : null}
 
                 <td>{policyCategory.name}</td>
-                <td>{policyCategory.policy?.join(", ")}</td>
+                <td>{policyCategory.policies?.map(pol => pol.title).join(", ")}</td>
                 <td>
                   {policyCategory.draft ||
                   policyCategory.status === "waiting_for_approval"

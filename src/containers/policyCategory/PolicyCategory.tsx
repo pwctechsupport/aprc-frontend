@@ -291,7 +291,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
             <ul>
               {data?.policyCategory?.policies?.map((policy) => (
                 <li key={policy.id}>
-                  <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
+                  <Link to={`/policy/${policy.id}`} className="link">{policy.title}</Link>
                 </li>
               ))}
             </ul>
