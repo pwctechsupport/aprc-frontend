@@ -105,7 +105,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
   }
 
   console.log({ errors });
-
+console.log(validatePassword)
   return (
     <Container fluid>
       <Row className="d-flex justify-content-center">
@@ -134,7 +134,9 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
                   innerRef={register({ required: true })}
                   error={errors && errors.passwordConfirmation?.message}
                 />
-                <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
+                {validatePassword && (
+                  <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
+                )}
               </div>
               <div style={{ marginBottom: '25px'}}>
               <Button
