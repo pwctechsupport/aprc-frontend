@@ -204,7 +204,7 @@ const validationSchema = yup.object().shape({
     .string()
     .trim()
     .required()
-    .oneOf([yup.ref("password")], "Password does not match"),
+    .oneOf([yup.ref("password")], "Password confirmation does not match Password"),
   phone: yup.string().required(),
   policyCategoryIds: yup.array().required(),
   roleIds: yup.object().required(),
