@@ -147,7 +147,7 @@ export default function BusinessProcess({
           </div>
         </div>
       )}
-      {inEditMode ? <h6 className="mt-2">ID: {id}</h6> : <h6>ID: {id}</h6>}
+      {inEditMode ? <h6 className="mt-2">Business ID: {id}</h6> : <h6>Business ID: {id}</h6>}
       {isAdmin || isAdminPreparer ? (
         <div className="mt-5">
           {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}

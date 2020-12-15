@@ -128,7 +128,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
         <title>Policy Category - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="w-100">
-        <BreadCrumb crumbs={[["/policyCategory", "Policy Category"]]} />
+        <BreadCrumb crumbs={[["/policyCategory", "Policy Category Administrative"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h4 style={{ fontSize: "23px" }}>List of Policy Category</h4>
           {isAdminReviewer ? (

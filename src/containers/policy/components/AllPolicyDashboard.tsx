@@ -10,19 +10,19 @@ import styled from "styled-components";
 const AllPolicyDashboard = () => {
   const { data, loading } = usePolicyDashboardQuery();
   
-  const getTotalPoliciesAdminPreparer = useGetTotalPoliciesQuery({
+  const {data: getTotalPoliciesAdminPreparer, loading: loadingForPreparer} = useGetTotalPoliciesQuery({
     variables: {
       filter: {status_in: ["draft", "waiting_for_review", "release"]},
     }
   });
 
-  const getTotalPoliciesAdminReviewer = useGetTotalPoliciesQuery({
+  const {data: getTotalPoliciesAdminReviewer, loading: loadingForReviewer} = useGetTotalPoliciesQuery({
     variables: {
       filter: {status_in: ["waiting_for_review", "release"]},
     }
   });
 
-  const getTotalPoliciesUser = useGetTotalPoliciesQuery({
+  const {data: getTotalPoliciesUser, loading: loadingForUser} = useGetTotalPoliciesQuery({
     variables: {
       filter: {status_in: ["release"]},
     }
@@ -47,14 +47,20 @@ const AllPolicyDashboard = () => {
   const totalRisks = oc(data).totalRisks.metadata.totalCount(0);
   const totalControls = oc(data).totalControls.metadata.totalCount(0);
   //newTotal Policies
+  if (loadingForPreparer) return null;
   const adminPreparerTotalPolicies = oc(getTotalPoliciesAdminPreparer).policies.metadata.totalCount(0);
+
+  if (loadingForReviewer) return null;
   const adminReviewerTotalPolicies = oc(getTotalPoliciesAdminReviewer).policies.metadata.totalCount(0);
+
+  if (loadingForUser) return null;
   const userTotalPolicies = oc(getTotalPoliciesUser).policies.metadata.totalCount(0);
 
   const chartData = [
     {
       label: "Policies",
-      total: totalPolicies,
+      // total: totalPolicies,
+      total: (isAdminPreparer ? adminPreparerTotalPolicies : isAdminReviewer ? adminReviewerTotalPolicies : userTotalPolicies),
       reviewed: reviewedPolicies,
       prepared: preparedPolicies,
     },
@@ -76,7 +82,7 @@ const AllPolicyDashboard = () => {
     ? [
         {
           label: "Total",
-          subPolicy: totalPolicies,
+          subPolicy: userTotalPolicies,
           risk: totalRisks,
           control: totalControls,
           sum() {
@@ -105,7 +111,7 @@ const AllPolicyDashboard = () => {
         },
         {
           label: <strong>Total</strong>,
-          subPolicy: totalPolicies,
+          subPolicy: (isAdminPreparer ? adminPreparerTotalPolicies : isAdminReviewer ? adminReviewerTotalPolicies : userTotalPolicies),
           risk: totalRisks,
           control: totalControls,
           sum() {

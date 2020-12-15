@@ -304,11 +304,11 @@ export default function Risk({
       { label: "Risk ID", value: id },
       { label: "Name", value: name },
       {
-        label: "Business Process",
+        label: "Business process",
         value: bps.length ? bps?.join(", ") : "",
       },
       {
-        label: "Level of Risk",
+        label: "Level of risk",
         value: (
           <Badge color="secondary">
             {startCase(levelOfRisk)}
@@ -316,25 +316,25 @@ export default function Risk({
         ),
       },
       {
-        label: "Type of Risk",
+        label: "Type of risk",
         value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [
       {
-        label: "Last Updated",
+        label: "Last updated",
         value: draft ? updatedAt?.split("T")[0] : updatedAt?.split(" ")[0],
       },
       {
-        label: "Updated By",
+        label: "Updated by",
         value: updatedBy,
       },
       {
-        label: "Created At",
+        label: "Created at",
         value: draft ? createdAt?.split("T")[0] : createdAt?.split(" ")[0],
       },
       {
-        label: "Created By",
+        label: "Created by",
         value: createdBy,
       },
       {
