@@ -2,13 +2,31 @@ import React, { Fragment } from "react";
 import Helmet from "react-helmet";
 import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
-import { usePolicyDashboardQuery } from "../../../generated/graphql";
+import { usePolicyDashboardQuery, useGetTotalPoliciesQuery } from "../../../generated/graphql";
 import PolicyChart from "./PolicyChart";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import styled from "styled-components";
 
 const AllPolicyDashboard = () => {
   const { data, loading } = usePolicyDashboardQuery();
+  
+  const getTotalPoliciesAdminPreparer = useGetTotalPoliciesQuery({
+    variables: {
+      filter: {status_in: ["draft", "waiting_for_review", "release"]},
+    }
+  });
+
+  const getTotalPoliciesAdminReviewer = useGetTotalPoliciesQuery({
+    variables: {
+      filter: {status_in: ["waiting_for_review", "release"]},
+    }
+  });
+
+  const getTotalPoliciesUser = useGetTotalPoliciesQuery({
+    variables: {
+      filter: {status_in: ["release"]},
+    }
+  });
 
   const [isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin_reviewer",
@@ -28,6 +46,11 @@ const AllPolicyDashboard = () => {
   const totalPolicies = oc(data).totalPolicies.metadata.totalCount(0);
   const totalRisks = oc(data).totalRisks.metadata.totalCount(0);
   const totalControls = oc(data).totalControls.metadata.totalCount(0);
+  //newTotal Policies
+  const adminPreparerTotalPolicies = oc(getTotalPoliciesAdminPreparer).policies.metadata.totalCount(0);
+  const adminReviewerTotalPolicies = oc(getTotalPoliciesAdminReviewer).policies.metadata.totalCount(0);
+  const userTotalPolicies = oc(getTotalPoliciesUser).policies.metadata.totalCount(0);
+
   const chartData = [
     {
       label: "Policies",
