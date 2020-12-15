@@ -175,7 +175,7 @@ export default function ResourceBox({
               className="pwc"
               color="primary"
             >
-              <SmallText>&nbsp;Download File</SmallText>
+              <SmallText>&nbsp;Download file</SmallText>
             </Button>
           </Tooltip>
         </ResourceBoxMetaWrapper>
