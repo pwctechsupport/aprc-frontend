@@ -39,7 +39,7 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Risk and Controls - PricewaterhouseCoopers</title>
       </Helmet>
-      <BreadCrumb crumbs={[["/risk-and-control", "Risk and controls"]]} />
+      <BreadCrumb crumbs={[["/risk-and-control", "Risk and Controls"]]} />
       <div className="d-flex justify-content-end align-items-center"></div>
       <SearchBar
         search={search}

@@ -81,13 +81,13 @@ export default function UserManual() {
                   <dt>Name</dt>
                   <dd>{manual.name}</dd>
                   <br />
-                  <dt>File Size</dt>
+                  <dt>File size</dt>
                   <dd>{manual.fileSize} bytes</dd>
                   <br />
-                  <dt>File Type</dt>
+                  <dt>File type</dt>
                   <dd>{manual.fileType}</dd>
                   <br />
-                  <dt>Last Updated</dt>
+                  <dt>Last updated</dt>
                   <DateHover withIcon>{manual.updatedAt}</DateHover>
                 </div>
                 <div className="d-flex">

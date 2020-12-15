@@ -105,7 +105,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 
   return (
     <div>
-      <BreadCrumb crumbs={[["/business-process", "Business processes"]]} />
+      <BreadCrumb crumbs={[["/business-process", "Business Process Administartive"]]} />
       <div className="d-flex">
         <Helmet>
           <title>Business Process - PricewaterhouseCoopers</title>
