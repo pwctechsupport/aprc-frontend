@@ -475,7 +475,7 @@ export default function RiskAndControl({
     const createdAt = dataRisk?.risk?.createdAt;
 
     const details1 = [
-      { label: "Risk Id", value: riskId },
+      { label: "Risk ID", value: riskId },
       { label: "Name", value: riskName },
       {
         label: "Business Process",

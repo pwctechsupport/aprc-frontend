@@ -568,7 +568,7 @@ export default function Policy({
     ];
     const details2 = [
       {
-        label: "Last Updated",
+        label: "Last updated",
         value: updatedAt?.split(" ")[0],
       },
       {
@@ -580,7 +580,7 @@ export default function Policy({
         value: createdAt?.split(" ")[0],
       },
       {
-        label: "Created By",
+        label: "Created by",
         value: createdBy,
       },
       {
@@ -656,14 +656,14 @@ export default function Policy({
       { label: "Description", value: descriptionControl },
 
       {
-        label: "Control Owner",
+        label: "Control owner",
         value: departments.map((a: any) => a.name).join(", "),
       },
       {
         label: "Key Control",
         value: <CheckBox checked={keyControl} />,
       },
-      { label: "Type of Control", value: capitalCase(typeOfControl) },
+      { label: "Type of control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
         value: assertion.map((x) => capitalCase(x)).join(", "),
@@ -677,10 +677,10 @@ export default function Policy({
         label: "Status",
         value: `${draftControl ? "Waiting for review" : "Release"}`,
       },
-      { label: "Last Updated", value: updatedAt },
+      { label: "Last updated", value: updatedAt },
       { label: "Last Updated By", value: lastUpdatedBy },
       { label: "Created At", value: createdAt.split(" ")[0] },
-      { label: "Created By", value: createdBy },
+      { label: "Created by", value: createdBy },
     ];
     return (
       <Route exact path="/policy/:id/details/control/:id">
@@ -843,7 +843,7 @@ export default function Policy({
               }
             >
               <div className="text-right my-2 text-secondary">
-                <div className="mb-1  ">Created By : {createdBy}</div>
+                <div className="mb-1  ">Created by : {createdBy}</div>
                 {lastUpdatedAt ? (
                   <DateHover withIcon humanize={false}>{lastUpdatedAt}</DateHover>
                 ) : (

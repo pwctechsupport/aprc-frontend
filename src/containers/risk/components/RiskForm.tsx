@@ -391,8 +391,8 @@ const RiskForm = ({
         />
         <Select
           name="levelOfRisk"
-          placeholder="Level of risk"
-          label="Level of risk*"
+          placeholder="Level of Risk"
+          label="Level of Risk*"
           options={levelOfRisks}
           onChange={handleChange("levelOfRisk")}
           error={errors.levelOfRisk && errors.levelOfRisk.message}
@@ -477,7 +477,7 @@ const validationSchema = yup.object().shape({
   //     value: yup.string(),
   //   })
   // ),
-  levelOfRisk: yup.string().required("Level of risk is a required field"),
+  levelOfRisk: yup.string().required("Level of Risk is a required field"),
   typeOfRisk: yup.string().required("Type of risk is a required field"),
 });
 

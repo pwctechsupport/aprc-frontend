@@ -165,16 +165,16 @@ const PolicyForm = ({
         </div>
         <Select
           name="policyCategoryId"
-          label="Policy category*"
+          label="Policy Category*"
           loading={policyCategoriesState.loading}
-          placeholder="Policy category"
+          placeholder="Policy Category"
           options={options}
           onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(
             (option) => option.value === policyCategoryId
           )}
           error={
-            errors.policyCategoryId && "Policy category is a required field"
+            errors.policyCategoryId && "Policy Category is a required field"
           }
         />
 

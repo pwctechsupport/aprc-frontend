@@ -39,7 +39,7 @@ export default function RiskAndControlSideBox({
   const businessProcesses = data?.navigatorBusinessProcesses?.collection || [];
   return (
     <SideBox>
-      <SideBoxTitle>Risk & control</SideBoxTitle>
+      <SideBoxTitle>Risk & Control</SideBoxTitle>
 
       <SideBoxSearch
         search={search}

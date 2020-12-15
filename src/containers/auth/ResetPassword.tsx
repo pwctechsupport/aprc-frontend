@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -31,6 +31,7 @@ interface ResetPasswordFormValues {
 }
 
 const ResetPassword = ({ history, location }: RouteComponentProps) => {
+  const [validatingPassword, setValidatingPassword] = useState({})
   const searhParams = new URLSearchParams(location.search);
   const token = searhParams.get("reset_password_token");
 
@@ -62,12 +63,23 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
 
   const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
-  const validatePassword =
-    noLowerCasePassword ||
-    noCapitalPassword ||
-    noNumberPassword ||
-    noSpecialCharacterPassword ||
-    falsePasswordLength;
+  const validatePassword = {
+    falsePasswordLength,
+    noLowerCasePassword,
+    noCapitalPassword,
+    noNumberPassword,
+    noSpecialCharacterPassword,
+  }
+
+  useEffect(() => {
+    setValidatingPassword({
+      falsePasswordLength: false,
+      noLowerCasePassword: false,
+      noCapitalPassword: false,
+      noNumberPassword: false,
+      noSpecialCharacterPassword: false,
+    })
+  }, [validatePassword])
 
   const [updatePassword, { loading }] = useUpdatePasswordMutation({
     onCompleted,
@@ -134,7 +146,15 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
                   innerRef={register({ required: true })}
                   error={errors && errors.passwordConfirmation?.message}
                 />
-                <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
+                {validatePassword && (
+                  <PasswordRequirements 
+                    falsePasswordLength={validatePassword.falsePasswordLength}
+                    noCapitalPassword={validatePassword.noCapitalPassword}
+                    noLowerCasePassword={validatePassword.noLowerCasePassword}
+                    noSpecialCharacterPassword={validatePassword.noSpecialCharacterPassword}
+                    noNumberPassword={validatePassword.noNumberPassword}
+                  />
+                )}
               </div>
               <div style={{ marginBottom: '25px'}}>
               <Button

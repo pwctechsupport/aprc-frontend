@@ -27,7 +27,7 @@ export default function UserManual() {
   const manuals = data?.manuals?.collection || [];
   const [updateManual, updateManualInfo] = useUpdateManualMutation({
     onCompleted: () => {
-      notifySuccess("User Manual Updated");
+      notifySuccess("User manual Updated");
       closeModal();
     },
     onError: notifyGraphQLErrors,
@@ -36,7 +36,7 @@ export default function UserManual() {
   });
   const [create, createM] = useCreateManualMutation({
     onCompleted: () => {
-      notifySuccess("User Manual Created");
+      notifySuccess("User manual Created");
       closeModal();
     },
     onError: notifyGraphQLErrors,
@@ -68,13 +68,13 @@ export default function UserManual() {
   return (
     <div>
       <Helmet>
-        <title>User Manual - Settings - PricewaterhouseCoopers</title>
+        <title>User manual - Settings - PricewaterhouseCoopers</title>
       </Helmet>
       <div style={{ minHeight: "80vh" }}>
         {!loading && manuals.length ? (
           manuals.map((manual) => (
             <Fragment>
-              <h4>User Manual</h4>
+              <h4>User manual</h4>
               <br />
               <div className="d-flex justify-content-between">
                 <div>
@@ -92,7 +92,7 @@ export default function UserManual() {
                 </div>
                 <div className="d-flex">
                   {isAdminReviewer && (
-                    <Tooltip description="Edit User Manual">
+                    <Tooltip description="Edit User manual">
                       <Button
                         onClick={() => setCurrentEditId(manual.id)}
                         className="soft red mr-2"
@@ -102,7 +102,7 @@ export default function UserManual() {
                       </Button>
                     </Tooltip>
                   )}
-                  <Tooltip description="Download User Manual">
+                  <Tooltip description="Download User manual">
                     <Button
                       className="soft orange"
                       color=""
@@ -122,7 +122,7 @@ export default function UserManual() {
           ))
         ) : !loading && isAdminReviewer ? (
           <Fragment>
-            <h4>Create User Manual</h4>
+            <h4>Create User manual</h4>
             <UserManualForm
               onSubmit={handleCreate}
               onCancel={closeModal}
@@ -142,7 +142,7 @@ export default function UserManual() {
         <Modal
           isOpen={Boolean(currentEditId)}
           toggle={closeModal}
-          title="Update User Manual"
+          title="Update User manual"
         >
           <UserManualForm
             onSubmit={handleSubmitForm}

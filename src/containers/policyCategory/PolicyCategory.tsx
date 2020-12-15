@@ -310,7 +310,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       </Helmet>
       <BreadCrumb
         crumbs={[
-          ["/policy-category", "Policy category"],
+          ["/policy-category", "Policy Category"],
           ["/policy-category/" + id, name],
         ]}
       />
