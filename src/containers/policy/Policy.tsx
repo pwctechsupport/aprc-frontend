@@ -403,6 +403,7 @@ export default function Policy({
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
+  const getSubPoliciesStatus = children?.map((item) => (item.status))
 
   //resource Bar
   const [resourceId, setResourceId] = useState("");
@@ -923,7 +924,7 @@ export default function Policy({
                   show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
                 >
-                  <RisksList data={data} setRiskId={setRiskId} />
+                  <RisksList data={data} setRiskId={setRiskId} subPoliciesStatus={getSubPoliciesStatus} />
                 </Collapsible>
               </div>
 
@@ -936,7 +937,7 @@ export default function Policy({
                   show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
-                  <ControlsTable setControlId={setControlId} data={data} />
+                  <ControlsTable setControlId={setControlId} data={data} subPoliciesStatus={getSubPoliciesStatus} />
                 </Collapsible>
               </div>
 
@@ -950,6 +951,7 @@ export default function Policy({
                     policies={children}
                     isAdminView={isAdminView}
                     onDelete={handleDelete}
+                    subPoliciesStatus={getSubPoliciesStatus}
                   />
                 </Collapsible>
               </div>

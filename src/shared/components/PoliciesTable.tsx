@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import { FaFolder, FaFolderOpen } from "react-icons/fa";
 import { MdSubdirectoryArrowRight } from "react-icons/md";
 import { Link, useHistory } from "react-router-dom";
@@ -18,14 +18,17 @@ interface PoliciesTableProps {
   policies: Policy[];
   isAdminView?: boolean;
   onDelete?: (id: string, title: string) => void;
+  subPoliciesStatus?: any
 }
 
 export default function PoliciesTable({
   policies,
   onDelete,
   isAdminView,
+  subPoliciesStatus
 }: PoliciesTableProps) {
   const history = useHistory();
+  const [isUser] = useAccessRights(["user"]);
   return (
     <Table responsive>
       <thead>
@@ -40,23 +43,52 @@ export default function PoliciesTable({
       </thead>
       <tbody>
         {policies.length ? (
-          policies.map((policy) => (
-            <PolicyTableRow
-              key={policy.id}
-              policy={policy}
-              isAdminView={isAdminView}
-              onClick={(id) =>
-                history.push(
-                  isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
-                )
-              }
-              onDelete={() => onDelete?.(policy.id, policy.title || "")}
-              level={0}
-            />
-          ))
+          <Fragment>
+            {isUser ? (
+              <Fragment>
+                {!subPoliciesStatus.includes('release') ? (
+                  <tr>
+                    <td colSpan={6}>
+                      <EmptyAttribute />
+                    </td>
+                  </tr>
+                ) : (
+                  policies.map((policy) => (
+                    <PolicyTableRow
+                      key={policy.id}
+                      policy={policy}
+                      isAdminView={isAdminView}
+                      onClick={(id) =>
+                        history.push(
+                          isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
+                        )
+                      }
+                      onDelete={() => onDelete?.(policy.id, policy.title || "")}
+                      level={0}
+                    />
+                  ))
+                )}
+              </Fragment>
+            ) : (
+              policies.map((policy) => (
+                <PolicyTableRow
+                  key={policy.id}
+                  policy={policy}
+                  isAdminView={isAdminView}
+                  onClick={(id) =>
+                    history.push(
+                      isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
+                    )
+                  }
+                  onDelete={() => onDelete?.(policy.id, policy.title || "")}
+                  level={0}
+                />
+              ))
+            )}
+          </Fragment>
         ) : (
           <tr>
-            <td colSpan={8}>
+            <td colSpan={6}>
               <EmptyAttribute />
             </td>
           </tr>

@@ -25,6 +25,7 @@ interface RisksListProps {
   data?: PolicyQuery;
   setRiskId?: any;
   // withRelatedControls?: boolean;
+  subPoliciesStatus?: any;
 }
 
 export default function RisksList({
@@ -33,12 +34,14 @@ export default function RisksList({
   setRiskId,
   // editControl,
   data,
+  subPoliciesStatus,
 }: // withRelatedControls,
 RisksListProps) {
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
+    "user",
   ]);
   const policyId = data?.policy?.id;
   const risksWithoutChildren = oc(data).policy.risks([]);
@@ -86,33 +89,60 @@ RisksListProps) {
 
   useEffect(() => {
     if (
-      !(isAdmin || isAdminReviewer || isAdminPreparer) &&
-      newData === newDataRisks
+      isUser && newData === newDataRisks
     ) {
       setNewDataRisks(newData.filter((a) => a.status === "release"));
     }
-  }, [isAdmin, isAdminReviewer, isAdminPreparer, newData, newDataRisks]);
+  }, [isAdmin, isAdminReviewer, isAdminPreparer, isUser, newData, newDataRisks]);
   return dataModifier(newDataRisks).length ? (
     <ul>
-      {dataModifier(newDataRisks).map((risk: any) => (
-        <li key={risk.id}>
-          <div className="mb-3 d-flex justify-content-between">
-            <PWCLink
-              to={`/policy/${policyId}/details/risk/${risk.id}`}
-              onClick={() => setRiskId(risk.id)}
-              style={{ fontSize: "14px" }}
-            >
-              {risk.name}
-              <Badge color="secondary mx-3">
-                {startCase(risk.levelOfRisk || "")}
-              </Badge>
-              <Badge color="secondary">
-                {startCase(risk.typeOfRisk || "")}
-              </Badge>
-            </PWCLink>
-          </div>
-        </li>
-      ))}
+      {isUser ? (
+        <ul>
+          {!subPoliciesStatus.includes('release') ? (
+            <EmptyAttribute />
+          ) : (
+            dataModifier(newDataRisks).map((risk: any) => (
+              <li key={risk.id}>
+                <div className="mb-3 d-flex justify-content-between">
+                  <PWCLink
+                    to={`/policy/${policyId}/details/risk/${risk.id}`}
+                    onClick={() => setRiskId(risk.id)}
+                    style={{ fontSize: "14px" }}
+                  >
+                    {risk.name}
+                    <Badge color="secondary mx-3">
+                      {startCase(risk.levelOfRisk || "")}
+                    </Badge>
+                    <Badge color="secondary">
+                      {startCase(risk.typeOfRisk || "")}
+                    </Badge>
+                  </PWCLink>
+                </div>
+              </li>
+            ))
+          )}
+        </ul>
+      ) : (
+        dataModifier(newDataRisks).map((risk: any) => (
+          <li key={risk.id}>
+            <div className="mb-3 d-flex justify-content-between">
+              <PWCLink
+                to={`/policy/${policyId}/details/risk/${risk.id}`}
+                onClick={() => setRiskId(risk.id)}
+                style={{ fontSize: "14px" }}
+              >
+                {risk.name}
+                <Badge color="secondary mx-3">
+                  {startCase(risk.levelOfRisk || "")}
+                </Badge>
+                <Badge color="secondary">
+                  {startCase(risk.typeOfRisk || "")}
+                </Badge>
+              </PWCLink>
+            </div>
+          </li>
+        ))
+      )}
       {/* {editRisk && (
               <Button
                 onClick={() =>
