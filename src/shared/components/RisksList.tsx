@@ -25,6 +25,7 @@ interface RisksListProps {
   data?: PolicyQuery;
   setRiskId?: any;
   // withRelatedControls?: boolean;
+  subPoliciesStatus?: any;
 }
 
 export default function RisksList({
@@ -33,12 +34,14 @@ export default function RisksList({
   setRiskId,
   // editControl,
   data,
+  subPoliciesStatus,
 }: // withRelatedControls,
 RisksListProps) {
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
+    "user",
   ]);
   const policyId = data?.policy?.id;
   const risksWithoutChildren = oc(data).policy.risks([]);
@@ -86,13 +89,12 @@ RisksListProps) {
 
   useEffect(() => {
     if (
-      !(isAdmin || isAdminReviewer || isAdminPreparer) &&
-      newData === newDataRisks
+      isUser && newData === newDataRisks
     ) {
       setNewDataRisks(newData.filter((a) => a.status === "release"));
     }
   }, [isAdmin, isAdminReviewer, isAdminPreparer, newData, newDataRisks]);
-  return dataModifier(newDataRisks).length ? (
+  return dataModifier(newDataRisks).length && !subPoliciesStatus.includes('draft') ? (
     <ul>
       {dataModifier(newDataRisks).map((risk: any) => (
         <li key={risk.id}>

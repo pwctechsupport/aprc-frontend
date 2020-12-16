@@ -23,6 +23,7 @@ interface ControlsTableProps {
   // editControl?: Function;
   data?: PolicyQuery;
   setControlId?: any;
+  subPoliciesStatus?: any;
 }
 
 export default function ControlsTable({
@@ -30,11 +31,13 @@ export default function ControlsTable({
   // editControl,
   data,
   setControlId,
+  subPoliciesStatus,
 }: ControlsTableProps) {
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
+    "user",
   ]);
   const policyId = data?.policy?.id;
   const controlsWithoutChildren = oc(data).policy.controls([]);
@@ -82,8 +85,7 @@ export default function ControlsTable({
   const [newDataControls, setNewDataControls] = useState(newData);
   useEffect(() => {
     if (
-      !(isAdmin || isAdminReviewer || isAdminPreparer) &&
-      newData === newDataControls
+      isUser && newData === newDataControls
     ) {
       setNewDataControls(newData.filter((a) => a.status === "release"));
     }
@@ -104,7 +106,7 @@ export default function ControlsTable({
         </tr>
       </thead>
       <tbody>
-        {dataModifier(newDataControls).length ? (
+        {dataModifier(newDataControls).length && !subPoliciesStatus.includes('draft') ? (
           <Fragment>
             {dataModifier(newDataControls)?.map((control: any) => (
               <tr key={control.id}>
