@@ -71,6 +71,13 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
     noSpecialCharacterPassword,
   }
 
+  const ifValid = 
+    falsePasswordLength ||
+    noLowerCasePassword ||
+    noCapitalPassword ||
+    noNumberPassword ||
+    noSpecialCharacterPassword
+
   useEffect(() => {
     setValidatingPassword({
       falsePasswordLength: false,
@@ -87,7 +94,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
   });
 
   const onSubmit = (data: any) => {
-    if (!validatePassword) {
+    if (!ifValid) {
       updatePassword({
         variables: {
           input: {
@@ -146,7 +153,7 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
                   innerRef={register({ required: true })}
                   error={errors && errors.passwordConfirmation?.message}
                 />
-                {validatePassword && (
+                {ifValid && (
                   <PasswordRequirements 
                     falsePasswordLength={validatePassword.falsePasswordLength}
                     noCapitalPassword={validatePassword.noCapitalPassword}
