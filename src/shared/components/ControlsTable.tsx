@@ -89,7 +89,7 @@ export default function ControlsTable({
     ) {
       setNewDataControls(newData.filter((a) => a.status === "release"));
     }
-  }, [isAdmin, isAdminReviewer, isAdminPreparer, newData, newDataControls]);
+  }, [isAdmin, isAdminReviewer, isAdminPreparer, isUser, newData, newDataControls]);
 
   return (
     <Table responsive>
@@ -106,28 +106,61 @@ export default function ControlsTable({
         </tr>
       </thead>
       <tbody>
-        {dataModifier(newDataControls).length && !subPoliciesStatus.includes('draft') ? (
+        {dataModifier(newDataControls).length ? (
           <Fragment>
-            {dataModifier(newDataControls)?.map((control: any) => (
-              <tr key={control.id}>
-                <td>
-                  <PWCLink
-                    to={`/policy/${policyId}/details/control/${control.id}`}
-                    onClick={() => {
-                      setControlId(control.id);
-                    }}
-                  >
-                    {control.description}
-                  </PWCLink>
-                </td>
-                <td>{capitalCase(control.frequency) || ""}</td>
-                <td>{capitalCase(control.typeOfControl) || ""}</td>
-                <td>{capitalCase(control.nature) || ""}</td>
-                <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
-                <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
-                <td>{control.controlOwner?.join(", ")}</td>
-              </tr>
-            ))}
+            {isUser ? (
+              <Fragment>
+                {!subPoliciesStatus.includes('release') ? (
+                  <tr>
+                    <td colSpan={7}>
+                      <EmptyAttribute />
+                    </td>
+                  </tr>
+                ) : (
+                  dataModifier(newDataControls)?.map((control: any) => (
+                    <tr key={control.id}>
+                      <td>
+                        <PWCLink
+                          to={`/policy/${policyId}/details/control/${control.id}`}
+                          onClick={() => {
+                            setControlId(control.id);
+                          }}
+                        >
+                          {control.description}
+                        </PWCLink>
+                      </td>
+                      <td>{capitalCase(control.frequency) || ""}</td>
+                      <td>{capitalCase(control.typeOfControl) || ""}</td>
+                      <td>{capitalCase(control.nature) || ""}</td>
+                      <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
+                      <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
+                      <td>{control.controlOwner?.join(", ")}</td>
+                    </tr>
+                  ))
+                )}
+              </Fragment>
+            ) : (
+              dataModifier(newDataControls)?.map((control: any) => (
+                <tr key={control.id}>
+                  <td>
+                    <PWCLink
+                      to={`/policy/${policyId}/details/control/${control.id}`}
+                      onClick={() => {
+                        setControlId(control.id);
+                      }}
+                    >
+                      {control.description}
+                    </PWCLink>
+                  </td>
+                  <td>{capitalCase(control.frequency) || ""}</td>
+                  <td>{capitalCase(control.typeOfControl) || ""}</td>
+                  <td>{capitalCase(control.nature) || ""}</td>
+                  <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
+                  <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
+                  <td>{control.controlOwner?.join(", ")}</td>
+                </tr>
+              ))
+            )}
           </Fragment>
         ) : (
           <tr>
