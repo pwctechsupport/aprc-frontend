@@ -174,7 +174,7 @@ const Risks = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "13%" }}>Risk</th>
+            <th style={{ width: "30%" }}>Risk</th>
 
             <th style={{ width: "13%" }}>Risk level</th>
             <th style={{ width: "13%" }}>Type of risk</th>
@@ -209,7 +209,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                     />
                   </td>
                 ) : null}
-                <td>{oc(risk).name("")}</td>
+                <td style={{overflow: "hidden", overflowWrap: "anywhere"}}>{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                 <td>
                   {capitalCase(risk.typeOfRisk?.split("_").join(" ") || "")}
