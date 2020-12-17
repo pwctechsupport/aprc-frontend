@@ -188,23 +188,23 @@ const Departments = ({ history }: RouteComponentProps) => {
                 </td>
                 <td>
                   {isEdit && selected === department.id ? (
-                    <Fragment>
+                    <div className="d-flex align-items-center">
                       <DialogButton
                         color="primary"
                         onConfirm={updating.handleSubmit(handleUpdate)}
-                        className="pwc mr-1"
+                        className="add mr-1"
                         loading={updateM.loading}
                       >
                         Save
                       </DialogButton>
                       <StyledDialogButton
                         loading={destroyM.loading}
-                        className="ml-1 black"
+                        className="cancel w-95px"
                         onConfirm={() => toggleEdit(department.id)}
                       >
                         Cancel
                       </StyledDialogButton>
-                    </Fragment>
+                    </div>
                   ) : (
                     <Fragment>
                       <Fragment>

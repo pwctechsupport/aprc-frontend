@@ -97,11 +97,11 @@ export default function ControlsTable({
         <tr>
           <th style={{ width: "14.28%" }}>Description</th>
           <th style={{ width: "14.28%" }}>Frequency</th>
-          <th style={{ width: "14.28%" }}>Type of Control</th>
+          <th style={{ width: "14.28%" }}>Type of control</th>
           <th style={{ width: "14.28%" }}>Nature</th>
           <th style={{ width: "14.28%" }}>Assertion</th>
           <th style={{ width: "14.28%" }}>IPO</th>
-          <th style={{ width: "14.28%" }}>Control Owner</th>
+          <th style={{ width: "14.28%" }}>Control owner</th>
           {/* {editControl && <th />} */}
         </tr>
       </thead>
