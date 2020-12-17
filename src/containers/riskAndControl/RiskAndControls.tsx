@@ -50,8 +50,8 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th>Business Process</th>
-            <th>Risks</th>
+            <th style={{width: '15%'}}>Business Process</th>
+            <th style={{width: '15%'}}>Risks</th>
           </tr>
         </thead>
         <tbody>
@@ -94,7 +94,7 @@ const RiskAndControlTableRow = ({
   return (
     <>
       <tr key={businessProcess.id} onClick={() => onClick(businessProcess.id)}>
-        <td>
+        <td className="wrapped">
           <div>
             {level ? (
               <MdSubdirectoryArrowRight color="grey" className="mr-1" />
@@ -102,7 +102,7 @@ const RiskAndControlTableRow = ({
             {businessProcess.name}
           </div>
         </td>
-        <td>
+        <td className="wrapped">
           {businessProcess?.risks
             ?.map(({ name }) => startCase(name || ""))
             .join(", ")}

@@ -28,7 +28,7 @@ export default function PoliciesTable({
   subPoliciesStatus
 }: PoliciesTableProps) {
   const history = useHistory();
-  const [isUser] = useAccessRights(["user"]);
+  const [isUser, isAdminReviewer] = useAccessRights(["user", "admin_reviewer"]);
   return (
     <Table responsive>
       <thead>
@@ -70,20 +70,49 @@ export default function PoliciesTable({
                 )}
               </Fragment>
             ) : (
-              policies.map((policy) => (
-                <PolicyTableRow
-                  key={policy.id}
-                  policy={policy}
-                  isAdminView={isAdminView}
-                  onClick={(id) =>
-                    history.push(
-                      isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
-                    )
-                  }
-                  onDelete={() => onDelete?.(policy.id, policy.title || "")}
-                  level={0}
-                />
-              ))
+              <Fragment>
+                {isAdminReviewer ? (
+                  <>
+                    {subPoliciesStatus.includes('draft') ? (
+                      <tr>
+                        <td colSpan={6}>
+                          <EmptyAttribute />
+                        </td>
+                      </tr>
+                    ) : (
+                      policies.map((policy) => (
+                        <PolicyTableRow
+                          key={policy.id}
+                          policy={policy}
+                          isAdminView={isAdminView}
+                          onClick={(id) =>
+                            history.push(
+                              isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
+                            )
+                          }
+                          onDelete={() => onDelete?.(policy.id, policy.title || "")}
+                          level={0}
+                        />
+                      ))
+                    )}
+                  </>
+                ) : (
+                  policies.map((policy) => (
+                    <PolicyTableRow
+                      key={policy.id}
+                      policy={policy}
+                      isAdminView={isAdminView}
+                      onClick={(id) =>
+                        history.push(
+                          isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
+                        )
+                      }
+                      onDelete={() => onDelete?.(policy.id, policy.title || "")}
+                      level={0}
+                    />
+                  ))
+                )}
+              </Fragment>
             )}
           </Fragment>
         ) : (
