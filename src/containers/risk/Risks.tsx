@@ -176,7 +176,7 @@ const Risks = ({ history }: RouteComponentProps) => {
 
             <th style={{ width: "13%" }}>Risk</th>
 
-            <th style={{ width: "13%" }}>Risk level</th>
+            <th style={{ width: "13%" }}>Level of risk</th>
             <th style={{ width: "13%" }}>Type of risk</th>
             <th style={{ width: "13%" }}>Business Process</th>
             <th style={{ width: "13%" }}>Last updated</th>
