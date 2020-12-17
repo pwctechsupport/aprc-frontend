@@ -182,8 +182,8 @@ const Controls = ({ history }: RouteComponentProps) => {
                   </th>
                 ) : null}
 
-                <th>Description</th>
-                <th>Frequency</th>
+                <th style={{width: '30%'}}>Description</th>
+                <th style={{width: '10%'}}>Frequency</th>
                 <th style={{ width: "10%" }}>Type</th>
                 <th style={{ width: "20%" }}>Ass. risk</th>
                 {/* <th style={{ width: "9%" }}>Nature</th> */}
@@ -214,7 +214,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                       </td>
                     ) : null}
 
-                    <td style={{ width: 200 }}>{control.description}</td>
+                    <td className="wrapped">{control.description}</td>
                     <td>{capitalCase(control.frequency || "")}</td>
                     <td>{capitalCase(control.typeOfControl || "")}</td>
                     <td>
