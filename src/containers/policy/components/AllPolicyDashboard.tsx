@@ -2,31 +2,13 @@ import React, { Fragment } from "react";
 import Helmet from "react-helmet";
 import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
-import { usePolicyDashboardQuery, useGetTotalPoliciesQuery } from "../../../generated/graphql";
+import { usePolicyDashboardQuery } from "../../../generated/graphql";
 import PolicyChart from "./PolicyChart";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import styled from "styled-components";
 
 const AllPolicyDashboard = () => {
   const { data, loading } = usePolicyDashboardQuery();
-  
-  const {data: getTotalPoliciesAdminPreparer, loading: loadingForPreparer} = useGetTotalPoliciesQuery({
-    variables: {
-      filter: {status_in: ["draft", "waiting_for_review", "release"]},
-    }
-  });
-
-  const {data: getTotalPoliciesAdminReviewer, loading: loadingForReviewer} = useGetTotalPoliciesQuery({
-    variables: {
-      filter: {status_in: ["waiting_for_review", "release"]},
-    }
-  });
-
-  const {data: getTotalPoliciesUser, loading: loadingForUser} = useGetTotalPoliciesQuery({
-    variables: {
-      filter: {status_in: ["release"]},
-    }
-  });
 
   const [isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin_reviewer",
@@ -35,34 +17,35 @@ const AllPolicyDashboard = () => {
   const isUser = !(isAdminReviewer || isAdminPreparer);
   if (loading) return null;
   // reviewed:
-  const reviewedPolicies = oc(data).reviewedPolicies.metadata.totalCount(0);
+  // const reviewedPolicies = oc(data).reviewedPolicies.metadata.totalCount(0);
   const reviewedRisks = oc(data).reviewedRisks.metadata.totalCount(0);
   const reviewedControls = oc(data).reviewedControls.metadata.totalCount(0);
   // prepared:
-  const preparedPolicies = oc(data).preparedPolicies.metadata.totalCount(0);
+  // const preparedPolicies = oc(data).preparedPolicies.metadata.totalCount(0);
   const preparedRisks = oc(data).preparedRisks.metadata.totalCount(0);
   const preparedControls = oc(data).preparedControls.metadata.totalCount(0);
   // total:
-  const totalPolicies = oc(data).totalPolicies.metadata.totalCount(0);
+  // const totalPolicies = oc(data).totalPolicies.metadata.totalCount(0);
   const totalRisks = oc(data).totalRisks.metadata.totalCount(0);
   const totalControls = oc(data).totalControls.metadata.totalCount(0);
-  //newTotal Policies
-  if (loadingForPreparer) return null;
-  const adminPreparerTotalPolicies = oc(getTotalPoliciesAdminPreparer).policies.metadata.totalCount(0);
-
-  if (loadingForReviewer) return null;
-  const adminReviewerTotalPolicies = oc(getTotalPoliciesAdminReviewer).policies.metadata.totalCount(0);
-
-  if (loadingForUser) return null;
-  const userTotalPolicies = oc(getTotalPoliciesUser).policies.metadata.totalCount(0);
+  // Admin Preparer
+  const totalAdminPreparerPolicies = oc(data).adminPreparerTotalPolicies.metadata.totalCount(0);
+  const preparedAdminPreparerPolicies = oc(data).adminPreparerPreparedPolicies.metadata.totalCount(0);
+  const reviewedAdminPreparerPolicies = oc(data).adminPreparerReviewedPolicies.metadata.totalCount(0);
+  // Admin Reviewer
+  const totalAdminReviewerPolicies = oc(data).adminReviewerTotalPolicies.metadata.totalCount(0);
+  const preparedAdminReviewerPolicies = oc(data).adminReviewerPreparedPolicies.metadata.totalCount(0);
+  const reviewedAdminReviewerPolicies = oc(data).adminReviewerReviewedPolicies.metadata.totalCount(0);
+  // User
+  const totalUserPolicies = oc(data).userTotalPolicies.metadata.totalCount(0);
 
   const chartData = [
     {
       label: "Policies",
       // total: totalPolicies,
-      total: (isAdminPreparer ? adminPreparerTotalPolicies : isAdminReviewer ? adminReviewerTotalPolicies : userTotalPolicies),
-      reviewed: reviewedPolicies,
-      prepared: preparedPolicies,
+      total: (isAdminPreparer ? totalAdminPreparerPolicies : isAdminReviewer ? totalAdminReviewerPolicies : totalUserPolicies),
+      reviewed: (isAdminPreparer ? reviewedAdminPreparerPolicies : isAdminReviewer ? reviewedAdminReviewerPolicies : 0),
+      prepared: (isAdminPreparer ? preparedAdminPreparerPolicies : isAdminReviewer ? preparedAdminReviewerPolicies : 0),
     },
     {
       label: "Risks",
@@ -82,7 +65,7 @@ const AllPolicyDashboard = () => {
     ? [
         {
           label: "Total",
-          subPolicy: userTotalPolicies,
+          subPolicy: totalUserPolicies,
           risk: totalRisks,
           control: totalControls,
           sum() {
@@ -93,7 +76,7 @@ const AllPolicyDashboard = () => {
     : [
         {
           label: "Reviewed",
-          subPolicy: reviewedPolicies,
+          subPolicy: (isAdminPreparer ? reviewedAdminPreparerPolicies : isAdminReviewer ? reviewedAdminReviewerPolicies : 0),
           risk: reviewedRisks,
           control: reviewedControls,
           sum() {
@@ -102,7 +85,7 @@ const AllPolicyDashboard = () => {
         },
         {
           label: "Prepared",
-          subPolicy: preparedPolicies,
+          subPolicy: (isAdminPreparer ? preparedAdminPreparerPolicies : isAdminReviewer ? preparedAdminReviewerPolicies : 0),
           risk: preparedRisks,
           control: preparedControls,
           sum() {
@@ -111,7 +94,7 @@ const AllPolicyDashboard = () => {
         },
         {
           label: <strong>Total</strong>,
-          subPolicy: (isAdminPreparer ? adminPreparerTotalPolicies : isAdminReviewer ? adminReviewerTotalPolicies : userTotalPolicies),
+          subPolicy: (isAdminPreparer ? totalAdminPreparerPolicies : isAdminReviewer ? totalAdminReviewerPolicies : totalUserPolicies),
           risk: totalRisks,
           control: totalControls,
           sum() {
