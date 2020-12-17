@@ -214,7 +214,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                       </td>
                     ) : null}
 
-                    <td style={{overflow: "hidden", overflowWrap: "anywhere"}}>{control.description}</td>
+                    <td className="wrapped">{control.description}</td>
                     <td>{capitalCase(control.frequency || "")}</td>
                     <td>{capitalCase(control.typeOfControl || "")}</td>
                     <td>

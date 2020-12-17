@@ -94,7 +94,7 @@ const RiskAndControlTableRow = ({
   return (
     <>
       <tr key={businessProcess.id} onClick={() => onClick(businessProcess.id)}>
-        <td style={{overflow: "hidden", overflowWrap: "anywhere"}}>
+        <td className="wrapped">
           <div>
             {level ? (
               <MdSubdirectoryArrowRight color="grey" className="mr-1" />
@@ -102,7 +102,7 @@ const RiskAndControlTableRow = ({
             {businessProcess.name}
           </div>
         </td>
-        <td style={{overflow: "hidden", overflowWrap: "anywhere"}}>
+        <td className="wrapped">
           {businessProcess?.risks
             ?.map(({ name }) => startCase(name || ""))
             .join(", ")}

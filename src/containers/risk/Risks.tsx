@@ -209,7 +209,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                     />
                   </td>
                 ) : null}
-                <td style={{overflow: "hidden", overflowWrap: "anywhere"}}>{oc(risk).name("")}</td>
+                <td className="wrapped">{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                 <td>
                   {capitalCase(risk.typeOfRisk?.split("_").join(" ") || "")}
