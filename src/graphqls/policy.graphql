@@ -412,20 +412,56 @@ mutation updatePolicyVisit($id: ID!) {
 }
 
 query policyDashboard {
-  # POLICY
-  reviewedPolicies: policies(filter: { status_eq: release }) {
+  # ADMIN PREPARER - POLICY
+  adminPreparerTotalPolicies: policies (
+    filter: {}
+  ) {
     metadata {
       totalCount
     }
   }
-  preparedPolicies: policies(
+  adminPreparerPreparedPolicies: policies (
     filter: { status_in: ["draft", "waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
-  totalPolicies: policies(filter: {}) {
+  adminPreparerReviewedPolicies: policies (
+    filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+
+  #ADMIN REVIEWER - POLICY
+  adminReviewerTotalPolicies: policies (
+    filter: { status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  adminReviewerPreparedPolicies: policies (
+    filter: { status_in: ["waiting_for_review"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  adminReviewerReviewedPolicies: policies (
+    filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+
+  # USER - POLICY
+  userTotalPolicies: policies (
+    filter: { status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
+  ) {
     metadata {
       totalCount
     }
@@ -462,14 +498,6 @@ query policyDashboard {
     }
   }
   totalRisks: risks(filter: {}) {
-    metadata {
-      totalCount
-    }
-  }
-}
-
-query getTotalPolicies ($filter: BaseScalar = {}) {
-  policies (filter: $filter) {
     metadata {
       totalCount
     }
