@@ -171,7 +171,7 @@ const Resources = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "12%" }}>Name</th>
+            <th style={{ width: "25%" }}>Name</th>
             <th style={{ width: "10%" }}>File type</th>
             <th style={{ width: "10%" }}>Category</th>
             <th style={{ width: "16%" }}>Related Policies</th>
@@ -200,7 +200,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                     />
                   </td>
                 ) : null}
-                <td>{resource.name}</td>
+                <td className="wrapped">{resource.name}</td>
                 <td>{resource.resourceFileType}</td>
                 <td>{capitalCase(resource.category || "")}</td>
 
