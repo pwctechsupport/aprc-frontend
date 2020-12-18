@@ -140,7 +140,7 @@ const UpdateProfileForm = ({
         }
         type="number"
         label="Phone number"
-        innerRef={register({ required: true })}
+        innerRef={register}
         error={errors.phone && errors.phone.message}
       />
       <div className="d-flex justify-content-end">
