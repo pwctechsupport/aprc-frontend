@@ -189,14 +189,6 @@ const Departments = ({ history }: RouteComponentProps) => {
                 <td>
                   {isEdit && selected === department.id ? (
                     <div className="d-flex align-items-center">
-                      <DialogButton
-                        color="primary"
-                        onConfirm={updating.handleSubmit(handleUpdate)}
-                        className="add mr-1"
-                        loading={updateM.loading}
-                      >
-                        Save
-                      </DialogButton>
                       <StyledDialogButton
                         loading={destroyM.loading}
                         className="cancel w-95px"
@@ -204,6 +196,14 @@ const Departments = ({ history }: RouteComponentProps) => {
                       >
                         Cancel
                       </StyledDialogButton>
+                      <DialogButton
+                        color="primary"
+                        onConfirm={updating.handleSubmit(handleUpdate)}
+                        className="add ml-1"
+                        loading={updateM.loading}
+                      >
+                        Save
+                      </DialogButton>
                     </div>
                   ) : (
                     <Fragment>
