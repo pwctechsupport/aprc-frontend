@@ -189,8 +189,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "10%" }}>Category name</th>
-            <th style={{ width: "45%" }}>Related policies</th>
+            <th style={{ width: "30%" }}>Category name</th>
+            <th style={{ width: "25%" }}>Related policies</th>
             <th style={{ width: "15%" }}>Status</th>
             <th style={{ width: "12%" }}>Last updated</th>
             <th style={{ width: "12%" }}>Last updated by</th>
@@ -219,8 +219,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                   </td>
                 ) : null}
 
-                <td>{policyCategory.name}</td>
-                <td>{policyCategory.policies?.map(pol => pol.title).join(", ")}</td>
+                <td className="wrapped">{policyCategory.name}</td>
+                <td className="wrapped">{policyCategory.policies?.map(pol => pol.title).join(", ")}</td>
                 <td>
                   {policyCategory.draft ||
                   policyCategory.status === "waiting_for_approval"

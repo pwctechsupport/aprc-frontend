@@ -210,7 +210,7 @@ const PolicyTableRow = ({
           <td>
             <div
               style={level ? { marginLeft: level * 10 } : {}}
-              className="d-flex align-items-center"
+              className="d-flex align-items-center wrapped"
             >
               {level > 0 && (
                 <MdSubdirectoryArrowRight color="grey" className="mr-1" />
@@ -248,7 +248,7 @@ const PolicyTableRow = ({
           <td>
             <div
               style={level ? { marginLeft: level * 10 } : {}}
-              className="d-flex align-items-center"
+              className="d-flex align-items-center wrapped"
             >
               {level > 0 && (
                 <MdSubdirectoryArrowRight color="grey" className="mr-1" />
@@ -301,7 +301,7 @@ const PolicyTableRow = ({
           <td>
             <div
               style={level ? { marginLeft: level * 10 } : {}}
-              className="d-flex align-items-center"
+              className="d-flex align-items-center wrapped"
             >
               {level > 0 && (
                 <MdSubdirectoryArrowRight color="grey" className="mr-1" />
