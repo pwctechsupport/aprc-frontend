@@ -209,7 +209,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                     </td>
                   ) : null}
 
-                  <td>{item.name}</td>
+                  <td className="wrapped">{item.name}</td>
                   <td>{item.updatedAt.split("T")[0]}</td>
                   <td>{item.lastUpdatedBy}</td>
                   <td>{item.createdAt.split("T")[0]}</td>
