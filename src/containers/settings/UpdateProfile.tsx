@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -173,6 +173,9 @@ const UpdatePasswordForm = ({
   const { register, handleSubmit, errors, reset, watch } = useForm<
     UpdatePasswordFormValues
   >();
+
+  const [validatingPassword, setValidatingPassword] = useState({})
+
   const checkPassword = watch("password")?.split("") || [""];
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
@@ -197,14 +200,33 @@ const UpdatePasswordForm = ({
 
   const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
-  const validatePassword =
+  const validatePassword = {
+    falsePasswordLength,
+    noLowerCasePassword,
+    noCapitalPassword,
+    noNumberPassword,
+    noSpecialCharacterPassword,
+  }
+
+  const ifValid = 
+    falsePasswordLength ||
     noLowerCasePassword ||
     noCapitalPassword ||
     noNumberPassword ||
-    noSpecialCharacterPassword ||
-    falsePasswordLength;
+    noSpecialCharacterPassword
+
+  useEffect(() => {
+    setValidatingPassword({
+      falsePasswordLength: false,
+      noLowerCasePassword: false,
+      noCapitalPassword: false,
+      noNumberPassword: false,
+      noSpecialCharacterPassword: false,
+    })
+  }, [validatePassword])
+
   const submit = (data: UpdatePasswordFormValues) => {
-    if (!validatePassword) {
+    if (!ifValid) {
       onSubmit(data);
       reset({
         password: "",
@@ -234,13 +256,13 @@ const UpdatePasswordForm = ({
         error={errors.password?.message}
         required
       />{" "}
-      {validatePassword && (
+      {ifValid && (
         <PasswordRequirements
-          falsePasswordLength
-          noCapitalPassword
-          noLowerCasePassword
-          noSpecialCharacterPassword
-          noNumberPassword
+          falsePasswordLength={validatePassword.falsePasswordLength}
+          noCapitalPassword={validatePassword.noCapitalPassword}
+          noLowerCasePassword={validatePassword.noLowerCasePassword}
+          noSpecialCharacterPassword={validatePassword.noSpecialCharacterPassword}
+          noNumberPassword={validatePassword.noNumberPassword}
         />
       )}
       <Input
