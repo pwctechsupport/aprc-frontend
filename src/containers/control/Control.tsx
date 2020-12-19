@@ -49,7 +49,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
   const id = get(match, "params.id", "");
   const { loading, data } = useControlQuery({
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
     variables: { id },
   });
   const draft = data?.control?.draft?.objectResult;
