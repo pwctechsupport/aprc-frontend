@@ -217,7 +217,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                     <td className="wrapped">{control.description}</td>
                     <td>{capitalCase(control.frequency || "")}</td>
                     <td>{capitalCase(control.typeOfControl || "")}</td>
-                    <td>
+                    <td className="wrapped">
                       {dataModifier(
                         oc(control)
                           .risks([])
