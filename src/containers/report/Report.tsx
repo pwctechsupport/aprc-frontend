@@ -45,7 +45,7 @@ const reportOptions = [
       { id: "xlsx", name: "Excel" },
     ],
     description:
-      "List of reviewed control(s) that are not mapped with any control",
+      "List of reviewed controls that are not mapped with any control",
   },
   {
     name: "Resources with rating",
