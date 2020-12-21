@@ -342,7 +342,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
             <dt>Risks</dt>
             {risks.length ? (
               filteredNames(risks).map((risk: any) => (
-                <dd key={risk.id}>{risk.name}</dd>
+                <dd className="wrapped" key={risk.id}>{risk.name}</dd>
               ))
             ) : (
               <EmptyAttribute />
