@@ -49,12 +49,12 @@ export default function SunEditorCustom(props: SunEditorReactProps) {
           "Perpetua",
         ],
         buttonList: [
-          ["font", "fontSize", "align", "list"],
+          ["font", "fontSize", "align", "list", "outdent", "indent"],
           ["fontColor", "hiliteColor", "bold", "underline", "italic"],
           ["image", "table", "link"],
         ],
       }}
-      onPaste={handlePaste}
+      // onPaste={handlePaste}
       {...props}
     />
   );
