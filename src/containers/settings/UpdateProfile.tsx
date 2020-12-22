@@ -238,11 +238,11 @@ const UpdatePasswordForm = ({
       />{" "}
       {checkingPasswordValidity && (
         <PasswordRequirements
-          falsePasswordLength
-          noCapitalPassword
-          noLowerCasePassword
-          noSpecialCharacterPassword
-          noNumberPassword
+          falsePasswordLength={falsePasswordLength}
+          noCapitalPassword={noCapitalPassword}
+          noLowerCasePassword={noLowerCasePassword}
+          noSpecialCharacterPassword={noSpecialCharacterPassword}
+          noNumberPassword={noNumberPassword}
         />
       )}
       <Input

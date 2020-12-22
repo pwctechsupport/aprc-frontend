@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -73,14 +73,15 @@ export default function UserForm(props: UserFormProps) {
 
   const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
-  const validatePassword =
+  const checkingPasswordValidity = 
+    falsePasswordLength ||
     noLowerCasePassword ||
     noCapitalPassword ||
     noNumberPassword ||
-    noSpecialCharacterPassword ||
-    falsePasswordLength;
+    noSpecialCharacterPassword
+
   function onSubmit(data: UserFormValues) {
-    if (!props.submitting && !validatePassword) {
+    if (!props.submitting && !checkingPasswordValidity) {
       props.onSubmit?.(data);
     } else {
       toast.error("Password doesn't fullfill requirement(s)");
@@ -113,8 +114,14 @@ export default function UserForm(props: UserFormProps) {
         innerRef={register({ required: true })}
         error={capitalize(errors?.password?.message || "")}
       />
-      {validatePassword && (
-        <PasswordRequirements falsePasswordLength noCapitalPassword noLowerCasePassword noSpecialCharacterPassword noNumberPassword />
+      {checkingPasswordValidity && (
+        <PasswordRequirements 
+          falsePasswordLength={falsePasswordLength}
+          noCapitalPassword={noCapitalPassword}
+          noLowerCasePassword={noLowerCasePassword}
+          noSpecialCharacterPassword={noSpecialCharacterPassword}
+          noNumberPassword={noNumberPassword}
+        />
       )}
       <Input
         label="Password Confirmation*"
