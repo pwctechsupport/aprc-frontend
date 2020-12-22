@@ -373,7 +373,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
         </Col>
 
         {activityControls.length > 0 ? (
-          <Col xs={7} className="mt-2">
+          <Col xs={12} className="mt-2">
             <dt className="mb-1">Control activities</dt>
             <Table>
               <thead>
@@ -389,10 +389,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
               <tbody>
                 {activityControls.map((activity) => (
                   <tr key={"Row" + activity.id}>
-                    <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                    <td className="wrapped" style={{ fontSize: "13px", fontWeight: "normal" }}>
                       {activity.activity}
                     </td>
-                    <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                    <td className="wrapped" style={{ fontSize: "13px", fontWeight: "normal" }}>
                       {activity.guidance ? (
                         activity.guidance
                       ) : activity.guidanceFileName ? (
