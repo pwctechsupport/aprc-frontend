@@ -205,11 +205,15 @@ const PolicyTableRow = ({
     "admin_preparer",
     "admin_reviewer",
   ]);
+  const isRelease = status.includes("release")
+  const isWaitingForApproval = status.includes("waiting_for_approval")
+  const isReadyForEdit = status.includes("ready_for_edit")
   const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
+  const isUserStatus = isRelease || isWaitingForApproval || isReadyForEdit
   return (
     <>
       {/* when user */}
-      {isUser && status === "release" && (
+      {isUser && isUserStatus && (
         <tr key={policy.id} onClick={() => onClick(policy.id)}>
           <td>
             <div
