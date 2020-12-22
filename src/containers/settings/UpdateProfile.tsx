@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -173,6 +173,7 @@ const UpdatePasswordForm = ({
   const { register, handleSubmit, errors, reset, watch } = useForm<
     UpdatePasswordFormValues
   >();
+
   const checkPassword = watch("password")?.split("") || [""];
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
@@ -197,14 +198,15 @@ const UpdatePasswordForm = ({
 
   const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
-  const validatePassword =
+  const checkingPasswordValidity = 
+    falsePasswordLength ||
     noLowerCasePassword ||
     noCapitalPassword ||
     noNumberPassword ||
-    noSpecialCharacterPassword ||
-    falsePasswordLength;
+    noSpecialCharacterPassword
+
   const submit = (data: UpdatePasswordFormValues) => {
-    if (!validatePassword) {
+    if (!checkingPasswordValidity) {
       onSubmit(data);
       reset({
         password: "",
@@ -234,7 +236,7 @@ const UpdatePasswordForm = ({
         error={errors.password?.message}
         required
       />{" "}
-      {validatePassword && (
+      {checkingPasswordValidity && (
         <PasswordRequirements
           falsePasswordLength
           noCapitalPassword

@@ -124,7 +124,7 @@ export default function UserForm(props: UserFormProps) {
         error={capitalize(errors?.passwordConfirmation?.message || "")}
       />
       <Input
-        label="Phone*"
+        label="Phone"
         name="phone"
         onKeyDown={(e) =>
           (e.keyCode === 69 ||
@@ -135,7 +135,7 @@ export default function UserForm(props: UserFormProps) {
           e.preventDefault()
         }
         type="number"
-        innerRef={register({ required: true })}
+        innerRef={register}
         error={capitalize(oc(errors).phone.message(""))}
       />
       <AsyncSelect
@@ -205,7 +205,6 @@ const validationSchema = yup.object().shape({
     .trim()
     .required()
     .oneOf([yup.ref("password")], "Password confirmation does not match Password"),
-  phone: yup.string().required(),
   policyCategoryIds: yup.array().required(),
   roleIds: yup.object().required(),
   departmentIds: yup.object().required(),

@@ -45,6 +45,11 @@
     border: 1px solid $pwc-orange;
     color: $pwc-orange;
   }
+
+  &:active {
+    background-color: darken($pwc-orange, 10) !important;
+    border-color: darken($pwc-orange, 10) !important;
+  }
 }
 
 .button.add {
@@ -170,7 +175,6 @@
     display: block;
   }
 }
-
 
 /* ========================================================================== */
 /* button width control */

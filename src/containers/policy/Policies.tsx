@@ -57,17 +57,21 @@ export default function Policies({ history }: RouteComponentProps) {
     skip: isAdminReviewer,
     variables: {
       isTree,
-      filter: isUser
-        ? {
-            ...(isTree && { ancestry_null: true }),
-            //title_or_policy_category_name_cont
-            title_or_policy_category_name_or_status_cont: searchQuery,
-            status_eq: "release",
-          }
-        : {
-            ...(isTree && { ancestry_null: true }),
-            title_or_policy_category_name_or_status_cont: searchQuery,
-          },
+      // filter: isUser
+      //   ? {
+      //       ...(isTree && { ancestry_null: true }),
+      //       //title_or_policy_category_name_cont
+      //       title_or_policy_category_name_or_status_cont: searchQuery,
+      //       status_eq: "release",
+      //     }
+      //   : {
+      //       ...(isTree && { ancestry_null: true }),
+      //       title_or_policy_category_name_or_status_cont: searchQuery,
+      //     },
+      filter: {
+        ...(isTree && { ancestry_null: true }),
+        title_or_policy_category_name_or_status_cont: searchQuery,
+      },
       limit,
       page,
     },
