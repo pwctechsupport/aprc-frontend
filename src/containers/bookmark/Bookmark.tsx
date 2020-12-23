@@ -172,30 +172,30 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                 </Col>
                 <Col
                   xs={12}
-                  md={4}
-                  className="text-right text-md-left my-2 my-sm-0"
+                  md={6}
+                  className="d-flex justify-content-end justify-content-md-between my-2 my-sm-0"
                 >
-                  <Tooltip description="Reset Search">
+                  <div>
+                    <Tooltip description="Reset Search">
+                      <Button
+                        type="reset"
+                        className="soft red ml-0 mr-2"
+                        color=""
+                        onClick={handleReset}
+                      >
+                        <PickIcon name="reloadOrange" />
+                      </Button>
+                    </Tooltip>
                     <Button
-                      type="reset"
-                      className="soft red ml-0 mr-4"
-                      color=""
-                      onClick={handleReset}
+                      loading={loading}
+                      type="submit"
+                      className="pwc ml-2"
+                      color="primary"
                     >
-                      <PickIcon name="reloadOrange" />
+                      Search
                     </Button>
-                  </Tooltip>
-                  <Button
-                    loading={loading}
-                    type="submit"
-                    className="pwc ml-2"
-                    color="primary"
-                  >
-                    Search
-                  </Button>
-                </Col>
-                <Col>
-                  <div className="text-right">
+                  </div>
+                  <div className="text-right ml-2">
                     <DialogButton
                       className="soft red"
                       disabled={!checked.length}
