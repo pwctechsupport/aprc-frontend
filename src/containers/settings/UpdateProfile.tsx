@@ -107,7 +107,7 @@ const UpdateProfileForm = ({
     defaultValues,
   });
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} className="mb-5 mb-md-0">
       <h4 style={{ fontSize: "23px" }}>Profile</h4>
       <Input
         name="name"
