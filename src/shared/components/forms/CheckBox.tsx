@@ -20,7 +20,7 @@ const CheckBox = ({
       style={style}
     >
       <Icon viewBox="0 0 24 24">
-        <Polyline points="20 6 9 17 4 12" />
+        <Polyline />
       </Icon>
     </StyledCheckbox>
   );
@@ -32,9 +32,9 @@ const Icon = styled.svg`
   stroke-width: 2px;
 `;
 
-export const Polyline = styled.polyline.attrs({ points: '20 6 9 17 4 12' })`
-  transform: translateY(-3px);
-`
+export const Polyline = styled.polyline.attrs({ points: "5,9 10,14 20,4" })`
+  /* transform: translateY(-3px); */
+`;
 
 interface Props {
   checked?: boolean;

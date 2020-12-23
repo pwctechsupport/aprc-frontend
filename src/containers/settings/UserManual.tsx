@@ -79,10 +79,11 @@ export default function UserManual() {
               <div className="d-flex justify-content-between">
                 <div>
                   <dt>Name</dt>
-                  <dd>{manual.name}</dd>
+                  <dd className="wrapped">{manual.name}</dd>
                   <br />
                   <dt>File size</dt>
-                  <dd>{manual.fileSize} bytes</dd>
+                  {/* fileSize is in byte so we divide it by 1 million */}
+                  <dd>{manual.fileSize && (manual.fileSize / 10**6)?.toFixed(2)} MB</dd> 
                   <br />
                   <dt>File type</dt>
                   <dd>{manual.fileType}</dd>

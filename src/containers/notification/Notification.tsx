@@ -78,10 +78,12 @@ const Notification = ({ history }: RouteComponentProps) => {
       });
     } else {
       setFilter({
-        title_or_originator_type_or_sender_user_name_cont: values.notif,
+        title_or_sender_user_name_cont: values.notif,
         created_at_gteq: constructDateFilter(labelTime),
       });
     }
+
+    handlePageChange(1)
   };
 
   const { data, loading, networkStatus } = useNotificationsQuery({
@@ -418,6 +420,7 @@ const Notification = ({ history }: RouteComponentProps) => {
             totalCount={totalCount}
             perPage={limit}
             onPageChange={handlePageChange}
+            currentPage={page}
           />
         </div>
         <Footer />
