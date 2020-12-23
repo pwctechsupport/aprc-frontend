@@ -83,7 +83,7 @@ export default function Homepage() {
                   >
               Welcome, {username}
             </h3>
-                  <HomepageSearch inputStyle={{ height: 50 }} />
+                  <HomepageSearch inputStyle={{ height: 50 }} placeholder="Search policies..." />
                 </ContentBox>
               </Container>
             </Centerer>
