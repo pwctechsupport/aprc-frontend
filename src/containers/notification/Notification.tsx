@@ -174,7 +174,7 @@ const Notification = ({ history }: RouteComponentProps) => {
       </Helmet>
 
       <Container fluid className="p-md-5 ">
-        <h2 style={{ fontSize: "23px" }} className="mb-5">
+        <h2 style={{ fontSize: "23px" }}>
           Notifications Manager
         </h2>
         {/* {NotificationSettings()} */}

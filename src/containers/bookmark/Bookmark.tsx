@@ -170,7 +170,11 @@ const Bookmark = ({ history }: RouteComponentProps) => {
                     value={[{ label: labelTime, value: 1 }]}
                   />
                 </Col>
-                <Col xs={12} md={4} className="text-right text-md-left">
+                <Col
+                  xs={12}
+                  md={4}
+                  className="text-right text-md-left my-2 my-sm-0"
+                >
                   <Tooltip description="Reset Search">
                     <Button
                       type="reset"
