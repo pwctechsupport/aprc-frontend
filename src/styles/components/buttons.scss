@@ -82,10 +82,14 @@
 .button.cancel {
   background: $soft-grey;
   border-radius: 3px;
-  width: 200px;
   color: black;
   border: 0;
   opacity: 0.9;
+
+  @media (min-width: $sm) {
+    width: 200px;
+  }
+
   &:hover {
     opacity: 1;
   }
