@@ -43,7 +43,7 @@ export default function ResourceBar({
   })
 
   return (
-    <ResourceBarContainer>
+    <ResourceBarContainer noGutters>
       <Col xs={8} md={6} className="wrapped">
         <ResourceBarDivider>
           <NavLink
