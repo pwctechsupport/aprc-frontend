@@ -7,6 +7,7 @@ import {
   FormFeedback,
   FormText
 } from "reactstrap";
+import cn from 'classnames';
 
 import Label from "./Label";
 
@@ -39,7 +40,7 @@ const Input = ({
   );
 
   return (
-    <FormGroup row={row} className={formGroupclassName}>
+    <FormGroup row={row} className={cn(formGroupclassName, inputProps.className)}>
       {label ? (
         <Label required={required} sm={row ? 3 : undefined}>
           {label}

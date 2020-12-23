@@ -15,6 +15,7 @@ import {
 } from "../../../shared/hooks/suggestions";
 import { PwcRadioInput } from "../../report/Report";
 import { useLoadPolicyCategories } from "../../user/components/UserForm";
+import styled from "styled-components";
 
 export interface PolicySearchFormValues {
   title?: string;
@@ -59,8 +60,8 @@ export default function PolicySearchForm({
   const loadPolicyReferences = useLoadPolicyReferences();
   return (
     <Form onSubmit={handleSubmit(onSubmit)} className="mx-3">
-      <Input innerRef={register} name="title" placeholder="By title..." />
-      <Input
+      <SInput innerRef={register} name="title" placeholder="By title..." />
+      <SInput
         innerRef={register}
         name="description"
         placeholder="By description..."
@@ -149,3 +150,9 @@ export default function PolicySearchForm({
     </Form>
   );
 }
+
+const SInput = styled(Input)`
+  input::placeholder {
+    font-size: 13.6px;
+  }
+`;
