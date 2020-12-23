@@ -44,8 +44,8 @@ export default function ResourceBar({
 
   return (
     <ResourceBarContainer>
-      <Col xs={8} md={6}>
-        <ResourceBarDivider width="40">
+      <Col xs={8} md={6} className="wrapped">
+        <ResourceBarDivider>
           <NavLink
             exact
             to={
