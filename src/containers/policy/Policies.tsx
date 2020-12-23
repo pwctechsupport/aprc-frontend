@@ -200,16 +200,21 @@ const PolicyTableRow = ({
   status?: any;
 }) => {
   const childs = policy.children || [];
-  const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
+  const [isAdmin, isAdminPreparer, isAdminReviewer, isUser] = useAccessRights([
     "admin",
     "admin_preparer",
     "admin_reviewer",
+    "user"
   ]);
-  const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
+  const isRelease = status.includes("release")
+  const isWaitingForApproval = status.includes("waiting_for_approval")
+  const isReadyForEdit = status.includes("ready_for_edit")
+  // const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
+  const isUserStatus = isRelease || isWaitingForApproval || isReadyForEdit
   return (
     <>
       {/* when user */}
-      {isUser && status === "release" && (
+      {isUser && isUserStatus && (
         <tr key={policy.id} onClick={() => onClick(policy.id)}>
           <td>
             <div
