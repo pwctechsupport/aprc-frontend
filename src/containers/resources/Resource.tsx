@@ -55,14 +55,14 @@ export default function Resource({
 
   const { data, loading } = useResourceQuery({
     variables: { id },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
   const category = data?.resource?.category;
 
   const { data: dataRating } = useResourceRatingsQuery({
     skip: category === "Flowchart",
     variables: { filter: { user_id_eq: userId, resource_id_eq: id } },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
   const name = data?.resource?.name || "";
   const totalRating = data?.resource?.totalRating || 0;

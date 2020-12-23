@@ -122,12 +122,19 @@ export default function UserRow({
 
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
-  const department = user?.department?.name || "";
+  let department = user?.department?.name || "";
   let name = user?.name || "";
 
-  if (draft) {
+if (draft) {
     const draftData: any = draft || {};
     name = draftData.name;
+    policyCategories = draftData.policyCategories.map(myFunction)
+    department = draftData.department.name
+    user = draftData
+  }
+
+  function myFunction(data: any) {
+    return data.name;
   }
 
   const handleGetRoles = useLoadRoles();
