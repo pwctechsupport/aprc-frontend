@@ -203,9 +203,10 @@ const PolicyBranch = ({
   const toggle = () => setIsOpen(!isOpen);
   const isActive = id === activeId;
   const hasChild = Array.isArray(children) && !!children.length;
-  const [isAdminReviewer, isAdminPreparer] = useAccessRights([
+  const [isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
     "admin_reviewer",
     "admin_preparer",
+    "user",
   ]);
   const childrenHasChildWhenUser = originalData?.children
     ?.map((a: any) => a.status)
@@ -213,11 +214,16 @@ const PolicyBranch = ({
   const reviewerHasChild =
     originalData?.children?.filter((a: any) => a.status !== "draft") || [];
   const grandpa = children?.map((a) => a.children).flat().length || 0;
+
+  const isRelease = status.includes("release")
+  const isWaitingForApproval = status.includes("waiting_for_approval")
+  const isReadyForEdit = status.includes("ready_for_edit")
+  const isUserStatus = isRelease || isWaitingForApproval || isReadyForEdit
   return (
     <div>
       <Fragment>
         {/* when the current user is just a user */}
-        {!(isAdminReviewer || isAdminPreparer) && status === "release" ? (
+        {isUser && isUserStatus ? (
           <Fragment>
             <SideBoxBranch
               className={classnames("d-flex align-items-center", {
