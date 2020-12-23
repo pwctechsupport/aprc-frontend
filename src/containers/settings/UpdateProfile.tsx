@@ -144,7 +144,12 @@ const UpdateProfileForm = ({
         error={errors.phone && errors.phone.message}
       />
       <div className="d-flex justify-content-end">
-        <Button type="submit" loading={submitting} className="pwc">
+        <Button
+          type="submit"
+          loading={submitting}
+          className="pwc"
+          style={{ width: 150 }}
+        >
           Save profile
         </Button>
       </div>
@@ -198,12 +203,12 @@ const UpdatePasswordForm = ({
 
   const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
-  const checkingPasswordValidity = 
+  const checkingPasswordValidity =
     falsePasswordLength ||
     noLowerCasePassword ||
     noCapitalPassword ||
     noNumberPassword ||
-    noSpecialCharacterPassword
+    noSpecialCharacterPassword;
 
   const submit = (data: UpdatePasswordFormValues) => {
     if (!checkingPasswordValidity) {
@@ -254,7 +259,12 @@ const UpdatePasswordForm = ({
         required
       />
       <div className="d-flex justify-content-end">
-        <Button className="pwc" type="submit" loading={submitting}>
+        <Button
+          className="pwc"
+          type="submit"
+          loading={submitting}
+          style={{ width: 150 }}
+        >
           Update password
         </Button>
       </div>
