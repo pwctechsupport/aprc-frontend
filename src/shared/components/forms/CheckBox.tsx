@@ -48,8 +48,14 @@ const StyledCheckbox = styled.div<Props>`
     props.checked ? `var(--tangerine)` : "var(--soft-grey)"};
   border-radius: 3px;
   transition: all 150ms;
+  transform: translateY(1px); //dirty
+  vertical-align: top;
 
   ${Icon} {
     visibility: ${(props) => (props.checked ? "visible" : "hidden")};
+  }
+
+  .form-check & + label {
+    width: 94%;
   }
 `;
