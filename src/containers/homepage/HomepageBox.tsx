@@ -26,8 +26,8 @@ export default function HomepageBox({
   const [textHeight, setTextHeight] = useState(0)
   const { height } = useWindowSize()
   const heigthAdjustment = open
-    ? `${(height * 58) / 100 - textHeight}px`
-    : undefined
+    ? `${(height * 89) / 100 - textHeight}px`
+    : `${(height * 48) / 100 - textHeight}px`
   return (
     <div
       className="my-2"
