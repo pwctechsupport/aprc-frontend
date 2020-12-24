@@ -38,7 +38,7 @@ const Controls = ({ history }: RouteComponentProps) => {
   const { limit, handlePageChange, page } = useListState({ limit: 10 });
   const { loading: loadingAdmin, data: dataAdmin } = useAdminControlsQuery({
     skip: isAdminReviewer,
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
     variables: {
       filter: isAdminPreparer ? {} : { draft_id_null: true },
       limit,
@@ -50,7 +50,7 @@ const Controls = ({ history }: RouteComponentProps) => {
     data: dataReviewer,
   } = useReviewerControlsStatusQuery({
     skip: isAdminPreparer || isUser,
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
     variables: {
       filter: {},
       limit,
