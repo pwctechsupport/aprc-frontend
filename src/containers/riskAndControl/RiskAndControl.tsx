@@ -97,13 +97,12 @@ export default function RiskAndControl({
   match,
   history,
 }: RouteComponentProps<TParams>) {
-  const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
+  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
-    "user"
   ]);
-  // const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
+  const isUser = !(isAdmin || isAdminReviewer || isAdminPreparer);
   const initialCollapse = ["Risks", "Controls", "Related policies"];
   const [collapse, setCollapse] = useState(initialCollapse);
   const toggleCollapse = (name: string) =>
@@ -1248,7 +1247,7 @@ export default function RiskAndControl({
               show={collapse.includes("Related policies")}
               onClick={toggleCollapse}
             >
-              <PoliciesList isUser={isUser} data={dataRisksnControl || {}} />
+              <PoliciesList data={dataRisksnControl || {}} />
             </Collapsible>
             <div style={{ borderBottom: " 1px solid #d85604" }}></div>
             <Collapsible

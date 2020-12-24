@@ -1,7 +1,12 @@
 import React from "react";
 import { PWCLink } from "./PoliciesTable";
 import EmptyAttribute from "./EmptyAttribute";
+import useAccessRights from "../hooks/useAccessRights";
 const PoliciesList = (data: any) => {
+  const [isUser] = useAccessRights([
+    "user"
+  ]);
+  const statusPolicy = ['waiting_for_approval', 'release', 'ready_for_edit']
   const newData = data?.data?.navigatorBusinessProcesses?.collection || [];
   const dataModifier = (a: any) => {
     for (let i = 0; i < a.length; ++i) {
@@ -12,44 +17,36 @@ const PoliciesList = (data: any) => {
     return a;
   };
   const policies = dataModifier(
+    isUser ? newData
+    .map((a: any) =>
+      a.policies.filter((b: any) => ( statusPolicy.includes(b.status)))
+      .map((c: any) => {
+        return { id: c.id, title: c.title};
+      })
+    )
+    .flat(10) || []
+    :
     newData
       .map((a: any) =>
         a.policies.map((b: any) => {
-          return { id: b.id, title: b.title, status: b.status };
+          return { id: b.id, title: b.title};
         })
       )
       .flat(10) || []
   );
-  const statusPolicy = ['waiting_for_approval', 'release', 'ready_for_edit']
   return (
     <>
       {policies.length ? (
         <ul>
-          {policies.map((a: any) => {
-            if(data.isUser){
-              if(statusPolicy.includes(a.status)){
-                return (
-                  <li key={a.id}>
-                    <div className="mb-3 d-flex justify-content-between">
-                      <PWCLink style={{ fontSize: "16px" }} to={`/policy/${a.id}`}>
-                        {a.title}
-                      </PWCLink>
-                    </div>
-                  </li>
-                )
-              }
-            } else {
-              return (
-              <li key={a.id}>
-                <div className="mb-3 d-flex justify-content-between">
-                  <PWCLink style={{ fontSize: "16px" }} to={`/policy/${a.id}`}>
-                    {a.title}
-                  </PWCLink>
-                </div>
-              </li>
-              )
-            }
-          })}
+          {policies.map((a: any) => (
+            <li key={a.id}>
+              <div className="mb-3 d-flex justify-content-between">
+                <PWCLink style={{ fontSize: "16px" }} to={`/policy/${a.id}`}>
+                  {a.title}
+                </PWCLink>
+              </div>
+            </li>
+          ))}
         </ul>
       ) : (
         <EmptyAttribute />
