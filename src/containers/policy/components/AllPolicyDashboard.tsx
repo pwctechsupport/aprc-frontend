@@ -6,6 +6,7 @@ import { usePolicyDashboardQuery } from "../../../generated/graphql";
 import PolicyChart from "./PolicyChart";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import styled from "styled-components";
+import Tooltip from "../../../shared/components/Tooltip";
 
 const AllPolicyDashboard = () => {
   const { data, loading } = usePolicyDashboardQuery();
@@ -127,7 +128,29 @@ const AllPolicyDashboard = () => {
               {tableData.map((item, index) => {
                 return (
                   <tr key={index}>
-                    <td>{item.label}</td>
+                    {item.label === "Reviewed" ? (
+                      <Tooltip description="Data with status : Waiting for Approval, Ready for Edit, and Release">
+                        <td>{item.label}</td>
+                      </Tooltip>
+                    ) : (
+                      <Fragment>
+                        {item.label === "Prepared" ? (
+                          <Fragment>
+                            {isAdminPreparer ? (
+                              <Tooltip description="Data with status : Draft and Waiting for Review">
+                                <td>{item.label}</td>
+                              </Tooltip>
+                            ) : (
+                              <Tooltip description="Data with status : Waiting for Review">
+                                <td>{item.label}</td>
+                              </Tooltip>
+                            )}
+                          </Fragment>
+                        ) : (
+                          <td>{item.label}</td>
+                        )}
+                      </Fragment>
+                    )}
                     <td>{item.subPolicy}</td>
                     <td>{item.risk}</td>
                     <td>{item.control}</td>

@@ -60,6 +60,10 @@ fragment userFragment on User {
     id
     name
   }
+  department {
+    id
+    name
+  }
 }
 
 fragment userRowFragment on User {

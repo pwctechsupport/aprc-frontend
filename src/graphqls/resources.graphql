@@ -222,6 +222,16 @@ query resource($id: ID!) {
           name
           id
           updatedAt
+          businessProcess {
+            id
+            name 
+          }
+          category
+          policies {
+            id
+            title
+            description
+          }
         }
       }
     }

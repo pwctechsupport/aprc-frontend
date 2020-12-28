@@ -40,7 +40,7 @@ const Risks = ({ history }: RouteComponentProps) => {
       limit,
       page,
     },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
   const {
     loading: loadingReviewer,
@@ -52,7 +52,7 @@ const Risks = ({ history }: RouteComponentProps) => {
       limit,
       page,
     },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
   const totalCount =
     dataAdmin?.preparerRisks?.metadata.totalCount ||

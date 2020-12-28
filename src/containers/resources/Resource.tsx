@@ -55,23 +55,25 @@ export default function Resource({
 
   const { data, loading } = useResourceQuery({
     variables: { id },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
-  const category = data?.resource?.category;
+  let category = data?.resource?.category;
 
   const { data: dataRating } = useResourceRatingsQuery({
     skip: category === "Flowchart",
     variables: { filter: { user_id_eq: userId, resource_id_eq: id } },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
   const name = data?.resource?.name || "";
   const totalRating = data?.resource?.totalRating || 0;
   const visit = data?.resource?.visit || 0;
   const resourceFileType = data?.resource?.resourceFileType;
-  const businessProcess = data?.resource?.businessProcess;
+  // const businessProcess = data?.resource?.businessProcess;
+  let businessProcessName = data?.resource?.businessProcess?.name;
+  let businessProcessId = data?.resource?.businessProcess?.id;
   const resuploadUrl = data?.resource?.resuploadUrl;
   const resuploadLink = data?.resource?.resuploadLink;
-  const policies = data?.resource?.policies || [];
+  let policies = data?.resource?.policies || [];
   const bps = data?.resource?.businessProcess;
   const draft = data?.resource?.draft?.objectResult;
   const hasEditAccess = data?.resource?.hasEditAccess || false;
@@ -84,6 +86,14 @@ export default function Resource({
     requestStatus,
     requestEditState,
   });
+
+if (draft) {
+  const draftData: any = draft || {};
+  category = draftData.category
+  policies = draftData.policies
+  businessProcessName = draftData.businessProcess.name
+  businessProcessId = draftData.businessProcess.id
+}
 
   const rating =
     dataRating?.resourceRatings?.collection.map((a) => a.rating).pop() || 0;
@@ -254,15 +264,17 @@ export default function Resource({
             <div className="mt-5 mt-lg-0">
               <h5>
                 Category:&nbsp;
-                <span className="text-orange">{category}</span>
+                <span className="text-orange">
+                  {category}
+                </span>
               </h5>
               {category === "Flowchart" ? (
                 <>
                   <h5 className="mt-5">Business Process:</h5>
                   <TangerineLink
-                    to={`/business-process/${businessProcess?.id}`}
+                    to={`/business-process/${businessProcessId}`}
                   >
-                    {businessProcess?.name}
+                    {businessProcessName}
                   </TangerineLink>
                 </>
               ) : (
@@ -273,8 +285,8 @@ export default function Resource({
                       <ul>
                         {
                           <li>
-                            <TangerineLink to={`/risk-and-control/${bps.id}`}>
-                              {bps.name}
+                            <TangerineLink to={`/risk-and-control/${businessProcessId}`}>
+                              {businessProcessName}
                             </TangerineLink>
                           </li>
                         }
