@@ -33,6 +33,7 @@ import {
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import PickIcon from "../../assets/Icons/PickIcon";
 import { Badge } from "../../shared/components/Badge";
+import { capitalCase } from "capital-case";
 // import styled from "styled-components";
 
 export default function Risk({
@@ -339,7 +340,7 @@ export default function Risk({
       },
       {
         label: "Status",
-        value: draft ? "Waiting for review" : "Release",
+        value: capitalCase(data?.risk?.status || ''),
       },
     ];
     return (
