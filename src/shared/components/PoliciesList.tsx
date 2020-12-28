@@ -17,23 +17,11 @@ const PoliciesList = (data: any) => {
     return a;
   };
   const policies = dataModifier(
-    isUser ? newData
-    .map((a: any) =>
-      a.policies.filter((b: any) => ( statusPolicy.includes(b.status)))
-      .map((c: any) => {
-        return { id: c.id, title: c.title};
-      })
-    )
-    .flat(10) || []
-    :
-    newData
-      .map((a: any) =>
-        a.policies.map((b: any) => {
-          return { id: b.id, title: b.title};
-        })
-      )
-      .flat(10) || []
-  );
+    (isUser ? newData.map((a: any) => a.policies.filter((b: any) => statusPolicy.includes(b.status))).flat(10) || [] : newData.map((a: any) => a.policies).flat(10) || [])
+    .map((c: any) => {
+      return { id: c.id, title: c.title};
+    })
+  )
   return (
     <>
       {policies.length ? (
