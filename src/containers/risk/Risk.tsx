@@ -379,17 +379,17 @@ export default function Risk({
   return (
     <div>
       <Helmet>
-        <title>{name} - Risk - PricewaterhouseCoopers</title>
+        <title>{draft ? draftName : name} - Risk - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb
         crumbs={[
           ["/risk", "Risks"],
-          ["/risk/" + id, name],
+          ["/risk/" + id, (draft ? draftName : name)],
         ]}
       />
       <Row>
         <Col>
-          <HeaderWithBackButton heading={name} draft={!!draft} />
+          <HeaderWithBackButton heading={draft ? draftName : name} draft={!!draft} />
         </Col>
         <Col>
           <div  className="d-flex justify-content-end mb-3">
