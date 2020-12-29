@@ -212,7 +212,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                 </td>
                 <td>{resource.businessProcess?.name}</td>
                 <td>
-                  <DateHover>{resource.updatedAt}</DateHover>
+                  <DateHover humanize={false}>{resource.updatedAt}</DateHover>
                 </td>
                 <td>{resource.createdBy}</td>
                 <td className="action">

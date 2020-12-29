@@ -36,6 +36,7 @@ import {
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import CheckBox from "../../shared/components/forms/CheckBox";
 import PickIcon from "../../assets/Icons/PickIcon";
+import DateHover from "../../shared/components/DateHover";
 // import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
@@ -324,9 +325,9 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       },
       { label: "Frequency", value: capitalCase(frequency) },
       // { label: "Status", value: capitalCase(status) },
-      { label: "Last updated", value: updatedAt },
+      { label: "Last updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
       { label: "Last updated by", value: lastUpdatedBy },
-      { label: "Created at", value: createdAt.split(" ")[0] },
+      { label: "Created at", value: <DateHover humanize={false}>{createdAt.split(" ")[0]}</DateHover> },
       { label: "Created by", value: createdBy },
     ];
     return (

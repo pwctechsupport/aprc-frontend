@@ -26,6 +26,7 @@ import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
+import DateHover from '../../../shared/components/DateHover';
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -227,7 +228,11 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                     ? "Waiting for review"
                     : "Release"}
                 </td>
-                <td>{policyCategory.updatedAt.split(" ")[0]}</td>
+                <td>
+                  <DateHover humanize={false}>
+                    {policyCategory.updatedAt.split(" ")[0]}
+                  </DateHover>
+                </td>
                 <td>{policyCategory.lastUpdatedBy}</td>
                 {isAdminReviewer ? (
                   <td className="action">

@@ -8,6 +8,7 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { previewHtml } from "../../shared/formatter";
 import { Row, Col } from "reactstrap";
 import TangerineLink from "../../shared/components/Link";
+import DateHover from '../../shared/components/DateHover';
 
 type TParams = { id: string };
 
@@ -50,7 +51,11 @@ const Reference = ({
           <Col>
             <Fragment>
               <dt> Created at </dt>
-              <dd>{createdAt.split("T")[0]}</dd>
+              <dd>
+                <DateHover humanize={false}>
+                  {createdAt.split("T")[0]}
+                </DateHover>
+              </dd>
             </Fragment>
             <Fragment>
               <dt>Created by</dt>
@@ -73,7 +78,11 @@ const Reference = ({
           <Col>
             <Fragment>
               <dt> Last updated</dt>
-              <dd>{updatedAt.split("T")[0]}</dd>
+              <dd>
+                <DateHover humanize={false}>
+                  {updatedAt.split("T")[0]}
+                </DateHover>
+              </dd>
             </Fragment>
             <Fragment>
               <dt>Last updated by</dt>
