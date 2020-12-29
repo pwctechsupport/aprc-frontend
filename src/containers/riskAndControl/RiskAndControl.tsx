@@ -440,8 +440,7 @@ export default function RiskAndControl({
       return (
         <div className="d-flex">
           <DialogButton
-            color="danger"
-            className="mr-2"
+            className="mr-2 button cancel"
             onConfirm={() => reviewRisk({ publish: false })}
             loading={reviewMutationInfo.loading}
           >
@@ -717,8 +716,7 @@ export default function RiskAndControl({
       return (
         <div className="d-flex">
           <DialogButton
-            color="danger"
-            className="mr-2"
+            className="mr-2 button cancel"
             onConfirm={() => review({ publish: false })}
             loading={reviewMutationControlInfo.loading}
           >
