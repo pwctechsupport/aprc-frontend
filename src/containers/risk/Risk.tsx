@@ -66,6 +66,8 @@ export default function Risk({
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
   const requestEditState = data?.risk?.requestEdit?.state;
+  const draftName = draft?.name
+  const businessProcessesData = data?.risk?.businessProcesses
 
   const premise = useEditState({
     draft,
@@ -303,10 +305,13 @@ export default function Risk({
   const renderRisk = () => {
     const details1 = [
       { label: "Risk ID", value: id },
-      { label: "Name", value: name },
+      { 
+        label: "Name", 
+        value: draft ? draftName : name 
+      },
       {
         label: "Business process",
-        value: bps.length ? bps?.join(", ") : "",
+        value: businessProcessesData?.map(item => item.name).join(", "),
       },
       {
         label: "Level of risk",
