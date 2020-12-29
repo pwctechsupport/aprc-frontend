@@ -128,29 +128,33 @@ const AllPolicyDashboard = () => {
               {tableData.map((item, index) => {
                 return (
                   <tr key={index}>
-                    {item.label === "Reviewed" ? (
-                      <Tooltip description="Data with status : Waiting for Approval, Ready for Edit, and Release">
-                        <td>{item.label}</td>
-                      </Tooltip>
-                    ) : (
-                      <Fragment>
-                        {item.label === "Prepared" ? (
-                          <Fragment>
-                            {isAdminPreparer ? (
-                              <Tooltip description="Data with status : Draft and Waiting for Review">
-                                <td>{item.label}</td>
-                              </Tooltip>
-                            ) : (
-                              <Tooltip description="Data with status : Waiting for Review">
-                                <td>{item.label}</td>
-                              </Tooltip>
-                            )}
-                          </Fragment>
-                        ) : (
-                          <td>{item.label}</td>
-                        )}
+                    <td>
+                      {item.label === "Reviewed" ? (
+                        <Tooltip description="Data with status : Waiting for Approval, Ready for Edit, and Release">
+                          {item.label}
+                        </Tooltip>
+                      ) : (
+                        <Fragment>
+                          {item.label === "Prepared" ? (
+                            <Fragment>
+                              {isAdminPreparer ? (
+                                <Tooltip description="Data with status : Draft and Waiting for Review">
+                                  {item.label}
+                                </Tooltip>
+                              ) : (
+                                <Tooltip description="Data with status : Waiting for Review">
+                                  {item.label}
+                                </Tooltip>
+                              )}
+                            </Fragment>
+                          ) : (
+                            <Fragment>
+                              {item.label}
+                            </Fragment>
+                          )}
                       </Fragment>
                     )}
+                    </td>
                     <td>{item.subPolicy}</td>
                     <td>{item.risk}</td>
                     <td>{item.control}</td>
