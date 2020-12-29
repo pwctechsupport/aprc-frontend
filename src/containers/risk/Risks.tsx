@@ -23,6 +23,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import DateHover from '../../shared/components/DateHover';
 
 const Risks = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -215,7 +216,11 @@ const Risks = ({ history }: RouteComponentProps) => {
                   {capitalCase(risk.typeOfRisk?.split("_").join(" ") || "")}
                 </td>
                 <td>{bps}</td>
-                <td>{risk.updatedAt?.split(" ")[0]}</td>
+                <td>
+                  <DateHover humanize={false}>
+                    {risk.updatedAt?.split(" ")[0]}
+                  </DateHover>
+                </td>
                 <td>{risk.lastUpdatedBy}</td>
                 <td>{capitalCase(risk.status || '')}</td>
                 {isAdminReviewer ? (

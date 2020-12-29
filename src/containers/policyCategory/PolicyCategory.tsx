@@ -31,6 +31,7 @@ import PolicyCategoryForm, {
   PolicyCategoryFormValues,
 } from "./components/PolicyCategoryForm";
 import { Row, Col } from "reactstrap";
+import DateHover from '../../shared/components/DateHover';
 
 const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -274,7 +275,11 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       <div>
         <Fragment>
           <dt>Created at</dt>
-          <dd>{createdAt}</dd>
+          <dd>
+            <DateHover humanize={false}>
+              {createdAt}
+            </DateHover>
+          </dd>
         </Fragment>
         <Fragment>
           <dt>Created by</dt>

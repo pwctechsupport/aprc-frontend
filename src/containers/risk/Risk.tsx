@@ -5,6 +5,7 @@ import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Col, Row } from "reactstrap";
+import get from "lodash/get";
 import {
   LevelOfRisk,
   TypeOfRisk,
@@ -34,6 +35,7 @@ import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import PickIcon from "../../assets/Icons/PickIcon";
 import { Badge } from "../../shared/components/Badge";
 import { capitalCase } from "capital-case";
+import DateHover from '../../shared/components/DateHover';
 // import styled from "styled-components";
 
 export default function Risk({
@@ -59,10 +61,10 @@ export default function Risk({
   const levelOfRisk = draft?.levelOfRisk || data?.risk?.levelOfRisk || "";
   const typeOfRisk = draft?.typeOfRisk || data?.risk?.typeOfRisk || "";
   const bps = data?.risk?.businessProcess || [];
-  const updatedAt = data?.risk?.updatedAt;
+  const updatedAt = draft ? get(data, "risk.draft.objectResult.updatedAt", "") : data?.risk?.updatedAt;
   const updatedBy = data?.risk?.lastUpdatedBy;
   const createdBy = data?.risk?.createdBy;
-  const createdAt = data?.risk?.createdAt;
+  const createdAt = draft ? get(data, "risk.draft.objectResult.createdAt", "") : data?.risk?.createdAt;
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
   const requestEditState = data?.risk?.requestEdit?.state;
@@ -329,7 +331,7 @@ export default function Risk({
     const details2 = [
       {
         label: "Last updated",
-        value: draft ? updatedAt?.split("T")[0] : updatedAt?.split(" ")[0],
+        value: draft ? <DateHover humanize={false}>{updatedAt?.split("T")[0]}</DateHover> : <DateHover humanize={false}>{updatedAt?.split(" ")[0]}</DateHover>,
       },
       {
         label: "Updated by",
@@ -337,7 +339,7 @@ export default function Risk({
       },
       {
         label: "Created at",
-        value: draft ? createdAt?.split("T")[0] : createdAt?.split(" ")[0],
+        value: draft ? <DateHover humanize={false}>{createdAt?.split("T")[0]}</DateHover> : <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover>,
       },
       {
         label: "Created by",

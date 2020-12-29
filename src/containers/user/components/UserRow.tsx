@@ -31,6 +31,7 @@ import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
+import DateHover from '../../../shared/components/DateHover';
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -214,8 +215,16 @@ if (draft) {
             <span className="text-orange">[Approved] </span>
           )}
         </td>
-        <td>{createdAt.split(" ")[0]}</td>
-        <td>{updatedAt.split(" ")[0]}</td>
+        <td>
+          <DateHover humanize={false}>
+            {createdAt.split(" ")[0]}
+          </DateHover>
+        </td>
+        <td>
+          <DateHover humanize={false}>
+            {updatedAt.split(" ")[0]}
+          </DateHover>
+        </td>
 
         <td>
           {/* premis 1 None */}

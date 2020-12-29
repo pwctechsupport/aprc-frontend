@@ -23,6 +23,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import CreateBusinessProcess from "./CreateBusinessProcess";
+import DateHover from '../../shared/components/DateHover';
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -210,9 +211,17 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                   ) : null}
 
                   <td className="wrapped">{item.name}</td>
-                  <td>{item.updatedAt.split("T")[0]}</td>
+                  <td>
+                    <DateHover humanize={false}>
+                      {item.updatedAt.split("T")[0]}
+                    </DateHover>
+                  </td>
                   <td>{item.lastUpdatedBy}</td>
-                  <td>{item.createdAt.split("T")[0]}</td>
+                  <td>
+                    <DateHover humanize={false}>
+                      {item.createdAt.split("T")[0]}
+                    </DateHover>
+                  </td>
                   <td>{item.createdBy}</td>
                   {isAdminReviewer ? (
                     <td className="action">

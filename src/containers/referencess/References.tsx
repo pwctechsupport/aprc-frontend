@@ -33,6 +33,7 @@ import {
   notifySuccess,
 } from "../../shared/utils/notif";
 import { gql } from "apollo-boost";
+import DateHover from "../../shared/components/DateHover";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -312,9 +313,17 @@ const ReferenceRow = ({
           reference.policies?.map((a) => a.title).join(", ")
         )}
       </td>
-      <td>{reference.updatedAt.split("T")[0]}</td>
+      <td>
+        <DateHover humanize={false}>
+          {reference.updatedAt.split("T")[0]}
+        </DateHover>
+      </td>
       <td>{reference.lastUpdatedBy}</td>
-      <td>{reference.createdAt.split("T")[0]}</td>
+      <td>
+        <DateHover humanize={false}>
+          {reference.createdAt.split("T")[0]}
+        </DateHover>
+      </td>
       <td>{reference.createdBy}</td>
       {isAdmin || isAdminReviewer || isAdminPreparer ? (
         <td

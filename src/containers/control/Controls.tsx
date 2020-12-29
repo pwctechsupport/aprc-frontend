@@ -23,6 +23,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import DateHover from '../../shared/components/DateHover';
 
 const Controls = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -228,7 +229,9 @@ const Controls = ({ history }: RouteComponentProps) => {
                     <td>{control.controlOwner?.join(", ")}</td>
                     <td>{capitalCase(control?.status || '')}</td>
                     <td>
-                      {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}
+                      <DateHover humanize={false}>
+                        {control.updatedAt ? control.updatedAt.split(" ")[0] : ""}
+                      </DateHover>
                     </td>
                     {/* <td>{control.lastUpdatedBy}</td> */}
                     {isAdminReviewer ? (
