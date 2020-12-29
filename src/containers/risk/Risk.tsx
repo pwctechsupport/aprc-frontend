@@ -66,6 +66,8 @@ export default function Risk({
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
   const requestEditState = data?.risk?.requestEdit?.state;
+  const draftName = draft?.name
+  const businessProcessesData = data?.risk?.businessProcesses
 
   const premise = useEditState({
     draft,
@@ -303,10 +305,13 @@ export default function Risk({
   const renderRisk = () => {
     const details1 = [
       { label: "Risk ID", value: id },
-      { label: "Name", value: name },
+      { 
+        label: "Name", 
+        value: draft ? draftName : name 
+      },
       {
         label: "Business process",
-        value: bps.length ? bps?.join(", ") : "",
+        value: businessProcessesData?.map(item => item.name).join(", "),
       },
       {
         label: "Level of risk",
@@ -374,17 +379,17 @@ export default function Risk({
   return (
     <div>
       <Helmet>
-        <title>{name} - Risk - PricewaterhouseCoopers</title>
+        <title>{draft ? draftName : name} - Risk - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb
         crumbs={[
           ["/risk", "Risks"],
-          ["/risk/" + id, name],
+          ["/risk/" + id, (draft ? draftName : name)],
         ]}
       />
       <Row>
         <Col>
-          <HeaderWithBackButton heading={name} draft={!!draft} />
+          <HeaderWithBackButton heading={draft ? draftName : name} draft={!!draft} />
         </Col>
         <Col>
           <div  className="d-flex justify-content-end mb-3">
