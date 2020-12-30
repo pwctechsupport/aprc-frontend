@@ -393,7 +393,7 @@ const ControlForm = ({
           <Table>
             <thead>
               <tr>
-                <th>Activity</th>
+                <th>Title</th>
                 <th>Guidance</th>
                 <th></th>
               </tr>
