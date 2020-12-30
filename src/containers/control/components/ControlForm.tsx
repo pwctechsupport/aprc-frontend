@@ -273,26 +273,6 @@ const ControlForm = ({
           error={errors.riskIds && "Risks is a required field"}
         />
 
-        <FormGroup check className="mb-3">
-          <CheckBox2
-            name="keyControl"
-            innerRef={register}
-            id="keyControlCheckbox"
-          />
-          <Label className="ml-2" for="keyControlCheckbox" check>
-            Key control
-          </Label>
-        </FormGroup>
-
-        <Select
-          options={newLabelTypeOfControls}
-          onChange={handleSelectChange("typeOfControl")}
-          label="Type of controls*"
-          placeholder="Type of controls"
-          defaultValue={pDefVal(typeOfControl, typeOfControls)}
-          error={errors.typeOfControl && "Type of Controls is a required field"}
-        />
-
         <FormSelect
           isMulti
           isDisabled={checkRisk.length ? false : true}
@@ -312,6 +292,26 @@ const ControlForm = ({
           error={
             errors.businessProcessIds && "Business Process is a required field"
           }
+        />
+
+        <FormGroup check className="mb-3">
+          <CheckBox2
+            name="keyControl"
+            innerRef={register}
+            id="keyControlCheckbox"
+          />
+          <Label className="ml-2" for="keyControlCheckbox" check>
+            Key control
+          </Label>
+        </FormGroup>
+
+        <Select
+          options={newLabelTypeOfControls}
+          onChange={handleSelectChange("typeOfControl")}
+          label="Type of controls*"
+          placeholder="Type of controls"
+          defaultValue={pDefVal(typeOfControl, typeOfControls)}
+          error={errors.typeOfControl && "Type of Controls is a required field"}
         />
 
         <Select
