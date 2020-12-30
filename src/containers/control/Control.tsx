@@ -380,7 +380,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
               <thead>
                 <tr>
                   <th style={{ fontSize: "13px", fontWeight: "normal" }}>
-                    Control activity
+                    Title
                   </th>
                   <th style={{ fontSize: "13px", fontWeight: "normal" }}>
                     Guidance
