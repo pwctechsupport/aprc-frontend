@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { get } from "lodash";
-import pwcLogo from "../../assets/images/pwc-logo.png";
+import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
 import { useUpdatePasswordMutation } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import {  H1, Image, Label } from "./Login";
@@ -111,8 +111,8 @@ const ResetPassword = ({ history, location }: RouteComponentProps) => {
       <Row className="d-flex justify-content-center">
         <Col xs={12} md={4} >
             <div className="text-center">
-              <Image src={pwcLogo} alt="pwc-logo" className="mt-3" />
-              <H1 className="mt-4">Change Password</H1>
+              <Image src={pwcLogoOutline} alt="pwc-logo" className="mt-3" />
+              <H1 style={{fontSize: '16px'}}>Change Password</H1>
             </div>
             <Form onSubmit={handleSubmit(onSubmit)}>
               <div className="my-4">
