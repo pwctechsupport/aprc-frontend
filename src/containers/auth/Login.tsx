@@ -191,7 +191,7 @@ export const Form = styled.form`
 `;
 
 export const Image = styled.img`
-  width: 230px;
+  width: 200px;
   height: auto;
   @media (max-width: 760px) {
     width: 100px;
