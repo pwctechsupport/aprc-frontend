@@ -170,6 +170,7 @@ const PolicyTableRow = ({
               <MdSubdirectoryArrowRight color="grey" className="mr-1" />
             )}
             <PWCLink
+              className="wrapped"
               to={isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`}
             >
               {policy.title}

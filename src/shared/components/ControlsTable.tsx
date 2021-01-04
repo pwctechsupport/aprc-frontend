@@ -121,6 +121,7 @@ export default function ControlsTable({
                     <tr key={control.id}>
                       <td>
                         <PWCLink
+                          className="wrapped"
                           to={`/policy/${policyId}/details/control/${control.id}`}
                           onClick={() => {
                             setControlId(control.id);
@@ -144,6 +145,7 @@ export default function ControlsTable({
                 <tr key={control.id}>
                   <td>
                     <PWCLink
+                      className="wrapped"
                       to={`/policy/${policyId}/details/control/${control.id}`}
                       onClick={() => {
                         setControlId(control.id);
