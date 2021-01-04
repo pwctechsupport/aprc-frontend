@@ -95,6 +95,7 @@ const BusinessProcessList = ({ dataPolicy }: props) => {
           <li key={bp.id}>
             <div className="mb-3 d-flex justify-content-between">
               <PWCLink
+                className="wrapped"
                 style={{ fontSize: "14px" }}
                 to={`/risk-and-control/${bp.id}`}
               >

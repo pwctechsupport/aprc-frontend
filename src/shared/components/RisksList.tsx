@@ -105,6 +105,7 @@ RisksListProps) {
               <li key={risk.id}>
                 <div className="mb-3 d-flex justify-content-between">
                   <PWCLink
+                    className="wrapped"
                     to={`/policy/${policyId}/details/risk/${risk.id}`}
                     onClick={() => setRiskId(risk.id)}
                     style={{ fontSize: "14px" }}
@@ -127,6 +128,7 @@ RisksListProps) {
           <li key={risk.id}>
             <div className="mb-3 d-flex justify-content-between">
               <PWCLink
+                className="wrapped"
                 to={`/policy/${policyId}/details/risk/${risk.id}`}
                 onClick={() => setRiskId(risk.id)}
                 style={{ fontSize: "14px" }}

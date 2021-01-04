@@ -68,7 +68,7 @@ export default function NewNavbar() {
       <StyledNavbarBrand tag={Link} to="/">
         <Image src={pwcLogo} alt="PwC" />
         <StraightLine />
-        <div>eGRC</div>
+        <div style={{fontSize: '15px'}}>Automated Policy, <br></br>Risk and Control <br></br>Management Tool</div>
       </StyledNavbarBrand>
       <NavbarToggler onClick={toggle} />
       <Collapse isOpen={isOpen} navbar>

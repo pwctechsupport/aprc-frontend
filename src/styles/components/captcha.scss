@@ -2,17 +2,25 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 255px;
+  // max-width: 255px;
   background-color: #eee;
   border-radius: 6px;
   padding: 10px;
   box-sizing: border-box;
+  margin: 20px 0 20px 0;
+  @media (max-height: 568px) {
+    margin: 10px 0 10px 0;
+    padding: 6px;
+  }
 }
 
 .rnc-row {
   display: flex;
   align-items: stretch;
   margin: 0 0 10px 0;
+  @media (max-height: 568px) {
+    margin: 0 0 6px 0;
+  }
 }
 
 .rnc-column {
@@ -23,6 +31,8 @@
 }
 
 .rnc-canvas {
+  display: flex;
+  flex: auto;
   box-sizing: border-box;
   background-color: #fff;
   border-radius: 3px;
@@ -37,8 +47,8 @@
   color: inherit;
   border: none;
   padding: 0;
-  width: 25px;
-  height: 20px;
+  width: 60px;
+  height: 22px;
   box-sizing: border-box;
   border-radius: 3px;
 }
