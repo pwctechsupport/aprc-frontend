@@ -176,7 +176,7 @@ export const LoginBox = styled.div`
   border-radius: 3px;
   background: rgba(255,255,255,.7);
   @media (max-height: 568px) {
-    margin-top: 7px;
+    margin-top: 5px;
   }
 `
 export const Container = styled.div`
