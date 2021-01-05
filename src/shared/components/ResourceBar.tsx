@@ -43,9 +43,9 @@ export default function ResourceBar({
   })
 
   return (
-    <ResourceBarContainer>
-      <Col xs={8} md={6}>
-        <ResourceBarDivider width="40">
+    <ResourceBarContainer noGutters>
+      <Col xs={8} md={6} className="wrapped">
+        <ResourceBarDivider>
           <NavLink
             exact
             to={
@@ -53,6 +53,7 @@ export default function ResourceBar({
                 ? `/policy/${policyIdsWithoutChildren}/resources/${id}`
                 : `/risk-and-control/${bPId}/resources/${id}`
             }
+            className="link"
           >
             <ResourceName
               onClick={() => {
@@ -104,7 +105,7 @@ export default function ResourceBar({
             totalRating={totalRating}
             // onStarClick={handleStarClick}
           />
-          <ResourceViewCount className="views">{visit} Views</ResourceViewCount>
+          <ResourceViewCount className="views">{visit} Downloads</ResourceViewCount>
         </ResourceBarDivider>
       </Col>
     </ResourceBarContainer>
@@ -134,10 +135,10 @@ const ResourceName = styled.div`
   font-weight: bold;
   font-size: 18px;
   line-height: 20px;
-  color: #d85604;
   cursor: pointer;
-`
+`;
 
 const ResourceViewCount = styled.div`
   font-size: 12px;
 `
+

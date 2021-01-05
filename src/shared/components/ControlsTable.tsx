@@ -16,12 +16,14 @@ import Table from "./Table";
 import { oc } from "ts-optchain";
 import useAccessRights from "../hooks/useAccessRights";
 import { PWCLink } from "./PoliciesTable";
+import { capitalCase } from "capital-case";
 
 interface ControlsTableProps {
   // controls: Control[];
   // editControl?: Function;
   data?: PolicyQuery;
   setControlId?: any;
+  subPoliciesStatus?: any;
 }
 
 export default function ControlsTable({
@@ -29,11 +31,13 @@ export default function ControlsTable({
   // editControl,
   data,
   setControlId,
+  subPoliciesStatus,
 }: ControlsTableProps) {
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
+    "user",
   ]);
   const policyId = data?.policy?.id;
   const controlsWithoutChildren = oc(data).policy.controls([]);
@@ -81,12 +85,11 @@ export default function ControlsTable({
   const [newDataControls, setNewDataControls] = useState(newData);
   useEffect(() => {
     if (
-      !(isAdmin || isAdminReviewer || isAdminPreparer) &&
-      newData === newDataControls
+      isUser && newData === newDataControls
     ) {
       setNewDataControls(newData.filter((a) => a.status === "release"));
     }
-  }, [isAdmin, isAdminReviewer, isAdminPreparer, newData, newDataControls]);
+  }, [isAdmin, isAdminReviewer, isAdminPreparer, isUser, newData, newDataControls]);
 
   return (
     <Table responsive>
@@ -94,37 +97,72 @@ export default function ControlsTable({
         <tr>
           <th style={{ width: "14.28%" }}>Description</th>
           <th style={{ width: "14.28%" }}>Frequency</th>
-          <th style={{ width: "14.28%" }}>Type of Control</th>
+          <th style={{ width: "14.28%" }}>Type of control</th>
           <th style={{ width: "14.28%" }}>Nature</th>
           <th style={{ width: "14.28%" }}>Assertion</th>
           <th style={{ width: "14.28%" }}>IPO</th>
-          <th style={{ width: "14.28%" }}>Control Owner</th>
+          <th style={{ width: "14.28%" }}>Control owner</th>
           {/* {editControl && <th />} */}
         </tr>
       </thead>
       <tbody>
         {dataModifier(newDataControls).length ? (
           <Fragment>
-            {dataModifier(newDataControls)?.map((control: any) => (
-              <tr key={control.id}>
-                <td>
-                  <PWCLink
-                    to={`/policy/${policyId}/details/control/${control.id}`}
-                    onClick={() => {
-                      setControlId(control.id);
-                    }}
-                  >
-                    {control.description}
-                  </PWCLink>
-                </td>
-                <td>{control.frequency || ""}</td>
-                <td>{control.typeOfControl || ""}</td>
-                <td>{control.nature || ""}</td>
-                <td>{control.assertion.join(", ") || ""}</td>
-                <td>{control.ipo.join(", ") || ""}</td>
-                <td>{control.controlOwner?.join(", ")}</td>
-              </tr>
-            ))}
+            {isUser ? (
+              <Fragment>
+                {!subPoliciesStatus.includes('release') ? (
+                  <tr>
+                    <td colSpan={7}>
+                      <EmptyAttribute />
+                    </td>
+                  </tr>
+                ) : (
+                  dataModifier(newDataControls)?.map((control: any) => (
+                    <tr key={control.id}>
+                      <td>
+                        <PWCLink
+                          className="wrapped"
+                          to={`/policy/${policyId}/details/control/${control.id}`}
+                          onClick={() => {
+                            setControlId(control.id);
+                          }}
+                        >
+                          {control.description}
+                        </PWCLink>
+                      </td>
+                      <td>{capitalCase(control.frequency) || ""}</td>
+                      <td>{capitalCase(control.typeOfControl) || ""}</td>
+                      <td>{capitalCase(control.nature) || ""}</td>
+                      <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
+                      <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
+                      <td>{control.controlOwner?.join(", ")}</td>
+                    </tr>
+                  ))
+                )}
+              </Fragment>
+            ) : (
+              dataModifier(newDataControls)?.map((control: any) => (
+                <tr key={control.id}>
+                  <td>
+                    <PWCLink
+                      className="wrapped"
+                      to={`/policy/${policyId}/details/control/${control.id}`}
+                      onClick={() => {
+                        setControlId(control.id);
+                      }}
+                    >
+                      {control.description}
+                    </PWCLink>
+                  </td>
+                  <td>{capitalCase(control.frequency) || ""}</td>
+                  <td>{capitalCase(control.typeOfControl) || ""}</td>
+                  <td>{capitalCase(control.nature) || ""}</td>
+                  <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
+                  <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
+                  <td>{control.controlOwner?.join(", ")}</td>
+                </tr>
+              ))
+            )}
           </Fragment>
         ) : (
           <tr>

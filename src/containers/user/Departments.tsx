@@ -155,17 +155,17 @@ const Departments = ({ history }: RouteComponentProps) => {
         >
           <thead>
             <tr>
-              <th style={{ width: "20%" }}>Department ID</th>
+              <th className="text-center" style={{ width: "15%" }}>Department ID</th>
               <th style={{ width: "20%" }}>Name</th>
               <th style={{ width: "20%" }}>Created At</th>
               <th style={{ width: "20%" }}>Last Updated</th>
-              <th style={{ width: "20%" }}>Action</th>
+              <th style={{ width: "10%" }}>Action</th>
             </tr>
           </thead>
           <tbody>
             {departments?.map((department, index) => (
               <tr key={index}>
-                <td>{department.id}</td>
+                <td className="text-center">{department.id}</td>
                 <td>
                   {isEdit && selected === department.id ? (
                     <Input
@@ -181,30 +181,30 @@ const Departments = ({ history }: RouteComponentProps) => {
                   )}
                 </td>
                 <td>
-                  <DateHover>{department.createdAt}</DateHover>
+                  <DateHover humanize={false}>{department.createdAt}</DateHover>
                 </td>
                 <td>
-                  <DateHover>{department.updatedAt}</DateHover>
+                  <DateHover humanize={false}>{department.updatedAt}</DateHover>
                 </td>
                 <td>
                   {isEdit && selected === department.id ? (
-                    <Fragment>
-                      <DialogButton
-                        color="primary"
-                        onConfirm={updating.handleSubmit(handleUpdate)}
-                        className="pwc mr-1"
-                        loading={updateM.loading}
-                      >
-                        Save
-                      </DialogButton>
+                    <div className="d-flex align-items-center">
                       <StyledDialogButton
                         loading={destroyM.loading}
-                        className="ml-1 black"
+                        className="cancel w-95px"
                         onConfirm={() => toggleEdit(department.id)}
                       >
                         Cancel
                       </StyledDialogButton>
-                    </Fragment>
+                      <DialogButton
+                        color="primary"
+                        onConfirm={updating.handleSubmit(handleUpdate)}
+                        className="add ml-1"
+                        loading={updateM.loading}
+                      >
+                        Save
+                      </DialogButton>
+                    </div>
                   ) : (
                     <Fragment>
                       <Fragment>

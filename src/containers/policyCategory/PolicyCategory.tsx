@@ -25,11 +25,13 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import PolicyCategoryForm, {
   PolicyCategoryFormValues,
 } from "./components/PolicyCategoryForm";
 import { Row, Col } from "reactstrap";
+import DateHover from '../../shared/components/DateHover';
 
 const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -56,7 +58,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       limit: 1000,
     },
   });
-  const policiesData = policiesDataRaw.data?.preparerPolicies?.collection || [];
+
   const createdAt = data?.policyCategory?.createdAt.split(" ")[0];
   const createdBy = data?.policyCategory?.createdBy;
   const lastUpdatedBy = data?.policyCategory?.lastUpdatedBy;
@@ -114,7 +116,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewPolicyCategory({ variables: { id, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
@@ -165,7 +167,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
 
   const defaultValues = {
     name,
-    policies: policiesData.map(toLabelValue),
+    policies: data?.policyCategory?.policies?.map(toLabelValue),
   };
 
   const renderPolicyCategoryAction = () => {
@@ -273,7 +275,11 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       <div>
         <Fragment>
           <dt>Created at</dt>
-          <dd>{createdAt}</dd>
+          <dd>
+            <DateHover humanize={false}>
+              {createdAt}
+            </DateHover>
+          </dd>
         </Fragment>
         <Fragment>
           <dt>Created by</dt>
@@ -286,11 +292,11 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
         {/* <h6 className="mt-4"> </h6> */}
         <Fragment>
           <dt>Related policies</dt>
-          {policiesData.length ? (
+          {data?.policyCategory?.policies?.length ? (
             <ul>
-              {policiesData.map((policy) => (
+              {data?.policyCategory?.policies?.map((policy) => (
                 <li key={policy.id}>
-                  <Link to={`/policy/${policy.id}`}>{policy.title}</Link>
+                  <Link to={`/policy/${policy.id}`} className="link">{policy.title}</Link>
                 </li>
               ))}
             </ul>
@@ -309,7 +315,7 @@ const PolicyCategory = ({ match, history, location }: RouteComponentProps) => {
       </Helmet>
       <BreadCrumb
         crumbs={[
-          ["/policy-category", "Policy category"],
+          ["/policy-category", "Policy Category"],
           ["/policy-category/" + id, name],
         ]}
       />

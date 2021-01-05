@@ -20,7 +20,7 @@ const CheckBox = ({
       style={style}
     >
       <Icon viewBox="0 0 24 24">
-        <polyline points="20 6 9 17 4 12" />
+        <Polyline />
       </Icon>
     </StyledCheckbox>
   );
@@ -31,6 +31,11 @@ const Icon = styled.svg`
   stroke: white;
   stroke-width: 2px;
 `;
+
+export const Polyline = styled.polyline.attrs({ points: "5,9 10,14 20,4" })`
+  /* transform: translateY(-3px); */
+`;
+
 interface Props {
   checked?: boolean;
 }
@@ -43,8 +48,14 @@ const StyledCheckbox = styled.div<Props>`
     props.checked ? `var(--tangerine)` : "var(--soft-grey)"};
   border-radius: 3px;
   transition: all 150ms;
+  transform: translateY(1px); //dirty
+  vertical-align: top;
 
   ${Icon} {
     visibility: ${(props) => (props.checked ? "visible" : "hidden")};
+  }
+
+  .form-check & + label {
+    width: 94%;
   }
 `;

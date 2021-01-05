@@ -10,6 +10,7 @@ import {
 import HeaderWithBackButton from "../../shared/components/Header";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import { notifyGraphQLErrors } from "../../shared/utils/notif";
 
 const CreateRisk = ({ history }: RouteComponentProps) => {
   const [createRisk, { loading }] = useCreateRiskMutation({
@@ -17,7 +18,7 @@ const CreateRisk = ({ history }: RouteComponentProps) => {
       toast.success("Create Success");
       history.goBack();
     },
-    onError: () => toast.error("Create Failed"),
+    onError: notifyGraphQLErrors,
     refetchQueries: ["risks", "adminRisks"],
     awaitRefetchQueries: true,
   });

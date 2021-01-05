@@ -6,6 +6,7 @@ import { useCreateControlMutation } from "../../generated/graphql";
 import HeaderWithBackButton from "../../shared/components/Header";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import BreadCrumb from "../../shared/components/BreadCrumb";
+import { notifyGraphQLErrors } from "../../shared/utils/notif";
 
 const CreateControl = ({ history }: RouteComponentProps) => {
   const [create, { loading }] = useCreateControlMutation({
@@ -15,7 +16,7 @@ const CreateControl = ({ history }: RouteComponentProps) => {
       const id = oc(res).createControl.control.id("");
       history.replace(`/control/${id}`);
     },
-    onError: () => toast.error("Create Failed"),
+    onError: notifyGraphQLErrors,
     refetchQueries: ["controls", "adminControls"],
     awaitRefetchQueries: true,
   });

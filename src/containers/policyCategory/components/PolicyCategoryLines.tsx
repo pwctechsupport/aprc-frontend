@@ -26,6 +26,7 @@ import {
   notifyGraphQLErrors,
   notifySuccess,
 } from "../../../shared/utils/notif";
+import DateHover from '../../../shared/components/DateHover';
 
 const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -128,9 +129,9 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
         <title>Policy Category - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="w-100">
-        <BreadCrumb crumbs={[["/policyCategory", "Policy category"]]} />
+        <BreadCrumb crumbs={[["/policyCategory", "Policy Category Administrative"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4 style={{ fontSize: "23px" }}>List of Policy category</h4>
+          <h4 style={{ fontSize: "23px" }}>List of Policy Category</h4>
           {isAdminReviewer ? (
             <div className="d-flex">
               <Tooltip
@@ -189,8 +190,8 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "10%" }}>Category name</th>
-            <th style={{ width: "45%" }}>Related policies</th>
+            <th style={{ width: "30%" }}>Category name</th>
+            <th style={{ width: "25%" }}>Related policies</th>
             <th style={{ width: "15%" }}>Status</th>
             <th style={{ width: "12%" }}>Last updated</th>
             <th style={{ width: "12%" }}>Last updated by</th>
@@ -219,15 +220,19 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
                   </td>
                 ) : null}
 
-                <td>{policyCategory.name}</td>
-                <td>{policyCategory.policy?.join(", ")}</td>
+                <td className="wrapped">{policyCategory.name}</td>
+                <td className="wrapped">{policyCategory.policies?.map(pol => pol.title).join(", ")}</td>
                 <td>
                   {policyCategory.draft ||
                   policyCategory.status === "waiting_for_approval"
                     ? "Waiting for review"
                     : "Release"}
                 </td>
-                <td>{policyCategory.updatedAt.split(" ")[0]}</td>
+                <td>
+                  <DateHover humanize={false}>
+                    {policyCategory.updatedAt.split(" ")[0]}
+                  </DateHover>
+                </td>
                 <td>{policyCategory.lastUpdatedBy}</td>
                 {isAdminReviewer ? (
                   <td className="action">

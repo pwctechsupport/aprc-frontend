@@ -256,7 +256,7 @@ export default function ImageTagger({
                   <TaggerBoxCloseButton
                     onClick={handleClose}
                     size={13}
-                    color="red"
+                    color="#3a3838"
                   />
                   <Async
                     loadOptions={handleLoadOptions}
@@ -283,12 +283,11 @@ export default function ImageTagger({
                       <Button
                         onClick={() => handleDelete(currentTag.id)}
                         size="sm"
-                        className="mr-1 pwc cancel"
-                        color="danger"
+                        className="mr-1 reset flex-fill"
                       >
                         Delete
                       </Button>
-                    ) : null}
+                    ) : <div className="flex-fill mr-5" />}
                     <Button
                       onClick={() =>
                         currentTag.id
@@ -296,7 +295,7 @@ export default function ImageTagger({
                           : handleCreate(currentTag.x, currentTag.y)
                       }
                       size="sm"
-                      className="pwc"
+                      className="base flex-fill"
                     >
                       Save
                     </Button>

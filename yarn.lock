@@ -4615,6 +4615,11 @@ de-indent@^1.0.2:
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
   integrity sha1-sgOOhG3DO6pXlhKNCAS0VbjB4h0=
 
+debounce-promise@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/debounce-promise/-/debounce-promise-3.1.2.tgz#320fb8c7d15a344455cd33cee5ab63530b6dc7c5"
+  integrity sha512-rZHcgBkbYavBeD9ej6sP56XfG53d51CD4dnaw989YX/nZ/ZJfgRx/9ePKmTNiUiyQvh4mtrMoS3OAWW+yoYtpg==
+
 debounce@1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
@@ -12315,18 +12320,18 @@ stylehacks@^4.0.0:
     postcss "^7.0.0"
     postcss-selector-parser "^3.0.0"
 
-suneditor-react@^2.13.1:
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/suneditor-react/-/suneditor-react-2.13.1.tgz#bcce9d3270ca694d6d12577cecd7272c6ad0d6d9"
-  integrity sha512-FHE4yhua8M9oou+bnNwpWL+c56Sr/kkZ5vb4GLSN2Lz7bBN/xKLpJnuz5KurxAq0Qbt4Yg5qXX26ka56QxLqDw==
+suneditor-react@^2.14.9:
+  version "2.14.9"
+  resolved "https://registry.yarnpkg.com/suneditor-react/-/suneditor-react-2.14.9.tgz#62e2df299e66229d7e68c3a02068243f942630f5"
+  integrity sha512-ZLp5r+Qorwl9Te/S+0lcrUJInJdA7cWeXL9at6xoSyf6eFifGaoixmDbDztLpQxDiIlSXsNNtvRrSDnq68Gs6w==
   dependencies:
     prop-types "^15.7.2"
-    suneditor "^2.32.0"
+    suneditor "^2.34.3"
 
-suneditor@^2.32.0:
-  version "2.32.1"
-  resolved "https://registry.yarnpkg.com/suneditor/-/suneditor-2.32.1.tgz#78594a6db8fb70e9744ec27c1e24ac30489ce404"
-  integrity sha512-t12dDUYV1IZ5h6K/kzyyZJeILXOBgGb8+gGSkM0YpLtRBArPIJzxg27SmusTK7JLHw2tvBs8Yac3O5fgBeTKOg==
+suneditor@^2.34.3:
+  version "2.34.3"
+  resolved "https://registry.yarnpkg.com/suneditor/-/suneditor-2.34.3.tgz#a8349f7372a73304f19ae18c14b0018b95771403"
+  integrity sha512-SyM8cu5oSZ01E8eXW5kb283Vkpf7nVzAIWYMvPOjmUebXHfawxlhakEo+FeUldlBlFE6EORLUJSJhislnHGZKw==
 
 supports-color@^2.0.0:
   version "2.0.0"

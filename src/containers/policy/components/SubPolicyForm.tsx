@@ -19,9 +19,8 @@ import Modal from "../../../shared/components/Modal";
 import { toLabelValue } from "../../../shared/formatter";
 import * as yup from "yup";
 import { toast } from "react-toastify";
-import SunEditor from "suneditor-react";
-import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
 import styled from "styled-components";
+import SunEditorCustom from "../../../shared/components/forms/SunEditorCustom";
 
 const SubPolicyForm = ({
   saveAsDraftFirst,
@@ -188,45 +187,10 @@ const SubPolicyForm = ({
               backgroundColor: "red",
             }}
           >
-            <SunEditor
-              showToolbar={true}
-              enable={true}
-              show={true}
+            <SunEditorCustom
               name="description"
               setContents={defaultValues?.description || ""}
               onChange={onChangeEditor}
-              enableToolbar={true}
-              setOptions={{
-                showPathLabel: false,
-                imageUploadSizeLimit: 10485760,
-                linkProtocol: "http://",
-                minHeight: "30vh",
-                height: "auto",
-                font: [
-                  "Serif",
-                  "Sans Serif",
-                  "Monospace",
-                  "Candara",
-                  "Verdana",
-                  "Arial",
-                  "Twentieth Century",
-                  "Calibri",
-                  "Georgia",
-                  "Abadi",
-                  "Helvetica",
-                  "Garamond",
-                  "Bookman",
-                  "Arial Nova Cond",
-                  "Bahnschrift",
-                  "Selawik",
-                  "Perpetua",
-                ],
-                buttonList: [
-                  ["font", "fontSize", "align"],
-                  ["fontColor", "hiliteColor", "bold", "underline", "italic"],
-                  ["image", "table", "link"],
-                ],
-              }}
             />
           </div>
           {errors.description && (
@@ -254,16 +218,13 @@ const SubPolicyForm = ({
         </div>
         <Select
           name="referenceIds"
-          label="Sub-policy reference*"
+          label="Sub-policy reference"
           placeholder="Sub-policy reference"
           loading={referenceData.loading}
           onChange={handleReferenceChange}
           options={references}
           isMulti
           defaultValue={defaultReference}
-          error={
-            errors.referenceIds && "Sub-policy reference is a required field"
-          }
         />
 
         <div className="text-right mt-3">
@@ -752,10 +713,21 @@ const SubPolicyAttributeForm = ({
   const controlDefaultValues = controlsOptions.filter((a) =>
     controlValue.includes(a.value)
   );
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<{
+    businessProcessMain?: string,
+    businessProcessFirst?: string,
+    businessProcessIds?: string,
+  }>({});
 
   const submit = (values: SubPolicyModalFormValues) => {
-    if (handleGetValueBps.length) {
+    const checkMain = checkMainBp?.length === undefined || checkMainBp?.length === 0
+    const checkFirst = checkFirstBp?.length === undefined || checkFirstBp?.length === 0
+
+    let errors: any = {}
+    if (checkMain) { errors.businessProcessMain = "Main business process is a required field" }
+    if (checkFirst) { errors.businessProcessFirst = "Sub business process level 1 is a required field" }
+    if (!handleGetValueBps.length) { errors.businessProcessIds = "Selected business process is a required field" }
+    if (!checkMain && !checkFirst && handleGetValueBps.length) {
       onSubmit &&
         onSubmit({
           controlIds: values.controlIds,
@@ -766,7 +738,11 @@ const SubPolicyAttributeForm = ({
             : undefined,
         });
     } else {
-      setError(true);
+      setError({
+        businessProcessMain: errors.businessProcessMain,
+        businessProcessFirst: errors.businessProcessFirst,
+        businessProcessIds: errors.businessProcessIds,
+      });
     }
   };
 
@@ -793,10 +769,11 @@ const SubPolicyAttributeForm = ({
         name="businessProcessMain"
         register={formModal.register}
         setValue={formModal.setValue}
-        label="Main Business Process"
+        label="Main Business Process*"
         placeholder="Main Business Process"
         options={handleGetMainBps}
         defaultValue={mainBpsDefaultValue}
+        error={error.businessProcessMain}
       />
 
       <FormSelect
@@ -807,9 +784,10 @@ const SubPolicyAttributeForm = ({
         value={getFirstBpsValues}
         isDisabled={mainBpIds.length ? false : true}
         setValue={formModal.setValue}
-        label="Sub Business Process Level 1"
+        label="Sub Business Process Level 1*"
         placeholder="Sub Business Process Level 1"
         options={handleGetFirstBps}
+        error={error.businessProcessFirst}
       />
 
       <FormSelect
@@ -830,13 +808,12 @@ const SubPolicyAttributeForm = ({
         name="businessProcessIds"
         register={formModal.register}
         isDisabled={true}
-        required
         value={handleGetValueBps}
         setValue={formModal.setValue}
-        label="Selected Business Process"
+        label="Selected Business Process*"
         placeholder="Selected Business Process"
         options={handleGetMainBps}
-        error={error ? "Business process is a required field" : undefined}
+        error={error.businessProcessIds}
       />
 
       <FormSelect
@@ -895,7 +872,6 @@ const validationSchema = yup.object().shape({
     .string()
     .min(11)
     .required(),
-  referenceIds: yup.array().required(),
 });
 // const validationSchemaAttributes = yup.object().shape({
 //   // businessProcessFirst: yup.array().required(),

@@ -37,16 +37,16 @@ const reportOptions = [
     ],
     description: "List of reviewed risks that are not mapped with any control",
   },
-  // {
-  //   name: "Control Without Risk",
-  //   id: "report_control_policy",
-  //   formats: [
-  //     { id: "jangan masuk", name: "PDF" },
-  //     { id: "jangan masuk", name: "Excel" },
-  //   ],
-  //   description:
-  //     "List of reviewed control(s) that are not mapped with any control",
-  // },
+  {
+    name: "Control Without Risk",
+    id: "report_control_policy",
+    formats: [
+      { id: "pdf", name: "PDF" },
+      { id: "xlsx", name: "Excel" },
+    ],
+    description:
+      "List of reviewed controls that are not mapped with any control",
+  },
   {
     name: "Resources with rating",
     id: "report_resource_rating",
@@ -184,7 +184,7 @@ export default function Report() {
   const [checked, setChecked] = useState(true);
   return (
     <Container fluid className="p-0 pt-3 px-4 pl-5">
-      <TitleStyle>Exception report</TitleStyle>
+      <TitleStyle>Exception Report</TitleStyle>
       <div style={{ minHeight: "60vh", marginTop: "30px" }}>
         <Form>
           <Table>

@@ -13,7 +13,7 @@ const Button = ({ loading, className, disabled, ...props }: ButtonProps) => {
       {...props}
       disabled={loading || disabled}
       className={cx("button", { disabled }, className)}
-      style={{ borderRadius: "3px" }}
+      style={{ borderRadius: "3px", ...props.style }}
     >
       {props.children}
       {loading && <LoadingSpinner className="ml-2" />}

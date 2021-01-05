@@ -171,11 +171,11 @@ const Resources = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "12%" }}>Name</th>
+            <th style={{ width: "25%" }}>Name</th>
             <th style={{ width: "10%" }}>File type</th>
             <th style={{ width: "10%" }}>Category</th>
-            <th style={{ width: "16%" }}>Related policy</th>
-            <th style={{ width: "16%" }}>Related business process</th>
+            <th style={{ width: "16%" }}>Related Policies</th>
+            <th style={{ width: "16%" }}>Related Business Process</th>
             <th style={{ width: "10%" }}>Last updated</th>
             <th style={{ width: "10%" }}>Created by</th>
 
@@ -200,7 +200,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                     />
                   </td>
                 ) : null}
-                <td>{resource.name}</td>
+                <td className="wrapped">{resource.name}</td>
                 <td>{resource.resourceFileType}</td>
                 <td>{capitalCase(resource.category || "")}</td>
 
@@ -212,7 +212,7 @@ const Resources = ({ history }: RouteComponentProps) => {
                 </td>
                 <td>{resource.businessProcess?.name}</td>
                 <td>
-                  <DateHover>{resource.updatedAt}</DateHover>
+                  <DateHover humanize={false}>{resource.updatedAt}</DateHover>
                 </td>
                 <td>{resource.createdBy}</td>
                 <td className="action">

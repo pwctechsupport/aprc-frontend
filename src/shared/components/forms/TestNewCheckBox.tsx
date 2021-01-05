@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Input from "./Input";
+import { Polyline } from "./CheckBox";
 const CheckboxContainer = styled.div`
   display: inline-block;
   vertical-align: middle;
@@ -64,7 +65,7 @@ const CheckBox2 = ({
       />
       <StyledCheckbox checked={checked}>
         <Icon viewBox="0 0 24 24">
-          <polyline points="20 6 9 17 4 12" />
+          <Polyline />
         </Icon>
       </StyledCheckbox>
     </CheckboxContainer>

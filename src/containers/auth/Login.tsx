@@ -20,11 +20,16 @@ import Captcha from "react-numeric-captcha";
 // import useWindowSize from "../../shared/hooks/useWindowSize";
 import { Container as BsContainer, Row, Col } from "reactstrap";
 import Footer from "../../shared/components/Footer";
+import * as yup from "yup";
+import FormInput from '../../shared/components/forms/Input';
+
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
   const [login, { loading }] = useLoginMutation();
-  const { register, handleSubmit, watch } = useForm<LoginMutationVariables>();
+  const { register, handleSubmit, watch, errors } = useForm<LoginMutationVariables>({
+    validationSchema,
+  });
 
   //refreshes Captcha when error
   const [t, st] = useState({
@@ -82,44 +87,40 @@ export default function Login({ history }: RouteComponentProps) {
             <title>Login - PricewaterhouseCoopers</title>
           </Helmet>
           <LoginBox>
-            <H1>Welcome to eGRC</H1>
+            <H1>Welcome to <br />Automated Policy, Risk and <br /> Control Management Tool</H1>
 
             <Form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
               <Label>Email</Label>
-              <br />
-              <Input
+              <SFormInput
+                formGroupclassName="mb-0"
                 name="email"
                 placeholder="Enter email address"
                 required
-                ref={register({ required: true })}
+                innerRef={register}
+                error={errors.email?.message}
               />
-              <br />
-              <br />
+              <Gap />
               <Label>Password</Label>
-              <br />
-              <Input
+              <SFormInput
+                formGroupclassName="mb-0"
                 name="password"
                 type="password"
                 placeholder="Enter password"
                 required
-                ref={register({ required: true })}
+                innerRef={register}
+                error={errors.password?.message}
               />
-              <br />
-              <br />
               <Captcha
                 ref={(e: any) => st(e)}
                 onChange={setCaptcha}
                 placeholder="Insert captcha"
               />
-              <br />
-              <br />
-
               <Row>
                 <Col>
                   <h6></h6>
-                  <Link to="/forgot-password" className="link-pwc">
+                  <SLink to="/forgot-password" className="link-pwc">
                     Forgot password?
-                  </Link>
+                  </SLink>
                 </Col>
                 <Col>
                   <Button
@@ -134,7 +135,7 @@ export default function Login({ history }: RouteComponentProps) {
                   </Button>
                 </Col>
               </Row>
-              <div className="text-center my-4"></div>
+              <div className="text-center my-0"></div>
             </Form>
           </LoginBox>
         </Col>
@@ -144,11 +145,39 @@ export default function Login({ history }: RouteComponentProps) {
   )
 }
 
+const validationSchema = yup.object().shape({
+  email: yup.string().required("Email is a required field"),
+  password: yup.string().required("Password is a required field"),
+})
+
+const SLink = styled(Link)`
+  font-size: 14px;
+  @media (max-height: 568px) {
+    font-size: 12px;
+  }
+`;
+
+const SFormInput = styled(FormInput)`
+  @media (max-height: 568px) {
+    font-size: 12px;
+  }
+`;
+
+const Gap = styled.div`
+  margin: 0 0 15px 0;
+  @media (max-height: 568px) {
+    margin: 0 0 0 0;
+  }
+`
+
 export const LoginBox = styled.div`
   border: 1px solid rgba(0,0,0,0.2);
   padding: 10px;
   border-radius: 3px;
   background: rgba(255,255,255,.7);
+  @media (max-height: 568px) {
+    margin-top: 5px;
+  }
 `
 export const Container = styled.div`
   display: flex;
@@ -162,7 +191,7 @@ export const Form = styled.form`
 `;
 
 export const Image = styled.img`
-  width: 230px;
+  width: 200px;
   height: auto;
   @media (max-width: 760px) {
     width: 100px;
@@ -172,6 +201,10 @@ export const Image = styled.img`
 export const H1 = styled.h3`
   margin-bottom: 15px;
   font-size: 23px;
+  @media (max-height: 568px) {
+    font-size: 21px;
+    margin-bottom: 10px;
+  }
 `;
 
 export const Label = styled.label`
@@ -180,6 +213,10 @@ export const Label = styled.label`
   line-height: 16px;
   color: #3a3838;
   margin-bottom: 10px;
+  @media (max-height: 568px) {
+    font-size: 12px;
+    line-height: 10px;
+  }
 `;
 
 export const Input = styled.input`

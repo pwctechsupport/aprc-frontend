@@ -23,6 +23,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import CreateBusinessProcess from "./CreateBusinessProcess";
+import DateHover from '../../shared/components/DateHover';
 
 const BusinessProcesses = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -105,14 +106,14 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 
   return (
     <div>
-      <BreadCrumb crumbs={[["/business-process", "Business processes"]]} />
+      <BreadCrumb crumbs={[["/business-process", "Business Process Administartive"]]} />
       <div className="d-flex">
         <Helmet>
           <title>Business Process - PricewaterhouseCoopers</title>
         </Helmet>
         <div className="w-100">
           <div className="d-flex justify-content-between align-items-center mb-3">
-            <h4 style={{ fontSize: "23px" }}>List of Business process</h4>
+            <h4 style={{ fontSize: "23px" }}>List of Business Process</h4>
             {isAdmin || isAdminPreparer ? (
               <Tooltip description="Create business process">
                 <Button onClick={toggleCreateBpModal} className="pwc">
@@ -182,7 +183,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                   </th>
                 ) : null}
 
-                <th>Business process</th>
+                <th>Business Process</th>
                 <th>Last updated</th>
                 <th>Last updated by</th>
                 <th>Created at</th>
@@ -209,10 +210,18 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                     </td>
                   ) : null}
 
-                  <td>{item.name}</td>
-                  <td>{item.updatedAt.split("T")[0]}</td>
+                  <td className="wrapped">{item.name}</td>
+                  <td>
+                    <DateHover humanize={false}>
+                      {item.updatedAt.split("T")[0]}
+                    </DateHover>
+                  </td>
                   <td>{item.lastUpdatedBy}</td>
-                  <td>{item.createdAt.split("T")[0]}</td>
+                  <td>
+                    <DateHover humanize={false}>
+                      {item.createdAt.split("T")[0]}
+                    </DateHover>
+                  </td>
                   <td>{item.createdBy}</td>
                   {isAdminReviewer ? (
                     <td className="action">

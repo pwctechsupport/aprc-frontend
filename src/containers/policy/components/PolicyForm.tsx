@@ -10,10 +10,9 @@ import Select from "../../../shared/components/forms/Select";
 import LoadingSpinner from "../../../shared/components/LoadingSpinner";
 import { toLabelValue } from "../../../shared/formatter";
 import styled from "styled-components";
+import SunEditorCustom from "../../../shared/components/forms/SunEditorCustom";
 // import TextEditor from "../../../shared/components/forms/TextEditor";
 // import { Editor } from "@tinymce/tinymce-react";
-import SunEditor from "suneditor-react";
-import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
 
 const PolicyForm = ({
   submitFromDraft,
@@ -99,45 +98,10 @@ const PolicyForm = ({
               backgroundColor: "red",
             }}
           >
-            <SunEditor
-              showToolbar={true}
-              enable={true}
-              show={true}
+            <SunEditorCustom
               name="description"
               setContents={defaultValues?.description || ""}
               onChange={onChangeEditor}
-              enableToolbar={true}
-              setOptions={{
-                showPathLabel: false,
-                imageUploadSizeLimit: 10485760,
-                linkProtocol: "http://",
-                minHeight: "30vh",
-                height: "auto",
-                font: [
-                  "Serif",
-                  "Sans Serif",
-                  "Monospace",
-                  "Candara",
-                  "Verdana",
-                  "Arial",
-                  "Twentieth Century",
-                  "Calibri",
-                  "Georgia",
-                  "Abadi",
-                  "Helvetica",
-                  "Garamond",
-                  "Bookman",
-                  "Arial Nova Cond",
-                  "Bahnschrift",
-                  "Selawik",
-                  "Perpetua",
-                ],
-                buttonList: [
-                  ["font", "fontSize", "align"],
-                  ["fontColor", "hiliteColor", "bold", "underline", "italic"],
-                  ["image", "table", "link"],
-                ],
-              }}
             />
           </div>
           {errors.description && (
@@ -165,16 +129,16 @@ const PolicyForm = ({
         </div>
         <Select
           name="policyCategoryId"
-          label="Policy category*"
+          label="Policy Category*"
           loading={policyCategoriesState.loading}
-          placeholder="Policy category"
+          placeholder="Policy Category"
           options={options}
           onChange={handleChange("policyCategoryId")}
           defaultValue={options.find(
             (option) => option.value === policyCategoryId
           )}
           error={
-            errors.policyCategoryId && "Policy category is a required field"
+            errors.policyCategoryId && "Policy Category is a required field"
           }
         />
 

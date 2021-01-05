@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { FaFileExport, FaFileImport, FaTimes } from "react-icons/fa";
@@ -7,7 +7,6 @@ import { Input } from "reactstrap";
 import { oc } from "ts-optchain";
 import PickIcon from "../../assets/Icons/PickIcon";
 import {
-  PoliciesDocument,
   Reference,
   useAdminReferencesQuery,
   useDestroyReferenceMutation,
@@ -33,6 +32,8 @@ import {
   notifyInfo,
   notifySuccess,
 } from "../../shared/utils/notif";
+import { gql } from "apollo-boost";
+import DateHover from "../../shared/components/DateHover";
 
 const References = ({ history }: RouteComponentProps) => {
   const [modal, setModal] = useState(false);
@@ -96,9 +97,9 @@ const References = ({ history }: RouteComponentProps) => {
         <title>References - PricewaterhouseCoopers</title>
       </Helmet>
       <div className="w-100">
-        <BreadCrumb crumbs={[["/references", "References"]]} />
+        <BreadCrumb crumbs={[["/references", "Policy Reference Administrative"]]} />
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4 style={{ fontSize: "23px" }}>List of Policy references</h4>
+          <h4 style={{ fontSize: "23px" }}>List of Policy References</h4>
 
           {isAdminReviewer ? (
             <div className="mb-3 d-flex justify-content-end">
@@ -205,7 +206,7 @@ const ReferenceRow = ({
   toggleCheck,
   onClick,
 }: ReferenceRowProps) => {
-  const { register, handleSubmit, setValue } = useForm<ReferenceRowFormValues>({
+  const { register, handleSubmit, setValue, reset } = useForm<ReferenceRowFormValues>({
     defaultValues: {
       name: reference.name || "",
       policyIds: oc(reference)
@@ -213,10 +214,13 @@ const ReferenceRow = ({
         .map(toLabelValue),
     },
   });
+
+  useEffect(() => { reset({ name: reference.name || '' }) }, [reference]) //reset reference form values after update
+
   const getPolicies = useLazyQueryReturnPromise(PoliciesDocument);
   async function handleGetPolicies(input: string) {
     try {
-      return oc(await getPolicies({ filter: { name_cont: input } }))
+      return oc(await getPolicies({ filter: { title_cont: input } }))
         .data.policies.collection([])
         .map(toLabelValue);
     } catch (error) {
@@ -241,7 +245,7 @@ const ReferenceRow = ({
         input: {
           id: reference.id || "",
           name: values.name,
-          policyIds: values.policyIds.map((a) => a.value),
+          policyIds: (values.policyIds || []).map((a) => a.value),
         },
       },
     });
@@ -309,9 +313,17 @@ const ReferenceRow = ({
           reference.policies?.map((a) => a.title).join(", ")
         )}
       </td>
-      <td>{reference.updatedAt.split("T")[0]}</td>
+      <td>
+        <DateHover humanize={false}>
+          {reference.updatedAt.split("T")[0]}
+        </DateHover>
+      </td>
       <td>{reference.lastUpdatedBy}</td>
-      <td>{reference.createdAt.split("T")[0]}</td>
+      <td>
+        <DateHover humanize={false}>
+          {reference.createdAt.split("T")[0]}
+        </DateHover>
+      </td>
       <td>{reference.createdBy}</td>
       {isAdmin || isAdminReviewer || isAdminPreparer ? (
         <td
@@ -320,14 +332,13 @@ const ReferenceRow = ({
         >
           <div className="d-flex align-items-center justify-content-end">
             {edit ? (
-              <div>
+              <div style={{width: 'max-content'}}>
                 <Button
-                  color=""
                   onClick={toggleEdit}
                   type="button"
-                  className="mr-2"
+                  className="mr-2 button cancel w-95px"
                 >
-                  <FaTimes /> Cancel
+                  Cancel
                 </Button>
                 <DialogButton
                   onConfirm={handleSubmit(updateReference)}
@@ -377,6 +388,26 @@ const ReferenceRow = ({
     </tr>
   );
 };
+
+const PoliciesDocument = gql`
+  query policies(
+    $filter: BaseScalar = {}
+    $limit: Int
+  ) {
+    policies(filter: $filter, limit: $limit) {
+      collection {
+        id
+        title
+      }
+      metadata {
+        totalCount
+        currentPage
+        totalPages
+        limitValue
+      }
+    }
+  }
+`;
 
 interface ReferenceRowProps {
   reference: Partial<Reference>;

@@ -26,7 +26,6 @@ import { Route, RouteComponentProps } from "react-router";
 import { Link, NavLink } from "react-router-dom";
 import { Col, Nav, NavItem, Row, TabContent, TabPane } from "reactstrap";
 import styled from "styled-components";
-import SunEditor from "suneditor-react";
 import { oc } from "ts-optchain";
 import PickIcon from "../../assets/Icons/PickIcon";
 import {
@@ -84,11 +83,13 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import ResourceBox from "../resources/components/ResourceBox";
 import PolicyDashboard from "./components/PolicyDashboard";
 import PolicyForm, { PolicyFormValues } from "./components/PolicyForm";
 import SubPolicyForm, { SubPolicyFormValues } from "./components/SubPolicyForm";
+import SunEditorCustom from "../../shared/components/forms/SunEditorCustom";
 
 type TParams = { id: string };
 
@@ -373,7 +374,7 @@ export default function Policy({
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewPolicy({ variables: { id, publish } });
-      notifySuccess(publish ? "Changes Accepted" : "Changes Rejected");
+      publish ? notifySuccess("Changes Accepted") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
@@ -402,6 +403,7 @@ export default function Policy({
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
+  const getSubPoliciesStatus = children?.map((item) => (item.status))
 
   //resource Bar
   const [resourceId, setResourceId] = useState("");
@@ -472,7 +474,7 @@ export default function Policy({
                       {category === "Flowchart" ? (
                         <>
                           <h5 className="mt-5">Business Process:</h5>
-                          <Link to={`/risk-and-control/${businessProcess?.id}`}>
+                          <Link to={`/risk-and-control/${businessProcess?.id}`} className="link">
                             {businessProcess?.name}
                           </Link>
                         </>
@@ -483,7 +485,7 @@ export default function Policy({
                             {bps ? (
                               <ul>
                                 <li>
-                                  <Link to={`/risk-and-control/${bps.id}`}>
+                                  <Link to={`/risk-and-control/${bps.id}`} className="link">
                                     {bps.name}
                                   </Link>
                                 </li>
@@ -498,7 +500,7 @@ export default function Policy({
                               <ul>
                                 {policies.map((policy) => (
                                   <li key={policy.id}>
-                                    <Link to={`/policy/${policy.id}`}>
+                                    <Link to={`/policy/${policy.id}`} className="link">
                                       {policy.title}
                                     </Link>
                                   </li>
@@ -567,7 +569,7 @@ export default function Policy({
     ];
     const details2 = [
       {
-        label: "Last Updated",
+        label: "Last updated",
         value: updatedAt?.split(" ")[0],
       },
       {
@@ -579,7 +581,7 @@ export default function Policy({
         value: createdAt?.split(" ")[0],
       },
       {
-        label: "Created By",
+        label: "Created by",
         value: createdBy,
       },
       {
@@ -655,14 +657,14 @@ export default function Policy({
       { label: "Description", value: descriptionControl },
 
       {
-        label: "Control Owner",
+        label: "Control owner",
         value: departments.map((a: any) => a.name).join(", "),
       },
       {
         label: "Key Control",
         value: <CheckBox checked={keyControl} />,
       },
-      { label: "Type of Control", value: capitalCase(typeOfControl) },
+      { label: "Type of control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
         value: assertion.map((x) => capitalCase(x)).join(", "),
@@ -676,10 +678,10 @@ export default function Policy({
         label: "Status",
         value: `${draftControl ? "Waiting for review" : "Release"}`,
       },
-      { label: "Last Updated", value: updatedAt },
+      { label: "Last updated", value: updatedAt },
       { label: "Last Updated By", value: lastUpdatedBy },
       { label: "Created At", value: createdAt.split(" ")[0] },
-      { label: "Created By", value: createdBy },
+      { label: "Created by", value: createdBy },
     ];
     return (
       <Route exact path="/policy/:id/details/control/:id">
@@ -842,12 +844,12 @@ export default function Policy({
               }
             >
               <div className="text-right my-2 text-secondary">
-                <div className="mb-1  ">Created By : {createdBy}</div>
+                <div className="mb-1  ">Created by : {createdBy}</div>
                 {lastUpdatedAt ? (
-                  <DateHover withIcon>{lastUpdatedAt}</DateHover>
+                  <DateHover withIcon humanize={false}>{lastUpdatedAt}</DateHover>
                 ) : (
                   <div className="text-secondary">
-                    <DateHover withIcon>{createdAt}</DateHover>
+                    <DateHover withIcon humanize={false}>{createdAt}</DateHover>
                   </div>
                 )}
 
@@ -864,19 +866,12 @@ export default function Policy({
                 }}
               /> */}
               <div className="mt-2">
-                <SunEditor
+                <SunEditorCustom
+                  disable
+                  hide
                   showToolbar={false}
-                  disable={true}
-                  show={true}
                   name="description"
                   setContents={description || ""}
-                  hide={true}
-                  enableToolbar={true}
-                  setOptions={{
-                    showPathLabel: false,
-                    minHeight: "30vh",
-                    height: "auto",
-                  }}
                 />
               </div>
               {policyReferences.length ? (
@@ -922,7 +917,7 @@ export default function Policy({
                   show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
                 >
-                  <RisksList data={data} setRiskId={setRiskId} />
+                  <RisksList data={data} setRiskId={setRiskId} subPoliciesStatus={getSubPoliciesStatus} />
                 </Collapsible>
               </div>
 
@@ -935,7 +930,7 @@ export default function Policy({
                   show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
-                  <ControlsTable setControlId={setControlId} data={data} />
+                  <ControlsTable setControlId={setControlId} data={data} subPoliciesStatus={getSubPoliciesStatus} />
                 </Collapsible>
               </div>
 
@@ -949,6 +944,7 @@ export default function Policy({
                     policies={children}
                     isAdminView={isAdminView}
                     onDelete={handleDelete}
+                    subPoliciesStatus={getSubPoliciesStatus}
                   />
                 </Collapsible>
               </div>
@@ -1459,9 +1455,13 @@ export default function Policy({
               : title}
           </HeaderWithBackButton>
         </Col>
-        {currentUrl.includes("/details/") || currentUrl.includes("resources/")
-          ? null
-          : renderGeneralAction()}
+        <Col>
+          <div className="d-flex justify-content-end mb-3">
+            {currentUrl.includes("/details/") || currentUrl.includes("resources/")
+              ? null
+              : renderGeneralAction()}
+          </div>
+        </Col>
       </Row>
       {inEditMode ? renderPolicyInEditMode() : renderPolicy()}
       {renderResourceDetails()}

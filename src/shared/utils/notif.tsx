@@ -1,6 +1,6 @@
 import React from "react";
 import { toast, ToastContent, ToastOptions } from "react-toastify";
-import { FaCheckCircle, FaInfoCircle, FaExclamation } from "react-icons/fa";
+import { FaCheckCircle, FaInfoCircle, FaExclamation, FaRegTimesCircle } from "react-icons/fa";
 import { ApolloError } from "apollo-boost";
 import { IconType } from "react-icons/lib/cjs";
 
@@ -12,7 +12,7 @@ const notify = (
 ) => {
   const toastContent = (
     <div className="d-flex align-items-center pl-2">
-      {icon ? icon({ className: "mr-3", size: 22 }) : null}
+      {icon ? icon({ className: "mr-1", size: 22 }) : null}
       {composeMessage(message)}
     </div>
   );
@@ -27,6 +27,10 @@ export const notifySuccess = (
   notify(message, "success", options, FaCheckCircle);
 };
 
+export const notifyReject = (message: ToastContent, options?: ToastOptions) => {
+  notify(message, "error", options, FaRegTimesCircle);
+};
+
 export const notifyError = (message: ToastContent, options?: ToastOptions) => {
   notify(message, "error", options, FaExclamation);
 };
@@ -38,7 +42,7 @@ export const notifyInfo = (message: ToastContent, options?: ToastOptions) => {
 function composeMessage(messages: any) {
   if (messages instanceof Array) {
     return (
-      <ul>
+      <ul style={{ marginLeft: '-1.5rem'}}>
         {messages.map((message, index) => {
           return <li key={index}>{message}</li>;
         })}

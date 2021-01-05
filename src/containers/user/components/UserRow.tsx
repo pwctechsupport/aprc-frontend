@@ -31,6 +31,7 @@ import { useLoadDepartmentUser } from "../../../shared/hooks/suggestions";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import { notifyGraphQLErrors, notifyInfo } from "../../../shared/utils/notif";
 import { useLoadPolicyCategories, useLoadRoles } from "./UserForm";
+import DateHover from '../../../shared/components/DateHover';
 
 interface UserRowProps {
   isEdit?: boolean;
@@ -122,12 +123,19 @@ export default function UserRow({
 
   const hasEditAccess = oc(user).hasEditAccess();
   const rejected = requestStatus === "rejected";
-  const department = user?.department?.name || "";
+  let department = user?.department?.name || "";
   let name = user?.name || "";
 
-  if (draft) {
+if (draft) {
     const draftData: any = draft || {};
     name = draftData.name;
+    policyCategories = draftData.policyCategories.map(myFunction)
+    department = draftData.department.name
+    user = draftData
+  }
+
+  function myFunction(data: any) {
+    return data.name;
   }
 
   const handleGetRoles = useLoadRoles();
@@ -207,8 +215,16 @@ export default function UserRow({
             <span className="text-orange">[Approved] </span>
           )}
         </td>
-        <td>{createdAt.split(" ")[0]}</td>
-        <td>{updatedAt.split(" ")[0]}</td>
+        <td>
+          <DateHover humanize={false}>
+            {createdAt.split(" ")[0]}
+          </DateHover>
+        </td>
+        <td>
+          <DateHover humanize={false}>
+            {updatedAt.split(" ")[0]}
+          </DateHover>
+        </td>
 
         <td>
           {/* premis 1 None */}
@@ -336,21 +352,19 @@ export default function UserRow({
   } else {
     return (
       <tr>
+        <td>{oc(user).id("")}</td>
         <td>
           <Input
             required
             name="name"
-            label="Name"
             innerRef={register({ required: true })}
             defaultValue={name}
             error={get(errors, "name.message", undefined) as string | undefined}
           />
         </td>
-        <td>{oc(user).id("")}</td>
         <td>
           <AsyncSelect
             cacheOptions
-            label="User Group"
             defaultOptions
             name="roleIds"
             register={register}
@@ -364,7 +378,6 @@ export default function UserRow({
           <AsyncSelect
             isMulti
             cacheOptions
-            label="Policy Category"
             defaultOptions
             error={
               errors.policyCategoryIds && "Policy category is a required field"
@@ -380,7 +393,6 @@ export default function UserRow({
         <td>
           <AsyncSelect
             cacheOptions
-            label="Department"
             defaultOptions
             error={errors.departmentId && "Department is a required field"}
             name="departmentId"
@@ -393,21 +405,32 @@ export default function UserRow({
           />
         </td>
         <td>
-          <DialogButton
-            loading={updateM.loading}
-            className="pwc"
-            color="primary"
-            onConfirm={handleSubmit(handleSave)}
-          >
-            Save
-          </DialogButton>
-          <StyledButton
-            // loading={updateM.loading}
-            className="ml-1"
-            onConfirm={toggleEdit}
-          >
-            Cancel
-          </StyledButton>
+          {draft ? (
+            <span className="text-orange">[Waiting for review] </span>
+          ) : (
+            <span className="text-orange">[Approved] </span>
+          )}
+        </td>
+        <td>{oc(user).createdAt("").split("T")}</td>
+        <td>{oc(user).updatedAt("").split("T")}</td>
+        <td>
+          <div className="d-flex align-items-center justify-content-end">
+            <StyledButton
+              // loading={updateM.loading}
+              className="mr-1 reset w-95px"
+              onConfirm={toggleEdit}
+            >
+              Cancel
+            </StyledButton>
+            <DialogButton
+              loading={updateM.loading}
+              className="add"
+              color="primary"
+              onConfirm={handleSubmit(handleSave)}
+            >
+              Save
+            </DialogButton>
+          </div>
         </td>
       </tr>
     );

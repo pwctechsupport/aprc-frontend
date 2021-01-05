@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "reactstrap";
 import { oc } from "ts-optchain";
@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { capitalCase } from "capital-case";
 import { capitalize } from "lodash";
+import { PasswordRequirements } from '../../../shared/components/forms/PasswordRequirements';
 
 export interface UserFormProps {
   onSubmit?: (values: UserFormValues) => void;
@@ -70,16 +71,17 @@ export default function UserForm(props: UserFormProps) {
     ?.map((a) => numbers.includes(a))
     .every((a) => a === false);
 
-  const falsePasswordLength = (checkPassword?.length || 0) < 12;
+  const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
-  const validatePassword =
+  const checkingPasswordValidity = 
+    falsePasswordLength ||
     noLowerCasePassword ||
     noCapitalPassword ||
     noNumberPassword ||
-    noSpecialCharacterPassword ||
-    falsePasswordLength;
+    noSpecialCharacterPassword
+
   function onSubmit(data: UserFormValues) {
-    if (!props.submitting && !validatePassword) {
+    if (!props.submitting && !checkingPasswordValidity) {
       props.onSubmit?.(data);
     } else {
       toast.error("Password doesn't fullfill requirement(s)");
@@ -93,62 +95,42 @@ export default function UserForm(props: UserFormProps) {
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
       <Input
-        required
-        label="Name"
+        label="Name*"
         name="name"
         innerRef={register({ required: true })}
         error={capitalize(errors?.name?.message || "")}
       />
       <Input
-        required
-        label="Email"
+        label="Email*"
         name="email"
         type="email"
         innerRef={register({ required: true })}
         error={capitalize(errors?.email?.message || "")}
       />
       <Input
-        required
-        label="Password"
+        label="Password*"
         name="password"
         type="password"
         innerRef={register({ required: true })}
         error={capitalize(errors?.password?.message || "")}
       />
-      {validatePassword && (
-        <Fragment>
-          <h6 style={{ fontSize: "14px", color: "red" }}>
-            Password requirements:
-          </h6>
-          <ul>
-            {falsePasswordLength && (
-              <li style={{ color: "red" }}>At least 12 characters</li>
-            )}
-            {noCapitalPassword && (
-              <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
-            )}
-            {noLowerCasePassword && (
-              <li style={{ color: "red" }}>Lowercase characters (a - z)</li>
-            )}
-            {noSpecialCharacterPassword && (
-              <li style={{ color: "red" }}>Special characters ({` ~!"#$%&'()*+=,-./:;<>?@[\\\`]^_{|}'`})</li>
-            )}
-            {noNumberPassword && (
-              <li style={{ color: "red" }}>Numbers (0 - 9)</li>
-            )}
-          </ul>
-        </Fragment>
+      {checkingPasswordValidity && (
+        <PasswordRequirements 
+          falsePasswordLength={falsePasswordLength}
+          noCapitalPassword={noCapitalPassword}
+          noLowerCasePassword={noLowerCasePassword}
+          noSpecialCharacterPassword={noSpecialCharacterPassword}
+          noNumberPassword={noNumberPassword}
+        />
       )}
       <Input
-        required
-        label="Password Confirmation"
+        label="Password Confirmation*"
         name="passwordConfirmation"
         type="password"
         innerRef={register({ required: true })}
         error={capitalize(errors?.passwordConfirmation?.message || "")}
       />
       <Input
-        required
         label="Phone"
         name="phone"
         onKeyDown={(e) =>
@@ -160,7 +142,7 @@ export default function UserForm(props: UserFormProps) {
           e.preventDefault()
         }
         type="number"
-        innerRef={register({ required: true })}
+        innerRef={register}
         error={capitalize(oc(errors).phone.message(""))}
       />
       <AsyncSelect
@@ -229,8 +211,7 @@ const validationSchema = yup.object().shape({
     .string()
     .trim()
     .required()
-    .oneOf([yup.ref("password")], "Password does not match"),
-  phone: yup.string().required(),
+    .oneOf([yup.ref("password")], "Password confirmation does not match Password"),
   policyCategoryIds: yup.array().required(),
   roleIds: yup.object().required(),
   departmentIds: yup.object().required(),

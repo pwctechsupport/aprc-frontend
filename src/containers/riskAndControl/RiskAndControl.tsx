@@ -81,6 +81,7 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import ControlForm, {
   ControlFormValues,
@@ -357,7 +358,7 @@ export default function RiskAndControl({
   async function reviewRisk({ publish }: { publish: boolean }) {
     try {
       await reviewMutation({ variables: { id: riskId, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
@@ -439,8 +440,7 @@ export default function RiskAndControl({
       return (
         <div className="d-flex">
           <DialogButton
-            color="danger"
-            className="mr-2"
+            className="mr-2 button cancel"
             onConfirm={() => reviewRisk({ publish: false })}
             loading={reviewMutationInfo.loading}
           >
@@ -474,7 +474,7 @@ export default function RiskAndControl({
     const createdAt = dataRisk?.risk?.createdAt;
 
     const details1 = [
-      { label: "Risk Id", value: riskId },
+      { label: "Risk ID", value: riskId },
       { label: "Name", value: riskName },
       {
         label: "Business Process",
@@ -526,7 +526,7 @@ export default function RiskAndControl({
                 {details1.map((item) => (
                   <Fragment key={item.label}>
                     <dt>{item.label}</dt>
-                    <dd>{item.value || "-"}</dd>
+                    <dd className="wrapped">{item.value || "-"}</dd>
                   </Fragment>
                 ))}
               </dl>
@@ -622,7 +622,7 @@ export default function RiskAndControl({
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewMutationControl({ variables: { id: controlId, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
@@ -716,8 +716,7 @@ export default function RiskAndControl({
       return (
         <div className="d-flex">
           <DialogButton
-            color="danger"
-            className="mr-2"
+            className="mr-2 button cancel"
             onConfirm={() => review({ publish: false })}
             loading={reviewMutationControlInfo.loading}
           >
@@ -954,7 +953,7 @@ export default function RiskAndControl({
                     {category === "Flowchart" ? (
                       <>
                         <h5 className="mt-5">Business process:</h5>
-                        <Link to={`/risk-and-control/${businessProcess?.id}`}>
+                        <Link to={`/risk-and-control/${businessProcess?.id}`} className="link">
                           {businessProcess?.name}
                         </Link>
                       </>
@@ -976,7 +975,7 @@ export default function RiskAndControl({
                             <ul>
                               {policies.map((policy) => (
                                 <li key={policy.id}>
-                                  <Link to={`/policy/${policy.id}`}>
+                                  <Link to={`/policy/${policy.id}`} className="link">
                                     {policy.title}
                                   </Link>
                                 </li>
@@ -1266,7 +1265,7 @@ export default function RiskAndControl({
                           onClick={() => {
                             setRiskId(risk?.id || "");
                           }}
-                          style={{ fontSize: "14px" }}
+                          style={{ fontSize: "16px" }}
                         >
                           {startCase(risk?.name || "")}
                           <Badge

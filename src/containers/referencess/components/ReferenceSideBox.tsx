@@ -49,7 +49,7 @@ const ReferenceSideBox = () => {
         <div className="d-flex justify-content-between">
           {/* {isAdmin || isAdminReviewer || isAdminPreparer */}
             {/* ?  */}
-            Policy reference Administrative
+            Policy Reference Administrative
             {/* : "Policy reference"} */}
         </div>
       </SideBoxTitle>

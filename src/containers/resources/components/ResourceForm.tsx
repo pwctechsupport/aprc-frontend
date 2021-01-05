@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { Form, Label, Col, Row } from 'reactstrap'
@@ -57,6 +57,7 @@ export interface ResourceFormValues {
   businessProcessId?: Suggestion
   businessProcessIdNotFlowchart?: Suggestion
   resuploadBase64?: any
+  resupload?: any
   resuploadUrl?: string
   resuploadLink?: string
   tagsAttributes?: Omit<Tag, 'createdAt' | 'updatedAt'>[]
@@ -91,6 +92,15 @@ ResourceFormProps) {
   const [preview, setPreview] = useState<string | null>(
     defaultValues ? `${APP_ROOT_URL}${defaultValues.resuploadUrl}` : ''
   )
+
+  const handleSetFile = (name: string, base64: string, shouldValidate: boolean, file: any) => {
+    setValue(name, base64, shouldValidate)
+    setValue('resupload', file, shouldValidate)
+  }
+
+  useEffect(() => {
+    register({ name: 'resupload' })
+  }, [])
 
   function submit(data: ResourceFormValues) {
     if (data.resuploadBase64) {
@@ -182,8 +192,8 @@ ResourceFormProps) {
       ) : (
         <Fragment>
           <div
-            style={{ fontStyle: 'italic', color: 'red', fontSize: '12px' }}
-            className="mb-1"
+            style={{ fontSize: '12px' }}
+            className="mb-1 font-italic text-danger"
           >
             Note: Please select related policies or related sub-business process
           </div>
@@ -264,20 +274,28 @@ ResourceFormProps) {
 
       <div className="mt-1">
         {selectedCategory?.value !== 'Flowchart' && activityType === 'text' ? (
-          <Input
-            type="text"
-            name="resuploadLink"
-            placeholder="Type image URL..."
-            innerRef={register}
-            error={errors.resuploadLink && errors.resuploadLink.message}
-          />
+          <Fragment>
+            <Input
+              type="text"
+              name="resuploadLink"
+              placeholder="Type image URL..."
+              innerRef={register}
+              error={errors.resuploadLink && errors.resuploadLink.message}
+            />
+            <div
+              style={{ fontSize: '12px' }}
+              className="mt-lg-n3 font-italic text-danger"
+            >
+              Note: Maximum attachment file size 50 Mb
+            </div>
+          </Fragment>
         ) : selectedCategory?.value !== 'Flowchart' &&
           activityType !== 'text' ? (
           <Fragment>
             <FileInput
               name="resuploadBase64"
               register={register}
-              setValue={setValue}
+              setValue={handleSetFile}
               onFileSelect={setPreview}
               errorForm={errors.resuploadLink && errors.resuploadLink.message}
             />
@@ -303,13 +321,19 @@ ResourceFormProps) {
             ) ? (
               <div>{defaultValues.name}.doc</div>
             ) : null}
+            <div
+              style={{ fontSize: '12px' }}
+              className="mt-lg-n2 font-italic text-danger"
+            >
+              Note: Maximum attachment file size 50 Mb
+            </div>
           </Fragment>
         ) : (
           <FileInput
             name="resuploadBase64"
             flowchart
             register={register}
-            setValue={setValue}
+            setValue={handleSetFile}
             onFileSelect={setPreview}
             errorForm={
               selectedCategory?.value === 'Flowchart'

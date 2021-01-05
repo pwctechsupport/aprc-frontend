@@ -45,6 +45,11 @@
     border: 1px solid $pwc-orange;
     color: $pwc-orange;
   }
+
+  &:active {
+    background-color: darken($pwc-orange, 10) !important;
+    border-color: darken($pwc-orange, 10) !important;
+  }
 }
 
 .button.add {
@@ -77,10 +82,14 @@
 .button.cancel {
   background: $soft-grey;
   border-radius: 3px;
-  width: 200px;
   color: black;
   border: 0;
   opacity: 0.9;
+
+  @media (min-width: $sm) {
+    width: 200px;
+  }
+
   &:hover {
     opacity: 1;
   }
@@ -168,5 +177,19 @@
   .btn-sm-block {
     width: 100%;
     display: block;
+  }
+}
+
+/* ========================================================================== */
+/* button width control */
+/* ========================================================================== */
+
+.button {
+  &.w-95px {
+    width: 95px;
+  }
+
+  &.w-200px {
+    width: 200px;
   }
 }

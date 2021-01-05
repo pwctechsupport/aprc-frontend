@@ -123,7 +123,7 @@ export default function BusinessProcess({
         </div>
       ) : (
         <div className="d-flex justify-content-between align-items-center mt-3">
-          <h4>{name}</h4>
+          <h4 style={{overflow: "hidden", overflowWrap: "break-word"}}>{name}</h4>
           <div>
             {isAdmin || isAdminPreparer ? (
               <Button
@@ -147,7 +147,7 @@ export default function BusinessProcess({
           </div>
         </div>
       )}
-      {inEditMode ? <h6 className="mt-2">ID: {id}</h6> : <h6>ID: {id}</h6>}
+      {inEditMode ? <h6 className="mt-2">Business ID: {id}</h6> : <h6>Business ID: {id}</h6>}
       {isAdmin || isAdminPreparer ? (
         <div className="mt-5">
           {isLimitMax ? null : <Route component={CreateSubBusinessProcess} />}

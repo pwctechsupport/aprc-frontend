@@ -37,6 +37,7 @@ const Footer = ({ fontColor = "", linebreak, origin }: FooterProps) => {
           textAlign: 'left',
           color: fontColor ? fontColor : 'rgba(0,0,0,.5)',
           marginLeft: origin === 'login' ? 0 : '7px',
+          marginTop: origin === 'policy' || 'resources' ? '1rem' : 0,
         }}
       >
         &copy; 2020 PwC. PwC all rights reserved. PwC refers to the PwC network
@@ -48,3 +49,4 @@ const Footer = ({ fontColor = "", linebreak, origin }: FooterProps) => {
   )
 };
 export default Footer;
+

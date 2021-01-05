@@ -64,7 +64,7 @@ export default function FileInput({
         };
         reader.readAsDataURL(e.target.files[0]);
         setError(null);
-        setValue(name, String(await toBase64(e.target.files[0])), true);
+        setValue(name, String(await toBase64(e.target.files[0])), true, e.target.files[0]);
       } else {
         setError(fileTypeErrorMsg);
       }
@@ -86,7 +86,7 @@ export default function FileInput({
         reader.readAsDataURL(e.target.files[0]);
 
         setError(null);
-        setValue(name, String(await toBase64(e.target.files[0])), true);
+        setValue(name, String(await toBase64(e.target.files[0])), true, e.target.files[0]);
       } else {
         setError(fileTypeErrorMsg);
       }
@@ -110,7 +110,7 @@ export default function FileInput({
         };
         reader.readAsDataURL(e.dataTransfer.files[0]);
         setError(null);
-        setValue(name, String(await toBase64(e.dataTransfer.files[0])), true);
+        setValue(name, String(await toBase64(e.dataTransfer.files[0])), true, e.dataTransfer.files[0]);
       } else {
         setError(fileTypeErrorMsg);
       }

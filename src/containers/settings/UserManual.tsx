@@ -27,7 +27,7 @@ export default function UserManual() {
   const manuals = data?.manuals?.collection || [];
   const [updateManual, updateManualInfo] = useUpdateManualMutation({
     onCompleted: () => {
-      notifySuccess("User Manual Updated");
+      notifySuccess("User manual Updated");
       closeModal();
     },
     onError: notifyGraphQLErrors,
@@ -36,7 +36,7 @@ export default function UserManual() {
   });
   const [create, createM] = useCreateManualMutation({
     onCompleted: () => {
-      notifySuccess("User Manual Created");
+      notifySuccess("User manual Created");
       closeModal();
     },
     onError: notifyGraphQLErrors,
@@ -68,31 +68,32 @@ export default function UserManual() {
   return (
     <div>
       <Helmet>
-        <title>User Manual - Settings - PricewaterhouseCoopers</title>
+        <title>User manual - Settings - PricewaterhouseCoopers</title>
       </Helmet>
       <div style={{ minHeight: "80vh" }}>
         {!loading && manuals.length ? (
           manuals.map((manual) => (
             <Fragment>
-              <h4>User Manual</h4>
+              <h4>User manual</h4>
               <br />
               <div className="d-flex justify-content-between">
                 <div>
                   <dt>Name</dt>
-                  <dd>{manual.name}</dd>
+                  <dd className="wrapped">{manual.name}</dd>
                   <br />
-                  <dt>File Size</dt>
-                  <dd>{manual.fileSize} bytes</dd>
+                  <dt>File size</dt>
+                  {/* fileSize is in byte so we divide it by 1 million */}
+                  <dd>{manual.fileSize && (manual.fileSize / 10**6)?.toFixed(2)} MB</dd> 
                   <br />
-                  <dt>File Type</dt>
+                  <dt>File type</dt>
                   <dd>{manual.fileType}</dd>
                   <br />
-                  <dt>Last Updated</dt>
+                  <dt>Last updated</dt>
                   <DateHover withIcon>{manual.updatedAt}</DateHover>
                 </div>
                 <div className="d-flex">
                   {isAdminReviewer && (
-                    <Tooltip description="Edit User Manual">
+                    <Tooltip description="Edit User manual">
                       <Button
                         onClick={() => setCurrentEditId(manual.id)}
                         className="soft red mr-2"
@@ -102,7 +103,7 @@ export default function UserManual() {
                       </Button>
                     </Tooltip>
                   )}
-                  <Tooltip description="Download User Manual">
+                  <Tooltip description="Download User manual">
                     <Button
                       className="soft orange"
                       color=""
@@ -122,7 +123,7 @@ export default function UserManual() {
           ))
         ) : !loading && isAdminReviewer ? (
           <Fragment>
-            <h4>Create User Manual</h4>
+            <h4>Create User manual</h4>
             <UserManualForm
               onSubmit={handleCreate}
               onCancel={closeModal}
@@ -142,7 +143,7 @@ export default function UserManual() {
         <Modal
           isOpen={Boolean(currentEditId)}
           toggle={closeModal}
-          title="Update User Manual"
+          title="Update User manual"
         >
           <UserManualForm
             onSubmit={handleSubmitForm}
@@ -187,6 +188,12 @@ function UserManualForm({
     <form onSubmit={handleSubmit(onSubmit)}>
       <Input innerRef={register} name="name" label="Name" />
       <FileInputPdf name="resupload" register={register} setValue={setValue} />
+      <div
+        style={{ fontSize: '12px' }}
+        className="mt-lg-n2 mb-3 font-italic text-danger"
+      >
+        Note: Maximum attachment file size 50 Mb
+      </div>
       <div className="d-flex justify-content-end">
         <Button
           type="button"

@@ -12,20 +12,25 @@ interface props {
   dataPolicy?: PolicyQuery;
 }
 const BusinessProcessList = ({ dataPolicy }: props) => {
-  const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
+  const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
     "admin",
     "admin_reviewer",
     "admin_preparer",
+    "user"
   ]);
-  const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
 
   const coolFilteringFunction = (a: any) => {
     const requestStatus = a.requestStatus;
     const notRequested = !requestStatus;
     const rejected = requestStatus === "rejected";
-    if (isUser && !a.draft && (notRequested || rejected)) {
+    const isRelease = a.status.includes("release")
+    const isWaitingForApproval = a.status.includes("waiting_for_approval")
+    const isReadyForEdit = a.status.includes("ready_for_edit")
+    const isDraft = a.status.includes("draft")
+    const isUserStatus = isRelease || isWaitingForApproval || isReadyForEdit
+    if (isUser && isUserStatus && (notRequested || rejected)) {
       return a.id;
-    } else if (isAdminReviewer && !a.draft) {
+    } else if (isAdminReviewer && !isDraft) {
       return a.id;
     } else if (isAdminPreparer) {
       return a.id;
@@ -90,6 +95,7 @@ const BusinessProcessList = ({ dataPolicy }: props) => {
           <li key={bp.id}>
             <div className="mb-3 d-flex justify-content-between">
               <PWCLink
+                className="wrapped"
                 style={{ fontSize: "14px" }}
                 to={`/risk-and-control/${bp.id}`}
               >

@@ -1,7 +1,12 @@
 import React from "react";
 import { PWCLink } from "./PoliciesTable";
 import EmptyAttribute from "./EmptyAttribute";
+import useAccessRights from "../hooks/useAccessRights";
 const PoliciesList = (data: any) => {
+  const [isUser] = useAccessRights([
+    "user"
+  ]);
+  const statusPolicy = ['waiting_for_approval', 'release', 'ready_for_edit']
   const newData = data?.data?.navigatorBusinessProcesses?.collection || [];
   const dataModifier = (a: any) => {
     for (let i = 0; i < a.length; ++i) {
@@ -12,14 +17,11 @@ const PoliciesList = (data: any) => {
     return a;
   };
   const policies = dataModifier(
-    newData
-      .map((a: any) =>
-        a.policies.map((b: any) => {
-          return { id: b.id, title: b.title };
-        })
-      )
-      .flat(10) || []
-  );
+    (isUser ? newData.map((a: any) => a.policies.filter((b: any) => statusPolicy.includes(b.status))).flat(10) || [] : newData.map((a: any) => a.policies).flat(10) || [])
+    .map((c: any) => {
+      return { id: c.id, title: c.title};
+    })
+  )
   return (
     <>
       {policies.length ? (
@@ -27,7 +29,7 @@ const PoliciesList = (data: any) => {
           {policies.map((a: any) => (
             <li key={a.id}>
               <div className="mb-3 d-flex justify-content-between">
-                <PWCLink style={{ fontSize: "14px" }} to={`/policy/${a.id}`}>
+                <PWCLink style={{ fontSize: "16px" }} to={`/policy/${a.id}`}>
                   {a.title}
                 </PWCLink>
               </div>

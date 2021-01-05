@@ -8,6 +8,7 @@ import LoadingSpinner from "../../shared/components/LoadingSpinner";
 import { previewHtml } from "../../shared/formatter";
 import { Row, Col } from "reactstrap";
 import TangerineLink from "../../shared/components/Link";
+import DateHover from '../../shared/components/DateHover';
 
 type TParams = { id: string };
 
@@ -40,7 +41,7 @@ const Reference = ({
           ["/references/" + id, name],
         ]}
       />
-      <div className="d-flex justify-content-between align-items-center">
+      <div className="justify-content-between align-items-center">
         <HeaderWithBackButton>{name}</HeaderWithBackButton>
       </div>
       {loading ? (
@@ -49,11 +50,15 @@ const Reference = ({
         <Row>
           <Col>
             <Fragment>
-              <dt> Created At </dt>
-              <dd>{createdAt.split("T")[0]}</dd>
+              <dt> Created at </dt>
+              <dd>
+                <DateHover humanize={false}>
+                  {createdAt.split("T")[0]}
+                </DateHover>
+              </dd>
             </Fragment>
             <Fragment>
-              <dt>Created By</dt>
+              <dt>Created by</dt>
               <dd> {createdBy ? createdBy : "-"}</dd>
             </Fragment>
             <Fragment>
@@ -72,11 +77,15 @@ const Reference = ({
 
           <Col>
             <Fragment>
-              <dt> Last Updated</dt>
-              <dd>{updatedAt.split("T")[0]}</dd>
+              <dt> Last updated</dt>
+              <dd>
+                <DateHover humanize={false}>
+                  {updatedAt.split("T")[0]}
+                </DateHover>
+              </dd>
             </Fragment>
             <Fragment>
-              <dt>Last Updated By</dt>
+              <dt>Last updated by</dt>
               <dd>{lastUpdatedBy}</dd>
             </Fragment>
           </Col>

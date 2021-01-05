@@ -39,7 +39,7 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
       <Helmet>
         <title>Risk and Controls - PricewaterhouseCoopers</title>
       </Helmet>
-      <BreadCrumb crumbs={[["/risk-and-control", "Risk and controls"]]} />
+      <BreadCrumb crumbs={[["/risk-and-control", "Risk and Controls"]]} />
       <div className="d-flex justify-content-end align-items-center"></div>
       <SearchBar
         search={search}
@@ -50,8 +50,8 @@ const RiskAndControls = ({ history }: RouteComponentProps) => {
       <Table reloading={loading}>
         <thead>
           <tr>
-            <th>Business process</th>
-            <th>Risks</th>
+            <th style={{width: '15%'}}>Business Process</th>
+            <th style={{width: '15%'}}>Risks</th>
           </tr>
         </thead>
         <tbody>
@@ -94,7 +94,7 @@ const RiskAndControlTableRow = ({
   return (
     <>
       <tr key={businessProcess.id} onClick={() => onClick(businessProcess.id)}>
-        <td>
+        <td className="wrapped">
           <div>
             {level ? (
               <MdSubdirectoryArrowRight color="grey" className="mr-1" />
@@ -102,7 +102,7 @@ const RiskAndControlTableRow = ({
             {businessProcess.name}
           </div>
         </td>
-        <td>
+        <td className="wrapped">
           {businessProcess?.risks
             ?.map(({ name }) => startCase(name || ""))
             .join(", ")}

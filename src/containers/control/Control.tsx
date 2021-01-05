@@ -31,10 +31,12 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import ControlForm, { CreateControlFormValues } from "./components/ControlForm";
 import CheckBox from "../../shared/components/forms/CheckBox";
 import PickIcon from "../../assets/Icons/PickIcon";
+import DateHover from "../../shared/components/DateHover";
 // import { takeValue } from "../../shared/formatter";
 
 const Control = ({ match, history, location }: RouteComponentProps) => {
@@ -48,7 +50,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
   const id = get(match, "params.id", "");
   const { loading, data } = useControlQuery({
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
     variables: { id },
   });
   const draft = data?.control?.draft?.objectResult;
@@ -70,7 +72,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewMutation({ variables: { id, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
@@ -301,7 +303,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
 
   const renderControlNonEditable = () => {
     const details = [
-      { label: "Control id", value: id },
+      { label: "Control ID", value: id },
       { label: "Description", value: description },
 
       {
@@ -319,13 +321,13 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       },
       {
         label: "IPO",
-        value: ipo.map((x: any) => capitalCase(x)).join(", "),
+        value: (ipo === null || ipo.length < 1 || ipo === undefined ? '-' : ipo.map((x: any) => capitalCase(x)).join(", ")),
       },
       { label: "Frequency", value: capitalCase(frequency) },
       // { label: "Status", value: capitalCase(status) },
-      { label: "Last updated", value: updatedAt },
+      { label: "Last updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
       { label: "Last updated by", value: lastUpdatedBy },
-      { label: "Created at", value: createdAt.split(" ")[0] },
+      { label: "Created at", value: <DateHover humanize={false}>{createdAt.split(" ")[0]}</DateHover> },
       { label: "Created by", value: createdBy },
     ];
     return (
@@ -335,13 +337,13 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
             {details.slice(0, Math.ceil(details.length / 2)).map((item) => (
               <Fragment key={item.label}>
                 <dt>{item.label}</dt>
-                <dd>{item.value || "-"}</dd>
+                <dd className="wrapped">{item.value || "-"}</dd>
               </Fragment>
             ))}
             <dt>Risks</dt>
             {risks.length ? (
               filteredNames(risks).map((risk: any) => (
-                <dd key={risk.id}>{risk.name}</dd>
+                <dd className="wrapped" key={risk.id}>{risk.name}</dd>
               ))
             ) : (
               <EmptyAttribute />
@@ -372,13 +374,13 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
         </Col>
 
         {activityControls.length > 0 ? (
-          <Col xs={7} className="mt-2">
+          <Col xs={12} className="mt-2">
             <dt className="mb-1">Control activities</dt>
             <Table>
               <thead>
                 <tr>
                   <th style={{ fontSize: "13px", fontWeight: "normal" }}>
-                    Control activity
+                    Title
                   </th>
                   <th style={{ fontSize: "13px", fontWeight: "normal" }}>
                     Guidance
@@ -388,10 +390,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
               <tbody>
                 {activityControls.map((activity) => (
                   <tr key={"Row" + activity.id}>
-                    <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                    <td className="wrapped" style={{ fontSize: "13px", fontWeight: "normal" }}>
                       {activity.activity}
                     </td>
-                    <td style={{ fontSize: "13px", fontWeight: "normal" }}>
+                    <td className="wrapped" style={{ fontSize: "13px", fontWeight: "normal" }}>
                       {activity.guidance ? (
                         activity.guidance
                       ) : activity.guidanceFileName ? (

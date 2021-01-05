@@ -57,17 +57,21 @@ export default function Policies({ history }: RouteComponentProps) {
     skip: isAdminReviewer,
     variables: {
       isTree,
-      filter: isUser
-        ? {
-            ...(isTree && { ancestry_null: true }),
-            //title_or_policy_category_name_cont
-            title_or_policy_category_name_or_status_cont: searchQuery,
-            status_eq: "release",
-          }
-        : {
-            ...(isTree && { ancestry_null: true }),
-            title_or_policy_category_name_or_status_cont: searchQuery,
-          },
+      // filter: isUser
+      //   ? {
+      //       ...(isTree && { ancestry_null: true }),
+      //       //title_or_policy_category_name_cont
+      //       title_or_policy_category_name_or_status_cont: searchQuery,
+      //       status_eq: "release",
+      //     }
+      //   : {
+      //       ...(isTree && { ancestry_null: true }),
+      //       title_or_policy_category_name_or_status_cont: searchQuery,
+      //     },
+      filter: {
+        ...(isTree && { ancestry_null: true }),
+        title_or_policy_category_name_or_status_cont: searchQuery,
+      },
       limit,
       page,
     },
@@ -196,21 +200,26 @@ const PolicyTableRow = ({
   status?: any;
 }) => {
   const childs = policy.children || [];
-  const [isAdmin, isAdminPreparer, isAdminReviewer] = useAccessRights([
+  const [isAdmin, isAdminPreparer, isAdminReviewer, isUser] = useAccessRights([
     "admin",
     "admin_preparer",
     "admin_reviewer",
+    "user"
   ]);
-  const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
+  const isRelease = status.includes("release")
+  const isWaitingForApproval = status.includes("waiting_for_approval")
+  const isReadyForEdit = status.includes("ready_for_edit")
+  // const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
+  const isUserStatus = isRelease || isWaitingForApproval || isReadyForEdit
   return (
     <>
       {/* when user */}
-      {isUser && status === "release" && (
+      {isUser && isUserStatus && (
         <tr key={policy.id} onClick={() => onClick(policy.id)}>
           <td>
             <div
               style={level ? { marginLeft: level * 10 } : {}}
-              className="d-flex align-items-center"
+              className="d-flex align-items-center wrapped"
             >
               {level > 0 && (
                 <MdSubdirectoryArrowRight color="grey" className="mr-1" />
@@ -221,7 +230,7 @@ const PolicyTableRow = ({
           <td>{policy.policyCategory?.name || ""}</td>
           <td>{capitalCase(policy.status || "")}</td>
           <td>
-            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+            <DateHover humanize={false}>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
           {isAdminReviewer ? (
@@ -248,7 +257,7 @@ const PolicyTableRow = ({
           <td>
             <div
               style={level ? { marginLeft: level * 10 } : {}}
-              className="d-flex align-items-center"
+              className="d-flex align-items-center wrapped"
             >
               {level > 0 && (
                 <MdSubdirectoryArrowRight color="grey" className="mr-1" />
@@ -275,7 +284,7 @@ const PolicyTableRow = ({
           </td>
           <td>
             {" "}
-            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+            <DateHover humanize={false}>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
           {isAdminReviewer ? (
@@ -301,7 +310,7 @@ const PolicyTableRow = ({
           <td>
             <div
               style={level ? { marginLeft: level * 10 } : {}}
-              className="d-flex align-items-center"
+              className="d-flex align-items-center wrapped"
             >
               {level > 0 && (
                 <MdSubdirectoryArrowRight color="grey" className="mr-1" />
@@ -320,7 +329,7 @@ const PolicyTableRow = ({
               : capitalCase(policy.status || "")}
           </td>
           <td>
-            <DateHover>{policy?.lastUpdatedAt}</DateHover>
+            <DateHover humanize={false}>{policy?.lastUpdatedAt}</DateHover>
           </td>
           <td>{policy?.lastUpdatedBy}</td>
           {isAdminReviewer ? (

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import Helmet from "react-helmet";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -16,6 +16,7 @@ import { useSelector } from "../../shared/hooks/useSelector";
 import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import { toast } from "react-toastify";
 import Footer from "../../shared/components/Footer";
+import { PasswordRequirements } from "../../shared/components/forms/PasswordRequirements";
 
 export default function UpdateProfile() {
   const user = useSelector((state) => state.auth.user);
@@ -35,6 +36,7 @@ export default function UpdateProfile() {
         phone: oc(res).updateUser.user.phone(""),
         jobPosition: oc(res).updateUser.user.jobPosition(""),
         department: oc(res).updateUser.user.department.name(""),
+        roles: res?.updateUser?.user?.roles || [],
       };
       if (user) dispatch(updateUser(newUser));
     },
@@ -105,7 +107,7 @@ const UpdateProfileForm = ({
     defaultValues,
   });
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    <Form onSubmit={handleSubmit(onSubmit)} className="mb-5 mb-md-0">
       <h4 style={{ fontSize: "23px" }}>Profile</h4>
       <Input
         name="name"
@@ -138,11 +140,16 @@ const UpdateProfileForm = ({
         }
         type="number"
         label="Phone number"
-        innerRef={register({ required: true })}
+        innerRef={register}
         error={errors.phone && errors.phone.message}
       />
       <div className="d-flex justify-content-end">
-        <Button type="submit" loading={submitting} className="pwc">
+        <Button
+          type="submit"
+          loading={submitting}
+          className="pwc"
+          style={{ width: 150 }}
+        >
           Save profile
         </Button>
       </div>
@@ -171,6 +178,7 @@ const UpdatePasswordForm = ({
   const { register, handleSubmit, errors, reset, watch } = useForm<
     UpdatePasswordFormValues
   >();
+
   const checkPassword = watch("password")?.split("") || [""];
   const capitalWords = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   const lowerCaseWords = "abcdefghijklmnopqrstuvwxyz".split("");
@@ -193,16 +201,17 @@ const UpdatePasswordForm = ({
     ?.map((a) => numbers.includes(a))
     .every((a) => a === false);
 
-  const falsePasswordLength = (checkPassword?.length || 0) < 12;
+  const falsePasswordLength = (checkPassword?.length || 0) < 8;
 
-  const validatePassword =
+  const checkingPasswordValidity =
+    falsePasswordLength ||
     noLowerCasePassword ||
     noCapitalPassword ||
     noNumberPassword ||
-    noSpecialCharacterPassword ||
-    falsePasswordLength;
+    noSpecialCharacterPassword;
+
   const submit = (data: UpdatePasswordFormValues) => {
-    if (!validatePassword) {
+    if (!checkingPasswordValidity) {
       onSubmit(data);
       reset({
         password: "",
@@ -212,6 +221,7 @@ const UpdatePasswordForm = ({
       toast.error("Password doesn't fullfill requirement(s)");
     }
   };
+
   return (
     <Form onSubmit={handleSubmit(submit)}>
       <h4 style={{ fontSize: "23px" }}>Update password</h4>
@@ -231,29 +241,14 @@ const UpdatePasswordForm = ({
         error={errors.password?.message}
         required
       />{" "}
-      {validatePassword && (
-        <Fragment>
-          <h6 style={{ fontSize: "14px", color: "red" }}>
-            Password requirements:
-          </h6>
-          <ul>
-            {falsePasswordLength && (
-              <li style={{ color: "red" }}>At least 12 characters</li>
-            )}
-            {noCapitalPassword && (
-              <li style={{ color: "red" }}>Uppercase characters (A - Z)</li>
-            )}
-            {noLowerCasePassword && (
-              <li style={{ color: "red" }}>Lowercase characters (a - z)</li>
-            )}
-            {noSpecialCharacterPassword && (
-              <li style={{ color: "red" }}>Special characters ({` ~!"#$%&'()*+=,-./:;<>?@[\\\`]^_{|}'`})</li>
-            )}
-            {noNumberPassword && (
-              <li style={{ color: "red" }}>Numbers (0 - 9)</li>
-            )}
-          </ul>
-        </Fragment>
+      {checkingPasswordValidity && (
+        <PasswordRequirements
+          falsePasswordLength={falsePasswordLength}
+          noCapitalPassword={noCapitalPassword}
+          noLowerCasePassword={noLowerCasePassword}
+          noSpecialCharacterPassword={noSpecialCharacterPassword}
+          noNumberPassword={noNumberPassword}
+        />
       )}
       <Input
         name="passwordConfirmation"
@@ -264,7 +259,12 @@ const UpdatePasswordForm = ({
         required
       />
       <div className="d-flex justify-content-end">
-        <Button className="pwc" type="submit" loading={submitting}>
+        <Button
+          className="pwc"
+          type="submit"
+          loading={submitting}
+          style={{ width: 150 }}
+        >
           Update password
         </Button>
       </div>

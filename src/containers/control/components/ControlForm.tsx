@@ -143,14 +143,14 @@ const ControlForm = ({
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
-    if (prepare.length) {
-      onSubmit?.({
-        ...values,
-        activityControlsAttributes: prepare,
-      });
-    } else {
-      toast.error("Add Control Activity is a required field");
-    }
+    onSubmit?.({
+      ...values,
+      activityControlsAttributes: prepare,
+    });
+    // if (prepare.length) {
+    // } else {
+    //   toast.error("Add Control Activity is a required field");
+    // }
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
@@ -273,26 +273,6 @@ const ControlForm = ({
           error={errors.riskIds && "Risks is a required field"}
         />
 
-        <FormGroup check className="mb-3">
-          <CheckBox2
-            name="keyControl"
-            innerRef={register}
-            id="keyControlCheckbox"
-          />
-          <Label className="ml-2" for="keyControlCheckbox" check>
-            Key control
-          </Label>
-        </FormGroup>
-
-        <Select
-          options={typeOfControls}
-          onChange={handleSelectChange("typeOfControl")}
-          label="Type of controls*"
-          placeholder="Type of controls"
-          defaultValue={pDefVal(typeOfControl, typeOfControls)}
-          error={errors.typeOfControl && "Type of Controls is a required field"}
-        />
-
         <FormSelect
           isMulti
           isDisabled={checkRisk.length ? false : true}
@@ -312,6 +292,26 @@ const ControlForm = ({
           error={
             errors.businessProcessIds && "Business Process is a required field"
           }
+        />
+
+        <FormGroup check className="mb-3">
+          <CheckBox2
+            name="keyControl"
+            innerRef={register}
+            id="keyControlCheckbox"
+          />
+          <Label className="ml-2" for="keyControlCheckbox" check>
+            Key control
+          </Label>
+        </FormGroup>
+
+        <Select
+          options={newLabelTypeOfControls}
+          onChange={handleSelectChange("typeOfControl")}
+          label="Type of controls*"
+          placeholder="Type of controls"
+          defaultValue={pDefVal(typeOfControl, typeOfControls)}
+          error={errors.typeOfControl && "Type of Controls is a required field"}
         />
 
         <Select
@@ -352,14 +352,14 @@ const ControlForm = ({
             <FormSelect
               isMulti
               name="ipo"
-              label="IPOs*"
+              label="IPOs"
               placeholder="IPOs"
               loading={controlsQ.loading}
               register={register}
               setValue={setValue}
-              options={ipos}
+              options={newLabelIPOs}
               defaultValue={ipos.filter((res) => getIPO.includes(res.value))}
-              error={errors.ipo && "IPOs is a required field"}
+              // error={errors.ipo && "IPOs is a required field"}
             />
           </Col>
         </Row>
@@ -393,7 +393,7 @@ const ControlForm = ({
           <Table>
             <thead>
               <tr>
-                <th>Activity</th>
+                <th>Title</th>
                 <th>Guidance</th>
                 <th></th>
               </tr>
@@ -490,7 +490,7 @@ const ActivityModalForm = ({
   const { register, handleSubmit, setValue, errors } = useForm<
     MyCoolControlActivity
   >({
-    validationSchema: validationSchemaControlActivity,
+    // validationSchema: validationSchemaControlActivity,
     defaultValues: activityDefaultValue,
   });
 
@@ -513,8 +513,10 @@ const ActivityModalForm = ({
     if (file) {
       if (
         ![
+          'application/vnd.ms-excel',
           "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
           "application/pdf",
+          'application/msword',
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         ].includes(file.type)
       ) {
@@ -569,10 +571,18 @@ const ActivityModalForm = ({
             placeholder="Description..."
           />
         ) : (
-          <Input
-            type="file"
-            onChange={activityType === "attachment" ? handleSetFile : () => {}}
-          />
+          <Fragment>
+            <Input
+              type="file"
+              onChange={activityType === "attachment" ? handleSetFile : () => {}}
+            />
+            <div
+              style={{ fontSize: '12px' }}
+              className="mt-lg-n2 font-italic text-danger"
+            >
+              Note: Maximum attachment file size 50 Mb
+            </div>
+          </Fragment>
         )}
       </div>
       {error && <h6 className="text-red mt-2">{error}</h6>}
@@ -590,6 +600,21 @@ export default ControlForm;
 // -------------------------------------------------------------------------
 // Construct Options
 // -------------------------------------------------------------------------
+
+const newLabelTypeOfControls = [
+  {label: "Automatic", value: "automatic"},
+  {label: "Manual", value: "manual"},
+  {label: "IT Dependent Manual", value: "it_dependent_manual"},
+  {label: "Manual SSC", value: "manual_ssc"},
+  {label: "Manual SDC", value: "manual_sdc"}
+];
+
+const newLabelIPOs = [
+  {label: "Completeness", value: "completeness"},
+  {label: "Accuracy", value: "accuracy"},
+  {label: "Validity", value: "validation"},
+  {label: "Restriction Access (CAVR)", value: "restriction"}
+]
 
 const frequencies = Object.entries(Frequency).map(([label, value]) => ({
   label: capitalCase(value),
@@ -685,16 +710,16 @@ const validationSchema = yup.object().shape({
   description: yup.string().required(),
   riskIds: yup.array().required(),
   frequency: yup.string().required(),
-  ipo: yup.array().required(),
+  // ipo: yup.array().required(),
   assertion: yup.array().required(),
   nature: yup.string().required(),
   controlOwner: yup.array().required(),
   businessProcessIds: yup.array().required(),
 });
 
-const validationSchemaControlActivity = yup.object().shape({
-  activity: yup.string().required(),
-});
+// const validationSchemaControlActivity = yup.object().shape({
+//   activity: yup.string().required(),
+// });
 // export interface CreateActivityControlFormValues {
 //   activity: string;
 //   guidance: string;

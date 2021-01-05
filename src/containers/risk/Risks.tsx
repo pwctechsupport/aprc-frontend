@@ -23,6 +23,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
+import DateHover from '../../shared/components/DateHover';
 
 const Risks = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -40,7 +41,7 @@ const Risks = ({ history }: RouteComponentProps) => {
       limit,
       page,
     },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
   const {
     loading: loadingReviewer,
@@ -52,7 +53,7 @@ const Risks = ({ history }: RouteComponentProps) => {
       limit,
       page,
     },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
   const totalCount =
     dataAdmin?.preparerRisks?.metadata.totalCount ||
@@ -174,11 +175,11 @@ const Risks = ({ history }: RouteComponentProps) => {
               </th>
             ) : null}
 
-            <th style={{ width: "13%" }}>Risk</th>
+            <th style={{ width: "30%" }}>Risk</th>
 
-            <th style={{ width: "13%" }}>Risk level</th>
+            <th style={{ width: "13%" }}>Level of risk</th>
             <th style={{ width: "13%" }}>Type of risk</th>
-            <th style={{ width: "13%" }}>Business process</th>
+            <th style={{ width: "13%" }}>Business Process</th>
             <th style={{ width: "13%" }}>Last updated</th>
             <th style={{ width: "13%" }}>Last updated by</th>
 
@@ -189,8 +190,10 @@ const Risks = ({ history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {risks.map((risk) => {
-            const bps = risk.businessProcesses?.map((a) => `, ${a.name}`) || [];
-            bps[0] = risk.businessProcesses?.map((a) => `${a.name}`)[0] || "-";
+            const bps = risk.businessProcesses?.map(b => b.name).join(', ')
+              || risk.businessProcess?.join(', ')
+              || '-';
+
             return (
               <tr
                 key={risk.id}
@@ -207,15 +210,19 @@ const Risks = ({ history }: RouteComponentProps) => {
                     />
                   </td>
                 ) : null}
-                <td>{oc(risk).name("")}</td>
+                <td className="wrapped">{oc(risk).name("")}</td>
                 <td>{capitalCase(oc(risk).levelOfRisk(""))}</td>
                 <td>
                   {capitalCase(risk.typeOfRisk?.split("_").join(" ") || "")}
                 </td>
                 <td>{bps}</td>
-                <td>{risk.updatedAt?.split(" ")[0]}</td>
+                <td>
+                  <DateHover humanize={false}>
+                    {risk.updatedAt?.split(" ")[0]}
+                  </DateHover>
+                </td>
                 <td>{risk.lastUpdatedBy}</td>
-                <td>{risk.draft ? "Waiting for review" : "Release"}</td>
+                <td>{capitalCase(risk.status || '')}</td>
                 {isAdminReviewer ? (
                   <td className="action">
                     <DialogButton

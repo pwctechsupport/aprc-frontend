@@ -5,6 +5,7 @@ import { AiOutlineClockCircle } from "react-icons/ai";
 import { FaExclamationCircle } from "react-icons/fa";
 import { RouteComponentProps } from "react-router";
 import { Col, Row } from "reactstrap";
+import get from "lodash/get";
 import {
   LevelOfRisk,
   TypeOfRisk,
@@ -28,10 +29,13 @@ import {
   notifyGraphQLErrors,
   notifyInfo,
   notifySuccess,
+  notifyReject,
 } from "../../shared/utils/notif";
 import RiskForm, { RiskFormValues } from "./components/RiskForm";
 import PickIcon from "../../assets/Icons/PickIcon";
 import { Badge } from "../../shared/components/Badge";
+import { capitalCase } from "capital-case";
+import DateHover from '../../shared/components/DateHover';
 // import styled from "styled-components";
 
 export default function Risk({
@@ -50,20 +54,22 @@ export default function Risk({
   const id = match.params && (match.params as any).id;
   const { data, loading } = useRiskQuery({
     variables: { id },
-    fetchPolicy: "network-only",
+    fetchPolicy: "no-cache",
   });
-  const draft = data?.risk?.draft?.objectResult;
+  const draft: any = data?.risk?.draft?.objectResult;
   const name = data?.risk?.name || "";
-  const levelOfRisk = data?.risk?.levelOfRisk || "";
-  const typeOfRisk = data?.risk?.typeOfRisk || "";
+  const levelOfRisk = draft?.levelOfRisk || data?.risk?.levelOfRisk || "";
+  const typeOfRisk = draft?.typeOfRisk || data?.risk?.typeOfRisk || "";
   const bps = data?.risk?.businessProcess || [];
-  const updatedAt = data?.risk?.updatedAt;
+  const updatedAt = draft ? get(data, "risk.draft.objectResult.updatedAt", "") : data?.risk?.updatedAt;
   const updatedBy = data?.risk?.lastUpdatedBy;
   const createdBy = data?.risk?.createdBy;
-  const createdAt = data?.risk?.createdAt;
+  const createdAt = draft ? get(data, "risk.draft.objectResult.createdAt", "") : data?.risk?.createdAt;
   const hasEditAccess = data?.risk?.hasEditAccess || false;
   const requestStatus = data?.risk?.requestStatus;
   const requestEditState = data?.risk?.requestEdit?.state;
+  const draftName = draft?.name
+  const businessProcessesData = data?.risk?.businessProcesses
 
   const premise = useEditState({
     draft,
@@ -157,7 +163,7 @@ export default function Risk({
   async function review({ publish }: { publish: boolean }) {
     try {
       await reviewMutation({ variables: { id, publish } });
-      notifySuccess(publish ? "Changes Approved" : "Changes Rejected");
+      publish ? notifySuccess("Changes Approved") : notifyReject('Changes Rejected')
     } catch (error) {
       notifyGraphQLErrors(error);
     }
@@ -300,14 +306,17 @@ export default function Risk({
 
   const renderRisk = () => {
     const details1 = [
-      { label: "Risk Id", value: id },
-      { label: "Name", value: name },
-      {
-        label: "Business Process",
-        value: bps.length ? bps?.join(", ") : "",
+      { label: "Risk ID", value: id },
+      { 
+        label: "Name", 
+        value: draft ? draftName : name 
       },
       {
-        label: "Level of Risk",
+        label: "Business process",
+        value: businessProcessesData?.map(item => item.name).join(", "),
+      },
+      {
+        label: "Level of risk",
         value: (
           <Badge color="secondary">
             {startCase(levelOfRisk)}
@@ -315,30 +324,30 @@ export default function Risk({
         ),
       },
       {
-        label: "Type of Risk",
+        label: "Type of risk",
         value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [
       {
-        label: "Last Updated",
-        value: draft ? updatedAt?.split("T")[0] : updatedAt?.split(" ")[0],
+        label: "Last updated",
+        value: draft ? <DateHover humanize={false}>{updatedAt?.split("T")[0]}</DateHover> : <DateHover humanize={false}>{updatedAt?.split(" ")[0]}</DateHover>,
       },
       {
-        label: "Updated By",
+        label: "Updated by",
         value: updatedBy,
       },
       {
-        label: "Created At",
-        value: draft ? createdAt?.split("T")[0] : createdAt?.split(" ")[0],
+        label: "Created at",
+        value: draft ? <DateHover humanize={false}>{createdAt?.split("T")[0]}</DateHover> : <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover>,
       },
       {
-        label: "Created By",
+        label: "Created by",
         value: createdBy,
       },
       {
         label: "Status",
-        value: draft ? "Waiting for review" : "Release",
+        value: capitalCase(data?.risk?.status || ''),
       },
     ];
     return (
@@ -348,7 +357,11 @@ export default function Risk({
             {details1.map((item) => (
               <Fragment key={item.label}>
                 <dt>{item.label}</dt>
-                <dd>{item.value || "-"}</dd>
+                {item.label === "Name" ? (
+                  <dd style={{overflow: "hidden", overflowWrap: "break-word"}}>{item.value || "-"}</dd>
+                ) : (
+                  <dd>{item.value || "-"}</dd>
+                )}
               </Fragment>
             ))}
           </dl>
@@ -368,17 +381,17 @@ export default function Risk({
   return (
     <div>
       <Helmet>
-        <title>{name} - Risk - PricewaterhouseCoopers</title>
+        <title>{draft ? draftName : name} - Risk - PricewaterhouseCoopers</title>
       </Helmet>
       <BreadCrumb
         crumbs={[
           ["/risk", "Risks"],
-          ["/risk/" + id, name],
+          ["/risk/" + id, (draft ? draftName : name)],
         ]}
       />
       <Row>
         <Col>
-          <HeaderWithBackButton heading={name} draft={!!draft} />
+          <HeaderWithBackButton heading={draft ? draftName : name} draft={!!draft} />
         </Col>
         <Col>
           <div  className="d-flex justify-content-end mb-3">
