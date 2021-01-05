@@ -538,6 +538,7 @@ const ActivityModalForm = ({
         placeholder="Title..."
         innerRef={register}
         error={errors.activity && "Activity is a required field"}
+        type="textarea"
       />
       <span className="mt-2 mb-3">Control activity guidance</span>
       <div className="d-flex ml-3">
@@ -565,7 +566,7 @@ const ActivityModalForm = ({
       <div className="mt-1">
         {activityType === "text" ? (
           <Input
-            type="text"
+            type="textarea"
             name="guidance"
             innerRef={register}
             placeholder="Description..."

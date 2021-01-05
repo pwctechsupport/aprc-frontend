@@ -5,6 +5,7 @@ import { Link, RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Input } from "reactstrap";
 import styled from "styled-components";
+import { capitalCase } from 'capital-case';
 import PickIcon from "../../../assets/Icons/PickIcon";
 import {
   useAdminPolicyCategoriesQuery,
@@ -201,6 +202,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {policyCategories.map((policyCategory) => {
+            console.log('cekking',policyCategory.draft)
             return (
               <tr
                 key={policyCategory.id}
@@ -222,12 +224,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
 
                 <td className="wrapped">{policyCategory.name}</td>
                 <td className="wrapped">{policyCategory.policies?.map(pol => pol.title).join(", ")}</td>
-                <td>
-                  {policyCategory.draft ||
-                  policyCategory.status === "waiting_for_approval"
-                    ? "Waiting for review"
-                    : "Release"}
-                </td>
+                <td>{capitalCase(policyCategory?.status || "")}</td>
                 <td>
                   <DateHover humanize={false}>
                     {policyCategory.updatedAt.split(" ")[0]}

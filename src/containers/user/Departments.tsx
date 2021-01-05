@@ -157,8 +157,8 @@ const Departments = ({ history }: RouteComponentProps) => {
             <tr>
               <th className="text-center" style={{ width: "15%" }}>Department ID</th>
               <th style={{ width: "20%" }}>Name</th>
-              <th style={{ width: "20%" }}>Created At</th>
-              <th style={{ width: "20%" }}>Last Updated</th>
+              <th style={{ width: "20%" }}>Created at</th>
+              <th style={{ width: "20%" }}>Last updated</th>
               <th style={{ width: "10%" }}>Action</th>
             </tr>
           </thead>
