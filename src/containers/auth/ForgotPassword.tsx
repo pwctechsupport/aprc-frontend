@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { RouteComponentProps } from "react-router-dom";
 import { toast } from "react-toastify";
+import styled from "styled-components";
 import { useForgotPasswordMutation } from "../../generated/graphql";
 import Button from "../../shared/components/Button";
 import { Container, Form, H1, Image, Input, Label } from "../auth/Login";
@@ -53,14 +54,14 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
           }}
         >
           <Image src={pwcLogo} alt="pwc-logo" />
-          <H1 style={{ fontSize: "16px", textAlign: "center" }}>Automated Policy, Risk and Control Management Tool</H1>
+          <H4 style={{ fontSize: "16px" }}>Automated Policy, Risk and Control Management Tool</H4>
           <H1 style={{ fontSize: "16px", textAlign: "center" }}>
             Password recovery
           </H1>
-          <h4 style={{ fontSize: "14px", textAlign: "center" }}>
+          <H4>
             Enter the email address for your account and we'll send you
             instructions to reset your password.
-          </h4>
+          </H4>
           <Form onSubmit={handleSubmit(onSubmit)}>
             <div className="my-5">
               <Label>Your Email</Label>
@@ -96,3 +97,18 @@ const ForgotPassword = ({ history }: RouteComponentProps) => {
 };
 
 export default ForgotPassword;
+
+const H4 = styled.h4`
+  font-size: 14px;
+  text-align: center;
+  margin-bottom: 15px;
+  @media (max-width: 414px) {
+    margin: 0 21px 15px 21px;
+  }
+  @media (max-width: 375px) {
+    margin: 0 16px 15px 16px;
+  }
+  @media (max-width: 320px) {
+    margin: 0 20px 15px 20px;
+  }
+`
