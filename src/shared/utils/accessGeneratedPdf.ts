@@ -55,8 +55,8 @@ export async function emailPdf(fileName: string, id: number, policy?: boolean) {
     const link = document.createElement("a");
     link.target = "_blank";
     link.href = policy
-      ? `mailto:?subject=${fileName}&body=http://skywalker.rubyh.co/policy/${id}`
-      : `mailto:?subject=${fileName}&body=http://skywalker.rubyh.co/risk-and-control/${id}`;
+      ? `mailto:?subject=${fileName}&body=${document.location.origin}/policy/${id}`
+      : `mailto:?subject=${fileName}&body=${document.location.origin}/risk-and-control/${id}`;
     document.body.appendChild(link);
     link.click();
     link.parentNode && link.parentNode.removeChild(link);
