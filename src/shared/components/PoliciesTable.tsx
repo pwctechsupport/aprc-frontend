@@ -154,14 +154,14 @@ const PolicyTableRow = ({
   return (
     <>
       <tr key={id}>
-        <td>
+        <td style={{width: '6%'}}>
           {hasChild && (
             <Button onClick={toggleChild} color="" className="text-secondary">
               {showChild ? <FaFolderOpen /> : <FaFolder />}
             </Button>
           )}
         </td>
-        <td>
+        <td style={{width: '55%'}}>
           <div
             style={level ? { marginLeft: level * 10 } : {}}
             className="d-flex align-items-center"
@@ -177,14 +177,14 @@ const PolicyTableRow = ({
             </PWCLink>
           </div>
         </td>
-        <td>{policy.references?.map((item) => item.name).join(", ")}</td>
-        <td>
+        <td style={{width: '11%'}}>{policy.references?.map((item) => item.name).join(", ")}</td>
+        <td style={{width: '11%'}}>
           <DisplayStatus>{policy.status}</DisplayStatus>
         </td>
-        <td>
+        <td style={{width: '11%'}}>
           <DateHover withIcon>{policy.updatedAt}</DateHover>
         </td>
-        <td className="action">
+        <td className="action" style={{width: '6%'}}>
           {isAdminReviewer ? (
             <Tooltip description="Delete Policy">
               <Button onClick={handleDelete} className="soft red" color="">
