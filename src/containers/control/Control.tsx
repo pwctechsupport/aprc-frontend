@@ -192,9 +192,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
   const risks = data?.control?.risks || [];
   const riskIds = risks.map((a) => a.id);
 
-  const businessProcesses =
-    dataBps?.navigatorBusinessProcesses?.collection || [];
-  const businessProcessIds = businessProcesses.map((bp) => bp.id);
+  const businessProcesses = draft
+    ? get(data, "control.draft.objectResult.businessProcesses", [])
+    : data?.control?.businessProcesses || [];
+  const businessProcessIds = businessProcesses.map((bp: any) => bp.id);
   const activityControls = data?.control?.activityControls || [];
   const createdAt = draft
     ? get(data, "control.draft.objectResult.createdAt", "")

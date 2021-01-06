@@ -88,6 +88,10 @@ fragment objectResulto on Control {
     id
     name
   }
+  businessProcesses {
+    id
+    name
+  }
   assertion
   typeOfControl
   ipo
