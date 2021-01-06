@@ -48,9 +48,9 @@ function composeMessage(messages: any) {
         })}
       </ul>
     );
+  } else {
+    return messages.join('')
   }
-
-  return messages;
 }
 
 export const notifyGraphQLErrors = (errors: ApolloError) => {
