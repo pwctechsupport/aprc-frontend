@@ -128,9 +128,9 @@ export default function UserRow({
 
 if (draft) {
     const draftData: any = draft || {};
-    name = draftData.name;
+    name = draftData?.name;
     policyCategories = draftData.policyCategories.map(myFunction)
-    department = draftData.department.name
+    department = draftData?.department?.name
     user = draftData
   }
 
