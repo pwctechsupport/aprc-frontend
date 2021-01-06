@@ -40,17 +40,20 @@ export const notifyInfo = (message: ToastContent, options?: ToastOptions) => {
 };
 
 function composeMessage(messages: any) {
-  if (messages instanceof Array && messages.length > 1) {
-    return (
-      <ul style={{ marginLeft: '-1.5rem'}}>
-        {messages.map((message, index) => {
-          return <li key={index}>{message}</li>;
-        })}
-      </ul>
-    );
-  } else {
-    return messages.join('')
-  }
+  if (messages instanceof Array) {
+    if (messages.length > 1) {
+      return (
+        <ul style={{ marginLeft: '-1.5rem'}}>
+          {messages.map((message, index) => {
+            return <li key={index}>{message}</li>;
+          })}
+        </ul>
+      )
+    } else {
+      return messages.join('');
+    }
+  } 
+    return messages;
 }
 
 export const notifyGraphQLErrors = (errors: ApolloError) => {
