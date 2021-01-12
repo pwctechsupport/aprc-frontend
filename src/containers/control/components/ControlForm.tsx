@@ -401,13 +401,13 @@ const ControlForm = ({
             <tbody>
               {cool.map((activity) => (
                 <tr key={"Row" + activity.id}>
-                  <td>{activity.activity}</td>
-                  <td>
+                  <td className="wrapped" style={{width: '42.5%'}}>{activity.activity}</td>
+                  <td className="wrapped" style={{width: '42.5%'}}>
                     {activity.resuploadFileName
                       ? activity.resuploadFileName?.toString()
                       : activity.guidance}
                   </td>
-                  <td className="action">
+                  <td className="action" style={{width: '15%'}}>
                     <Button
                       onClick={() => handleEdit(activity.id)}
                       className="soft red mr-2"
