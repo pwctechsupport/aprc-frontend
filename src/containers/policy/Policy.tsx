@@ -944,7 +944,6 @@ export default function Policy({
                     policies={children}
                     isAdminView={isAdminView}
                     onDelete={handleDelete}
-                    subPoliciesStatus={getSubPoliciesStatus}
                   />
                 </Collapsible>
               </div>

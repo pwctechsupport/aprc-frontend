@@ -18,17 +18,24 @@ interface PoliciesTableProps {
   policies: Policy[];
   isAdminView?: boolean;
   onDelete?: (id: string, title: string) => void;
-  subPoliciesStatus?: any
 }
 
 export default function PoliciesTable({
   policies,
   onDelete,
   isAdminView,
-  subPoliciesStatus
 }: PoliciesTableProps) {
   const history = useHistory();
   const [isUser, isAdminReviewer] = useAccessRights(["user", "admin_reviewer"]);
+
+  const getPolicy = policies.filter(function(policy) {
+    if (isUser && policy?.status) {
+      return ['release'].includes(policy.status)
+    } else if (isAdminReviewer && policy?.status) {
+      return !['draft'].includes(policy.status)
+    } else return policy
+  })
+
   return (
     <Table responsive>
       <thead>
@@ -42,79 +49,21 @@ export default function PoliciesTable({
         </tr>
       </thead>
       <tbody>
-        {policies.length ? (
-          <Fragment>
-            {isUser ? (
-              <Fragment>
-                {!subPoliciesStatus.includes('release') ? (
-                  <tr>
-                    <td colSpan={6}>
-                      <EmptyAttribute />
-                    </td>
-                  </tr>
-                ) : (
-                  policies.map((policy) => (
-                    <PolicyTableRow
-                      key={policy.id}
-                      policy={policy}
-                      isAdminView={isAdminView}
-                      onClick={(id) =>
-                        history.push(
-                          isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
-                        )
-                      }
-                      onDelete={() => onDelete?.(policy.id, policy.title || "")}
-                      level={0}
-                    />
-                  ))
-                )}
-              </Fragment>
-            ) : (
-              <Fragment>
-                {isAdminReviewer ? (
-                  <>
-                    {subPoliciesStatus.includes('draft') ? (
-                      <tr>
-                        <td colSpan={6}>
-                          <EmptyAttribute />
-                        </td>
-                      </tr>
-                    ) : (
-                      policies.map((policy) => (
-                        <PolicyTableRow
-                          key={policy.id}
-                          policy={policy}
-                          isAdminView={isAdminView}
-                          onClick={(id) =>
-                            history.push(
-                              isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
-                            )
-                          }
-                          onDelete={() => onDelete?.(policy.id, policy.title || "")}
-                          level={0}
-                        />
-                      ))
-                    )}
-                  </>
-                ) : (
-                  policies.map((policy) => (
-                    <PolicyTableRow
-                      key={policy.id}
-                      policy={policy}
-                      isAdminView={isAdminView}
-                      onClick={(id) =>
-                        history.push(
-                          isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
-                        )
-                      }
-                      onDelete={() => onDelete?.(policy.id, policy.title || "")}
-                      level={0}
-                    />
-                  ))
-                )}
-              </Fragment>
-            )}
-          </Fragment>
+        {getPolicy.length ? (
+          getPolicy.map((policy) => (
+            <PolicyTableRow
+              key={policy.id}
+              policy={policy}
+              isAdminView={isAdminView}
+              onClick={(id) =>
+                history.push(
+                  isAdminView ? `/policy-admin/${id}/details` : `/policy/${id}`
+                )
+              }
+              onDelete={() => onDelete?.(policy.id, policy.title || "")}
+              level={0}
+            />
+          ))
         ) : (
           <tr>
             <td colSpan={6}>
