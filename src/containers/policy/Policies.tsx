@@ -193,7 +193,7 @@ const PolicyTableRow = ({
   level = 0,
   status,
 }: {
-  policy: Omit<Policy, "createdAt" | "updatedAt" | "visit">;
+  policy: Omit<Policy, "createdAt" | "updatedAt" | "visit" | "publishedAt">;
   onClick: (value: any) => void;
   onDelete: (value: any) => void;
   level?: number;

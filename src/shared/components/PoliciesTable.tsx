@@ -30,8 +30,11 @@ export default function PoliciesTable({
 
   const getPolicy = policies.filter(function(policy) {
     if (isUser && policy?.status) {
+      if (policy.publishedAt) {
+        return ['release', 'waiting_for_review'].includes(policy.status)
+      }
       return ['release'].includes(policy.status)
-    } else if (isAdminReviewer && policy?.status) {
+    } else if (isAdminReviewer && policy.status) {
       return !['draft'].includes(policy.status)
     } else return policy
   })
