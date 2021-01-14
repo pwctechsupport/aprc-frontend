@@ -215,15 +215,11 @@ const PolicyBranch = ({
     originalData?.children?.filter((a: any) => a.status !== "draft") || [];
   const grandpa = children?.map((a) => a.children).flat().length || 0;
 
-  const isRelease = status.includes("release")
-  const isWaitingForApproval = status.includes("waiting_for_approval")
-  const isReadyForEdit = status.includes("ready_for_edit")
-  const isUserStatus = isRelease || isWaitingForApproval || isReadyForEdit
   return (
     <div>
       <Fragment>
         {/* when the current user is just a user */}
-        {isUser && isUserStatus ? (
+        {isUser ? (
           <Fragment>
             <SideBoxBranch
               className={classnames("d-flex align-items-center", {
