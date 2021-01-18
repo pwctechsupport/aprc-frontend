@@ -1,0 +1,9 @@
+query riskBusinessProcesses {
+  riskBusinessProcesses(filter: {}, limit: 10000) {
+    collection {
+      id
+      businessProcess { id name }
+      risk { id name }
+    }
+  }
+}
