@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import { Col, Form, FormGroup, Label, Row } from "reactstrap";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
+import { groupBy } from "lodash";
+import { pipe, filter, map, uniq, get } from "lodash/fp";
 import * as yup from "yup";
 import PickIcon from "../../../assets/Icons/PickIcon";
 import {
@@ -19,6 +21,7 @@ import {
   useBusinessProcessesQuery,
   useControlsQuery,
   useDepartmentsQuery,
+  useRiskBusinessProcessesQuery,
 } from "../../../generated/graphql";
 import Button from "../../../shared/components/Button";
 import DialogButton from "../../../shared/components/DialogButton";
@@ -75,12 +78,39 @@ const ControlForm = ({
     skip: checkRisk.length ? false : true,
     variables: { filter: { risks_id_in: checkRisk } },
   });
-  const ultimateBp =
-    risksQ.data?.preparerRisks?.collection.filter((a) =>
-      checkRisk.includes(a.id)
-    ) || [];
 
-  const groupedBpOptions = ultimateBp.map((a) => {
+  const riskBisproQ = useRiskBusinessProcessesQuery();
+  // const ultimateBp =
+  //   risksQ.data?.preparerRisks?.collection.filter((a) =>
+  //     checkRisk.includes(a.id)
+  //   ) || []; //selected risk in form
+
+  const grouped = groupBy(
+    (riskBisproQ.data?.riskBusinessProcesses?.collection || [])
+      .filter(({risk}) => {
+        return risk?.id && checkRisk.includes(risk?.id);
+      }),
+    "risk.name"
+  );
+  console.log({ grouped });
+
+  let newOptions = [];
+
+  for (const riskGroup in grouped) {
+    newOptions.push({
+      label: riskGroup,
+      options: grouped[riskGroup].map((riskBispro) => {
+        return {
+          label: riskBispro.businessProcess?.name,
+          value: riskBispro.id,
+        } as any;
+      }),
+    });
+  }
+
+  console.log({ newOptions });
+
+  /* const groupedBpOptions = ultimateBp.map((a) => {
     return {
       label: a.name,
       options: oc(bpsQ.data)
@@ -103,7 +133,7 @@ const ControlForm = ({
           return { label: z.label || "", value: z.value };
         }),
     };
-  });
+  }); */
 
   const bpOptions = oc(bpsQ)
     .data.navigatorBusinessProcesses.collection([])
@@ -143,14 +173,20 @@ const ControlForm = ({
 
   const submit = (values: CreateControlFormValues) => {
     const prepare = beforeSubmit(cool).concat(deleteActivity);
+    const businessProcessIds = pipe(
+      filter((riskBispro: any) => values.riskBusinessProcessIds.includes(riskBispro.id)),
+      map(get('businessProcess.id')),
+      uniq
+    )(riskBisproQ.data?.riskBusinessProcesses?.collection || [])
+
     onSubmit?.({
       ...values,
       activityControlsAttributes: prepare,
     });
-    // if (prepare.length) {
-    // } else {
-    //   toast.error("Add Control Activity is a required field");
-    // }
+    if (prepare.length) {
+    } else {
+      toast.error("Add Control Activity is a required field");
+    }
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
@@ -276,13 +312,13 @@ const ControlForm = ({
         <FormSelect
           isMulti
           isDisabled={checkRisk.length ? false : true}
-          name="businessProcessIds"
+          name="riskBusinessProcessIds"
           label="Business processes*"
           placeholder="Business processes"
           isLoading={bpsQ.loading}
           register={register}
           setValue={setValue}
-          options={groupedBpOptions}
+          options={newOptions}
           loading={bpsQ.loading}
           defaultValue={bpOptions.filter((res) =>
             oc(defaultValues)
@@ -290,7 +326,7 @@ const ControlForm = ({
               .includes(res.value)
           )}
           error={
-            errors.businessProcessIds && "Business Process is a required field"
+            errors.riskBusinessProcessIds && "Business Process is a required field"
           }
         />
 
@@ -669,6 +705,7 @@ export interface CreateControlFormValues {
   description?: string | null;
   riskIds: string[];
   businessProcessIds: string[];
+  riskBusinessProcessIds: string[];
   keyControl: boolean;
   activityControlsAttributes: MyCoolControlActivity[] | null | undefined;
 }
@@ -715,7 +752,7 @@ const validationSchema = yup.object().shape({
   assertion: yup.array().required(),
   nature: yup.string().required(),
   controlOwner: yup.array().required(),
-  businessProcessIds: yup.array().required(),
+  riskBusinessProcessIds: yup.array().required(),
 });
 
 // const validationSchemaControlActivity = yup.object().shape({
