@@ -92,7 +92,6 @@ const ControlForm = ({
       }),
     "risk.name"
   );
-  console.log({ grouped });
 
   let newOptions = [];
 
@@ -107,8 +106,6 @@ const ControlForm = ({
       }),
     });
   }
-
-  console.log({ newOptions });
 
   /* const groupedBpOptions = ultimateBp.map((a) => {
     return {
@@ -181,12 +178,13 @@ const ControlForm = ({
 
     onSubmit?.({
       ...values,
+      businessProcessIds,
       activityControlsAttributes: prepare,
     });
-    if (prepare.length) {
-    } else {
-      toast.error("Add Control Activity is a required field");
-    }
+    // if (prepare.length) {
+    // } else {
+    //   toast.error("Add Control Activity is a required field");
+    // }
   };
 
   function handleActivitySubmit(values: MyCoolControlActivity) {
