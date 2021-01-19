@@ -5,7 +5,6 @@ import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import PickIcon from "../../assets/Icons/PickIcon";
 import { Policy } from "../../generated/graphql";
-import { previewHtml } from "../formatter";
 import useAccessRights from "../hooks/useAccessRights";
 import Button from "./Button";
 import DateHover from "./DateHover";
@@ -31,7 +30,7 @@ export default function PoliciesTable({
   const getPolicy = policies.filter(function(policy) {
     if (isUser && policy?.status) {
       if (policy.publishedAt) {
-        return ['release', 'waiting_for_review'].includes(policy.status)
+        return ['release', 'waiting_for_review', 'draft'].includes(policy.status)
       }
       return ['release'].includes(policy.status)
     } else if (isAdminReviewer && policy.status) {
