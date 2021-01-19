@@ -133,8 +133,8 @@ export default function Policy({
 
   const { loading, data } = usePolicyQuery({
     variables: { id, withChild: true },
-    fetchPolicy: "network-only",
-    pollInterval: 30000,
+    fetchPolicy: "no-cache",
+    // pollInterval: 30000,
   });
   const referenceData = useReferencesQuery({
     fetchPolicy: "network-only",
@@ -190,7 +190,7 @@ export default function Policy({
       }),
     []
   );
-
+const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
   useLayoutEffect(() => {
     if (location.hash.includes("risks")) {
       scrollToRisk();
@@ -382,10 +382,31 @@ export default function Policy({
 
   const isSubmitted = data?.policy?.isSubmitted;
   const draft = data?.policy?.draft?.objectResult;
-  const title = data?.policy?.title || "";
-  const description = draft
-    ? get(data, "policy.draft.objectResult.description", "")
-    : data?.policy?.description || "";
+  let title = ""
+  if (isUser) {
+    title = data?.policy?.title || ""
+  } else {
+    if (draft) {
+      title = get(data, "policy.draft.objectResult.title", "")
+    } else {
+      title = data?.policy?.title || ""
+    }
+  }
+
+  let description = ""
+  if (isUser) {
+    description = data?.policy?.description || ""
+  } else {
+    if (draft) {
+      description = get(data, "policy.draft.objectResult.description", "")
+    } else {
+      description = data?.policy?.description || ""
+    }
+  }
+
+  // const description = draft
+  //   ? get(data, "policy.draft.objectResult.description", "")
+  //   : data?.policy?.description || "";
   const hasEditAccess = oc(data).policy.hasEditAccess();
 
   const children = oc(data).policy.children([]);
