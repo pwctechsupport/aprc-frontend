@@ -57,7 +57,8 @@ export default function NewNavbar() {
   })
 
   const unreadCount = data?.notifications?.metadata.totalCount || 0
-  const showNotif = data?.me?.notifShow || false
+  // const showNotif = data?.me?.notifShow || false
+  const showNotif = true
   const underlineDecider = (path: any) => {
     if (path === currentUrl) {
       return <Underline />
