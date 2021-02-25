@@ -193,7 +193,7 @@ const PolicyTableRow = ({
   level = 0,
   status,
 }: {
-  policy: Omit<Policy, "createdAt" | "updatedAt" | "visit">;
+  policy: Omit<Policy, "createdAt" | "updatedAt" | "visit" | "publishedAt">;
   onClick: (value: any) => void;
   onDelete: (value: any) => void;
   level?: number;
@@ -206,15 +206,15 @@ const PolicyTableRow = ({
     "admin_reviewer",
     "user"
   ]);
-  const isRelease = status.includes("release")
-  const isWaitingForApproval = status.includes("waiting_for_approval")
-  const isReadyForEdit = status.includes("ready_for_edit")
+  // const isRelease = status.includes("release")
+  // const isWaitingForApproval = status.includes("waiting_for_approval")
+  // const isReadyForEdit = status.includes("ready_for_edit")
   // const isUser = !(isAdmin || isAdminPreparer || isAdminReviewer);
-  const isUserStatus = isRelease || isWaitingForApproval || isReadyForEdit
+  // const isUserStatus = isRelease || isWaitingForApproval || isReadyForEdit
   return (
     <>
       {/* when user */}
-      {isUser && isUserStatus && (
+      {isUser && (
         <tr key={policy.id} onClick={() => onClick(policy.id)}>
           <td>
             <div

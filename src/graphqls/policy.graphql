@@ -316,6 +316,7 @@ fragment policyFragment on Policy {
   draft {
     id
   }
+  publishedAt
   requestStatus
   ancestry
   parentId
@@ -468,40 +469,70 @@ query policyDashboard {
   }
 
   # CONTROL
-  reviewedControls: controls(filter: { status_eq: release }) {
+  # reviewedControls: controls(filter: { status_eq: release }) {
+  #   metadata {
+  #     totalCount
+  #   }
+  # }
+  reviewedControls: controls(filter: { policy_controls_id_not_null: true, status_eq: release }) {
     metadata {
       totalCount
     }
   }
-  preparedControls: controls(
-    filter: { status_in: ["draft", "waiting_for_review"] }
-  ) {
+  # preparedControls: controls(
+  #   filter: { status_in: ["draft", "waiting_for_review"] }
+  # ) {
+  #   metadata {
+  #     totalCount
+  #   }
+  # }
+  preparedControls: controls(filter: { policy_controls_id_not_null: true, status_in: ["draft", "waiting_for_review"] }) {
     metadata {
       totalCount
     }
   }
-  totalControls: controls(filter: {}) {
+  # totalControls: controls(filter: {}) {
+  #   metadata {
+  #     totalCount
+  #   }
+  # }
+  totalControls: controls(filter: { policy_controls_id_not_null: true }) {
     metadata {
       totalCount
     }
   }
 
   # RISK
-  reviewedRisks: risks(filter: { status_eq: release }) {
+  # reviewedRisks: risks(filter: { status_eq: release }) {
+  #   metadata {
+  #     totalCount
+  #   }
+  # }
+  reviewedRisks: risks(filter: { policy_risks_id_not_null: true, status_eq: release }) {
     metadata {
       totalCount
     }
   }
-  preparedRisks: risks(filter: { status_in: ["draft", "waiting_for_review"] }) {
+  # preparedRisks: risks(filter: { status_in: ["draft", "waiting_for_review"] }) {
+  #   metadata {
+  #     totalCount
+  #   }
+  # }
+  preparedRisks: risks(filter: { policy_risks_id_not_null: true, status_in: ["draft", "waiting_for_review"] }) {
     metadata {
       totalCount
     }
   }
-  totalRisks: risks(filter: {}) {
+  # totalRisks: risks(filter: {}) {
+  #   metadata {
+  #     totalCount
+  #   }
+  # }
+  totalRisks: risks(filter: { policy_risks_id_not_null: true }) {
     metadata {
       totalCount
     }
-  }
+  } 
 }
 
 mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {
