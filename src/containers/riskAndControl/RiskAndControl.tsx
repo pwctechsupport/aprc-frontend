@@ -55,6 +55,7 @@ import { Badge } from "../../shared/components/Badge";
 import BreadCrumb, { CrumbItem } from "../../shared/components/BreadCrumb";
 import Button from "../../shared/components/Button";
 import Collapsible from "../../shared/components/Collapsible";
+import DateHover from "../../shared/components/DateHover";
 import DialogButton from "../../shared/components/DialogButton";
 import EmptyAttribute from "../../shared/components/EmptyAttribute";
 import CheckBox from "../../shared/components/forms/CheckBox";
@@ -496,7 +497,7 @@ export default function RiskAndControl({
     const details2 = [
       {
         label: "Last Updated",
-        value: updatedAt?.split(" ")[0],
+        value: <DateHover humanize={false}>{updatedAt?.split(" ")[0]}</DateHover>,
       },
       {
         label: "Updated By",
@@ -504,7 +505,7 @@ export default function RiskAndControl({
       },
       {
         label: "Created At",
-        value: createdAt?.split(" ")[0],
+        value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover>,
       },
       {
         label: "Created By",
@@ -793,9 +794,9 @@ export default function RiskAndControl({
         label: "Status",
         value: `${draftControl ? "Waiting for review" : "Release"}`,
       },
-      { label: "Last Updated", value: updatedAt },
+      { label: "Last Updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
       { label: "Last Updated By", value: lastUpdatedBy },
-      { label: "Created At", value: createdAt.split(" ")[0] },
+      { label: "Created At", value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover> },
       { label: "Created By", value: createdBy },
     ];
     return (

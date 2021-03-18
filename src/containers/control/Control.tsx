@@ -308,14 +308,14 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       { label: "Description", value: description },
 
       {
-        label: "Control owner",
+        label: "Control Owner",
         value: controlOwners.join(", "),
       },
       {
-        label: "Key control",
+        label: "Key Control",
         value: <CheckBox checked={keyControl} />,
       },
-      { label: "Type of control", value: capitalCase(typeOfControl) },
+      { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
         value: assertion.map((x: any) => capitalCase(x)).join(", "),
@@ -326,10 +326,10 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       },
       { label: "Frequency", value: capitalCase(frequency) },
       // { label: "Status", value: capitalCase(status) },
-      { label: "Last updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
-      { label: "Last updated by", value: lastUpdatedBy },
-      { label: "Created at", value: <DateHover humanize={false}>{createdAt.split(" ")[0]}</DateHover> },
-      { label: "Created by", value: createdBy },
+      { label: "Last Updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
+      { label: "Last Updated By", value: lastUpdatedBy },
+      { label: "Created At", value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover> },
+      { label: "Created By", value: createdBy },
     ];
     return (
       <Row>
