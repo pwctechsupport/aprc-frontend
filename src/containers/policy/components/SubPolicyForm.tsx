@@ -53,7 +53,7 @@ const SubPolicyForm = ({
     controlIds,
     riskIds,
   });
-  console.log("attr:", attr);
+  // console.log("attr:", attr);
   const skipBispro = attr.businessProcessIds || [];
   const getBisproDefValQ = useBusinessProcessesQuery({
     skip: !skipBispro.length,
