@@ -53,7 +53,7 @@ const SubPolicyForm = ({
     controlIds,
     riskIds,
   });
-  console.log("attr:", attr);
+
   const skipBispro = attr.businessProcessIds || [];
   const getBisproDefValQ = useBusinessProcessesQuery({
     skip: !skipBispro.length,
@@ -640,7 +640,7 @@ const SubPolicyAttributeForm = ({
   const controlsQ = useControlsQuery({
     skip: checkRisk.length ? false : true,
     variables: {
-      filter: { risks_id_in: checkRisk },
+      filter: { risks_id_in: checkRisk, status_in: ['release'] },
     },
     fetchPolicy: "network-only",
   });
@@ -650,15 +650,15 @@ const SubPolicyAttributeForm = ({
     .navigatorControls.collection([])
     .map(({ id, description }) => ({ label: description || "", value: id }));
 
-  const groupedControlOptions = controlOption.map((a) => {
+  const groupedControlOptions = controlOption.map((ctrlOpt) => {
     return {
-      label: a.label,
+      label: ctrlOpt.label,
       options: oc(controlsQ.data)
         .navigatorControls.collection([])
         .map((b) => {
           return {
             risks: b.risks?.map((c) => {
-              if (c.id === a.value) {
+              if (c.id === ctrlOpt.value) {
                 return 1;
               } else {
                 return 0;
