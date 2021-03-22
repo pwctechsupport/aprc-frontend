@@ -133,7 +133,7 @@ const PolicyTableRow = ({
           <DisplayStatus>{policy.status}</DisplayStatus>
         </td>
         <td style={{width: '11%'}}>
-          <DateHover withIcon>{policy.updatedAt}</DateHover>
+          <DateHover humanize={false} withIcon>{policy.updatedAt}</DateHover>
         </td>
         <td className="action" style={{width: '6%'}}>
           {isAdminReviewer ? (
