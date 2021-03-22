@@ -30,7 +30,9 @@ const PolicyForm = ({
   isAdmin = true,
 }: PolicyFormProps) => {
   const [createS, setCreateS] = useState(false);
-  const policyCategoriesState = usePolicyCategoriesQuery();
+  const policyCategoriesState = usePolicyCategoriesQuery({
+    variables: {filter: {status_in: ["release"]}}
+  });
   const { register, setValue, errors, handleSubmit } = useForm<
     PolicyFormValues
   >({
@@ -72,7 +74,7 @@ const PolicyForm = ({
     onSubmitAsDraft && onSubmitAsDraft(values);
   }
 
-  const options = oc(policyCategoriesState)
+  const optionsPolicyCateg = oc(policyCategoriesState)
     .data.navigatorPolicyCategories.collection([])
     .map(toLabelValue);
   const policyCategoryId = oc(defaultValues).policyCategoryId("");
@@ -132,9 +134,9 @@ const PolicyForm = ({
           label="Policy Category*"
           loading={policyCategoriesState.loading}
           placeholder="Policy Category"
-          options={options}
+          options={optionsPolicyCateg}
           onChange={handleChange("policyCategoryId")}
-          defaultValue={options.find(
+          defaultValue={optionsPolicyCateg.find(
             (option) => option.value === policyCategoryId
           )}
           error={
