@@ -468,71 +468,115 @@ query policyDashboard {
     }
   }
 
-  # CONTROL
-  # reviewedControls: controls(filter: { status_eq: release }) {
-  #   metadata {
-  #     totalCount
-  #   }
-  # }
-  reviewedControls: controls(filter: { policy_controls_id_not_null: true, status_eq: release }) {
+  # ADMIN PREPARER - CONTROL
+  adminPreparerTotalControls: controls (
+    filter: { policy_controls_id_not_null: true }
+  ) {
     metadata {
       totalCount
     }
   }
-  # preparedControls: controls(
-  #   filter: { status_in: ["draft", "waiting_for_review"] }
-  # ) {
-  #   metadata {
-  #     totalCount
-  #   }
-  # }
-  preparedControls: controls(filter: { policy_controls_id_not_null: true, status_in: ["draft", "waiting_for_review"] }) {
+  adminPreparerPreparedControls: controls (
+    filter: { policy_controls_id_not_null: true, status_in: ["draft", "waiting_for_review"] }
+  ) {
     metadata {
       totalCount
     }
   }
-  # totalControls: controls(filter: {}) {
-  #   metadata {
-  #     totalCount
-  #   }
-  # }
-  totalControls: controls(filter: { policy_controls_id_not_null: true }) {
+  adminPreparerReviewedControls: controls (
+    filter: { policy_controls_id_not_null: true, status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+  ) {
     metadata {
       totalCount
     }
   }
 
-  # RISK
-  # reviewedRisks: risks(filter: { status_eq: release }) {
-  #   metadata {
-  #     totalCount
-  #   }
-  # }
-  reviewedRisks: risks(filter: { policy_risks_id_not_null: true, status_eq: release }) {
+  #ADMIN REVIEWER - CONTROL
+  adminReviewerTotalControls: controls (
+    filter: { policy_controls_id_not_null: true, status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
+  ) {
     metadata {
       totalCount
     }
   }
-  # preparedRisks: risks(filter: { status_in: ["draft", "waiting_for_review"] }) {
-  #   metadata {
-  #     totalCount
-  #   }
-  # }
-  preparedRisks: risks(filter: { policy_risks_id_not_null: true, status_in: ["draft", "waiting_for_review"] }) {
+  adminReviewerPreparedControls: controls (
+    filter: { policy_controls_id_not_null: true, status_in: ["waiting_for_review"] }
+  ) {
     metadata {
       totalCount
     }
   }
-  # totalRisks: risks(filter: {}) {
-  #   metadata {
-  #     totalCount
-  #   }
-  # }
-  totalRisks: risks(filter: { policy_risks_id_not_null: true }) {
+  adminReviewerReviewedControls: controls (
+    filter: { policy_controls_id_not_null: true, status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+  ) {
     metadata {
       totalCount
     }
-  } 
+  }
+
+  # USER - CONTROL
+  userTotalControls: controls (
+    filter: { policy_controls_id_not_null: true, status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+
+  # ADMIN PREPARER - RISK
+  adminPreparerTotalRisks: risks (
+    filter: { policy_risks_id_not_null: true }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  adminPreparerPreparedRisks: risks (
+    filter: { policy_risks_id_not_null: true, status_in: ["draft", "waiting_for_review"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  adminPreparerReviewedRisks: risks (
+    filter: { policy_risks_id_not_null: true, status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+
+  #ADMIN REVIEWER - RISK
+  adminReviewerTotalRisks: risks (
+    filter: { policy_risks_id_not_null: true, status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  adminReviewerPreparedRisks: risks (
+    filter: { policy_risks_id_not_null: true, status_in: ["waiting_for_review"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+  adminReviewerReviewedRisks: risks (
+    filter: { policy_risks_id_not_null: true, status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
+
+  # USER - RISK
+  userTotalRisks: risks (
+    filter: { policy_risks_id_not_null: true, status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
+  ) {
+    metadata {
+      totalCount
+    }
+  }
 }
 
 mutation createBookmarkPolicy($input: CreateBookmarkPolicyInput!) {

@@ -110,14 +110,14 @@ export default function ControlsTable({
           <Fragment>
             {isUser ? (
               <Fragment>
-                {!subPoliciesStatus.includes('release') ? (
+                {/* {!subPoliciesStatus.includes('release') ? (
                   <tr>
                     <td colSpan={7}>
                       <EmptyAttribute />
                     </td>
                   </tr>
-                ) : (
-                  dataModifier(newDataControls)?.map((control: any) => (
+                ) : ( */}
+                  {dataModifier(newDataControls)?.map((control: any) => (
                     <tr key={control.id}>
                       <td>
                         <PWCLink
@@ -137,8 +137,8 @@ export default function ControlsTable({
                       <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
                       <td>{control.controlOwner?.join(", ")}</td>
                     </tr>
-                  ))
-                )}
+                  ))}
+                {/* )} */}
               </Fragment>
             ) : (
               dataModifier(newDataControls)?.map((control: any) => (

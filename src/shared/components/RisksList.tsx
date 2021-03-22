@@ -98,10 +98,10 @@ RisksListProps) {
     <ul>
       {isUser ? (
         <ul>
-          {!subPoliciesStatus.includes('release') ? (
+          {/* {!subPoliciesStatus.includes('release') ? (
             <EmptyAttribute />
-          ) : (
-            dataModifier(newDataRisks).map((risk: any) => (
+          ) : ( */}
+            {dataModifier(newDataRisks).map((risk: any) => (
               <li key={risk.id}>
                 <div className="mb-3 d-flex justify-content-between">
                   <PWCLink
@@ -120,8 +120,8 @@ RisksListProps) {
                   </PWCLink>
                 </div>
               </li>
-            ))
-          )}
+            ))}
+          {/* )} */}
         </ul>
       ) : (
         dataModifier(newDataRisks).map((risk: any) => (
