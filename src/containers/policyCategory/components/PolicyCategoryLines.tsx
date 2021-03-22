@@ -202,7 +202,6 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {policyCategories.map((policyCategory) => {
-            console.log('cekking',policyCategory.draft)
             return (
               <tr
                 key={policyCategory.id}
