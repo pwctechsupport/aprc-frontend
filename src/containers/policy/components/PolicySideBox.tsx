@@ -88,6 +88,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
           })
           .filter((b) => b !== undefined)
       : policies;
+
   useEffect(() => {
     policies.length === limit ? setCondition(true) : setCondition(false);
   }, [policies, scrollPointer, limit]);
@@ -199,6 +200,13 @@ const PolicyBranch = ({
           : 0
         : 0
     );
+
+  const filterModifiedChildren = modifiedChildren?.filter((childPolicy) => {
+    if (childPolicy.status === 'release' || childPolicy.status === 'waiting_for_approval') {
+      return childPolicy
+    }
+  })
+    
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const isActive = id === activeId;
@@ -259,7 +267,7 @@ const PolicyBranch = ({
             </SideBoxBranch>
             {hasChild && (
               <Collapse isOpen={isOpen}>
-                {modifiedChildren?.map((child: PolicyBranchProps) => (
+                {filterModifiedChildren?.map((child: PolicyBranchProps) => (
                   <PolicyBranch
                     key={child.id}
                     parentId={child.parentId}

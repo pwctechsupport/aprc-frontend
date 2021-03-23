@@ -590,8 +590,8 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
     ];
     const details2 = [
       {
-        label: "Last updated",
-        value: updatedAt?.split(" ")[0],
+        label: "Last Updated",
+        value: <DateHover humanize={false}>{updatedAt?.split(" ")[0]}</DateHover>,
       },
       {
         label: "Updated By",
@@ -599,10 +599,10 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
       },
       {
         label: "Created At",
-        value: createdAt?.split(" ")[0],
+        value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover>,
       },
       {
-        label: "Created by",
+        label: "Created By",
         value: createdBy,
       },
       {
@@ -678,14 +678,14 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
       { label: "Description", value: descriptionControl },
 
       {
-        label: "Control owner",
+        label: "Control Owner",
         value: departments.map((a: any) => a.name).join(", "),
       },
       {
         label: "Key Control",
         value: <CheckBox checked={keyControl} />,
       },
-      { label: "Type of control", value: capitalCase(typeOfControl) },
+      { label: "Type of Control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
         value: assertion.map((x) => capitalCase(x)).join(", "),
@@ -699,10 +699,10 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
         label: "Status",
         value: `${draftControl ? "Waiting for review" : "Release"}`,
       },
-      { label: "Last updated", value: updatedAt },
+      { label: "Last Updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
       { label: "Last Updated By", value: lastUpdatedBy },
-      { label: "Created At", value: createdAt.split(" ")[0] },
-      { label: "Created by", value: createdBy },
+      { label: "Created At", value: <DateHover humanize={false}>{createdAt.split(" ")[0]}</DateHover> },
+      { label: "Created By", value: createdBy },
     ];
     return (
       <Route exact path="/policy/:id/details/control/:id">
@@ -726,7 +726,7 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
                 ) : (
                   <EmptyAttribute />
                 )}
-                <dt>Business processes</dt>
+                <dt>Business Processes</dt>
                 {businessProcesses.length ? (
                   filteredNames(businessProcesses).map((bp: any) => (
                     <dd key={bp.id}>{bp.name}</dd>
