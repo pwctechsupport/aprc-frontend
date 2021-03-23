@@ -32,7 +32,7 @@ export default function PoliciesTable({
       if (policy.publishedAt) {
         return ['release', 'waiting_for_review', 'draft'].includes(policy.status)
       }
-      return ['release'].includes(policy.status)
+      return ['release', 'waiting_for_approval'].includes(policy.status)
     } else if (isAdminReviewer && policy.status) {
       return !['draft'].includes(policy.status)
     } else return policy
