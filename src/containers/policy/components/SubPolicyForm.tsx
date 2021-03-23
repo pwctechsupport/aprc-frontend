@@ -615,7 +615,7 @@ const SubPolicyAttributeForm = ({
   const risksQ = useRisksQuery({
     skip: bpsFinalValues.length ? false : true,
     variables: {
-      filter: { business_processes_id_in: bpsFinalValues },
+      filter: { business_processes_id_in: bpsFinalValues, status_eq: "release" },
     },
     fetchPolicy: "network-only",
   });
