@@ -478,11 +478,11 @@ export default function RiskAndControl({
       { label: "Risk ID", value: riskId },
       { label: "Name", value: riskName },
       {
-        label: "Business Process",
+        label: "Business process",
         value: bps?.join(", "),
       },
       {
-        label: "Level of Risk",
+        label: "Level of risk",
         value: (
           <Badge color="secondary">
             {startCase(levelOfRisk)}
@@ -490,25 +490,25 @@ export default function RiskAndControl({
         ),
       },
       {
-        label: "Type of Risk",
+        label: "Type of risk",
         value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [
       {
-        label: "Last Updated",
+        label: "Last updated",
         value: <DateHover humanize={false}>{updatedAt?.split(" ")[0]}</DateHover>,
       },
       {
-        label: "Updated By",
+        label: "Updated by",
         value: updatedBy,
       },
       {
-        label: "Created At",
+        label: "Created at",
         value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover>,
       },
       {
-        label: "Created By",
+        label: "Created by",
         value: createdBy,
       },
       {
@@ -773,14 +773,14 @@ export default function RiskAndControl({
       { label: "Description", value: descriptionControl },
 
       {
-        label: "Control Owner",
+        label: "Control owner",
         value: departments.map((a: any) => a.name).join(", "),
       },
       {
-        label: "Key Control",
+        label: "Key control",
         value: <CheckBox checked={keyControl} />,
       },
-      { label: "Type of Control", value: capitalCase(typeOfControl) },
+      { label: "Type of control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
         value: assertion.map((x: any) => capitalCase(x)).join(", "),
@@ -794,10 +794,10 @@ export default function RiskAndControl({
         label: "Status",
         value: `${draftControl ? "Waiting for review" : "Release"}`,
       },
-      { label: "Last Updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
-      { label: "Last Updated By", value: lastUpdatedBy },
-      { label: "Created At", value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover> },
-      { label: "Created By", value: createdBy },
+      { label: "Last updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
+      { label: "Last updated by", value: lastUpdatedBy },
+      { label: "Created at", value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover> },
+      { label: "Created by", value: createdBy },
     ];
     return (
       <Route exact path="/risk-and-control/:id/control/:id">

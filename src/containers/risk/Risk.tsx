@@ -312,11 +312,11 @@ export default function Risk({
         value: draft ? draftName : name 
       },
       {
-        label: "Business Process",
+        label: "Business process",
         value: businessProcessesData?.map(item => item.name).join(", "),
       },
       {
-        label: "Level of Risk",
+        label: "Level of risk",
         value: (
           <Badge color="secondary">
             {startCase(levelOfRisk)}
@@ -324,25 +324,25 @@ export default function Risk({
         ),
       },
       {
-        label: "Type of Risk",
+        label: "Type of risk",
         value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [
       {
-        label: "Last Updated",
+        label: "Last updated",
         value: draft ? <DateHover humanize={false}>{updatedAt?.split("T")[0]}</DateHover> : <DateHover humanize={false}>{updatedAt?.split(" ")[0]}</DateHover>,
       },
       {
-        label: "Updated By",
+        label: "Updated by",
         value: updatedBy,
       },
       {
-        label: "Created At",
+        label: "Created at",
         value: draft ? <DateHover humanize={false}>{createdAt?.split("T")[0]}</DateHover> : <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover>,
       },
       {
-        label: "Created By",
+        label: "Created by",
         value: createdBy,
       },
       {
