@@ -726,7 +726,7 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
                 ) : (
                   <EmptyAttribute />
                 )}
-                <dt>Business Processes</dt>
+                <dt>Business processes</dt>
                 {businessProcesses.length ? (
                   filteredNames(businessProcesses).map((bp: any) => (
                     <dd key={bp.id}>{bp.name}</dd>
