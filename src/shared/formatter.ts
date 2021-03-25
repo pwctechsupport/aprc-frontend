@@ -18,7 +18,7 @@ export const date = (
   if (input == null) {
     return "";
   }
-  input = new Date(input);
+  input = input ? new Date(input) : undefined;
   const defaultOptions = {
     year: "numeric",
     month: "long",
