@@ -470,21 +470,21 @@ query policyDashboard {
 
   # ADMIN PREPARER - CONTROL
   adminPreparerTotalControls: controls (
-    filter: { policy_controls_id_not_null: true }
+    filter: {}
   ) {
     metadata {
       totalCount
     }
   }
   adminPreparerPreparedControls: controls (
-    filter: { policy_controls_id_not_null: true, status_in: ["draft", "waiting_for_review"] }
+    filter: { status_in: ["draft", "waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
   adminPreparerReviewedControls: controls (
-    filter: { policy_controls_id_not_null: true, status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+    filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
@@ -493,21 +493,21 @@ query policyDashboard {
 
   #ADMIN REVIEWER - CONTROL
   adminReviewerTotalControls: controls (
-    filter: { policy_controls_id_not_null: true, status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
+    filter: { status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
     }
   }
   adminReviewerPreparedControls: controls (
-    filter: { policy_controls_id_not_null: true, status_in: ["waiting_for_review"] }
+    filter: { status_in: ["waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
   adminReviewerReviewedControls: controls (
-    filter: { policy_controls_id_not_null: true, status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+    filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
@@ -516,7 +516,7 @@ query policyDashboard {
 
   # USER - CONTROL
   userTotalControls: controls (
-    filter: { policy_controls_id_not_null: true, status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
+    filter: { status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
@@ -525,21 +525,21 @@ query policyDashboard {
 
   # ADMIN PREPARER - RISK
   adminPreparerTotalRisks: risks (
-    filter: { policy_risks_id_not_null: true }
+    filter: {}
   ) {
     metadata {
       totalCount
     }
   }
   adminPreparerPreparedRisks: risks (
-    filter: { policy_risks_id_not_null: true, status_in: ["draft", "waiting_for_review"] }
+    filter: { status_in: ["draft", "waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
   adminPreparerReviewedRisks: risks (
-    filter: { policy_risks_id_not_null: true, status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+    filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
@@ -548,21 +548,21 @@ query policyDashboard {
 
   #ADMIN REVIEWER - RISK
   adminReviewerTotalRisks: risks (
-    filter: { policy_risks_id_not_null: true, status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
+    filter: { status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
     }
   }
   adminReviewerPreparedRisks: risks (
-    filter: { policy_risks_id_not_null: true, status_in: ["waiting_for_review"] }
+    filter: { status_in: ["waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
   adminReviewerReviewedRisks: risks (
-    filter: { policy_risks_id_not_null: true, status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
+    filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
@@ -571,7 +571,7 @@ query policyDashboard {
 
   # USER - RISK
   userTotalRisks: risks (
-    filter: { policy_risks_id_not_null: true, status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
+    filter: { status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
