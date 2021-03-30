@@ -136,6 +136,7 @@ export default function Policy({
     fetchPolicy: "no-cache",
     // pollInterval: 30000,
   });
+
   const referenceData = useReferencesQuery({
     fetchPolicy: "network-only",
     variables: { filter: { policies_id_matches_any: id } },
@@ -424,7 +425,6 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
-  const getSubPoliciesStatus = children?.map((item) => (item.status))
 
   //resource Bar
   const [resourceId, setResourceId] = useState("");
@@ -569,14 +569,14 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
     const createdAt = dataRisk?.risk?.createdAt;
 
     const details1 = [
-      { label: "Risk Id", value: id },
+      { label: "Risk ID", value: id },
       { label: "Name", value: riskName },
       {
-        label: "Business Process",
+        label: "Business process",
         value: bps?.join(", "),
       },
       {
-        label: "Level of Risk",
+        label: "Level of risk",
         value: (
           <Badge color={getRiskColor(levelOfRisk)}>
             {startCase(levelOfRisk)}
@@ -584,22 +584,22 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
         ),
       },
       {
-        label: "Type of Risk",
+        label: "Type of risk",
         value: <Badge color="secondary">{startCase(typeOfRisk)}</Badge>,
       },
     ];
     const details2 = [
       {
         label: "Last updated",
-        value: updatedAt?.split(" ")[0],
+        value: <DateHover humanize={false}>{updatedAt?.split(" ")[0]}</DateHover>,
       },
       {
-        label: "Updated By",
+        label: "Updated by",
         value: updatedBy,
       },
       {
-        label: "Created At",
-        value: createdAt?.split(" ")[0],
+        label: "Created at",
+        value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover>,
       },
       {
         label: "Created by",
@@ -682,7 +682,7 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
         value: departments.map((a: any) => a.name).join(", "),
       },
       {
-        label: "Key Control",
+        label: "Key control",
         value: <CheckBox checked={keyControl} />,
       },
       { label: "Type of control", value: capitalCase(typeOfControl) },
@@ -699,9 +699,9 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
         label: "Status",
         value: `${draftControl ? "Waiting for review" : "Release"}`,
       },
-      { label: "Last updated", value: updatedAt },
-      { label: "Last Updated By", value: lastUpdatedBy },
-      { label: "Created At", value: createdAt.split(" ")[0] },
+      { label: "Last updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
+      { label: "Last updated by", value: lastUpdatedBy },
+      { label: "Created at", value: <DateHover humanize={false}>{createdAt.split(" ")[0]}</DateHover> },
       { label: "Created by", value: createdBy },
     ];
     return (
@@ -938,7 +938,7 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
                   show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
                 >
-                  <RisksList data={data} setRiskId={setRiskId} subPoliciesStatus={getSubPoliciesStatus} />
+                  <RisksList data={data} setRiskId={setRiskId} />
                 </Collapsible>
               </div>
 
@@ -951,7 +951,7 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
                   show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
-                  <ControlsTable setControlId={setControlId} data={data} subPoliciesStatus={getSubPoliciesStatus} />
+                  <ControlsTable setControlId={setControlId} data={data} />
                 </Collapsible>
               </div>
 

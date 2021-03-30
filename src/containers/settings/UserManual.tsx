@@ -89,7 +89,7 @@ export default function UserManual() {
                   <dd>{manual.fileType}</dd>
                   <br />
                   <dt>Last updated</dt>
-                  <DateHover withIcon>{manual.updatedAt}</DateHover>
+                  <DateHover humanize={false} withIcon>{manual.updatedAt}</DateHover>
                 </div>
                 <div className="d-flex">
                   {isAdminReviewer && (

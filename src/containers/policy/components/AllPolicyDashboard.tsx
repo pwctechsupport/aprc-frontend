@@ -17,48 +17,61 @@ const AllPolicyDashboard = () => {
   ]);
   const isUser = !(isAdminReviewer || isAdminPreparer);
   if (loading) return null;
-  // reviewed:
-  // const reviewedPolicies = oc(data).reviewedPolicies.metadata.totalCount(0);
-  const reviewedRisks = oc(data).reviewedRisks.metadata.totalCount(0);
-  const reviewedControls = oc(data).reviewedControls.metadata.totalCount(0);
-  // prepared:
-  // const preparedPolicies = oc(data).preparedPolicies.metadata.totalCount(0);
-  const preparedRisks = oc(data).preparedRisks.metadata.totalCount(0);
-  const preparedControls = oc(data).preparedControls.metadata.totalCount(0);
-  // total:
-  // const totalPolicies = oc(data).totalPolicies.metadata.totalCount(0);
-  const totalRisks = oc(data).totalRisks.metadata.totalCount(0);
-  const totalControls = oc(data).totalControls.metadata.totalCount(0);
+
   // Admin Preparer
+    ///Policies
   const totalAdminPreparerPolicies = oc(data).adminPreparerTotalPolicies.metadata.totalCount(0);
   const preparedAdminPreparerPolicies = oc(data).adminPreparerPreparedPolicies.metadata.totalCount(0);
   const reviewedAdminPreparerPolicies = oc(data).adminPreparerReviewedPolicies.metadata.totalCount(0);
+    ///Controls
+  const totalAdminPreparerControls = oc(data).adminPreparerTotalControls.metadata.totalCount(0);
+  const preparedAdminPreparerControls = oc(data).adminPreparerPreparedControls.metadata.totalCount(0);
+  const reviewedAdminPreparerControls = oc(data).adminPreparerReviewedControls.metadata.totalCount(0);
+    ///Risks
+  const totalAdminPreparerRisks = oc(data).adminPreparerTotalRisks.metadata.totalCount(0);
+  const preparedAdminPreparerRisks = oc(data).adminPreparerPreparedRisks.metadata.totalCount(0);
+  const reviewedAdminPreparerRisks = oc(data).adminPreparerReviewedRisks.metadata.totalCount(0);
+
   // Admin Reviewer
+    ///Policies
   const totalAdminReviewerPolicies = oc(data).adminReviewerTotalPolicies.metadata.totalCount(0);
   const preparedAdminReviewerPolicies = oc(data).adminReviewerPreparedPolicies.metadata.totalCount(0);
   const reviewedAdminReviewerPolicies = oc(data).adminReviewerReviewedPolicies.metadata.totalCount(0);
+    ///Controls
+  const totalAdminReviewerControls = oc(data).adminReviewerTotalControls.metadata.totalCount(0);
+  const preparedAdminReviewerControls = oc(data).adminReviewerPreparedControls.metadata.totalCount(0);
+  const reviewedAdminReviewerControls = oc(data).adminReviewerReviewedControls.metadata.totalCount(0);
+    ///Risks
+  const totalAdminReviewerRisks = oc(data).adminReviewerTotalRisks.metadata.totalCount(0);
+  const preparedAdminReviewerRisks = oc(data).adminReviewerPreparedRisks.metadata.totalCount(0);
+  const reviewedAdminReviewerRisks = oc(data).adminReviewerReviewedRisks.metadata.totalCount(0);
+
   // User
+    ///Policies
   const totalUserPolicies = oc(data).userTotalPolicies.metadata.totalCount(0);
+    ///Controls
+  const totalUserControls = oc(data).userTotalControls.metadata.totalCount(0);
+    ///Risks
+  const totalUserRisks = oc(data).userTotalRisks.metadata.totalCount(0);
 
   const chartData = [
     {
       label: "Policies",
-      // total: totalPolicies,
       total: (isAdminPreparer ? totalAdminPreparerPolicies : isAdminReviewer ? totalAdminReviewerPolicies : totalUserPolicies),
       reviewed: (isAdminPreparer ? reviewedAdminPreparerPolicies : isAdminReviewer ? reviewedAdminReviewerPolicies : 0),
       prepared: (isAdminPreparer ? preparedAdminPreparerPolicies : isAdminReviewer ? preparedAdminReviewerPolicies : 0),
     },
     {
       label: "Risks",
-      total: totalRisks,
-      reviewed: reviewedRisks,
-      prepared: preparedRisks,
+      total: (isAdminPreparer ? totalAdminPreparerRisks : isAdminReviewer ? totalAdminReviewerRisks : totalUserRisks),
+      reviewed: (isAdminPreparer ? reviewedAdminPreparerRisks : isAdminReviewer ? reviewedAdminReviewerRisks : 0),
+      prepared: (isAdminPreparer ? preparedAdminPreparerRisks : isAdminReviewer ? preparedAdminReviewerRisks : 0),
     },
     {
       label: "Controls",
-      total: totalControls,
-      reviewed: reviewedControls,
-      prepared: preparedControls,
+      total: (isAdminPreparer ? totalAdminPreparerControls : isAdminReviewer ? totalAdminReviewerControls : totalUserControls),
+      reviewed: (isAdminPreparer ? reviewedAdminPreparerControls : isAdminReviewer ? reviewedAdminReviewerControls : 0),
+      prepared: (isAdminPreparer ? preparedAdminPreparerControls : isAdminReviewer ? preparedAdminReviewerControls : 0),
     },
   ];
 
@@ -67,8 +80,8 @@ const AllPolicyDashboard = () => {
         {
           label: "Total",
           subPolicy: totalUserPolicies,
-          risk: totalRisks,
-          control: totalControls,
+          risk: totalUserRisks,
+          control: totalUserControls,
           sum() {
             return this.subPolicy + this.risk + this.control;
           },
@@ -78,8 +91,8 @@ const AllPolicyDashboard = () => {
         {
           label: "Reviewed",
           subPolicy: (isAdminPreparer ? reviewedAdminPreparerPolicies : isAdminReviewer ? reviewedAdminReviewerPolicies : 0),
-          risk: reviewedRisks,
-          control: reviewedControls,
+          risk: (isAdminPreparer ? reviewedAdminPreparerRisks : isAdminReviewer ? reviewedAdminReviewerRisks : 0),
+          control: (isAdminPreparer ? reviewedAdminPreparerControls : isAdminReviewer ? reviewedAdminReviewerControls : 0),
           sum() {
             return this.subPolicy + this.risk + this.control;
           },
@@ -87,8 +100,8 @@ const AllPolicyDashboard = () => {
         {
           label: "Prepared",
           subPolicy: (isAdminPreparer ? preparedAdminPreparerPolicies : isAdminReviewer ? preparedAdminReviewerPolicies : 0),
-          risk: preparedRisks,
-          control: preparedControls,
+          risk: (isAdminPreparer ? preparedAdminPreparerRisks : isAdminReviewer ? preparedAdminReviewerRisks : 0),
+          control: (isAdminPreparer ? preparedAdminPreparerControls : isAdminReviewer ? preparedAdminReviewerControls : 0),
           sum() {
             return this.subPolicy + this.risk + this.control;
           },
@@ -96,8 +109,8 @@ const AllPolicyDashboard = () => {
         {
           label: <strong>Total</strong>,
           subPolicy: (isAdminPreparer ? totalAdminPreparerPolicies : isAdminReviewer ? totalAdminReviewerPolicies : totalUserPolicies),
-          risk: totalRisks,
-          control: totalControls,
+          risk: (isAdminPreparer ? totalAdminPreparerRisks : isAdminReviewer ? totalAdminReviewerRisks : totalUserRisks),
+          control: (isAdminPreparer ? totalAdminPreparerControls : isAdminReviewer ? totalAdminReviewerControls : totalUserControls),
           sum() {
             return this.subPolicy + this.risk + this.control;
           },

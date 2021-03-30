@@ -328,7 +328,7 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
       // { label: "Status", value: capitalCase(status) },
       { label: "Last updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
       { label: "Last updated by", value: lastUpdatedBy },
-      { label: "Created at", value: <DateHover humanize={false}>{createdAt.split(" ")[0]}</DateHover> },
+      { label: "Created at", value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover> },
       { label: "Created by", value: createdBy },
     ];
     return (

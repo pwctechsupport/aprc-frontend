@@ -1,51 +1,34 @@
 import startCase from "lodash/startCase";
-import React, { useState, useEffect } from "react";
-// import { FaPencilAlt } from "react-icons/fa";
-import {
-  // LevelOfRisk,
-  // Risk,
-  // TypeOfRisk,
-  // Policy,
-  PolicyQuery,
-} from "../../generated/graphql";
-// import { toLabelValue } from "../formatter";
-import getRiskColor from "../utils/getRiskColor";
-// import Button from "./Button";
-// import ControlsTable from "./ControlsTable";
+import React from "react";
+  // { useState, useEffect } 
 import EmptyAttribute from "./EmptyAttribute";
 import { oc } from "ts-optchain";
-import useAccessRights from "../hooks/useAccessRights";
+// import useAccessRights from "../hooks/useAccessRights";
 import { PWCLink } from "./PoliciesTable";
 import { Badge } from "./Badge";
+import _, { isEmpty } from "lodash";
 
 interface RisksListProps {
-  // risks: Risk[];
-  // editRisk?: Function;
-  // editControl?: Function;
-  data?: PolicyQuery;
+  data?: any;
   setRiskId?: any;
-  // withRelatedControls?: boolean;
-  subPoliciesStatus?: any;
 }
 
 export default function RisksList({
-  // risks,
-  // editRisk,
   setRiskId,
-  // editControl,
   data,
-  subPoliciesStatus,
-}: // withRelatedControls,
+}:
 RisksListProps) {
-  const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-    "user",
-  ]);
+  // const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
+  //   "admin",
+  //   "admin_reviewer",
+  //   "admin_preparer",
+  //   "user",
+  // ]);
   const policyId = data?.policy?.id;
+  const descendantsRisks = data?.policy?.descendantsRisks
+  const hasChildren = isEmpty(data?.policy?.children)
   const risksWithoutChildren = oc(data).policy.risks([]);
-  const riskFirstChild = data?.policy?.children?.map((a) => a.risks) || [];
+  const riskFirstChild = data?.policy?.children?.map((a: any) => a.risks) || [];
   const riskSecondChild =
     data?.policy?.children?.map((a: any) =>
       a.children.map((b: any) => b.risks)
@@ -77,6 +60,7 @@ RisksListProps) {
 
     return a;
   };
+
   const newData = [
     ...risksWithoutChildren.flat(10),
     ...riskFirstChild.flat(10),
@@ -85,95 +69,124 @@ RisksListProps) {
     ...riskFourthChild.flat(10),
     ...riskFifthChild.flat(10),
   ];
-  const [newDataRisks, setNewDataRisks] = useState(newData);
+  // const [newDataRisks, setNewDataRisks] = useState(newData);
 
-  useEffect(() => {
-    if (
-      isUser && newData === newDataRisks
-    ) {
-      setNewDataRisks(newData.filter((a) => a.status === "release"));
-    }
-  }, [isAdmin, isAdminReviewer, isAdminPreparer, isUser, newData, newDataRisks]);
-  return dataModifier(newDataRisks).length ? (
+  // const subPolicyRisksData = _(newData).keyBy('id').merge(_.keyBy(descendantsRisks, 'id')).values().value()
+
+  // useEffect(() => {
+  //   if (
+  //     isUser && newData === newDataRisks
+  //   ) {
+  //     setNewDataRisks(newData.filter((a) => a.status === "release"));
+  //   }
+  // }, [isAdmin, isAdminReviewer, isAdminPreparer, isUser, newData, newDataRisks]);
+
+  return dataModifier(newData).length ? (
     <ul>
-      {isUser ? (
+      {!hasChildren ? (
         <ul>
-          {!subPoliciesStatus.includes('release') ? (
-            <EmptyAttribute />
-          ) : (
-            dataModifier(newDataRisks).map((risk: any) => (
-              <li key={risk.id}>
-                <div className="mb-3 d-flex justify-content-between">
-                  <PWCLink
-                    className="wrapped"
-                    to={`/policy/${policyId}/details/risk/${risk.id}`}
-                    onClick={() => setRiskId(risk.id)}
-                    style={{ fontSize: "14px" }}
-                  >
-                    {risk.name}
-                    <Badge color="secondary mx-3">
-                      {startCase(risk.levelOfRisk || "")}
-                    </Badge>
-                    <Badge color="secondary">
-                      {startCase(risk.typeOfRisk || "")}
-                    </Badge>
-                  </PWCLink>
-                </div>
-              </li>
-            ))
-          )}
+          {dataModifier(descendantsRisks).map((risk: any) => (
+            <li key={risk.id}>
+              <div className="mb-3 d-flex justify-content-between">
+                <PWCLink
+                  className="wrapped"
+                  to={`/policy/${policyId}/details/risk/${risk.id}`}
+                  onClick={() => setRiskId(risk.id)}
+                  style={{ fontSize: "14px" }}
+                >
+                  {risk.name}
+                  <Badge color="secondary mx-3">
+                    {startCase(risk.levelOfRisk || "")}
+                  </Badge>
+                  <Badge color="secondary">
+                    {startCase(risk.typeOfRisk || "")}
+                  </Badge>
+                </PWCLink>
+              </div>
+            </li>
+          ))}
         </ul>
       ) : (
-        dataModifier(newDataRisks).map((risk: any) => (
-          <li key={risk.id}>
-            <div className="mb-3 d-flex justify-content-between">
-              <PWCLink
-                className="wrapped"
-                to={`/policy/${policyId}/details/risk/${risk.id}`}
-                onClick={() => setRiskId(risk.id)}
-                style={{ fontSize: "14px" }}
-              >
-                {risk.name}
-                <Badge color="secondary mx-3">
-                  {startCase(risk.levelOfRisk || "")}
-                </Badge>
-                <Badge color="secondary">
-                  {startCase(risk.typeOfRisk || "")}
-                </Badge>
-              </PWCLink>
-            </div>
-          </li>
-        ))
+        <ul>
+          {/* {isUser ? (
+            <ul>
+              {dataModifier(newDataRisks).map((risk: any) => (
+                <li key={risk.id}>
+                  <div className="mb-3 d-flex justify-content-between">
+                    <PWCLink
+                      className="wrapped"
+                      to={`/policy/${policyId}/details/risk/${risk.id}`}
+                      onClick={() => setRiskId(risk.id)}
+                      style={{ fontSize: "14px" }}
+                    >
+                      {risk.name}
+                      <Badge color="secondary mx-3">
+                        {startCase(risk.levelOfRisk || "")}
+                      </Badge>
+                      <Badge color="secondary">
+                        {startCase(risk.typeOfRisk || "")}
+                      </Badge>
+                    </PWCLink>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : ( */}
+            {dataModifier(newData).map((risk: any) => {
+              return (
+                <li key={risk.id}>
+                  <div className="mb-3 d-flex justify-content-between">
+                    <PWCLink
+                      className="wrapped"
+                      to={`/policy/${policyId}/details/risk/${risk.id}`}
+                      onClick={() => setRiskId(risk.id)}
+                      style={{ fontSize: "14px" }}
+                    >
+                      {risk.name}
+                      <Badge color="secondary mx-3">
+                        {startCase(risk.levelOfRisk || "")}
+                      </Badge>
+                      <Badge color="secondary">
+                        {startCase(risk.typeOfRisk || "")}
+                      </Badge>
+                    </PWCLink>
+                  </div>
+                </li>
+              )
+            })}
+          {/* )} */}
+        </ul>
       )}
-      {/* {editRisk && (
-              <Button
-                onClick={() =>
-                  editRisk({
-                    id: risk.id,
-                    name: risk.name || "",
-                    businessProcessIds:
-                      risk.businessProcesses?.map(toLabelValue) || [],
-                    levelOfRisk: risk.levelOfRisk as LevelOfRisk,
-                    typeOfRisk: risk.typeOfRisk as TypeOfRisk,
-                  })
-                }
-                color=""
-              >
-                <FaPencilAlt />
-              </Button>
-            )} */}
-      {/* 
-          {withRelatedControls && risk.controls?.length ? (
-            <>
-              <h6>Control</h6>
-              <ControlsTable
-                controls={risk.controls}
-                editControl={editControl}
-              />
-            </>
-          ) : null} */}
     </ul>
   ) : (
     <EmptyAttribute />
   );
 }
+
+/* {editRisk && (
+      <Button
+        onClick={() =>
+          editRisk({
+            id: risk.id,
+            name: risk.name || "",
+            businessProcessIds:
+              risk.businessProcesses?.map(toLabelValue) || [],
+            levelOfRisk: risk.levelOfRisk as LevelOfRisk,
+            typeOfRisk: risk.typeOfRisk as TypeOfRisk,
+          })
+        }
+        color=""
+      >
+        <FaPencilAlt />
+      </Button>
+    )} */
+/* 
+    {withRelatedControls && risk.controls?.length ? (
+      <>
+        <h6>Control</h6>
+        <ControlsTable
+          controls={risk.controls}
+          editControl={editControl}
+        />
+      </>
+    ) : null} */

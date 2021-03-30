@@ -69,7 +69,9 @@ const ControlForm = ({
     []
   );
 
-  const risksQ = useAdminRisksQuery();
+  const risksQ = useAdminRisksQuery({
+    variables: { filter: { status_in: ["release"] }}
+  });
   const riskOptions = oc(risksQ)
     .data.preparerRisks.collection([])
     .map((risk) => ({ label: risk.name || "", value: risk.id }));

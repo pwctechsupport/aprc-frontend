@@ -74,7 +74,7 @@ export default function PolicySearchItem({
               </StyledTitle>
             </div>
             <div className="mb-2 ml-2">
-              <DateHover withIcon>{updatedAt}</DateHover>
+              <DateHover humanize={false} withIcon>{updatedAt}</DateHover>
             </div>
             <div className="text-secondary ml-2 text-justify">
               {(description

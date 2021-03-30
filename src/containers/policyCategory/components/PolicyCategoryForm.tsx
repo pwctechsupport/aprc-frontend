@@ -110,7 +110,7 @@ function useLoadPolicies() {
   async function getSuggestions(title_cont: string = ""): Promise<Suggestions> {
     try {
       const { data } = await query({
-        filter: { title_cont },
+        filter: { title_cont, ancestry_not_null: false },
       });
       return data.policies?.collection?.map(toLabelValue) || [];
     } catch (error) {

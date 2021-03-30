@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import styled from "styled-components";
 import { oc } from "ts-optchain";
 import pwcLogoOutline from "../../assets/images/pwc-logo-outline-black.png";
@@ -15,7 +15,7 @@ import {
 } from "../../generated/graphql";
 import { authorize } from "../../redux/auth";
 import Button from "../../shared/components/Button";
-import { notifySuccess } from "../../shared/utils/notif";
+import { notifyGraphQLErrors, notifySuccess } from "../../shared/utils/notif";
 import Captcha from "react-numeric-captcha";
 // import useWindowSize from "../../shared/hooks/useWindowSize";
 import { Container as BsContainer, Row, Col } from "reactstrap";
@@ -26,7 +26,9 @@ import FormInput from '../../shared/components/forms/Input';
 export default function Login({ history }: RouteComponentProps) {
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState(false);
-  const [login, { loading }] = useLoginMutation();
+  const [login, { loading }] = useLoginMutation({
+    onError: notifyGraphQLErrors
+  });
   const { register, handleSubmit, watch, errors } = useForm<LoginMutationVariables>({
     validationSchema,
   });
@@ -62,12 +64,7 @@ export default function Login({ history }: RouteComponentProps) {
       );
       history.push("/");
     } catch (error) {
-        toast.error(
-          <div>
-            <h5>Login failed</h5>
-            <div>Please try again</div>
-          </div>
-        );
+      console.error(error)
     }
   }
   // const screenSize = useWindowSize();
