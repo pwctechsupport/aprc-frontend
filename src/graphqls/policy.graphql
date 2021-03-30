@@ -316,6 +316,19 @@ fragment policyFragment on Policy {
   draft {
     id
   }
+  descendantsControls {
+    id
+    description
+    ...control
+  }
+  descendantsRisks {
+    id
+    name
+    status
+    levelOfRisk
+    typeOfRisk
+    ...risk
+  }
   publishedAt
   requestStatus
   ancestry

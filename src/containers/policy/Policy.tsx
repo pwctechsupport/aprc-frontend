@@ -136,6 +136,7 @@ export default function Policy({
     fetchPolicy: "no-cache",
     // pollInterval: 30000,
   });
+
   const referenceData = useReferencesQuery({
     fetchPolicy: "network-only",
     variables: { filter: { policies_id_matches_any: id } },
@@ -424,7 +425,6 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
   const createdAt = data?.policy?.createdAt;
   const createdBy = data?.policy?.createdBy;
   const trueVersion = data?.policy?.trueVersion;
-  const getSubPoliciesStatus = children?.map((item) => (item.status))
 
   //resource Bar
   const [resourceId, setResourceId] = useState("");
@@ -938,7 +938,7 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
                   show={collapse.includes("Risks")}
                   onClick={toggleCollapse}
                 >
-                  <RisksList data={data} setRiskId={setRiskId} subPoliciesStatus={getSubPoliciesStatus} />
+                  <RisksList data={data} setRiskId={setRiskId} />
                 </Collapsible>
               </div>
 
@@ -951,7 +951,7 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
                   show={collapse.includes("Controls")}
                   onClick={toggleCollapse}
                 >
-                  <ControlsTable setControlId={setControlId} data={data} subPoliciesStatus={getSubPoliciesStatus} />
+                  <ControlsTable setControlId={setControlId} data={data} />
                 </Collapsible>
               </div>
 

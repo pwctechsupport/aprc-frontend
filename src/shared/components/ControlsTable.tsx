@@ -1,45 +1,33 @@
-import React, { Fragment, useState, useEffect } from "react";
-// import { FaPencilAlt } from "react-icons/fa";
+import React, { Fragment } from "react";
 import {
-  // Assertion,
-  // Control,
-  // Frequency,
-  // Ipo,
-  // Nature,
-  // Status,
-  // TypeOfControl,
   PolicyQuery,
 } from "../../generated/graphql";
-// import Button from "./Button";
 import EmptyAttribute from "./EmptyAttribute";
 import Table from "./Table";
 import { oc } from "ts-optchain";
-import useAccessRights from "../hooks/useAccessRights";
+// import useAccessRights from "../hooks/useAccessRights";
 import { PWCLink } from "./PoliciesTable";
 import { capitalCase } from "capital-case";
+import _, { isEmpty } from "lodash";
 
 interface ControlsTableProps {
-  // controls: Control[];
-  // editControl?: Function;
   data?: PolicyQuery;
   setControlId?: any;
-  subPoliciesStatus?: any;
 }
 
 export default function ControlsTable({
-  // controls,
-  // editControl,
   data,
   setControlId,
-  subPoliciesStatus,
 }: ControlsTableProps) {
-  const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
-    "admin",
-    "admin_reviewer",
-    "admin_preparer",
-    "user",
-  ]);
+  // const [isAdmin, isAdminReviewer, isAdminPreparer, isUser] = useAccessRights([
+  //   "admin",
+  //   "admin_reviewer",
+  //   "admin_preparer",
+  //   "user",
+  // ]);
   const policyId = data?.policy?.id;
+  const descendantsControls = data?.policy?.descendantsControls
+  const hasChildren = isEmpty(data?.policy?.children)
   const controlsWithoutChildren = oc(data).policy.controls([]);
   const controlFirstChild =
     data?.policy?.children?.map((a: any) => a.controls) || [];
@@ -82,14 +70,17 @@ export default function ControlsTable({
     ...controlFourthChild.flat(10),
     ...controlFifthChild.flat(10),
   ];
-  const [newDataControls, setNewDataControls] = useState(newData);
-  useEffect(() => {
-    if (
-      isUser && newData === newDataControls
-    ) {
-      setNewDataControls(newData.filter((a) => a.status === "release"));
-    }
-  }, [isAdmin, isAdminReviewer, isAdminPreparer, isUser, newData, newDataControls]);
+  // const [newDataControls, setNewDataControls] = useState(newData);
+
+  // const subPolicyControlsData = _(newData).keyBy('id').merge(_.keyBy(descendantsControls, 'id')).values().value()
+
+  // useEffect(() => {
+  //   if (
+  //     isUser && newData === newDataControls
+  //   ) {
+  //     setNewDataControls(newData.filter((a) => a.status === "release"));
+  //   }
+  // }, [isAdmin, isAdminReviewer, isAdminPreparer, isUser, newData, newDataControls]);
 
   return (
     <Table responsive>
@@ -106,18 +97,60 @@ export default function ControlsTable({
         </tr>
       </thead>
       <tbody>
-        {dataModifier(newDataControls).length ? (
+        {dataModifier(newData).length ? (
           <Fragment>
-            {isUser ? (
-              <Fragment>
-                {/* {!subPoliciesStatus.includes('release') ? (
-                  <tr>
-                    <td colSpan={7}>
-                      <EmptyAttribute />
+            {!hasChildren ? (
+              <>
+                {dataModifier(descendantsControls).map((control: any) => (
+                  <tr key={control.id}>
+                    <td>
+                      <PWCLink
+                        className="wrapped"
+                        to={`/policy/${policyId}/details/control/${control.id}`}
+                        onClick={() => {
+                          setControlId(control.id);
+                        }}
+                      >
+                        {control.description}
+                      </PWCLink>
                     </td>
+                    <td>{capitalCase(control.frequency) || ""}</td>
+                    <td>{capitalCase(control.typeOfControl) || ""}</td>
+                    <td>{capitalCase(control.nature) || ""}</td>
+                    <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
+                    <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
+                    <td>{control.controlOwner?.join(", ")}</td>
                   </tr>
+                ))}
+              </>
+            ) : (
+              <>
+                {/* {isUser ? (
+                  <Fragment>
+                    {dataModifier(newDataControls)?.map((control: any) => (
+                      <tr key={control.id}>
+                        <td>
+                          <PWCLink
+                            className="wrapped"
+                            to={`/policy/${policyId}/details/control/${control.id}`}
+                            onClick={() => {
+                              setControlId(control.id);
+                            }}
+                          >
+                            {control.description}
+                          </PWCLink>
+                        </td>
+                        <td>{capitalCase(control.frequency) || ""}</td>
+                        <td>{capitalCase(control.typeOfControl) || ""}</td>
+                        <td>{capitalCase(control.nature) || ""}</td>
+                        <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
+                        <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
+                        <td>{control.controlOwner?.join(", ")}</td>
+                      </tr>
+                    ))}
+                  </Fragment>
                 ) : ( */}
-                  {dataModifier(newDataControls)?.map((control: any) => (
+                  {dataModifier(newData)?.map((control: any) => (
                     <tr key={control.id}>
                       <td>
                         <PWCLink
@@ -139,29 +172,7 @@ export default function ControlsTable({
                     </tr>
                   ))}
                 {/* )} */}
-              </Fragment>
-            ) : (
-              dataModifier(newDataControls)?.map((control: any) => (
-                <tr key={control.id}>
-                  <td>
-                    <PWCLink
-                      className="wrapped"
-                      to={`/policy/${policyId}/details/control/${control.id}`}
-                      onClick={() => {
-                        setControlId(control.id);
-                      }}
-                    >
-                      {control.description}
-                    </PWCLink>
-                  </td>
-                  <td>{capitalCase(control.frequency) || ""}</td>
-                  <td>{capitalCase(control.typeOfControl) || ""}</td>
-                  <td>{capitalCase(control.nature) || ""}</td>
-                  <td>{control.assertion.map((x: any) => capitalCase(x)).join(", ")}</td>
-                  <td>{control.ipo.map((x: any) => capitalCase(x)).join(", ")}</td>
-                  <td>{control.controlOwner?.join(", ")}</td>
-                </tr>
-              ))
+              </>
             )}
           </Fragment>
         ) : (
@@ -172,33 +183,6 @@ export default function ControlsTable({
           </tr>
         )}
       </tbody>
-      {/* {editControl && (
-                <td>
-                  <Button
-                    onClick={() =>
-                      editControl?.({
-                        id: control.id,
-                        assertion: control.assertion as Assertion[],
-                        controlOwner: control.controlOwner || "",
-                        description: control.description || "",
-                        status: control.status as Status,
-                        typeOfControl: control.typeOfControl as TypeOfControl,
-                        nature: control.nature as Nature,
-                        ipo: control.ipo as Ipo[],
-                        businessProcessIds:
-                          control?.businessProcesses?.map(({ id }) => id) || [],
-                        frequency: control.frequency as Frequency,
-                        keyControl: control.keyControl || false,
-                        riskIds: control?.risks?.map(({ id }) => id) || [],
-                        activityControls: control.activityControls,
-                      })
-                    }
-                    color=""
-                  >
-                    <FaPencilAlt />
-                  </Button>
-                </td>
-              )} */}
     </Table>
   );
 }
