@@ -578,7 +578,7 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
       {
         label: "Level of risk",
         value: (
-          <Badge color={getRiskColor(levelOfRisk)}>
+          <Badge color="secondary">
             {startCase(levelOfRisk)}
           </Badge>
         ),
