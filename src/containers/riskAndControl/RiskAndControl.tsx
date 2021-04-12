@@ -810,7 +810,7 @@ export default function RiskAndControl({
                 {details.slice(0, Math.ceil(details.length / 2)).map((item) => (
                   <Fragment key={item.label}>
                     <dt>{item.label}</dt>
-                    <dd>{item.value || "-"}</dd>
+                    <dd className="wrapped">{item.value || "-"}</dd>
                   </Fragment>
                 ))}
                 <dt>Risks</dt>
