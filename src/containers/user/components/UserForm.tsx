@@ -254,7 +254,7 @@ export function useLoadPolicyCategories() {
   async function handleGetPolicyCategories(input: string) {
     try {
       const queryResult = await getPolicyCategories({
-        filter: { name_cont: input },
+        filter: { name_cont: input, status_eq: "release" },
       });
       return (
         queryResult.data?.navigatorPolicyCategories?.collection?.map(
