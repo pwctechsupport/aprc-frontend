@@ -58,14 +58,30 @@ const Controls = ({ history }: RouteComponentProps) => {
       page,
     },
   });
+
   const totalCount =
     dataAdmin?.preparerControls?.metadata.totalCount ||
     dataReviewer?.reviewerControlsStatus?.metadata.totalCount ||
     0;
+
+  const {
+    data: dataReviewerToExport,
+  } = useReviewerControlsStatusQuery({
+    skip: isAdminPreparer || isUser,
+    fetchPolicy: "no-cache",
+    variables: {
+      filter: {},
+      limit: totalCount,
+    },
+  });
+
   const controls =
     dataAdmin?.preparerControls?.collection ||
     dataReviewer?.reviewerControlsStatus?.collection ||
     [];
+
+  const controlToExport = dataReviewerToExport?.reviewerControlsStatus?.collection || []
+
   const [destroy, destroyM] = useDestroyControlMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
@@ -88,7 +104,7 @@ const Controls = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll() {
     if (clicked) {
-      setSelected(controls.map((n) => n.id));
+      setSelected(controlToExport.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -174,7 +190,7 @@ const Controls = ({ history }: RouteComponentProps) => {
                 {isAdminReviewer ? (
                   <th>
                     <CheckBox
-                      checked={selected.length === controls.length}
+                      checked={selected.length === controls.length || selected.length === controlToExport.length}
                       onClick={() => {
                         clickButton();
                         toggleCheckAll();
