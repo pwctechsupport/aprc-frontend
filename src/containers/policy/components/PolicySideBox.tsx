@@ -67,7 +67,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
         : {
             ...(!searchQuery && {
               ancestry_null: true,
-              status_not_eq: "draft",
+              // status_not_eq: "draft",
             }),
             title_cont: searchQuery,
           },
