@@ -790,10 +790,10 @@ export default function RiskAndControl({
         value: ipo.map((x: any) => capitalCase(x)).join(", "),
       },
       { label: "Frequency", value: capitalCase(frequency) },
-      {
-        label: "Status",
-        value: `${draftControl ? "Waiting for review" : "Release"}`,
-      },
+      // {
+      //   label: "Status",
+      //   value: `${draftControl ? "Waiting for review" : "Release"}`,
+      // },
       { label: "Last updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
       { label: "Last updated by", value: lastUpdatedBy },
       { label: "Created at", value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover> },
@@ -810,7 +810,7 @@ export default function RiskAndControl({
                 {details.slice(0, Math.ceil(details.length / 2)).map((item) => (
                   <Fragment key={item.label}>
                     <dt>{item.label}</dt>
-                    <dd>{item.value || "-"}</dd>
+                    <dd className="wrapped">{item.value || "-"}</dd>
                   </Fragment>
                 ))}
                 <dt>Risks</dt>

@@ -55,11 +55,24 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
       isTree,
     },
   });
+
   const totalCount =
-    adminBusinessQuery.data?.preparerBusinessProcesses?.metadata.totalCount ||
-    0;
+  adminBusinessQuery.data?.preparerBusinessProcesses?.metadata.totalCount ||
+  0;
+
+  const adminBusinessToExport = useAdminBusinessProcessTreeQuery({
+    variables: {
+      filter: {
+        ...(isTree && { ancestry_null: true }),
+      },
+      limit: totalCount,
+    },
+  });
+
   const bps =
     oc(adminBusinessQuery).data.preparerBusinessProcesses.collection() || [];
+  const bpsToExport = oc(adminBusinessToExport).data.preparerBusinessProcesses.collection() || [];
+
   const [destroy, destroyM] = useDestroyBusinessProcessMutation({
     onCompleted: () => toast.success("Delete Success"),
     onError: () => toast.error("Delete Failed"),
@@ -83,7 +96,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll() {
     if (clicked) {
-      setSelected(bps.map((n) => n.id));
+      setSelected(bpsToExport.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -174,7 +187,7 @@ const BusinessProcesses = ({ history }: RouteComponentProps) => {
                 {isAdminReviewer ? (
                   <th>
                     <CheckBox
-                      checked={selected.length === bps.length}
+                      checked={selected.length === bps.length || selected.length === bpsToExport.length}
                       onClick={() => {
                         clickButton();
                         toggleCheckAll();

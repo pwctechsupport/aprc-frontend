@@ -74,6 +74,20 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
     dataAdmin?.preparerPolicyCategories?.metadata.totalCount ||
     dataReviewer?.reviewerPolicyCategoriesStatus?.metadata.totalCount ||
     0;
+
+  const {
+    data: dataReviewerToExport,
+  } = useReviewerPolicyCategoriesStatusQuery({
+    skip: isAdminPreparer || isUser,
+    variables: {
+      filter: {},
+      limit: totalCount,
+    },
+    fetchPolicy: "network-only",
+  });
+
+  const policyCategToExport = dataReviewerToExport?.reviewerPolicyCategoriesStatus?.collection || []
+
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
   const [destroy, destroyM] = useDestroyPolicyCategoriesMutation({
@@ -104,7 +118,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
   const clickButton = () => setClicked((p) => !p);
   function toggleCheckAll() {
     if (clicked) {
-      setSelected(policyCategories.map((n) => n.id));
+      setSelected(policyCategToExport.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -182,7 +196,7 @@ const PolicyCategoryLines = ({ history }: RouteComponentProps) => {
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
                 <CheckBox
-                  checked={selected.length === policyCategories.length}
+                  checked={selected.length === policyCategories.length || selected.length === policyCategToExport.length}
                   onClick={() => {
                     clickButton();
                     toggleCheckAll();

@@ -54,10 +54,20 @@ const Resources = ({ history }: RouteComponentProps) => {
     },
     fetchPolicy: "network-only",
   });
+
   const totalCount =
     dataReviewer?.reviewerResourcesStatus?.metadata.totalCount ||
     adminData?.recentResources?.metadata.totalCount ||
     0;
+
+  const { data: dataReviewerToExport } = useReviewerResourcesStatusQuery({
+    skip: isUser || isAdminPreparer,
+    variables: {
+      filter: {},
+      limit: totalCount,
+    },
+    fetchPolicy: "network-only",
+  });
 
   const [destroyResource, destroyM] = useDestroyResourceMutation({
     refetchQueries: ["resources", "recentResources", "reviewerResourcesStatus"],
@@ -68,6 +78,10 @@ const Resources = ({ history }: RouteComponentProps) => {
   const resources =
     adminData?.recentResources?.collection ||
     dataReviewer?.reviewerResourcesStatus?.collection ||
+    [];
+
+  const resourcesToExport =
+    dataReviewerToExport?.reviewerResourcesStatus?.collection ||
     [];
   // const [modal, setModal] = useState(false);
   // const toggleImportModal = () => setModal((p) => !p);
@@ -84,7 +98,7 @@ const Resources = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll() {
     if (clicked) {
-      setSelected(resources.map((n) => n.id));
+      setSelected(resourcesToExport.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -162,7 +176,7 @@ const Resources = ({ history }: RouteComponentProps) => {
             {isAdminReviewer ? (
               <th>
                 <CheckBox
-                  checked={selected.length === resources.length}
+                  checked={selected.length === resources.length || selected.length === resourcesToExport.length}
                   onClick={() => {
                     clickButton();
                     toggleCheckAll();

@@ -49,8 +49,16 @@ const References = ({ history }: RouteComponentProps) => {
     fetchPolicy: "network-only",
     variables: { limit, page },
   });
+
   const totalCount = dataAdmin?.preparerReferences?.metadata.totalCount || 0;
+
+  const { data: dataAdminToExport } = useAdminReferencesQuery({
+    fetchPolicy: "network-only",
+    variables: { limit: totalCount },
+  });
+
   const references = dataAdmin?.preparerReferences?.collection || [];
+  const referencesToExport = dataAdminToExport?.preparerReferences?.collection || [];
 
   const [selected, setSelected] = useState<string[]>([]);
   const [destroyReference, destroyM] = useDestroyReferenceMutation({
@@ -70,7 +78,7 @@ const References = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll() {
     if (clicked) {
-      setSelected(references.map((n) => n.id));
+      setSelected(referencesToExport.map((n) => n.id));
     } else {
       setSelected([]);
     }
@@ -150,7 +158,7 @@ const References = ({ history }: RouteComponentProps) => {
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
                 <CheckBox
-                  checked={selected.length === references.length}
+                  checked={selected.length === references.length || selected.length === referencesToExport.length}
                   onClick={() => {
                     clickButton();
                     toggleCheckAll();
