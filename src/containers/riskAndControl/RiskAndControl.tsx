@@ -790,10 +790,10 @@ export default function RiskAndControl({
         value: ipo.map((x: any) => capitalCase(x)).join(", "),
       },
       { label: "Frequency", value: capitalCase(frequency) },
-      {
-        label: "Status",
-        value: `${draftControl ? "Waiting for review" : "Release"}`,
-      },
+      // {
+      //   label: "Status",
+      //   value: `${draftControl ? "Waiting for review" : "Release"}`,
+      // },
       { label: "Last updated", value: <DateHover humanize={false}>{updatedAt}</DateHover> },
       { label: "Last updated by", value: lastUpdatedBy },
       { label: "Created at", value: <DateHover humanize={false}>{createdAt?.split(" ")[0]}</DateHover> },
