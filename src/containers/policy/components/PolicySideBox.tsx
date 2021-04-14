@@ -54,7 +54,7 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
               ancestry_null: true,
             }),
             title_cont: searchQuery,
-            // status_eq: "release",
+            status_in: ["release", "ready_for_edit", "waiting_for_approval"],
           }
         : isAdminPreparer
         ? {
@@ -62,11 +62,12 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
               ancestry_null: true,
             }),
             title_cont: searchQuery,
+            status_in: ["waiting_for_review", "ready_for_edit", "waiting_for_approval", "release"]
           }
         : {
             ...(!searchQuery && {
               ancestry_null: true,
-              status_not_eq: "draft",
+              // status_not_eq: "draft",
             }),
             title_cont: searchQuery,
           },
