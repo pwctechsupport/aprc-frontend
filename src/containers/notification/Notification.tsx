@@ -325,13 +325,13 @@ const Notification = ({ history }: RouteComponentProps) => {
                                   ? data.title
                                       .split(
                                         data.senderUserActualName + " " || ""
-                                      )[1]
+                                      )[0]
                                       .includes("Create a User with email")
                                     ? data.title
                                         .split(
                                           data.senderUserActualName + " " || ""
-                                        )[1]
-                                        .split("Create a User with email ")[1]
+                                        )[0]
+                                        .split("Create a User with email ")[0]
                                     : data.title
                                   : data.title
                               }]`

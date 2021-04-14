@@ -77,6 +77,7 @@ const PolicyCategoryForm = ({
         defaultOptions
         defaultValue={policies}
         isMulti
+        isDisabled={true}
       />
       {renderSubmit()}
     </Form>
