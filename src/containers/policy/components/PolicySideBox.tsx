@@ -62,7 +62,12 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
               ancestry_null: true,
             }),
             title_cont: searchQuery,
-            status_in: ["waiting_for_review", "ready_for_edit", "waiting_for_approval", "release"]
+            status_in: [
+              "waiting_for_review",
+              "ready_for_edit",
+              "waiting_for_approval",
+              "release",
+            ],
           }
         : {
             ...(!searchQuery && {
@@ -74,21 +79,33 @@ export default function PolicySideBox({ location }: RouteComponentProps) {
       limit,
       isTree: !searchQuery,
     },
+    fetchPolicy: "no-cache"
   });
 
   const policies = data?.sidebarPolicies?.collection || [];
-  const policiesReal =
-    isUser || isAdminReviewer
-      ? policies
-          .map((a) => {
-            if (a.status !== "draft") {
-              return a;
-            } else {
-              return undefined;
-            }
-          })
-          .filter((b) => b !== undefined)
-      : policies;
+  // const policiesReal =
+  //   isUser || isAdminReviewer
+  //     ? policies
+  //         .map((a) => {
+  //           if (a.status !== "draft") {
+  //             return a;
+  //           } else {
+  //             return undefined;
+  //           }
+  //         })
+  //         .filter((b) => b !== undefined)
+  //     : policies;
+
+  const policiesReal = isAdminReviewer
+    ? policies.filter((a) => a.status !== "draft")
+    : isUser
+    ? policies.filter(
+        (a) =>
+          a.status === "ready_for_edit" ||
+          a.status === "waiting_for_approval" ||
+          a.status === "release"
+      )
+    : policies;
 
   useEffect(() => {
     policies.length === limit ? setCondition(true) : setCondition(false);
@@ -203,11 +220,14 @@ const PolicyBranch = ({
     );
 
   const filterModifiedChildren = modifiedChildren?.filter((childPolicy) => {
-    if (childPolicy.status === 'release' || childPolicy.status === 'waiting_for_approval') {
-      return childPolicy
+    if (
+      childPolicy.status === "release" ||
+      childPolicy.status === "waiting_for_approval"
+    ) {
+      return childPolicy;
     }
-  })
-    
+  });
+
   const [isOpen, setIsOpen] = useState(true);
   const toggle = () => setIsOpen(!isOpen);
   const isActive = id === activeId;
@@ -219,7 +239,7 @@ const PolicyBranch = ({
   ]);
   const childrenHasChildWhenUser = originalData?.children
     ?.map((a: any) => a.status)
-    .includes("release");
+    .includes("release" || "ready_for_edit" || "waiting_for_approval");
   const reviewerHasChild =
     originalData?.children?.filter((a: any) => a.status !== "draft") || [];
   const grandpa = children?.map((a) => a.children).flat().length || 0;

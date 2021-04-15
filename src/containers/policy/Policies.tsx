@@ -363,7 +363,7 @@ const PolicyTableRow = ({
         </tr>
       )}
 
-      {isAdminReviewer
+      {/* {isAdminReviewer
         ? childs.filter((a) => a.status !== "draft").length
           ? childs
               .filter((a) => a.status !== "draft")
@@ -389,7 +389,38 @@ const PolicyTableRow = ({
               level={level + 1}
             />
           ))
-        : null}
+        : null} */}
+        
+      {isAdminReviewer ? childs.filter((a) => a.status !== 'draft').map((childPol) => (
+        <PolicyTableRow 
+          key={childPol.id}
+          policy={childPol}
+          status={childPol.status}
+          onClick={onClick}
+          onDelete={onDelete}
+          level={level + 1}
+        />
+      )) : null }
+      {isAdminPreparer ? childs.map((childPol) => (
+        <PolicyTableRow 
+          key={childPol.id}
+          policy={childPol}
+          status={childPol.status}
+          onClick={onClick}
+          onDelete={onDelete}
+          level={level + 1}
+        />
+      )) : null }
+      {isUser ? childs.filter((a) => a.status === "ready_for_edit" || a.status === "waiting_for_approval" || a.status === "release").map((childPol) => (
+        <PolicyTableRow 
+          key={childPol.id}
+          policy={childPol}
+          status={childPol.status}
+          onClick={onClick}
+          onDelete={onDelete}
+          level={level + 1}
+        />
+      )) : null}
     </>
   );
 };
