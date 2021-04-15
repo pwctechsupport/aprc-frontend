@@ -222,7 +222,8 @@ const PolicyBranch = ({
   const filterModifiedChildren = modifiedChildren?.filter((childPolicy) => {
     if (
       childPolicy.status === "release" ||
-      childPolicy.status === "waiting_for_approval"
+      childPolicy.status === "waiting_for_approval" || 
+      childPolicy.status === "ready_for_edit"
     ) {
       return childPolicy;
     }
