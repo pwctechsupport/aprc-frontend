@@ -9,7 +9,9 @@ import styled from "styled-components";
 import Tooltip from "../../../shared/components/Tooltip";
 
 const AllPolicyDashboard = () => {
-  const { data, loading } = usePolicyDashboardQuery();
+  const { data, loading } = usePolicyDashboardQuery({
+    fetchPolicy: "no-cache"
+  });
 
   const [isAdminReviewer, isAdminPreparer] = useAccessRights([
     "admin_reviewer",

@@ -68,7 +68,19 @@ export default function Policies({ history }: RouteComponentProps) {
       //       ...(isTree && { ancestry_null: true }),
       //       title_or_policy_category_name_or_status_cont: searchQuery,
       //     },
-      filter: {
+      // filter: {
+        // ...(isTree && { ancestry_null: true }),
+        // title_or_policy_category_name_or_status_cont: searchQuery,
+      // },
+      filter: isUser ? {
+        ...(isTree && { ancestry_null: true }),
+        title_or_policy_category_name_or_status_cont: searchQuery,
+        status_in: ["release", "ready_for_edit", "waiting_for_approval"]
+      } : isAdminReviewer ? {
+        ...(isTree && { ancestry_null: true }),
+        title_or_policy_category_name_or_status_cont: searchQuery,
+        status_in: ["waiting_for_review", "ready_for_edit", "waiting_for_approval", "release"]
+      } : {
         ...(isTree && { ancestry_null: true }),
         title_or_policy_category_name_or_status_cont: searchQuery,
       },
@@ -351,7 +363,7 @@ const PolicyTableRow = ({
         </tr>
       )}
 
-      {isAdminReviewer
+      {/* {isAdminReviewer
         ? childs.filter((a) => a.status !== "draft").length
           ? childs
               .filter((a) => a.status !== "draft")
@@ -377,7 +389,38 @@ const PolicyTableRow = ({
               level={level + 1}
             />
           ))
-        : null}
+        : null} */}
+        
+      {isAdminReviewer ? childs.filter((a) => a.status !== 'draft').map((childPol) => (
+        <PolicyTableRow 
+          key={childPol.id}
+          policy={childPol}
+          status={childPol.status}
+          onClick={onClick}
+          onDelete={onDelete}
+          level={level + 1}
+        />
+      )) : null }
+      {isAdminPreparer ? childs.map((childPol) => (
+        <PolicyTableRow 
+          key={childPol.id}
+          policy={childPol}
+          status={childPol.status}
+          onClick={onClick}
+          onDelete={onDelete}
+          level={level + 1}
+        />
+      )) : null }
+      {isUser ? childs.filter((a) => a.status === "ready_for_edit" || a.status === "waiting_for_approval" || a.status === "release").map((childPol) => (
+        <PolicyTableRow 
+          key={childPol.id}
+          policy={childPol}
+          status={childPol.status}
+          onClick={onClick}
+          onDelete={onDelete}
+          level={level + 1}
+        />
+      )) : null}
     </>
   );
 };

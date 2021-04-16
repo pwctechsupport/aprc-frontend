@@ -23,7 +23,7 @@ import useAccessRights from "../../shared/hooks/useAccessRights";
 import useListState from "../../shared/hooks/useList";
 import downloadXls from "../../shared/utils/downloadXls";
 import { notifySuccess } from "../../shared/utils/notif";
-import DateHover from '../../shared/components/DateHover';
+import DateHover from "../../shared/components/DateHover";
 
 const Risks = ({ history }: RouteComponentProps) => {
   const [isAdmin, isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -55,10 +55,21 @@ const Risks = ({ history }: RouteComponentProps) => {
     },
     fetchPolicy: "no-cache",
   });
+
   const totalCount =
-    dataAdmin?.preparerRisks?.metadata.totalCount ||
-    dataReviewer?.reviewerRisksStatus?.metadata.totalCount ||
-    0;
+  dataAdmin?.preparerRisks?.metadata.totalCount ||
+  dataReviewer?.reviewerRisksStatus?.metadata.totalCount ||
+  0;
+
+  const { data: dataReviewerToExport } = useReviewerRisksStatusQuery({
+    skip: isAdminPreparer || isUser,
+    variables: {
+      filter: {},
+      limit: totalCount,
+    },
+    fetchPolicy: "no-cache",
+  });
+
   const [selected, setSelected] = useState<string[]>([]);
   const [modal, setModal] = useState(false);
   const toggleImportModal = () => setModal((p) => !p);
@@ -73,6 +84,10 @@ const Risks = ({ history }: RouteComponentProps) => {
   const risks =
     dataAdmin?.preparerRisks?.collection ||
     dataReviewer?.reviewerRisksStatus?.collection ||
+    [];
+
+  const risksToExport =
+    dataReviewerToExport?.reviewerRisksStatus?.collection ||
     [];
 
   function handleDelete(id: string) {
@@ -91,12 +106,14 @@ const Risks = ({ history }: RouteComponentProps) => {
 
   function toggleCheckAll() {
     if (clicked) {
-      setSelected(risks.map((r) => r.id));
+      console.log('reviewerExport:', dataReviewerToExport)
+      console.log('reviewerOri:', dataReviewer)
+      setSelected(risksToExport.map((r) => r.id));
     } else {
       setSelected([]);
     }
   }
-
+console.log('selected:', selected)
   function handleExport() {
     downloadXls(
       "/prints/risk_excel.xlsx",
@@ -166,7 +183,7 @@ const Risks = ({ history }: RouteComponentProps) => {
             {isAdminReviewer ? (
               <th style={{ width: "5%" }}>
                 <CheckBox
-                  checked={selected.length === risks.length}
+                  checked={selected.length === risks.length || selected.length === risksToExport.length}
                   onClick={() => {
                     clickButton();
                     toggleCheckAll();
@@ -190,9 +207,10 @@ const Risks = ({ history }: RouteComponentProps) => {
         </thead>
         <tbody>
           {risks.map((risk) => {
-            const bps = risk.businessProcesses?.map(b => b.name).join(', ')
-              || risk.businessProcess?.join(', ')
-              || '-';
+            const bps =
+              risk.businessProcesses?.map((b) => b.name).join(", ") ||
+              risk.businessProcess?.join(", ") ||
+              "-";
 
             return (
               <tr
@@ -222,7 +240,7 @@ const Risks = ({ history }: RouteComponentProps) => {
                   </DateHover>
                 </td>
                 <td>{risk.lastUpdatedBy}</td>
-                <td>{capitalCase(risk.status || '')}</td>
+                <td>{capitalCase(risk.status || "")}</td>
                 {isAdminReviewer ? (
                   <td className="action">
                     <DialogButton
