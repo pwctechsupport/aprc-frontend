@@ -737,32 +737,40 @@ export default function RiskAndControl({
     return null;
   };
   const renderControlDetails = () => {
-    const keyControl = dataControl?.control?.keyControl || false;
+    const draftControl = dataControl?.control?.draft
+    const keyControl = draftControl
+      ? get(dataControl, "control.draft.objectResult.keyControl", false)
+      : dataControl?.control?.keyControl || false;
     const risks = dataControl?.control?.risks || [];
-    const businessProcesses = dataControl?.control?.businessProcesses || [];
+    const businessProcesses = draftControl
+      ? get(dataControl, "control.draft.objectResult.businessProcesses", [])
+      : dataControl?.control?.businessProcesses || [];
     const activityControls = dataControl?.control?.activityControls || [];
-    const createdAt = dataControl?.control?.createdAt || "";
-    const departments = dataControl?.control?.departments || [];
-
-    const updatedAt = draftControlReal
+    const createdAt = draftControl
+      ? get(dataControl, "control.draft.objectResult.createdAt", "")
+      : dataControl?.control?.createdAt || "";
+    const controlOwners = draftControl
+      ? get(dataControl, "control.draft.objectResult.controlOwner", [])
+      : dataControl?.control?.controlOwner || [];
+    const updatedAt = draftControl
       ? get(dataControl, "control.draft.objectResult.updatedAt", "")
       : dataControl?.control?.updatedAt?.split(" ")[0] || "";
-    const lastUpdatedBy = draftControlReal
+    const lastUpdatedBy = draftControl
       ? get(dataControl, "control.draft.objectResult.lastUpdatedBy", "")
       : dataControl?.control?.lastUpdatedBy || "";
-    const createdBy = draftControlReal
+    const createdBy = draftControl
       ? get(dataControl, "control.draft.objectResult.createdBy", "")
       : dataControl?.control?.createdBy || "";
-    const assertion = draftControlReal
+    const assertion = draftControl
       ? get(dataControl, "control.draft.objectResult.assertion", [])
       : dataControl?.control?.assertion || [];
-    const frequency = draftControlReal
+    const frequency = draftControl
       ? get(dataControl, "control.draft.objectResult.frequency", "")
       : dataControl?.control?.frequency || "";
-    const ipo = draftControlReal
+    const ipo = draftControl
       ? get(dataControl, "control.draft.objectResult.ipo", [])
       : dataControl?.control?.ipo || [];
-    const typeOfControl = draftControlReal
+    const typeOfControl = draftControl
       ? get(dataControl, "control.draft.objectResult.typeOfControl", "")
       : dataControl?.control?.typeOfControl || "";
     const filteredNames = (names: any) =>
@@ -774,7 +782,7 @@ export default function RiskAndControl({
 
       {
         label: "Control owner",
-        value: departments.map((a: any) => a.name).join(", "),
+        value: controlOwners?.join(", "),
       },
       {
         label: "Key control",
@@ -783,11 +791,11 @@ export default function RiskAndControl({
       { label: "Type of control", value: capitalCase(typeOfControl) },
       {
         label: "Assertion",
-        value: assertion.map((x: any) => capitalCase(x)).join(", "),
+        value: assertion?.map((x: any) => capitalCase(x)).join(", "),
       },
       {
         label: "IPO",
-        value: ipo.map((x: any) => capitalCase(x)).join(", "),
+        value: (ipo === null || ipo.length < 1 || ipo === undefined ? '-' : ipo.map((x: any) => capitalCase(x)).join(", ")),
       },
       { label: "Frequency", value: capitalCase(frequency) },
       // {
@@ -824,7 +832,7 @@ export default function RiskAndControl({
                 <dt>Business processes</dt>
                 {businessProcesses.length ? (
                   filteredNames(businessProcesses).map((bp: any) => (
-                    <dd key={bp.id}>{bp.name}</dd>
+                    <li key={bp.id}>{bp.name}</li>
                   ))
                 ) : (
                   <EmptyAttribute />
@@ -845,7 +853,7 @@ export default function RiskAndControl({
             </Col>
 
             {activityControls.length > 0 ? (
-              <Col xs={7} className="mt-2">
+              <Col xs={12} className="mt-2">
                 <dt className="mb-1">Control Activities</dt>
                 <Table>
                   <thead>

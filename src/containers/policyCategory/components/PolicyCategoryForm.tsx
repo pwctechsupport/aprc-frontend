@@ -67,7 +67,7 @@ const PolicyCategoryForm = ({
         label="Name*"
         error={errors.name && errors.name.message}
       />
-      <AsyncSelect
+      {/* <AsyncSelect
         name="policyIds"
         label="Related policies"
         register={register}
@@ -78,7 +78,7 @@ const PolicyCategoryForm = ({
         defaultValue={policies}
         isMulti
         isDisabled={true}
-      />
+      /> */}
       {renderSubmit()}
     </Form>
   );
