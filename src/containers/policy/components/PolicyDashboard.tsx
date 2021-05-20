@@ -29,7 +29,7 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
     : [
         {
           label: "Reviewed",
-          subPolicy: oc(subPolicy).reviewed(0),
+          subPolicy: oc(subPolicy).reviewed(0) + oc(subPolicy).addToReviewed(0),
           control: oc(control).reviewed(0),
           risk: oc(risk).reviewed(0),
           sum() {
