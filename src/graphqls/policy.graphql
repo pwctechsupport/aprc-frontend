@@ -482,21 +482,21 @@ query policyDashboard {
   }
 
   # ADMIN PREPARER - CONTROL
-  adminPreparerTotalControls: controls (
+  adminPreparerTotalControls: policyControls (
     filter: {}
   ) {
     metadata {
       totalCount
     }
   }
-  adminPreparerPreparedControls: controls (
+  adminPreparerPreparedControls: policyControls (
     filter: { status_in: ["draft", "waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
-  adminPreparerReviewedControls: controls (
+  adminPreparerReviewedControls: policyControls (
     filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
   ) {
     metadata {
@@ -505,21 +505,21 @@ query policyDashboard {
   }
 
   #ADMIN REVIEWER - CONTROL
-  adminReviewerTotalControls: controls (
+  adminReviewerTotalControls: policyControls (
     filter: { status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
     }
   }
-  adminReviewerPreparedControls: controls (
+  adminReviewerPreparedControls: policyControls (
     filter: { status_in: ["waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
-  adminReviewerReviewedControls: controls (
+  adminReviewerReviewedControls: policyControls (
     filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
   ) {
     metadata {
@@ -528,7 +528,7 @@ query policyDashboard {
   }
 
   # USER - CONTROL
-  userTotalControls: controls (
+  userTotalControls: policyControls (
     filter: { status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
   ) {
     metadata {
@@ -537,21 +537,21 @@ query policyDashboard {
   }
 
   # ADMIN PREPARER - RISK
-  adminPreparerTotalRisks: risks (
+  adminPreparerTotalRisks: policyRisks (
     filter: {}
   ) {
     metadata {
       totalCount
     }
   }
-  adminPreparerPreparedRisks: risks (
+  adminPreparerPreparedRisks: policyRisks (
     filter: { status_in: ["draft", "waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
-  adminPreparerReviewedRisks: risks (
+  adminPreparerReviewedRisks: policyRisks (
     filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
   ) {
     metadata {
@@ -560,21 +560,21 @@ query policyDashboard {
   }
 
   #ADMIN REVIEWER - RISK
-  adminReviewerTotalRisks: risks (
+  adminReviewerTotalRisks: policyRisks (
     filter: { status_in: ["waiting_for_review", "release", "ready_for_edit", "waiting_for_approval"] }
   ) {
     metadata {
       totalCount
     }
   }
-  adminReviewerPreparedRisks: risks (
+  adminReviewerPreparedRisks: policyRisks (
     filter: { status_in: ["waiting_for_review"] }
   ) {
     metadata {
       totalCount
     }
   }
-  adminReviewerReviewedRisks: risks (
+  adminReviewerReviewedRisks: policyRisks (
     filter: { status_in: ["ready_for_edit", "release", "waiting_for_approval"] }
   ) {
     metadata {
@@ -583,7 +583,7 @@ query policyDashboard {
   }
 
   # USER - RISK
-  userTotalRisks: risks (
+  userTotalRisks: policyRisks (
     filter: { status_in: ["release", "ready_for_edit", "waiting_for_approval"] }
   ) {
     metadata {
