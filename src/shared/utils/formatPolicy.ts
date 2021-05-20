@@ -13,8 +13,10 @@ const getPreparedReviewed = (
   reviewed: number;
   prepared: number;
   addToPrepare: number;
+  addToReviewed: number;
 } => ({
   reviewed: obj.release,
+  addToReviewed: obj.waiting_for_approval,
   addToPrepare: obj.waiting_for_review,
   prepared: obj.draft,
   total: obj.total,
