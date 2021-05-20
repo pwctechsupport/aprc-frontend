@@ -23,6 +23,7 @@ import ResourceForm, {
   ResourceFormValues,
 } from "../../containers/resources/components/ResourceForm";
 import useAccessRights from "../hooks/useAccessRights";
+import { APP_ROOT_URL } from "../../settings";
 
 export default function ResourcesTab({
   queryFilters,
@@ -267,20 +268,29 @@ export default function ResourcesTab({
       </div>
 
       {resources.length ? (
-        resources.map((resource: any) => (
-          <ResourceBar
-            policyIdsWithoutChildren={policyIdsWithoutChildren}
-            setResourceId={setResourceId}
-            bPId={bPId}
-            rating={resource.rating}
-            deleteResource={handleDeleteResource}
-            totalRating={resource.totalRating}
-            visit={resource.visit}
-            key={resource.id}
-            resourceId={resource.id}
-            {...resource}
-          />
-        ))
+        resources.map((resource: any) => {
+          const imagePreviewUrl = resource.resuploadLink
+            ? resource.resuploadLink
+            : resource.resuploadUrl && !resource.resuploadLink?.includes("original/missing.png")
+            ? `${APP_ROOT_URL}${resource.resuploadUrl}`
+            : undefined;
+
+            return (
+              <ResourceBar
+                policyIdsWithoutChildren={policyIdsWithoutChildren}
+                setResourceId={setResourceId}
+                bPId={bPId}
+                rating={resource.rating}
+                deleteResource={handleDeleteResource}
+                totalRating={resource.totalRating}
+                visit={resource.visit}
+                key={resource.id}
+                resourceId={resource.id}
+                imagePreviewUrl={imagePreviewUrl}
+                {...resource}
+              />
+            )
+        })
       ) : (
         <EmptyAttribute centered>No Resource</EmptyAttribute>
       )}
