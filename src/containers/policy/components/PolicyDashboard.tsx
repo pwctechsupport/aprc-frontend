@@ -1,9 +1,10 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Table } from "reactstrap";
 import { oc } from "ts-optchain";
 import PolicyChart, { PolicyChartProps } from "./PolicyChart";
 import useAccessRights from "../../../shared/hooks/useAccessRights";
 import styled from "styled-components";
+import Tooltip from "../../../shared/components/Tooltip";
 
 const PolicyDashboard = ({ data }: PolicyChartProps) => {
   const [isAdminReviewer, isAdminPreparer] = useAccessRights([
@@ -73,6 +74,33 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
           {tableData.map((item, index) => {
             return (
               <tr key={index}>
+                <td>
+                  {item.label === "Reviewed" ? (
+                    <Tooltip description="Data with status : Waiting for Approval, Ready for Edit, and Release">
+                      {item.label}
+                    </Tooltip>
+                  ) : (
+                    <Fragment>
+                      {item.label === "Prepared" ? (
+                        <Fragment>
+                          {isAdminPreparer ? (
+                            <Tooltip description="Data with status : Draft and Waiting for Review">
+                              {item.label}
+                            </Tooltip>
+                          ) : (
+                            <Tooltip description="Data with status : Waiting for Review">
+                              {item.label}
+                            </Tooltip>
+                          )}
+                        </Fragment>
+                      ) : (
+                        <Fragment>
+                          {item.label}
+                        </Fragment>
+                      )}
+                  </Fragment>
+                )}
+                </td>
                 <td>{item.label}</td>
                 <td>{item.subPolicy}</td>
                 <td>{item.risk}</td>
