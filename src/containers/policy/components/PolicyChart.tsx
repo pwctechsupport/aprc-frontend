@@ -202,6 +202,7 @@ interface ChartData {
   total: number;
   prepared: number;
   addToPrepare?: number;
+  addToReviewed?: number;
   reviewed: number;
   onClick?: () => void;
 }

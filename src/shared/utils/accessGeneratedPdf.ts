@@ -15,7 +15,7 @@ export async function downloadPdf(url: string, option: FileOption) {
     link.href = targetUrl;
     link.setAttribute(
       "download",
-      `${option.fileName}..${fileType}` || `PwC-Generated.${fileType}`
+      `${option.fileName}` || `PwC-Generated.${fileType}`
     );
     document.body.appendChild(link);
     link.click();

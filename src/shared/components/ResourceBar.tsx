@@ -22,6 +22,7 @@ interface ResourceBarProps {
   policyIdsWithoutChildren?: any
   setResourceId?: any
   bPId?: any
+  imagePreviewUrl?: any
 }
 
 export default function ResourceBar({
@@ -36,11 +37,25 @@ export default function ResourceBar({
   visit,
   resourceId,
   totalRating = 0,
+  imagePreviewUrl,
 }: ResourceBarProps) {
   const [isAdminReviewer] = useAccessRights(['admin_reviewer'])
   const [updateResourceVisit] = useUpdateResourceVisitMutation({
     refetchQueries: ['resources', 'recentResources', 'reviewerResourcesStatus'],
   })
+
+  const handleDownload = () => {
+    updateResourceVisit({ variables: { id } });
+    const link = document.createElement("a");
+    // link.href = base64File || imagePreviewUrl || "";
+    link.href = imagePreviewUrl || "";
+    link.target = "_blank";
+    // link.setAttribute("download", name || "PwC-Generated");
+    link.download = name || "PwC-Generated";
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode && link.parentNode.removeChild(link);
+  };
 
   return (
     <ResourceBarContainer noGutters>
@@ -74,11 +89,11 @@ export default function ResourceBar({
               subtitle="Will be download if file type not supported"
             >
               <a
-                href={`${APP_ROOT_URL}${resuploadUrl}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                download={`Pwc-Resource ${name}`}
-                onClick={() => updateResourceVisit({ variables: { id } })}
+                // href={`${APP_ROOT_URL}${resuploadUrl}`}
+                // target="_blank"
+                // rel="noopener noreferrer"
+                // download={`Pwc-Resource ${name}`}
+                onClick={handleDownload}
               >
                 <PickIcon name="downloadOrange" />
               </a>

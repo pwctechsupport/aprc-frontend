@@ -383,16 +383,18 @@ const isUser = !isAdmin || !isAdminReviewer || !isAdminPreparer
 
   const isSubmitted = data?.policy?.isSubmitted;
   const draft = data?.policy?.draft?.objectResult;
-  let title = ""
-  if (isUser) {
-    title = data?.policy?.title || ""
-  } else {
-    if (draft) {
-      title = get(data, "policy.draft.objectResult.title", "")
-    } else {
-      title = data?.policy?.title || ""
-    }
-  }
+  // let title = ""
+  // if (isUser) {
+  //   title = data?.policy?.title || ""
+  // } else {
+  //   if (draft) {
+  //     title = get(data, "policy.draft.objectResult.title", "")
+  //   } else {
+  //     title = data?.policy?.title || ""
+  //   }
+  // }
+
+  const title = draft ? get(data, "policy.draft.objectResult.title", "") : data?.policy?.title
 
   let description = ""
   if (isUser) {
