@@ -101,7 +101,6 @@ const PolicyDashboard = ({ data }: PolicyChartProps) => {
                   </Fragment>
                 )}
                 </td>
-                <td>{item.label}</td>
                 <td>{item.subPolicy}</td>
                 <td>{item.risk}</td>
                 <td>{item.control}</td>
