@@ -41,7 +41,7 @@ pipelines:
             - pipe: atlassian/ssh-run:0.1.4
               variables:
                 SSH_USER: "deploy"
-                SERVER: "skywalker.rubyh.co"
+                SERVER: "skywalker.rubyh.co" 
                 COMMAND: "cd app/skywalker/build/ && rm -rf *"
             - pipe: atlassian/scp-deploy:0.3.3
               variables:
@@ -49,3 +49,15 @@ pipelines:
                 SERVER: "skywalker.rubyh.co"
                 REMOTE_PATH: "/home/deploy/app/skywalker"
                 LOCAL_PATH: "build"
+    
+    develop:
+      - step:
+          deployment: develop
+          script:
+            - pipe: atlassian/ssh-run:0.4.1
+              variables:
+                SSH_USER: $HOST_USER
+                SERVER: $HOST
+                PORT: $SSH_PORT
+                MODE: 'script'
+                COMMAND: 'dev-deploy-script.sh'
