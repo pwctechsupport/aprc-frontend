@@ -52,7 +52,8 @@ pipelines:
     
     develop:
       - step:
-          deployment: develop
+          image: atlassian/default-image:3
+          deployment: development
           script:
             - pipe: atlassian/ssh-run:0.4.1
               variables:
