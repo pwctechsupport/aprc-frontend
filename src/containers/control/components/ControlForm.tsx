@@ -649,7 +649,7 @@ const newLabelTypeOfControls = [
 const newLabelIPOs = [
   {label: "Completeness", value: "completeness"},
   {label: "Accuracy", value: "accuracy"},
-  {label: "Validity", value: "validation"},
+  {label: "Validation", value: "validation"},
   {label: "Restriction Access (CAVR)", value: "restriction"}
 ]
 
