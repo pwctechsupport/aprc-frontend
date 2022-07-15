@@ -1,5 +1,5 @@
 overwrite: true
-schema: "http://mandalorian.rubyh.co/graphql"
+schema: "https://pwc-api.altechomega.com/graphql"
 documents: "src/**/*.graphql"
 generates:
   src/generated/graphql.tsx:
