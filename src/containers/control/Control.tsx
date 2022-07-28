@@ -444,9 +444,9 @@ const Control = ({ match, history, location }: RouteComponentProps) => {
             (typeOfControl as TypeOfControl) || TypeOfControl.Automatic,
           riskIds,
           businessProcessIds,
-          riskBusinessProcessIds: businessProcessIds,
           keyControl,
           activityControls,
+          riskBusinessProcessIds: businessProcessIds,
         }}
         toggleEditMode={toggleEditMode}
         submitting={updateState.loading}
